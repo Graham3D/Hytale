@@ -149,3 +149,12 @@ See [the full fixture and per-affix matrix](QA159-PACK.md). Spawn individual ite
 4. `/rpg sentineltrace off` and `/rpg geartrace off`. Both commands print the saved trace path. Compare EXPECTED rows; NOT_APPLICABLE is not a failed check. OWNER_ONLY and INAPPLICABLE bound affixes must not appear as inherited modifiers. Owner-side minion affixes can still affect the companion through separately recorded owner equipment.
 
 WA-141 needs two real distinct daggers: use qa159-08 together with qa159-09. A single-item Sentinel cannot fabricate an offhand. WA-083/147 need a real successful block; the current unguarded Sentinel cannot fabricate one. Passive proc chances are not guaranteed per hit. A status-potency line needs a compatible status source, and WA-112 requires an actual successful-cleanse event. These prerequisites are preserved.
+
+### R245 Elite birth status
+
+`/rpg worldconfig status` (permission `inigmasgames.rpg.worldconfig`) is read-only.
+It also reports each world's Elite admission gate, pending birth transaction count, and oldest pending age in milliseconds.
+Pending age is diagnostic only: it never releases a lease or assumes a write failed.
+`/rpg spawntrace start` and `/rpg spawntrace status` retain their existing permissions and two-minute capture.
+Birth root, seal, attachment, durable publication, finish, compensation, uncertain outcome and admission-close events use the bounded priority buffer.
+No configuration changes or save reset are performed by these diagnostics. R245 or newer build required for these fields.

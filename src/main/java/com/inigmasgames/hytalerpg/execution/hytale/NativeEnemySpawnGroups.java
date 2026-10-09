@@ -30,10 +30,10 @@ public final class NativeEnemySpawnGroups extends WorldSpawnJobSystems.Ticking {
     public record Member(UUID entity,String nativeRole,EnemyStaging.State staging){
         public Member{Objects.requireNonNull(entity);Objects.requireNonNull(nativeRole);Objects.requireNonNull(staging);}
     }
-    public record Group(Job job,Reservation reservation,List<Member> members,boolean nativeFailed,boolean extensionCreatedFlock){
+    public record Group(Job job,Reservation reservation,List<Member> members,boolean nativeFailed,boolean extensionCreatedFlock,Ref<EntityStore> extensionFlockRef){
         public Group{members=List.copyOf(members);}
         public Group(Job job,Reservation reservation,List<Member> members,boolean nativeFailed){
-            this(job,reservation,members,nativeFailed,false);
+            this(job,reservation,members,nativeFailed,false,null);
         }
     }
     public interface Owner {

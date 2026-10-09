@@ -56,6 +56,7 @@ public final class NativeEnemyActionAttachment {
         var refs=new ArrayList<Ref<EntityStore>>();
         for(var actor:active){
             var ref=store.getExternalData().getRefFromUUID(actor.entityId());
+            if(ref==null||!ref.isValid())throw new NativeBirthAwaitingLoad();
             var marker=ref==null||!ref.isValid()?null:store.getComponent(ref,EnemyStaging.getComponentType());
             var npc=ref==null||!ref.isValid()?null:store.getComponent(ref,NPCEntity.getComponentType());
             if(marker==null||npc==null||!marker.state().world().equals(birth.world())

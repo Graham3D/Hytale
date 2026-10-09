@@ -355,83 +355,54 @@ public final class NativeEnemyBirthOwner implements NativeEnemySpawnGroups.Owner
     private void processBirth(Store<EntityStore> store,NativeEnemySpawnGroups.Group group,
             java.util.concurrent.CompletionStage<Optional<NativeEnemyBirthReservation.Sealed>> start,
             java.util.concurrent.CompletableFuture<UUID> done){
-        var world=store.getExternalData().getWorld();
-        try{start.whenComplete((maybe,error)->onWorld(world,group.job().world(),()->{
-            if(error!=null){fail(group.job().world(),"RESERVE",error);if(done!=null)done.completeExceptionally(error);return;}
-            if(maybe.isEmpty()){
-                MonsterSpawnTrace.event("ELITE_DECLINED_NATIVE_CONTINUES",group.job().world(),group.job().environment(),group.job().nativeRole(),
-                        "job="+group.job().nativeJobId()+" encounter="+group.reservation().encounter()
-                                +" originals="+group.members().size());
-                if(done!=null){discardQaStaged(world.getEntityStore().getStore(),group);
-                    done.completeExceptionally(new IllegalStateException("ENEMY_QA_CAPACITY_UNAVAILABLE"));}
-                return; // Natural decision/capacity owner has restored its ordinary native group.
+        var world=store.getExternalData().getWorld();var id=group.job().world();
+        var completed=new java.util.concurrent.CompletableFuture<NativeBirthContinuation.Outcome>();
+        var lifetime=admission.watch(id,completed);
+        var flow=new NativeBirthContinuation<NativeEnemyBirthReservation.Sealed,NativeEnemyBirthAttachment.Prepared>(
+                task->{if(store.isInThread())task.run();else world.execute(task);},
+                ()->admission.current(id,lifetime),new NativeBirthContinuation.Steps<>(){
+            public java.util.concurrent.CompletionStage<NativeEnemyBirthAttachment.Prepared> prepare(NativeEnemyBirthReservation.Sealed sealed){
+                return attachment.prepare(store,sealed);
             }
-            var sealed=maybe.get();
-            try{attachment.prepare(world.getEntityStore().getStore(),sealed).whenComplete((prepared,attachError)->
-                    onWorld(world,group.job().world(),()->{
-                        if(attachError!=null){compensate(world.getEntityStore().getStore(),sealed,attachError);
-                            if(done!=null)done.completeExceptionally(attachError);return;}
-                        try{
-                            prepared.activate(hit->{},rejected->fail(group.job().world(),"ACTION",rejected));
-                        }catch(RuntimeException activationFailure){
-                            try{prepared.close();}catch(Exception cleanup){activationFailure.addSuppressed(cleanup);}
-                            compensate(world.getEntityStore().getStore(),sealed,activationFailure);
-                            if(done!=null)done.completeExceptionally(activationFailure);return;
-                        }
-                        try{publication.publish(world.getEntityStore().getStore(),sealed,prepared)
-                                .whenComplete((ignored,publishError)->onWorld(world,group.job().world(),()->{
-                                    if(publishError!=null){
-                                        try{stagePrepared(world.getEntityStore().getStore(),prepared);}
-                                        catch(RuntimeException staging){publishError.addSuppressed(staging);}
-                                        try{prepared.close();}catch(Exception cleanup){publishError.addSuppressed(cleanup);}
-                                        fail(group.job().world(),"PUBLISH",publishError);
-                                        if(done!=null)done.completeExceptionally(publishError);return;
-                                    }
-                                    try{registerPublished(world.getEntityStore().getStore(),prepared,
-                                            sealed.selected().root().plan().pack().staged().publish());
-                                        MonsterSpawnTrace.event("ELITE_PUBLISHED",group.job().world(),group.job().environment(),group.job().nativeRole(),
-                                                "job="+group.job().nativeJobId()+" encounter="+sealed.selected().root().encounter()
-                                                        +" actors="+prepared.active().size());
-                                        if(done!=null)done.complete(sealed.selected().root().encounter());}
-                                    catch(RuntimeException lifetimeFailure){
-                                        try{stagePrepared(world.getEntityStore().getStore(),prepared);}
-                                        catch(RuntimeException staging){lifetimeFailure.addSuppressed(staging);}
-                                        try{prepared.close();}catch(Exception cleanup){lifetimeFailure.addSuppressed(cleanup);}
-                                        fail(group.job().world(),"LIFETIME",lifetimeFailure);
-                                        if(done!=null)done.completeExceptionally(lifetimeFailure);
-                                    }
-                                }));}
-                        catch(RuntimeException publishRejection){
-                            try{stagePrepared(world.getEntityStore().getStore(),prepared);}
-                            catch(RuntimeException staging){publishRejection.addSuppressed(staging);}
-                            try{prepared.close();}catch(Exception cleanup){publishRejection.addSuppressed(cleanup);}
-                            fail(group.job().world(),"PUBLISH",publishRejection);
-                            if(done!=null)done.completeExceptionally(publishRejection);
-                        }
-                    }));}
-            catch(RuntimeException attachRejection){compensate(world.getEntityStore().getStore(),sealed,attachRejection);
-                if(done!=null)done.completeExceptionally(attachRejection);}
-        }));}catch(RuntimeException rejection){fail(group.job().world(),"RESERVE",rejection);
-            if(done!=null)done.completeExceptionally(rejection);throw rejection;}
+            public void activate(NativeEnemyBirthAttachment.Prepared prepared){
+                admission.birthPhase(prepared.birth(),"BIRTH_ATTACHMENT_READY",null);
+                prepared.activate(hit->{},rejected->fail(id,"ACTION",rejected));
+            }
+            public java.util.concurrent.CompletionStage<Void> publish(NativeEnemyBirthReservation.Sealed sealed,NativeEnemyBirthAttachment.Prepared prepared){
+                return publication.publish(store,sealed,prepared);
+            }
+            public void finish(NativeEnemyBirthReservation.Sealed sealed,NativeEnemyBirthAttachment.Prepared prepared){
+                registerPublished(store,prepared,sealed.selected().root().plan().pack().staged().publish());
+            }
+            public java.util.concurrent.CompletionStage<Void> compensate(NativeEnemyBirthReservation.Sealed sealed,
+                    NativeEnemyBirthAttachment.Prepared prepared,Throwable cause){
+                if(prepared!=null)try{prepared.close();}catch(Exception cleanup){cause.addSuppressed(cleanup);
+                    return java.util.concurrent.CompletableFuture.failedStage(cleanup);}
+                var selected=sealed.selected();var root=selected.root();
+                return rewards.compensateStagedNativeGroup(store,selected.original(),selected.additional(),root)
+                        .thenRun(()->admission.birthPhase(root.plan(),"BIRTH_COMPENSATED",cause));
+            }
+            public void awaitingLoad(NativeEnemyBirthReservation.Sealed sealed,NativeEnemyBirthAttachment.Prepared prepared,Throwable cause){
+                if(prepared!=null)try{prepared.close();}catch(Exception failure){throw new IllegalStateException("ENEMY_BIRTH_DEFER_CLEANUP",failure);}
+                admission.birthPhase(sealed.selected().root().plan(),"BIRTH_AWAITING_NATIVE_LOAD",cause);
+            }
+            public void uncertain(NativeEnemyBirthReservation.Sealed sealed,NativeEnemyBirthAttachment.Prepared prepared,
+                    String phase,Throwable cause){
+                if(prepared!=null&&store.isInThread()){
+                    try{stagePrepared(store,prepared);}catch(RuntimeException cleanup){cause.addSuppressed(cleanup);}
+                    try{prepared.close();}catch(Exception cleanup){cause.addSuppressed(cleanup);}
+                }
+                fail(id,phase,cause);
+            }
+        },completed);
+        flow.start(start);
+        completed.whenComplete((outcome,error)->{
+            if(done!=null){if(error!=null)done.completeExceptionally(error);
+                else if(outcome==NativeBirthContinuation.Outcome.PUBLISHED)done.complete(group.reservation().encounter());
+                else done.completeExceptionally(new IllegalStateException("ENEMY_BIRTH_"+outcome));}
+        });
     }
 
-    private void compensate(Store<EntityStore> store,NativeEnemyBirthReservation.Sealed sealed,Throwable cause){
-        var selected=sealed.selected();var root=selected.root();
-        try{rewards.compensateStagedNativeGroup(store,selected.original(),selected.additional(),root)
-                .whenComplete((ignored,error)->{
-                    if(error!=null){error.addSuppressed(cause);fail(root.world(),"COMPENSATE",error);return;}
-                    if(root.plan().actors().stream().allMatch(actor->actor.spawnOrigin()==EnemyRewardContext.Origin.QA)){
-                        var world=store.getExternalData().getWorld();
-                        onWorld(world,root.world(),()->{
-                            for(var member:selected.original().members()){
-                                var ref=world.getEntityStore().getStore().getExternalData().getRefFromUUID(member.entity());
-                                if(ref!=null&&ref.isValid())world.getEntityStore().getStore().removeEntity(ref,RemoveReason.REMOVE);
-                            }
-                        });
-                    }
-                });}
-        catch(RuntimeException rejected){rejected.addSuppressed(cause);fail(root.world(),"COMPENSATE",rejected);}
-    }
     private void discardQaStaged(Store<EntityStore> store,NativeEnemySpawnGroups.Group group){
         if(!store.isInThread())throw new IllegalStateException("ENEMY_QA_DISCARD_WORLD_THREAD");
         for(var member:group.members()){
@@ -446,7 +417,9 @@ public final class NativeEnemyBirthOwner implements NativeEnemySpawnGroups.Owner
     }
 
     private void onWorld(com.hypixel.hytale.server.core.universe.world.World world,UUID id,Runnable action){
+        var lifetime=admission.lifetime(id);
         var guarded=new Runnable(){@Override public void run(){
+            if(!admission.current(id,lifetime)||com.hypixel.hytale.server.core.universe.Universe.get().getWorld(id)!=world)return;
             try{action.run();}
             catch(RuntimeException|Error failure){fail(id,"WORLD_CALLBACK",failure);}
         }};
@@ -461,7 +434,7 @@ public final class NativeEnemyBirthOwner implements NativeEnemySpawnGroups.Owner
     }
 
     void fail(UUID world,String phase,Throwable error){
-        admission.failClosed(world);
+        admission.failClosed(world,phase,error);
         combat.quarantineEnemyWorld(world);
         actions.quarantineWorld(world);
         var nativeWorld=com.hypixel.hytale.server.core.universe.Universe.get().getWorld(world);
@@ -528,6 +501,7 @@ public final class NativeEnemyBirthOwner implements NativeEnemySpawnGroups.Owner
         if(!store.isInThread()||!store.getExternalData().getWorld().getWorldConfig().getUuid()
                 .equals(prepared.birth().world())||prepared.active().isEmpty())
             throw new IllegalStateException("ENEMY_BIRTH_LIFETIME_WORLD");
+        if(prepared.publicationReceipt()!=null)published=prepared.publicationReceipt();
         var loaded=new ArrayList<EnemyDescriptor>();
         for(var actor:prepared.active()){
             var ref=store.getExternalData().getRefFromUUID(actor.entityId());
@@ -545,6 +519,7 @@ public final class NativeEnemyBirthOwner implements NativeEnemySpawnGroups.Owner
         for(var actor:loaded)liveActors.put(actor.entityId(),prepared);
         if(prepared.allRetired())try{prepared.close();}
         catch(Exception failure){throw new IllegalStateException("ENEMY_BIRTH_EMPTY_LIFETIME_CLOSE",failure);}
+        admission.birthPhase(prepared.birth(),"ELITE_PUBLISHED",null);
     }
     public synchronized boolean bound(UUID nativeEntity){return liveActors.containsKey(nativeEntity);}
 

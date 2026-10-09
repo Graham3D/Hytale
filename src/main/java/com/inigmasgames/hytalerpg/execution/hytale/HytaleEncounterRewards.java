@@ -160,6 +160,10 @@ public final class HytaleEncounterRewards implements AutoCloseable {
     public java.util.concurrent.CompletionStage<com.inigmasgames.hytalerpg.enemies.EnemyPackRecord> transitionEnemyPack(UUID world,UUID pack,
             java.util.function.UnaryOperator<com.inigmasgames.hytalerpg.enemies.EnemyPackRecord> transition){return runtime.transitionEnemyPack(world,pack,transition);}
     public java.util.concurrent.CompletionStage<com.inigmasgames.hytalerpg.enemies.EnemyPackRecord> reconcileEnemyPackDefeats(UUID world,UUID pack){return runtime.reconcileEnemyPackDefeats(world,pack);}
+    Object watchBirth(UUID world,java.util.concurrent.CompletableFuture<?> result){
+        return enemyAdmission==null?null:enemyAdmission.watch(world,result);
+    }
+    boolean birthCurrent(UUID world,Object lifetime){return enemyAdmission==null||enemyAdmission.current(world,lifetime);}
     /** Called only after the complete birth root and its indexes have been durably reserved. */
     public java.util.concurrent.CompletionStage<Void> attachStaged(Store<EntityStore> store,
             com.inigmasgames.hytalerpg.enemies.EnemyDescriptor descriptor,
@@ -168,7 +172,8 @@ public final class HytaleEncounterRewards implements AutoCloseable {
         if(!store.isInThread()||!world(store).equals(descriptor.worldId())||difficultyCombat==null)
             throw new IllegalStateException("ENEMY_STAGED_ATTACH_OWNER");
         var ref=store.getExternalData().getRefFromUUID(descriptor.entityId());
-        var marker=ref==null||!ref.isValid()?null:store.getComponent(ref,EnemyStaging.getComponentType());
+        if(ref==null||!ref.isValid())throw new NativeBirthAwaitingLoad();
+        var marker=store.getComponent(ref,EnemyStaging.getComponentType());
         if(marker==null||!marker.state().world().equals(descriptor.worldId())
                 ||!marker.state().encounter().equals(descriptor.encounterId())
                 ||marker.state().generation()!=descriptor.encounterGeneration()
@@ -184,6 +189,7 @@ public final class HytaleEncounterRewards implements AutoCloseable {
                 descriptor.immutableRewardContext());
         var ticket=difficultyCombat.begin(descriptor.worldId(),descriptor.entityId());
         var result=new java.util.concurrent.CompletableFuture<Void>();
+        var lifetime=watchBirth(descriptor.worldId(),result);
         var nativeWorld=store.getExternalData().getWorld();
         // A root file alone is insufficient after an interrupted index write. Replaying the
         // idempotent reservation repairs every descriptor/pack index before actor attachment.
@@ -194,15 +200,18 @@ public final class HytaleEncounterRewards implements AutoCloseable {
             return reserveEnemyBirth(birth);
         }).thenCompose(ignored->attachObserved(descriptor.worldId(),descriptor.entityId(),descriptor.nativeRoleId(),Optional.of(enriched)))
                 .whenComplete((attached,error)->{
+                    if(!birthCurrent(descriptor.worldId(),lifetime))return;
                     if(error!=null||!Boolean.TRUE.equals(attached)){
                         difficultyCombat.detach(descriptor.worldId(),descriptor.entityId());
                         result.completeExceptionally(error!=null?error:new IllegalStateException("ENEMY_STAGED_DURABLE_ATTACH_REJECTED"));return;
                     }
                     try{nativeWorld.execute(()->{
+                        if(!birthCurrent(descriptor.worldId(),lifetime))return;
                         try{
                             var current=nativeWorld.getEntityStore().getStore();
                             var actor=nativeWorld.getEntityRef(descriptor.entityId());
-                            var staged=actor==null||!actor.isValid()?null:current.getComponent(actor,EnemyStaging.getComponentType());
+                            if(actor==null||!actor.isValid())throw new NativeBirthAwaitingLoad();
+                            var staged=current.getComponent(actor,EnemyStaging.getComponentType());
                             if(staged==null||!staged.state().equals(marker.state()))throw new IllegalStateException("ENEMY_STAGED_ACTOR_CHANGED");
                             difficultyCombat.ready(current,descriptor.entityId(),ticket,Optional.of(enriched),true,descriptor,providers);
                             var projected=difficultyCombat.enemyState(descriptor.worldId(),descriptor.entityId());
@@ -225,7 +234,8 @@ public final class HytaleEncounterRewards implements AutoCloseable {
         var type=com.inigmasgames.hytalerpg.enemies.EnemyActorIdentity.getComponentType();
         for(var actor:birth.actors()){
             var ref=store.getExternalData().getRefFromUUID(actor.entityId());
-            var staged=ref==null||!ref.isValid()?null:store.getComponent(ref,EnemyStaging.getComponentType());
+            if(ref==null||!ref.isValid())throw new NativeBirthAwaitingLoad();
+            var staged=store.getComponent(ref,EnemyStaging.getComponentType());
             var projected=difficultyCombat==null?Optional.<HytaleDifficultyCombat.EnemyState>empty():
                     difficultyCombat.enemyState(birth.world(),actor.entityId());
             var existing=ref==null||!ref.isValid()?null:store.getComponent(ref,type);
@@ -249,18 +259,25 @@ public final class HytaleEncounterRewards implements AutoCloseable {
             NativeEnemyBirthDecision.Selected selected,
             com.inigmasgames.hytalerpg.enemies.EnemyBalance balance,
             com.inigmasgames.hytalerpg.enemies.EnemyNativeBindings nativeBindings){
-        Objects.requireNonNull(selected);Objects.requireNonNull(balance);
-        Objects.requireNonNull(nativeBindings);
-        var birth=selected.root().plan();
+        Objects.requireNonNull(selected);
+        return attachFrozenBirthGroup(store,selected.root().plan(),selected.sources(),balance,nativeBindings);
+    }
+    java.util.concurrent.CompletionStage<Void> attachFrozenBirthGroup(Store<EntityStore> store,
+            com.inigmasgames.hytalerpg.enemies.EnemyBirthPlan birth,
+            List<com.inigmasgames.hytalerpg.enemies.EnemyNativeGroupPreparation.MemberSource> sources,
+            com.inigmasgames.hytalerpg.enemies.EnemyBalance balance,
+            com.inigmasgames.hytalerpg.enemies.EnemyNativeBindings nativeBindings){
+        Objects.requireNonNull(balance);Objects.requireNonNull(nativeBindings);
         if(!store.isInThread()||!world(store).equals(birth.world())||birth.pack()==null
                 ||birth.pack().state()!=com.inigmasgames.hytalerpg.enemies.EnemyPackRecord.State.RESERVED
-                ||selected.sources().size()!=birth.actors().size())
+                ||sources.size()!=birth.actors().size())
             throw new IllegalStateException("ENEMY_STAGED_GROUP_ATTACH_OWNER");
         var snapshots=new java.util.ArrayList<com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshot>();
         for(int i=0;i<birth.actors().size();i++){
-            var actor=birth.actors().get(i);var source=selected.sources().get(i).spawn();
+            var actor=birth.actors().get(i);var source=sources.get(i).spawn();
             var ref=store.getExternalData().getRefFromUUID(actor.entityId());
-            var marker=ref==null||!ref.isValid()?null:store.getComponent(ref,EnemyStaging.getComponentType());
+            if(ref==null||!ref.isValid())throw new NativeBirthAwaitingLoad();
+            var marker=store.getComponent(ref,EnemyStaging.getComponentType());
             if(marker==null||!marker.state().world().equals(birth.world())
                     ||!marker.state().encounter().equals(birth.encounter())
                     ||marker.state().generation()!=birth.generation()
@@ -274,13 +291,15 @@ public final class HytaleEncounterRewards implements AutoCloseable {
         }
         var tickets=new java.util.ArrayList<java.util.concurrent.CompletableFuture<Void>>();
         for(int i=0;i<birth.actors().size();i++)tickets.add(attachStaged(store,birth.actors().get(i),
-                selected.sources().get(i).spawn(),snapshots.get(i)).toCompletableFuture());
+                sources.get(i).spawn(),snapshots.get(i)).toCompletableFuture());
         var result=new java.util.concurrent.CompletableFuture<Void>();
+        var lifetime=watchBirth(birth.world(),result);
         var nativeWorld=store.getExternalData().getWorld();
         java.util.concurrent.CompletableFuture.allOf(tickets.toArray(java.util.concurrent.CompletableFuture[]::new))
                 .whenComplete((ignored,error)->{
                     if(error!=null){result.completeExceptionally(error);return;}
                     try{nativeWorld.execute(()->{
+                        if(!birthCurrent(birth.world(),lifetime))return;
                         try{
                             var current=nativeWorld.getEntityStore().getStore();
                             bindStagedNativeIdentities(current,birth);
@@ -743,9 +762,11 @@ public final class HytaleEncounterRewards implements AutoCloseable {
                 ||!group.members().stream().map(NativeEnemySpawnGroups.Member::entity).toList().equals(root.plan().originalNativeEntities()))
             throw new IllegalStateException("ENEMY_BIRTH_COMPENSATION_GROUP_BINDING");
         var nativeWorld=store.getExternalData().getWorld();var result=new java.util.concurrent.CompletableFuture<Void>();
+        var lifetime=watchBirth(root.world(),result);
         try{runtime.compensateEnemyBirth(root).whenComplete((decision,error)->{
             if(error!=null){result.completeExceptionally(error);return;}
             try{nativeWorld.execute(()->{
+                if(!birthCurrent(root.world(),lifetime))return;
                 try{
                     var current=nativeWorld.getEntityStore().getStore();
                     var identity=com.inigmasgames.hytalerpg.enemies.EnemyActorIdentity.getComponentType();

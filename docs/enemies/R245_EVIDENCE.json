@@ -1,0 +1,126 @@
+{
+  "readOnly": true,
+  "save": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG",
+  "configSha256": "3d7e86ab1b97f36e41f124fd3e03c682923f77f59b898fce8ca0221542df7986",
+  "serverLog": {
+    "path": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\logs\\2026-10-09_17-34-28_server.log",
+    "sha256": "0967c489ed9ea2265cebed75f08803c4f98a8dec592f94636341bb7fc039614d",
+    "failureLines": [
+      38860,
+      38873,
+      38882,
+      38887,
+      38894,
+      38907,
+      38911,
+      38924,
+      38935,
+      38940
+    ]
+  },
+  "trace": {
+    "path": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\InigmasGames_HytaleRPGPhase00Audit\\logs\\rpg\\monster-spawn-trace\\monster-spawn-1791581754225.jsonl",
+    "sha256": "156d25c582edc5dd52a91225a30cf729f726dac786409bb2685aceccbe096a80"
+  },
+  "records": [
+    {
+      "file": "mods\\InigmasGames_HytaleRPGPhase00Audit\\encounters\\enemy-birth-roots\\b6\\b6d280070197665d1852b223d7a3abe50e1d2efbc99cdce64fdc659861a3f71b.json",
+      "sha256": "a06b37666e35c7b55638dae63b4cd2ebdef679f992cc6461cddbb25ed82283f6",
+      "encounters": [
+        "2891aefc-43e2-390a-b683-ab5b91f544fb"
+      ],
+      "state": null,
+      "generation": 1
+    },
+    {
+      "file": "mods\\InigmasGames_HytaleRPGPhase00Audit\\encounters\\enemy-birth-roots\\e2\\e2173bef09a8e74e35fe84e42b16a094b08776b8b0a69796d1dda43f8330457b.json",
+      "sha256": "0e31f5d2d25b56cf382a34a985b6af2b419b23a37828139fdf6980d4928c345a",
+      "encounters": [
+        "b418a61e-1dfd-325e-8b93-91c40de004e6"
+      ],
+      "state": null,
+      "generation": 1
+    },
+    {
+      "file": "mods\\InigmasGames_HytaleRPGPhase00Audit\\encounters\\enemy-birth-roots\\f3\\f3e5703fa73451d851f53dbd96f35888a2953071fedbc736b0229c3aab23d3d2.json",
+      "sha256": "552b51a05a4957c5f23a46a5d0f11e78ba90dffb49140d2bd1fb3c120bafaa20",
+      "encounters": [
+        "dba6b29e-b35e-3971-a820-bb78f4d5c47f"
+      ],
+      "state": null,
+      "generation": 1
+    },
+    {
+      "file": "mods\\InigmasGames_HytaleRPGPhase00Audit\\encounters\\enemy-births\\b6\\b6d280070197665d1852b223d7a3abe50e1d2efbc99cdce64fdc659861a3f71b.json",
+      "sha256": "00c35abf75de8c5a9809bc1702b497fa58c7126651b21cc7fbaede3a0c07819e",
+      "encounters": [
+        "2891aefc-43e2-390a-b683-ab5b91f544fb"
+      ],
+      "state": null,
+      "generation": 1
+    },
+    {
+      "file": "mods\\InigmasGames_HytaleRPGPhase00Audit\\encounters\\enemy-births\\e2\\e2173bef09a8e74e35fe84e42b16a094b08776b8b0a69796d1dda43f8330457b.json",
+      "sha256": "649fa39329016509cf1ef39368aa123a13a5b8bd948c70b9ff6738a41c6841b5",
+      "encounters": [
+        "b418a61e-1dfd-325e-8b93-91c40de004e6"
+      ],
+      "state": null,
+      "generation": 1
+    },
+    {
+      "file": "mods\\InigmasGames_HytaleRPGPhase00Audit\\encounters\\enemy-births\\f3\\f3e5703fa73451d851f53dbd96f35888a2953071fedbc736b0229c3aab23d3d2.json",
+      "sha256": "b452ac8acceec8a839bffbf347911fce9e2c459afea5bc096ca6f992bcaaca51",
+      "encounters": [
+        "dba6b29e-b35e-3971-a820-bb78f4d5c47f"
+      ],
+      "state": null,
+      "generation": 1
+    },
+    {
+      "file": "mods\\InigmasGames_HytaleRPGPhase00Audit\\encounters\\enemy-packs\\4f\\4f066a3aadaa5248b7a5d17eee82b6a1ab421c24b90c9d602bcb8c69cffc16a3.json",
+      "sha256": "23608d5dfa408236ac064f838d25ba63da870aaab01ff0e26b2c992ee9bd1d4a",
+      "encounters": [
+        "b418a61e-1dfd-325e-8b93-91c40de004e6"
+      ],
+      "state": "RESERVED",
+      "generation": 1
+    },
+    {
+      "file": "mods\\InigmasGames_HytaleRPGPhase00Audit\\encounters\\enemy-packs\\59\\59b2dd6b5d832c64a30262de6c9907fbe0757a909e370fde3557e8c0796d3652.json",
+      "sha256": "15db113a80f4c98c003462d98b9bd34a8baeb5d4ab97358f8197b5f8415616e3",
+      "encounters": [
+        "2891aefc-43e2-390a-b683-ab5b91f544fb"
+      ],
+      "state": "ABORTED",
+      "generation": 1
+    },
+    {
+      "file": "mods\\InigmasGames_HytaleRPGPhase00Audit\\encounters\\enemy-packs\\f8\\f8f71ee78c3b83b2a5a615cb6eff7e78d21dce80301d5b598b93c67f819066af.json",
+      "sha256": "b1f893c5895a4e3a9eb7056185f58aaccd1032d1882574383a26cb8759555e2d",
+      "encounters": [
+        "dba6b29e-b35e-3971-a820-bb78f4d5c47f"
+      ],
+      "state": "ABORTED",
+      "generation": 1
+    },
+    {
+      "file": "mods\\InigmasGames_HytaleRPGPhase00Audit\\encounters\\enemy-birth-compensations\\b6\\b6d280070197665d1852b223d7a3abe50e1d2efbc99cdce64fdc659861a3f71b.json",
+      "sha256": "695992533ec8a739215f18bc9dcdd2e1cb14108a57da88fbcbb0a1504faa497a",
+      "encounters": [
+        "2891aefc-43e2-390a-b683-ab5b91f544fb"
+      ],
+      "state": null,
+      "generation": 1
+    },
+    {
+      "file": "mods\\InigmasGames_HytaleRPGPhase00Audit\\encounters\\enemy-birth-compensations\\f3\\f3e5703fa73451d851f53dbd96f35888a2953071fedbc736b0229c3aab23d3d2.json",
+      "sha256": "6439a1cd4c993390175f954cada323d2d999f0ed82ec73b0746a3584158e8fbf",
+      "encounters": [
+        "dba6b29e-b35e-3971-a820-bb78f4d5c47f"
+      ],
+      "state": null,
+      "generation": 1
+    }
+  ]
+}

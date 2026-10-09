@@ -123,9 +123,10 @@ public final class NativeEnemyBirthDecision {
                     +(rollback.additional==null?0:rollback.additional.members().size()))return rollback.fallback(
                             result.fallbackReason()==null?"PLAN_ROSTER":result.fallbackReason());
             for(var actor:result.plan().actors())bindings.requireActorRole(actor);
-            var root=new EnemyBirthRoot(result.plan(),sources.get().stream()
-                    .map(EnemyNativeGroupPreparation.MemberSource::spawn).toList());
             var allSources=new ArrayList<>(sources.get());allSources.addAll(additionalSources);
+            var root=new EnemyBirthRoot(result.plan(),sources.get().stream()
+                    .map(EnemyNativeGroupPreparation.MemberSource::spawn).toList(),allSources.stream()
+                    .map(EnemyNativeGroupPreparation.MemberSource::spawn).toList());
             return Optional.of(new Selected(root,original,rollback.additional,role,allSources,rollback.lease));
         }catch(RuntimeException failure){
             if(!rollback.started&&!rollback.failClosed){

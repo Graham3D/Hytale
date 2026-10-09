@@ -56,6 +56,7 @@ public final class NativeEnemyBirthReservation {
             catch(RuntimeException failedRestore){admission.failClosed(birth.world());throw failedRestore;}
             return CompletableFuture.completedStage(Optional.empty());
         }
+        admission.birthSubmitted(birth,selected.original().job().nativeJobId(),selected.original().job().environment(),selected.original().job().nativeRole());
         CompletionStage<EnemyBirthPlan> write;
         try{write=rewards.reserveEnemyBirthRoot(selected.root());}
         catch(RuntimeException synchronousRejection){
@@ -63,33 +64,43 @@ public final class NativeEnemyBirthReservation {
             try{if(!qa)decisions.restore(store,selected);}
             catch(RuntimeException rollback){synchronousRejection.addSuppressed(rollback);admission.failClosed(birth.world());}
             finally{admission.releaseUnsealed(capacity);}
+            if(!admission.failed(birth.world())){
+                admission.birthPhase(birth,"BIRTH_DECLINED",synchronousRejection);
+                return CompletableFuture.completedStage(Optional.empty());
+            }
             throw synchronousRejection;
         }
         var result=new CompletableFuture<Optional<Sealed>>();
+        var lifetime=admission.watch(birth.world(),result);
         var nativeWorld=store.getExternalData().getWorld();
         write.whenComplete((written,error)->{
+            if(!admission.current(birth.world(),lifetime))return;
             if(error!=null||!birth.equals(written)){
-                admission.failClosed(birth.world());
+                admission.failClosed(birth.world(),"ROOT_WRITE",error);
                 result.completeExceptionally(error!=null?error:new IllegalStateException("ENEMY_BIRTH_ROOT_WRITE_MISMATCH"));
                 return;
             }
+            admission.birthPhase(birth,"BIRTH_ROOT_DURABLE",null);
             try{nativeWorld.execute(()->{
+                if(!admission.current(birth.world(),lifetime))return;
                 try{
                     var current=nativeWorld.getEntityStore().getStore();
                     if(!current.isInThread()||!admission.admits(birth.world()))
                         throw new IllegalStateException("ENEMY_BIRTH_ROOT_WORLD_CHANGED");
                     for(var actor:birth.actors()){
                         var ref=current.getExternalData().getRefFromUUID(actor.entityId());
-                        var marker=ref==null||!ref.isValid()?null:current.getComponent(ref,EnemyStaging.getComponentType());
+                        if(ref==null||!ref.isValid())continue; // Root stays reserved; attachment/recovery owns pending LOAD.
+                        var marker=current.getComponent(ref,EnemyStaging.getComponentType());
                         if(marker==null||!marker.state().world().equals(birth.world())
                                 ||!marker.state().encounter().equals(birth.encounter())
                                 ||marker.state().generation()!=birth.generation()
                                 ||!marker.state().entity().equals(actor.entityId()))
                             throw new IllegalStateException("ENEMY_BIRTH_SEALED_ROSTER_CHANGED");
                     }
+                    admission.birthPhase(birth,"BIRTH_SEALED",null);
                     result.complete(Optional.of(new Sealed(selected,capacity)));
-                }catch(RuntimeException failure){admission.failClosed(birth.world());result.completeExceptionally(failure);}
-            });}catch(RuntimeException queueFailure){admission.failClosed(birth.world());result.completeExceptionally(queueFailure);}
+                }catch(RuntimeException failure){admission.failClosed(birth.world(),"RESERVE",failure);result.completeExceptionally(failure);}
+            });}catch(RuntimeException queueFailure){admission.failClosed(birth.world(),"RESERVE",queueFailure);result.completeExceptionally(queueFailure);}
         });
         return result.minimalCompletionStage();
     }

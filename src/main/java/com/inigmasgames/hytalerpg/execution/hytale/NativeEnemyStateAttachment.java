@@ -21,6 +21,9 @@ public final class NativeEnemyStateAttachment {
         return prepare(store,birth,birth.actors(),fresh);
     }
     public Prepared prepare(Store<EntityStore> store,EnemyBirthPlan birth,List<EnemyDescriptor> active,boolean fresh){
+        return prepare(store,birth,active,fresh,false);
+    }
+    public Prepared prepare(Store<EntityStore> store,EnemyBirthPlan birth,List<EnemyDescriptor> active,boolean fresh,boolean unpublishedRecovery){
         if(!store.isInThread()||!store.getExternalData().getWorld().getWorldConfig().getUuid().equals(birth.world())
                 ||birth.pack()==null)throw new IllegalStateException("ENEMY_NATIVE_STATE_WORLD_OR_BIRTH");
         if(active.isEmpty()||active.size()>birth.actors().size()||new HashSet<>(active).size()!=active.size()
@@ -28,6 +31,7 @@ public final class NativeEnemyStateAttachment {
         var candidates=new ArrayList<Candidate>();
         for(var actor:active){
             var ref=store.getExternalData().getRefFromUUID(actor.entityId());
+            if(ref==null||!ref.isValid())throw new NativeBirthAwaitingLoad();
             var staged=ref==null||!ref.isValid()?null:store.getComponent(ref,EnemyStaging.getComponentType());
             var savedClock=ref==null||!ref.isValid()?null:store.getComponent(ref,EnemyEngagementClock.getComponentType());
             var savedShield=ref==null||!ref.isValid()?null:store.getComponent(ref,EnemyShieldProjection.getComponentType());
@@ -39,7 +43,7 @@ public final class NativeEnemyStateAttachment {
             boolean frenzied=actor.own(EnemyAffixRegistry.Operator.FRENZIED).isPresent();
             if(frenzied){
                 if(savedClock!=null&&fresh)throw new IllegalStateException("ENEMY_FRENZIED_FRESH_CLOCK_CONFLICT");
-                if(savedClock==null&&!fresh)throw new IllegalStateException("ENEMY_FRENZIED_SAVED_CLOCK_MISSING");
+                if(savedClock==null&&!fresh&&!unpublishedRecovery)throw new IllegalStateException("ENEMY_FRENZIED_SAVED_CLOCK_MISSING");
                 if(savedClock!=null)savedClock.requireActor(actor);
             }else if(savedClock!=null)throw new IllegalStateException("ENEMY_FRENZIED_FOREIGN_CLOCK");
             var bulwark=actor.own(EnemyAffixRegistry.Operator.BULWARK);
@@ -54,7 +58,7 @@ public final class NativeEnemyStateAttachment {
                 if(!Double.isFinite(capacity)||capacity<=0||capacity>Float.MAX_VALUE)
                     throw new IllegalStateException("ENEMY_BULWARK_CAPACITY_INVALID");
                 if(savedShield!=null&&fresh)throw new IllegalStateException("ENEMY_BULWARK_FRESH_SHIELD_CONFLICT");
-                if(savedShield==null&&!fresh)throw new IllegalStateException("ENEMY_BULWARK_SAVED_SHIELD_MISSING");
+                if(savedShield==null&&!fresh&&!unpublishedRecovery)throw new IllegalStateException("ENEMY_BULWARK_SAVED_SHIELD_MISSING");
                 if(savedShield!=null){var saved=savedShield.snapshot();
                     if(!saved.key().equals(key)||saved.capacity()!=capacity)
                         throw new IllegalStateException("ENEMY_BULWARK_SAVED_DESCRIPTOR_MISMATCH");
@@ -62,7 +66,7 @@ public final class NativeEnemyStateAttachment {
             }else if(savedShield!=null)throw new IllegalStateException("ENEMY_BULWARK_FOREIGN_SHIELD");
             candidates.add(new Candidate(actor,ref,savedClock,savedShield,key,capacity));
         }
-        return new Prepared(store,candidates,fresh);
+        return new Prepared(store,candidates,fresh||unpublishedRecovery);
     }
 
     public final class Prepared implements AutoCloseable {

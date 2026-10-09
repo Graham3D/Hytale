@@ -171,7 +171,7 @@ public final class MonsterSpawnTrace implements AutoCloseable {
             com.inigmasgames.hytalerpg.spawning.NativePopulationRoles.load();
     private static String populationCategory(String role){return POPULATION_ROLES.category(role).name();}
     private static boolean priority(String stage,String detail){
-        return stage.equals("ELITE_PUBLISHED")||stage.equals("PLAYER_LOCAL")||stage.equals("PACK_RESERVATION")||stage.startsWith("PACK_LEASE_")
+        return stage.startsWith("BIRTH_")||stage.equals("WORLD_ELITE_ADMISSION_CLOSED")||stage.equals("ELITE_PUBLISHED")||stage.equals("PLAYER_LOCAL")||stage.equals("PACK_RESERVATION")||stage.startsWith("PACK_LEASE_")
                 ||stage.equals("NATIVE_CLASSIFY_REJECT")
                 ||stage.equals("PACK_REACTIVATED")||stage.equals("PACK_GRANDFATHERED_OVER_CAP")
                 ||stage.equals("PACK_NEW_BIRTH_DENIED")||stage.equals("NATIVE_EXTENSION_REJECTED")

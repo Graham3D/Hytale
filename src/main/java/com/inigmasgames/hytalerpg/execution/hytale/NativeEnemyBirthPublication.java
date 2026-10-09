@@ -31,14 +31,18 @@ public final class NativeEnemyBirthPublication {
         if(!store.isInThread()||!birth.equals(attachment.birth())||!admission.admits(birth.world()))
             throw new IllegalStateException("ENEMY_BIRTH_PUBLISH_WORLD_OR_BIRTH");
         var result=new CompletableFuture<Void>();var nativeWorld=store.getExternalData().getWorld();
+        var lifetime=admission.watch(birth.world(),result);
         try{rewards.transitionEnemyPack(birth.world(),birth.pack().packId(),EnemyPackRecord::staged)
                 .thenCompose(staged->{
                     if(!staged.equals(birth.pack().staged()))
                         throw new IllegalStateException("ENEMY_BIRTH_STAGED_PACK_MISMATCH");
                     return rewards.transitionEnemyPack(birth.world(),birth.pack().packId(),EnemyPackRecord::publish);
                 }).whenComplete((published,error)->{
-                    if(error!=null){admission.failClosed(birth.world());result.completeExceptionally(error);return;}
+                    if(!admission.current(birth.world(),lifetime))return;
+                    if(error!=null){admission.failClosed(birth.world(),"PUBLISH",error);result.completeExceptionally(error);return;}
+                    admission.birthPhase(birth,"BIRTH_PACK_PUBLISHED_DURABLE",null);
                     try{nativeWorld.execute(()->{
+                        if(!admission.current(birth.world(),lifetime))return;
                         try{
                             var current=nativeWorld.getEntityStore().getStore();
                             if(!current.isInThread()||!admission.admits(birth.world())
@@ -46,15 +50,30 @@ public final class NativeEnemyBirthPublication {
                                 throw new IllegalStateException("ENEMY_BIRTH_PUBLISHED_PACK_MISMATCH");
                             finish(current,birth,published,attachment,
                                     selected.sources().stream().map(EnemyNativeGroupPreparation.MemberSource::nativeName).toList(),false);
-                            result.complete(null);
-                        }catch(RuntimeException failure){admission.failClosed(birth.world());result.completeExceptionally(failure);}
-                    });}catch(RuntimeException closing){admission.failClosed(birth.world());result.completeExceptionally(closing);}
-                });}catch(RuntimeException rejected){admission.failClosed(birth.world());result.completeExceptionally(rejected);}
+                            admission.birthPhase(birth,"BIRTH_NATIVE_FINISH",null);
+                            completePublication(current,birth,published,attachment,result,lifetime);
+                        }catch(RuntimeException failure){admission.failClosed(birth.world(),"PUBLISH",failure);result.completeExceptionally(failure);}
+                    });}catch(RuntimeException closing){admission.failClosed(birth.world(),"PUBLISH",closing);result.completeExceptionally(closing);}
+                });}catch(RuntimeException rejected){admission.failClosed(birth.world(),"PUBLISH",rejected);result.completeExceptionally(rejected);}
         return result.minimalCompletionStage();
     }
 
+    private void completePublication(Store<EntityStore> store,EnemyBirthPlan birth,EnemyPackRecord published,
+            NativeEnemyBirthAttachment.Prepared attachment,CompletableFuture<Void> result,Object lifetime){
+        boolean anyLoaded=birth.activeActors(published).stream().anyMatch(actor->{var ref=store.getExternalData().getRefFromUUID(actor.entityId());return ref!=null&&ref.isValid();});
+        if(anyLoaded){attachment.publicationReceipt(published);result.complete(null);return;}
+        rewards.transitionEnemyPack(birth.world(),published.packId(),current->{
+            requireSameRecoveryPack(published,current);
+            return current.state()==EnemyPackRecord.State.SUSPENDED?current:current.suspend();
+        }).whenComplete((suspended,error)->{
+            if(!admission.current(birth.world(),lifetime))return;
+            if(error!=null){admission.failClosed(birth.world(),"PUBLISH_SUSPEND",error);result.completeExceptionally(error);return;}
+            attachment.publicationReceipt(suspended);result.complete(null);
+        });
+    }
+
     /** Finish a saved birth from its current durable state; no rarity, affix or actor is regenerated. */
-    public CompletionStage<Void> publishRecovered(Store<EntityStore> store,EnemyBirthPlan birth,
+    public CompletionStage<EnemyPackRecord> publishRecovered(Store<EntityStore> store,EnemyBirthPlan birth,
             EnemyPackRecord observed,NativeEnemyBirthAttachment.Prepared attachment,
             java.util.function.Predicate<UUID> alreadyBound){
         Objects.requireNonNull(alreadyBound);
@@ -67,7 +86,8 @@ public final class NativeEnemyBirthPublication {
                     &&!attachment.active().equals(birth.activeActors(observed))
                 )
             throw new IllegalStateException("ENEMY_REBIND_PUBLISH_IDENTITY");
-        var nativeWorld=store.getExternalData().getWorld();var result=new CompletableFuture<Void>();
+        var nativeWorld=store.getExternalData().getWorld();var result=new CompletableFuture<EnemyPackRecord>();
+        var lifetime=admission.watch(birth.world(),result);
         try{rewards.transitionEnemyPack(birth.world(),observed.packId(),current->{
             requireSameRecoveryPack(observed,current);
             return current.state()==EnemyPackRecord.State.RESERVED?current.staged():current;
@@ -80,14 +100,17 @@ public final class NativeEnemyBirthPublication {
                 default->throw new IllegalStateException("ENEMY_REBIND_PACK_NOT_PUBLISHABLE");
             };
         })).whenComplete((published,error)->{
-            if(error!=null){admission.failClosed(birth.world());result.completeExceptionally(error);return;}
+            if(!admission.current(birth.world(),lifetime))return;
+            if(error!=null){admission.failClosed(birth.world(),"PUBLISH",error);result.completeExceptionally(error);return;}
             try{nativeWorld.execute(()->{
+                if(!admission.current(birth.world(),lifetime))return;
                 try{
                     var current=nativeWorld.getEntityStore().getStore();
                     var names=new ArrayList<String>();
                     for(var actor:attachment.active()){
                         var ref=current.getExternalData().getRefFromUUID(actor.entityId());
                         var npc=ref==null||!ref.isValid()?null:current.getComponent(ref,NPCEntity.getComponentType());
+                        if(ref==null||!ref.isValid()){names.add("");continue;}
                         if(npc==null)throw new IllegalStateException("ENEMY_REBIND_DISPLAY_NATIVE_MISSING");
                         var name=HytaleDifficultyCombat.nativeDisplayName(current,ref,npc);
                         if(name==null||name.isBlank()||name.startsWith("server.")||name.contains("_"))
@@ -95,10 +118,15 @@ public final class NativeEnemyBirthPublication {
                         names.add(name);
                     }
                     finish(current,birth,published,attachment,names,false);
-                    result.complete(null);
-                }catch(RuntimeException failure){admission.failClosed(birth.world());result.completeExceptionally(failure);}
-            });}catch(RuntimeException closing){admission.failClosed(birth.world());result.completeExceptionally(closing);}
-        });}catch(RuntimeException rejected){admission.failClosed(birth.world());result.completeExceptionally(rejected);}
+                    var completion=new CompletableFuture<Void>();
+                    completion.whenComplete((ignored,completionError)->{
+                        if(completionError!=null)result.completeExceptionally(completionError);
+                        else result.complete(attachment.publicationReceipt());
+                    });
+                    completePublication(current,birth,published,attachment,completion,lifetime);
+                }catch(RuntimeException failure){admission.failClosed(birth.world(),"PUBLISH",failure);result.completeExceptionally(failure);}
+            });}catch(RuntimeException closing){admission.failClosed(birth.world(),"PUBLISH",closing);result.completeExceptionally(closing);}
+        });}catch(RuntimeException rejected){admission.failClosed(birth.world(),"PUBLISH",rejected);result.completeExceptionally(rejected);}
         return result.minimalCompletionStage();
     }
 
@@ -129,10 +157,13 @@ public final class NativeEnemyBirthPublication {
                 ||names.size()!=actors.size()
                 ||pack.state()!=EnemyPackRecord.State.GUARDED&&pack.state()!=EnemyPackRecord.State.RELEASED)
             throw new IllegalStateException("ENEMY_BIRTH_PUBLISH_ACTIVE_ROSTER");
-        var staged=new ArrayList<EnemyStaging.State>();var displays=new ArrayList<Display>();
+        var staged=new LinkedHashMap<UUID,EnemyStaging.State>();var displays=new ArrayList<Display>();
         for(var actor:actors){
             var ref=store.getExternalData().getRefFromUUID(actor.entityId());
-            var marker=ref==null||!ref.isValid()?null:store.getComponent(ref,EnemyStaging.getComponentType());
+            // A completed durable publish owns unloaded actors too. Their saved staging/identity
+            // is reconciled on LOAD; only still-loaded members need native release now.
+            if(ref==null||!ref.isValid())continue;
+            var marker=store.getComponent(ref,EnemyStaging.getComponentType());
             var npc=ref==null||!ref.isValid()?null:store.getComponent(ref,NPCEntity.getComponentType());
             var identity=ref==null||!ref.isValid()?null:store.getComponent(ref,EnemyActorIdentity.getComponentType());
             var projected=combat.enemyState(birth.world(),actor.entityId()).orElse(null);
@@ -146,13 +177,14 @@ public final class NativeEnemyBirthPublication {
                     ||!npc.getRoleName().equals(actor.nativeRoleId()))
                 throw new IllegalStateException("ENEMY_BIRTH_PUBLISH_ROSTER_CHANGED");
             nativeBindings.requireActorRole(actor);
-            staged.add(marker.state());
+            staged.put(actor.entityId(),marker.state());
         }
         attachment.published(); // Saved clock and shield must survive an interrupted presentation/release.
         combat.refreshEnemyPack(store,pack);
         for(int i=0;i<actors.size();i++){
-            var actor=actors.get(i);var state=combat.enemyState(birth.world(),actor.entityId()).orElseThrow();
-            var ref=store.getExternalData().getRefFromUUID(actor.entityId());var marker=staged.get(i);
+            var actor=actors.get(i);if(!staged.containsKey(actor.entityId()))continue;
+            var state=combat.enemyState(birth.world(),actor.entityId()).orElseThrow();
+            var ref=store.getExternalData().getRefFromUUID(actor.entityId());var marker=staged.get(actor.entityId());
             var npc=store.getComponent(ref,NPCEntity.getComponentType());
             var nativeStatuses=new TreeSet<String>();
             var actorRole=nativeBindings.requireActorRole(actor);
@@ -185,6 +217,6 @@ public final class NativeEnemyBirthPublication {
             }
             combat.publishEnemyDisplay(store,display.actor(),display.dto(),true);
         }
-        EnemyStaging.releaseGroup(store,staged);
+        if(!staged.isEmpty())EnemyStaging.releaseGroup(store,List.copyOf(staged.values()));
     }
 }

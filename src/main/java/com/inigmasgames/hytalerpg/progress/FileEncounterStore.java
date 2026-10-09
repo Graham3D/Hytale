@@ -957,6 +957,13 @@ public final class FileEncounterStore implements AutoCloseable {
     }
     private static boolean matchesPersistedShape(JsonElement persisted,JsonElement current,Class<?> type){
         if(current.equals(persisted))return true;
+        // R245 freezes every attachment source. Older roots omit the additive empty list.
+        // Verify the original checksum first, then accept only this exact missing-field shape.
+        if(type==com.inigmasgames.hytalerpg.enemies.EnemyBirthRoot.class&&persisted.isJsonObject()&&current.isJsonObject()
+                &&!persisted.getAsJsonObject().has("attachmentSpawns")){
+            var expected=persisted.getAsJsonObject().deepCopy();expected.add("attachmentSpawns",new JsonArray());
+            return current.equals(expected);
+        }
         // The v1/v2 Sentinel ledger predates the frozen owner equipment snapshot.
         // Its canonical constructor supplies an empty ownerItems list. Accept only
         // that one additive default after verifying the original payload checksum.

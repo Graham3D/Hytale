@@ -94,6 +94,7 @@ tasks.withType(JavaCompile).configureEach {
 tasks.test {
     useJUnitPlatform()
     exclude '**/R244NamesTest*'
+    exclude '**/R245FlockRollbackTest*'
     exclude '**/R244PopulationProjectionTest*'
     ['NativeAffix*Test', 'ManagedCarrierProductionTest', 'GearCombatProductionTest',
      'GearSignatureProcRuntimeTest', 'NativeGearActionProfilesTest', 'NativeTwinAssaultTest',
@@ -144,6 +145,7 @@ tasks.register('nativeControlTest', Test) {
     classpath = sourceSets.test.runtimeClasspath
     useJUnitPlatform()
     include '**/R244NamesTest.class'
+    include '**/R245FlockRollbackTest.class'
     include '**/R244PopulationProjectionTest.class'
     // Include native test classes before forking, avoiding empty worker JVMs.
         ['NativeAffix*Test', 'ManagedCarrierProductionTest', 'GearCombatProductionTest',

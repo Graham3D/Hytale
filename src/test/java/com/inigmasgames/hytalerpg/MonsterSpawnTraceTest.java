@@ -10,6 +10,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MonsterSpawnTraceTest {
     @TempDir Path temp;
+    @Test void birthStagesAndQuarantineRemainVisibleAfterTenThousandOrdinaryEvents() throws Exception {
+        var world=UUID.randomUUID();var encounter=UUID.randomUUID();
+        var phases=java.util.List.of("BIRTH_ROOT_SUBMITTED","BIRTH_ROOT_DURABLE","BIRTH_SEALED","BIRTH_ATTACHMENT_READY",
+                "BIRTH_PACK_PUBLISHED_DURABLE","BIRTH_NATIVE_FINISH","PACK_LEASE_ACTIVATED","ELITE_PUBLISHED",
+                "BIRTH_COMPENSATED","BIRTH_UNCERTAIN","WORLD_ELITE_ADMISSION_CLOSED");
+        try(var trace=new MonsterSpawnTrace(temp)){
+            trace.start();for(int i=0;i<10020;i++)MonsterSpawnTrace.event("NATIVE_JOB_CREATED",world,1,"Bear_Polar","job="+i);
+            for(var phase:phases)MonsterSpawnTrace.event(phase,world,1,"Bear_Polar","job=511 encounter="+encounter+" phase="+phase+" reason=fixture");
+            var file=trace.stop().lastFile();var text=Files.readString(Path.of(file));
+            for(var phase:phases)assertTrue(text.contains("\"stage\":\""+phase+"\""),phase);
+            assertTrue(text.contains(encounter.toString()));
+        }
+    }
     @Test void boundedDetailsPreserveAggregateCountsAndNativeJobIdentity() throws Exception {
         var world=UUID.randomUUID();
         try(var trace=new MonsterSpawnTrace(temp)){

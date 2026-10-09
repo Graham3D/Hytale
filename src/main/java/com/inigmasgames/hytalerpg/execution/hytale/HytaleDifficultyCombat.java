@@ -344,7 +344,8 @@ public final class HytaleDifficultyCombat {
         if(stats==null)throw new IllegalStateException("DIFFICULTY_NATIVE_HEALTH_MISSING");
         var healthProjection=store.getComponent(ref,DifficultyHealthProjection.getComponentType());
         double savedHealth=healthProjection==null?Double.NaN:healthProjection.healthFor(spawn);
-        projectHealth(stats,spawn.combat(),providers,fresh);
+        if(npc.getRole()==null)throw new IllegalStateException("DIFFICULTY_NATIVE_ROLE_MISSING");
+        projectHealth(stats,spawn.combat(),providers,fresh,npc.getRole().getInitialMaxHealth());
         if(!fresh&&Double.isFinite(savedHealth))stats.setStatValue(DefaultEntityStatTypes.getHealth(),(float)Math.min(savedHealth,stats.get(DefaultEntityStatTypes.getHealth()).getMax()));
         if(healthProjection==null){
             healthProjection=new DifficultyHealthProjection(world,enemy,spawn.registryProfile(),stats.get(DefaultEntityStatTypes.getHealth()).get());
@@ -392,6 +393,14 @@ public final class HytaleDifficultyCombat {
     /** Compose ME into the existing difficulty modifier, not another modifier or Health store. */
     public static void projectHealth(EntityStatMap stats,EncounterProfileResolver.Resolved profile,
             com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshot providers,boolean fresh){
+        projectHealth(stats,profile,providers,fresh,profile.nativeHealthBaseline());
+    }
+    /** The frozen profile is the target, not evidence of the SDK's resolved variant chassis.
+     * Validate the actual Role baseline so unrelated modifiers still fail closed. */
+    public static void projectHealth(EntityStatMap stats,EncounterProfileResolver.Resolved profile,
+            com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshot providers,boolean fresh,double nativeBaseline){
+        if(!Double.isFinite(nativeBaseline)||nativeBaseline<=0)
+            throw new IllegalStateException("DIFFICULTY_NATIVE_ROLE_BASELINE_INVALID");
         double resolvedMaximum=providers==null?profile.maxHealth():providers.projectedMaximumHealth(profile.maxHealth());
         int index=DefaultEntityStatTypes.getHealth();var hp=stats.get(index);
         if(hp==null)throw new IllegalStateException("DIFFICULTY_NATIVE_HEALTH_MISSING");
@@ -399,8 +408,8 @@ public final class HytaleDifficultyCombat {
         if(old!=null&&(!(old instanceof StaticModifier m)||m.getTarget()!=Modifier.ModifierTarget.MAX||m.getCalculationType()!=StaticModifier.CalculationType.ADDITIVE))
             throw new IllegalStateException("DIFFICULTY_MODIFIER_OWNERSHIP_CONFLICT");
         double prior=old==null?0:((StaticModifier)old).getAmount();
-        if(Math.abs(maximum-prior-profile.nativeHealthBaseline())>.02)throw new IllegalStateException("DIFFICULTY_NATIVE_BASELINE_MISMATCH:"+maximum+":"+profile.nativeHealthBaseline());
-        float addition=(float)(resolvedMaximum-profile.nativeHealthBaseline());
+        if(Math.abs(maximum-prior-nativeBaseline)>.02)throw new IllegalStateException("DIFFICULTY_NATIVE_BASELINE_MISMATCH:"+maximum+":"+nativeBaseline);
+        float addition=(float)(resolvedMaximum-nativeBaseline);
         if(addition!=0||old!=null){stats.putModifier(index,HEALTH_KEY,new StaticModifier(Modifier.ModifierTarget.MAX,StaticModifier.CalculationType.ADDITIVE,addition));stats.update();}
         // Only an untouched new spawn may start full. Reload/reapply never restores a wound.
         stats.setStatValue(index,fresh&&old==null&&before>=maximum?(float)resolvedMaximum:Math.min(before,hp.getMax()));

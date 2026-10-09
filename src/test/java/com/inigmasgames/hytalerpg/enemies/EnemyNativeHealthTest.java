@@ -78,6 +78,27 @@ class EnemyNativeHealthTest {
         var clone=stats.clone();HytaleDifficultyCombat.projectHealth(clone,profile,providers(2.4,0),false);
         assertEquals(72,clone.get(health).get(),.001);assertEquals(480,clone.get(health).getMax(),.001);
     }
+    @Test void resolvedNativeVariantBaselineUsesFrozenTargetWithoutRelaxingForeignModifierGuard(){
+        int health=DefaultEntityStatTypes.getHealth();
+        for(double[] pair:List.of(new double[]{36,74},new double[]{124,103})){
+            var stats=stats();
+            stats.putModifier(health,"NPC_Max",new StaticModifier(com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier.ModifierTarget.MAX,
+                    StaticModifier.CalculationType.ADDITIVE,(float)(pair[0]-100)));
+            stats.update();stats.maximizeStatValue(health);
+            var base=profile();var target=new EncounterProfileResolver.Resolved(base.worldId(),base.enemyId(),base.difficulty(),base.profileId(),
+                    base.worldProfileId(),base.roleId(),base.biomeKey(),base.sourceCombatLevel(),pair[1]*2,base.attackBasis(),2,1,
+                    base.resistance(),base.evidence());
+            assertThrows(IllegalStateException.class,()->HytaleDifficultyCombat.projectHealth(stats,target,providers(2.4,0),true));
+            HytaleDifficultyCombat.projectHealth(stats,target,providers(2.4,0),true,pair[0]);
+            assertEquals(pair[1]*4.8,stats.get(health).getMax(),.001);
+            stats.subtractStatValue(health,13);float wounded=stats.get(health).get();
+            for(int replay=0;replay<3;replay++)HytaleDifficultyCombat.projectHealth(stats,target,providers(2.4,0),false,pair[0]);
+            assertEquals(wounded,stats.get(health).get(),.001);
+            stats.putModifier(health,"foreign",new StaticModifier(com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier.ModifierTarget.MAX,
+                    StaticModifier.CalculationType.ADDITIVE,17));stats.update();
+            assertThrows(IllegalStateException.class,()->HytaleDifficultyCombat.projectHealth(stats,target,providers(2.4,0),false,pair[0]));
+        }
+    }
     @Test void unrelatedBaselineIsRejectedAndOrdinaryDifficultyRetainsItsProjection(){
         var stats=stats();var profile=profile();int health=DefaultEntityStatTypes.getHealth();
         HytaleDifficultyCombat.projectHealth(stats,profile,true);assertEquals(200,stats.get(health).get(),.001);

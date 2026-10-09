@@ -49,6 +49,8 @@ public final class RpgWorldConfigCommand extends AbstractAsyncCommand {
                     active.enemyBalance().revision(),config.path())));
             for(var world:com.hypixel.hytale.server.core.universe.Universe.get().getWorlds().values()){
                 var packStatus=packs.status(world.getWorldConfig().getUuid());var leases=packStatus.leases();
+                context.sendMessage(Message.raw(world.getName()+" Elite admission: "+(packStatus.admissionOpen()?"open":"closed")
+                        +"; pending birth transactions "+packStatus.pendingTransactions()+"; oldest "+packStatus.oldestPendingMillis()+" ms."));
                 context.sendMessage(Message.raw(String.format(Locale.ROOT,
                         "%s (%s) Elite packs: active %d, pending %d, dormant %d, historical QA %d, limit %d, cell limit %d, over-cap %d; cells %s; denied world %d / cell %d",
                         world.getName(),world.getWorldConfig().getUuid(),leases.loadedActiveProductionPacks(),leases.pendingNewBirths(),

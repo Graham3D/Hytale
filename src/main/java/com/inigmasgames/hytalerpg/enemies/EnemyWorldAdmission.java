@@ -77,7 +77,41 @@ public final class EnemyWorldAdmission {
     public synchronized boolean admits(UUID world){return !failed.contains(world)&&rebound.contains(world)&&recovered.containsKey(world);}
     /** Read-only diagnostics: only loaded production packs and pending natural births. */
     public synchronized int activePackReservations(UUID world){return capacity.count(world);}
-    public record Status(EnemyPackCapacity.Snapshot leases,int dormantNonterminalProductionPacks,int qaExcludedRecords){}
+    private record Pending(EnemyBirthPlan birth,long job,int environment,String role,long started,String phase,long sequence){}
+    private final Map<UUID,Map<UUID,Pending>> transactions=new HashMap<>();
+    private final Map<UUID,Set<CompletableFuture<?>>> callbacks=new HashMap<>();
+    /** The existing recovery stage is also the world lifetime token; never reuse it across unload. */
+    public synchronized Object lifetime(UUID world){return loading.get(world);}
+    public synchronized boolean current(UUID world,Object token){return token!=null&&loading.get(world)==token;}
+    public synchronized Object watch(UUID world,CompletableFuture<?> result){
+        Object token=lifetime(world);
+        if(token==null){result.completeExceptionally(new IllegalStateException("ENEMY_BIRTH_WORLD_UNLOADED"));return null;}
+        var set=callbacks.computeIfAbsent(world,k->new HashSet<>());set.add(result);
+        result.whenComplete((v,e)->{synchronized(this){set.remove(result);}});
+        return token;
+    }
+    public synchronized void birthSubmitted(EnemyBirthPlan birth,long job,int environment,String role){
+        var pending=transactions.computeIfAbsent(birth.world(),k->new HashMap<>());
+        if(pending.size()>=4096||pending.containsKey(birth.encounter()))throw new IllegalStateException("ENEMY_BIRTH_TRANSACTION_DUPLICATE_OR_LIMIT");
+        pending.put(birth.encounter(),new Pending(birth,job,environment,role,System.nanoTime(),"SELECTED",0));
+        birthPhase(birth,"BIRTH_ROOT_SUBMITTED",null);
+    }
+    public synchronized void birthPhase(EnemyBirthPlan birth,String phase,Throwable error){
+        var map=transactions.get(birth.world());var old=map==null?null:map.get(birth.encounter());
+        if(old==null)return;
+        if(!old.birth().equals(birth))throw new IllegalStateException("ENEMY_BIRTH_TRANSACTION_IDENTITY");
+        Throwable cause=error;while(cause!=null&&cause.getCause()!=null)cause=cause.getCause();
+        String reason=cause==null?"none":cause.getClass().getSimpleName()+":"+String.valueOf(cause.getMessage()).replace(' ','_');
+        MonsterSpawnTrace.event(phase,birth.world(),old.environment(),old.role(),
+                "job="+old.job()+" encounter="+birth.encounter()+" generation="+birth.generation()
+                +" members="+birth.actors().size()+" phase="+phase+" oldState="+old.phase()+" newState="+phase
+                +" sequence="+(old.sequence()+1)+" durableIdentity="+birth.seed()+" pack="+birth.pack().packId()
+                +" admission="+admits(birth.world())+" reason="+reason);
+        if(phase.equals("ELITE_PUBLISHED")||phase.equals("BIRTH_COMPENSATED")||phase.equals("BIRTH_DECLINED"))map.remove(birth.encounter());
+        else map.put(birth.encounter(),new Pending(birth,old.job(),old.environment(),old.role(),old.started(),phase,old.sequence()+1));
+    }
+    public record Status(EnemyPackCapacity.Snapshot leases,int dormantNonterminalProductionPacks,int qaExcludedRecords,
+                         boolean admissionOpen,int pendingTransactions,long oldestPendingMillis){}
     public synchronized Status status(UUID world){
         int dormant=0,qa=0;
         for(var known:catalog.getOrDefault(world,Map.of()).values()){
@@ -86,11 +120,22 @@ public final class EnemyWorldAdmission {
             if(state!=EnemyPackRecord.State.DEFEATED&&state!=EnemyPackRecord.State.ABORTED
                     &&!capacity.contains(EnemyPackCapacity.Reservation.of(known.pack())))dormant++;
         }
-        return new Status(capacity.metrics(world),dormant,qa);
+        var pending=transactions.getOrDefault(world,Map.of());
+        long now=System.nanoTime(),age=pending.values().stream().mapToLong(p->Math.max(0,(now-p.started())/1_000_000)).max().orElse(0);
+        return new Status(capacity.metrics(world),dormant,qa,admits(world),pending.size(),age);
     }
     public synchronized boolean failed(UUID world){return failed.contains(world);}
     /** An uncertain writer result cannot be retried or treated as an ordinary spawn in this process. */
-    public synchronized void failClosed(UUID world){Objects.requireNonNull(world);failed.add(world);rebound.remove(world);}
+    public synchronized void failClosed(UUID world){failClosed(world,"UNSPECIFIED_BOUNDARY",null);}
+    public synchronized void failClosed(UUID world,String phase,Throwable error){
+        Objects.requireNonNull(world);boolean wasOpen=admits(world);failed.add(world);rebound.remove(world);
+        var pending=List.copyOf(transactions.getOrDefault(world,Map.of()).values());
+        for(var p:pending)birthPhase(p.birth(),"BIRTH_UNCERTAIN",error);
+        MonsterSpawnTrace.event("WORLD_ELITE_ADMISSION_CLOSED",world,-1,"all",
+                "phase="+phase+" admissionBefore="+wasOpen+" admissionAfter=false pending="+pending.size()
+                +" encounters="+pending.stream().map(p->p.birth().encounter()).toList()
+                +" reason="+(error==null?phase:error.toString().replace(' ','_')));
+    }
     public synchronized Optional<FileEncounterStore.EnemyWorldInventory> inventory(UUID world){return Optional.ofNullable(recovered.get(world));}
     /** The pack decision reserves through the existing capacity index only after world recovery/rebind. */
     public synchronized EnemyPackCapacity.Admission reserve(EnemyPackCapacity.Reservation reservation){
@@ -178,7 +223,10 @@ public final class EnemyWorldAdmission {
     }
     public synchronized void worldUnload(UUID world){
         capacity.unload(world);catalog.remove(world);recovered.remove(world);rebound.remove(world);failed.remove(world);
-        loading.remove(world);
+        loading.remove(world);transactions.remove(world);
+        var waiting=callbacks.remove(world);
+        if(waiting!=null)for(var result:List.copyOf(waiting))
+            result.completeExceptionally(new IllegalStateException("ENEMY_BIRTH_WORLD_UNLOADED"));
     }
     private void trace(String stage,EnemyPackCapacity.Reservation reservation,UUID actor,String detail,int before){
         MonsterSpawnTrace.event(stage,reservation.world(),-1,"all", "encounter="+reservation.encounter()

@@ -146,11 +146,15 @@ public final class NativeEnemyWholeBirthRecovery extends RefSystem<EntityStore> 
             var ref=store.getExternalData().getRefFromUUID(actor.entityId());
             var marker=ref==null||!ref.isValid()?null:store.getComponent(ref,EnemyStaging.getComponentType());
             var saved=ref==null||!ref.isValid()?null:store.getComponent(ref,EnemyActorIdentity.getComponentType());
+            if(whole&&marker!=null&&saved==null&&validStagingProvenance(birth,actor,marker.state(),null)){
+                saved=new EnemyActorIdentity(EnemyActorIdentity.State.of(actor));
+                store.addComponent(ref,EnemyActorIdentity.getComponentType(),saved);
+            }
             if(marker==null||saved==null||!saved.state().equals(EnemyActorIdentity.State.of(actor))){
                 loading.remove(key);if(whole)groups.remove(groupKey);return; // Another LOAD may complete the group.
             }
         }
-        try{attachment.prepareRecovered(store,birth,pack,actors).whenComplete((prepared,error)->
+        try{(whole?attachment.prepareUnpublished(store,sealed.root(),pack):attachment.prepareRecovered(store,birth,pack,actors)).whenComplete((prepared,error)->
                 onWorld(world,identity.world(),()->{
                     if(error!=null){loading.remove(key);if(whole)groups.remove(groupKey);failed(identity.world(),"ATTACH",error);return;}
                     try{prepared.activate(hit->{},rejected->failed(identity.world(),"ACTION",rejected));}
@@ -159,7 +163,7 @@ public final class NativeEnemyWholeBirthRecovery extends RefSystem<EntityStore> 
                         loading.remove(key);if(whole)groups.remove(groupKey);failed(identity.world(),"ACTIVATE",rejected);return;
                     }
                     try{publication.publishRecovered(world.getEntityStore().getStore(),birth,pack,prepared,owner::bound)
-                            .whenComplete((ignored,publishError)->onWorld(world,identity.world(),()->{
+                            .whenComplete((publishedPack,publishError)->onWorld(world,identity.world(),()->{
                                 loading.remove(key);if(whole)groups.remove(groupKey);
                                 if(publishError!=null){
                                     try{owner.stagePrepared(world.getEntityStore().getStore(),prepared);}
@@ -168,7 +172,7 @@ public final class NativeEnemyWholeBirthRecovery extends RefSystem<EntityStore> 
                                     failed(identity.world(),"PUBLISH",publishError);return;
                                 }
                                 try{
-                                    owner.registerPublished(world.getEntityStore().getStore(),prepared,pack);
+                                    owner.registerPublished(world.getEntityStore().getStore(),prepared,publishedPack);
                                     published.accept(world);
                                 }
                                 catch(RuntimeException lifetimeFailure){
@@ -188,17 +192,24 @@ public final class NativeEnemyWholeBirthRecovery extends RefSystem<EntityStore> 
         catch(RuntimeException rejected){loading.remove(key);if(whole)groups.remove(groupKey);failed(identity.world(),"ATTACH",rejected);}
     }
     private void onWorld(World world,UUID id,Runnable action){
+        var lifetime=admission.lifetime(id);
         var guarded=new Runnable(){@Override public void run(){
+            if(!admission.current(id,lifetime)||com.hypixel.hytale.server.core.universe.Universe.get().getWorld(id)!=world)return;
             try{action.run();}catch(RuntimeException|Error error){failed(id,"WORLD_CALLBACK",error);}
         }};
         try{if(world.getEntityStore().getStore().isInThread())guarded.run();else world.execute(guarded);}
         catch(RuntimeException closing){
+            if(!admission.current(id,lifetime)||com.hypixel.hytale.server.core.universe.Universe.get().getWorld(id)!=world)return;
             loading.removeIf(key->key.world().equals(id));
             groups.removeIf(key->key.world().equals(id));
             failed(id,"WORLD_QUEUE",closing);
         }
     }
     private void failed(UUID world,String phase,Throwable error){
+        Throwable root=error;while(root.getCause()!=null)root=root.getCause();
+        if(root instanceof NativeBirthAwaitingLoad){
+            loading.removeIf(key->key.world().equals(world));groups.removeIf(key->key.world().equals(world));return;
+        }
         loading.removeIf(key->key.world().equals(world));
         groups.removeIf(key->key.world().equals(world));
         owner.fail(world,"REBIND_"+phase,error);

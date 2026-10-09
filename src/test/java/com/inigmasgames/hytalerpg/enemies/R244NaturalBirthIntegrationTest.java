@@ -26,8 +26,8 @@ class R244NaturalBirthIntegrationTest {
         String biome=CampaignBiomes.current().biomes().stream().filter(b->b.key().contains("Zone3")
                 &&b.sources().stream().anyMatch(s->s.asset().contains("/Custom."))).findFirst().orElseThrow().key();
         var planner=new EnemyBirthPlanner(balance,EnemyAffixRegistry.canonical(),EnemyAffinityRegistry.canonical(),EnemyNamePools.canonical(),EnemyVisualVariants.canonical());
-        for(var roleList:List.of(List.of("Skeleton_Frost_Fighter","Skeleton_Frost_Soldier"),List.of("Bear_Grizzly"))){
-            String role=roleList.getFirst();var encounter=id("r244/"+role);
+        for(var desired:List.of(EnemyRarity.UNIQUE,EnemyRarity.CHAMPION))for(var roleList:List.of(List.of("Skeleton_Frost_Fighter","Skeleton_Frost_Soldier"),List.of("Bear_Grizzly"))){
+            String role=roleList.getFirst();var encounter=id("r244/"+role+"/"+desired);
             var reservation=new NativeEnemySpawnGroups.Reservation(world,encounter,1);
             var members=new ArrayList<NativeEnemySpawnGroups.Member>();var sources=new ArrayList<EnemyNativeGroupPreparation.MemberSource>();
             for(int i=0;i<roleList.size();i++){
@@ -44,9 +44,9 @@ class R244NaturalBirthIntegrationTest {
                 var candidate=EnemyNativeGroupPreparation.prepare(group,sources,bindings::role,new Vec3(-65,70,63),balance,bindings.revision(),true).orElseThrow();
                 var rarity=planner.rarity(candidate.seed(),DifficultyId.NORMAL);
                 if(rarity==EnemyRarity.NORMAL)sawOrdinary=true;
-                if(sawOrdinary&&rarity==EnemyRarity.UNIQUE){captured=group;request=candidate;break;}
+                if(sawOrdinary&&rarity==desired){captured=group;request=candidate;break;}
             }
-            assertNotNull(request);var seed=request.seed();int needed=planner.additionalUniqueMembers(request).orElseThrow();
+            assertNotNull(request);var seed=request.seed();int needed=(desired==EnemyRarity.UNIQUE?planner.additionalUniqueMembers(request):planner.additionalChampionMembers(request)).orElseThrow();
             var allSources=new ArrayList<>(sources);
             if(needed>0){
                 var extras=new ArrayList<NativeEnemySpawnGroups.Member>();var extraSources=new ArrayList<EnemyNativeGroupPreparation.MemberSource>();
@@ -65,7 +65,7 @@ class R244NaturalBirthIntegrationTest {
             var capacity=new EnemyPackCapacity(balance);var gate=new EnemyWorldAdmission(w->CompletableFuture.completedFuture(new FileEncounterStore.EnemyWorldInventory(List.of(),List.of())),capacity);
             gate.begin(world).toCompletableFuture().join();assertTrue(gate.reserve(EnemyPackCapacity.Reservation.of(birth.pack())).accepted());
             var root=new EnemyBirthRoot(birth,sources.stream().map(EnemyNativeGroupPreparation.MemberSource::spawn).toList());
-            var path=directory.resolve(role);
+            var path=directory.resolve(role+"-"+desired);
             try(var store=new FileEncounterStore(path)){
                 assertEquals(birth,store.reserveEnemyBirthRoot(root));assertEquals(birth,store.reserveEnemyBirthRoot(root));
                 store.transitionEnemyPack(world,birth.pack().packId(),EnemyPackRecord::staged);

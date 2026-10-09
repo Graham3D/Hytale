@@ -25,7 +25,7 @@ public final class NativeEnemyBirthAttachment {
     public CompletionStage<Prepared> prepare(Store<EntityStore> store,NativeEnemyBirthReservation.Sealed sealed){
         var birth=sealed.selected().root().plan();
         var balance=EnemyBalance.forRevision(birth.actors().getFirst().balanceRevision());
-        return prepare(store,birth,birth.actors(),true,false,null,
+        return prepare(store,birth,birth.actors(),true,false,false,null,
                 ()->rewards.attachStagedGroup(store,sealed.selected(),balance,nativeBindings));
     }
     /** Rebuild the same runtime owners from saved native Health and the current durable pack. */
@@ -37,40 +37,55 @@ public final class NativeEnemyBirthAttachment {
             EnemyPackRecord pack,List<EnemyDescriptor> requested){
         var active=birth.activeSubset(pack,requested);
         var balance=EnemyBalance.forRevision(birth.actors().getFirst().balanceRevision());
-        return prepare(store,birth,active,false,false,null,
+        return prepare(store,birth,active,false,false,false,null,
                 ()->rewards.reattachStagedEnemyGroup(store,birth,pack,balance,nativeBindings,active));
+    }
+    /** Root already committed, but publication has never committed. Reuse frozen sources and initialize only absent state. */
+    public CompletionStage<Prepared> prepareUnpublished(Store<EntityStore> store,EnemyBirthRoot root,EnemyPackRecord pack){
+        var birth=root.plan();
+        if(pack.state()!=EnemyPackRecord.State.RESERVED&&pack.state()!=EnemyPackRecord.State.STAGED)
+            throw new IllegalArgumentException("ENEMY_REBIND_NOT_UNPUBLISHED");
+        var balance=EnemyBalance.forRevision(birth.actors().getFirst().balanceRevision());
+        return prepare(store,birth,birth.activeActors(pack),false,false,true,null,()->{
+            var sources=birth.actors().stream().map(a->new EnemyNativeGroupPreparation.MemberSource(root.attachmentSpawn(a),a.nativeRoleId().replace('_',' '))).toList();
+            return rewards.attachFrozenBirthGroup(store,birth,sources,balance,nativeBindings);
+        });
     }
     /** QA consumes already-bound native Health/pack state without a durable encounter transaction. */
     public CompletionStage<Prepared> prepareQa(Store<EntityStore> store,EnemyBirthPlan birth,
             java.util.function.BiFunction<EnemyDescriptor,Integer,CompletionStage<com.inigmasgames.hytalerpg.progress.FileEncounterStore.EnemyActionRootBlock>> roots){
         if(birth.actors().stream().anyMatch(actor->actor.spawnOrigin()!=EnemyRewardContext.Origin.QA))
             throw new IllegalArgumentException("QA_ATTACHMENT_PROVENANCE");
-        return prepare(store,birth,birth.actors(),true,true,Objects.requireNonNull(roots),
+        return prepare(store,birth,birth.actors(),true,true,false,Objects.requireNonNull(roots),
                 ()->CompletableFuture.completedStage(null));
     }
     private CompletionStage<Prepared> prepare(Store<EntityStore> store,EnemyBirthPlan birth,List<EnemyDescriptor> active,
-            boolean fresh,boolean qa,
+            boolean fresh,boolean qa,boolean unpublishedRecovery,
             java.util.function.BiFunction<EnemyDescriptor,Integer,CompletionStage<com.inigmasgames.hytalerpg.progress.FileEncounterStore.EnemyActionRootBlock>> roots,
             Supplier<CompletionStage<Void>> bind){
         if(!store.isInThread())throw new IllegalStateException("ENEMY_BIRTH_ATTACH_WORLD_THREAD");
         var nativeWorld=store.getExternalData().getWorld();var result=new CompletableFuture<Prepared>();
+        var lifetime=qa?null:rewards.watchBirth(birth.world(),result);
         try{bind.get().whenComplete((ignored,error)->{
             if(error!=null){result.completeExceptionally(error);return;}
             try{nativeWorld.execute(()->{
+                if(!qa&&!rewards.birthCurrent(birth.world(),lifetime))return;
                 NativeEnemyStateAttachment.Prepared saved=null;
                 try{
                     var current=nativeWorld.getEntityStore().getStore();
-                    saved=state.prepare(current,birth,active,fresh);saved.attach();
+                    saved=state.prepare(current,birth,active,fresh,unpublishedRecovery);saved.attach();
                     var preparedState=saved;
                     (qa?actions.prepareQa(current,birth,roots):actions.prepare(current,birth,active)).whenComplete((prepared,actionError)->{
+                        if(!qa&&!rewards.birthCurrent(birth.world(),lifetime))return;
                         if(actionError!=null){
                             try{nativeWorld.execute(()->{
+                                if(!qa&&!rewards.birthCurrent(birth.world(),lifetime))return;
                                 try{preparedState.close();}catch(RuntimeException cleanup){actionError.addSuppressed(cleanup);}
                                 result.completeExceptionally(actionError);
                             });}catch(RuntimeException closing){actionError.addSuppressed(closing);result.completeExceptionally(actionError);}
                             return;
                         }
-                        try{nativeWorld.execute(()->result.complete(new Prepared(current,birth,active,preparedState,prepared)));}
+                        try{nativeWorld.execute(()->{if(qa||rewards.birthCurrent(birth.world(),lifetime))result.complete(new Prepared(current,birth,active,preparedState,prepared));});}
                         catch(RuntimeException closing){
                             // A committed root/lease remains spent; world rebind is required after queue failure.
                             result.completeExceptionally(closing);
@@ -91,6 +106,11 @@ public final class NativeEnemyBirthAttachment {
         private final NativeEnemyActionAttachment.Prepared action;
         private final Set<UUID> retired=new HashSet<>();
         private boolean active,closed;
+        private volatile EnemyPackRecord publicationReceipt;
+        void publicationReceipt(EnemyPackRecord receipt){
+            birth.activeActors(receipt);publicationReceipt=receipt;
+        }
+        EnemyPackRecord publicationReceipt(){return publicationReceipt;}
         private Prepared(Store<EntityStore> store,EnemyBirthPlan birth,List<EnemyDescriptor> active,
                 NativeEnemyStateAttachment.Prepared saved,
                 NativeEnemyActionAttachment.Prepared action){

@@ -570,3 +570,8 @@ R209 supersedes the R208 **top-center presentation** described above. The instal
 ## R244 production admission and primary-name ownership
 
 R244 consolidates primary hostile text in `NativeHostileNames`; reward/profile admission no longer gates names. Reliable actor Nameplate remains nonblank and the duplicate promoted custom-name segment is suppressed; affix anchors, Healthbar, tint and gameplay stay with their existing owners. Exact installed Tile/Custom campaign biome bindings feed the shared typed production classifier. Native population projection runs after native target reconstruction via one neutral pinned WorldSpawningSystem callback. The existing native job adapter gains environment-span/fluid-aware bounded aquatic admission. No affix, reward or pack-lease owner is replaced. See [R244 implementation and evidence](R244_HOSTILE_NAMES_AND_SPAWNING.md) and `tools/native-patch/THREE_LEAF_PATCH.md`.
+
+
+## R245 — natural Elite birth transaction repair
+
+See [R245_ELITE_BIRTH_TRANSACTION_REPAIR.md](R245_ELITE_BIRTH_TRANSACTION_REPAIR.md) and the read-only [evidence inventory](R245_EVIDENCE.json). Native Health readiness uses `Role.getInitialMaxHealth()` while the existing frozen RPG profile remains the target. A transient exact created-flock reference survives native dissolution during rollback. Existing birth, file-store, pack-capacity and LOAD owners handle completion/compensation/recovery; the continuation is a single callback owner, not new gameplay. New roots retain frozen all-actor attachment sources; legacy checksummed roots are accepted without save rewriting. No affix owner, tuning, population policy or native-server patch changes.

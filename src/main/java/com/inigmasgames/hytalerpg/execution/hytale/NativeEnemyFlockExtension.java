@@ -106,7 +106,7 @@ public final class NativeEnemyFlockExtension {
             if(flock==null&&(createdFlockRef==null||!createdFlockRef.isValid()))
                 throw new IllegalStateException("ENEMY_NATIVE_EXTENSION_FLOCK_NOT_CREATED");
             return Attempt.accepted(new NativeEnemySpawnGroups.Group(result.job(),result.reservation(),
-                    result.members(),false,flock==null));
+                    result.members(),false,flock==null,createdFlockRef));
         }
         if(result!=null){
             for(var member:result.members()){
@@ -152,20 +152,25 @@ public final class NativeEnemyFlockExtension {
         var environment=population==null?null:population.getWorldEnvironmentSpawnData(original.job().environment());
         if(environment==null)throw new IllegalStateException("ENEMY_NATIVE_EXTENSION_DISCARD_TRACKER");
         int worldBefore=population.getActualNPCs(),environmentBefore=environment.getActualNPCs();
+        var leader=store.getExternalData().getRefFromUUID(original.members().getFirst().entity());
+        // Retain the exact creation receipt across asynchronous compensation and native dissolve callbacks.
+        var createdFlock=added.extensionFlockRef();
+        if(added.extensionCreatedFlock()&&(leader==null||!leader.isValid()||createdFlock==null))
+            throw new IllegalStateException("ENEMY_EXTENSION_FLOCK_ROLLBACK_IDENTITY");
         for(var ref:references)store.removeEntity(ref,RemoveReason.REMOVE);
-        if(added.extensionCreatedFlock()){
-            var leader=store.getExternalData().getRefFromUUID(original.members().getFirst().entity());
-            if(leader==null||!leader.isValid())throw new IllegalStateException("ENEMY_EXTENSION_FLOCK_LEADER_MISSING");
-            var membership=store.getComponent(leader,FlockMembership.getComponentType());
-            removeCreatedFlock(store,leader,membership==null?null:membership.getFlockRef());
-        }
+        if(added.extensionCreatedFlock())removeCreatedFlock(store,leader,createdFlock);
         if(population.getActualNPCs()!=worldBefore-references.size()
                 ||environment.getActualNPCs()!=environmentBefore-references.size())
             throw new IllegalStateException("ENEMY_NATIVE_EXTENSION_DISCARD_POPULATION");
     }
-    private static void removeCreatedFlock(Store<EntityStore> store,Ref<EntityStore> leader,Ref<EntityStore> flock){
-        if(flock==null||!flock.isValid())throw new IllegalStateException("ENEMY_EXTENSION_FLOCK_ROLLBACK_IDENTITY");
-        store.removeComponent(leader,FlockMembership.getComponentType());
+    static void removeCreatedFlock(Store<EntityStore> store,Ref<EntityStore> leader,Ref<EntityStore> flock){
+        if(flock==null||leader==null||!leader.isValid())throw new IllegalStateException("ENEMY_EXTENSION_FLOCK_ROLLBACK_IDENTITY");
+        var membership=store.getComponent(leader,FlockMembership.getComponentType());
+        if(membership!=null&&membership.getFlockRef()!=null&&!membership.getFlockRef().equals(flock))
+            throw new IllegalStateException("ENEMY_EXTENSION_FLOCK_ROLLBACK_IDENTITY");
+        // Native FlockMembershipSystems may already have dissolved this exact flock.
+        // Never remove a replacement membership or a different flock.
+        if(membership!=null)store.removeComponent(leader,FlockMembership.getComponentType());
         if(flock.isValid())store.removeEntity(flock,RemoveReason.REMOVE);
     }
 
