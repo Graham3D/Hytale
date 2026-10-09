@@ -36,16 +36,17 @@ public final class NativeEnemyBirthReservation {
     }
     public CompletionStage<Optional<Sealed>> beginQa(Store<EntityStore> store,NativeEnemySpawnGroups.Group group,
             EnemyQaSpawnRequest qa){
-        if(!store.isInThread()||!admission.admits(group.job().world()))
-            throw new IllegalStateException("ENEMY_QA_WORLD_NOT_ADMITTED");
-        return seal(store,decisions.selectQa(store,group,qa),true);
+        throw new IllegalStateException("ENEMY_QA_TRANSIENT_OWNER_REQUIRED");
     }
     private CompletionStage<Optional<Sealed>> seal(Store<EntityStore> store,NativeEnemyBirthDecision.Selected selected,
             boolean qa){
         var birth=selected.root().plan();
         var capacity=EnemyPackCapacity.Reservation.of(birth.pack());
         EnemyPackCapacity.Admission reservation;
-        try{reservation=admission.reserve(capacity);}
+        try{reservation=selected.preLease()==null?admission.reserve(capacity):
+                admission.pending(selected.preLease())
+                        ?new EnemyPackCapacity.Admission(EnemyPackCapacity.Gate.RESERVED,selected.preLease())
+                        :throwMissingLease();}
         catch(RuntimeException uncertain){admission.failClosed(birth.world());throw uncertain;}
         MonsterSpawnTrace.event("PACK_RESERVATION",selected.original().job().world(),selected.original().job().environment(),
                 selected.original().job().nativeRole(),"job="+selected.original().job().nativeJobId()
@@ -59,8 +60,9 @@ public final class NativeEnemyBirthReservation {
         try{write=rewards.reserveEnemyBirthRoot(selected.root());}
         catch(RuntimeException synchronousRejection){
             // No writer task was accepted, so the original native group is still recoverable in place.
-            try{if(!qa)decisions.restore(store,selected);admission.releaseUnsealed(capacity);}
+            try{if(!qa)decisions.restore(store,selected);}
             catch(RuntimeException rollback){synchronousRejection.addSuppressed(rollback);admission.failClosed(birth.world());}
+            finally{admission.releaseUnsealed(capacity);}
             throw synchronousRejection;
         }
         var result=new CompletableFuture<Optional<Sealed>>();
@@ -90,5 +92,8 @@ public final class NativeEnemyBirthReservation {
             });}catch(RuntimeException queueFailure){admission.failClosed(birth.world());result.completeExceptionally(queueFailure);}
         });
         return result.minimalCompletionStage();
+    }
+    private static EnemyPackCapacity.Admission throwMissingLease(){
+        throw new IllegalStateException("ENEMY_BIRTH_PRELEASE_LOST");
     }
 }

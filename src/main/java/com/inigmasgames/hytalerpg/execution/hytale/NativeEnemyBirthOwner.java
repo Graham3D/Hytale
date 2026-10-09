@@ -387,7 +387,8 @@ public final class NativeEnemyBirthOwner implements NativeEnemySpawnGroups.Owner
                                         fail(group.job().world(),"PUBLISH",publishError);
                                         if(done!=null)done.completeExceptionally(publishError);return;
                                     }
-                                    try{registerPublished(world.getEntityStore().getStore(),prepared);
+                                    try{registerPublished(world.getEntityStore().getStore(),prepared,
+                                            sealed.selected().root().plan().pack().staged().publish());
                                         MonsterSpawnTrace.event("ELITE_PUBLISHED",group.job().world(),group.job().environment(),group.job().nativeRole(),
                                                 "job="+group.job().nativeJobId()+" encounter="+sealed.selected().root().encounter()
                                                         +" actors="+prepared.active().size());
@@ -522,14 +523,28 @@ public final class NativeEnemyBirthOwner implements NativeEnemySpawnGroups.Owner
     }
 
     /** A later chunk LOAD may rebind one surviving member while its packmates remain live. */
-    public synchronized void registerPublished(Store<EntityStore> store,NativeEnemyBirthAttachment.Prepared prepared){
+    public synchronized void registerPublished(Store<EntityStore> store,NativeEnemyBirthAttachment.Prepared prepared,
+            EnemyPackRecord published){
         if(!store.isInThread()||!store.getExternalData().getWorld().getWorldConfig().getUuid()
                 .equals(prepared.birth().world())||prepared.active().isEmpty())
             throw new IllegalStateException("ENEMY_BIRTH_LIFETIME_WORLD");
-        for(var actor:prepared.active())if(liveActors.containsKey(actor.entityId()))
-            throw new IllegalStateException("ENEMY_BIRTH_DUPLICATE_LIVE_ACTOR");
-        if(liveActors.size()+prepared.active().size()>4096)throw new IllegalStateException("ENEMY_BIRTH_LIFETIME_CAPACITY");
-        for(var actor:prepared.active())liveActors.put(actor.entityId(),prepared);
+        var loaded=new ArrayList<EnemyDescriptor>();
+        for(var actor:prepared.active()){
+            var ref=store.getExternalData().getRefFromUUID(actor.entityId());
+            if(ref==null||!ref.isValid())continue; // Unloaded after the durable publish callback.
+            var identity=store.getComponent(ref,EnemyActorIdentity.getComponentType());
+            if(identity==null||!identity.state().equals(EnemyActorIdentity.State.of(actor)))
+                throw new IllegalStateException("ENEMY_BIRTH_LIFETIME_IDENTITY");
+            if(liveActors.containsKey(actor.entityId()))throw new IllegalStateException("ENEMY_BIRTH_DUPLICATE_LIVE_ACTOR");
+            loaded.add(actor);
+        }
+        if(liveActors.size()+loaded.size()>4096)throw new IllegalStateException("ENEMY_BIRTH_LIFETIME_CAPACITY");
+        for(var actor:prepared.active())if(!loaded.contains(actor))try{prepared.retireActor(actor.entityId());}
+        catch(Exception failure){throw new IllegalStateException("ENEMY_BIRTH_UNLOADED_LIFETIME",failure);}
+        admission.activatePublished(prepared.birth(),published,loaded.stream().map(EnemyDescriptor::entityId).toList());
+        for(var actor:loaded)liveActors.put(actor.entityId(),prepared);
+        if(prepared.allRetired())try{prepared.close();}
+        catch(Exception failure){throw new IllegalStateException("ENEMY_BIRTH_EMPTY_LIFETIME_CLOSE",failure);}
     }
     public synchronized boolean bound(UUID nativeEntity){return liveActors.containsKey(nativeEntity);}
 
@@ -589,6 +604,7 @@ public final class NativeEnemyBirthOwner implements NativeEnemySpawnGroups.Owner
                     var suspended=pack.suspend();
                     // Close action/protection admission for surviving loaded packmates on this world thread.
                     combat.refreshEnemyPack(store,suspended);
+                    admission.beginSuspension(birth);
                     try{rewards.transitionEnemyPack(identity.world(),identity.pack(),current->{
                         if(!current.worldId().equals(identity.world())||current.generation()!=identity.generation()
                                 ||!current.encounterId().equals(identity.encounter())
@@ -596,7 +612,9 @@ public final class NativeEnemyBirthOwner implements NativeEnemySpawnGroups.Owner
                             throw new IllegalStateException("ENEMY_UNLOAD_PACK_CHANGED");
                         return current.state()==EnemyPackRecord.State.SUSPENDED?current:current.suspend();
                     }).whenComplete((persisted,error)->{
-                        if(error!=null)fail(identity.world(),"UNLOAD_SUSPEND",error);
+                        if(error!=null){fail(identity.world(),"UNLOAD_SUSPEND",error);return;}
+                        var world=store.getExternalData().getWorld();
+                        onWorld(world,identity.world(),()->admission.finishSuspension(birth,persisted));
                     });}catch(RuntimeException rejected){fail(identity.world(),"UNLOAD_SUSPEND",rejected);}
                 }
             }catch(RuntimeException suspensionFailure){fail(identity.world(),"UNLOAD_PROTECTION",suspensionFailure);}
@@ -604,6 +622,7 @@ public final class NativeEnemyBirthOwner implements NativeEnemySpawnGroups.Owner
         try{
             prepared.retireActor(identity.nativeEntity());
             liveActors.remove(identity.nativeEntity());
+            admission.memberRemoved(birth,identity.nativeEntity(),reason.name());
             if(prepared.allRetired())prepared.close();
         }catch(Exception failure){fail(identity.world(),"REMOVE_LIFETIME",failure);}
     }
@@ -621,7 +640,11 @@ public final class NativeEnemyBirthOwner implements NativeEnemySpawnGroups.Owner
         @Override public void onEntityRemove(Ref<EntityStore> ref,RemoveReason reason,Store<EntityStore> store,
                 CommandBuffer<EntityStore> buffer){
             var identity=store.getComponent(ref,EnemyActorIdentity.getComponentType());
-            if(identity!=null)owner.removed(store,identity.state(),reason);
+            if(identity!=null){
+                var current=store.getExternalData().getRefFromUUID(identity.state().nativeEntity());
+                if(current!=null&&current.isValid()&&!current.equals(ref))return;
+                owner.removed(store,identity.state(),reason);
+            }
         }
     }
 }

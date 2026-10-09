@@ -39,21 +39,48 @@ class EnemyWorldAdmissionTest {
         assertThrows(IllegalStateException.class,()->gate.rebindComplete(world,List.of()));
     }
 
-    @Test void savedBirthReservesCapacityButBlocksFreshAdmissionUntilWholeRebind(){
+    @Test void savedBirthStaysDormantButBlocksFreshAdmissionUntilWholeRebind(){
         var birth=new EnemyBirthPersistenceTest().plan();var world=birth.world();
         var capacity=new EnemyPackCapacity(EnemyBalance.canonical());
         var gate=new EnemyWorldAdmission(id->CompletableFuture.completedFuture(
                 new FileEncounterStore.EnemyWorldInventory(List.of(birth),List.of(birth.pack()))),capacity);
         gate.begin(world).toCompletableFuture().join();
-        assertEquals(1,capacity.count(world));assertFalse(gate.admits(world));
+        assertEquals(0,capacity.count(world));assertFalse(gate.admits(world));
         assertThrows(IllegalStateException.class,()->gate.rebindComplete(world,List.of()));
         assertFalse(gate.admits(world));
         gate.rebindComplete(world,List.of(birth.encounter()));assertTrue(gate.admits(world));
-        assertEquals(1,capacity.count(world));
-        assertThrows(IllegalStateException.class,()->gate.releaseTerminal(birth.pack()));
-        assertEquals(1,capacity.count(world));
-        assertTrue(gate.releaseTerminal(birth.pack().abort("QA_ABORT")));
         assertEquals(0,capacity.count(world));
+        assertThrows(IllegalStateException.class,()->gate.releaseTerminal(birth.pack()));
+        assertEquals(0,capacity.count(world));
+        assertFalse(gate.releaseTerminal(birth.pack().abort("QA_ABORT")));
+        assertEquals(0,capacity.count(world));
+    }
+
+    @Test void suspendedDurablePackRebindsOneExactActorAndReleasesOnlyAfterLastLoadedMemberLeaves(){
+        var birth=new EnemyBirthPersistenceTest().plan();var world=birth.world();
+        var suspended=birth.pack().staged().publish().suspend();
+        var capacity=new EnemyPackCapacity(EnemyBalance.canonical());
+        var gate=new EnemyWorldAdmission(id->CompletableFuture.completedFuture(
+                new FileEncounterStore.EnemyWorldInventory(List.of(birth),List.of(suspended))),capacity);
+        gate.begin(world).toCompletableFuture().join();
+        gate.rebindComplete(world,List.of(birth.encounter()));
+        assertEquals(1,gate.status(world).dormantNonterminalProductionPacks());
+        assertEquals(0,capacity.count(world));
+        var first=birth.actors().getFirst().entityId();var second=birth.actors().getLast().entityId();
+        gate.activatePublished(birth,suspended,List.of(first));
+        assertEquals(1,capacity.count(world));
+        gate.activatePublished(birth,suspended,List.of(second));
+        assertEquals(1,capacity.count(world));
+        assertEquals(0,gate.status(world).dormantNonterminalProductionPacks());
+        gate.memberRemoved(birth,first,"UNLOAD");assertEquals(1,capacity.count(world));
+        gate.beginSuspension(birth);
+        gate.memberRemoved(birth,second,"UNLOAD");assertEquals(1,capacity.count(world));
+        gate.finishSuspension(birth,suspended);assertEquals(0,capacity.count(world));
+        assertEquals(1,gate.status(world).dormantNonterminalProductionPacks());
+        gate.activatePublished(birth,suspended,List.of(second));
+        assertEquals(1,capacity.count(world));
+        gate.memberRemoved(birth,second,"REMOVE");assertEquals(0,capacity.count(world));
+        assertEquals(1,gate.status(world).dormantNonterminalProductionPacks());
     }
 
     @Test void failedOrForeignRecoveryCannotOpenAdmission(){

@@ -65,9 +65,7 @@ public final class NativeEnemyBirthPublication {
                 ||(observed.state()==EnemyPackRecord.State.RESERVED
                     ||observed.state()==EnemyPackRecord.State.STAGED)
                     &&!attachment.active().equals(birth.activeActors(observed))
-                ||observed.state()==EnemyPackRecord.State.SUSPENDED
-                    &&birth.activeActors(observed).stream().anyMatch(actor->
-                            !attachment.active().contains(actor)&&!alreadyBound.test(actor.entityId())))
+                )
             throw new IllegalStateException("ENEMY_REBIND_PUBLISH_IDENTITY");
         var nativeWorld=store.getExternalData().getWorld();var result=new CompletableFuture<Void>();
         try{rewards.transitionEnemyPack(birth.world(),observed.packId(),current->{
@@ -86,10 +84,6 @@ public final class NativeEnemyBirthPublication {
             try{nativeWorld.execute(()->{
                 try{
                     var current=nativeWorld.getEntityStore().getStore();
-                    if(observed.state()==EnemyPackRecord.State.SUSPENDED
-                            &&birth.activeActors(published).stream().anyMatch(actor->
-                                    !attachment.active().contains(actor)&&!alreadyBound.test(actor.entityId())))
-                        throw new IllegalStateException("ENEMY_REBIND_RESUME_MEMBER_UNRESOLVED");
                     var names=new ArrayList<String>();
                     for(var actor:attachment.active()){
                         var ref=current.getExternalData().getRefFromUUID(actor.entityId());

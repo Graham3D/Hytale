@@ -18,7 +18,7 @@ class MonsterSpawnTraceTest {
             MonsterSpawnTrace.job(world,3,"Wolf_Black",42,"requestedFlock=3");
             MonsterSpawnTrace.job(world,3,"Wolf_Black",42,"requestedFlock=3");
             for(int i=0;i<MonsterSpawnTrace.MAX_DETAILS+10;i++)
-                MonsterSpawnTrace.event("ORIGINAL_GROUP_RESTORED",world,3,"Wolf_Black","alive=3 stillStaged=0");
+                MonsterSpawnTrace.event("NATIVE_JOB_CREATED",world,3,"Wolf_Black","job="+i);
             var running=trace.status();
             assertEquals(MonsterSpawnTrace.MAX_DETAILS+11,running.events());
             assertEquals(MonsterSpawnTrace.MAX_DETAILS,running.detailedEvents());
@@ -46,14 +46,17 @@ class MonsterSpawnTraceTest {
                     "job=7 encounter=abc subreason=CHUNK_HEADROOM");
             MonsterSpawnTrace.event("PACK_RESERVATION",world,1,"Wolf_Black",
                     "encounter=abc reason=WORLD_LIMIT");
+            MonsterSpawnTrace.event("PACK_LEASE_SUSPENDED",world,1,"Wolf_Black",
+                    "encounter=abc pack=def reason=LAST_MEMBER_UNLOADED occupancyBefore=1 occupancyAfter=0");
             var stopped=trace.stop();
             var lines=Files.readAllLines(Path.of(stopped.lastFile()));
             var summary=JsonParser.parseString(lines.getFirst()).getAsJsonObject();
             assertEquals(2,summary.getAsJsonObject("priorityCounts").get("NATIVE_EXTENSION_REJECTED|CHUNK_HEADROOM").getAsLong()
                     +summary.getAsJsonObject("priorityCounts").get("PACK_RESERVATION|WORLD_LIMIT").getAsLong());
-            assertEquals(MonsterSpawnTrace.MAX_DETAILS+2,summary.get("detailedEvents").getAsInt());
-            assertTrue(lines.get(lines.size()-2).contains("CHUNK_HEADROOM"));
-            assertTrue(lines.getLast().contains("WORLD_LIMIT"));
+            assertEquals(MonsterSpawnTrace.MAX_DETAILS+3,summary.get("detailedEvents").getAsInt());
+            assertTrue(lines.get(lines.size()-3).contains("CHUNK_HEADROOM"));
+            assertTrue(lines.get(lines.size()-2).contains("WORLD_LIMIT"));
+            assertTrue(lines.getLast().contains("LAST_MEMBER_UNLOADED"));
         }
     }
 }

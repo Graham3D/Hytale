@@ -101,10 +101,12 @@ public final class MonsterSpawnTrace implements AutoCloseable {
         }catch(RuntimeException ignored){/* Trace cannot affect native admission. */}
     }
     private static boolean priority(String stage,String detail){
-        return stage.equals("PACK_RESERVATION")||stage.equals("NATIVE_EXTENSION_REJECTED")
+        return stage.equals("PACK_RESERVATION")||stage.startsWith("PACK_LEASE_")
+                ||stage.equals("PACK_REACTIVATED")||stage.equals("PACK_GRANDFATHERED_OVER_CAP")
+                ||stage.equals("PACK_NEW_BIRTH_DENIED")||stage.equals("NATIVE_EXTENSION_REJECTED")
                 ||stage.equals("ELITE_PLAN_RESULT")||stage.equals("ELITE_FALLBACK_EXCEPTION")
                 ||stage.equals("ELITE_FALLBACK")&&!detail.contains("reason=RARITY_NORMAL")
-                ||stage.equals("ORIGINAL_GROUP_RESTORED")&&!"0".equals(field(detail,"stillStaged="));
+                ||stage.equals("ORIGINAL_GROUP_RESTORED");
     }
     private static String field(String detail,String marker){
         int start=detail.indexOf(marker);if(start<0)return null;

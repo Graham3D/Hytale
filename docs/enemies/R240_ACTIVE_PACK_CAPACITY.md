@@ -1,0 +1,15 @@
+# R240 active Elite pack capacity
+
+R239 counted saved nonterminal natural packs against the configured 12-pack world limit, including eight suspended packs whose actors had unloaded. R240 separates durable encounter history from volatile capacity. It retains every saved birth, pack, actor identity, frozen affix/stat snapshot and reward receipt. No save migration or `world-config.json` rewrite is needed.
+
+`EnemyPackCapacity` owns one lease per world and encounter. An accepted natural birth acquires a pending lease before native flock extension. Publication converts that same lease into a loaded lease after confirming native actor UUIDs in the authoritative entity store. Declined pre-root births release the pending lease through the existing single original-group restore. Uncertain durable writes retain fail-closed admission. QA births do not enter this index.
+
+Native unload and ordinary removal each retire only the exact loaded actor. A partially loaded pack consumes one slot. Last-member unload waits for the existing durable `SUSPENDED` transition before freeing its volatile slot; the saved encounter remains intact. `RELEASED` Packbound state is nonterminal and does not by itself free a loaded slot. Exact saved-actor rebind reactivates the original encounter with its original balance revision, even if world or cell occupancy exceeds the current limit. Overflow blocks new births until capacity falls below the limit. Durable `DEFEATED` and `ABORTED` receipts release the matching lease; removal never creates a reward receipt. World teardown clears volatile leases after native lifecycle cleanup.
+
+For the audited R239 save shape (three historical QA records, eight suspended natural packs and one other natural pack), recovery does not infer nine loaded slots from files. Loaded occupancy is established only by verified native actors. The current world/cell defaults remain 12/3; the operator's 8× density and wildlife/hostile policy are unchanged.
+
+`/rpg worldconfig status` reports configured world/cell limits, loaded production packs, pending births, dormant nonterminal packs, excluded historical QA records, over-cap incumbents, active 64 m cells and world/cell denial counts. `/rpg spawntrace` prioritizes lease acquisition, activation, suspension, reactivation, overflow, denial, release and original-group restoration, with encounter/actor/cell and occupancy context. Native extension rejection subreasons remain unchanged.
+
+Offline verification covers saved-record recovery, atomic concurrent reservation, partial six-member unload, incumbent world/cell overflow, config reduction, stale callbacks, repeated traversal, durable inventory reload, partial suspended rebind, and pre-root rollback. Connected acceptance remains the owner's RPG-save restart and natural-area travel with a fresh spawn trace. Deployment alone does not prove connected behavior.
+
+Release artifact: `HyARPG.jar` (deployed as `Hywind.jar`), revision `R240-U7P5`, SHA-256 `54A3FF70C082CCE31244D0BE294048BC290EB6D27C4E9ED5C22E459AB66C18CB`. The full offline `:test` suite passed, and the package/asset validator passed. No standalone Hytale server was launched.

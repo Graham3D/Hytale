@@ -6,6 +6,7 @@ import com.hypixel.hytale.server.core.command.system.arguments.system.RequiredAr
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractAsyncCommand;
 import com.inigmasgames.hytalerpg.spawning.*;
+import com.inigmasgames.hytalerpg.enemies.EnemyWorldAdmission;
 import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 
@@ -14,11 +15,12 @@ public final class RpgWorldConfigCommand extends AbstractAsyncCommand {
     private final HywindWorldConfiguration config;
     private final NativeWorldSpawnDensity density;
     private final NativePopulationBalance population;
+    private final EnemyWorldAdmission packs;
     private final RequiredArg<String> action;
     public RpgWorldConfigCommand(HywindWorldConfiguration config,NativeWorldSpawnDensity density,
-                                 NativePopulationBalance population){
+                                 NativePopulationBalance population,EnemyWorldAdmission packs){
         super("worldconfig","Reload or inspect the RPG save's world-config.json.");
-        this.config=config;this.density=density;this.population=population;
+        this.config=config;this.density=density;this.population=population;this.packs=packs;
         action=withRequiredArg("reload|status","Reload settings or show effective settings",ArgTypes.STRING);
         requirePermission("inigmasgames.rpg.worldconfig");
     }
@@ -46,6 +48,13 @@ public final class RpgWorldConfigCommand extends AbstractAsyncCommand {
                     active.population().hostileShare()*100,active.population().wildlifeShare()*100,
                     active.enemyBalance().revision(),config.path())));
             for(var world:com.hypixel.hytale.server.core.universe.Universe.get().getWorlds().values()){
+                var packStatus=packs.status(world.getWorldConfig().getUuid());var leases=packStatus.leases();
+                context.sendMessage(Message.raw(String.format(Locale.ROOT,
+                        "%s (%s) Elite packs: active %d, pending %d, dormant %d, historical QA %d, limit %d, cell limit %d, over-cap %d; cells %s; denied world %d / cell %d",
+                        world.getName(),world.getWorldConfig().getUuid(),leases.loadedActiveProductionPacks(),leases.pendingNewBirths(),
+                        packStatus.dormantNonterminalProductionPacks(),packStatus.qaExcludedRecords(),
+                        leases.configuredActiveLimit(),leases.configuredCellLimit(),leases.grandfatheredOverCapPacks(),
+                        leases.activeBy64mCell(),leases.newBirthRejectionsWorldCap(),leases.newBirthRejectionsCellCap())));
                 var observations=population.snapshot(world.getWorldConfig().getUuid());
                 for(var row:observations.values())context.sendMessage(Message.raw(String.format(Locale.ROOT,
                         "%s environment %d: native %d/%.1f (headroom %.1f), hostile %d, wildlife %d, birds %d, other %d; expected hostile %.1f / wildlife %.1f; %s%s",

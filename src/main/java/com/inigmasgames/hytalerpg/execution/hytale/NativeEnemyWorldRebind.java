@@ -58,7 +58,7 @@ public final class NativeEnemyWorldRebind {
         });
     }
 
-    /** Unloaded members remain capacity-reserved and must pass the saved-identity LOAD owner. */
+    /** Unloaded members retain durable identity and must pass the saved-identity LOAD owner. */
     static Set<UUID> inspect(Store<EntityStore> store,FileEncounterStore.EnemyWorldInventory inventory,
             NativeEnemyBirthOwner owner){
         if(!store.isInThread())throw new IllegalStateException("ENEMY_WORLD_REBIND_THREAD");

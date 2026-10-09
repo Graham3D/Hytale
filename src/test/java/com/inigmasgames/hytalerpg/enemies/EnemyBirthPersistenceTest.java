@@ -275,7 +275,7 @@ class EnemyBirthPersistenceTest {
             assertEquals(List.of(birth.pack()),store.enemyPacks(birth.world()));
             var capacity=new EnemyPackCapacity(fixture.balance);
             capacity.restore(birth.world(),store.enemyPacks(birth.world()));
-            assertEquals(1,capacity.count(birth.world()));
+            assertEquals(0,capacity.count(birth.world()));
         }
     }
 }

@@ -481,7 +481,8 @@ public final class HyArpgPlugin extends TavernsPlugin {
         enemyWorldAdmission=new com.inigmasgames.hytalerpg.enemies.EnemyWorldAdmission(
                 encounterRewards::recoverEnemyWorld,
                 new com.inigmasgames.hytalerpg.enemies.EnemyPackCapacity(
-                        ()->worldConfiguration.snapshot().enemyBalance().promotion()),true);
+                        ()->worldConfiguration.snapshot().enemyBalance().promotion()),true,
+                ()->worldConfiguration.snapshot().configRevision());
         encounterRewards.configureEnemyAdmission(enemyWorldAdmission);
         combatKernel.statuses().configureEncounterAdmission(difficultyCombat::statusImmune,
                 difficultyCombat::allowsExternalMutation,difficultyCombat::slowImmune);
@@ -617,7 +618,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
                 ()->worldConfiguration.snapshot().population());
         getChunkStoreRegistry().registerSystem(populationBalance.new Tick());
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgWorldConfigCommand(
-                worldConfiguration,worldSpawnDensity,populationBalance));
+                worldConfiguration,worldSpawnDensity,populationBalance,enemyWorldAdmission));
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgManaguardCommand(supportSystem));
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgDifficultyCommand(difficultyRuntime,loadouts,difficultyWorlds,difficultyTravel,portalRegistry,difficultyIo,travelPort,difficultyCombat));
         var gearEquipment=new com.inigmasgames.hytalerpg.gear.HytaleGearEquipment(loadouts);
@@ -804,6 +805,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
                     gearRecovery.cancelWorld(worldId);gearSignatures.clearWorld(worldId);
                     gearStatuses.clearWorld(worldId);itemAffixes.worldUnload(worldId);summonSystem.worldUnload(worldId);
                     difficultyCombat.healthBars().forgetWorld(worldId);
+                    enemyWorldAdmission.worldUnload(worldId);
                 }});
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Application(combatTrace,
                 (receipt,target,source,buffer)->{
@@ -906,7 +908,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
         }
         skillExecutionSystem.nativeBasics().configureNativeDamageReceipt(enemyDamageReceiptHook!=null);
         var enemyDecision=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyBirthDecision(
-                encounterRewards,enemyBindings,enemyBalance,worldConfiguration::snapshot);
+                encounterRewards,enemyBindings,enemyBalance,worldConfiguration::snapshot,enemyWorldAdmission);
         var enemyReservation=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyBirthReservation(
                 enemyDecision,enemyWorldAdmission,encounterRewards);
         var enemyAttachment=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyBirthAttachment(

@@ -134,11 +134,10 @@ public final class NativeEnemyWholeBirthRecovery extends RefSystem<EntityStore> 
             loading.remove(key);failed(identity.world(),"ROLE",new IllegalStateException("ENEMY_REBIND_NATIVE_REVISION"));return;
         }
         boolean whole=pack.state()==EnemyPackRecord.State.RESERVED
-                ||pack.state()==EnemyPackRecord.State.STAGED||pack.state()==EnemyPackRecord.State.SUSPENDED;
+                ||pack.state()==EnemyPackRecord.State.STAGED;
         var groupKey=new PackKey(identity.world(),identity.pack());
         if(whole&&!groups.add(groupKey)){loading.remove(key);return;}
-        var actors=whole?birth.activeActors(pack).stream()
-                .filter(actor->pack.state()!=EnemyPackRecord.State.SUSPENDED||!owner.bound(actor.entityId())).toList()
+        var actors=whole?birth.activeActors(pack)
                 :List.of(birth.actors().stream()
                 .filter(actor->actor.entityId().equals(identity.nativeEntity())).findFirst().orElseThrow());
         if(actors.isEmpty()){loading.remove(key);if(whole)groups.remove(groupKey);return;}
@@ -169,7 +168,7 @@ public final class NativeEnemyWholeBirthRecovery extends RefSystem<EntityStore> 
                                     failed(identity.world(),"PUBLISH",publishError);return;
                                 }
                                 try{
-                                    owner.registerPublished(world.getEntityStore().getStore(),prepared);
+                                    owner.registerPublished(world.getEntityStore().getStore(),prepared,pack);
                                     published.accept(world);
                                 }
                                 catch(RuntimeException lifetimeFailure){

@@ -13,29 +13,38 @@ import java.util.*;
 public final class NativeEnemyBirthDecision {
     public record Selected(EnemyBirthRoot root,NativeEnemySpawnGroups.Group original,
             NativeEnemySpawnGroups.Group additional,EnemyNativeBindings.Role role,
-            List<EnemyNativeGroupPreparation.MemberSource> sources){
+            List<EnemyNativeGroupPreparation.MemberSource> sources,
+            EnemyPackCapacity.Reservation preLease){
         public Selected{
             Objects.requireNonNull(root);Objects.requireNonNull(original);Objects.requireNonNull(role);
             sources=List.copyOf(sources);
             if(sources.size()!=root.plan().actors().size())throw new IllegalArgumentException("ENEMY_BIRTH_SOURCE_ROSTER");
             for(int i=0;i<sources.size();i++)if(!sources.get(i).spawn().enemy().equals(root.plan().actors().get(i).entityId()))
                 throw new IllegalArgumentException("ENEMY_BIRTH_SOURCE_ACTOR_ORDER");
+            if(preLease!=null&&!preLease.equals(EnemyPackCapacity.Reservation.of(root.plan().pack())))
+                throw new IllegalArgumentException("ENEMY_BIRTH_PRELEASE_IDENTITY");
         }
     }
     private final HytaleEncounterRewards rewards;
     private final EnemyNativeBindings bindings;
     private final java.util.function.Supplier<com.inigmasgames.hytalerpg.spawning.HywindWorldConfiguration.Snapshot> settings;
     private final EnemyBalance fallbackBalance;
+    private final EnemyWorldAdmission admission;
     private volatile PlannerCache plannerCache;
     private record Policy(EnemyBalance balance,EnemyAffixSelection.WeightPolicy weights){}
     private record PlannerCache(String revision,EnemyBirthPlanner planner){}
     public NativeEnemyBirthDecision(HytaleEncounterRewards rewards,EnemyNativeBindings bindings,EnemyBalance balance){
-        this(rewards,bindings,balance,null);
+        this(rewards,bindings,balance,null,null);
     }
     public NativeEnemyBirthDecision(HytaleEncounterRewards rewards,EnemyNativeBindings bindings,EnemyBalance balance,
             java.util.function.Supplier<com.inigmasgames.hytalerpg.spawning.HywindWorldConfiguration.Snapshot> settings){
+        this(rewards,bindings,balance,settings,null);
+    }
+    public NativeEnemyBirthDecision(HytaleEncounterRewards rewards,EnemyNativeBindings bindings,EnemyBalance balance,
+            java.util.function.Supplier<com.inigmasgames.hytalerpg.spawning.HywindWorldConfiguration.Snapshot> settings,
+            EnemyWorldAdmission admission){
         this.rewards=Objects.requireNonNull(rewards);this.bindings=Objects.requireNonNull(bindings);
-        this.fallbackBalance=Objects.requireNonNull(balance);this.settings=settings;
+        this.fallbackBalance=Objects.requireNonNull(balance);this.settings=settings;this.admission=admission;
     }
     private Policy currentPolicy(){
         if(settings==null)return new Policy(fallbackBalance,new EnemyAffixSelection.WeightPolicy(Map.of(),Set.of()));
@@ -80,6 +89,13 @@ public final class NativeEnemyBirthDecision {
             if(rarity==EnemyRarity.NORMAL)return rollback.fallback("RARITY_NORMAL");
             var need=rarity==EnemyRarity.CHAMPION?planner.additionalChampionMembers(request):planner.additionalUniqueMembers(request);
             if(need.isEmpty())return rollback.fallback("ELITE_DEMAND_OR_CAPACITY");
+            if(admission!=null){
+                var lease=new EnemyPackCapacity.Reservation(original.job().world(),original.reservation().encounter(),
+                        request.packId(),original.reservation().generation(),request.anchor());
+                var capacity=admission.reserve(lease);
+                if(capacity.gate()!=EnemyPackCapacity.Gate.RESERVED)return rollback.fallback("PACK_"+capacity.gate());
+                rollback.lease=lease;
+            }
             if(need.getAsInt()>0){
                 rollback.failClosed=true;
                 var extension=NativeEnemyFlockExtension.attempt(store,original,nativeJob,need.getAsInt());
@@ -110,7 +126,7 @@ public final class NativeEnemyBirthDecision {
             var root=new EnemyBirthRoot(result.plan(),sources.get().stream()
                     .map(EnemyNativeGroupPreparation.MemberSource::spawn).toList());
             var allSources=new ArrayList<>(sources.get());allSources.addAll(additionalSources);
-            return Optional.of(new Selected(root,original,rollback.additional,role,allSources));
+            return Optional.of(new Selected(root,original,rollback.additional,role,allSources,rollback.lease));
         }catch(RuntimeException failure){
             if(!rollback.started&&!rollback.failClosed){
                 // No durable root exists at this decision boundary. A locally
@@ -213,7 +229,7 @@ public final class NativeEnemyBirthDecision {
             savedSources.add(new EnemyNativeGroupPreparation.MemberSource(qaSpawn,sources.get(i).nativeName()));
         }
         var root=new EnemyBirthRoot(plan,savedSources.stream().map(EnemyNativeGroupPreparation.MemberSource::spawn).toList());
-        return new Selected(root,group,null,role,savedSources);
+        return new Selected(root,group,null,role,savedSources,null);
     }
     /** Capacity denial or a pre-root persistence rejection also returns the actual native group. */
     public void restore(Store<EntityStore> store,Selected selected){
@@ -221,7 +237,7 @@ public final class NativeEnemyBirthDecision {
     }
     private final class Rollback {
         final Store<EntityStore> store;final NativeEnemySpawnGroups.Group original;
-        NativeEnemySpawnGroups.Group additional;boolean started,failClosed;
+        NativeEnemySpawnGroups.Group additional;EnemyPackCapacity.Reservation lease;boolean started,failClosed;
         Rollback(Store<EntityStore> store,NativeEnemySpawnGroups.Group original){this.store=store;this.original=original;}
         Optional<Selected> fallback(String reason){
             return fallback(reason,null);
@@ -232,7 +248,12 @@ public final class NativeEnemyBirthDecision {
                     +(subreason==null?"":" subreason="+subreason));
             restore();return Optional.empty();
         }
-        void restore(){started=true;NativeEnemyBirthDecision.this.restore(store,original,additional);}
+        void restore(){
+            if(started)throw new IllegalStateException("ENEMY_BIRTH_ROLLBACK_REPEATED");
+            started=true;
+            try{NativeEnemyBirthDecision.this.restore(store,original,additional);}
+            finally{if(lease!=null)admission.releaseUnsealed(lease);}
+        }
     }
     private void restore(Store<EntityStore> store,NativeEnemySpawnGroups.Group original,
             NativeEnemySpawnGroups.Group additional){
