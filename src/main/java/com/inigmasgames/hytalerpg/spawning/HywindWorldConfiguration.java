@@ -11,21 +11,6 @@ import java.util.*;
 
 /** Validated, save-root operator policy. One immutable snapshot is published after full validation. */
 public final class HywindWorldConfiguration implements SpawnDensitySetting {
-    /** Hytale supplies plugin data paths relative to the active save's process directory. */
-    public static Path resolveSaveRoot(Path pluginDataDirectory){
-        return resolveSaveRoot(pluginDataDirectory,Path.of("").toAbsolutePath());
-    }
-    static Path resolveSaveRoot(Path pluginDataDirectory,Path processDirectory){
-        Objects.requireNonNull(pluginDataDirectory);Objects.requireNonNull(processDirectory);
-        var absolute=(pluginDataDirectory.isAbsolute()?pluginDataDirectory:processDirectory.resolve(pluginDataDirectory))
-                .toAbsolutePath().normalize();
-        var mods=absolute.getParent();
-        if(mods==null||mods.getFileName()==null||!mods.getFileName().toString().equalsIgnoreCase("mods")
-                ||!Files.isDirectory(mods))throw new IllegalStateException("RPG_SAVE_ROOT_UNAVAILABLE:"+absolute);
-        var save=mods.getParent();
-        if(save==null)throw new IllegalStateException("RPG_SAVE_ROOT_UNAVAILABLE:"+absolute);
-        return save;
-    }
     public record Snapshot(JsonObject source,String configRevision,double density,
                            NativePopulationBalance.Policy population,EnemyBalance enemyBalance,
                            Map<String,Double> affixWeightMultipliers,Set<String> randomAffixesDisabled) {

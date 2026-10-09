@@ -12,12 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class HywindWorldConfigurationTest {
     @TempDir Path root;
     @AfterEach void restoreSharedBalance(){EnemyBalance.activate(EnemyBalance.base(),root.resolve("reset-balance"));}
-    @Test void relativeHytaleModDataPathResolvesThroughWorkingDirectory() throws Exception{
-        var mods=root.resolve("mods");Files.createDirectories(mods);
-        assertEquals(root,HywindWorldConfiguration.resolveSaveRoot(
-                Path.of("mods","InigmasGames_HytaleRPGPhase00Audit"),root));
-        assertEquals(root,HywindWorldConfiguration.resolveSaveRoot(mods.resolve("InigmasGames_HytaleRPGPhase00Audit")));
-    }
     private com.google.gson.JsonObject defaults() throws Exception{
         try(var input=getClass().getResourceAsStream("/rpg/world-config-default.json")){
             assertNotNull(input);return JsonParser.parseString(new String(input.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();

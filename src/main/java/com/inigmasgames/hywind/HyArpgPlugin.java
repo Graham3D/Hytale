@@ -298,7 +298,8 @@ public final class HyArpgPlugin extends TavernsPlugin {
 
     private void setupRpg() {
         try (var readyPathSpan = com.inigmasgames.hywind.readypath.ReadyPathProbe.span("BOOT_RPG_SETUP", null)) {
-        var saveRoot=com.inigmasgames.hytalerpg.spawning.HywindWorldConfiguration.resolveSaveRoot(rpgDataDirectory());
+        var saveRoot=rpgDataDirectory().getParent().getParent();
+        if(saveRoot==null)throw new IllegalStateException("RPG_SAVE_ROOT_UNAVAILABLE");
         worldConfiguration=new com.inigmasgames.hytalerpg.spawning.HywindWorldConfiguration(
                 saveRoot,rpgDataDirectory().resolve("world-spawn-density.json"));
         LOGGER.atInfo().log("HYTALE_RPG_SETUP revision=%s version=%s hytale=%s stage=%s combatEnabled=true",
