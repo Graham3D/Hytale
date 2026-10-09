@@ -561,11 +561,41 @@ public final class HytaleEncounterRewards implements AutoCloseable {
                 ||allegiance==null||allegiance.getDefaultPlayerAttitude()
                     !=com.hypixel.hytale.server.core.asset.type.attitude.Attitude.HOSTILE
                 ||!binding.nativeRoleIds().contains(npc.getRoleName())
-                ||!marker.state().world().equals(world(store))||!marker.state().entity().equals(id(store,ref)))
+                ||!marker.state().world().equals(world(store))||!marker.state().entity().equals(id(store,ref))){
+            MonsterSpawnTrace.event("NATIVE_CLASSIFY_REJECT",world(store),npc==null?-1:npc.getEnvironment(),
+                    npc==null?"unknown":npc.getRoleName(),"reason="+(npc==null?"nativeActor":marker==null?"stagingMarker"
+                            :qaActor(store,ref)?"qaActor":allegiance==null?"worldSupport"
+                            :allegiance.getDefaultPlayerAttitude()!=com.hypixel.hytale.server.core.asset.type.attitude.Attitude.HOSTILE
+                                    ?"attitude":!binding.nativeRoleIds().contains(npc.getRoleName())?"binding":"stagingIdentity"));
             return Optional.empty();
-        var classified=classifyNatural(store,ref);if(classified.isEmpty())return Optional.empty();
+        }
+        // Native flock members can be reserved by Hytale's flock owner while the
+        // birth transaction is staged. The synchronous world-job capture above is
+        // the source proof; the ordinary added() classifier's isReserved gate is
+        // for uncaptured actors and must not reject this proven native roster.
+        if(store.getComponent(ref,PlayerRef.getComponentType())!=null
+                ||store.getComponent(ref,SummonProjection.getComponentType())!=null
+                ||store.getComponent(ref,ConversionProjection.getComponentType())!=null
+                ||store.getComponent(ref,EntityStore.REGISTRY.getNonSerializedComponentType())!=null){
+            MonsterSpawnTrace.event("NATIVE_CLASSIFY_REJECT",world(store),npc.getEnvironment(),npc.getRoleName(),"reason=excludedActor");
+            return Optional.empty();
+        }
+        if(difficulty==null||!nativeWorldSpawnEvidence(AddReason.SPAWN,npc.getEnvironment(),npc.getSpawnConfiguration())
+                ||registry.resolveRole(npc.getRoleName()).isEmpty()){
+            MonsterSpawnTrace.event("NATIVE_CLASSIFY_REJECT",world(store),npc.getEnvironment(),npc.getRoleName(),"reason=sourceOrRole");
+            return Optional.empty();
+        }
+        var classified=difficulty.classifyAuthored(registry,world(store),id(store,ref),npc.getRoleName(),biome(store,ref),
+                EnemyRewardRegistry.Origin.WILD_WORLD_SPAWN,System.currentTimeMillis());
+        if(classified.isEmpty()){
+            MonsterSpawnTrace.event("NATIVE_CLASSIFY_REJECT",world(store),npc.getEnvironment(),npc.getRoleName(),"reason=authoredProfile");
+            return Optional.empty();
+        }
         var name=HytaleDifficultyCombat.nativeDisplayName(store,ref,npc);
-        if(name==null||name.isBlank()||name.startsWith("server.")||name.contains("_"))return Optional.empty();
+        if(name==null||name.isBlank()||name.startsWith("server.")||name.contains("_")){
+            MonsterSpawnTrace.event("NATIVE_CLASSIFY_REJECT",world(store),npc.getEnvironment(),npc.getRoleName(),"reason=displayName");
+            return Optional.empty();
+        }
         return Optional.of(new com.inigmasgames.hytalerpg.enemies.EnemyNativeGroupPreparation.MemberSource(classified.get(),name));
     }
     /** Operator staging admits a real NPC through the authored profile without claiming a world-spawn job. */

@@ -128,6 +128,7 @@ public final class MonsterSpawnTrace implements AutoCloseable {
             current.counts.merge(key,amount,Long::sum);current.total+=amount;
             var bucket=bucket(current,now);
             if(category.equals("NATIVE_JOB_CREATED")||category.startsWith("NATIVE_REJECTION_")
+                    ||category.equals("NATIVE_FLUID_JOB_DRY_COLUMN")||category.equals("NATIVE_CLASSIFY_REJECT")
                     ||category.equals("ELITE_PUBLISHED")||category.equals("ELITE_FALLBACK")
                     ||category.startsWith("PACK_LEASE_"))bucket.counts.merge(category,amount,Long::sum);
             if(category.equals("NPC_ADDED_NATIVE_JOB")||category.equals("NPC_ADDED_OTHER"))
@@ -156,6 +157,7 @@ public final class MonsterSpawnTrace implements AutoCloseable {
     private static String populationCategory(String role){return POPULATION_ROLES.category(role).name();}
     private static boolean priority(String stage,String detail){
         return stage.equals("PACK_RESERVATION")||stage.startsWith("PACK_LEASE_")
+                ||stage.equals("NATIVE_CLASSIFY_REJECT")
                 ||stage.equals("PACK_REACTIVATED")||stage.equals("PACK_GRANDFATHERED_OVER_CAP")
                 ||stage.equals("PACK_NEW_BIRTH_DENIED")||stage.equals("NATIVE_EXTENSION_REJECTED")
                 ||stage.equals("ELITE_PLAN_RESULT")||stage.equals("ELITE_FALLBACK_EXCEPTION")

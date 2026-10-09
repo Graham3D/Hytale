@@ -280,12 +280,20 @@ public final class NativeEnemyBirthDecision {
         var result=new ArrayList<EnemyNativeGroupPreparation.MemberSource>();
         for(var member:group.members()){
             var ref=store.getExternalData().getRefFromUUID(member.entity());
-            if(ref==null||!ref.isValid())return Optional.empty();
+            if(ref==null||!ref.isValid()){
+                MonsterSpawnTrace.event("NATIVE_CLASSIFY_REJECT",group.job().world(),group.job().environment(),
+                        member.nativeRole(),"reason=memberUnavailable");
+                return Optional.empty();
+            }
             // Native FlockPlugin may choose a different authored FlockSpawnType for
             // a member. The exact job provenance is captured by NativeEnemySpawnGroups;
             // classify each concrete role through its own certified binding.
             var memberRole=bindings.role(member.nativeRole()).orElse(null);
-            if(memberRole==null||!memberRole.productionPromotionEnabled())return Optional.empty();
+            if(memberRole==null||!memberRole.productionPromotionEnabled()){
+                MonsterSpawnTrace.event("NATIVE_CLASSIFY_REJECT",group.job().world(),group.job().environment(),
+                        member.nativeRole(),"reason="+(memberRole==null?"bindingUnavailable":"promotionDisabled"));
+                return Optional.empty();
+            }
             var source=rewards.classifyStagedNative(store,ref,memberRole);
             if(source.isEmpty())return Optional.empty();
             result.add(source.get());
