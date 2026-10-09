@@ -1,0 +1,22 @@
+{
+  "revision": "R247-U7P5",
+  "deployedAtUtc": "2026-10-09T23:54:35Z",
+  "sourceCommit": "a2cd2197a59cf7e8a0f1a1f4c9447dbb140ec63f",
+  "sourceBranch": "codex/checkpoint-c-optional-bridge",
+  "deploymentTarget": "C:/Users/Zemio/AppData/Roaming/Hytale/data/pre-release/Saves/RPG/mods/Hywind.jar",
+  "jarSha256": "5CAE492C5BC51F50A17DB36997F2A367EBB4AC27611833EE9DF832EDB10C20AC",
+  "jarBytes": 19359483,
+  "previousJarBackup": "C:/Users/Zemio/.codex/deploy-backups/R247-20261009-1955/Hywind-R246.jar",
+  "previousJarSha256": "9C362DC723D1EF1BA98E09EC4D762304C40A4D12DE54FBD068008341AFDA9AB0",
+  "worldConfigSha256BeforeAndAfter": "3D7E86AB1B97F36E41F124FD3E03C682923F77F59B898FCE8CA0221542DF7986",
+  "verification": {
+    "preFixRegression": "2 failures on R246: missing initial-rebind lifecycle admission",
+    "postFixFocusedRegression": "PASS",
+    "affectedRegressionTests": 93,
+    "affectedRegressionFailures": 0,
+    "nativeControlTests": 451,
+    "nativeControlFailures": 0,
+    "offlinePackage": "verifyHyArpgJar PASS"
+  },
+  "connectedAcceptance": "Pending owner gameplay QA; no standalone Hytale server or game launched"
+}
