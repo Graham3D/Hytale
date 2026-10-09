@@ -6,7 +6,6 @@ import com.hypixel.hytale.component.system.HolderSystem;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
-import com.hypixel.hytale.server.core.universe.world.chunk.section.FluidSection;
 import com.hypixel.hytale.server.core.universe.world.storage.*;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
 import com.hypixel.hytale.server.spawning.SpawningPlugin;
@@ -107,9 +106,7 @@ public final class NativeEnemySpawnGroups extends WorldSpawnJobSystems.Ticking {
         }
     }
     private final Owner owner;
-    // Installed role assets for these three point at Template_Swimming_Passive.
-    // Include them even when an older native spawn table omits SpawnFluidTag.
-    private static final Set<String> WATER_ONLY_NATIVE_ROLES=Set.of("Frostgill","Snapjaw","Trilobite");
+    public final NativeAquaticHabitat habitat=new NativeAquaticHabitat();
     private static String region(SpawnJobData job){
         try{
             var context=job.getSpawningContext();
@@ -122,25 +119,6 @@ public final class NativeEnemySpawnGroups extends WorldSpawnJobSystems.Ticking {
                 spawning.getSpawnJobDataComponentType(),spawning.getChunkSpawnDataComponentType(),spawning.getChunkSpawnedNPCDataComponentType());
         this.owner=Objects.requireNonNull(owner);
     }
-    /** An absent/unloaded section is unknown, never proof that a native fluid placement is impossible. */
-    static boolean definitelyDry(int sections,IntFunction<Boolean> sectionContainsFluid){
-        for(int section=0;section<sections;section++){
-            var containsFluid=sectionContainsFluid.apply(section);
-            if(containsFluid==null||containsFluid)return false;
-        }
-        return sections>0;
-    }
-    private static boolean definitelyDry(ArchetypeChunk<ChunkStore> archetype,int index,Store<ChunkStore> store){
-        var worldChunk=archetype.getComponent(index,WorldChunk.getComponentType());
-        if(worldChunk==null)return false;
-        var chunks=store.getExternalData().getWorld().getChunkStore();
-        return definitelyDry(ChunkUtil.HEIGHT_SECTIONS,section->{
-            var ref=chunks.getChunkSectionReference(worldChunk.getX(),ChunkUtil.MIN_SECTION+section,worldChunk.getZ());
-            if(ref==null||!ref.isValid())return null;
-            var fluids=store.getComponent(ref,FluidSection.getComponentType());
-            return fluids!=null&&!fluids.isEmpty();
-        });
-    }
     @Override public void tick(float dt,int index,ArchetypeChunk<ChunkStore> chunk,Store<ChunkStore> store,CommandBuffer<ChunkStore> buffer){
         try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enterChunk(store,
                 com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.LIFECYCLE)){
@@ -150,17 +128,10 @@ public final class NativeEnemySpawnGroups extends WorldSpawnJobSystems.Ticking {
         if(role==null||role.getId()==null||role.getId().isBlank()){super.tick(dt,index,chunk,store,buffer);return;}
         var world=store.getExternalData().getWorld();
         var job=new Job(world.getWorldConfig().getUuid(),data.getJobId(),data.getRoleIndex(),role.getId(),data.getEnvironmentIndex(),data.getSpawnConfigIndex(),data.getFlockSize());
-        // The native spawn table owns fluid eligibility. If every loaded section of this
-        // job's column is fluid-free, no column probe can satisfy that table's fluid tag.
-        // Terminate through native Ticking so its failed-job and population accounting run.
-        int fluidTag=data.getSpawnConfig().getSpawnFluidTag(data.getRoleIndex());
-        if(!data.isTerminated()&&(fluidTag!=Integer.MIN_VALUE||WATER_ONLY_NATIVE_ROLES.contains(job.nativeRole()))
-                &&definitelyDry(chunk,index,store)){
-            MonsterSpawnTrace.event("NATIVE_FLUID_JOB_DRY_COLUMN",job.world(),job.environment(),job.nativeRole(),
-                    "job="+job.nativeJobId()+" fluidTag="+fluidTag);
-            data.terminate();
-            super.tick(dt,index,chunk,store,buffer);
-            return;
+        var nativeChunk=chunk.getComponent(index,WorldChunk.getComponentType());
+        if(nativeChunk!=null&&habitat.reject(data,nativeChunk,store)){
+            data.terminate(); // The native owner performs exactly one endProbing + component removal.
+            super.tick(dt,index,chunk,store,buffer);return;
         }
         if(MonsterSpawnTrace.enabled()){
             String population="unavailable";

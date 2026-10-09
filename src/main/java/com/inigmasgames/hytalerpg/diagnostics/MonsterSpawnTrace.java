@@ -18,13 +18,26 @@ public final class MonsterSpawnTrace implements AutoCloseable {
     private final ScheduledExecutorService expiry=Executors.newSingleThreadScheduledExecutor(
             task->Thread.ofPlatform().daemon().name("RPG-monster-spawn-trace").unstarted(task));
     private final Gson gson=new Gson();
+    private java.util.function.Supplier<Map<String,Object>> configuration=Map::of;
+    public void configureManifest(java.util.function.Supplier<Map<String,Object>> source){configuration=source;}
     private Session session;
     private String lastFile="none",lastError="none";
     private long lastEvents,lastDetails;
     private Map<String,Long> lastCounts=Map.of();
     private boolean closed;
 
+    private static Map<String,Object> buildManifest(){
+        var result=new LinkedHashMap<String,Object>();
+        try(var input=MonsterSpawnTrace.class.getResourceAsStream("/rpg-build.properties")){
+            var properties=new java.util.Properties();if(input!=null)properties.load(input);
+            properties.forEach((k,v)->result.put(k.toString(),v));
+        }catch(java.io.IOException e){result.put("buildManifest","UNAVAILABLE");}
+        result.put("biomeManifest",com.inigmasgames.hytalerpg.difficulty.CampaignBiomes.current().revision());
+        result.put("nativeProjection","population-projection-0.7.0-pre.5.1-r244");
+        return Map.copyOf(result);
+    }
     private static final class Session {
+        final Map<String,Object> manifest=new LinkedHashMap<>(buildManifest());
         final long started=System.currentTimeMillis(), deadline=started+DURATION_SECONDS*1000L;
         final Map<String,Long> counts=new TreeMap<>();
         final List<Map<String,Object>> details=new ArrayList<>();
@@ -60,7 +73,7 @@ public final class MonsterSpawnTrace implements AutoCloseable {
     public synchronized Status start(){
         if(closed)throw new IllegalStateException("Monster spawn trace is stopped");
         if(session!=null)throw new IllegalStateException("Monster spawn trace is already running");
-        session=new Session();installed=this;
+        session=new Session();session.manifest.putAll(configuration.get());installed=this;
         var current=session;
         expiry.schedule(()->{synchronized(this){if(session==current)finish();}},DURATION_SECONDS,TimeUnit.SECONDS);
         return status();
@@ -122,7 +135,7 @@ public final class MonsterSpawnTrace implements AutoCloseable {
         long now=System.currentTimeMillis();if(now>=current.deadline)return;
         // Diagnostics must never throw into Hytale's spawn or world thread.
         try{
-            String category=clean(stage,64),nativeRole=clean(role,96),message=clean(detail,512);
+            String category=clean(stage,64),nativeRole=clean(role,96),message=clean(detail,1536);
             String key=category+"|"+world+"|"+environment+"|"+nativeRole;
             if(current.counts.size()>=50_000&&!current.counts.containsKey(key))key="OTHER|COUNTER_LIMIT";
             current.counts.merge(key,amount,Long::sum);current.total+=amount;
@@ -130,7 +143,9 @@ public final class MonsterSpawnTrace implements AutoCloseable {
             if(category.equals("NATIVE_JOB_CREATED")||category.startsWith("NATIVE_REJECTION_")
                     ||category.equals("NATIVE_FLUID_JOB_DRY_COLUMN")||category.equals("NATIVE_CLASSIFY_REJECT")
                     ||category.equals("ELITE_PUBLISHED")||category.equals("ELITE_FALLBACK")
-                    ||category.startsWith("PACK_LEASE_"))bucket.counts.merge(category,amount,Long::sum);
+                    ||category.startsWith("PACK_LEASE_")||category.startsWith("NATIVE_HABITAT")||category.equals("HOSTILE_NAME")||category.equals("PLAYER_LOCAL"))bucket.counts.merge(category,amount,Long::sum);
+            if(category.equals("HOSTILE_NAME"))bucket.counts.merge("HOSTILE_NAME_"+Objects.toString(field(message,"outcome="),"UNKNOWN"),amount,Long::sum);
+            if(category.equals("NATIVE_HABITAT"))bucket.counts.merge("HABITAT_"+Objects.toString(field(message,"outcome="),"UNKNOWN"),amount,Long::sum);
             if(category.equals("NPC_ADDED_NATIVE_JOB")||category.equals("NPC_ADDED_OTHER"))
                 bucket.additions.merge(populationCategory(nativeRole),amount,Long::sum);
             if(category.equals("NPC_REMOVED"))
@@ -156,7 +171,7 @@ public final class MonsterSpawnTrace implements AutoCloseable {
             com.inigmasgames.hytalerpg.spawning.NativePopulationRoles.load();
     private static String populationCategory(String role){return POPULATION_ROLES.category(role).name();}
     private static boolean priority(String stage,String detail){
-        return stage.equals("PACK_RESERVATION")||stage.startsWith("PACK_LEASE_")
+        return stage.equals("ELITE_PUBLISHED")||stage.equals("PLAYER_LOCAL")||stage.equals("PACK_RESERVATION")||stage.startsWith("PACK_LEASE_")
                 ||stage.equals("NATIVE_CLASSIFY_REJECT")
                 ||stage.equals("PACK_REACTIVATED")||stage.equals("PACK_GRANDFATHERED_OVER_CAP")
                 ||stage.equals("PACK_NEW_BIRTH_DENIED")||stage.equals("NATIVE_EXTENSION_REJECTED")
@@ -187,7 +202,7 @@ public final class MonsterSpawnTrace implements AutoCloseable {
                 writer.write(gson.toJson(Map.of("type","summary","started",Instant.ofEpochMilli(current.started).toString(),
                         "ended",Instant.now().toString(),"events",current.total,"detailedEvents",lastDetails,
                         "detailLimit",MAX_DETAILS,"priorityDetailLimit",MAX_PRIORITY_DETAILS,
-                        "priorityCounts",current.priorityCounts,"counts",current.counts)));writer.newLine();
+                        "priorityCounts",current.priorityCounts,"counts",current.counts,"manifest",current.manifest)));writer.newLine();
                 for(var bucket:current.buckets){writer.write(gson.toJson(bucket.output()));writer.newLine();}
                 for(var event:current.details){writer.write(gson.toJson(event));writer.newLine();}
                 for(var event:current.priorityDetails){writer.write(gson.toJson(event));writer.newLine();}

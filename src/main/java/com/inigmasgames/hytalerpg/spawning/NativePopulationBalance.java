@@ -33,17 +33,31 @@ public final class NativePopulationBalance implements AutoCloseable {
     private final Map<World,Set<Integer>> modified=Collections.synchronizedMap(new WeakHashMap<>());
     private final Map<UUID,Map<Integer,EnvironmentSnapshot>> snapshots=new java.util.concurrent.ConcurrentHashMap<>();
     private volatile boolean closed;
-    public NativePopulationBalance(Supplier<Policy> policy){this.policy=Objects.requireNonNull(policy);}
+    private final AutoCloseable nativeProjection;
+    public NativePopulationBalance(Supplier<Policy> policy){
+        this.policy=Objects.requireNonNull(policy);
+        nativeProjection=com.inigmasgames.hytale.patch.NativePopulationProjectionHook.install(store->applySafely(store.getExternalData().getWorld()));
+    }
     public Map<Integer,EnvironmentSnapshot> snapshot(UUID world){return snapshots.getOrDefault(world,Map.of());}
     public NativePopulationRoles roles(){return roles;}
 
-    private void apply(World world){
+    public void applySafely(World world){
+        try{apply(world);}catch(RuntimeException failure){
+            // Explicit no-tuning fallback: reconstruct all native role targets, preserving failure flags and actuals.
+            var store=world.getEntityStore().getStore();var data=store.getResource(WorldSpawnData.getResourceType());
+            var time=store.getResource(WorldTimeResource.getResourceType());
+            if(data!=null&&time!=null)for(int index:data.getWorldEnvironmentSpawnDataIndexes()){
+                var environment=data.getWorldEnvironmentSpawnData(index);if(environment!=null)environment.updateExpectedNPCs(time.getMoonPhase());
+            }
+            MonsterSpawnTrace.event("POPULATION_PROJECTION_RESTORED_NATIVE",world.getWorldConfig().getUuid(),-1,"all",
+                    "reason="+failure.getClass().getSimpleName());
+        }
+    }
+    public void apply(World world){
         if(closed||!world.getWorldConfig().isSpawningNPC())return;
         long now=System.nanoTime();
-        synchronized(lastRun){
-            if(now-lastRun.getOrDefault(world,0L)<1_000_000_000L)return;
-            lastRun.put(world,now);
-        }
+        boolean traceSummary=now-lastRun.getOrDefault(world,0L)>=1_000_000_000L;
+        if(traceSummary)lastRun.put(world,now);
         var entityStore=world.getEntityStore().getStore();
         var nativeData=entityStore.getResource(WorldSpawnData.getResourceType());
         var time=entityStore.getResource(WorldTimeResource.getResourceType());
@@ -79,13 +93,10 @@ public final class NativePopulationBalance implements AutoCloseable {
                         Math.max(0,stat.getWeight(time.getMoonPhase())),Math.max(0,stat.getActual()),minFlock,eligible));
             }
             var result=PopulationWeightPlan.calculate(environment.getExpectedNPCs(),rows,
-                    selected.hostileShare(),selected.wildlifeShare());
+                    selected.hostileShare(),selected.wildlifeShare(),selected.enabled());
             boolean adjust=selected.enabled()&&result.adjusted();
             if(adjust||modifiedWorld.contains(index)){
-                for(var stat:environment.getNpcStatMap().values()){
-                    double target=result.expected().getOrDefault(stat.getRoleIndex(),stat.getExpected());
-                    if(Math.abs(stat.getExpected()-target)>1e-8)stat.setExpected(target);
-                }
+                publish(environment.getNpcStatMap().values(),result);
                 if(adjust)modifiedWorld.add(index);else modifiedWorld.remove(index);
             }
             String reason=selected.enabled()?result.reason():"DISABLED_NATIVE_WEIGHTS";
@@ -93,7 +104,7 @@ public final class NativePopulationBalance implements AutoCloseable {
                     environment.getActualNPCs(),result.actualHostile(),result.actualWildlife(),result.actualAvian(),
                     result.actualOther(),result.baseHostile(),result.baseWildlife(),adjust?result.targetHostile():result.baseHostile(),
                     adjust?result.targetWildlife():result.baseWildlife(),adjust,reason,unknown));
-            if(MonsterSpawnTrace.enabled())MonsterSpawnTrace.event("POPULATION_WEIGHT",world.getWorldConfig().getUuid(),index,"all",
+            if(traceSummary&&MonsterSpawnTrace.enabled())MonsterSpawnTrace.event("POPULATION_WEIGHT",world.getWorldConfig().getUuid(),index,"all",
                     "segments="+environment.getSegmentCount()+" expected="+environment.getExpectedNPCs()
                     +" actual="+environment.getActualNPCs()+" hostileActual="+result.actualHostile()
                     +" wildlifeActual="+result.actualWildlife()+" avianActual="+result.actualAvian()
@@ -110,11 +121,20 @@ public final class NativePopulationBalance implements AutoCloseable {
                         NPCPlugin.get().getName(row.roleIndex()),"category="+row.category()+" nativeWeight="+row.nativeWeight()
                         +" baseExpected="+(totalNativeWeight>0?environment.getExpectedNPCs()*row.nativeWeight()/totalNativeWeight:0)
                         +" adjustedExpected="+(adjust?result.expected().get(row.roleIndex()):"native")
+                        +" storedExpected="+environment.getNpcStatMap().get(row.roleIndex()).getExpected()+" projectionRevision=R244"
                         +" actual="+row.actual()+" minFlock="+row.minimumFlock()+" eligible="+row.eligible());
         }
         snapshots.put(world.getWorldConfig().getUuid(),Map.copyOf(observed));
     }
-    @Override public void close(){closed=true;lastRun.clear();lastRoleTrace.clear();modified.clear();snapshots.clear();}
+    /** Both the native selection seam and tests publish through the real stat setter. */
+    public static void publish(Collection<com.hypixel.hytale.server.spawning.world.WorldNPCSpawnStat> stats,PopulationWeightPlan.Result result){
+        for(var stat:stats){
+            double target=result.expected().getOrDefault(stat.getRoleIndex(),stat.getExpected());
+            if(Math.abs(stat.getExpected()-target)>1e-8)stat.setExpected(target);
+            if(Math.abs(stat.getExpected()-target)>1e-8)throw new IllegalStateException("NATIVE_POPULATION_PROJECTION_MISMATCH");
+        }
+    }
+    @Override public void close(){closed=true;try{nativeProjection.close();}catch(Exception e){throw new IllegalStateException(e);}lastRun.clear();lastRoleTrace.clear();modified.clear();snapshots.clear();}
     public final class Tick extends TickingSystem<ChunkStore> {
         @Override public Set<Dependency<ChunkStore>> getDependencies(){return Set.of(
                 new SystemDependency<>(Order.AFTER,NativeWorldSpawnDensity.Tick.class),

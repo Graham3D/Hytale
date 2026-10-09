@@ -93,6 +93,8 @@ tasks.withType(JavaCompile).configureEach {
 
 tasks.test {
     useJUnitPlatform()
+    exclude '**/R244NamesTest*'
+    exclude '**/R244PopulationProjectionTest*'
     ['NativeAffix*Test', 'ManagedCarrierProductionTest', 'GearCombatProductionTest',
      'GearSignatureProcRuntimeTest', 'NativeGearActionProfilesTest', 'NativeTwinAssaultTest',
      'IronSentinelRestoredLeaseTest'].each { exclude "**/${it}*" }
@@ -141,6 +143,8 @@ tasks.register('nativeControlTest', Test) {
     testClassesDirs = sourceSets.test.output.classesDirs
     classpath = sourceSets.test.runtimeClasspath
     useJUnitPlatform()
+    include '**/R244NamesTest.class'
+    include '**/R244PopulationProjectionTest.class'
     // Include native test classes before forking, avoiding empty worker JVMs.
         ['NativeAffix*Test', 'ManagedCarrierProductionTest', 'GearCombatProductionTest',
          'GearSignatureProcRuntimeTest', 'NativeGearActionProfilesTest', 'NativeTwinAssaultTest',
@@ -266,10 +270,12 @@ tasks.processResources {
         }
     }
     inputs.property('version', project.version)
+    def sourceCommit = providers.exec { commandLine 'git', 'rev-parse', 'HEAD' }.standardOutput.asText.get().trim()
+    inputs.property('sourceCommit', sourceCommit)
     inputs.property('rpgRevision', rpg_revision)
     inputs.property('hytaleVersion', hytale_version)
     filesMatching(['manifest.json', 'rpg-build.properties']) {
-        expand(version: project.version, rpgRevision: rpg_revision, hytaleVersion: hytale_version)
+        expand(version: project.version, rpgRevision: rpg_revision, hytaleVersion: hytale_version, sourceCommit: sourceCommit)
     }
     def gearLanguage = file('src/main/gearLanguage/server.lang')
     def tavernLanguage = file('hytale-taverns/src/main/tavernLanguage/server.lang')
@@ -310,3 +316,11 @@ tasks.register('generateEliteRoleMatrix', JavaExec) {
     mainClass = 'com.inigmasgames.hytalerpg.enemies.EnemyEliteRoleMatrix'
     args file('docs/enemies/ELITE_ROLE_MATRIX.md').absolutePath
 }
+
+// Exact installed campaign biome coverage; no runtime asset/world scan.
+tasks.register('verifyCampaignBiomes', Exec) {
+    group = 'verification'
+    commandLine file("${System.getProperty('user.home')}/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe"),
+        file('tools/Build-CampaignBiomeCoverage.py'), '--verify'
+}
+tasks.named('processResources') { dependsOn tasks.named('verifyCampaignBiomes') }

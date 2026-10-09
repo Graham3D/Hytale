@@ -62,8 +62,8 @@ class LarvaNativeBindingAssetTest {
                 binding.getAsJsonObject("encounterProfileIdsByMode").get(mode).getAsString()),mode);
         assertEquals(hash(GAME.resolve("Assets.zip")),manifest.get("assetsSha256").getAsString());
         assertTrue(Set.of(manifest.get("serverJarSha256").getAsString(),
-                "6f4233203e804d6b0071a6416d26dd867f5cfb0c60d3e78b69a6a91415c1a59e")
-                .contains(hash(GAME.resolve("Server/HytaleServer.jar"))),"Expected original or approved version-pinned native patch");
+                "a032a64e03390ca0aeb6c03c3b1600eaa892c8bc833d1bf3ac39307ccdf3cb20")
+                .contains(hash(Path.of("build/native-patch/HytaleServer-packbound.jar"))),"Expected original or approved version-pinned native patch");
         try(var zip=new ZipFile(GAME.resolve("Assets.zip").toFile())){
             var nativeRole=read(zip,ROLE);
             assertEquals(nativeRole.getAsJsonObject("Modify").get("DropList").getAsString(),

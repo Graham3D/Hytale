@@ -151,9 +151,39 @@ public final class EncounterProfileResolver {
         return result;
     }
     public Optional<EnemyRewardRegistry.Spawn> classifyAuthored(EnemyRewardRegistry registry,UUID world,UUID enemy,String role,String biome,EnemyRewardRegistry.Origin origin,long now){
-        var legacy=registry.classify(world,enemy,role,biome,origin,now);
-        if(legacy.isEmpty())return Optional.empty();
-        return author(legacy.get(),biome);
+        return classifyNatural(registry,world,enemy,role,biome,-1,origin,now).spawn();
+    }
+    public enum Admission { WORLD_NOT_READY,WORLD_DISABLED,UNSUPPORTED_GENERATOR,ROLE_UNMAPPED,
+        BIOME_KEY_UNMAPPED,REGION_UNMAPPED,PROFILE_KEY_MISSING,BASELINE_INVALID,PROVENANCE_REJECTED,READY }
+    public record NaturalContext(UUID world,UUID entity,String era,String worldProfile,String runtimeRole,
+                                 String canonicalRole,int nativeEnvironment,String biome,String region,String revision){}
+    public record Classification(Admission reason,NaturalContext context,Optional<EnemyRewardRegistry.Spawn> spawn){}
+    /** Shared production lookup. Custom native biomes use their exact authored region, never a QA fallback. */
+    public Classification classifyNatural(EnemyRewardRegistry registry,UUID world,UUID enemy,String role,String biome,
+            int environment,EnemyRewardRegistry.Origin origin,long now){
+        var binding=worlds.find(world).orElse(null);var resolvedRole=registry.resolveRole(role).orElse(null);
+        var region=CampaignBiomes.current().find(biome).orElse(null);
+        var context=new NaturalContext(world,enemy,binding==null?"UNKNOWN":binding.difficulty().name(),
+                binding==null?"UNKNOWN":binding.profileId(),role,resolvedRole==null?"UNKNOWN":resolvedRole.canonical().roleId(),
+                environment,biome,region==null?"UNKNOWN":region.region(),CampaignBiomes.current().revision());
+        Admission reason;
+        if(origin!=EnemyRewardRegistry.Origin.WILD_WORLD_SPAWN)reason=Admission.PROVENANCE_REJECTED;
+        else if(binding==null)reason=Admission.WORLD_NOT_READY;
+        else if(!binding.enabled()||!scalars.difficulty(binding.difficulty().name()).enabled())reason=Admission.WORLD_DISABLED;
+        else if(binding.kind()!=WorldDifficultyRegistry.Kind.CAMPAIGN||!biome.startsWith("Default/"))reason=Admission.UNSUPPORTED_GENERATOR;
+        else if(resolvedRole==null)reason=Admission.ROLE_UNMAPPED;
+        else if(region==null)reason=biome.startsWith("Default/Oceans/")?Admission.REGION_UNMAPPED:Admission.BIOME_KEY_UNMAPPED;
+        else if(!profiles.containsKey(new Key(binding.difficulty(),binding.profileId(),role,biome)))reason=Admission.PROFILE_KEY_MISSING;
+        else {
+            try{
+                var resolved=resolveAuthored(world,enemy,role,biome);
+                var canonical=resolvedRole.canonical();
+                return new Classification(Admission.READY,context,Optional.of(new EnemyRewardRegistry.Spawn(world,enemy,role,
+                        canonical.combatIdentity(),biome,resolved.sourceCombatLevel(),canonical.rank(),canonical.rarity(),
+                        resolved.profileId(),now,null,resolved)));
+            }catch(IllegalArgumentException invalid){return new Classification(Admission.BASELINE_INVALID,context,Optional.empty());}
+        }
+        return new Classification(reason,context,Optional.empty());
     }
     public Optional<EnemyRewardRegistry.Spawn> author(EnemyRewardRegistry.Spawn spawn,String profileBiome){
         var binding=worlds.find(spawn.world());

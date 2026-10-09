@@ -94,38 +94,10 @@ public final class EnemyHealthBarPresentation {
             removeAnchor(store,affixAnchors.remove(key));
             affixAnchors.put(key,new Anchor(createAnchor(store,asset,rows.affixAnchorPosition(),affixText),affixText));
         }
-        boolean promoted=PromotedNameGlyphs.rarityAsset(display.rarityLabel())!=null
-                &&!"Minion".equals(display.packRoleLabel());
-        if(promoted){
-            removeAnchor(store,nameAnchors.remove(key));
-            var old=coloredNames.get(key);
-            if(old!=null&&old.valid()&&old.text().equals(display.name())&&old.rarity().equals(display.rarityLabel()))return true;
-            try {
-                var next=PromotedNameGlyphs.prepare(display.name(),display.rarityLabel());
-                coloredNames.put(key,next);
-                if(old!=null)coloredPackets.removeOwner(store,id);
-                com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log(
-                        "RPG_ENEMY_COLORED_NAME_PREPARED enemy=%s rarity=%s glyphs=%s nameY=%s",
-                        id,display.rarityLabel(),next.glyphs().size(),rows.nameY());
-                return true;
-            } catch(RuntimeException failure) {
-                coloredNames.remove(key);
-                coloredPackets.removeOwner(store,id);
-                String reason=failure.getClass().getSimpleName()+":"+failure.getMessage();
-                if(coloredNameFailures.add(reason))
-                    com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
-                            "RPG_ENEMY_COLORED_NAME_FAILED reason=%s nativeNamePreserved=true",reason);
-                return false;
-            }
-        }
+        // R244 primary identity belongs to the native actor's Nameplate compositor.
+        removeAnchor(store,nameAnchors.remove(key));
         coloredNames.remove(key);
         coloredPackets.removeOwner(store,id);
-        var priorName=nameAnchors.get(key);
-        if(priorName!=null&&priorName.ref().isValid())updateAnchor(store,nameAnchors,key,priorName,display.name());
-        else {
-            removeAnchor(store,nameAnchors.remove(key));
-            nameAnchors.put(key,new Anchor(createAnchor(store,asset,rows.nameAnchorPosition(),display.name()),display.name()));
-        }
         return true;
     }
 
@@ -446,14 +418,9 @@ public final class EnemyHealthBarPresentation {
             var name=owner.nameAnchors.get(key);
             var affix=owner.affixAnchors.get(key);
             var colored=owner.coloredNames.get(key);
-            if((name==null&&colored==null)||affix==null)return;
+            if(affix==null)return;
             if((name!=null&&!name.ref().isValid())||(colored!=null&&!colored.valid())||!affix.ref().isValid()
                     ||store.getComponent(actor,DeathComponent.getComponentType())!=null){
-                boolean alive=store.getComponent(actor,DeathComponent.getComponentType())==null;
-                if(alive){
-                    var plate=buffer.getComponent(actor,Nameplate.getComponentType());
-                    if(plate!=null&&plate.getText().isBlank())plate.setText(colored!=null?colored.text():name.text());
-                }
                 if(name!=null&&owner.nameAnchors.remove(key,name)&&name.ref().isValid())
                     buffer.tryRemoveEntity(name.ref(),com.hypixel.hytale.component.RemoveReason.REMOVE);
                 if(owner.affixAnchors.remove(key,affix)&&affix.ref().isValid())

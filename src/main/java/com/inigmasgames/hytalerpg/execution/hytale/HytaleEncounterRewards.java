@@ -546,8 +546,7 @@ public final class HytaleEncounterRewards implements AutoCloseable {
         var npc=store.getComponent(ref,NPCEntity.getComponentType());
         if(npc==null||!nativeWorldSpawnEvidence(AddReason.SPAWN,npc.getEnvironment(),npc.getSpawnConfiguration())
                 ||registry.resolveRole(npc.getRoleName()).isEmpty())return Optional.empty();
-        return difficulty.classifyAuthored(registry,world(store),id(store,ref),npc.getRoleName(),biome(store,ref),
-                EnemyRewardRegistry.Origin.WILD_WORLD_SPAWN,System.currentTimeMillis());
+        return resolveNaturalProfile(store,ref,npc).spawn();
     }
     /** Read a staged native member through the ordinary authored classifier and native name resolver. */
     public Optional<com.inigmasgames.hytalerpg.enemies.EnemyNativeGroupPreparation.MemberSource> classifyStagedNative(
@@ -585,18 +584,18 @@ public final class HytaleEncounterRewards implements AutoCloseable {
             MonsterSpawnTrace.event("NATIVE_CLASSIFY_REJECT",world(store),npc.getEnvironment(),npc.getRoleName(),"reason=sourceOrRole");
             return Optional.empty();
         }
-        var classified=difficulty.classifyAuthored(registry,world(store),id(store,ref),npc.getRoleName(),biome(store,ref),
-                EnemyRewardRegistry.Origin.WILD_WORLD_SPAWN,System.currentTimeMillis());
-        if(classified.isEmpty()){
-            MonsterSpawnTrace.event("NATIVE_CLASSIFY_REJECT",world(store),npc.getEnvironment(),npc.getRoleName(),"reason=authoredProfile");
-            return Optional.empty();
-        }
+        var classified=resolveNaturalProfile(store,ref,npc).spawn();
+        if(classified.isEmpty())return Optional.empty();
         var name=HytaleDifficultyCombat.nativeDisplayName(store,ref,npc);
-        if(name==null||name.isBlank()||name.startsWith("server.")||name.contains("_")){
-            MonsterSpawnTrace.event("NATIVE_CLASSIFY_REJECT",world(store),npc.getEnvironment(),npc.getRoleName(),"reason=displayName");
-            return Optional.empty();
-        }
         return Optional.of(new com.inigmasgames.hytalerpg.enemies.EnemyNativeGroupPreparation.MemberSource(classified.get(),name));
+    }
+    private com.inigmasgames.hytalerpg.difficulty.EncounterProfileResolver.Classification resolveNaturalProfile(
+            Store<EntityStore> store,Ref<EntityStore> ref,NPCEntity npc){
+        var result=difficulty.classifyNatural(registry,world(store),id(store,ref),npc.getRoleName(),biome(store,ref),
+                npc.getEnvironment(),EnemyRewardRegistry.Origin.WILD_WORLD_SPAWN,System.currentTimeMillis());
+        MonsterSpawnTrace.event(result.spawn().isPresent()?"NATIVE_CLASSIFY_READY":"NATIVE_CLASSIFY_REJECT",
+                world(store),npc.getEnvironment(),npc.getRoleName(),"reason="+result.reason()+" context="+result.context());
+        return result;
     }
     /** Operator staging admits a real NPC through the authored profile without claiming a world-spawn job. */
     public Optional<com.inigmasgames.hytalerpg.enemies.EnemyNativeGroupPreparation.MemberSource> classifyStagedQa(
@@ -832,19 +831,7 @@ public final class HytaleEncounterRewards implements AutoCloseable {
         attachNativeCombat(store,world,enemy,roleId,spawn,reason,combatTicket);
     }
     private void presentNativeHostileName(Store<EntityStore> store,Ref<EntityStore> ref){
-        if(difficultyCombat==null)return;
-        if(store.getComponent(ref,PlayerRef.getComponentType())!=null
-                ||store.getComponent(ref,SummonProjection.getComponentType())!=null
-                ||store.getComponent(ref,ConversionProjection.getComponentType())!=null
-                ||EntityStore.REGISTRY.getNonSerializedComponentType()!=null
-                    &&store.getComponent(ref,EntityStore.REGISTRY.getNonSerializedComponentType())!=null)return;
-        var npc=store.getComponent(ref,NPCEntity.getComponentType());
-        if(npc==null||registry.resolveRole(npc.getRoleName()).isEmpty())return;
-        try{difficultyCombat.presentNativeHostileName(store,ref);}
-        catch(RuntimeException failure){
-            com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
-                    "RPG_ENEMY_NATIVE_NAME_FALLBACK_FAILED role=%s error=%s",npc.getRoleName(),failure.toString());
-        }
+        if(difficultyCombat!=null)difficultyCombat.presentNativeHostileName(store,ref);
     }
     private void attachNativeCombat(Store<EntityStore> store,UUID world,UUID enemy,String role,Optional<EnemyRewardRegistry.Spawn> spawn,AddReason reason,Object ticket){
         var nativeWorld=store.getExternalData().getWorld();

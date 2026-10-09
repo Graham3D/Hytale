@@ -1,0 +1,2509 @@
+{
+  "revision": "r244-campaign-biomes-u7p5",
+  "biomes": [
+    {
+      "key": "Default/Zone1_Shallow_Ocean/Rocks",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Shallow_Ocean/Custom.Rocks.json",
+          "sha256": "d4073e597544eb6675feae62a8e6d529577a9d181dfc9019a34954916515f5b4"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Shallow_Ocean/Trenches",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Shallow_Ocean/Custom.Trenches.json",
+          "sha256": "c0ddc75a115729b462caee1e258aeb7c4b9eaa2bef38f8b51f13816cc12148d9"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Shallow_Ocean/Shore",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Shallow_Ocean/Tile.Shore.json",
+          "sha256": "1c92aaf2749600119942bda5f627125f067f7fd8ba34cbf0630a8fedc6716cea"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Shore/Cliffs",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Shore/Custom.Cliffs.json",
+          "sha256": "8a53cfa792184eb16dd3228a06bbaf5fd0550450b7606453add52434d97847ad"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Shore/Lake",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Shore/Custom.Lake.json",
+          "sha256": "e3898bd75c330732c0b78ebd68409ce7fe452dd6fd7c35396dfebb53e614ceff"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Shore/River",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Shore/Custom.River.json",
+          "sha256": "e26ba6895f1f4cd86aab95c05edfab55db1ecd75f4b8e4337f15f969524f0197"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Shore/Beach",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Shore/Tile.Beach.json",
+          "sha256": "4cd38d8d3c439af85ff48eae0671dd5e8cc316ba4c1cb6c5daf48bd92818ab61"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Spawn/River_Plains_Spawn",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Spawn/Custom.River_Plains_Spawn.json",
+          "sha256": "f73636dbc581cdf15236066c70779b8ccaef34855222a38a385d2326716420f3"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Spawn/Plains_Spawn",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Spawn/Tile.Plains_Spawn.json",
+          "sha256": "0a302ccd63b7044dadd35829213b9cce382c873949fd3558ce9ab74ca867968c"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Temple/River_Plains_Temple",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Temple/Custom.River_Plains_Temple.json",
+          "sha256": "0e8196f9316b46c16acd4df586bc80fbc17cec586f6c05426385e3fb0d9f3dbc"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Temple/Plains_Temple",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Temple/Tile.Plains_Temple.json",
+          "sha256": "7c147832530a95649475c32b7e622cf1984432b3799bfd8d58858481337a9a68"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier1/Forest_Birch_Trork",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier1/Custom.Forest_Birch_Trork.json",
+          "sha256": "d55dfe82235f6d7f4e69dc8a5270d6b70bcfa44e66599b7595f6da4b9857a9cc"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier1/Forest_Flower_Trork",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier1/Custom.Forest_Flower_Trork.json",
+          "sha256": "5ed42a4d3746c709dab3806d6dc21304737023053c9167fb5f2f95e29ab0b815"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier1/Mountain_Tier1",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier1/Custom.Mountain_Tier1.json",
+          "sha256": "542b2033b36f2a3bb766a3335697d5c5f6645c025c9b81319c33103bc69b3177"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier1/Plains_Birch_Kweebec",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier1/Custom.Plains_Birch_Kweebec.json",
+          "sha256": "9ca3d952b430c69f6cd179785a2d70f8444ce08bbe30e2e5da623dcc07115bc0"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier1/Plains_Birch_Trork",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier1/Custom.Plains_Birch_Trork.json",
+          "sha256": "6a23e68584a403a3cbc623d6191eaa4a5fb70969d7bfe60ee203c71bfd2b420a"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier1/Plains_Smooth_Kweebec",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier1/Custom.Plains_Smooth_Kweebec.json",
+          "sha256": "7d3b0b06e5c6d77a418f1718f969147a3cc26e74662e1c88df98d5c766329531"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier1/Plains_Smooth_Trork",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier1/Custom.Plains_Smooth_Trork.json",
+          "sha256": "2460a3aea5732945d1dfd5c08200c0974bb3b1ea84cdcb8640a57efc6a532911"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier1/River_Forest_Birch",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier1/Custom.River_Forest_Birch.json",
+          "sha256": "a265210ecd86d3ff2bddb67c25eea7f89a518ed7f93892ba9fcc6abc8ee4935c"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier1/River_Forest_Flower",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier1/Custom.River_Forest_Flower.json",
+          "sha256": "af7e83fa088bde28d16d79f12c307d2f3f835f57938394b941531ba543a92658"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier1/River_Plains_Birch",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier1/Custom.River_Plains_Birch.json",
+          "sha256": "519b963e15e5aa8637a7b2992ebee2a3547f4596a5643ec523935fa4352ddde9"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier1/River_Plains_Smooth",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier1/Custom.River_Plains_Smooth.json",
+          "sha256": "c1dcb1e30b07a07540a86cc472bfcf08ba323fd739c05c62c675d2a5c8411ba3"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier1/Forest_Birch",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier1/Tile.Forest_Birch.json",
+          "sha256": "41a8c5aed98d412eda4f44e1a8612bbcf03ecd96a8b99b612720aeec4eb5e0d9"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier1/Forest_Flower",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier1/Tile.Forest_Flower.json",
+          "sha256": "6713d143005a32f1f4aa7a67239319eafc42706ac3fb3d29f87fdbefe37f7961"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier1/Plains_Birch",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier1/Tile.Plains_Birch.json",
+          "sha256": "08038ef6aa2014749ed97e09f1a51662b1e05198030bec9a43501667d9816c5b"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier1/Plains_Smooth",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier1/Tile.Plains_Smooth.json",
+          "sha256": "d3232952026d43756ac65741f5157135ed40c5fcca320a0f18965c8012854557"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier2/Forest_Aspen_Kweebec",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier2/Custom.Forest_Aspen_Kweebec.json",
+          "sha256": "d2fc1be1a16ca06aa4e4722c0a95e52b415ed05bfc62747c3a48274b7a027c4c"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier2/Forest_Aspen_Trork",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier2/Custom.Forest_Aspen_Trork.json",
+          "sha256": "4485ebd10b546d397b8f92f06ab0278a9a2d725ee322d1450c20987667db7535"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier2/Forest_Gully_Trork",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier2/Custom.Forest_Gully_Trork.json",
+          "sha256": "4866a53428d5422bdc44cfe0ff42fe36a7643041b7e76090d3e1fccc2dc5a9b2"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier2/Lake_Chalk",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier2/Custom.Lake_Chalk.json",
+          "sha256": "3584f6cfa2bb1141044df9978a84e675f448c0b39052b8a030528ecaee9b489c"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier2/Mountain_Tier2",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier2/Custom.Mountain_Tier2.json",
+          "sha256": "2001ef398f2dabdb37f42df58b82c8f5517e780c735e9ee70cd613314dd7ae7a"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier2/Plains_Tallgrass_Trork",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier2/Custom.Plains_Tallgrass_Trork.json",
+          "sha256": "02bcb62ddbb30d19b99d995f36ff34522f362bc12b4a3cdf03bf607fd12239d9"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier2/River_Forest_Aspen",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier2/Custom.River_Forest_Aspen.json",
+          "sha256": "7342065279ee576154e669a09a654eed8113684dc2d9e5de88dfee96239f9a1e"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier2/River_Forest_Gully",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier2/Custom.River_Forest_Gully.json",
+          "sha256": "20fa27859e79be2233c7abc9ec50d1910fe1fb271e148e7cb5f8c08ec1eeb05d"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier2/River_Plains_Gorge",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier2/Custom.River_Plains_Gorge.json",
+          "sha256": "d8f42aac618921546700abfd854c38358a150db36feb7ffea4118f3adf6cb055"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier2/River_Plains_Tallgrass",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier2/Custom.River_Plains_Tallgrass.json",
+          "sha256": "d974448b125a507eea49233fc125248d411f43d014373e206c7134e5cb13223a"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier2/River_Plains_Tallsgrass",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier2/Custom.River_Plains_Tallsgrass.json",
+          "sha256": "79ea484d33d41aab2d910c257a60a20a4abf3b1be8d9c84dab8db3489e91f23c"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier2/Forest_Aspen",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier2/Tile.Forest_Aspen.json",
+          "sha256": "3451ea6e737e5c1fe4d0cf3cf34a64dfc773064e00f37a3b3aa73de2d7de649d"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier2/Forest_Gully",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier2/Tile.Forest_Gully.json",
+          "sha256": "4f36fa7bd2134428cc7efcb5f05be4ed445f3179961ef6ddf0fafc24ddbde292"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier2/Plains_Gorge",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier2/Tile.Plains_Gorge.json",
+          "sha256": "aa25d5ac47ff9ff7b8f7b8990c5088724413acf8ff13c50ac343b6f6636e4e60"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier2/Plains_Tallgrass",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier2/Tile.Plains_Tallgrass.json",
+          "sha256": "5fb11de222ae0e209180c0491383d913b71d02427a55dc77a97632a1d4b06f09"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier3/Forest_Autumn_Kweebec",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier3/Custom.Forest_Autumn_Kweebec.json",
+          "sha256": "662693d3d36a2d31eea65d4be559fd2875a28dd0338349c93df20cc5ce304f1f"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier3/Forest_Autumn_Trork",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier3/Custom.Forest_Autumn_Trork.json",
+          "sha256": "2cce1928c346c612755c7f75a65bee90f7f5bf7769e3aac330050db1d5a3ca3d"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier3/Forest_Moss_Trork",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier3/Custom.Forest_Moss_Trork.json",
+          "sha256": "f6f82a0a3ab69d832266b49e78356c46f09b11c4bd249928896ef446d75778d3"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier3/Lake",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier3/Custom.Lake.json",
+          "sha256": "03d28425e8403ed67b43fc733b13b4a5602485ceb7968aa2c664a2ca88d7d894"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier3/Lake_Chalk",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier3/Custom.Lake_Chalk.json",
+          "sha256": "1db824e97a8edcb6b025e4de3f3cdb90e2e032610f5d574e0496c03804b622d6"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier3/Lake_Moss",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier3/Custom.Lake_Moss.json",
+          "sha256": "72eefa1606a639797536e8e7d0f4b2f83b7fca5e12eac0f9b01031966e60966b"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier3/Lake_Swamp",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier3/Custom.Lake_Swamp.json",
+          "sha256": "0feb155bdf8006690fbb47573b6bb61c83c8491b5cf44ca39b34fa21f2806f18"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier3/Mountain_Tier3",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier3/Custom.Mountain_Tier3.json",
+          "sha256": "582bc72c629b0b54c54ea3a9c628be1004b4fe3714e35139320b3fa26ea6d787"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier3/River_Forest_Autumn",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier3/Custom.River_Forest_Autumn.json",
+          "sha256": "66947a01484a372b1cc51e5f11dfaf56893059a75652115842c95e87ed9ff848"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier3/River_Forest_Moss",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier3/Custom.River_Forest_Moss.json",
+          "sha256": "7d11c9497a822aec923df52e3d413c14bba6c3f5e6f4fb3ca6eefae1386432e9"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier3/River_Plains_Gorge",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier3/Custom.River_Plains_Gorge.json",
+          "sha256": "c95481227921b2b2592d293cb9f141667b361483a6b7662f76e77ed2ec077a9b"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier3/Forest_Autumn",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier3/Tile.Forest_Autumn.json",
+          "sha256": "8db6b5027100f35570410f520863c9457c61cb1067b0a1df45fc0b06712b403b"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier3/Forest_Azure",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier3/Tile.Forest_Azure.json",
+          "sha256": "edfa92edc947c3feaac1243afbfab1aecef7d8a44968ca67185b96219db945b5"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier3/Forest_Moss",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier3/Tile.Forest_Moss.json",
+          "sha256": "bf73ff94929fc027f72106c1bfe7182040f439df7b1c0a5e892397df91a5a1a7"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier3/Forest_Swamp",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier3/Tile.Forest_Swamp.json",
+          "sha256": "d791e075f94b7c2d704947045130c94bb68846ca42db3fd557038ba2b7c10ab5"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone1_Tier3/Plains_Gorge",
+      "region": "emerald_wilds",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone1_Tier3/Tile.Plains_Gorge.json",
+          "sha256": "ad2427065be695080fc8e5ee358e57db051bc99b28e30f501b8c40b84d7fa568"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Shallow_Ocean/Cavern",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Shallow_Ocean/Custom.Cavern.json",
+          "sha256": "3db687655ef12bad2860f62f1ad0aa18edd69c38ade63bc89c10198b7786d054"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Shallow_Ocean/Islands",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Shallow_Ocean/Custom.Islands.json",
+          "sha256": "e9d536e186ea29f3fef2fdbe429f1b42a277085b816e6ade432e110a453f8c3c"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Shallow_Ocean/Plateau",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Shallow_Ocean/Custom.Plateau.json",
+          "sha256": "9981e766eeba6d4fdfec6a8d0a529a92759d75b4f726c9bebbf284bbb17b63c7"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Shallow_Ocean/Coral_Orange",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Shallow_Ocean/Tile.Coral_Orange.json",
+          "sha256": "8c71af5e4e70bddb449dfe9bc5de95f85df9222c979efc468b07ed49603bd812"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Shallow_Ocean/Coral_Red",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Shallow_Ocean/Tile.Coral_Red.json",
+          "sha256": "070d62c2fe131033f9d6274605436d63082c30020ba3ea5f32e19fbe0491cfc4"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Shallow_Ocean/Coral_Yellow",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Shallow_Ocean/Tile.Coral_Yellow.json",
+          "sha256": "31b63f4f256e532e81e2c5df056460bb89431a08945986f30fcd19bac16189ec"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Shallow_Ocean/Grass_Yellow",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Shallow_Ocean/Tile.Grass_Yellow.json",
+          "sha256": "ea7659f6c72f6c1040a037ce17372d413a143d0f28a7d3fab48d55b23e51530f"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Shallow_Ocean/Shallow_Sand",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Shallow_Ocean/Tile.Shallow_Sand.json",
+          "sha256": "2af2874ff9a62c8443301678071007d940bd07cf364c10ddbfb25f9423b1f6ca"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Shore/Plateau_Beach",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Shore/Custom.Plateau_Beach.json",
+          "sha256": "95e70b0bf0c7b419c69eb14b359f4939a7197631a75f376372f69bcefd097185"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Shore/Beach_Palm",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Shore/Tile.Beach_Palm.json",
+          "sha256": "e2155bb603d1170f312d4554c0db84951f5a6f9063e55ecbcde38bfcb211f8d4"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Shore/Beach_Smooth",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Shore/Tile.Beach_Smooth.json",
+          "sha256": "f84d6b3340789d7baf21cd6f6a60a367d65abb202ad06f8ef419b5afeb306d46"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier1/Plateau_Savannah_Boab",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier1/Custom.Plateau_Savannah_Boab.json",
+          "sha256": "82dd68dc9133bbaac1ff934f5d125367fc54270b47e66399256c253024f9d586"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier1/Plateau_Savannah_Forest",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier1/Custom.Plateau_Savannah_Forest.json",
+          "sha256": "c7af535ed7b386a86551f37e957fc11483a54926e1b89c6d1cb96b60496606b4"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier1/Plateau_Savannah_Plains",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier1/Custom.Plateau_Savannah_Plains.json",
+          "sha256": "e9cbfddb42bb0bc8efea79a71428b8663f365231523e4edaa1c202d56759f17d"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier1/Plateau_Savannah_Rock",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier1/Custom.Plateau_Savannah_Rock.json",
+          "sha256": "36966a0d4ef44de0166814eed706618d01784282ada7af8b21fd336f0c2a4cec"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier1/Plateau_Scrub_Bushland",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier1/Custom.Plateau_Scrub_Bushland.json",
+          "sha256": "838ede0f4389cec65ceba332fa933ee9aff53a7e0e36a5d6deb16e27b3509c8d"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier1/River",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier1/Custom.River.json",
+          "sha256": "f70707de024fa481cc0949341fe9c43a74db7bef4c023b2ea3dcb2640866d82b"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier1/Savannah_Mudflats",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier1/Custom.Savannah_Mudflats.json",
+          "sha256": "6492a03695b147b794498349360442efdaa2dfa28f3b367a136f55267460505b"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier1/Savannah_Boab",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier1/Tile.Savannah_Boab.json",
+          "sha256": "58a9fa8cc24d25b22444ea62273d138f4b89cc12f69e548a0e4e73011cae41fe"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier1/Savannah_Forest",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier1/Tile.Savannah_Forest.json",
+          "sha256": "e04e11b4582d9fe8fabbea27b17e52eb4f4980fb1699a5de08398addd62ac196"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier1/Savannah_Plains",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier1/Tile.Savannah_Plains.json",
+          "sha256": "d1477f83a4209daba5bf97d37e1a973d46638971c171d66cd21116b2f856e887"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier1/Savannah_Rock",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier1/Tile.Savannah_Rock.json",
+          "sha256": "9b0f51ae8665a270bbca35dbbefb60db015a4b215ec5ce7209a9c9689834de45"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier1/Scrub_Bushland",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier1/Tile.Scrub_Bushland.json",
+          "sha256": "92ab62b2f9b0159d55054cb42273827abe37c9f002e32e9fd8c522fe85883e56"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier2/Desert_Hotsprings",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier2/Custom.Desert_Hotsprings.json",
+          "sha256": "889660d3f643b6ef4b25238cd4ea737eddbccd02ab76eade6613f7a16fe4ef17"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier2/Desert_Oasis_Hidden",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier2/Custom.Desert_Oasis_Hidden.json",
+          "sha256": "786e41dcdda335941b9d0628719c6540e8ec270b1cde80f10ab1403462ba928b"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier2/Desert_Oasis_Hidden_Dunes",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier2/Custom.Desert_Oasis_Hidden_Dunes.json",
+          "sha256": "7b1bb84c3633c4a8de9fa42a4e74824e15ce48a8d56a924bcbbfdb1e2d58a7d8"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier2/Desert_Oasis_Hidden_Dunes_Red",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier2/Custom.Desert_Oasis_Hidden_Dunes_Red.json",
+          "sha256": "61aa9226a3964e91855f5ea73d8f5b87f84eeead8be29e19a5b86e056588227f"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier2/Dunes_Desert_Oasis",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier2/Custom.Dunes_Desert_Oasis.json",
+          "sha256": "1dc99b5710da3fd26b4c37076794e3bac809c02065d6fb0bf3258dd0c5706c16"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier2/Dunes_Desert_Red",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier2/Custom.Dunes_Desert_Red.json",
+          "sha256": "9eed788a5a22c48fe2bbbb8796e9e793c130c5bc4dace68949d53cfc54520992"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier2/Dunes_Desert_Rock",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier2/Custom.Dunes_Desert_Rock.json",
+          "sha256": "d75529a9b6c638c9c71a9449ebe56f2e93961c81149e2946416396ff38a9a46e"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier2/Dunes_Desert_Springs",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier2/Custom.Dunes_Desert_Springs.json",
+          "sha256": "3a2b581542794a2dc5976560638a79267fed67e8320ad3e282a1a6131ccfd80a"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier2/Plateau_Desert_Oasis",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier2/Custom.Plateau_Desert_Oasis.json",
+          "sha256": "8301760cc0c5aa759898386c136bcbc6fa428304c3db24101cc12d1c62434aca"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier2/Plateau_Desert_Red",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier2/Custom.Plateau_Desert_Red.json",
+          "sha256": "d251a756d49752a6918f6539509a1bb1ffe5754b8c75f0d9ec8e3854b4137eb6"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier2/Plateau_Desert_Rock",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier2/Custom.Plateau_Desert_Rock.json",
+          "sha256": "7dee8c8e8495e5a842d19fd0dc37ba0f7de7ed159826acd79dd1f2de23bf6d3a"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier2/Plateau_Desert_Springs",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier2/Custom.Plateau_Desert_Springs.json",
+          "sha256": "0bd66a2a560a32b57b7fc3d0b2c2e35ca783c603c5c0028b5e5ce479b6dd3869"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier2/Scrub_Tar_Pits",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier2/Custom.Scrub_Tar_Pits.json",
+          "sha256": "2837a684d65650ff0ebc0c42987d07e16cc20c32a274ed52c07f584a55dd620b"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier2/Desert_Oasis",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier2/Tile.Desert_Oasis.json",
+          "sha256": "6f09b4af79d0ab94ce06a2c90d454c9b747ed449c6fb5626e876264ad44b96db"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier2/Desert_Red",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier2/Tile.Desert_Red.json",
+          "sha256": "f483e2ef03b87dee752bdf07389240efdab76a462c60eaef8ba8d47a7334c81a"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier2/Desert_Rock",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier2/Tile.Desert_Rock.json",
+          "sha256": "4308986728bb14a4005b70c1f43d6159ad50e61f10a27b58116181efb6167bff"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier2/Desert_Springs",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier2/Tile.Desert_Springs.json",
+          "sha256": "820779a36633dbeb6301230705220039237636d1c14bceb8a00f21d662a22063"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier3/Desert_Mushroom",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier3/Custom.Desert_Mushroom.json",
+          "sha256": "97f551dcc661b6285e3f2885bd32b88c21e03b3971b0328201114aaf94b7478b"
+        },
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier3/Tile.Desert_Mushroom.json",
+          "sha256": "514ce3e60537632e1454024f2e452ca2d9de6cbc0c64c1f9b09d731705584667"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier3/Desert_Mushroom_Foot",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier3/Custom.Desert_Mushroom_Foot.json",
+          "sha256": "e22c8c251d0d27c0f7232e9ac2b1f1286de6be664ecd2db95df6040f95610596"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier3/Desert_Oasis_Hidden",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier3/Custom.Desert_Oasis_Hidden.json",
+          "sha256": "483d986d85139643f3a3eed78acb69ba88b8004854c65607ce69426e9b32d553"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier3/Desert_Oasis_Hidden_Dunes",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier3/Custom.Desert_Oasis_Hidden_Dunes.json",
+          "sha256": "acb007feb06106856e0ad2011496272678d9423edcf9d5fba1a6d90a07137c56"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier3/Dunes_Desert_Barren",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier3/Custom.Dunes_Desert_Barren.json",
+          "sha256": "01214fbb73639081533a2ca26946fc217d82679de859a9820a89af088d480a27"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier3/Dunes_Desert_Mushroom",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier3/Custom.Dunes_Desert_Mushroom.json",
+          "sha256": "89a485a4da4e3ea4697f15c28572abe8201200fb2bb4c604fab21cf23f591e6a"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier3/Plateau_Desert_Barren",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier3/Custom.Plateau_Desert_Barren.json",
+          "sha256": "721d5912f2ee1042a5965a59288b6ef41f8824c2c149388544833aea40d74988"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier3/Plateau_Desert_Mushroom",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier3/Custom.Plateau_Desert_Mushroom.json",
+          "sha256": "2979313565e4dd8d2935d1b77b0b61bd1354ed71cc9e630e0d3a5d0cf47529d6"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier3/Scrub_Tar_Pits",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier3/Custom.Scrub_Tar_Pits.json",
+          "sha256": "8f40cb72e9b46f887d2d6195b8783fe67ff3051a473e2513fabcecdf9102cd57"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone2_Tier3/Desert_Barren",
+      "region": "howling_sands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone2_Tier3/Tile.Desert_Barren.json",
+          "sha256": "6e575effca7aebd6d6e63c68a97e14064797236ba2d8997297f76eab6321fa5f"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shallow_Ocean_Tier1/Rocks",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shallow_Ocean_Tier1/Custom.Rocks.json",
+          "sha256": "667ccf8bd1a3e15dffc730145890986aeb60a8a70934df8ccf2e1f772cfd8b69"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shallow_Ocean_Tier1/Trenches_Cold",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shallow_Ocean_Tier1/Custom.Trenches_Cold.json",
+          "sha256": "aaf0d4b10a72323b1fcabe6f362a17e34785dea315f873eb3a135c1fcb2a42e0"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shallow_Ocean_Tier1/Trenches_Warm",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shallow_Ocean_Tier1/Custom.Trenches_Warm.json",
+          "sha256": "1bc84489a98710ab8f8a8999eb8b03dea5752283fb5b1edd15505de4b8a90049"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shallow_Ocean_Tier1/Shore_Cold",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shallow_Ocean_Tier1/Tile.Shore_Cold.json",
+          "sha256": "f7ede3788206728b13ceba14007181e0215e356382f5a0f9954cc268c3877903"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shallow_Ocean_Tier1/Shore_Warm",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shallow_Ocean_Tier1/Tile.Shore_Warm.json",
+          "sha256": "cbd16e963feb7918690eea48e96fdd88f022f93db5bf5b6d87ca5d25dec33a67"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shallow_Ocean_Tier2/Rocks",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shallow_Ocean_Tier2/Custom.Rocks.json",
+          "sha256": "308cf5191a0a9fb105c873f268a9154f5b9f3ba105344d9f2e3ec595dcbdd4dc"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shallow_Ocean_Tier2/Trenches_Cold",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shallow_Ocean_Tier2/Custom.Trenches_Cold.json",
+          "sha256": "eefd38c55a9ab7226414ed8cfef8d304e725838ba1aad4adb4731ed17482cc92"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shallow_Ocean_Tier2/Trenches_Warm",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shallow_Ocean_Tier2/Custom.Trenches_Warm.json",
+          "sha256": "c1b6a95961578ad01b5e0f409b084063316fab5588d0f50c9bb1b75cc286bf52"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shallow_Ocean_Tier2/Shore_Cold",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shallow_Ocean_Tier2/Tile.Shore_Cold.json",
+          "sha256": "5b60d7717425ad72d3877b7170245459bf0ecbf457260031a3f5c9d91c878977"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shallow_Ocean_Tier2/Shore_Warm",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shallow_Ocean_Tier2/Tile.Shore_Warm.json",
+          "sha256": "b234fa54e2ecba47bd2ccac970ae0e4cabd7256e9f67bc59acbe4db81cd7e954"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shallow_Ocean_Tier3/Rocks",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shallow_Ocean_Tier3/Custom.Rocks.json",
+          "sha256": "b517753a9f5497c6ffdd6a90911a05dabeb8b59cdafbb4f96e68e78d312fd3fe"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shallow_Ocean_Tier3/Trenches_Cold",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shallow_Ocean_Tier3/Custom.Trenches_Cold.json",
+          "sha256": "d0d6a7ab860091d65555cf39cbaa6b57d89cdd59f9b75cd13951e78003c9ab92"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shallow_Ocean_Tier3/Shore_Cold",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shallow_Ocean_Tier3/Tile.Shore_Cold.json",
+          "sha256": "54d4a6d6da0bd1d8a861e3943b409ef85cfde7a725684c5dd977eed9749ac5e9"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shore_Tier1/Cliffs_Rocky",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shore_Tier1/Custom.Cliffs_Rocky.json",
+          "sha256": "75bffb0e402b10a2ae6a89d59ee326ea3ffd8118b2a05d67761e75ebdb6de6bb"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shore_Tier1/Cliffs_Tundra",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shore_Tier1/Custom.Cliffs_Tundra.json",
+          "sha256": "f9d261d619435b1af04e90b639515f6c1635be4b4b315eea2a0415ed5c7aa6f3"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shore_Tier1/Lake",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shore_Tier1/Custom.Lake.json",
+          "sha256": "e6e07435d32aaf531a160636291501b8228173daf77770b535945225e5c2d6b3"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shore_Tier1/River",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shore_Tier1/Custom.River.json",
+          "sha256": "ffb52426188613dd1c1eafd8e214b2b179e33ed7f056831c7e9ede297eb9e3c4"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shore_Tier1/Beach_Rocky",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shore_Tier1/Tile.Beach_Rocky.json",
+          "sha256": "91fe7c810b180a2a48bbb309d2b754f6e4e0512f3c0254bc47324fcb5c1d140b"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shore_Tier1/Beach_Tundra",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shore_Tier1/Tile.Beach_Tundra.json",
+          "sha256": "3e7b1642f5e802e4a3326882c246c5c37cc5dfb30705e7695f8d334e25c236c3"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shore_Tier2/Cliffs_Glacier",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shore_Tier2/Custom.Cliffs_Glacier.json",
+          "sha256": "b31c8d955f57e650d8da8efa6f2f8bfc4cba505f1aba319a852fa3c51c3919d5"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shore_Tier2/Cliffs_Rocky",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shore_Tier2/Custom.Cliffs_Rocky.json",
+          "sha256": "1848688bc0d84c18e689dd8f40c3b726c8969a6ea27d525499c8ffa5592426aa"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shore_Tier2/Cliffs_Tundra",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shore_Tier2/Custom.Cliffs_Tundra.json",
+          "sha256": "28f0db1f214e5329a8f03c07f22e5ebab36311157bdf94369d7493dd13e518b6"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shore_Tier2/Glacier",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shore_Tier2/Custom.Glacier.json",
+          "sha256": "74c5696a2c4994082221088faee343f8fa0b480d01115f035dc09e5bc0e0bb47"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shore_Tier2/Lake",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shore_Tier2/Custom.Lake.json",
+          "sha256": "f53faadf5039aa31cb9e473657af202edb0587ffa359222b7280b4055b1d38a3"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shore_Tier2/River",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shore_Tier2/Custom.River.json",
+          "sha256": "65473ce0e149ca899a9c9fce3f4c5be623e8d37af0670b02da1cd25ce03bc4df"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shore_Tier2/Beach_Rocky",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shore_Tier2/Tile.Beach_Rocky.json",
+          "sha256": "6a662c9dee526afe449620844ba267317def0da671af61a8199c32739a5b2141"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shore_Tier2/Beach_Tundra",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shore_Tier2/Tile.Beach_Tundra.json",
+          "sha256": "f0d040750c423422989b76f5f93bd308c96daec3f9914e298bd39c7ceaa99a47"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shore_Tier3/Cliffs_Frozen",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shore_Tier3/Custom.Cliffs_Frozen.json",
+          "sha256": "2b5fc36d63aa789c7098392c9462091c8f457650c0090d31b2d60ba27c27bc9b"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shore_Tier3/Glacier",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shore_Tier3/Custom.Glacier.json",
+          "sha256": "1b89add1f7578b9a5d392c85bbf3bec6d813af9ef1346ce90017af97a7e7e510"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shore_Tier3/Lake",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shore_Tier3/Custom.Lake.json",
+          "sha256": "2de9734dad6c2ff36e31fa56e09d1381cb0f016ba812ea4b7303132c63c38bf0"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shore_Tier3/Village_Outlander",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shore_Tier3/Custom.Village_Outlander.json",
+          "sha256": "db8785d0c21ec6c3866470662c3228efbc077a23894613ee66a777572db3962e"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Shore_Tier3/Beach_Frozen",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Shore_Tier3/Tile.Beach_Frozen.json",
+          "sha256": "92f97be24c768a43e97738b0e6534866cc80bf2d8b66ba56d46c8f2819e1a5bb"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier1/Forest_Redwood_Kweebec",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier1/Custom.Forest_Redwood_Kweebec.json",
+          "sha256": "0ff5f121ec13b7511a205abcd383324704ca547b773931d7f4cfb55bdd724220"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier1/Lake_Forest_Fir",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier1/Custom.Lake_Forest_Fir.json",
+          "sha256": "d8780834438db17d6d5320e5c57fd42d243ea92eae869ecc101b11619977e032"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier1/Lake_Forest_Hedera",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier1/Custom.Lake_Forest_Hedera.json",
+          "sha256": "b2a180dd4abb02e425af817e9fc804e42f6b1a0a6ad6f834f03577550361bc66"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier1/Lake_Forest_Redwood",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier1/Custom.Lake_Forest_Redwood.json",
+          "sha256": "4ba8a99d78f8154d7dbbb94f8a6975e36cb1efc82faac61d3e4a72d9dffd672d"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier1/Lake_Forest_Tundra",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier1/Custom.Lake_Forest_Tundra.json",
+          "sha256": "cd50cb67343cb7e3d0a5d439a446c04171caaa2f01e266472fd12210861c57d4"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier1/Lake_Plains_Hotsprings",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier1/Custom.Lake_Plains_Hotsprings.json",
+          "sha256": "0e8cd00d900beb176f2a7ffe70f39cc7bcac461044ebe84b841942dcb4720781"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier1/Lake_Plains_Shire",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier1/Custom.Lake_Plains_Shire.json",
+          "sha256": "32f846ed9ecc30419a6c3b7baaec428cdf9f07d3cdd8ed6d3537e552c398fe3c"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier1/Mountain_Zone3_Tier1",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier1/Custom.Mountain_Zone3_Tier1.json",
+          "sha256": "18d4d266af7cb9d7163755f5c1687b05777bab17243f1912b864aa9b889b175e"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier1/Valley_Forest_Fir",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier1/Custom.Valley_Forest_Fir.json",
+          "sha256": "65edf095bfd0738056061e88b91a064367f6cf69416a1e8c4c92fe8e216fd6f4"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier1/Valley_Forest_Redwood",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier1/Custom.Valley_Forest_Redwood.json",
+          "sha256": "fc355e7e14cde58847c65790b6cd00cce3c9f9f06f835584b4c9c7985b264519"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier1/Valley_Forest_Tundra",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier1/Custom.Valley_Forest_Tundra.json",
+          "sha256": "facc5f3c1b475b9241b9de57d83fb1cb509a92c18ced8dd8607ff57091aa8bb5"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier1/Valley_Plains_Hotsprings",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier1/Custom.Valley_Plains_Hotsprings.json",
+          "sha256": "f49ef9a5327eb27c958843aa6d0fd7354e741e72d939ba7ef8a0d685faa5ac20"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier1/Valley_Plains_Shire",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier1/Custom.Valley_Plains_Shire.json",
+          "sha256": "21976195d71d9dfb0d9b959176c97abe885ba052d47ffb743f515da48cd63e07"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier1/Forest_Fir",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier1/Tile.Forest_Fir.json",
+          "sha256": "6ffb86e3963a7c9010243a31ac102c1511ab5190368558dd1446ffa727ec8104"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier1/Forest_Redwood",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier1/Tile.Forest_Redwood.json",
+          "sha256": "08ab348e561611442efbab36f18f77f09b922a5a5258ac3cad9291a60070a2fb"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier1/Forest_Tundra",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier1/Tile.Forest_Tundra.json",
+          "sha256": "6ac5dc4fdc20aa186d3680ec6f634a3902d02ea671fe4d9a12afe08af78b615e"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier1/Plains_Hotsprings",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier1/Tile.Plains_Hotsprings.json",
+          "sha256": "62a286513df9a8e618c8fdaff194740b34abcc92cc75711ab38a7e709c159d51"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier1/Plains_Shire",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier1/Tile.Plains_Shire.json",
+          "sha256": "669d4f7caf142eafe7f7bc23c30e2380e73a5fbea1f7a46eaa4c0fe54f56e8fa"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier2/Lake_Forest_Cedar",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier2/Custom.Lake_Forest_Cedar.json",
+          "sha256": "cb73d46d12b43dd7222b01e3af4b20cc75bc505572bace397647f227194ba15e"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier2/Lake_Forest_Cedar_Mixed",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier2/Custom.Lake_Forest_Cedar_Mixed.json",
+          "sha256": "faa37d92b4783220da0ab9ce5315c1a18b434f919b4221ed3906e6b0adcb83a6"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier2/Lake_Glacier",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier2/Custom.Lake_Glacier.json",
+          "sha256": "861800f9e4bcbfe8914343b0f1fc922e3e2e536b29f0d6bb70e6122923c5cd6c"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier2/Lake_Plains_Frozen",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier2/Custom.Lake_Plains_Frozen.json",
+          "sha256": "15eaa945aae5c02fd62c8678da9883488649107181d62d99fb2a234d0fa3df58"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier2/Lake_Plains_Tundra",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier2/Custom.Lake_Plains_Tundra.json",
+          "sha256": "ebf88f822001ff534c3c817054db88c9bbee3b559d62c5e3ad981c04e28fe77e"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier2/Mountain_Zone3_Tier2",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier2/Custom.Mountain_Zone3_Tier2.json",
+          "sha256": "c3366c59f6588328634999937ff12b064b5739034a5fc8c7071608a50442ce64"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier2/Valley_Forest_Cedar",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier2/Custom.Valley_Forest_Cedar.json",
+          "sha256": "56ec7df2c3a35fb3a9181e0a7368bee98d51fab5cd8bb71cc96f2b824dcee5bf"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier2/Valley_Forest_Cedar_Mixed",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier2/Custom.Valley_Forest_Cedar_Mixed.json",
+          "sha256": "6cde24eaf0ba1b7d16baec184e20b4e4641a7ecf6153414cf44e5063d72082f2"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier2/Valley_Glacier",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier2/Custom.Valley_Glacier.json",
+          "sha256": "a626486cf78e214889ff33a88b146e739f87fbb3fc77e06d443450a6868ffacb"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier2/Valley_Plains_Frozen",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier2/Custom.Valley_Plains_Frozen.json",
+          "sha256": "f062f5ce23c6d29fd21f052b56b350859d89136f2f0253b55372e361fc222130"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier2/Valley_Plains_Tundra",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier2/Custom.Valley_Plains_Tundra.json",
+          "sha256": "9050bb816488e647b495b24f0495912eb5a2ada2841d37340a9901be4380f8d5"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier2/Forest_Cedar",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier2/Tile.Forest_Cedar.json",
+          "sha256": "806ed262c247c0b97a9fce011b83e8c613a33cbc11bda1cd1e3332165fa0e351"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier2/Forest_Cedar_Mixed",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier2/Tile.Forest_Cedar_Mixed.json",
+          "sha256": "01c7b49eabb9e6dbc0972eadc484509ba7209c9aaa53c7040c3a5a06028bdb30"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier2/Plains_Frozen",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier2/Tile.Plains_Frozen.json",
+          "sha256": "9e623b273bda6cb5cf4e59010f20062e738f043acce2ea3a2770a1cda2bf8b2f"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier2/Plains_Tundra",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier2/Tile.Plains_Tundra.json",
+          "sha256": "14332b7464ce1e0b388ecdf2b102e3e484bd17e630b262f60861e9788e99eca9"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier3/Lake_Forest_Frozen",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier3/Custom.Lake_Forest_Frozen.json",
+          "sha256": "7547f331c878c7d362f500d63a1038aa761d61495446b34f0f57d0e44d965605"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier3/Lake_Forest_Frozen_Light",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier3/Custom.Lake_Forest_Frozen_Light.json",
+          "sha256": "3181a28a422ab5ff4785e38bd96fa42b5276bce7b1c1eff489405614bcc44d43"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier3/Lake_Glacier",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier3/Custom.Lake_Glacier.json",
+          "sha256": "e9baa7807ebadbe0365b7a578bd95f0a90b3af5117d321d58233e709a2ee62c3"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier3/Lake_Plains_Frozen_Frost",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier3/Custom.Lake_Plains_Frozen_Frost.json",
+          "sha256": "944c021a1f0454671f6a223010d020732bb814ad5759a5851dcbad1d4806c4fd"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier3/Mountain_Zone3_Tier3",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier3/Custom.Mountain_Zone3_Tier3.json",
+          "sha256": "398ab4ef69eeaae093708b6b2d79b9811e13cfcb79a581e85d2a3584b8fdbe3f"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier3/Valley_Forest_Frozen",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier3/Custom.Valley_Forest_Frozen.json",
+          "sha256": "90e9e2d37e9f4cae30d500cc10562e675bbd0134e7d2c9f27be2690bea3eda16"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier3/Valley_Forest_Frozen_Light",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier3/Custom.Valley_Forest_Frozen_Light.json",
+          "sha256": "dc498f78ebf8e4dbbc747ff0df24b14ad25ed28679b9f7336e6d7cf264f4f1b0"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier3/Valley_Glacier",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier3/Custom.Valley_Glacier.json",
+          "sha256": "fcbfbae23e44c98881674e8cdead6c9ef4dc5ac569f189f4d1385262e8dcf473"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier3/Valley_Plains_Frozen_Frost",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier3/Custom.Valley_Plains_Frozen_Frost.json",
+          "sha256": "3af8ca1bd0ca2db5484d95d4ecba5e483e9546794b4185787523e5a951f26c77"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier3/Village_Outlander",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier3/Custom.Village_Outlander.json",
+          "sha256": "e24203a0bba820c478688449fe14315ccd32885f3541b0e700ea4c2cd8488c61"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier3/Forest_Frozen",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier3/Tile.Forest_Frozen.json",
+          "sha256": "5a3d90131ad883ecb44491044d2ee23bc64f8725137ac6bc2718d56c14dabb61"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier3/Forest_Frozen_Light",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier3/Tile.Forest_Frozen_Light.json",
+          "sha256": "e9aca24f5f2321997699e407f9c35c7ce1e087af450131d9ab7018e071b0fdef"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone3_Tier3/Plains_Frozen_Frost",
+      "region": "whisperfrost",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone3_Tier3/Tile.Plains_Frozen_Frost.json",
+          "sha256": "f68729979fea9b9c29462ab0f202c3c1caa1ac9eb0a90ff951e9d7b20606367c"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Shallow_Ocean_Tier4/Rocks_Ocean_Wastes",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Shallow_Ocean_Tier4/Custom.Rocks_Ocean_Wastes.json",
+          "sha256": "296452f98393cc981671b2ee6c5f36248933e0a0f4c4b5f4a47f41edbd240005"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Shallow_Ocean_Tier4/Ocean_Wastes",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Shallow_Ocean_Tier4/Tile.Ocean_Wastes.json",
+          "sha256": "78f60c8e16430052cf33897e5819479a805bdf84967bd110f4186b8b1306a81d"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Shallow_Ocean_Tier5/Rocks_Ocean_Lava",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Shallow_Ocean_Tier5/Custom.Rocks_Ocean_Lava.json",
+          "sha256": "859fb29ccf4e41f2eb51a6d567c8aa55e11c5da4af7f45cf19efe2badf0d1dec"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Shallow_Ocean_Tier5/Ocean_Lava",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Shallow_Ocean_Tier5/Tile.Ocean_Lava.json",
+          "sha256": "b820d0a13adaf0b7f366cafce7248f36295857e564704a34d4b9c3f7e567e67b"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Shore_Tier4/Canyon_Beach_Wastes",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Shore_Tier4/Custom.Canyon_Beach_Wastes.json",
+          "sha256": "7e05cac9afffb71e9887d1c190182d904e962eaf9bea9787262e053a47a6ee0b"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Shore_Tier4/Cliff_Beach_Wastes",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Shore_Tier4/Custom.Cliff_Beach_Wastes.json",
+          "sha256": "02bd848c63035702279ff4888af6478a249f2007a3a66e7f6973f2b3ed5520bf"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Shore_Tier4/Beach_Wastes",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Shore_Tier4/Tile.Beach_Wastes.json",
+          "sha256": "460c104809222e9e085acf98e2ddc59878a9645470bfc0652e4ca4415c33e64f"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Shore_Tier5/Canyon_Beach_Lava",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Shore_Tier5/Custom.Canyon_Beach_Lava.json",
+          "sha256": "a643dd9b1ea7a9db7ee91778bd2dbd75136823fd226e8f0277dde7af0b4b040e"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Shore_Tier5/Cliff_Beach_Lava",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Shore_Tier5/Custom.Cliff_Beach_Lava.json",
+          "sha256": "2d9931edbf4328f9dc7f4ba542a64d3538b587af5a9205386680ee2e7622715e"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Shore_Tier5/Beach_Lava",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Shore_Tier5/Tile.Beach_Lava.json",
+          "sha256": "0d1e056b59f9077028c45e48c0e99d80f7c8928f275cb22b1f94bbdd1f52e5ed"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier4/Caldera_Forest_Ghost",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier4/Custom.Caldera_Forest_Ghost.json",
+          "sha256": "a7217bbc04a9c0190da3064c303c9adde0c6b7d7f1840922d5c7ba35bb619779"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier4/Caldera_Wastes_Geysers",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier4/Custom.Caldera_Wastes_Geysers.json",
+          "sha256": "6809df57a6d669aa40d51ade7a76fd4466ce13bc43fecb201ac5a0422f9d46f4"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier4/Caldera_Wastes_Grasslands",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier4/Custom.Caldera_Wastes_Grasslands.json",
+          "sha256": "9fcb5f70004ecfd04b3d97452dc6a5899580c8c76d6dcfef9d56c8e4853145f9"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier4/Canyon_Desert_Dunes",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier4/Custom.Canyon_Desert_Dunes.json",
+          "sha256": "ae3e8852996d5272f24e61c9b98602a338cbc28d9a22a2d5ebf43a6bfd20c55c"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier4/Canyon_Forest_Ghost",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier4/Custom.Canyon_Forest_Ghost.json",
+          "sha256": "a1df2b369853050d97e6e2abda5631650fba424e624849ec04e8f996bfbdc134"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier4/Canyon_Forest_Swamp",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier4/Custom.Canyon_Forest_Swamp.json",
+          "sha256": "13f4b822a9bc6819a84baca2012a091309f9e41e1571ffc4eaebfefd15e6e813"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier4/Canyon_Wastes_Geysers",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier4/Custom.Canyon_Wastes_Geysers.json",
+          "sha256": "e2fbf06c8124e8b962ddaf10a52b0a822101b4824ed3bc5ad83d6a850aeb3cad"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier4/Canyon_Wastes_Grasslands",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier4/Custom.Canyon_Wastes_Grasslands.json",
+          "sha256": "21a9b6448f2af9dd228fd57467c13eb1453097581af8a38636aea3b2ae6d4729"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier4/Forest_Ghost_Town",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier4/Custom.Forest_Ghost_Town.json",
+          "sha256": "86d06907004c3ede4c5e1cacbaa00a23875975c024e17785d8ec03ade3a8e549"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier4/Forest_Ghost_Village",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier4/Custom.Forest_Ghost_Village.json",
+          "sha256": "1efe720245da0a00c1ed430cadeec978164de16600f19c2a496b5f4d6a504f06"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier4/Forest_Swamp_Village",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier4/Custom.Forest_Swamp_Village.json",
+          "sha256": "027b2382156d605c0c80e35fce24b53de65b7e435521d1545d1ad626f2106e49"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier4/Mountain_Desert_Dunes",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier4/Custom.Mountain_Desert_Dunes.json",
+          "sha256": "b1443668cdf561060c4399b0334517e49cdccbc86021c0d9322055132fecd272"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier4/Mountain_Forest_Ghost",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier4/Custom.Mountain_Forest_Ghost.json",
+          "sha256": "62110e0638fb5d6e3adba341bb91eaa388e58611cbe71084c14d8642fd3b0ba2"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier4/Mountain_Forest_Swamp",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier4/Custom.Mountain_Forest_Swamp.json",
+          "sha256": "815c192e7c5e687f577791c10570bb98961e22fe82d5afbd1b5e918d4334f986"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier4/Mountain_Wastes_Geysers",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier4/Custom.Mountain_Wastes_Geysers.json",
+          "sha256": "aa3538484b44ad452641a96b3b7e96e17bc9f195c2a495a5b3adf4ed02e323bf"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier4/Mountain_Wastes_Grasslands",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier4/Custom.Mountain_Wastes_Grasslands.json",
+          "sha256": "89d1c994af9ccdf8897bcfbdab48b82ab86f9e112078b8cb1ceff40087e653b4"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier4/Wastes_Geysers_Village",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier4/Custom.Wastes_Geysers_Village.json",
+          "sha256": "11b47a0986615ea95cbeeb4495a36b645e86e1bb4b40adea385602e389a66258"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier4/Wastes_Grasslands_Village",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier4/Custom.Wastes_Grasslands_Village.json",
+          "sha256": "74e54f78e4a1c3d642420991caafad19c32476a1cf9f91c8287e4f12ab1dc58c"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier4/Desert_Dunes",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier4/Tile.Desert_Dunes.json",
+          "sha256": "5c0c8488a82b011f187242f4bc07ca1b017751fdec952db33d9f99454bf799b9"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier4/Forest_Ghost",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier4/Tile.Forest_Ghost.json",
+          "sha256": "36a8d69b891faa7fc18502dc9851699e12c0aa2fa3c0f603767cda9e75ddaf80"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier4/Forest_Swamp",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier4/Tile.Forest_Swamp.json",
+          "sha256": "bc5135f27ca2bd9d83b35398ffeae9be33ef6c73f918ac9e3b57331c5eb5f2df"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier4/Wastes_Geysers",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier4/Tile.Wastes_Geysers.json",
+          "sha256": "26a30dfc08f7b313b7fdcb46d97c45c89837ee9553a8fa58b7ba43aa8245023d"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier4/Wastes_Grasslands",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier4/Tile.Wastes_Grasslands.json",
+          "sha256": "0f8d7dc405850361b7258cc435e8cbddbfebf613b7837793166df840987a0c77"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier5/Canyon_Desert_Ash",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier5/Custom.Canyon_Desert_Ash.json",
+          "sha256": "74e605b581b20046016390df2599c514088bf70fa3549b0e2b08eacd943c3177"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier5/Canyon_Forest_Burned",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier5/Custom.Canyon_Forest_Burned.json",
+          "sha256": "0deaf65d78465d7763e4cceb22d65a4db5af8774f3866dc7575e4a2bf0d430f5"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier5/Canyon_Forest_Roots",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier5/Custom.Canyon_Forest_Roots.json",
+          "sha256": "4471b6e9e6e4b67be53c3ee3a8902e71728faa8c165f2cb691dbe72161a74eb8"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier5/Canyon_Wastes_Ash",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier5/Custom.Canyon_Wastes_Ash.json",
+          "sha256": "86e68f74babc36808d6ae6b5ac4300aebe63d57a26f7cfd6cc82576adeb29d4b"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier5/Canyon_Wastes_Lava",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier5/Custom.Canyon_Wastes_Lava.json",
+          "sha256": "ba1f5412f3e29bd3c129022db5f9ab2967b25fe0e95509da31e7b50659b60086"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier5/Hills_Wastes_Lava",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier5/Custom.Hills_Wastes_Lava.json",
+          "sha256": "178f647a4854872fd5594a00fa063035dd81137a05fafe6cf6d87049e38e7fd7"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier5/Mountain_Desert_Ash",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier5/Custom.Mountain_Desert_Ash.json",
+          "sha256": "c95ab1904b1c2f1a3a587b7b4d24e22bef778b4050bfb318a7feceef104691cf"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier5/Mountain_Forest_Burned",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier5/Custom.Mountain_Forest_Burned.json",
+          "sha256": "540d1bb76ed776d2ff1d20e4fb056151f8890f4ba8022c88d0e4cd10056de7ac"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier5/Mountain_Forest_Roots",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier5/Custom.Mountain_Forest_Roots.json",
+          "sha256": "b847b1f3e9401903093b177d652dd3610e6dacc5b470610eabe9340fc823476a"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier5/Mountain_Wastes_Ash",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier5/Custom.Mountain_Wastes_Ash.json",
+          "sha256": "c38c575cec0f8d7eba4322eb5f5ecd028c533c25e99737202607a7e95d7b6d22"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier5/Mountain_Wastes_Lava",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier5/Custom.Mountain_Wastes_Lava.json",
+          "sha256": "51299e04a0ea14831377909312d8625efcc0b5bfdba7bbb99c83b0fd7a498903"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier5/Town_Desert_Ash",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier5/Custom.Town_Desert_Ash.json",
+          "sha256": "d9d385fd249ebc6f66a245e4a584abc81a1c892fe45e088a697d2a7119619cf0"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier5/Town_Wastes_Ash",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier5/Custom.Town_Wastes_Ash.json",
+          "sha256": "b7098f9d746092defa8936c8c8d5155c827169277d4beb191fe2360bc82d46a4"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier5/Volcano_Wastes_Lava",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier5/Custom.Volcano_Wastes_Lava.json",
+          "sha256": "84c827846527ff9c8ab9440fc5622a89cd483adcdd21cf6b1f5b60c7cee9ecc1"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier5/Desert_Ash",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier5/Tile.Desert_Ash.json",
+          "sha256": "c1dee02bc8cdbf4c9e85e2113507aba8b384c4bf5f6322c3bbef0f56abac8c4c"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier5/Forest_Burned",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier5/Tile.Forest_Burned.json",
+          "sha256": "35b131243ce52000bbf9aece58907b2a434bdd2269c0f52fcb9e168ba7b70303"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier5/Forest_Roots",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier5/Tile.Forest_Roots.json",
+          "sha256": "0e44583c9454162102980e2a2d76c2e406c7ac19cc2c97af95d8bc5c452df4a5"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier5/Wastes_Ash",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier5/Tile.Wastes_Ash.json",
+          "sha256": "c58e8f29a8427030f534d65a0c3b4b7c78ecc25fc8afba139f2fb30399339329"
+        }
+      ]
+    },
+    {
+      "key": "Default/Zone4_Tier5/Wastes_Lava",
+      "region": "devastated_lands",
+      "sources": [
+        {
+          "asset": "Server/World/Default/Zones/Zone4_Tier5/Tile.Wastes_Lava.json",
+          "sha256": "68dcaecf8db51c19601fc86b16292f83157038f26d49efb786a1495061e3a19b"
+        }
+      ]
+    }
+  ],
+  "excluded": [
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Custom.Cold_Cities.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Custom.Cold_Kelp.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Custom.Cold_Reef.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Custom.Cold_Trench.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Custom.Island_Cold.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Custom.Island_Temperate.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Custom.Island_Tropical.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Custom.Island_Tropical_Volcano.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Custom.Pillars_Cold_Sandy.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Custom.Pillars_Temperate_Sandy.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Custom.Pillars_Tropical_Sandy.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Custom.Temperate_Kelp.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Custom.Temperate_Reef.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Custom.Temperate_Trench.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Custom.Tempreate_Cities.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Custom.Tropical_Cities.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Custom.Tropical_Kelp.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Custom.Tropical_Reef.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Custom.Tropical_Trench.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Tile.Cold_Barren.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Tile.Cold_Kelp.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Tile.Cold_Reef.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Tile.Cold_Sandy.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Tile.Temperate_Barren.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Tile.Temperate_Kelp.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Tile.Temperate_Reef.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Tile.Temperate_Sandy.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Tile.Tropical_Barren.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Tile.Tropical_Kelp.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Tile.Tropical_Reef.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Tile.Tropical_Sandy.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    },
+    {
+      "asset": "Server/World/Default/Zones/Oceans/Tile.Tropical_Tubes.json",
+      "reason": "REGION_UNMAPPED_NO_AUTHORED_BAND"
+    }
+  ]
+}

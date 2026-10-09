@@ -15,6 +15,8 @@ public final class PatchNativeMutations {
     private static final String HOOK="com/inigmasgames/hytale/patch/NativeMutationHook";
     private static final String DAMAGE_HOOK="com/inigmasgames/hytale/patch/NativeDamageReceiptHook";
     private static final String PROJECTILE_HOOK="com/inigmasgames/hytale/patch/NativeProjectileReceiptHook";
+    private static final String POPULATION_HOOK="com/inigmasgames/hytale/patch/NativePopulationProjectionHook";
+    private static final String POPULATION_SYSTEM="com/hypixel/hytale/server/spawning/world/system/WorldSpawningSystem.class";
     private static final String DAMAGE_LEAF=BASE+"DamageEntityInteraction.class";
     private static final String PROJECTILE_LEAF=BASE+"LaunchProjectileInteraction.class";
     private static final String DAMAGE_LEAF_PIN="6be3b2c00e3364373cb22b622e07677e14e31dcfa2cf1df9b5e7185340836e73";
@@ -95,6 +97,20 @@ public final class PatchNativeMutations {
         method.instructions.insertBefore(insertion,guard);
         var writer=new ClassWriter(ClassWriter.COMPUTE_FRAMES|ClassWriter.COMPUTE_MAXS);
         tree.accept(writer);return writer.toByteArray();
+    }
+    private static byte[] patchPopulation(byte[] input){
+        var tree=new ClassNode();new ClassReader(input).accept(tree,0);
+        var method=tree.methods.stream().filter(m->m.name.equals("tick")).findFirst().orElseThrow();
+        var calls=new ArrayList<MethodInsnNode>();
+        for(var node:method.instructions.toArray())if(node instanceof MethodInsnNode call
+                &&call.owner.equals("com/hypixel/hytale/server/spawning/world/component/WorldSpawnData")
+                &&call.name.equals("getActiveSpawnJobs"))calls.add(call);
+        require(calls.size()==2,"NATIVE_POPULATION_SELECTION_SHAPE");
+        shape(previous(calls.getFirst()),Opcodes.ALOAD,7);
+        var hook=new InsnList();hook.add(new VarInsnNode(Opcodes.ALOAD,3));
+        hook.add(new MethodInsnNode(Opcodes.INVOKESTATIC,POPULATION_HOOK,"beforeSelection","(Lcom/hypixel/hytale/component/Store;)V",false));
+        method.instructions.insertBefore(previous(calls.getFirst()),hook);
+        var writer=new ClassWriter(ClassWriter.COMPUTE_MAXS);tree.accept(writer);return writer.toByteArray();
     }
     private static byte[] patchDamage(byte[] input){
         var tree=new ClassNode();new ClassReader(input).accept(tree,0);
@@ -199,6 +215,14 @@ public final class PatchNativeMutations {
                 if(changed.contains(path)){
                     require(!Arrays.equals(before,after),"NATIVE_PATCH_EXPECTED_ENTRY_UNCHANGED:"+path);
                     var tree=new ClassNode();new ClassReader(after).accept(tree,0);
+                    if(path.equals(POPULATION_SYSTEM)){
+                        var originalTree=new ClassNode();new ClassReader(before).accept(originalTree,0);
+                        var method=tree.methods.stream().filter(m->m.name.equals("tick")).findFirst().orElseThrow();
+                        var originalMethod=originalTree.methods.stream().filter(m->m.name.equals("tick")).findFirst().orElseThrow();
+                        require(instructionShape(originalMethod,null,List.of()).equals(instructionShape(method,POPULATION_HOOK,List.of(Opcodes.ALOAD+":var:3"))),
+                                "NATIVE_POPULATION_ORIGINAL_INSTRUCTIONS_CHANGED");
+                        continue;
+                    }
                     if(path.equals(DAMAGE_LEAF)){
                         var method=tree.methods.stream().filter(m->m.name.equals("attemptEntityDamage0")).findFirst().orElseThrow();
                         var originalTree=new ClassNode();new ClassReader(before).accept(originalTree,0);
@@ -257,7 +281,7 @@ public final class PatchNativeMutations {
         require(hash(original).equals(ORIGINAL),"NATIVE_PATCH_SERVER_HASH_MISMATCH");
         var hookClasses=List.of(HOOK+".class",HOOK+"$Kind.class",HOOK+"$Mutation.class",HOOK+"$Policy.class",
                 DAMAGE_HOOK+".class",DAMAGE_HOOK+"$Context.class",DAMAGE_HOOK+"$Provider.class",
-                PROJECTILE_HOOK+".class",PROJECTILE_HOOK+"$Context.class",PROJECTILE_HOOK+"$Provider.class");
+                PROJECTILE_HOOK+".class",PROJECTILE_HOOK+"$Context.class",PROJECTILE_HOOK+"$Provider.class",POPULATION_HOOK+".class");
         var hooks=new LinkedHashMap<String,byte[]>();
         for(var hookClass:hookClasses)hooks.put(hookClass,Files.readAllBytes(classes.resolve(hookClass)));
         var patches=new HashMap<String,byte[]>();
@@ -280,6 +304,9 @@ public final class PatchNativeMutations {
             byte[] projectileBytes;try(var in=source.getInputStream(projectileEntry)){projectileBytes=in.readAllBytes();}
             require(hash(projectileBytes).equals(PROJECTILE_LEAF_PIN),"NATIVE_PROJECTILE_PATCH_CLASS_HASH_MISMATCH");
             patches.put(PROJECTILE_LEAF,patchProjectile(projectileBytes));
+            byte[] populationBytes;try(var in=source.getInputStream(source.getEntry(POPULATION_SYSTEM))){populationBytes=in.readAllBytes();}
+            require(hash(populationBytes).equals("c4392e0e579032f3b6f3596d065f010879cedd8d72e01defa4cf82acfff869de"),"NATIVE_POPULATION_CLASS_HASH_MISMATCH");
+            patches.put(POPULATION_SYSTEM,patchPopulation(populationBytes));
             Files.createDirectories(output.getParent());
             var temp=Files.createTempFile(output.getParent(),"native-packbound-",".jar");
             try{

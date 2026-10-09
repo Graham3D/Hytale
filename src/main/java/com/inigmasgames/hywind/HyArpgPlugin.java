@@ -111,6 +111,8 @@ public final class HyArpgPlugin extends TavernsPlugin {
     private com.inigmasgames.hytalerpg.enemies.EnemyWorldAdmission enemyWorldAdmission;
     private com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyBirthOwner enemyBirthOwner;
     private com.inigmasgames.hytalerpg.execution.hytale.EnemyHealthBarPresentation enemyHealthBars;
+    private com.inigmasgames.hytalerpg.execution.hytale.NativeHostileNames hostileNames;
+    private com.inigmasgames.hytalerpg.execution.hytale.NativeAquaticHabitat aquaticHabitat;
     private com.inigmasgames.hytalerpg.difficulty.DifficultyRuntime difficultyRuntime;
     private java.util.concurrent.ExecutorService difficultyIo;
     private com.inigmasgames.hytalerpg.difficulty.HytaleDifficultyPortals difficultyPortals;
@@ -438,6 +440,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
         });
         var difficultyCombat=new com.inigmasgames.hytalerpg.execution.hytale.HytaleDifficultyCombat(skillTrace);
         enemyHealthBars=difficultyCombat.healthBars();
+        hostileNames=difficultyCombat.names();
         difficultyCombat.healthBars().configureBossBars(bosses);
         var enemyBindings=com.inigmasgames.hytalerpg.enemies.EnemyNativeBindings.load();
         com.inigmasgames.hytalerpg.execution.hytale.NativeNpcTiming.configure(
@@ -615,9 +618,13 @@ public final class HyArpgPlugin extends TavernsPlugin {
                 world->enemyWorldAdmission==null?null:enemyWorldAdmission.activePackReservations(world));
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgSpawnTraceCommand(monsterSpawnTrace,worldSpawnDensity));
         getChunkStoreRegistry().registerSystem(worldSpawnDensity.new Tick());
+        monsterSpawnTrace.configureManifest(()->java.util.Map.of("worldConfigRevision",worldConfiguration.snapshot().configRevision(),
+                "nativeDensityMultiplier",worldSpawnDensity.multiplier(),"populationPolicy",worldConfiguration.snapshot().population().toString(),
+                "configSha256",com.inigmasgames.hytalerpg.progress.RewardIntent.digest(worldConfiguration.snapshot().source().toString()),
+                "nativeAssetsSha256",enemyBindings.assetsSha256(),"nativeBindingsRevision",enemyBindings.revision()));
         populationBalance=new com.inigmasgames.hytalerpg.spawning.NativePopulationBalance(
                 ()->worldConfiguration.snapshot().population());
-        getChunkStoreRegistry().registerSystem(populationBalance.new Tick());
+        worldSpawnDensity.configureFinalProjection(populationBalance::applySafely);
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgWorldConfigCommand(
                 worldConfiguration,worldSpawnDensity,populationBalance,enemyWorldAdmission));
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgManaguardCommand(supportSystem));
@@ -806,6 +813,8 @@ public final class HyArpgPlugin extends TavernsPlugin {
                     gearRecovery.cancelWorld(worldId);gearSignatures.clearWorld(worldId);
                     gearStatuses.clearWorld(worldId);itemAffixes.worldUnload(worldId);summonSystem.worldUnload(worldId);
                     difficultyCombat.healthBars().forgetWorld(worldId);
+                    difficultyCombat.names().forgetWorld(worldId);
+                    if(aquaticHabitat!=null)aquaticHabitat.forgetWorld(worldId);
                     enemyWorldAdmission.worldUnload(worldId);
                 }});
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Application(combatTrace,
@@ -851,6 +860,10 @@ public final class HyArpgPlugin extends TavernsPlugin {
         getEntityStoreRegistry().registerSystem(sharedReflection);
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleRetaliationSystem(skillExecutionSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.Tracking(encounterRewards));
+        getEntityStoreRegistry().registerSystem(difficultyCombat.names().new Tracking());
+        getEntityStoreRegistry().registerSystem(difficultyCombat.names().new Readiness());
+        getEntityStoreRegistry().registerSystem(difficultyCombat.names().new Tick());
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.diagnostics.NativeSpawnLocalSample());
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemySpawnGroups.Capture());
         var enemyStagingRecovery=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyStagingRecovery(
                 encounterRewards,enemyWorldAdmission);
@@ -937,9 +950,11 @@ public final class HyArpgPlugin extends TavernsPlugin {
                 event->enemyWorldRebind.begin(event.getWorld()));
         for(var existingWorld:com.hypixel.hytale.server.core.universe.Universe.get().getWorlds().values())
             enemyWorldRebind.begin(existingWorld);
-        enemySpawnGroups=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemySpawnGroups(
-                com.hypixel.hytale.server.spawning.SpawningPlugin.get(),enemyBirthOwner)
-                .install(com.hypixel.hytale.server.core.universe.world.storage.ChunkStore.REGISTRY);
+        var nativeGroups=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemySpawnGroups(
+                com.hypixel.hytale.server.spawning.SpawningPlugin.get(),enemyBirthOwner);
+        aquaticHabitat=nativeGroups.habitat;
+        getChunkStoreRegistry().registerSystem(nativeGroups.habitat.new Completion());
+        enemySpawnGroups=nativeGroups.install(com.hypixel.hytale.server.core.universe.world.storage.ChunkStore.REGISTRY);
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyEngagement(
                 difficultyCombat,supportSystem.runtime().finite(),
                 enemyBindings,enemyBalance));
@@ -1145,6 +1160,8 @@ public final class HyArpgPlugin extends TavernsPlugin {
     }
 
     private void shutdownRpg() {
+        if(hostileNames!=null){hostileNames.close();hostileNames=null;}
+        if(aquaticHabitat!=null){aquaticHabitat.close();aquaticHabitat=null;}
         RuntimeException enemyTeardown=null;
         try{if(enemyHealthBars!=null)enemyHealthBars.shutdown();}
         catch(RuntimeException failure){enemyTeardown=enemyTeardownFailure(enemyTeardown,"ENEMY_PRESENTATION_TEARDOWN",failure);}

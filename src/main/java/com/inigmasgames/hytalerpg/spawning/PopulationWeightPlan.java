@@ -18,6 +18,9 @@ public final class PopulationWeightPlan {
     }
     private PopulationWeightPlan(){}
     public static Result calculate(double environmentExpected,List<Row> rows,double hostileShare,double wildlifeShare){
+        return calculate(environmentExpected,rows,hostileShare,wildlifeShare,true);
+    }
+    public static Result calculate(double environmentExpected,List<Row> rows,double hostileShare,double wildlifeShare,boolean enabled){
         if(!Double.isFinite(environmentExpected)||environmentExpected<0||!Double.isFinite(hostileShare)
                 ||!Double.isFinite(wildlifeShare)||hostileShare<=0||wildlifeShare<=0
                 ||Math.abs(hostileShare+wildlifeShare-1)>1e-9)
@@ -36,9 +39,9 @@ public final class PopulationWeightPlan {
                 case OTHER->actualOther+=row.actual();
             }
         }
-        if(hostileWeight<=0||wildlifeWeight<=0)
+        if(!enabled||hostileWeight<=0||wildlifeWeight<=0)
             return new Result(base,hostileBase,wildlifeBase,hostileBase,wildlifeBase,
-                    actualHostile,actualWildlife,actualAvian,actualOther,false,"ONLY_ONE_OR_NO_CONTROLLED_CATEGORY");
+                    actualHostile,actualWildlife,actualAvian,actualOther,false,enabled?"ONLY_ONE_OR_NO_CONTROLLED_CATEGORY":"DISABLED_NATIVE_WEIGHTS");
         double budget=hostileBase+wildlifeBase;
         double hostileTarget=budget*hostileShare,wildlifeTarget=budget*wildlifeShare;
         if(hostileTarget/hostileBase>8||wildlifeTarget/wildlifeBase>8)

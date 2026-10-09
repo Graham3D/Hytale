@@ -39,6 +39,8 @@ public final class NativeWorldSpawnDensity implements AutoCloseable {
     private final Map<World, Long> lastChunkRefresh = Collections.synchronizedMap(new WeakHashMap<>());
     private final Map<GameplayConfig, Integer> baselineCaps = Collections.synchronizedMap(new IdentityHashMap<>());
     private volatile boolean closed;
+    private java.util.function.Consumer<World> finalProjection=world->{};
+    public void configureFinalProjection(java.util.function.Consumer<World> projection){finalProjection=Objects.requireNonNull(projection);}
 
     public NativeWorldSpawnDensity(SpawnDensitySetting settings) { this.settings = settings; }
     public double multiplier() { return settings.multiplier(); }
@@ -109,7 +111,7 @@ public final class NativeWorldSpawnDensity implements AutoCloseable {
                     +" nativeCap="+config.getMaxEnvironmentalNPCSpawns());
         }catch(RuntimeException ignored){/* Diagnostics cannot affect population projection. */}
         // Existing saves at 1x must leave native world/chunk population state untouched.
-        if (multiplier == 1.0 && !applied.containsKey(world)) return;
+        if (multiplier == 1.0 && !applied.containsKey(world)) {finalProjection.accept(world);return;}
         var time = entities.getResource(WorldTimeResource.getResourceType());
         if (time == null) throw new IllegalStateException("Native world time resource unavailable for population projection");
         var prior = applied.computeIfAbsent(world, ignored -> new HashMap<>());
@@ -139,6 +141,7 @@ public final class NativeWorldSpawnDensity implements AutoCloseable {
         }
         if (refreshChunks) lastChunkRefresh.put(world, now);
         if (changed) data.recalculateWorldCount();
+        if(changed)finalProjection.accept(world);
     }
 
     private Snapshot snapshot(World world) {

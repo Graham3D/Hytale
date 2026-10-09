@@ -94,6 +94,10 @@ public final class RpgEnemiesCommand extends AbstractCommandCollection {
                     var targetId=store.getComponent(target,UUIDComponent.getComponentType());
                     if(targetId==null){context.sendMessage(Message.raw("Master Enemies inspect: target has no native identity."));return;}
                     var worldId=player.getWorldUuid();var nativeId=targetId.getUuid();
+                    context.sendMessage(Message.raw("Native presentation: entity="+nativeId+" "+combat.names().inspect(worldId,nativeId)
+                            +" nativeText="+java.util.Optional.ofNullable(store.getComponent(target,com.hypixel.hytale.server.core.entity.nameplate.Nameplate.getComponentType())).map(com.hypixel.hytale.server.core.entity.nameplate.Nameplate::getText).orElse("")
+                            +" profile="+combat.snapshot(worldId,nativeId).map(s->s.roleId()+"/level="+s.level()).orElse("UNPROFILED")
+                            +" staged="+(store.getComponent(target,com.inigmasgames.hytalerpg.execution.hytale.EnemyStaging.getComponentType())!=null)));
                     var state=combat.enemyState(worldId,nativeId).orElse(null);
                     var display=combat.enemyDisplay(worldId,nativeId).orElse(null);
                     var pack=combat.enemyPack(worldId,nativeId).orElse(null);

@@ -38,7 +38,7 @@ public record AuthoredEncounterCatalog(int schemaVersion,String profileId,List<R
         return new EncounterProfileResolver(worlds,scalars,profiles());
     }
     public List<EncounterProfileResolver.Profile> profiles(){
-        var result=new ArrayList<EncounterProfileResolver.Profile>();var registry=EnemyRewardRegistry.load();var biomes=registry.biomes();var bands=DifficultyDefinitions.load();
+        var result=new ArrayList<EncounterProfileResolver.Profile>();var registry=EnemyRewardRegistry.load();var biomes=CampaignBiomes.current().biomes();var bands=DifficultyDefinitions.load();
         var roleDefinitions=new ArrayList<>(roles);var explicit=new HashSet<String>();roles.forEach(role->explicit.add(role.id()));
         for(var role:registry.roles())if(explicit.add(role.roleId()))roleDefinitions.add(new Role(role.roleId(),role.nativeHealth(),role.attackReference(),role.assetSha256(),"",Set.of(),Set.of()));
         for(var alias:registry.aliases())if(explicit.add(alias.roleId()))roleDefinitions.add(new Role(alias.roleId(),alias.nativeHealth(),alias.attackReference(),alias.assetSha256(),"",Set.of(),Set.of()));
@@ -56,7 +56,7 @@ public record AuthoredEncounterCatalog(int schemaVersion,String profileId,List<R
             if(!role.campaignRegion().isBlank()){
                 add(result,role,mode,worldProfile,CAMPAIGN_GOLEM,bands.band(role.campaignRegion(),mode).maximum(),mitigation,referenceLevel);
             }else for(var biome:biomes){
-                var band=bands.band(biome.rpgBand(),mode);
+                var band=bands.band(biome.region(),mode);
                 add(result,role,mode,worldProfile,biome.key(),(band.minimum()+band.maximum())/2,mitigation,referenceLevel);
             }
             }

@@ -28,7 +28,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class HytaleDifficultyCombat {
     public static final String HEALTH_KEY="RPG_DIFFICULTY_MAX";
     private record Key(UUID world,UUID enemy){}
-    private record OwnedPlate(String previous,String shown){}
     private static final class Entry { final Object ticket=new Object(); volatile EnemyRewardRegistry.Spawn spawn;
         volatile com.inigmasgames.hytalerpg.enemies.EnemyDisplayDto enemyDisplay;
         volatile EnemyState enemyState; volatile com.inigmasgames.hytalerpg.enemies.EnemyPackRecord enemyPack;
@@ -38,7 +37,8 @@ public final class HytaleDifficultyCombat {
     private final Map<Key,Entry> active=new ConcurrentHashMap<>();
     // Shared status APIs identify actors by their native UUID. Values alias the existing projection entry.
     private final Map<UUID,Entry> statusActors=new ConcurrentHashMap<>();
-    private final Map<Key,OwnedPlate> plates=new ConcurrentHashMap<>();
+    private final NativeHostileNames names=new NativeHostileNames(this);
+    public NativeHostileNames names(){return names;}
     private final EnemyHealthBarPresentation healthBars=new EnemyHealthBarPresentation();
     public EnemyHealthBarPresentation healthBars(){return healthBars;}
     private final Set<String> nameplateWarnings=ConcurrentHashMap.newKeySet();
@@ -299,22 +299,15 @@ public final class HytaleDifficultyCombat {
         boolean qaNative=healthBars.qaNativeEnabled(world,enemy);
         healthBars.forget(world,enemy);
         notifyEnemyDisplay(world,enemy);
-        var owned=plates.remove(key);if(owned==null&&!qaNative)return;
         var nativeWorld=Universe.get().getWorld(world);if(nativeWorld==null)return;
         try{nativeWorld.execute(()->{
-            if(plates.containsKey(key))return; // A newer projection owns this entity now.
             var store=nativeWorld.getEntityStore().getStore();var ref=store.getExternalData().getRefFromUUID(enemy);
             if(ref==null||!ref.isValid())return;
             if(qaNative)healthBars.restoreDetachedQaNative(store,ref);
-            if(owned==null)return;
-            var current=store.getComponent(ref,Nameplate.getComponentType());
-            if(current==null||!owned.shown().equals(current.getText()))return;
-            if(owned.previous()==null)store.removeComponent(ref,Nameplate.getComponentType());
-            else current.setText(owned.previous());
+            names.request(store,ref); // Recompose current state; never restore an obsolete blank plate.
         });}catch(RuntimeException worldClosing){/* Presentation cannot block encounter teardown. */}
     }
-    /** Entity removal needs no native restore; discard presentation ownership immediately. */
-    public void forget(UUID world,UUID enemy){var key=new Key(world,enemy);remove(key,active.get(key));plates.remove(key);healthBars.forget(world,enemy);notifyEnemyDisplay(world,enemy);}
+    public void forget(UUID world,UUID enemy){var key=new Key(world,enemy);remove(key,active.get(key));names.forget(world,enemy);healthBars.forget(world,enemy);notifyEnemyDisplay(world,enemy);}
     private void notifyEnemyDisplay(UUID world,UUID enemy){
         try{enemyDisplayChanged.accept(world,enemy);}
         catch(RuntimeException failure){warnPresentation("target-card",failure);}
@@ -370,44 +363,18 @@ public final class HytaleDifficultyCombat {
     private void presentNameplate(Store<EntityStore> store,Ref<EntityStore> ref,Key key,NPCEntity npc,
                                   EnemyRewardRegistry.Spawn spawn,boolean anchored){
         var allegiance=store.getComponent(ref,WorldSupport.getComponentType());
-        if(allegiance==null||allegiance.getDefaultPlayerAttitude()!=Attitude.HOSTILE)return;
-        healthBars.hideByDefault(store,ref,key.enemy());
-        String display=nativeDisplayName(store,ref,npc);
-        var entry=active.get(key);
-        if((entry==null||entry.enemyDisplay==null)&&(display==null||display.isBlank()))return;
-        // Suppress the promoted actor's duplicate only after both native anchors exist.
-        String shown=anchored?"":entry!=null&&entry.enemyDisplay!=null
-                ?(entry.enemyDisplay.packRoleLabel().equals("Minion")
-                    ?entry.enemyDisplay.baseRoleDisplayName():entry.enemyDisplay.name())
-                :EnemyNameplateText.format(display,spawn.level());
-        var plate=store.getComponent(ref,Nameplate.getComponentType());
-        if(plates.size()>=EncounterContributions.MAX_ENCOUNTERS&&!plates.containsKey(key))return;
-        String prior=plate==null?null:plate.getText();
-        // Older difficulty builds put a raw role ID on immunity plates; never restore that text.
-        if(prior!=null&&(prior.startsWith(spawn.roleId()+" [Immune:")||prior.equals(shown)))prior=null;
-        var previous=plates.get(key);
-        if(plate==null)store.addComponent(ref,Nameplate.getComponentType(),new Nameplate(shown));
-        else if(!shown.equals(plate.getText()))plate.setText(shown);
-        plates.put(key,new OwnedPlate(previous==null?prior:previous.previous(),shown));
+        if(allegiance!=null&&allegiance.getDefaultPlayerAttitude()==Attitude.HOSTILE)healthBars.hideByDefault(store,ref,key.enemy());
+        names.request(store,ref);
     }
-    /** Presentation only for a known native hostile without an accepted encounter projection. */
-    public void presentNativeHostileName(Store<EntityStore> store,Ref<EntityStore> ref){
-        if(!store.isInThread()||ref==null||!ref.isValid()||ref.getStore()!=store)
-            throw new IllegalStateException("ENEMY_NATIVE_NAME_WORLD_THREAD");
-        var npc=store.getComponent(ref,NPCEntity.getComponentType());
-        var allegiance=store.getComponent(ref,WorldSupport.getComponentType());
-        if(npc==null||allegiance==null||allegiance.getDefaultPlayerAttitude()!=Attitude.HOSTILE)return;
-        var plate=store.getComponent(ref,Nameplate.getComponentType());
-        if(plate!=null&&plate.getText()!=null&&!plate.getText().isBlank())return;
-        var name=nativeDisplayName(store,ref,npc);
-        if(name==null||name.isBlank())return;
-        if(plate==null)store.addComponent(ref,Nameplate.getComponentType(),new Nameplate(name));
-        else plate.setText(name);
-    }
+    public void presentNativeHostileName(Store<EntityStore> store,Ref<EntityStore> ref){names.request(store,ref);}
     /** One native display-name resolution path for ordinary plates and frozen ME birth names. */
     public static String nativeDisplayName(Store<EntityStore> store,Ref<EntityStore> ref,NPCEntity npc){
+        var personal=store.getComponent(ref,PersistentDisplayName.getComponentType());
+        if(personal!=null&&personal.getDisplayName()!=null){
+            String text=personal.getDisplayName().getRawText();if(text!=null&&!text.isBlank())return text;
+        }
         String display=null,keyName=npc.getRole()==null?null:npc.getRole().getNameTranslationKey();
-        if(keyName!=null&&!keyName.isBlank())display=I18nModule.get().getMessage("en-US",keyName);
+        if(keyName!=null&&!keyName.isBlank()&&I18nModule.get()!=null)display=I18nModule.get().getMessage("en-US",keyName);
         if(display==null||display.isBlank()||display.startsWith("server.")||display.contains("_")){
             var persistent=store.getComponent(ref,PersistentDisplayName.getComponentType());
             if(persistent!=null&&persistent.getDisplayName()!=null)display=persistent.getDisplayName().getRawText();

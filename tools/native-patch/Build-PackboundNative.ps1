@@ -12,13 +12,14 @@ function Get-PinnedHash([string]$path){
     }finally{$digest.Dispose()}
 }
 $expectedOriginal='35A34A32175CD92CE5E2A51310953DB3A4A64CAC89D995CBD4830C52A9B1B904'
-$expectedPatched='6F4233203E804D6B0071A6416D26DD867F5CFB0C60D3E78B69A6A91415C1A59E'
+$previousPatched='6F4233203E804D6B0071A6416D26DD867F5CFB0C60D3E78B69A6A91415C1A59E'
+$expectedPatched='A032A64E03390CA0AEB6C03C3B1600EAA892C8BC833D1BF3AC39307CCDF3CB20'
 $root=(Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 $server=(Resolve-Path -LiteralPath $ServerJar).Path
 $target=[IO.Path]::GetFullPath($OutputDirectory)
 if($server -eq (Join-Path $target 'HytaleServer-packbound.jar')){throw 'Patch output must differ from the installed server'}
 $installedHash=Get-PinnedHash $server
-if($installedHash -ne $expectedOriginal -and $installedHash -ne $expectedPatched){throw 'Installed server hash differs from both pinned versions'}
+if($installedHash -ne $expectedOriginal -and $installedHash -ne $expectedPatched -and $installedHash -ne $previousPatched){throw 'Installed server hash differs from both pinned versions'}
 $libRoot=Join-Path $env:USERPROFILE '.gradle\wrapper\dists\gradle-9.2.0-bin'
 $asm=@(Get-ChildItem -LiteralPath $libRoot -Recurse -File -Filter 'asm-9.8.jar')
 $tree=@(Get-ChildItem -LiteralPath $libRoot -Recurse -File -Filter 'asm-tree-9.8.jar')
@@ -42,7 +43,7 @@ $classes=Join-Path $target 'classes'
 New-Item -ItemType Directory -Force $classes | Out-Null
 $classpath="$sourceServer;$($asm[0].FullName);$($tree[0].FullName)"
 $source=Join-Path $root 'tools\native-patch\src\com\inigmasgames\hytale\patch'
-& javac -cp $classpath -d $classes (Join-Path $source 'NativeMutationHook.java') (Join-Path $source 'NativeDamageReceiptHook.java') (Join-Path $source 'NativeProjectileReceiptHook.java') (Join-Path $source 'PatchNativeMutations.java')
+& javac -cp $classpath -d $classes (Join-Path $source 'NativeMutationHook.java') (Join-Path $source 'NativeDamageReceiptHook.java') (Join-Path $source 'NativeProjectileReceiptHook.java') (Join-Path $source 'NativePopulationProjectionHook.java') (Join-Path $source 'PatchNativeMutations.java')
 if($LASTEXITCODE -ne 0){throw 'Native patch compiler failed'}
 $output=Join-Path $target 'HytaleServer-packbound.jar'
 & java -cp "$classes;$classpath" com.inigmasgames.hytale.patch.PatchNativeMutations $sourceServer $classes $output
