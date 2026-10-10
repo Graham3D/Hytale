@@ -25,8 +25,8 @@ solid-block collision; range, elevation, first hit, loaded-world, and support
 checks remain. Failed
 target selections record the individual native hazard flags in the existing
 single rejection event. Environmental damage and effects are untouched.
-This revision is a QA candidate until its exact source commit passes offline
-verification and the user confirms connected-game behavior.
+At the implementation checkpoint this was a QA candidate pending exact-commit
+offline verification and user connected-game acceptance.
 
 Before the source commit, all 13 focused target-selection JUnit tests passed,
 including native collision-mask assertions and benign grass, damaging ground,
@@ -34,7 +34,30 @@ fluid, support, and solid-body cases. Focused JaCoCo covered 51/62 lines and
 39/54 branches in `HytaleTeleportTarget`; the native world collision adapter
 cannot be exercised offline. Strict SpotBugs passed against the reviewed
 baseline with no new findings. The exact-commit standard `check` and Guardian
-receipt remain to be run; this candidate is not yet deployed.
+receipt remained to be run; the candidate had not yet been deployed.
+
+The implementation source commit is `320287ad75098135ae0a3007d4cf8aded6bb5412`
+on `codex/teleport-native-target`, still based on GitHub `main` at
+`b6a2bd10e877800d702ec5ecd8bc1464e1724f83`. Its exact-commit unmodified
+offline `check` passed 3,501 root, 452 native-control, 49 CanvasUI, and 5
+Taverns JUnit tests with zero failures or skips. The 5,014-asset and
+41,251-reference audit passed. Package validation passed 19,441 entries,
+2,163 classes, identity `InigmasGames:HyARPG@0.2.0-R252-U7P5B`, and zero
+ImmersiveNPCs payload. Guardian recorded the exact source commit in the JAR,
+verified SHA-256 `97C004B06D9592D11337AA89CC70798EBE4FFFB04436B84FEF7A2C4029ED4778`,
+and confirmed the branch published on GitHub; `main` integration is pending.
+
+On October 10, the prior R251 `Hywind.jar` was backed up outside `Saves` as
+`C:/Users/Zemio/AppData/Roaming/Hytale/Hywind-backups/Hywind-before-R252-20261010T212121448Z.jar`.
+The atomic replacement also preserved
+`C:/Users/Zemio/AppData/Roaming/Hytale/Hywind-backups/Hywind-before-R252-atomic-20261010T212121448Z.jar`.
+Both backups match the previous SHA-256
+`9555848D1EA699C89EDD68EFC1E55C68DB6C0AF4AB311C72E2869BB7E0FC772D`.
+Only the active RPG save's `mods/Hywind.jar` was replaced; its installed
+SHA-256 matches the R252 candidate above. The game and standalone native
+server were not launched. Connected-game Teleport acceptance remains with the
+user. This documentation follow-up creates a later Git commit; the deployed
+JAR intentionally embeds implementation commit `320287ad`.
 
 ## R251 Teleport target diagnostic candidate (2026-10-10)
 
