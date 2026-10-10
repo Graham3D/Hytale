@@ -4,7 +4,10 @@ The current GitHub `main` gameplay baseline is **R250-U7P5B**
 (`0.2.0-R250-U7P5B`). [PR #1](https://github.com/Graham3D/Hytale/pull/1)
 merged when the recovery branch fast-forwarded `main` to
 `e4927d06e9a3071bc2023aafec68b8fa68d76268`. Later documentation commits
-do not create a new gameplay revision. Read [the development baseline](docs/DEVELOPMENT_BASELINE.md)
+do not create a new gameplay revision. [Guardian PR #2](https://github.com/Graham3D/Hytale/pull/2)
+merged the engineering safeguards into `main` at
+`401700bc6b2eb2bb509ab6cd1ccfd2b90cc8662a`; R250-U7P5B remains the
+gameplay revision. Read [the development baseline](docs/DEVELOPMENT_BASELINE.md)
 and [engineering rules](AGENTS.md) before starting work; verify the actual
 branch HEAD and status rather than relying on a revision label alone.
 

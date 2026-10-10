@@ -258,6 +258,23 @@ and package receipt are required before publication. This infrastructure
 work does not establish a new gameplay revision, deployment, or connected-game
 acceptance.
 
+[Guardian PR #2](https://github.com/Graham3D/Hytale/pull/2) subsequently merged
+the reviewed branch commit `eb58081b3e4203ff5858f3bb950e2febc23c5719`
+into GitHub `main` as merge commit
+`401700bc6b2eb2bb509ab6cd1ccfd2b90cc8662a`. At the **branch commit**,
+the complete unmodified offline Gradle `check` passed with 3,994 JUnit tests,
+5,014 guarded JSON assets, and 41,251 references. The existing package
+validator passed: 19,436 entries, 2,158 classes, `InigmasGames:HyARPG`, and
+zero ImmersiveNPCs runtime payload. The **undeployed** JAR built from
+`eb58081b` has SHA-256
+`EE9F9255D1B28A46652BD6A6CEA82059AE1718B12E956C611BF9F44F87AB49AA`.
+The merge commit has the same source tree but a different Git identity, so
+that checksum must not be attributed to a build of the merge commit. The
+canonical main checkout still holds its separate uncommitted `AGENTS.md`
+addition and was not updated. Future engineering must start from a freshly
+verified `origin/main` rather than that stale working copy. Later documentation
+commits can advance GitHub `main` without changing the R250 gameplay revision.
+
 ## Preservation and release gates
 
 The full primary checkout and both Teleport worktrees, including untracked
