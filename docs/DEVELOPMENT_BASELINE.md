@@ -213,6 +213,19 @@ Guardian's live completion query found the task branch unpublished on GitHub;
 remain unverified. Any later documentation-only commit needs its own build
 checksum because the JAR embeds the exact source commit.
 
+The follow-up `1c3ae2a041541d78ab7a8217dcc7e7787349fccd` reserves
+completion exit code 0 for a verified remote PASS; unpublished or unknown
+remote state now returns 1, while blocked checks return 2. The 29 Guardian
+fixtures passed again. A complete unmodified offline `check` passed in
+5m 35s with 3,994 JUnit tests, the same 5,014-asset and 41,251-reference
+audit, and passing offline package validation. The undeployed JAR built from
+this exact commit has SHA-256
+`5A444CF78BE481B296D202438689B0B5333029104F89E24320DD8A62E682A42D`.
+A live completion query returned exit code 1: the task branch remained
+unpublished, `main` integration pending, and deployment and connected-game
+acceptance unverified. The gameplay revision and version remain R250-U7P5B
+and 0.2.0-R250-U7P5B.
+
 ## Preservation and release gates
 
 The full primary checkout and both Teleport worktrees, including untracked
