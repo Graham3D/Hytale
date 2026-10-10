@@ -87,6 +87,7 @@ dependencies {
     implementation project(':canvas-ui')
     implementation project(':hytale-taverns')
     compileOnly project(':immersive-compat-api')
+    compileOnly 'com.github.spotbugs:spotbugs-annotations:4.10.2'
     compileOnly files(packboundServerJar)
     compileOnly files(htDevLibJar)
     testImplementation files(packboundServerJar)

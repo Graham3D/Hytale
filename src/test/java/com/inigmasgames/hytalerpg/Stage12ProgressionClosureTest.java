@@ -6,6 +6,7 @@ import com.inigmasgames.hytalerpg.combat.cooldown.SavedCooldown;
 import com.inigmasgames.hytalerpg.content.RpgCatalog;
 import com.inigmasgames.hytalerpg.domain.*;
 import com.inigmasgames.hytalerpg.execution.math.Vec3;
+import com.inigmasgames.hytalerpg.gear.GearEconomyProgress;
 import com.inigmasgames.hytalerpg.links.*;
 import com.inigmasgames.hytalerpg.progress.*;
 import org.junit.jupiter.api.*;
@@ -67,6 +68,35 @@ class Stage12ProgressionClosureTest {
         try(var reopened=service()){
             var loaded=reopened.getPresentationView(player).state();
             assertEquals(1,loaded.level);assertEquals(13,loaded.unspentAttributePoints);
+        }
+    }
+    @Test void operatorSkillLevelChangesOnlyLearnedBaseRankAndPersistsAcrossReload(){
+        var before=seed();
+        before.skillMastery.put("fire_bolt",1000L);
+        before.gearEconomy=new GearEconomyProgress(Map.of("PLAIN_SCRAP/CAMPAIGN",7L),Map.of("quick_slash",5),Map.of());
+        repo().save(before);
+        try(var s=service()){
+            assertTrue(s.setOperatorSkillRank(player,"fire_bolt",20,"qa-rank-20").success());
+            assertEquals(20,s.baseSkillRank(player,"fire_bolt"));
+            assertTrue(s.setOperatorSkillRank(player,"fire_bolt",1,"qa-rank-1").success());
+            assertEquals(1,s.baseSkillRank(player,"fire_bolt"));
+            long revision=s.getPresentationView(player).state().revision;
+            assertEquals(revision,s.setOperatorSkillRank(player,"fire_bolt",1,"qa-same").revision());
+            for(var invalid:List.of(0,21))assertFalse(s.setOperatorSkillRank(player,"fire_bolt",invalid,"qa-range").success());
+            assertFalse(s.setOperatorSkillRank(player,"teleport",10,"qa-unlearned").success());
+            assertFalse(s.setOperatorSkillRank(player,"missing_skill",10,"qa-unknown").success());
+            assertEquals(revision,s.getPresentationView(player).state().revision);
+        }
+        try(var reopened=service()){
+            var after=reopened.getPresentationView(player).state();
+            assertEquals(1,reopened.baseSkillRank(player,"fire_bolt"));
+            assertEquals(5,reopened.baseSkillRank(player,"quick_slash"));
+            assertEquals(before.gearEconomy.materials(),after.gearEconomy.materials());
+            assertEquals(before.gearEconomy.receipts(),after.gearEconomy.receipts());
+            assertEquals(before.skillMastery,after.skillMastery);
+            assertEquals(before.learnedSkills,after.learnedSkills);
+            assertEquals(before.cooldowns,after.cooldowns);
+            assertEquals(before.rewards,after.rewards);
         }
     }
     @Test void operatorLevelRejectsOverspendingOnDowngradeAndInvalidTargets(){

@@ -623,6 +623,25 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
         }
     }
 
+    /** Self-targeted QA fixture; a borrowed or unknown skill cannot be promoted to a learned rank. */
+    public MutationResult setOperatorSkillRank(UUID player,String skill,int rank,String correlation){
+        Holder holder=holder(player);
+        synchronized(holder){
+            ensureUsable(player,holder);
+            if(rank<1||rank>20)return MutationResult.failure(ValidationCode.INVALID_REQUEST,
+                    "Skill level must be 1..20.",correlation,holder.state.revision);
+            if(catalog.skill(new SkillId(skill)).isEmpty())return MutationResult.failure(ValidationCode.UNKNOWN_SKILL,
+                    "Unknown skill: "+skill,correlation,holder.state.revision);
+            if(!holder.state.learnedSkills.contains(skill))return MutationResult.failure(ValidationCode.NO_OWNED_COPY,
+                    "Learn the skill before setting its level.",correlation,holder.state.revision);
+            int current=holder.state.gearEconomy.baseRanks().getOrDefault(skill,
+                    ProgressionMath.masteryLevel(holder.state.skillMastery.getOrDefault(skill,0L)));
+            if(current==rank)return new MutationResult(true,ValidationCode.ACCEPTED,
+                    "Skill level already "+rank+'.',correlation,holder.state.revision,Map.of());
+            return mutate(holder,player,correlation,state->state.gearEconomy=state.gearEconomy.withBaseRank(skill,rank));
+        }
+    }
+
     /** Saved cooldown work has no loadout revision/projection side effect and cannot overwrite the support deficit. */
     public void saveCooldowns(UUID player,java.util.Map<String,com.inigmasgames.hytalerpg.combat.cooldown.SavedCooldown> values){
         var checked=com.inigmasgames.hytalerpg.combat.cooldown.SavedCooldown.validate(values);Holder holder=holder(player);
