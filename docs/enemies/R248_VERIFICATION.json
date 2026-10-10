@@ -1,0 +1,28 @@
+{
+  "revision": "R248-U7P5A",
+  "sourceCommitEmbeddedInJar": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+  "candidateJarSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803",
+  "offlineCheck": "PASS",
+  "tests": {
+    "core": {"run": 3462, "failures": 0, "errors": 0, "skipped": 0},
+    "nativeControl": {"run": 451, "failures": 0, "errors": 0, "skipped": 0},
+    "canvasUi": {"run": 49, "failures": 0, "errors": 0, "skipped": 0},
+    "taverns": {"run": 5, "failures": 0, "errors": 0, "skipped": 0}
+  },
+  "actionRegression": {
+    "baseline": "FAIL: wrapped Selector fork was rejected by raw compiled-operation identity comparison",
+    "corrected": "PASS: installed LabelOperation unwraps to the exact certified interaction leaf; foreign chain and owner remain rejected",
+    "fixture": "com.inigmasgames.hytalerpg.enemies.EnemyNativeOutgoingTest#capturesNativeFlatPercentAndInheritedSourceEffectsWithoutMutatingSourceOrSubmittingDamage"
+  },
+  "assetAudit": {
+    "result": "PASS",
+    "baselineRevision": "R247-U7P5A",
+    "baselineJarSha256": "819CC21B80E49EF10FF079361C6B24F413ABA3A6DBB8DFC0D5EEDFC4E8667599",
+    "jsonAssetsChecked": 4920,
+    "referencesChecked": 41063,
+    "reviewedJsonDelta": ["Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Soldier.json", "rpg/enemies/native-bindings-v1.json"]
+  },
+  "nativeServerStarted": false,
+  "connectedAcceptance": "NOT_RUN",
+  "ownerAccepted": false
+}

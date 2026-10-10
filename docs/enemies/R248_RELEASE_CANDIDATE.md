@@ -2,6 +2,8 @@
 
 Monster Affix remains **OPEN**. The machine-readable [release gate](MONSTER_AFFIX_RELEASE_GATE.json) is authoritative for outstanding requirements. R248 is an offline-verified candidate; the owner has not accepted connected behavior.
 
+The [deployment receipt](R248_DEPLOYMENT.md) identifies the exact installed JAR and recovery copy. The [verification record](R248_VERIFICATION.json) records the final offline results against embedded source commit `97621fb0368f0ab755b095f436614a049dbd8fd0`.
+
 ## Connected evidence used for this correction
 
 - `2026-10-09_20-09-30_server.log`: five Goblin Scrapper and one Polar Bear accepted native attacks failed at `ENEMY_ACTION_ACCEPTANCE_SNAPSHOT_MISSING`, with `operationMatchesLeaf=false` inside native `OperationsBuilder$LabelOperation.tick`. The action adapter now unwraps the installed compiled operation to its exact certified leaf. The wrapper/fork test failed on the old comparison and passes after the correction; foreign chain and owner checks still reject.

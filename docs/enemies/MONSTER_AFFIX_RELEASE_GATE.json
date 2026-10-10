@@ -9,8 +9,8 @@
   "installedServerSha256": "a032a64e03390ca0aeb6c03c3b1600eaa892c8bc833d1bf3ac39307ccdf3cb20",
   "installedAssetsSha256": "eddf425546559bfbc3f2656babf30daa4008543c38ee5aa4499c605ed1732236",
   "worldConfigSha256": "3D7E86AB1B97F36E41F124FD3E03C682923F77F59B898FCE8CA0221542DF7986",
-  "candidateSourceCommit": "",
-  "candidateJarSha256": "",
+  "candidateSourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+  "candidateJarSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803",
   "requirements": [
     {
       "id": "ENEMY_ACTION",
@@ -25,11 +25,13 @@
         "com.inigmasgames.hytalerpg.enemies.EnemyNativeBindingsTest"
       ],
       "evidence": [
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Wrapped Selector fork fails against the baseline raw operation comparison and passes after unwrapping. Connected Goblin/Bear contacts, stale/duplicate execution and long combat remain unverified.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ORDINARY_DIFFICULTY",
@@ -44,11 +46,13 @@
         "com.inigmasgames.hytalerpg.enemies.R244ProductionProfileTest"
       ],
       "evidence": [
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Deferred handoff path is source-checked and profile resolver tested; native Hell fallback Health/damage and alternate ingress routes need connected proof.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "SKELETON_BINDINGS",
@@ -63,11 +67,13 @@
         "com.inigmasgames.hytalerpg.enemies.EnemyNativeBindingsTest"
       ],
       "evidence": [
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Seven trace-reported concrete role IDs resolve pinned installed action assets; actual natural combat and promotion need connected proof.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "CHAMPION_IDENTITY",
@@ -81,11 +87,13 @@
         "com.inigmasgames.hytalerpg.enemies.EnemyDisplayDtoTest"
       ],
       "evidence": [
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Primary native/inspect projection has Champion prefix; connected localized rendering, long names and LOAD need proof.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "CHAMPION_COMPOSITION",
@@ -99,11 +107,13 @@
         "com.inigmasgames.hytalerpg.enemies.EnemyBirthPlannerTest"
       ],
       "evidence": [
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Planner produces peer CHAMPION/MEMBER actors; native publication and LOAD need connected proof.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "PLAYER_CAST",
@@ -117,11 +127,13 @@
         "com.inigmasgames.hytalerpg.Stage11RetaliationTest"
       ],
       "evidence": [
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Charged Bolt trace proves validation PASS followed by COMMIT_FAILED_IllegalStateException, but the prior trace lost the inner cause. New bounded stage/cause diagnostic awaits a connected recurrence.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ADMISSION",
@@ -136,11 +148,13 @@
         "com.inigmasgames.hytalerpg.enemies.R247WorldRebindLifecycleTest"
       ],
       "evidence": [
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "R247 connected publications exist; full R248 natural source/rollback/profile and capacity paths are not yet connected verified.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "PRESENTATION",
@@ -154,11 +168,13 @@
         "com.inigmasgames.hytalerpg.enemies.EnemyDisplayDtoTest"
       ],
       "evidence": [
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Native client name, affix, Healthbar, long-name and rarity presentation need screenshots and connected observation.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "REWARDS",
@@ -173,11 +189,13 @@
         "com.inigmasgames.hytalerpg.enemies.EnemyBirthPersistenceTest"
       ],
       "evidence": [
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Exactly-once death, economic receipt and restart behavior on this candidate have no connected proof.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "LIFECYCLE",
@@ -192,11 +210,13 @@
         "com.inigmasgames.hytalerpg.enemies.EnemyBirthPersistenceTest"
       ],
       "evidence": [
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Full spawn, profile, fight, wound, unload, reload, republish, defeat, rewards and restart sequence is NOT_RUN on the candidate.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-001",
@@ -212,11 +232,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-002",
@@ -232,11 +254,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-003",
@@ -252,11 +276,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-004",
@@ -272,11 +298,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-005",
@@ -292,11 +320,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-006",
@@ -312,11 +342,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-007",
@@ -332,11 +364,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-008",
@@ -352,11 +386,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-009",
@@ -372,11 +408,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-010",
@@ -392,11 +430,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-011",
@@ -412,11 +452,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-012",
@@ -432,11 +474,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-013",
@@ -452,11 +496,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-014",
@@ -472,11 +518,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-015",
@@ -492,11 +540,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-016",
@@ -512,11 +562,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-017",
@@ -532,11 +584,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-018",
@@ -552,11 +606,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-019",
@@ -572,11 +628,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-020",
@@ -592,11 +650,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-021",
@@ -612,11 +672,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-022",
@@ -632,11 +694,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-023",
@@ -652,11 +716,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-024",
@@ -672,11 +738,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-025",
@@ -692,11 +760,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-026",
@@ -712,11 +782,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     },
     {
       "id": "ME-027",
@@ -732,11 +804,13 @@
       ],
       "evidence": [
         "docs/enemies/COMPLETION_MATRIX.md",
-        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+        "docs/enemies/R248_RELEASE_CANDIDATE.md",
+        "docs/enemies/R248_VERIFICATION.json",
+        "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "",
-      "buildSha256": ""
+      "sourceCommit": "97621fb0368f0ab755b095f436614a049dbd8fd0",
+      "buildSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803"
     }
   ]
 }
