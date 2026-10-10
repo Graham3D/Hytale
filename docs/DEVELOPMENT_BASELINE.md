@@ -182,9 +182,36 @@ zero ImmersiveNPCs payload entries. That commit's **local, undeployed** JAR has
 SHA-256 `0E951FE0428AD3B66E9B4F034C6D209988F03B65609BA91A5252A33BE6786CB3`.
 Guardian's 19 isolated Git fixture cases passed; its clean preflight took
 653 ms and printed 14 bytes. The completion check validated the receipt and
-warned, correctly, that the commit is local-only. A later documentation-only
-commit changes the JAR's embedded source commit and needs its own checksum.
+warned, correctly, that the commit is local-only. The subsequent
+documentation-only commit `15ffaff518813840d9f830c68e4fb16f7fa87a12`
+passed another complete unmodified offline `check` (3,994 JUnit tests,
+zero failures or skips), asset audit, and package validation. Its distinct,
+undeployed JAR SHA-256 is
+`47A1F081587BB545E40B4F6383661D59605C2F50CD97AE8CEFB46156B3154EF5`.
 Neither offline validation nor this record establishes connected-game QA.
+
+## Guardian remote synchronization follow-up (2026-10-10)
+
+The local `codex/hywind-guardian` implementation commit
+`14b3aac56cc9d1407f5eb1af2c38901efc1dbba2` adds a one-query,
+read-only GitHub completion check and an optional reviewed, non-force
+`codex/` task-branch publisher. Publication still requires explicit standing
+authorization; this follow-up did not invoke the publisher, install hooks,
+push, or integrate into `main`. The gameplay revision and version remain
+`R250-U7P5B` and `0.2.0-R250-U7P5B`.
+
+At that exact commit, 29 isolated Guardian fixture cases passed, including
+local-only, published, divergent, failed-push, and integrated states. Clean
+preflight took 609 ms and printed 14 bytes. The complete unmodified offline
+Gradle `check` passed in 5m 52s: 3,994 JUnit tests with zero failures or
+skips, 5,014 JSON assets and 41,251 references audited, and the existing
+package validator passed with `InigmasGames:HyARPG@0.2.0-R250-U7P5B` and
+zero ImmersiveNPCs payload. Its undeployed JAR SHA-256 is
+`8C30C3117059FD4BF8BC1FD4BEAF48718A2168FA3446640182FCBF34832083EB`.
+Guardian's live completion query found the task branch unpublished on GitHub;
+`main` integration is pending. Deployment and connected-game acceptance
+remain unverified. Any later documentation-only commit needs its own build
+checksum because the JAR embeds the exact source commit.
 
 ## Preservation and release gates
 
