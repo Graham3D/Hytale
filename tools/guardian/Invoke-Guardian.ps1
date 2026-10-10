@@ -9,12 +9,16 @@ param(
     [string]$Receipt = 'build/guardian/verification.json',
     [int]$MaxBaselineAgeHours = 24,
     [switch]$Details,
+    [switch]$LocalOnly,
     [switch]$FixtureMode
 )
 
 $ErrorActionPreference = 'Stop'
 $blocked = New-Object 'System.Collections.Generic.List[string]'
 $warnings = New-Object 'System.Collections.Generic.List[string]'
+$script:LocalState = 'UNVERIFIED'
+$script:GitHubState = 'NOT_CHECKED'
+$script:MainState = 'NOT_CHECKED'
 
 function Add-Blocked([string]$Message) { $script:blocked.Add($Message) }
 function Add-Warning([string]$Message) { $script:warnings.Add($Message) }
@@ -61,19 +65,23 @@ function Matches-Scope([string]$Path) {
     return $false
 }
 function Finish {
+    $state = "local=$script:LocalState GitHub=$script:GitHubState main=$script:MainState deployment=UNVERIFIED acceptance=UNVERIFIED"
     if ($blocked.Count -gt 0) {
         Write-Output ('GUARDIAN: BLOCKED - ' + $blocked[0])
+        if ($Mode -eq 'Completion') { Write-Output ('  state: ' + $state) }
         if ($Details -and $script:Context) { Write-Output ('  ' + $script:Context) }
         foreach ($issue in @($blocked | Select-Object -Skip 1) + @($warnings)) { Write-Output ('  - ' + $issue) }
         exit 2
     }
     if ($warnings.Count -gt 0) {
         Write-Output ('GUARDIAN: WARNING - ' + $warnings[0])
+        if ($Mode -eq 'Completion') { Write-Output ('  state: ' + $state) }
         if ($Details -and $script:Context) { Write-Output ('  ' + $script:Context) }
         foreach ($issue in @($warnings | Select-Object -Skip 1)) { Write-Output ('  - ' + $issue) }
         exit 0
     }
-    Write-Output 'GUARDIAN: PASS'
+    if ($Mode -eq 'Completion') { Write-Output ('GUARDIAN: PASS - ' + $state) }
+    else { Write-Output 'GUARDIAN: PASS' }
     if ($Details -and $script:Context) { Write-Output ('  ' + $script:Context) }
     exit 0
 }
@@ -99,6 +107,7 @@ try {
     if ($MassDeletionThreshold -lt 1 -or $MaxBaselineAgeHours -lt 1) {
         throw 'Thresholds must be positive.'
     }
+    if ($LocalOnly -and $Mode -ne 'Completion') { throw '-LocalOnly applies only to Completion.' }
 
     $remote = Run-Git @('config', '--get', 'remote.origin.url')
     if (-not $FixtureMode -and ($remote.Code -ne 0 -or
@@ -172,7 +181,11 @@ try {
     if ($statusResult.Code -ne 0) { Add-Blocked 'Git status could not be inspected.'; Finish }
     $statusLines = @($statusResult.Text -split '\r?\n' | Where-Object { $_.Length -ge 3 })
     if ($statusLines.Count -gt 0) {
-        if ($Mode -eq 'Completion') { Add-Blocked 'Uncommitted or untracked work is present; completion requires a clean committed checkout.' }
+        if ($Mode -eq 'Completion') {
+            $script:LocalState = 'UNCOMMITTED'
+            Add-Blocked 'Uncommitted or untracked work is present; completion requires a clean committed checkout.'
+            Finish
+        }
         elseif ($Mode -ne 'Commit') { Add-Warning ("Uncommitted work is present ({0} path(s)); nothing was changed." -f $statusLines.Count) }
     }
     if ($Mode -eq 'Changes' -or $Mode -eq 'Commit') {
@@ -289,12 +302,89 @@ try {
                 }
             }
         }
-        $upstream = Run-Git @('rev-parse', '--abbrev-ref', '--symbolic-full-name', '@{u}')
-        if ($upstream.Code -ne 0) { Add-Warning 'Commit is local; no upstream tracking ref is configured.' }
-        else {
-            $upstreamHead = Run-Git @('rev-parse', '--verify', "$($upstream.Text.Trim())^{commit}")
-            if ($upstreamHead.Code -ne 0 -or (Run-Git @('merge-base', '--is-ancestor', $head, $upstreamHead.Text.Trim())).Code -ne 0) {
-                Add-Warning 'Commit is local-only relative to its observed upstream tracking ref; no push is claimed.'
+        if ($blocked.Count -eq 0) {
+            $script:LocalState = 'VERIFIED'
+            if ($LocalOnly) {
+                Add-Warning 'GitHub synchronization was not checked; this is local verification only.'
+            } else {
+                # One narrow, read-only remote query. Never update refs or infer publication from a stale tracking ref.
+                $oldPrompt = $env:GIT_TERMINAL_PROMPT
+                $oldGcm = $env:GCM_INTERACTIVE
+                $oldSsh = $env:GIT_SSH_COMMAND
+                $env:GIT_TERMINAL_PROMPT = '0'
+                $env:GCM_INTERACTIVE = 'never'
+                $env:GIT_SSH_COMMAND = 'ssh -o BatchMode=yes -o ConnectTimeout=15'
+                try {
+                    $remoteHeads = Run-Git @('-c', 'http.lowSpeedLimit=1', '-c', 'http.lowSpeedTime=15',
+                        'ls-remote', '--heads', 'origin', 'refs/heads/main', "refs/heads/$branch")
+                } finally {
+                    if ($null -eq $oldPrompt) { Remove-Item Env:GIT_TERMINAL_PROMPT -ErrorAction SilentlyContinue }
+                    else { $env:GIT_TERMINAL_PROMPT = $oldPrompt }
+                    if ($null -eq $oldGcm) { Remove-Item Env:GCM_INTERACTIVE -ErrorAction SilentlyContinue }
+                    else { $env:GCM_INTERACTIVE = $oldGcm }
+                    if ($null -eq $oldSsh) { Remove-Item Env:GIT_SSH_COMMAND -ErrorAction SilentlyContinue }
+                    else { $env:GIT_SSH_COMMAND = $oldSsh }
+                }
+                if ($remoteHeads.Code -ne 0) {
+                    $script:GitHubState = 'UNKNOWN'
+                    $script:MainState = 'UNKNOWN'
+                    Add-Warning 'Authorized GitHub remote could not be checked; a failed push or network error cannot be ruled out.'
+                } else {
+                    $heads = [Collections.Generic.Dictionary[string,string]]::new([StringComparer]::Ordinal)
+                    foreach ($line in ($remoteHeads.Text -split '\r?\n')) {
+                        if ($line -match '^([0-9a-fA-F]{40})\s+(refs/heads/\S+)$') {
+                            $heads[$Matches[2]] = $Matches[1].ToLowerInvariant()
+                        }
+                    }
+                    if (-not $heads.ContainsKey('refs/heads/main')) {
+                        Add-Blocked 'Authorized remote main is missing; GitHub integration cannot be verified.'
+                    } else {
+                        $liveMain = $heads['refs/heads/main']
+                        $mainKnown = $liveMain -eq $head -or
+                            (Run-Git @('cat-file', '-e', "$liveMain^{commit}")).Code -eq 0
+                        if ($liveMain -eq $head -or ($mainKnown -and
+                            (Run-Git @('merge-base', '--is-ancestor', $head, $liveMain)).Code -eq 0)) {
+                            $script:MainState = 'INTEGRATED'
+                            $script:GitHubState = 'PUBLISHED'
+                        } elseif ($liveMain -eq $baseline) {
+                            $script:MainState = 'PENDING'
+                        } elseif (-not $mainKnown) {
+                            $script:MainState = 'UNVERIFIED_NEW_MAIN'
+                            Add-Warning 'GitHub main moved beyond locally known objects; fetch and review before claiming integration.'
+                        } elseif ((Run-Git @('merge-base', '--is-ancestor', $baseline, $liveMain)).Code -ne 0) {
+                            $script:MainState = 'DIVERGED'
+                            Add-Blocked 'GitHub main diverged from the locally known authoritative baseline.'
+                        } else {
+                            $script:MainState = 'PENDING_NEW_MAIN'
+                            Add-Warning 'GitHub main advanced since the local baseline; review the new commits.'
+                        }
+                        $branchRef = "refs/heads/$branch"
+                        if ($heads.ContainsKey($branchRef)) {
+                            $liveBranch = $heads[$branchRef]
+                            if ($liveBranch -eq $head) {
+                                $script:GitHubState = 'PUBLISHED'
+                            } elseif ($script:MainState -ne 'INTEGRATED') {
+                                $branchKnown = (Run-Git @('cat-file', '-e', "$liveBranch^{commit}")).Code -eq 0
+                                if (-not $branchKnown) {
+                                    $script:GitHubState = 'REMOTE_CHANGED'
+                                    Add-Blocked "GitHub $branch differs from HEAD; fetch and review the remote branch."
+                                } elseif ((Run-Git @('merge-base', '--is-ancestor', $liveBranch, $head)).Code -eq 0) {
+                                    $script:GitHubState = 'UNPUBLISHED'
+                                    Add-Warning "HEAD has unpublished commits on GitHub $branch; a push may have failed."
+                                } elseif ((Run-Git @('merge-base', '--is-ancestor', $head, $liveBranch)).Code -eq 0) {
+                                    $script:GitHubState = 'REMOTE_AHEAD'
+                                    Add-Blocked "GitHub $branch advanced beyond this checkout; fetch and review."
+                                } else {
+                                    $script:GitHubState = 'DIVERGED'
+                                    Add-Blocked "GitHub $branch diverged from this checkout; do not force-push."
+                                }
+                            }
+                        } elseif ($script:MainState -ne 'INTEGRATED') {
+                            $script:GitHubState = 'UNPUBLISHED'
+                            Add-Warning "HEAD is not on GitHub $branch; the task branch has not been published."
+                        }
+                    }
+                }
             }
         }
     }

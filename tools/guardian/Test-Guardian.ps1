@@ -17,7 +17,9 @@ $feature = Join-Path $fixtureRoot 'feature'
 $missingDocs = Join-Path $fixtureRoot 'missing-docs'
 $missingAgents = Join-Path $fixtureRoot 'missing-agents'
 $untrackedAgents = Join-Path $fixtureRoot 'untracked-agents'
+$peer = Join-Path $fixtureRoot 'peer'
 $guard = Join-Path $PSScriptRoot 'Invoke-Guardian.ps1'
+$publisher = Join-Path $PSScriptRoot 'Publish-GuardianBranch.ps1'
 $checks = 0
 
 function Write-Fixture([string]$Relative, [string]$Value) {
@@ -81,17 +83,15 @@ Invoke-FixtureGit $divergent @('commit','--quiet','-m','Fixture divergent commit
 $diverged = Run-Guard $divergent @('-Mode','Preflight')
 Assert-Case ($diverged.ExitCode -eq 2 -and $diverged.Text -match 'diverges') 'unexpected divergence blocked' $diverged.Text
 
-Invoke-FixtureGit $main @('worktree','add','--quiet','-b','feature',$feature,'refs/remotes/origin/main') | Out-Null
+Invoke-FixtureGit $main @('worktree','add','--quiet','-b','codex/feature',$feature,'refs/remotes/origin/main') | Out-Null
 [IO.File]::WriteAllText((Join-Path $feature 'feature.txt'), 'feature work', [Text.UTF8Encoding]::new($false))
 Invoke-FixtureGit $feature @('add','--','feature.txt') | Out-Null
 Invoke-FixtureGit $feature @('commit','--quiet','-m','Fixture feature commit') | Out-Null
 $featureResult = Run-Guard $feature @('-Mode','Preflight')
 Assert-Case ($featureResult.ExitCode -eq 0 -and $featureResult.Text -eq 'GUARDIAN: PASS') 'descendant feature branch passes' $featureResult.Text
 $localOnly = Run-Guard $feature @('-Mode','Completion')
-Assert-Case ($localOnly.Text -match 'local-only' -and $localOnly.Text -match 'receipt is missing') 'local commit distinguished from push' $localOnly.Text
-Invoke-FixtureGit $feature @('push','--quiet','-u','origin','feature') | Out-Null
-$pushed = Run-Guard $feature @('-Mode','Completion')
-Assert-Case ($pushed.Text -notmatch 'local-only' -and $pushed.Text -match 'receipt is missing') 'observed pushed commit distinguished' $pushed.Text
+Assert-Case ($localOnly.ExitCode -eq 2 -and $localOnly.Text -match 'receipt is missing' -and
+    $localOnly.Text -match 'GitHub=NOT_CHECKED') 'missing local evidence blocks completion' $localOnly.Text
 # A synthetic package and four JUnit reports exercise the completion receipt reader.
 $featureHead = Invoke-FixtureGit $feature @('rev-parse','HEAD')
 $jarDir = Join-Path $feature 'build/libs'
@@ -130,8 +130,66 @@ $recordScript = Join-Path $PSScriptRoot 'Record-Verification.ps1'
 $recordOutput = @(& powershell.exe -NoProfile -ExecutionPolicy Bypass -File $recordScript -Repository $feature -FixtureMode 2>&1)
 $recordCode = $LASTEXITCODE
 Assert-Case ($recordCode -eq 0 -and ($recordOutput -join ' ') -eq 'GUARDIAN: PASS') 'existing QA evidence recorded' ($recordOutput -join ' ')
+$unpublished = Run-Guard $feature @('-Mode','Completion')
+Assert-Case ($unpublished.ExitCode -eq 0 -and $unpublished.Text -match 'GitHub=UNPUBLISHED' -and
+    $unpublished.Text -match 'has not been published') 'local commit is not remote publication' $unpublished.Text
+$baseForPublication = Invoke-FixtureGit $main @('rev-parse','refs/remotes/origin/main')
+$firstPublishCommand = '& "' + $publisher + '" -Repository "' + $feature + '" -FixtureMode -StandingAuthorization -ExpectedCommit ' + $featureHead + ' -ReviewedBase ' + $baseForPublication + ' -ReviewedPaths @("feature.txt")'
+$firstPublish = @(& powershell.exe -NoProfile -ExecutionPolicy Bypass -Command $firstPublishCommand 2>&1)
+Assert-Case ($LASTEXITCODE -eq 0 -and ($firstPublish -join ' ') -match 'GitHub=PUBLISHED main=PENDING') 'authorized reviewed task branch publishes and verifies' ($firstPublish -join ' ')
 $complete = Run-Guard $feature @('-Mode','Completion')
-Assert-Case ($complete.ExitCode -eq 0 -and $complete.Text -eq 'GUARDIAN: PASS') 'committed verified revision passes' $complete.Text
+Assert-Case ($complete.ExitCode -eq 0 -and $complete.Text -match '^GUARDIAN: PASS - local=VERIFIED GitHub=PUBLISHED main=PENDING deployment=UNVERIFIED acceptance=UNVERIFIED') 'verified remote task branch passes' $complete.Text
+$denied = @(& powershell.exe -NoProfile -ExecutionPolicy Bypass -File $publisher -Repository $feature -FixtureMode -ExpectedCommit $featureHead -ReviewedBase (Invoke-FixtureGit $main @('rev-parse','refs/remotes/origin/main')) -ReviewedPaths 'feature.txt' 2>&1)
+Assert-Case ($LASTEXITCODE -ne 0 -and ($denied -join ' ') -match 'standing authorization') 'publication requires explicit authorization' ($denied -join ' ')
+
+# A new local commit is not published merely because an earlier commit reached the branch.
+[IO.File]::WriteAllText((Join-Path $feature 'second.txt'), 'second local change', [Text.UTF8Encoding]::new($false))
+Invoke-FixtureGit $feature @('add','--','second.txt') | Out-Null
+Invoke-FixtureGit $feature @('commit','--quiet','-m','Fixture unpublished second commit') | Out-Null
+$featureHead = Invoke-FixtureGit $feature @('rev-parse','HEAD')
+$zip = [IO.Compression.ZipFile]::Open($jarPath, [IO.Compression.ZipArchiveMode]::Update)
+try {
+    $zip.GetEntry('rpg-build.properties').Delete()
+    $entry = $zip.CreateEntry('rpg-build.properties')
+    $writer = New-Object IO.StreamWriter($entry.Open())
+    try { $writer.Write("rpg.sourceCommit=$featureHead`nrpg.revision=R250-U7P5B`n") }
+    finally { $writer.Dispose() }
+} finally { $zip.Dispose() }
+[IO.File]::WriteAllText($logPath, 'BUILD SUCCESSFUL', [Text.UTF8Encoding]::new($false))
+$newReceipt = @(& powershell.exe -NoProfile -ExecutionPolicy Bypass -File $recordScript -Repository $feature -FixtureMode 2>&1)
+Assert-Case ($LASTEXITCODE -eq 0 -and ($newReceipt -join ' ') -eq 'GUARDIAN: PASS') 'new local commit gets fresh evidence' ($newReceipt -join ' ')
+$ahead = Run-Guard $feature @('-Mode','Completion')
+Assert-Case ($ahead.ExitCode -eq 0 -and $ahead.Text -match 'GitHub=UNPUBLISHED' -and
+    $ahead.Text -match 'unpublished commits') 'remote branch behind HEAD is unpublished' $ahead.Text
+
+# Another writer advances the fixture remote; publication must reject non-fast-forward history.
+& git clone --quiet --branch codex/feature $remote $peer 2>&1 | Out-Null
+if ($LASTEXITCODE -ne 0) { throw 'Cannot clone fixture peer.' }
+Invoke-FixtureGit $peer @('config','user.name','Guardian Fixture Peer') | Out-Null
+Invoke-FixtureGit $peer @('config','user.email','peer@example.invalid') | Out-Null
+[IO.File]::WriteAllText((Join-Path $peer 'peer.txt'), 'remote branch advance', [Text.UTF8Encoding]::new($false))
+Invoke-FixtureGit $peer @('add','--','peer.txt') | Out-Null
+Invoke-FixtureGit $peer @('commit','--quiet','-m','Fixture remote advance') | Out-Null
+Invoke-FixtureGit $peer @('push','--quiet','origin','HEAD:refs/heads/codex/feature') | Out-Null
+$unknown = Run-Guard $feature @('-Mode','Completion')
+Assert-Case ($unknown.ExitCode -eq 2 -and $unknown.Text -match 'GitHub=REMOTE_CHANGED') 'unfetched remote tip is not trusted' $unknown.Text
+Invoke-FixtureGit $feature @('fetch','--quiet','origin','refs/heads/codex/feature:refs/remotes/origin/codex/feature') | Out-Null
+$divergedRemote = Run-Guard $feature @('-Mode','Completion')
+Assert-Case ($divergedRemote.ExitCode -eq 2 -and $divergedRemote.Text -match 'GitHub=DIVERGED') 'remote divergence blocked' $divergedRemote.Text
+$reviewedBase = Invoke-FixtureGit $main @('rev-parse','refs/remotes/origin/main')
+$publishCommand = '& "' + $publisher + '" -Repository "' + $feature + '" -FixtureMode -StandingAuthorization -ExpectedCommit ' + $featureHead + ' -ReviewedBase ' + $reviewedBase + ' -ReviewedPaths @("feature.txt","second.txt")'
+$failedPush = @(& powershell.exe -NoProfile -ExecutionPolicy Bypass -Command $publishCommand 2>&1)
+Assert-Case ($LASTEXITCODE -ne 0 -and ($failedPush -join ' ') -match 'Non-force push.*failed') 'failed push reported without force' ($failedPush -join ' ')
+
+Invoke-FixtureGit $main @('merge','--quiet','--ff-only','codex/feature') | Out-Null
+Invoke-FixtureGit $main @('push','--quiet','origin','main') | Out-Null
+$integrated = Run-Guard $feature @('-Mode','Completion')
+Assert-Case ($integrated.ExitCode -eq 0 -and $integrated.Text -match 'GitHub=PUBLISHED main=INTEGRATED') 'authoritative main integration verified' $integrated.Text
+Invoke-FixtureGit $main @('remote','set-url','origin','https://127.0.0.1:1/no-network.git') | Out-Null
+$networkFailure = Run-Guard $feature @('-Mode','Completion')
+Assert-Case ($networkFailure.ExitCode -eq 0 -and $networkFailure.Text -match 'GitHub=UNKNOWN' -and
+    $networkFailure.Text -match 'could not be checked') 'failed remote query cannot claim synchronization' $networkFailure.Text
+Invoke-FixtureGit $main @('remote','set-url','origin',$remote) | Out-Null
 $firstReport = Join-Path $feature 'build/test-results/test/TEST-Fixture.xml'
 [IO.File]::AppendAllText($firstReport, 'changed')
 $alteredReceipt = Run-Guard $feature @('-Mode','Completion')
@@ -141,6 +199,9 @@ Assert-Case ($alteredReceipt.ExitCode -eq 2 -and $alteredReceipt.Text -match 'JU
 $dirty = Run-Guard $feature @('-Mode','Preflight')
 Assert-Case ($dirty.ExitCode -eq 0 -and $dirty.Text -match 'Uncommitted work' -and
     (Get-Content (Join-Path $feature 'scratch.txt') -Raw) -eq 'preserve this') 'uncommitted work reported and preserved' $dirty.Text
+$dirtyCompletion = Run-Guard $feature @('-Mode','Completion')
+Assert-Case ($dirtyCompletion.ExitCode -eq 2 -and $dirtyCompletion.Text -match 'local=UNCOMMITTED' -and
+    $dirtyCompletion.Text -match 'GitHub=NOT_CHECKED') 'uncommitted work cannot be synchronized' $dirtyCompletion.Text
 $scope = Run-Guard $feature @('-Mode','Changes','-Scope','README.md')
 Assert-Case ($scope.ExitCode -eq 2 -and $scope.Text -match 'outside task scope') 'out-of-scope path blocked' $scope.Text
 Invoke-FixtureGit $feature @('add','--','scratch.txt') | Out-Null
