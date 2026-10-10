@@ -1308,8 +1308,17 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 if(states==null||!states.getMovementStates().onGround)return Validation.reject("TELEPORT_REQUIRES_GROUND");
                 Vec3 feet=vec(store.getComponent(actor,TransformComponent.getComponentType()).getPosition());
                 double range=com.inigmasgames.hytalerpg.execution.TeleportScaling.effectiveRange(effectiveSkillLevel,profile);
-                movementGround=HytaleTeleportTarget.select(store,actor,feet,aim(store,actor),range).orElse(null);
-                if(movementGround==null)return Validation.reject("TELEPORT_NO_VALID_SURFACE");
+                Vec3 targetAim=aim(store,actor);
+                var selection=HytaleTeleportTarget.select(store,actor,feet,targetAim,range);
+                if(!selection.valid()){
+                    trace.emit(playerRef.getUuid(),RpgTraceEventType.TELEPORT_TARGET_REJECTED,
+                            new CombatTrace.Context("teleport-target","teleport-target",java.util.UUID.randomUUID().toString()),
+                            Map.of("stage",selection.failure().name(),"feet",feet.toString(),"aim",targetAim.toString(),
+                                    "range",range,"contact",String.valueOf(selection.contact()),
+                                    "normal",String.valueOf(selection.normal()),"hitFraction",String.valueOf(selection.hitFraction())));
+                    return Validation.reject("TELEPORT_NO_VALID_SURFACE");
+                }
+                movementGround=selection.landing();
                 teleportGroup=summons==null?List.of():summons.preflightRelocation(store,playerRef.getUuid(),playerRef.getWorldUuid(),movementGround).orElse(null);
                 return teleportGroup==null?Validation.reject("TELEPORT_SUMMON_PLACEMENT_UNAVAILABLE"):Validation.pass();
             }

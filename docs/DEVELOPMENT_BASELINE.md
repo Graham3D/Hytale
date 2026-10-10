@@ -1,5 +1,39 @@
 # HyARPG/Hywind development baseline
 
+## R251 Teleport target diagnostic candidate (2026-10-10)
+
+The source branch `codex/teleport-native-target` starts from freshly fetched GitHub
+`main` at `b6a2bd10e877800d702ec5ecd8bc1464e1724f83`. The older primary
+checkout's unrelated `AGENTS.md` addition remains preserved there. Guardian
+preflight passed on the clean task worktree. The active RPG save's deployed
+`Hywind.jar` was read only and remains R250-U7P5B, SHA-256
+`F56BB5120BFA764088A30EBFB4ED62C067C1A4899E90A50B0A7B5DA5CBE14C30`.
+
+The October 10 connected trace contains five `TELEPORT_NO_VALID_SURFACE`
+rejections and one `TELEPORT_REQUIRES_GROUND`. No successful Teleport movement
+was observed. The surface error combines several native collision checks; the
+trace lacks aim, contact, and failing-stage data, so a gameplay root cause is
+not established. This pass retains the R250 first-hit, hazard, range, upward
+elevation, ground-support, body-clearance, and summon rules. R251-U7P5B
+(`0.2.0-R251-U7P5B`) is a diagnostic QA revision that records a bounded
+`TELEPORT_TARGET_REJECTED` event per failed target selection. Existing
+activation rejection codes are unchanged. The earlier encounter-persistence
+error remains outside this Teleport pass.
+
+On the pre-commit candidate, 9 target-selection and 5 existing Teleport JUnit
+tests passed. The focused JaCoCo run covered 40/54 lines and 42/64 branches
+in `HytaleTeleportTarget`'s selection logic; its native geometry adapter was
+not exercised offline. Strict SpotBugs passed against the reviewed baseline
+with zero new findings. The full unmodified `check` passed 3,497 root, 452
+native-control, 49 CanvasUI, and 5 Taverns JUnit tests with zero failures.
+The asset audit passed 5,014 JSON assets and 41,251 references. Package
+validation passed 19,441 entries, 2,163 classes,
+`InigmasGames:HyARPG@0.2.0-R251-U7P5B`, and zero ImmersiveNPCs payload.
+This pre-commit candidate JAR embeds the earlier HEAD, so its checksum is
+not a release checksum. The complete exact-commit check and Guardian receipt
+must follow the source commit. Connected QA is still needed to identify the
+failed native stage and establish gameplay acceptance.
+
 ## R250 recovery and promoted development baseline (2026-10-10)
 
 The source starting point was `codex/teleport-r250-latest` at
