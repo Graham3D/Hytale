@@ -28,9 +28,24 @@ identity `InigmasGames:HyARPG@0.2.0-R254-U7P5B`, and zero ImmersiveNPCs
 payload, SHA-256 `FFD2043EAB44CC8B1F503662AB22E6A348670C6A92AB1C9D5EB841406F85FE09`.
 The amended source adds a documented suppression for the intentional injected
 player authority; strict SpotBugs then passed. Focused JaCoCo covered 11/11
-lines and 10/10 branches in `setOperatorSkillRank`. Exact final-HEAD
-verification, GitHub publication, deployment, and connected-game QA are
-pending at this checkpoint.
+lines and 10/10 branches in `setOperatorSkillRank`. Documentation commit
+`8d3f6f3d6eaa991c972c81cb7c448dee189a0368` then passed its own exact-HEAD
+offline `check` with the same four test totals and zero failures or skips.
+Guardian recorded its package validation and JAR SHA-256
+`7353B2A657AD8D9249B7617B9BE66F7008028AA65C23609B60901BBAE25C1031`,
+and confirmed `codex/skill-level-qa` published on GitHub; `main` integration
+remains pending.
+
+The previous R253 JAR was backed up outside `Saves` at
+`C:/Users/Zemio/AppData/Roaming/Hytale/Hywind-backups/Hywind-before-R254-20261010T223734289Z.jar`,
+SHA-256 `E57E8F5F77063653982F4190FC64E4178A0B6EC5F00FEF1D4002EEC73FC89730`.
+Only the active `Saves/RPG/mods/Hywind.jar` was replaced; its installed
+SHA-256 matches the R254 candidate and its embedded source commit is
+`8d3f6f3d6eaa991c972c81cb7c448dee189a0368`. Save data, the game, and
+standalone native servers were untouched. Connected-game skill-level and
+Teleport acceptance remain with the user. This deployment record is a later
+documentation-only commit; the deployed JAR intentionally embeds the verified
+pre-record commit.
 
 ## R253 Teleport native relocation QA candidate (2026-10-10)
 
