@@ -50,7 +50,7 @@ if ((Get-Item -LiteralPath $checkLog).LastWriteTimeUtc -lt [DateTimeOffset]::Par
 }
 
 $reports = New-Object 'System.Collections.Generic.List[object]'
-$reportDirs = @('build/test-results/test', 'native-control/build/test-results/test',
+$reportDirs = @('build/test-results/test', 'build/test-results/nativeControlTest',
                 'canvas-ui/build/test-results/test', 'hytale-taverns/build/test-results/test')
 foreach ($relativeDir in $reportDirs) {
     $folder = Repo-File $relativeDir

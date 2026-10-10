@@ -110,7 +110,7 @@ try {
 $logPath = Join-Path $guardianDir 'gradle-check.log'
 [IO.File]::WriteAllText($logPath, 'BUILD SUCCESSFUL', [Text.UTF8Encoding]::new($false))
 $fixtureReports = @()
-foreach ($dir in @('build/test-results/test','native-control/build/test-results/test',
+foreach ($dir in @('build/test-results/test','build/test-results/nativeControlTest',
                    'canvas-ui/build/test-results/test','hytale-taverns/build/test-results/test')) {
     $reportDir = Join-Path $feature $dir
     [IO.Directory]::CreateDirectory($reportDir) | Out-Null

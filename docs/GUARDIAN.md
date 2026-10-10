@@ -33,7 +33,7 @@ if ($LASTEXITCODE -ne 0) { throw 'Gradle check failed.' }
 & .\tools\guardian\Invoke-Guardian.ps1 -Mode Completion
 ```
 
-`Record-Verification.ps1` does not start Gradle. It accepts only evidence inside the checkout, checks a successful log written after HEAD, four JUnit module report sets with zero failures/errors/skips, the built JAR's embedded source commit, and the existing `Test-HyArpgPackage.ps1` result. It writes an ignored `build/guardian/verification.json` receipt. `Completion` checks that receipt, its hashes, current test reports, the JAR, revision documentation, clean Git status, and observed upstream tracking ref. A local-only commit is reported as WARNING, not claimed as pushed. A receipt is local evidence, not a signed attestation or connected-game acceptance.
+`Record-Verification.ps1` does not start Gradle. It accepts only evidence inside the checkout, checks a successful log written after HEAD, four JUnit test report sets (root `test`, root `nativeControlTest`, Canvas UI `test`, and Taverns `test`) with zero failures/errors/skips, the built JAR's embedded source commit, and the existing `Test-HyArpgPackage.ps1` result. It writes an ignored `build/guardian/verification.json` receipt. `Completion` checks that receipt, its hashes, current test reports, the JAR, revision documentation, clean Git status, and observed upstream tracking ref. A local-only commit is reported as WARNING, not claimed as pushed. A receipt is local evidence, not a signed attestation or connected-game acceptance.
 
 ## Optional Codex launcher and hook
 

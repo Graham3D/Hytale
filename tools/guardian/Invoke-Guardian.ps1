@@ -264,8 +264,8 @@ try {
                     }
                 }
                 $reports = @($proof.reports)
-                if ($reports.Count -lt 4) { Add-Blocked 'JUnit receipt lacks reports from all required modules.' }
-                $modules = @('build/test-results/test/', 'native-control/build/test-results/test/',
+                if ($reports.Count -lt 4) { Add-Blocked 'JUnit receipt lacks reports from all required test tasks.' }
+                $modules = @('build/test-results/test/', 'build/test-results/nativeControlTest/',
                              'canvas-ui/build/test-results/test/', 'hytale-taverns/build/test-results/test/')
                 foreach ($module in $modules) {
                     if (@($reports | Where-Object { ([string]$_.path).Replace('\', '/').StartsWith($module) }).Count -eq 0) {
