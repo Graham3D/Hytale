@@ -1,5 +1,40 @@
 # HyARPG/Hywind development baseline
 
+## R253 Teleport native relocation QA candidate (2026-10-10)
+
+Source branch `codex/teleport-native-target` continues the published R252
+history from implementation commit `320287ad75098135ae0a3007d4cf8aded6bb5412`
+and its later documentation follow-up. The verified GitHub `main` ancestor is
+`b6a2bd10e877800d702ec5ecd8bc1464e1724f83`. Guardian preflight passed;
+the primary checkout's unrelated modified `AGENTS.md` remains untouched.
+The active RPG save carried R252 at SHA-256
+`97C004B06D9592D11337AA89CC70798EBE4FFFB04436B84FEF7A2C4029ED4778`
+before this candidate.
+
+R252 owner QA at 21:36:14 UTC recorded a committed Teleport, landing particle,
+and `MOVEMENT_END` over 5.65 m, but the player did not visibly move. The same
+instance remained in MOVEMENT until disconnect at 21:36:54 UTC; subsequent
+Teleport and Charged Bolt requests were rejected as `INCOMPATIBLE_ACTIVE_STATE`.
+Native Hytale 0.7.0-pre.5.1 bytecode shows `Player.moveTo` updates the server
+transform without sending `ClientTeleport`, whereas the native `Teleport`
+component's player system queues that packet and completes an operation future.
+The separate `OUT_OF_RANGE_OR_ELEVATION` side-face rejection is consistent with
+its resolved landing center lying beyond the rank's 10 m horizontal limit.
+
+R253-U7P5B (`0.2.0-R253-U7P5B`) queues that native component through the
+world tick's command buffer and waits for its completion before relocating
+summons, presenting arrival, emitting `MOVEMENT_END`, and terminating the
+action lock. Failure, timeout, death, disconnect, and world transfer release
+the retained cast without refunding a committed root. Teleport target rules,
+environmental damage, and other movement skills remain unchanged. Source
+commit, full offline verification, publication, checksum, and deployment are
+pending this candidate's engineering completion; connected-game acceptance
+remains with the owner. Before commit, all 26 focused Teleport, native receipt,
+target, and skill tests passed. JaCoCo covered 15/15 lines and 13/16 branches
+in `NativeTeleportReceipt`, and 51/62 lines and 39/54 branches in
+`HytaleTeleportTarget`; the native client cannot be exercised offline. Strict
+SpotBugs passed with no findings outside the reviewed baseline.
+
 ## R252 Teleport hazard-permissive QA candidate (2026-10-10)
 
 Source branch `codex/teleport-native-target` descends from the verified GitHub

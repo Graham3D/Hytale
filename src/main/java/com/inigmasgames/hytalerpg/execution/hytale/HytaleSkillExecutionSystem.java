@@ -35,6 +35,7 @@ import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.entity.component.Invulnerable;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
 import com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent;
 import com.hypixel.hytale.server.core.modules.entity.tracker.NetworkId;
@@ -114,6 +115,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 
@@ -146,6 +148,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     private final HytaleBossBarTracker bosses;
     private final Map<UUID, Long> windupEnds = new HashMap<>();
     private final Map<UUID, Motion> motions = new HashMap<>();
+    private final Map<UUID, PendingTeleport> teleports = new HashMap<>();
     private final Map<UUID, Counter> counters = new HashMap<>();
     private final com.inigmasgames.hytalerpg.execution.strike.StrikeSequenceRegistry<RepeatingStrike> repeatingStrikes = new com.inigmasgames.hytalerpg.execution.strike.StrikeSequenceRegistry<>();
     private final Map<String, ProjectileCarrier> projectiles = new java.util.concurrent.ConcurrentHashMap<>();
@@ -869,6 +872,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             for(var value:healingText.flush(actor,null,System.nanoTime()/1e9,false))presentHealingText(store,ref,value);
         }
         executions.tickScheduled(actor,port);
+        PendingTeleport teleport = teleports.get(actor);
+        if (teleport != null) advanceTeleport(store, ref, playerRef, port, teleport);
         Motion motion = motions.get(actor);
         if (motion != null) advanceMotion(deltaSeconds, store, ref, player, motion, buffer);
         Long windupEnd = windupEnds.get(actor);
@@ -958,7 +963,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         kernel.statuses().forgetSource(actor);
         if(summons!=null)summons.cancel(actor,reason);
         if(conversions!=null)conversions.cancel(actor);
-        windupEnds.remove(actor); motions.remove(actor); counters.remove(actor);
+        windupEnds.remove(actor); motions.remove(actor); teleports.remove(actor); counters.remove(actor);
         for(var repeating:repeatingStrikes.cancel(actor)){repeating.schedule.cancel();hits.clear(repeating.context.skillInstanceId());}
         removeOwnedProjectiles(actor, buffer);
         removeOwnedBurns(actor);
@@ -1111,6 +1116,42 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         hits.clear(motion.context.skillInstanceId());
         executions.terminate(motion.context, "MOVEMENT_COMPLETE");
     }
+
+    private void advanceTeleport(Store<EntityStore> store, Ref<EntityStore> ref, PlayerRef playerRef,
+                                 Port port, PendingTeleport pending) {
+        UUID owner = pending.context.request().actorId();
+        boolean valid = ref.isValid() && port.actorAliveAndUsable()
+                && playerRef.getWorldUuid().equals(pending.context.target().worldId());
+        TransformComponent transform = valid ? store.getComponent(ref, TransformComponent.getComponentType()) : null;
+        Vec3 actual = transform == null ? null : vec(transform.getPosition());
+        var state = pending.receipt.inspect(actual, valid, System.nanoTime());
+        if (state == NativeTeleportReceipt.State.WAITING) return;
+        teleports.remove(owner, pending);
+        if (state == NativeTeleportReceipt.State.FAILED) {
+            failTeleport(pending.context, pending.receipt.failure());
+            return;
+        }
+        try {
+            if (summons != null) summons.relocateOwned(store, pending.landing, pending.group);
+            presentAuthoredParticle(pending.context, store, pending.landing.add(new Vec3(0, 1.99, 0)),
+                    "RPG_Teleport_Landing", "TELEPORT_ARRIVAL");
+            emit(pending.context, RpgTraceEventType.MOVEMENT_END,
+                    Map.of("distance", actual.subtract(pending.origin).length(), "kind", "TELEPORT",
+                            "nativeTeleport", true, "summons", pending.group.size()));
+            executions.terminate(pending.context, "MOVEMENT_COMPLETE");
+        } catch (RuntimeException failure) {
+            executions.recordExecutionFailure(pending.context, "TELEPORT_COMPLETION", failure);
+            failTeleport(pending.context, "TELEPORT_COMPLETION_FAILED");
+        }
+    }
+
+    private void failTeleport(SkillExecutionContext context, String reason) {
+        emit(context, RpgTraceEventType.MOVEMENT_CANCELLED, Map.of("reason", reason, "paidRootRetained", true));
+        executions.terminate(context, reason);
+    }
+
+    private record PendingTeleport(SkillExecutionContext context, Vec3 origin, Vec3 landing,
+                                   List<HytaleSummonSystem.Relocation> group, NativeTeleportReceipt receipt) { }
 
     private final class Port implements SkillExecutionPort {
         private final Store<EntityStore> store; private final Ref<EntityStore> actor;
@@ -2248,13 +2289,27 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             if(context.profile().skillId().equals("teleport")){
                 if(teleportGroup==null)throw new IllegalStateException("TELEPORT_PREFLIGHT_MISSING");
                 Vec3 landing=context.target().point();
-                player.moveTo(actor,landing.x(),landing.y(),landing.z(),store);
-                Vec3 actual=vec(transform.getPosition());
-                if(actual.distanceSquared(landing)>.0001)throw new IllegalStateException("TELEPORT_NATIVE_WRITE_NOT_CONFIRMED");
-                if(summons!=null)summons.relocateOwned(store,landing,teleportGroup);
-                presentAuthoredParticle(context,store,landing.add(new Vec3(0,1.99,0)),"RPG_Teleport_Landing","TELEPORT_ARRIVAL");
-                emit(context,RpgTraceEventType.MOVEMENT_END,Map.of("distance",actual.subtract(origin).length(),"kind","TELEPORT","summons",teleportGroup.size()));
-                return SkillExecutionResult.committed("TELEPORTED",0,actual.subtract(origin).length());
+                var completion = new CompletableFuture<Void>();
+                var nativeTeleport = Teleport.createForPlayer(new Vector3d(landing.x(),landing.y(),landing.z()),
+                        transform.getRotation());
+                var head = store.getComponent(actor, HeadRotation.getComponentType());
+                if (head != null) nativeTeleport.setHeadRotation(head.getRotation());
+                nativeTeleport.setOnComplete(completion);
+                var pending = new PendingTeleport(context, origin, landing, List.copyOf(teleportGroup),
+                        new NativeTeleportReceipt(completion, landing, System.nanoTime()));
+                emit(context, RpgTraceEventType.MOVEMENT_BEGIN,
+                        Map.of("kind", "TELEPORT", "nativeTeleport", true,
+                                "requestedDistance", landing.subtract(origin).length()));
+                if (teleports.putIfAbsent(playerRef.getUuid(), pending) != null)
+                    throw new IllegalStateException("TELEPORT_ALREADY_PENDING");
+                try {
+                    if (buffer == null) store.addComponent(actor, Teleport.getComponentType(), nativeTeleport);
+                    else buffer.addComponent(actor, Teleport.getComponentType(), nativeTeleport);
+                } catch (RuntimeException failure) {
+                    teleports.remove(playerRef.getUuid(), pending);
+                    throw failure;
+                }
+                return SkillExecutionResult.committed("TELEPORT_PENDING_NATIVE",0,landing.subtract(origin).length());
             }
             Vec3 direction; double distance = context.profile().movement().maxDistance();
             if(context.target()!=null) {
