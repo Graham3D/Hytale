@@ -24,7 +24,7 @@ class EnemyNativeAssetRoutingTest {
         try(var input=zip.getInputStream(entry)){return JsonParser.parseReader(new InputStreamReader(input,StandardCharsets.UTF_8)).getAsJsonObject();}
     }
     @Test void packagedAssetsDifferOnlyAtTheFivePinnedNativeAdapterSeams()throws Exception{
-        var pins=JsonParser.parseString(Files.readString(Path.of("evidence/master-enemies/baseline/native-adapter-assets.json"))).getAsJsonArray();
+        var pins=JsonParser.parseString(Files.readString(Path.of("src/test/resources/master-enemies/native-adapter-assets.json"))).getAsJsonArray();
         assertEquals(5,pins.size());
         try(var zip=new ZipFile(assets.toFile())){
             for(var element:pins){

@@ -1,0 +1,6 @@
+/docs/enemies/ELITE_ROLE_MATRIX.md text eol=lf
+/src/main/resources/Server/Particles/RPG/RPG_Mantle_*.particlesystem text eol=lf
+/src/main/resources/Server/Entity/Effects/RPG/RPG_Mantle_*.json text eol=lf
+/src/main/resources/rpg/runtime/mantle-of-flame-v1.json text eol=lf
+/src/main/resources/Server/Particles/RPG/HealingPath/RPG_Heal_Path_* text eol=lf
+/src/main/resources/Server/Models/RPG/RPG_Heal_Path_*.json text eol=lf

@@ -178,6 +178,7 @@ try {
     if ($revisedNativeFootprints -ne 74) { throw "Unexpected native weapon footprint changes: $revisedNativeFootprints" }
 
     $forbiddenPatterns = @(
+        '^com/inigmasgames/hywind/HywindPlugin\.class$',
         '^com/inigmasgames/persistentnpcs/',
         '^com/inigmasgames/compat/immersivenpcs/',
         '^Server/NPC/Roles/(ImmersiveNPCs|PersistentNPCs)/',
@@ -222,6 +223,13 @@ try {
         if ($uiText -match 'ProfileInventory') {
             throw "Packaged HyARPG UI still references the ImmersiveNPC ProfileInventory resource: $($uiEntry.FullName)"
         }
+    }
+
+    # The inventory backdrop is a Group; only the native ItemGrid can own Dropped.
+    $inventoryPageSource = Join-Path $PSScriptRoot '..\src\main\java\com\inigmasgames\hytalerpg\ui\inventory\InventoryProbePage.java'
+    $inventoryPageBody = Get-Content -LiteralPath $inventoryPageSource -Raw
+    if ($inventoryPageBody -match 'CustomUIEventBindingType\.Dropped\s*,\s*"#DropBackdrop"') {
+        throw 'Dropped cannot bind to the inventory Group backdrop; use the native ItemGrid drop owner.'
     }
 
     $ability4Assets = 0
