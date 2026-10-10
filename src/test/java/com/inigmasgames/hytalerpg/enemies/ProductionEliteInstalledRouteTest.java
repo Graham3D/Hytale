@@ -14,9 +14,9 @@ class ProductionEliteInstalledRouteTest {
         var document=JsonParser.parseString(Files.readString(Path.of(
                 "src/main/resources/rpg/enemies/native-bindings-v1.json"))).getAsJsonObject();
         var groups=document.getAsJsonObject("derivedBindings").getAsJsonArray("installedCombatArchetypes");
-        var expected=Map.of("SINGLE_MELEE",3,"CHAIN_SHARED_MELEE",12,"CHAIN_VARIABLE_MELEE",6,
+        var expected=Map.of("SINGLE_MELEE",3,"CHAIN_SHARED_MELEE",13,"CHAIN_VARIABLE_MELEE",6,
                 "CHAIN_REPEATED_MELEE",1,
-                "SINGLE_PROJECTILE",6,"MIXED_NATIVE_ACTIONS",2,"DUAL_NATIVE_ACTIONS",1,
+                "SINGLE_PROJECTILE",9,"MIXED_NATIVE_ACTIONS",2,"DUAL_NATIVE_ACTIONS",1,
                 "CONDITIONAL_MELEE",2,"CAE_NATIVE_ACTIONS",1);
         assertEquals(expected.size(),groups.size());
         var bindings=EnemyNativeBindings.load();
@@ -56,7 +56,7 @@ class ProductionEliteInstalledRouteTest {
                             "Club_Swing_Left_Right_Down_Damage",3),role.actions().getFirst().contactOccurrences());
             }
         }
-        assertEquals(34,seen.size());
+        assertEquals(38,seen.size());
         assertTrue(bindings.productionEligibilityRejection("Goblin_Turret").isPresent());
         assertTrue(bindings.productionEligibilityRejection("Scarak_Seeker").isPresent());
     }

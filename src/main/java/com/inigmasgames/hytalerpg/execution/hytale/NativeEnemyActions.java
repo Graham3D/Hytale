@@ -199,7 +199,7 @@ public final class NativeEnemyActions {
                             chain==null||call.context().getEntry()==null?"null":call.context().getOperationCounter(),
                             chain!=null&&call.context().getEntry()!=null&&call.context().getOperationCounter()>=0
                                     &&call.context().getOperationCounter()<chain.getRootInteraction().getOperationMax()
-                                    &&chain.getRootInteraction().getOperation(call.context().getOperationCounter())==call.leaf());
+                                    &&chain.getRootInteraction().getOperation(call.context().getOperationCounter()).getInnerOperation()==call.leaf());
                 }
                 throw new IllegalStateException("ENEMY_ACTION_ACCEPTANCE_SNAPSHOT_MISSING");
             }

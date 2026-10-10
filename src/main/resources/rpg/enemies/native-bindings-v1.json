@@ -627,6 +627,12 @@
         ]
       },
       {
+        "canonicalRoleId": "Skeleton_Soldier",
+        "nativeRoleIds": [
+          "Skeleton_Soldier_Wander"
+        ]
+      },
+      {
         "canonicalRoleId": "Skeleton_Incandescent_Footman",
         "nativeRoleIds": [
           "Skeleton_Incandescent_Footman_Wander"
@@ -648,6 +654,18 @@
         "canonicalRoleId": "Skeleton_Burnt_Soldier",
         "nativeRoleIds": [
           "Skeleton_Burnt_Soldier_Wander"
+        ]
+      },
+      {
+        "canonicalRoleId": "Skeleton_Archer",
+        "nativeRoleIds": [
+          "Skeleton_Archer_Wander"
+        ]
+      },
+      {
+        "canonicalRoleId": "Skeleton_Burnt_Archer",
+        "nativeRoleIds": [
+          "Skeleton_Burnt_Archer_Wander"
         ]
       },
       {
@@ -1259,6 +1277,37 @@
             ]
           },
           {
+            "roleId": "Skeleton_Soldier",
+            "parentRoleId": "Template_Intelligent",
+            "modelAssetId": "Skeleton_Soldier",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "Cosmetics/Shoes/BootsBasic_Textures/Rotten_Leather.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Chest/Tunic_Torn_Textures/Tunic_Torn_Green_Bright.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Eyes/Eyes_Blue.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Soldier/Chest_Rusty.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/White.png"
+            ],
+            "nativeLootSourceId": "Drop_Skeleton_Soldier",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Root_NPC_Skeleton_Soldier_Attack",
+                "strikeKeys": [
+                  "Melee_Damage"
+                ],
+                "channel": "Physical"
+              }
+            ]
+          },
+          {
             "roleId": "Skeleton_Incandescent_Footman",
             "parentRoleId": "Template_Intelligent",
             "modelAssetId": "Skeleton_Incandescent_Footman",
@@ -1692,6 +1741,107 @@
             "actions": [
               {
                 "rootId": "Eye_Void_Surge_Blast",
+                "strikeKeys": [
+                  "projectile"
+                ],
+                "channel": "Projectile"
+              }
+            ]
+          },
+          {
+            "roleId": "Skeleton_Archer",
+            "parentRoleId": "Template_Intelligent",
+            "modelAssetId": "Skeleton_Archer",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "Items/Back/Quiver_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Archer/Head_Texture/Green.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Archer/Legs_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Chest/Tunic_Torn_Textures/Tunic_Torn_Green.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Eyes/Eyes_Blue.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/White.png"
+            ],
+            "nativeLootSourceId": "Drop_Skeleton_Archer",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Skeleton_Archer_Bow_Shoot",
+                "strikeKeys": [
+                  "projectile"
+                ],
+                "channel": "Projectile"
+              }
+            ]
+          },
+          {
+            "roleId": "Skeleton_Burnt_Archer",
+            "parentRoleId": "Template_Intelligent",
+            "modelAssetId": "Skeleton_Burnt_Archer",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "Items/Back/Quiver_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Burnt_Archer/Chest_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Burnt_Archer/Head_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Burnt_Archer/Legs_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Eyes/Eyes_Blue.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/Burnt.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/White.png"
+            ],
+            "nativeLootSourceId": "Drop_Skeleton_Burnt_Archer",
+            "nativeImmunityChannels": [
+              "FIRE"
+            ],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Skeleton_Burnt_Archer_Bow_Shoot",
+                "strikeKeys": [
+                  "projectile"
+                ],
+                "channel": "Projectile"
+              }
+            ]
+          },
+          {
+            "roleId": "Skeleton_Frost_Archer",
+            "parentRoleId": "Template_Intelligent",
+            "modelAssetId": "Skeleton_Frost_Archer",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "Items/Back/Quiver_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Eyes/Eyes_Blue.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Haircuts/Pointy_Dirty_Grey.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Frost_Archer/Chest_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Frost_Archer/Feet_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Frost_Archer/Hands_Texture.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/Frost.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/White.png"
+            ],
+            "nativeLootSourceId": "Drop_Skeleton_Frost_Archer",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Skeleton_Frost_Archer_Bow_Shoot",
                 "strikeKeys": [
                   "projectile"
                 ],

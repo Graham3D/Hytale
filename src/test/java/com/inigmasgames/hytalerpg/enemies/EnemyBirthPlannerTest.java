@@ -142,7 +142,12 @@ class EnemyBirthPlannerTest {
     @Test void sharedChampionAffixMustExecuteForEverySelectedMember(){
         var base=withNativePassiveDefenses(request(seedFor(EnemyRarity.CHAMPION),DifficultyId.NORMAL,2,6,true,Set.of(Capability.DEFENSE_STAT),2));
         var result=planner.plan(base);assertTrue(result.promoted());
+        assertNull(result.plan().pack().leaderId());
+        assertTrue(result.plan().pack().guardIds().isEmpty());
         for(var actor:result.plan().actors()){
+            assertEquals(EnemyRarity.CHAMPION,actor.enemyRarity());
+            assertEquals(EnemyDescriptor.PackRole.MEMBER,actor.packRole());
+            assertTrue(actor.inheritedAffixes().isEmpty());
             assertEquals("ME-004",actor.ownAffixes().getFirst().affixId());
             assertEquals(150,EnemyAffixSnapshot.resolve(actor,balance,result.plan().pack(),0,false,false).stoneSkinDefenseRating(),1e-10);
         }

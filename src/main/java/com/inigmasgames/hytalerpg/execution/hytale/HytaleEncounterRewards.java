@@ -720,12 +720,64 @@ public final class HytaleEncounterRewards implements AutoCloseable {
             throw new IllegalStateException("ENEMY_PRE_ROOT_RELEASE_REENTRY");
         releasingPreRoot.addAll(keys);
         try{
+            // Classify while the exact captured native source is still staged. A flock
+            // member may be reserved by Hytale, so the uncaptured added() classifier
+            // cannot be used here. This never revisits rarity or reserves a pack.
+            var ordinary=new HashMap<UUID,EnemyRewardRegistry.Spawn>();
+            for(var member:members){
+                try{
+                    var ref=store.getExternalData().getRefFromUUID(member.entity());
+                    if(ref==null||!ref.isValid()||difficulty==null||qaActor(store,ref))continue;
+                    var npc=store.getComponent(ref,NPCEntity.getComponentType());
+                    var allegiance=store.getComponent(ref,com.hypixel.hytale.server.npc.role.support.WorldSupport.getComponentType());
+                    if(npc==null||!nativeWorldSpawnEvidence(AddReason.SPAWN,npc.getEnvironment(),npc.getSpawnConfiguration())
+                            ||allegiance==null||allegiance.getDefaultPlayerAttitude()!=com.hypixel.hytale.server.core.asset.type.attitude.Attitude.HOSTILE
+                            ||registry.resolveRole(npc.getRoleName()).isEmpty())continue;
+                    resolveNaturalProfile(store,ref,npc).spawn().ifPresent(profile->ordinary.put(member.entity(),profile));
+                }catch(RuntimeException local){com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning()
+                        .withCause(local).log("RPG_ENEMY_ORDINARY_PROFILE_CLASSIFICATION_FAILED entity=%s",member.entity());}
+            }
             EnemyStaging.releaseGroup(store,members);
             // A declined birth intentionally has no durable RPG encounter. It
             // still needs the ordinary native hostile name visible to players.
             for(var member:members){
                 var ref=store.getExternalData().getRefFromUUID(member.entity());
                 if(ref!=null&&ref.isValid())presentNativeHostileName(store,ref);
+            }
+            if(!ordinary.isEmpty()){
+                var nativeWorld=store.getExternalData().getWorld();
+                try{nativeWorld.execute(()->{
+                    Store<EntityStore> current;
+                    try{current=nativeWorld.getEntityStore().getStore();}
+                    catch(RuntimeException worldClosing){
+                        com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(worldClosing).log(
+                                "RPG_ENEMY_ORDINARY_PROFILE_HANDOFF_UNAVAILABLE world=%s",members.getFirst().world());
+                        return;
+                    }
+                    for(var member:members){
+                        var profile=ordinary.get(member.entity());if(profile==null)continue;
+                        Object ticket=null;
+                        try{
+                            var ref=current.getExternalData().getRefFromUUID(member.entity());
+                            if(ref==null||!ref.isValid()||current.getComponent(ref,EnemyStaging.getComponentType())!=null
+                                    ||current.getComponent(ref,com.inigmasgames.hytalerpg.enemies.EnemyActorIdentity.getComponentType())!=null
+                                    ||qaActor(current,ref)||runtime.observing(member.world(),member.entity())
+                                    ||difficultyCombat!=null&&difficultyCombat.snapshot(member.world(),member.entity()).isPresent())continue;
+                            var npc=current.getComponent(ref,NPCEntity.getComponentType());
+                            if(npc==null||!profile.roleId().equals(npc.getRoleName()))continue;
+                            ticket=difficultyCombat==null?null:difficultyCombat.begin(member.world(),member.entity());
+                            attachNativeCombat(current,member.world(),member.entity(),npc.getRoleName(),Optional.of(profile),AddReason.SPAWN,ticket);
+                        }catch(RuntimeException local){
+                            if(ticket!=null)try{difficultyCombat.detach(member.world(),member.entity());}
+                            catch(RuntimeException cleanup){local.addSuppressed(cleanup);}
+                            com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(local).log(
+                                    "RPG_ENEMY_ORDINARY_PROFILE_HANDOFF_FAILED role=%s entity=%s",profile.roleId(),member.entity());
+                        }
+                    }
+                });}catch(RuntimeException worldClosing){
+                    com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(worldClosing).log(
+                            "RPG_ENEMY_ORDINARY_PROFILE_HANDOFF_UNAVAILABLE world=%s",world(store));
+                }
             }
         }
         finally{releasingPreRoot.removeAll(keys);}

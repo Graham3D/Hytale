@@ -1,0 +1,15 @@
+{
+  "baselineRevision": "R247-U7P5A",
+  "baselineJarSha256": "819cc21b80e49ef10ff079361c6b24f413aba3a6dbb8dfc0d5eedfc4e8667599",
+  "jsonAssetCount": 4919,
+  "allowedAdded": [
+    "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Soldier.json"
+  ],
+  "allowedChanged": [
+    "rpg/enemies/native-bindings-v1.json"
+  ],
+  "unchangedJsonSha256": "3beb617073348e01e83004581c55a84f390f7e39062977d686e68bec3393fd52",
+  "baselineChangedAssetSha256": {
+    "rpg/enemies/native-bindings-v1.json": "312e4550731dee9e606c69297f66cf5e94c2af05539c322902987e78bfbc6c12"
+  }
+}

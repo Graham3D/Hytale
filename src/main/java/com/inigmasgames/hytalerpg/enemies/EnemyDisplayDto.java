@@ -22,7 +22,7 @@ public record EnemyDisplayDto(UUID worldId,UUID logicalActorId,long generation,l
     public EnemyDisplayDto {
         Objects.requireNonNull(worldId);Objects.requireNonNull(logicalActorId);Objects.requireNonNull(currentHealthRef);
         require(generation>=0&&descriptorRevision>=1&&stateRevision>=0&&combatLevel>=1&&combatLevel<=99,"DISPLAY_IDENTITY");
-        text(name,40);text(baseRoleDisplayName,256);text(rarityLabel,64);text(packRoleLabel,64);
+        text(name,256);text(baseRoleDisplayName,256);text(rarityLabel,64);text(packRoleLabel,64);
         ownAffixTags=List.copyOf(ownAffixTags);inheritedEffectTags=List.copyOf(inheritedEffectTags);
         activeDefenseTags=List.copyOf(activeDefenseTags);stateTags=List.copyOf(stateTags);
         require(ownAffixTags.size()<=27&&inheritedEffectTags.size()<=27,"DISPLAY_AFFIX_COUNT");
@@ -40,7 +40,17 @@ public record EnemyDisplayDto(UUID worldId,UUID logicalActorId,long generation,l
         result.addAll(inheritedEffectTags);for(var tag:activeDefenseTags)if(!adjacent||!tag.stableTagId().equals("protection/invulnerable"))result.add(tag);
         result.addAll(stateTags);return List.copyOf(result);
     }
-    public String overheadText(){return "Lv "+combatLevel+" · "+(packRoleLabel.equals("Minion")?packRoleLabel:rarityLabel)+" · "+name;}
+    public String overheadText(){
+        if(rarityLabel.equals("Champion")&&name.startsWith("Champion "))return "Lv "+combatLevel+" · "+name;
+        return "Lv "+combatLevel+" · "+(packRoleLabel.equals("Minion")?packRoleLabel:rarityLabel)+" · "+name;
+    }
+    static String primaryName(EnemyRarity rarity,String savedName,String nativeName){
+        Objects.requireNonNull(rarity);text(savedName,40);text(nativeName,256);
+        if(rarity!=EnemyRarity.CHAMPION)return savedName;
+        String value="Champion "+nativeName;
+        text(value,256);
+        return value;
+    }
     public static EnemyDisplayDto project(EnemyDescriptor descriptor,EnemyAffixRegistry definitions,EnemyAffixSnapshot stats,
             EnemyPackRecord pack,long stateRevision,String resolvedName,String roleDisplayName,
             Set<String> activeNativeStatusImmunities,boolean nativeInvulnerable,double intrinsicShieldRemaining){
@@ -76,7 +86,7 @@ public record EnemyDisplayDto(UUID worldId,UUID logicalActorId,long generation,l
         var health=new ResourceRef(descriptor.worldId(),descriptor.logicalActorId(),descriptor.entityId(),descriptor.encounterGeneration(),"HEALTH");
         var shield=descriptor.own(EnemyAffixRegistry.Operator.BULWARK).isEmpty()?null:new ResourceRef(descriptor.worldId(),descriptor.logicalActorId(),descriptor.entityId(),descriptor.encounterGeneration(),"INTRINSIC_SHIELD");
         return new EnemyDisplayDto(descriptor.worldId(),descriptor.logicalActorId(),descriptor.encounterGeneration(),descriptor.descriptorRevision(),stateRevision,
-                resolvedName,roleDisplayName,descriptor.combatLevel(),label(descriptor.enemyRarity().name()),label(descriptor.packRole().name()),
+                primaryName(descriptor.enemyRarity(),resolvedName,roleDisplayName),roleDisplayName,descriptor.combatLevel(),label(descriptor.enemyRarity().name()),label(descriptor.packRole().name()),
                 own,inherited,defenses,states,remaining,descriptor.paletteId(),health,shield);
     }
     private static EnemyTag affix(EnemyDescriptor.AffixInstance instance,EnemyAffixRegistry definitions,EnemyAffixSnapshot stats,EnemyPackRecord pack,int priority,boolean inherited){

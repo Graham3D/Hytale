@@ -283,7 +283,7 @@ public final class NativeEnemyAction {
                 int operation=context.operationCounter();var operationRoot=chain.getRootInteraction();
                 if(operation<0||operation>=operationRoot.getOperationMax())
                     throw new IllegalStateException("ENEMY_PROJECTILE_OPERATION_OUT_OF_BOUNDS");
-                for(var strike:binding.projectileStrikes())if(operationRoot.getOperation(operation)==strike.leaf()){
+                for(var strike:binding.projectileStrikes())if(operationRoot.getOperation(operation).getInnerOperation()==strike.leaf()){
                     if(found!=null)throw new IllegalStateException("ENEMY_PROJECTILE_AMBIGUOUS_ACCEPTED_ROOT");
                     var source=projectileSnapshots.get(strike.leaf());
                     found=new ProjectileLaunch(strike.leaf().getProjectileId(),source.nativeBaseDamage(),source.offense());
@@ -308,7 +308,8 @@ public final class NativeEnemyAction {
         if(context.getEntity()!=actor||context.getOwningEntity()!=actor||chain==null||context.getEntry()==null
                 ||context.getEntry().isUseSimulationState()||chain.getType()!=binding.type())return false;
         int operation=context.getOperationCounter();var operationRoot=chain.getRootInteraction();
-        if(operation<0||operation>=operationRoot.getOperationMax()||operationRoot.getOperation(operation)!=call.leaf())return false;
+        if(operation<0||operation>=operationRoot.getOperationMax()
+                ||operationRoot.getOperation(operation).getInnerOperation()!=call.leaf())return false;
         return acceptedLineage(root,chain);
     }
     /** Native Selector hit forks may be detached from the parent's mutable fork map while

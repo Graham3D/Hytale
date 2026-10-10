@@ -10,16 +10,20 @@ class NativeEnemyPreRootRollbackTest {
     private static String source(String file) throws Exception {
         return Files.readString(Path.of("src/main/java/com/inigmasgames/hytalerpg/execution/hytale",file));
     }
-    @Test void preRootReleaseCannotReenterEncounterAttachment() throws Exception {
+    @Test void preRootReleaseDefersOrdinaryProfileWithoutReenteringBirth() throws Exception {
         var rewards=source("HytaleEncounterRewards.java");
         var start=rewards.indexOf("public void releasePreRootNativeGroup(");
         var end=rewards.indexOf("public void restoreStagedNativeGroup(",start);
         assertTrue(start>=0&&end>start);
         var release=rewards.substring(start,end);
         assertTrue(release.contains("EnemyStaging.releaseGroup(store,members)"));
-        assertFalse(release.contains("added("));
+        assertFalse(release.contains("added(ref,"));
         assertFalse(release.contains("attachObserved("));
-        assertFalse(release.contains("runtime."));
+        assertTrue(release.contains("resolveNaturalProfile(store,ref,npc)"));
+        assertTrue(release.contains("nativeWorld.execute(()->"));
+        assertTrue(release.contains("runtime.observing(member.world(),member.entity())"));
+        assertTrue(release.contains("attachNativeCombat(current,member.world(),member.entity(),npc.getRoleName(),Optional.of(profile),AddReason.SPAWN,ticket)"));
+        assertTrue(release.indexOf("EnemyStaging.releaseGroup(store,members)")<release.indexOf("nativeWorld.execute(()->"));
         assertTrue(rewards.contains("releasingPreRoot.contains(new ExclusionKey(world(store),id(store,ref)))"));
     }
     @Test void declinedAndRecoveredPreRootGroupsUseNativeReleaseButCommittedCompensationKeepsItsOwner() throws Exception {

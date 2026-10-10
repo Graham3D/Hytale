@@ -1,0 +1,742 @@
+{
+  "schema": 1,
+  "feature": "Monster Affix",
+  "status": "OPEN",
+  "ownerAccepted": false,
+  "baselineSourceCommit": "be5c57d1dcdabe019fda7b612e6a4d39551245c0",
+  "baselineReviewedCommit": "f96e67ab096c47ba8d6e665667079d7e185e4cfd",
+  "installedJarSha256": "819CC21B80E49EF10FF079361C6B24F413ABA3A6DBB8DFC0D5EEDFC4E8667599",
+  "installedServerSha256": "a032a64e03390ca0aeb6c03c3b1600eaa892c8bc833d1bf3ac39307ccdf3cb20",
+  "installedAssetsSha256": "eddf425546559bfbc3f2656babf30daa4008543c38ee5aa4499c605ed1732236",
+  "worldConfigSha256": "3D7E86AB1B97F36E41F124FD3E03C682923F77F59B898FCE8CA0221542DF7986",
+  "candidateSourceCommit": "",
+  "candidateJarSha256": "",
+  "requirements": [
+    {
+      "id": "ENEMY_ACTION",
+      "expected": "Accepted native melee/projectile leaves use the frozen exact action snapshot.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyNativeOutgoingTest#capturesNativeFlatPercentAndInheritedSourceEffectsWithoutMutatingSourceOrSubmittingDamage",
+        "com.inigmasgames.hytalerpg.enemies.EnemyNativeBindingsTest"
+      ],
+      "evidence": [
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Wrapped Selector fork fails against the baseline raw operation comparison and passes after unwrapping. Connected Goblin/Bear contacts, stale/duplicate execution and long combat remain unverified.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ORDINARY_DIFFICULTY",
+      "expected": "Every eligible ordinary native spawn receives the current era profile after a declined Elite birth.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyPreRootRollbackTest#preRootReleaseDefersOrdinaryProfileWithoutReenteringBirth",
+        "com.inigmasgames.hytalerpg.enemies.R244ProductionProfileTest"
+      ],
+      "evidence": [
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Deferred handoff path is source-checked and profile resolver tested; native Hell fallback Health/damage and alternate ingress routes need connected proof.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "SKELETON_BINDINGS",
+      "expected": "All seven reported concrete Skeleton roles have certified native actions and capabilities.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.ProductionEliteArchetypeAssetTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyNativeBindingsTest"
+      ],
+      "evidence": [
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Seven trace-reported concrete role IDs resolve pinned installed action assets; actual natural combat and promotion need connected proof.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "CHAMPION_IDENTITY",
+      "expected": "Every Champion presents Champion plus its native creature name across native and inspect views.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyDisplayDtoTest"
+      ],
+      "evidence": [
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Primary native/inspect projection has Champion prefix; connected localized rendering, long names and LOAD need proof.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "CHAMPION_COMPOSITION",
+      "expected": "Every Champion group has peer Champion members and no Unique minion or leader semantics.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyBirthPlannerTest"
+      ],
+      "evidence": [
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Planner produces peer CHAMPION/MEMBER actors; native publication and LOAD need connected proof.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "PLAYER_CAST",
+      "expected": "The reported charged_bolt cast commits or rejects for a proven valid reason without combat corruption.",
+      "status": "BLOCKED",
+      "implemented": false,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.Stage11RetaliationTest"
+      ],
+      "evidence": [
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Charged Bolt trace proves validation PASS followed by COMMIT_FAILED_IllegalStateException, but the prior trace lost the inner cause. New bounded stage/cause diagnostic awaits a connected recurrence.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ADMISSION",
+      "expected": "Natural and QA admissions preserve source, capacity, rollback and native spawning safeguards.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyPreRootRollbackTest",
+        "com.inigmasgames.hytalerpg.enemies.R247WorldRebindLifecycleTest"
+      ],
+      "evidence": [
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "R247 connected publications exist; full R248 natural source/rollback/profile and capacity paths are not yet connected verified.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "PRESENTATION",
+      "expected": "Native name, healthbar, affix and rarity presentation is correct and persistent.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyDisplayDtoTest"
+      ],
+      "evidence": [
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Native client name, affix, Healthbar, long-name and rarity presentation need screenshots and connected observation.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "REWARDS",
+      "expected": "XP, equipment and learning receipts are exactly once and exclude disallowed sources.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.progress.MasterAffixEconomyCompletionTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyBirthPersistenceTest"
+      ],
+      "evidence": [
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Exactly-once death, economic receipt and restart behavior on this candidate have no connected proof.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "LIFECYCLE",
+      "expected": "Spawn, profile, fight, wound, unload, reload, republish, defeat, reward and restart all pass.",
+      "status": "NOT_RUN",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.R247WorldRebindLifecycleTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyBirthPersistenceTest"
+      ],
+      "evidence": [
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Full spawn, profile, fight, wound, unload, reload, republish, defeat, rewards and restart sequence is NOT_RUN on the candidate.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-001",
+      "expected": "Accepted ME-001 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-002",
+      "expected": "Accepted ME-002 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-003",
+      "expected": "Accepted ME-003 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-004",
+      "expected": "Accepted ME-004 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-005",
+      "expected": "Accepted ME-005 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-006",
+      "expected": "Accepted ME-006 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-007",
+      "expected": "Accepted ME-007 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-008",
+      "expected": "Accepted ME-008 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-009",
+      "expected": "Accepted ME-009 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-010",
+      "expected": "Accepted ME-010 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-011",
+      "expected": "Accepted ME-011 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-012",
+      "expected": "Accepted ME-012 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-013",
+      "expected": "Accepted ME-013 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-014",
+      "expected": "Accepted ME-014 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-015",
+      "expected": "Accepted ME-015 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-016",
+      "expected": "Accepted ME-016 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-017",
+      "expected": "Accepted ME-017 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-018",
+      "expected": "Accepted ME-018 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-019",
+      "expected": "Accepted ME-019 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-020",
+      "expected": "Accepted ME-020 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-021",
+      "expected": "Accepted ME-021 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-022",
+      "expected": "Accepted ME-022 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-023",
+      "expected": "Accepted ME-023 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-024",
+      "expected": "Accepted ME-024 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-025",
+      "expected": "Accepted ME-025 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-026",
+      "expected": "Accepted ME-026 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    },
+    {
+      "id": "ME-027",
+      "expected": "Accepted ME-027 positive and negative vectors, era behavior, native delivery, persistence and cleanup.",
+      "status": "BLOCKED",
+      "implemented": true,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "tests": [
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshotTest",
+        "com.inigmasgames.hytalerpg.enemies.EnemyAffixSelectionTest"
+      ],
+      "evidence": [
+        "docs/enemies/COMPLETION_MATRIX.md",
+        "docs/enemies/R248_RELEASE_CANDIDATE.md"
+      ],
+      "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
+      "sourceCommit": "",
+      "buildSha256": ""
+    }
+  ]
+}

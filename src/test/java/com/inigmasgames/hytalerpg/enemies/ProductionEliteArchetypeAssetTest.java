@@ -13,6 +13,33 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /** R228 installed-data proof; tests the adapter delta without starting Hytale. */
 class ProductionEliteArchetypeAssetTest {
+    @Test void reportedSkeletonFlockMembersHaveExactCertifiedNativeRoutes()throws Exception{
+        var bindings=EnemyNativeBindings.load();var catalog=EnemyRewardRegistry.load();
+        var expected=Map.of("Skeleton_Archer","Skeleton_Archer_Bow_Shoot",
+                "Skeleton_Burnt_Archer","Skeleton_Burnt_Archer_Bow_Shoot",
+                "Skeleton_Frost_Archer","Skeleton_Frost_Archer_Bow_Shoot",
+                "Skeleton_Soldier","Root_NPC_Skeleton_Soldier_Attack");
+        try(var zip=new ZipFile(ASSETS.toFile())){
+            for(var entry:expected.entrySet()){
+                var id=entry.getKey();var role=bindings.role(id).orElseThrow();
+                assertTrue(bindings.productionEligibilityRejection(id).isEmpty(),id);
+                assertEquals(entry.getValue(),role.actions().getFirst().nativeActionId(),id);
+                var source=catalog.roles().stream().filter(r->r.roleId().equals(id)).findFirst().orElseThrow();
+                assertEquals(hash(zip.getInputStream(zip.getEntry(source.assetPath())).readAllBytes()),role.sourceAssetSha256(),id);
+                assertNotNull(zip.getEntry("Server/Item/RootInteractions/NPCs/"+entry.getValue()+".json")!=null
+                        ?zip.getEntry("Server/Item/RootInteractions/NPCs/"+entry.getValue()+".json")
+                        :zip.stream().filter(path->path.getName().endsWith("/"+entry.getValue()+".json")
+                                &&path.getName().startsWith("Server/Item/RootInteractions/")).findFirst().orElse(null),id);
+            }
+            for(var id:List.of("Skeleton_Archer_Wander","Skeleton_Burnt_Archer_Wander","Skeleton_Soldier_Wander")){
+                var alias=catalog.aliases().stream().filter(r->r.roleId().equals(id)).findFirst().orElseThrow();
+                var nativeRole=read(zip,alias.assetPath());var parent=nativeRole.get("Reference").getAsString();
+                assertEquals(parent,bindings.role(id).orElseThrow().canonicalRoleId());
+                assertEquals(bindings.role(parent).orElseThrow().actions(),bindings.role(id).orElseThrow().actions());
+                assertTrue(bindings.productionEligibilityRejection(id).isEmpty(),id);
+            }
+        }
+    }
     private static final Path ASSETS=Path.of(System.getProperty("user.home"),
             "AppData/Roaming/Hytale/install/pre-release/package/game/latest/Assets.zip");
     private static final Set<String> PLAIN=Set.of("Cow_Undead","Crocodile","Emberwulf","Hound_Bleached",

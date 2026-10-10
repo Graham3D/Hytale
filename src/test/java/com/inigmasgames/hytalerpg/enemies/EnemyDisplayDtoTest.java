@@ -7,6 +7,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class EnemyDisplayDtoTest {
     final EnemyAffixSnapshotTest fixture=new EnemyAffixSnapshotTest();
+    @Test void championPrimaryIdentityUsesTheNativeRoleNameWithoutChangingOtherRarities(){
+        assertEquals("Champion Grizzly Bear",EnemyDisplayDto.primaryName(EnemyRarity.CHAMPION,"generated-token","Grizzly Bear"));
+        assertEquals("Grimgor the Ashen",EnemyDisplayDto.primaryName(EnemyRarity.UNIQUE,"Grimgor the Ashen","Trork Warrior"));
+        assertEquals("Trork Warrior",EnemyDisplayDto.primaryName(EnemyRarity.NORMAL,"Trork Warrior","Trork Warrior"));
+        assertEquals("Champion "+"x".repeat(40),EnemyDisplayDto.primaryName(EnemyRarity.CHAMPION,"token","x".repeat(40)));
+    }
     @Test void packboundTagAndAdmissionReleaseFromTheSameDurableGuardState(){
         UUID second=UUID.randomUUID();var base=fixture.pack();
         var roster=new ArrayList<>(base.birthRoster());roster.add(new EnemyPackRecord.Member(second,second,"Trork_Warrior",EnemyPackRecord.Role.MINION));

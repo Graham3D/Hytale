@@ -18,13 +18,14 @@ GROUPS = {
     "SINGLE_MELEE": ("Piranha", "Piranha_Black", "Slug_Magma"),
     "CHAIN_SHARED_MELEE": (
         "Crawler_Void", "Scarak_Fighter", "Skeleton_Burnt_Lancer", "Skeleton_Fighter",
-        "Skeleton_Frost_Fighter", "Skeleton_Frost_Knight", "Skeleton_Frost_Soldier",
+        "Skeleton_Frost_Fighter", "Skeleton_Frost_Knight", "Skeleton_Frost_Soldier", "Skeleton_Soldier",
         "Skeleton_Incandescent_Footman", "Skeleton_Sand_Assassin", "Skeleton_Sand_Guard",
         "Wraith", "Zombie_Burnt"),
     "CHAIN_VARIABLE_MELEE": ("Bear_Grizzly", "Bear_Polar", "Scorpion", "Skeleton_Burnt_Soldier",
                              "Toad_Rhino", "Toad_Rhino_Magma"),
     "CHAIN_REPEATED_MELEE": ("Goblin_Scrapper",),
-    "SINGLE_PROJECTILE": ("Eye_Void", "Skeleton_Burnt_Gunner", "Skeleton_Frost_Mage",
+    "SINGLE_PROJECTILE": ("Eye_Void", "Skeleton_Archer", "Skeleton_Burnt_Archer", "Skeleton_Frost_Archer",
+                          "Skeleton_Burnt_Gunner", "Skeleton_Frost_Mage",
                           "Skeleton_Incandescent_Mage", "Skeleton_Mage", "Skeleton_Sand_Mage"),
     "MIXED_NATIVE_ACTIONS": ("Outlander_Berserker", "Outlander_Hunter"),
     "DUAL_NATIVE_ACTIONS": ("Void_Spectre",),
@@ -36,6 +37,11 @@ MELEE_AFFIXES = ["ME-002", "ME-003", "ME-004", "ME-005", "ME-006", "ME-007", "ME
                  "ME-017", "ME-018", "ME-020", "ME-021", "ME-022", "ME-024", "ME-025", "ME-026"]
 PROJECTILE_AFFIXES = ["ME-002", "ME-003", "ME-004", "ME-017"]
 CONDITIONAL_AFFIXES = ["ME-002", "ME-003", "ME-004", "ME-017", "ME-018", "ME-026"]
+# Connected R247 captured these concrete native flock children even though the
+# world-spawn table names only their parents. Their installed Variant data is
+# checked below before sharing a parent's combat certificate.
+REPORTED_FLOCK_VARIANTS = {"Skeleton_Archer_Wander", "Skeleton_Burnt_Archer_Wander",
+                           "Skeleton_Soldier_Wander"}
 
 
 def main(check=False):
@@ -336,7 +342,8 @@ def main(check=False):
                                          "nativeStunStaggerImmune": False, "nativeSlowImmune": False,
                                          "actions": action_records})
                 alias_ids = sorted(id for id, alias in aliases.items()
-                                   if alias["canonicalRoleId"] == role_id and id in world_roles)
+                                   if alias["canonicalRoleId"] == role_id
+                                   and (id in world_roles or id in REPORTED_FLOCK_VARIANTS))
                 if alias_ids:
                     for alias_id in alias_ids:
                         alias = native(aliases[alias_id]["assetPath"])

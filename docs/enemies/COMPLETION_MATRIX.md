@@ -1,5 +1,7 @@
 # Master Enemies v1.1 completion matrix
 
+Current release status and per-requirement evidence: [MONSTER_AFFIX_RELEASE_GATE.json](MONSTER_AFFIX_RELEASE_GATE.json). This historical matrix does not close the R248 release gate.
+
 Historical donor checklist from the earlier Hywind checkout. It is retained for implementation provenance, not as R201-U7P5 current acceptance status. See the R201 port note at the top of `INTEGRATION_MAP.md` and the revision record in `docs/qa/R201-master-enemies-r200-port.md`. Connected owner QA remains pending.
 
 Working checklist against `Master_Enemies_v1.1.md`. `COMPLETE` means the indicated primitive is implemented and focused offline tests exist; it does **not** mean connected-game acceptance. `PARTIAL` and `NOT STARTED` are unfinished Stage 1 work. The current feature acceptance state is `implemented=false`, `automatedPassed=false`, `nativeConnectedPassed=false`, `ownerAccepted=false`. See `INTEGRATION_MAP.md` for source audits, approved corrections, and gap resolutions.

@@ -1,6 +1,5 @@
-"""Offline package/reference guard against the connected R228 build and reviewed R229-R231 deltas."""
+"""Offline package/reference guard against deployed R247 and the reviewed R248 asset delta."""
 import argparse
-import copy
 import hashlib
 import json
 import runpy
@@ -10,7 +9,7 @@ from collections import Counter
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent.parent
-BASELINE = HERE / 'tools/u7p5-r228-semantic-baseline.json'
+BASELINE = HERE / 'tools/u7p5-r247-package-baseline.json'
 CATEGORIES = {
     'Quality': 'Item/Qualities', 'PlayerAnimationsId': 'Item/Animations',
     'ItemPlayerAnimationsId': 'Item/Animations', 'ItemSoundSetId': 'Audio/ItemSounds',
@@ -21,17 +20,17 @@ CATEGORIES = {
 }
 
 
-def digest(document):
-    return hashlib.sha256(json.dumps(document, sort_keys=True, separators=(',', ':'),
-                                    ensure_ascii=False).encode()).hexdigest()
+def asset_root(entries):
+    lines = '\n'.join(f'{name} {entries[name]}' for name in sorted(entries)) + '\n'
+    return hashlib.sha256(lines.encode()).hexdigest()
 
 
 def validate(package, installed, report):
     baseline = json.loads(BASELINE.read_text())
     failures = []
     checked_references = 0
-    if baseline.get('baselineJarSha256') != '5d24abffe40018adc62179f720d708b58c58c7fd047166f1403c39a428c08387':
-        failures.append('Connected R228 baseline identity changed')
+    if baseline.get('baselineJarSha256') != '819cc21b80e49ef10ff079361c6b24f413aba3a6dbb8dfc0d5eedfc4e8667599':
+        failures.append('Deployed R247 baseline identity changed')
     try:
         runpy.run_path(str(HERE / 'tools/Build-ProductionEliteRemaining.py'),
                        run_name='r229_asset_builder')['main'](check=True)
@@ -105,46 +104,22 @@ def validate(package, installed, report):
                         if not has('Item/Interactions', value) and not has('Item/RootInteractions', value):
                             failures.append(f'{path}: unresolved action {field}/{value}')
         actual = {name for name in own_names if name.endswith('.json') and name != 'manifest.json'}
-        expected = baseline['assets']
-        allowed_added = set(baseline['reviewedR229AddedAssets']) | set(baseline['reviewedR230AddedAssets'])
-        allowed_changed = set(baseline['reviewedR229ChangedAssets']) | set(baseline['reviewedR231ChangedAssets'])
-        added = actual - set(expected)
-        removed = set(expected) - actual
-        if added != allowed_added or removed:
-            failures.append(f'JSON asset set changed outside reviewed R229/R230 additions: added={sorted(added)}, removed={sorted(removed)}')
+        allowed_added = set(baseline['allowedAdded'])
+        allowed_changed = set(baseline['allowedChanged'])
+        if len(actual) != baseline['jsonAssetCount'] + len(allowed_added):
+            failures.append('R248 JSON asset count differs from pinned R247 plus reviewed additions')
+        if not allowed_added.issubset(actual) or not allowed_changed.issubset(actual):
+            failures.append('Reviewed R248 JSON asset is missing')
+        unchanged = {name: hashlib.sha256(candidate.read(name)).hexdigest()
+                     for name in actual - allowed_added - allowed_changed}
+        if asset_root(unchanged) != baseline['unchangedJsonSha256']:
+            failures.append('Unreviewed JSON asset set or contents differ from deployed R247')
         counts = Counter()
         for name in sorted(actual):
             document = json.loads(candidate.read(name))
-            comparison = document
-            if name == 'rpg/progression/enemy-registry.json':
-                comparison = copy.deepcopy(document)
-                spectres = [row for row in comparison['roles'] if row['roleId'] == 'Void_Spectre']
-                if len(spectres) != 1 or spectres[0]['assetSha256'] != (
-                        'E005E84AE112430819C630C7E39679C07CB96CF2B59C4C999D789BFB217844EC'):
-                    failures.append('Void_Spectre catalog source hash differs from reviewed native correction')
-                else:
-                    spectres[0]['assetSha256'] = 'E527A7370FCE03709FEEFE164E3DBE546BED19C2B71711EA8EED2FDAB18C8944'
-            if name == 'rpg/enemies/master-enemies-v1.json':
-                comparison = copy.deepcopy(document)
-                promotion = comparison['promotion']
-                expected_weights = {
-                    'NORMAL': {'NORMAL': 920, 'CHAMPION': 16, 'UNIQUE': 64},
-                    'NIGHTMARE': {'NORMAL': 860, 'CHAMPION': 28, 'UNIQUE': 112},
-                    'HELL': {'NORMAL': 800, 'CHAMPION': 40, 'UNIQUE': 160},
-                }
-                if promotion.get('weightsByDifficulty') != expected_weights:
-                    failures.append('Master Enemies rarity thresholds differ from reviewed R231 density')
-                promotion.pop('weightsByDifficulty', None)
-                promotion['weights'] = {'NORMAL': 92, 'CHAMPION': 2, 'UNIQUE': 6}
-            if name in expected and digest(comparison) != expected[name] and name not in allowed_changed:
-                failures.append(f'{name}: semantics differ from the connected R228 baseline')
-            if name == 'rpg/progression/enemy-registry.json' and digest(comparison) != expected[name]:
-                failures.append('Enemy registry changed beyond the reviewed Void_Spectre hash correction')
-            if name == 'rpg/enemies/master-enemies-v1.json' and digest(comparison) != expected[name]:
-                failures.append('Master Enemies balance changed beyond the reviewed rarity density')
             if name in allowed_added or name in allowed_changed:
                 source = HERE / 'src/main/resources' / name
-                if not source.is_file() or json.loads(source.read_text(encoding='utf-8')) != document:
+                if not source.is_file() or source.read_bytes() != candidate.read(name):
                     failures.append(f'{name}: packaged reviewed asset differs from checked source')
             if name.startswith('Server/'):
                 counts['/'.join(name.split('/')[1:3])] += 1

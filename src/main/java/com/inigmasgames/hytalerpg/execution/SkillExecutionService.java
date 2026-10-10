@@ -593,23 +593,37 @@ public final class SkillExecutionService {
         com.inigmasgames.hytalerpg.combat.cooldown.RpgCooldownService.Spend cooldownSpend=null;
         AttunementLedger.Commit attunementCommit=null;
         com.inigmasgames.hytalerpg.execution.strike.RuthlessLedger.Commit ruthlessCommit=null;
+        String commitStage="COOLDOWN_RECEIPT";
         try{
             cooldownSpend=pending.cooldown.getNow(null);
+            commitStage="COOLDOWN_ACCEPT";
             if(cooldownSpend!=null){kernel.cooldowns().acceptSpend(cooldownSpend);cooldownStarted=true;}
+            commitStage="AUTHORITY_RECEIPT";
             pending.authority.getNow(null);
+            commitStage="OWNER_VALIDATION";
             if(!port.actorAliveAndUsable()||!port.equipment().equals(prepared.equipment)
                     ||!lifecycle.owns(prepared.request.actorId(),prepared.instanceId))
                 throw new IllegalStateException("PENDING_COMMIT_OWNER_CHANGED");
+            commitStage="LOADOUT_VALIDATION";
             var plan=loadouts.getPresentationView(prepared.request.actorId()).plans().get(prepared.request.slot());
             if(plan==null||!plan.planHash().equals(prepared.plan.planHash()))throw new IllegalStateException("PENDING_COMMIT_LOADOUT_CHANGED");
+            commitStage="RELEASE_VALIDATION";
             var ownerValidation=port.validateDurableCompletion(context);
             if(!ownerValidation.accepted())throw new IllegalStateException(ownerValidation.code());
+            commitStage="RESOURCE_COMMIT";
             kernel.resources().commitCost(token,port.resources());resourceCommitted=true;
+            commitStage="ATTUNEMENT_COMMIT";
             if(prepared.plan.resources().attunement()&&prepared.request.origin()==SkillExecutionRequest.Origin.MANUAL)
                 attunementCommit=attunement.committed(new AttunementLedger.Key(prepared.request.actorId(),prepared.request.slot()),prepared.rootCastId,now());
+            commitStage="RUTHLESS_COMMIT";
             if(prepared.plan.strikes().ruthless()&&prepared.request.origin()==SkillExecutionRequest.Origin.MANUAL)
                 ruthlessCommit=ruthless.committed(new com.inigmasgames.hytalerpg.execution.strike.RuthlessLedger.Key(prepared.request.actorId(),prepared.request.slot()),prepared.rootCastId);
         }catch(RuntimeException error){
+            String reason=error.getMessage();
+            if(reason==null||!reason.matches("[A-Z0-9_]{1,96}"))reason="UNCLASSIFIED";
+            emit(prepared.request,RpgTraceEventType.SKILL_COMMIT_FAILED,prepared.rootCastId,prepared.instanceId,
+                    Map.of("skillId",prepared.profile.skillId(),"stage",commitStage,"causeCode",reason,
+                            "exceptionType",error.getClass().getSimpleName()));
             attunement.rollback(attunementCommit);ruthless.rollback(ruthlessCommit);
             if(cooldownStarted)try{kernel.cooldowns().submitRefund(cooldownSpend);}catch(RuntimeException settlementRejected){
                 // Reuse this cast's reserved ticket; a full queue cannot erase owed settlement.

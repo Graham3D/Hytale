@@ -117,6 +117,7 @@ class EnemyNativeOutgoingTest {
                 var field=context.getClass().getDeclaredField(fieldName);field.setAccessible(true);field.set(context,actor);
             }
             var root=new com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction("FixtureRoot",leaf.getId());root.build();
+            assertSame(leaf,root.getOperation(0).getInnerOperation());
             var type=com.hypixel.hytale.protocol.InteractionType.Primary;
             var chain=new com.hypixel.hytale.server.core.entity.InteractionChain(type,context,new com.hypixel.hytale.protocol.InteractionChainData(),root,null,false);
             var fixture=new EnemyAffixSnapshotTest();
@@ -128,6 +129,37 @@ class EnemyNativeOutgoingTest {
             assertSame(root,certified.root());assertSame(leaf,certified.strikes().getFirst().leaf());
             var active=new java.util.concurrent.atomic.AtomicBoolean(true);
             var action=NativeEnemyAction.capture(store,actor,chain,binding,descriptor,providers,"replay-root-1","birth-seed",2,1,0,outgoing,active::get);
+            // Hytale's Selector hit fork ticks a compiled LabelOperation, while the
+            // certified snapshot is keyed by the original damage Interaction.
+            var hitRoot=new com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction("FixtureSelectorHit",leaf.getId());
+            hitRoot.build();
+            var operationType=com.hypixel.hytale.server.core.modules.interaction.interaction.operation.Operation.class;
+            var labelsType=com.hypixel.hytale.server.core.modules.interaction.interaction.operation.Label[].class;
+            var wrapperType=Class.forName("com.hypixel.hytale.server.core.modules.interaction.interaction.operation.OperationsBuilder$LabelOperation");
+            var wrapperConstructor=wrapperType.getDeclaredConstructor(operationType,labelsType);wrapperConstructor.setAccessible(true);
+            var wrapped=(com.hypixel.hytale.server.core.modules.interaction.interaction.operation.Operation)
+                    wrapperConstructor.newInstance(leaf,new com.hypixel.hytale.server.core.modules.interaction.interaction.operation.Label[0]);
+            var operations=com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction.class.getDeclaredField("operations");
+            operations.setAccessible(true);operations.set(hitRoot,new com.hypixel.hytale.server.core.modules.interaction.interaction.operation.Operation[]{wrapped});
+            assertNotSame(leaf,hitRoot.getOperation(0));assertSame(leaf,hitRoot.getOperation(0).getInnerOperation());
+            var forkContext=com.hypixel.hytale.server.core.entity.InteractionContext.withoutEntity();
+            for(String fieldName:List.of("runningForEntity","owningEntity")){
+                var field=forkContext.getClass().getDeclaredField(fieldName);field.setAccessible(true);field.set(forkContext,actor);
+            }
+            chain.setChainId(-41);
+            var forkId=new com.hypixel.hytale.protocol.ForkedChainId(0,0,null);
+            var fork=new com.hypixel.hytale.server.core.entity.InteractionChain(forkId,forkId,type,forkContext,
+                    new com.hypixel.hytale.protocol.InteractionChainData(),hitRoot,null,true);
+            fork.setChainId(-41);
+            var chainField=forkContext.getClass().getDeclaredField("chain");chainField.setAccessible(true);chainField.set(forkContext,fork);
+            var entryField=forkContext.getClass().getDeclaredField("entry");entryField.setAccessible(true);
+            entryField.set(forkContext,new com.hypixel.hytale.server.core.entity.InteractionEntry(0,0,0));
+            forkContext.setOperationCounter(0);
+            var invocation=new com.inigmasgames.hytalerpg.combat.hytale.NativeDamageLeafInteraction.Invocation(leaf,forkContext,null);
+            assertTrue(action.owns(invocation)); // Baseline comparison with getOperation(0) == leaf rejected this hit.
+            fork.setChainId(-42);assertFalse(action.owns(invocation));fork.setChainId(-41);
+            var ownerField=forkContext.getClass().getDeclaredField("owningEntity");ownerField.setAccessible(true);
+            ownerField.set(forkContext,null);assertFalse(action.owns(invocation));ownerField.set(forkContext,actor);
             var snapshot=action.snapshot(leaf);
             assertEquals(((double)((100f+10)*1.3f)+(double)(50f*1.2f))*2*providers.rarityDirectFactor(),snapshot.sourcePower(),.00001);
             controller.getActiveEffects().clear();
