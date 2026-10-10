@@ -40,10 +40,27 @@ the same 4,003 JUnit tests and offline asset/package gates; Guardian's
 verification receipt confirms JAR SHA-256
 `EF50A65FB8F2D378EC199F96C754C7E421B80F3710D24A69B051A74E1DB887DF`
 with the embedded source commit `df70c72d2c5261b8835dd3181a4c6576ce16c5ca`.
-That JAR has not been deployed. This documentation follow-up creates a new
+That JAR was not deployed at that checkpoint. This documentation follow-up creates a new
 Git commit and therefore requires its own exact-commit check, package receipt,
 and checksum before publication or deployment. GitHub synchronization and
 connected QA are pending at this checkpoint.
+
+The documentation follow-up is `ec890714ecb8827b7a25815d3424bbe8b2104108`.
+Its exact-commit unmodified `check` and Guardian verification passed 4,003
+JUnit tests and the same asset/package gates. Its JAR SHA-256 is
+`9555848D1EA699C89EDD68EFC1E55C68DB6C0AF4AB311C72E2869BB7E0FC772D`;
+the embedded source commit is `ec890714ecb8827b7a25815d3424bbe8b2104108`.
+Guardian confirmed `codex/teleport-native-target` published on GitHub while
+GitHub `main` remained at the reviewed R250 baseline. On October 10, the
+previous RPG `Hywind.jar` was backed up outside `Saves` as
+`C:/Users/Zemio/AppData/Roaming/Hytale/Hywind-backups/Hywind-before-R251-20261010-165157.jar`;
+its SHA-256 matched the installed R250 JAR above. The exact verified R251 JAR
+was deployed only to the active RPG save's `mods/Hywind.jar`, and its installed
+SHA-256 and embedded source commit match this checkpoint. The world, player,
+inventory, and NPC data were not changed by the deployment. Connected-game
+Teleport acceptance remains pending. This deployment record is documentation
+only and will produce a later Git commit; the deployed JAR intentionally
+retains source commit `ec890714`.
 
 ## R250 recovery and promoted development baseline (2026-10-10)
 
