@@ -1,10 +1,12 @@
 # Hywind / HyARPG development baseline
 
-The current source baseline is **R250-U7P5B** (`0.2.0-R250-U7P5B`) on
-`codex/hywind-r250-recovery`. Read [the development baseline](docs/DEVELOPMENT_BASELINE.md)
-and [engineering rules](AGENTS.md) before starting work. The recovery branch is
-pending GitHub `main` integration; a branch name or revision label alone does
-not establish the latest verified source.
+The current GitHub `main` gameplay baseline is **R250-U7P5B**
+(`0.2.0-R250-U7P5B`). [PR #1](https://github.com/Graham3D/Hytale/pull/1)
+merged when the recovery branch fast-forwarded `main` to
+`e4927d06e9a3071bc2023aafec68b8fa68d76268`. Later documentation commits
+do not create a new gameplay revision. Read [the development baseline](docs/DEVELOPMENT_BASELINE.md)
+and [engineering rules](AGENTS.md) before starting work; verify the actual
+branch HEAD and status rather than relying on a revision label alone.
 
 HyARPG owns combat, skills, passives, progression, equipment, encounters,
 inventory, the skill tree, CanvasUI, HUD, native Ability4 support, and Tavern

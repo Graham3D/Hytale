@@ -1,6 +1,6 @@
 # HyARPG/Hywind development baseline
 
-## Recovery candidate (2026-10-10)
+## R250 recovery and promoted development baseline (2026-10-10)
 
 The source starting point was `codex/teleport-r250-latest` at
 `44184d936d750e0a6729a8f797e7f6a4fe30356f`, revision
@@ -8,9 +8,12 @@ The source starting point was `codex/teleport-r250-latest` at
 `codex/hywind-r250-recovery`; its approved local recovery commit is
 `e5ccefcb0fe228188c4f1d9d9b4aeee3dc9014c9`. The asset-audit correction
 described below is recorded at
-`c2f45417a53fe5ec5566f34d195bb88e491a4120`. Subsequent documentation
-updates do not create a new completed or deployed gameplay
-revision. Before subsequent work, check the branch's actual HEAD and status.
+`c2f45417a53fe5ec5566f34d195bb88e491a4120`. The reviewed documentation
+commit `e4927d06e9a3071bc2023aafec68b8fa68d76268` was fast-forwarded to
+GitHub `main` through [PR #1](https://github.com/Graham3D/Hytale/pull/1).
+Subsequent documentation updates do not create a new completed or deployed
+gameplay revision. Before subsequent work, check the branch's actual HEAD and
+status.
 
 The active RPG save's `mods/Hywind.jar` was inspected read-only. SHA-256
 `F56BB5120BFA764088A30EBFB4ED62C067C1A4899E90A50B0A7B5DA5CBE14C30`
@@ -27,8 +30,9 @@ tests. This candidate's fresh checks are recorded below.
 - R250's gameplay source remains the base. The second Teleport commit
   `ea63fd8a6c70ca808c51dc3697b948133476e37c` has the same patch ID as
   `44184d93`; the latter also retains three R249B deployment and release-gate
-  documents. The primary `main` HEAD is `209e38c0`, 80 commits behind R250,
-  with substantial uncommitted work and R141 build metadata.
+  documents. Before promotion, the original primary checkout's local `main`
+  HEAD was `209e38c0`, 80 commits behind R250, with substantial uncommitted
+  work and R141 build metadata. That checkout remains preserved separately.
 - The separate ImmersiveNPCs runtime boundary remains mandatory. R250's Tavern
   plugin extends `JavaPlugin`; its package validator excludes `persistentnpcs`
   code and NPC-owned resources. The older split's neutral `ReadyPathProbe`
@@ -129,17 +133,33 @@ It was not deployed or accepted in game. A later documentation commit changes
 the embedded source-commit field and therefore produces a different JAR hash;
 record that build separately rather than attributing it to `c2f45417`.
 
+After documentation commit `e4927d06e9a3071bc2023aafec68b8fa68d76268`,
+the complete unmodified offline `check` passed: 3,488 root tests, 452
+native-control tests, 49 CanvasUI tests, and 5 Tavern JUnit tests, with zero
+failures or skips. The asset audit passed all 5,014 JSON assets and 41,251
+references; direct package validation passed 19,436 entries, 2,158 classes,
+the `InigmasGames:HyARPG@0.2.0-R250-U7P5B` identity, and zero ImmersiveNPCs
+payload. The JAR built from that exact commit has SHA-256
+`D17B3A22E77C6A253C9FE09E25AEB501F8221C0A4AE887CA756072FDF2EEBF18`.
+It was not deployed or accepted in game. A later documentation-only commit may
+produce a different JAR hash because the build embeds its source commit; do
+not attribute this checksum to a later commit.
+
 ## GitHub integration status
 
-As assessed on 2026-10-10, GitHub `main` was
-`209e38c01ef5db153a18f723ddc3b05866844438`, an ancestor of the recovery
-branch. Publication of `codex/hywind-r250-recovery` and its pull request is
-authorized for review; promotion to `main` requires separate approval. The
-original primary checkout remains on its older local `main` with modified and
-untracked work. Future engineering must use a new worktree from the latest
-verified remote baseline and verify its actual HEAD, rather than infer source
-freshness from the primary checkout or a revision label. Recheck GitHub refs
-before any integration.
+On 2026-10-10, GitHub `main` fast-forwarded from
+`209e38c01ef5db153a18f723ddc3b05866844438` to
+`e4927d06e9a3071bc2023aafec68b8fa68d76268` from
+`codex/hywind-r250-recovery`. GitHub marked
+[PR #1](https://github.com/Graham3D/Hytale/pull/1) merged, with the recovery
+commit itself as the merge commit. GitHub `main` is now the authoritative
+R250-U7P5B development baseline; subsequent documentation commits can advance
+its Git HEAD without creating a new gameplay revision. The original primary
+checkout remains on its older local `main` with modified and untracked work.
+A separate clean clone tracks `origin/main`. Codex's saved Hytale project still
+requires its primary folder to be changed to that clone. Future engineering
+must verify the latest remote HEAD and worktree status rather than infer source
+freshness from the old checkout or a revision label.
 
 ## Preservation and release gates
 
@@ -153,6 +173,6 @@ Do not stage archived saves, player or NPC data, generated binaries, caches,
 large QA evidence archives, sensitive configuration, or unrelated primary
 files. Review every staged path and run compilation, relevant unit tests, and
 offline package validation for subsequent work. Do not launch a native server,
-deploy a JAR, alter the save, push, or promote this branch to `main` without the
+deploy a JAR, alter the save, or push new commits to `main` without the
 appropriate approval and release gate. Assign a new revision only when an
 engineering pass actually meets its completion gate.
