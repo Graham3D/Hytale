@@ -20,6 +20,11 @@ final class MonsterPresentationLayoutTest {
                     rows.affixAnchorPosition().y,1e-9);
             assertEquals(MonsterPresentationLayout.monsterPresentationAffixGap,
                     rows.affixY()-rows.healthbarY(),1e-9);
+            assertEquals(0.20,rows.nameY()-rows.affixY(),1e-9);
+            assertEquals(rows.visualTopY()+0.80,rows.nameY(),1e-9);
+            assertEquals(rows.visualTopY()+0.60,rows.affixY(),1e-9);
+            assertEquals(rows.affixY(),rows.affixAnchorPosition().y
+                    +MonsterPresentationLayout.nativeNameplateLift,1e-9);
             assertEquals(MonsterPresentationLayout.monsterPresentationNameGap,
                     rows.nameY()-rows.affixY(),1e-9);
             assertEquals(rows.centerX(),rows.affixAnchorPosition().x);
@@ -34,6 +39,19 @@ final class MonsterPresentationLayoutTest {
         }
     }
 
+    @Test void movingAndRebindingKeepAffixCenteredAtTheSameVisibleGap() {
+        var box=new Box(-.7,0,-.4,.7,2.4,.4);
+        var original=MonsterPresentationLayout.resolve(new Vector3d(2,10,3),box,1.30);
+        var moved=MonsterPresentationLayout.resolve(new Vector3d(7,11,9),box,1.30);
+        var rebound=MonsterPresentationLayout.resolve(new Vector3d(7,11,9),box,1.30);
+        assertEquals(original.nameY()+1,moved.nameY(),1e-9);
+        assertEquals(original.affixAnchorPosition().y+1,moved.affixAnchorPosition().y,1e-9);
+        assertEquals(original.centerX()+5,moved.centerX(),1e-9);
+        assertEquals(original.centerZ()+6,moved.centerZ(),1e-9);
+        assertEquals(moved,rebound);
+        assertEquals(0.20,moved.nameY()-(moved.affixAnchorPosition().y
+                +MonsterPresentationLayout.nativeNameplateLift),1e-9);
+    }
     @Test void packagedNativeBarUsesTheSingleAuthoredHitboxOffset() throws Exception {
         try(var stream=getClass().getClassLoader().getResourceAsStream("Server/Entity/UI/Healthbar.json")) {
             assertNotNull(stream);
@@ -51,6 +69,8 @@ final class MonsterPresentationLayoutTest {
         assertEquals(0.6,unique.affixY()-normal.affixY(),1e-9);
         assertEquals(normal.centerX(),unique.centerX());
         assertEquals(normal.centerZ(),unique.centerZ());
+        assertEquals(normal.nameY()+0.6,unique.nameY(),1e-9);
+        assertEquals(0.20,unique.nameY()-unique.affixY(),1e-9);
         assertEquals(2,box.max.y);
     }
 }

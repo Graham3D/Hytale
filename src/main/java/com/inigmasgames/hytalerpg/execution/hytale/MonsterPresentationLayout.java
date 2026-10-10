@@ -10,11 +10,12 @@ import org.joml.Vector3dc;
 final class MonsterPresentationLayout {
     // World-space row positions all start from the owning actor's actual hitbox top.
     static final double monsterPresentationBaseMargin = 0.12;
-    static final double monsterPresentationAffixGap = 0.30;
+    static final double monsterPresentationAffixGap = 0.48;
     // Hytale lifts Nameplate text above its zero-volume carrier. Place the
     // carrier below the desired visible row instead of lifting the whole stack.
     static final double nativeNameplateLift = 1.00;
-    static final double monsterPresentationNameGap = 0.38;
+    // Keep affixGap + nameGap at 0.68 so only the affix row moves.
+    static final double monsterPresentationNameGap = 0.20;
     // Server/Entity/UI/Healthbar.json is a shared native client-pixel offset.
     static final float NATIVE_HEALTHBAR_HITBOX_OFFSET_Y = -48f;
 
