@@ -1,5 +1,37 @@
 # HyARPG/Hywind development baseline
 
+## R254 operator skill-level QA command (2026-10-10)
+
+Source branch `codex/skill-level-qa` starts from the verified R253 documentation
+commit `864c8f16868c01612ae0fdc7fb29ada146b7c834`, descended from the
+refreshed GitHub `main` commit `b6a2bd10e877800d702ec5ecd8bc1464e1724f83`.
+The implementation commit is `e5ce62864fa4d4eb081ff6130a76a12d2b7aed35`.
+The primary checkout's unrelated modified `AGENTS.md` remains untouched;
+Guardian preflight passed in the clean task worktree.
+
+R254-U7P5B (`0.2.0-R254-U7P5B`) adds self-targeted operator command
+`/rpg skilllevel <skillId> <1..20>` for a learned skill. It writes that skill's
+base-rank checkpoint through the existing player transaction, preserving
+mastery XP, economy materials and receipts, cooldowns, rewards, other ranks,
+and gear-level bonuses. Unknown or unlearned skills and ranks outside 1..20
+are rejected; setting the current rank is a no-op. The command requires
+`inigmasgames.rpg.level`, has no marker gate, and changes only the active RPG
+player's saved progression. Teleport behavior and the save schema are unchanged.
+
+The focused `Stage12ProgressionClosureTest` passed all 27 tests, including a
+rank-20-to-1 override of earned mastery that survives reload. The
+pre-annotation implementation commit `9169ccf96837c9c4d237022961078949568c9731`
+passed unmodified offline `check`: 3,510 root, 452 native-control, 49 CanvasUI,
+and 5 Tavern JUnit tests, with zero failures or skips; the 41,251-reference
+asset audit passed. Package validation passed 19,445 entries, 2,167 classes,
+identity `InigmasGames:HyARPG@0.2.0-R254-U7P5B`, and zero ImmersiveNPCs
+payload, SHA-256 `FFD2043EAB44CC8B1F503662AB22E6A348670C6A92AB1C9D5EB841406F85FE09`.
+The amended source adds a documented suppression for the intentional injected
+player authority; strict SpotBugs then passed. Focused JaCoCo covered 11/11
+lines and 10/10 branches in `setOperatorSkillRank`. Exact final-HEAD
+verification, GitHub publication, deployment, and connected-game QA are
+pending at this checkpoint.
+
 ## R253 Teleport native relocation QA candidate (2026-10-10)
 
 Source branch `codex/teleport-native-target` continues the published R252
