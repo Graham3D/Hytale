@@ -10,7 +10,7 @@ The locally known authoritative ref is `refs/remotes/origin/main`. Its commit ad
 
 `Preflight` reports uncommitted or untracked work as WARNING and preserves it. `Changes` checks staged, unstaged, and untracked paths. With `-Scope`, any path outside the exact paths or directory prefixes supplied is BLOCKED. Twenty or more tracked deletions are BLOCKED by default; an explicitly reviewed refactor can use `-AllowMassDeletion` to downgrade that finding to WARNING. Architecture, engineering rules, revision records, the separate `persistent-npcs/` mod, and build configuration are flagged for review. No check resets, restores, cleans, or deletes work.
 
-Normal output is one line: `GUARDIAN: PASS`. Warnings exit 0 so they remain advisory; blocked checks exit 2. Use `-Details` when the worktree path, branch, HEAD, and locally known baseline commit are needed. Review every diagnostic before continuing.
+Normal preflight output is one line: `GUARDIAN: PASS`. Preflight, change, and hook warnings exit 0 so they remain advisory. Completion returns 0 only for a verified synchronized PASS, 1 for a warning (including unpublished or unknown remote state), and 2 for a blocked check. Use `-Details` when the worktree path, branch, HEAD, and locally known baseline commit are needed. Review every diagnostic before continuing.
 
 ## Everyday commands
 

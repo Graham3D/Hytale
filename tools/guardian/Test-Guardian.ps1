@@ -131,7 +131,7 @@ $recordOutput = @(& powershell.exe -NoProfile -ExecutionPolicy Bypass -File $rec
 $recordCode = $LASTEXITCODE
 Assert-Case ($recordCode -eq 0 -and ($recordOutput -join ' ') -eq 'GUARDIAN: PASS') 'existing QA evidence recorded' ($recordOutput -join ' ')
 $unpublished = Run-Guard $feature @('-Mode','Completion')
-Assert-Case ($unpublished.ExitCode -eq 0 -and $unpublished.Text -match 'GitHub=UNPUBLISHED' -and
+Assert-Case ($unpublished.ExitCode -eq 1 -and $unpublished.Text -match 'GitHub=UNPUBLISHED' -and
     $unpublished.Text -match 'has not been published') 'local commit is not remote publication' $unpublished.Text
 $baseForPublication = Invoke-FixtureGit $main @('rev-parse','refs/remotes/origin/main')
 $firstPublishCommand = '& "' + $publisher + '" -Repository "' + $feature + '" -FixtureMode -StandingAuthorization -ExpectedCommit ' + $featureHead + ' -ReviewedBase ' + $baseForPublication + ' -ReviewedPaths @("feature.txt")'
@@ -159,7 +159,7 @@ try {
 $newReceipt = @(& powershell.exe -NoProfile -ExecutionPolicy Bypass -File $recordScript -Repository $feature -FixtureMode 2>&1)
 Assert-Case ($LASTEXITCODE -eq 0 -and ($newReceipt -join ' ') -eq 'GUARDIAN: PASS') 'new local commit gets fresh evidence' ($newReceipt -join ' ')
 $ahead = Run-Guard $feature @('-Mode','Completion')
-Assert-Case ($ahead.ExitCode -eq 0 -and $ahead.Text -match 'GitHub=UNPUBLISHED' -and
+Assert-Case ($ahead.ExitCode -eq 1 -and $ahead.Text -match 'GitHub=UNPUBLISHED' -and
     $ahead.Text -match 'unpublished commits') 'remote branch behind HEAD is unpublished' $ahead.Text
 
 # Another writer advances the fixture remote; publication must reject non-fast-forward history.
@@ -187,7 +187,7 @@ $integrated = Run-Guard $feature @('-Mode','Completion')
 Assert-Case ($integrated.ExitCode -eq 0 -and $integrated.Text -match 'GitHub=PUBLISHED main=INTEGRATED') 'authoritative main integration verified' $integrated.Text
 Invoke-FixtureGit $main @('remote','set-url','origin','https://127.0.0.1:1/no-network.git') | Out-Null
 $networkFailure = Run-Guard $feature @('-Mode','Completion')
-Assert-Case ($networkFailure.ExitCode -eq 0 -and $networkFailure.Text -match 'GitHub=UNKNOWN' -and
+Assert-Case ($networkFailure.ExitCode -eq 1 -and $networkFailure.Text -match 'GitHub=UNKNOWN' -and
     $networkFailure.Text -match 'could not be checked') 'failed remote query cannot claim synchronization' $networkFailure.Text
 Invoke-FixtureGit $main @('remote','set-url','origin',$remote) | Out-Null
 $firstReport = Join-Path $feature 'build/test-results/test/TEST-Fixture.xml'

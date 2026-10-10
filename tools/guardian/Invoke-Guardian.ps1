@@ -78,6 +78,7 @@ function Finish {
         if ($Mode -eq 'Completion') { Write-Output ('  state: ' + $state) }
         if ($Details -and $script:Context) { Write-Output ('  ' + $script:Context) }
         foreach ($issue in @($warnings | Select-Object -Skip 1)) { Write-Output ('  - ' + $issue) }
+        if ($Mode -eq 'Completion') { exit 1 }
         exit 0
     }
     if ($Mode -eq 'Completion') { Write-Output ('GUARDIAN: PASS - ' + $state) }

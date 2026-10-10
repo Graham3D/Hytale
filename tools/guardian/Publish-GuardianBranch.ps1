@@ -48,7 +48,7 @@ if ($approved.Count -ne $historyPaths.Count -or
 }
 $guard = Join-Path $PSScriptRoot 'Invoke-Guardian.ps1'
 $local = @(& $guard -Mode Completion -LocalOnly -Repository $root -FixtureMode:$FixtureMode)
-if ($LASTEXITCODE -ne 0 -or $local.Count -ne 2 -or
+if ($LASTEXITCODE -ne 1 -or $local.Count -ne 2 -or
     $local[0] -ne 'GUARDIAN: WARNING - GitHub synchronization was not checked; this is local verification only.' -or
     $local[1] -notmatch '^  state: local=VERIFIED GitHub=NOT_CHECKED') {
     throw ('Local completion gate did not pass: ' + ($local -join ' '))
@@ -66,8 +66,9 @@ if ($pushCode -ne 0) {
 $verified = @(& $guard -Mode Completion -Repository $root -FixtureMode:$FixtureMode)
 $verificationCode = $LASTEXITCODE
 $verified | Write-Output
-if ($verificationCode -ne 0 -or
+if ($verificationCode -eq 2 -or
     @($verified | Where-Object { $_ -match 'local=VERIFIED GitHub=PUBLISHED ' }).Count -eq 0) {
     Write-Output 'GUARDIAN: BLOCKED - Push returned success, but authorized remote publication was not verified.'
     exit 2
 }
+if ($verificationCode -eq 1) { exit 1 }
