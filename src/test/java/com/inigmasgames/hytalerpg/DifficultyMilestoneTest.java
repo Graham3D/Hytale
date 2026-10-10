@@ -29,6 +29,65 @@ class DifficultyMilestoneTest {
         var s=new RpgLoadoutService(catalog,repository(),graph,new LinkCompiler(catalog,graph,compatibility),new OwnershipEntitlementPolicy(true),ignored->{});
         s.configureEarnedRewards(new FileEarnedRewardStore(root.resolve("rewards"),fault));return s;
     }
+    @Test void operatorUnlockIsCaseInsensitiveIdempotentAndPreservesEarnedFlags(){
+        assertEquals(DifficultyId.NIGHTMARE,DifficultyOperatorUnlock.target("nIgHtMaRe"));
+        assertEquals(DifficultyId.HELL,DifficultyOperatorUnlock.target(" HELL "));
+        assertThrows(IllegalArgumentException.class,()->DifficultyOperatorUnlock.target("normal"));
+        var earned=DifficultyProgress.INITIAL.complete(DifficultyId.NORMAL,"earned.extra").complete(DifficultyId.NORMAL,"golem.earth");
+        var nightmare=DifficultyOperatorUnlock.apply(earned,DifficultyId.NIGHTMARE);
+        assertTrue(nightmare.unlocked(DifficultyId.NIGHTMARE));
+        assertTrue(nightmare.milestones().get(DifficultyId.NORMAL).containsAll(GolemMilestones.REQUIRED_V1));
+        assertTrue(nightmare.milestones().get(DifficultyId.NORMAL).contains("earned.extra"));
+        assertTrue(nightmare.milestones().get(DifficultyId.NIGHTMARE).isEmpty());
+        assertEquals(DifficultyProgress.INITIAL.milestones().get(DifficultyId.NORMAL).size()+2,
+                earned.milestones().get(DifficultyId.NORMAL).size());
+        assertSame(nightmare,DifficultyOperatorUnlock.apply(nightmare,DifficultyId.NIGHTMARE));
+        var hell=DifficultyOperatorUnlock.apply(nightmare,DifficultyId.HELL);
+        assertTrue(hell.unlocked(DifficultyId.HELL));
+        assertTrue(hell.milestones().get(DifficultyId.NIGHTMARE).containsAll(GolemMilestones.REQUIRED_V1));
+        assertSame(hell,DifficultyOperatorUnlock.apply(hell,DifficultyId.HELL));
+        var directHell=DifficultyOperatorUnlock.apply(DifficultyProgress.INITIAL,DifficultyId.HELL);
+        assertTrue(directHell.unlocked(DifficultyId.HELL));
+        assertTrue(directHell.milestones().get(DifficultyId.NORMAL).containsAll(GolemMilestones.REQUIRED_V1));
+        assertTrue(directHell.milestones().get(DifficultyId.NIGHTMARE).containsAll(GolemMilestones.REQUIRED_V1));
+        assertEquals("",golems.rejection(hell,DifficultyId.NIGHTMARE));
+        assertEquals("",golems.rejection(hell,DifficultyId.HELL));
+    }
+    @Test void operatorUnlockPersistsThroughPlayerMutationAndRestartWithoutRewardChange(){
+        var original=RpgPlayerState.create(player);original.level=7;
+        original.currentXp=new com.inigmasgames.hytalerpg.ui.CharacterXpProjectionService().levelStartXp(7);
+        repository().save(original);
+        try(var s=service(ignored->{})){
+            s.awardEarned(player,new EarnedReward("ordinary-before-operator-unlock",1,1,Map.of(),"FIXTURE","","","ordinary"));
+            var before=s.getPresentationView(player).state();
+            assertEquals(1,before.rewards.sequence());
+            var result=s.mutateProgress(player,before.revision,"operator-nightmare",state->
+                    state.difficulty=DifficultyOperatorUnlock.apply(state.difficulty,DifficultyId.NIGHTMARE));
+            assertTrue(result.success(),result.message());
+            var after=s.getPresentationView(player).state();
+            assertTrue(after.difficulty.unlocked(DifficultyId.NIGHTMARE));
+            assertEquals(before.rewards,after.rewards);assertEquals(before.currentXp,after.currentXp);
+            assertEquals(before.learnedSkills,after.learnedSkills);
+        }
+        try(var restarted=service(ignored->{})){
+            var before=restarted.getPresentationView(player).state();
+            assertTrue(before.difficulty.unlocked(DifficultyId.NIGHTMARE));
+            var result=restarted.mutateProgress(player,before.revision,"operator-hell",state->
+                    state.difficulty=DifficultyOperatorUnlock.apply(state.difficulty,DifficultyId.HELL));
+            assertTrue(result.success(),result.message());
+            var after=restarted.getPresentationView(player).state();
+            assertTrue(after.difficulty.unlocked(DifficultyId.HELL));
+            for(var mode:List.of(DifficultyId.NORMAL,DifficultyId.NIGHTMARE))
+                assertTrue(after.difficulty.milestones().get(mode).containsAll(GolemMilestones.REQUIRED_V1));
+            assertEquals(before.rewards,after.rewards);assertEquals(before.currentXp,after.currentXp);
+        }
+        try(var restarted=service(ignored->{})){
+            var state=restarted.getPresentationView(player).state();
+            assertTrue(state.difficulty.unlocked(DifficultyId.HELL));
+            assertEquals(1,state.rewards.sequence());
+            assertEquals("",golems.rejection(state.difficulty,DifficultyId.HELL));
+        }
+    }
     EnemyRewardRegistry.Spawn spawn(DifficultyId mode,String key){var g=golems.require(key);UUID enemy=UUID.randomUUID();
         return new EnemyRewardRegistry.Spawn(world,enemy,g.roleId(),g.roleId(),"milestone/"+g.id(),0,ProgressionMath.Rank.BOSS,ProgressionMath.Rarity.ORDINARY,golems.profileId(),100,
                 new GolemEncounter(mode,g.id(),golems.profileId(),UUID.randomUUID().toString(),GolemEncounter.Source.OPERATOR_CAMPAIGN_PLACEMENT));}

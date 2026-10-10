@@ -59,6 +59,24 @@ public final class RpgDifficultyCommand extends AbstractCommandCollection {
             {setPermissionGroup(GameMode.Adventure);}
             @Override protected void execute(CommandContext c,Store<EntityStore> s,Ref<EntityStore> r,PlayerRef p,World w){reply(c,travel.request(p.getUuid(),DifficultyId.NORMAL,false),"Returned to Normal.");}
         });
+        addSubCommand(new AbstractPlayerCommand("unlock","Complete golem requirements and permanently unlock Nightmare or Hell.") {
+            final RequiredArg<String> value=withRequiredArg("difficulty","Nightmare or Hell.",ArgTypes.STRING);
+            {requirePermission(AUTHOR_PERMISSION);}
+            @Override protected void execute(CommandContext c,Store<EntityStore> s,Ref<EntityStore> r,PlayerRef p,World w){try{
+                var target=DifficultyOperatorUnlock.target(c.get(value));
+                var view=players.getPresentationView(p.getUuid());
+                var before=view.state().difficulty;
+                var after=DifficultyOperatorUnlock.apply(before,target);
+                if(after.equals(before)){c.sendMessage(Message.raw(target+" is already unlocked with its required golem milestones complete."));return;}
+                var result=players.mutateProgress(p.getUuid(),view.state().revision,"difficulty-operator-unlock/"+UUID.randomUUID(),
+                        state->state.difficulty=DifficultyOperatorUnlock.apply(state.difficulty,target));
+                if(!result.success()){c.sendMessage(Message.raw("Difficulty unlock: "+result.message()));return;}
+                com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log(
+                        "RPG_DIFFICULTY_OPERATOR_UNLOCK actor=%s target=%s progressRevision=%s rewardsGranted=false",
+                        p.getUuid(),target,after.revision());
+                c.sendMessage(Message.raw(target+" unlocked. Required golem milestones are complete; no combat rewards granted."));
+            }catch(RuntimeException e){c.sendMessage(Message.raw("Difficulty unlock: "+e.getMessage()));}}
+        });
         addSubCommand(new AbstractAsyncCommand("prepare","Prepare persistent Nightmare and Hell worlds."){
             {requirePermission(AUTHOR_PERMISSION);}
             @Override protected CompletableFuture<Void> executeAsync(CommandContext c){
