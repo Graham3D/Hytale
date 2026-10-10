@@ -1,68 +1,48 @@
-# Merged HyARPG + Tavern
+# Hywind / HyARPG development baseline
 
-This artifact is the merged gameplay product. It owns HyARPG combat, skills,
-passives, progression, equipment, encounters, the skill tree, CanvasUI, HUD and
-native Ability4 support, plus Tavern cores, comfort, service, prepared food,
-table serving, patrons, and Tavern persistence.
+The current source baseline is **R250-U7P5B** (`0.2.0-R250-U7P5B`) on
+`codex/hywind-r250-recovery`. Read [the development baseline](docs/DEVELOPMENT_BASELINE.md)
+and [engineering rules](AGENTS.md) before starting work. The recovery branch is
+pending GitHub `main` integration; a branch name or revision label alone does
+not establish the latest verified source.
 
-The merged artifact does not package or start ImmersiveNPCs, PersistentNPCs,
-Orbis, Nemotron/Ollama integration, speech recognition, speech synthesis, NPC
-cognition, ImmersiveNPC persistence, provider configuration, voice workers, or
-model-training assets. `persistent-npcs` remains an independent source product;
-`hytale-taverns` is a dependency of this merged gameplay build and has no AI
-runtime dependency.
+HyARPG owns combat, skills, passives, progression, equipment, encounters,
+inventory, the skill tree, CanvasUI, HUD, native Ability4 support, and Tavern
+gameplay. `hytale-taverns` contributes to the HyARPG build. ImmersiveNPCs is a
+**separate mod**: its `persistent-npcs` source, AI runtime, data, and resources
+are not packaged into `HyARPG.jar`. The optional ImmersiveNPCs bridge does not
+change that ownership boundary.
 
-Current identity:
+The internal plugin identity remains `InigmasGames:HyARPG`, with entrypoint
+`com.inigmasgames.hywind.HyArpgPlugin`. The build artifact is
+`build/libs/HyARPG.jar`; the active RPG save uses the filename `Hywind.jar`.
+The source targets Hytale `0.7.0-pre.5.1`. No plugin identity or save migration
+is part of this recovery.
 
-- plugin: `InigmasGames:HyARPG`
-- bootstrap: `com.inigmasgames.hywind.HyArpgPlugin`
-- artifact: `build/libs/HyARPG.jar`
-- revision: `R138`
-- Hytale API: `0.7.0-pre.4`
+## Offline verification
 
-Existing save-data roots are deliberately retained without migration:
-
-- `mods/InigmasGames_HytaleRPGPhase00Audit`
-- `mods/InigmasGames_CanvasUI`
-- `mods/InigmasGames_Taverns`
-
-## Build and verify
-
-Close Hytale, then run:
+Run validation from an isolated worktree based on the latest verified source:
 
 ```powershell
-Set-Location "C:\Users\Zemio\OneDrive\Documents\GitHub\Hytale"
-.\gradlew.bat clean check build
+.\gradlew.bat --offline --no-daemon check --console=plain
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/Test-HyArpgPackage.ps1 -JarPath build/libs/HyARPG.jar -ExpectedVersion 0.2.0-R250-U7P5B -ExpectedRevision R250-U7P5B
 ```
 
-The build runs deterministic RPG, CanvasUI, and Tavern tests, the native-control
-cohort, CustomUI validation, asset-grant audit, and merged-JAR ownership audit.
+The full `check` compiles source and runs RPG, native-control, CanvasUI, and
+Tavern tests, the R250 JSON compatibility audit, resource/reference checks,
+and package validation. The package validator verifies the plugin identity and
+absence of ImmersiveNPCs payload. Do not launch a standalone Hytale server for
+QA. Connected-game acceptance is performed by the user in the main game and is
+separate from offline validation.
 
-For an isolated server smoke:
+Deployment requires an explicit request. Follow `AGENTS.md` for backup,
+checksum, and the single active RPG save; never treat a local build or branch
+publication as a deployment. Preserve modified and untracked work in the
+original primary checkout.
 
-```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\Run-HyArpgSmoke.ps1
-```
+## References
 
-Preview or perform the narrow RPG-save deployment:
-
-```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\Deploy-HyArpg.ps1 -DryRun
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tools\Deploy-HyArpg.ps1
-```
-
-Deployment moves the prior merged gameplay artifact to an explicit rollback
-folder and installs exactly one `HyARPG.jar`. It never deploys ImmersiveNPCs.
-
-## Owner-managed RPG icons
-
-Put canonical `Skill*.png` and `Passive*.png` files in `art/Skills` and
-`art/Passives`, close Hytale, and run `Update RPG Icons.cmd`. The updater validates
-the standalone HyARPG manifest and never edits save data.
-
-## Engineering records
-
-- Checkpoint A ownership/separation report: `docs/hyarpg/checkpoint-a-separation.md`
-- RPG Stage 13 history: `docs/stage-13/`
-- CanvasUI history: `docs/canvas-ui/development-report.md`
-- ImmersiveNPCs documentation: `persistent-npcs/docs/` (independent product)
+- [Gameplay and QA commands](docs/COMMANDS.md)
+- [Deployment and revision ledger](docs/DEPLOYMENT_REVISIONS.md)
+- [Hywind / ImmersiveNPCs split history](docs/HYWIND_SPLIT_BOUNDARY_RECOVERY.md)
+- [Independent ImmersiveNPCs source](persistent-npcs/README.md)

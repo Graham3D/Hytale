@@ -7,8 +7,9 @@ The source starting point was `codex/teleport-r250-latest` at
 `R250-U7P5B` (`0.2.0-R250-U7P5B`). The isolated reconciliation branch is
 `codex/hywind-r250-recovery`; its approved local recovery commit is
 `e5ccefcb0fe228188c4f1d9d9b4aeee3dc9014c9`. The asset-audit correction
-described below is recorded in the subsequent local commit on this branch.
-Neither commit creates a new completed or deployed gameplay
+described below is recorded at
+`c2f45417a53fe5ec5566f34d195bb88e491a4120`. Subsequent documentation
+updates do not create a new completed or deployed gameplay
 revision. Before subsequent work, check the branch's actual HEAD and status.
 
 The active RPG save's `mods/Hywind.jar` was inspected read-only. SHA-256
@@ -106,7 +107,7 @@ entries. That pre-commit candidate build's SHA-256 was
 `D57A803EA8D9519A12CD3EA5728D6D2698370C2D68F3EA1E77A382A95F5FB79D`;
 it was not deployed or accepted in game.
 
-After the R250 audit correction, the full unmodified offline `check` passed
+Before the audit safeguard commit, the full unmodified offline `check` passed
 with 3,488 root tests, 452 native-control tests, 49 CanvasUI tests, and 5
 Tavern JUnit tests, all with zero failures or skips. The corrected asset audit
 passed 5,014 JSON assets (4,917 aggregate-guarded and 97 individually pinned)
@@ -116,13 +117,37 @@ entries. That pre-follow-up **local, undeployed** JAR has SHA-256
 `51574DA7B7006C550F0CB28F453767F41C8573FEF83E34A5EC2D2D63E081A919`.
 The installed RPG save JAR remains at the earlier SHA-256 above.
 
+After commit `c2f45417a53fe5ec5566f34d195bb88e491a4120`, the complete
+unmodified offline `check` passed again: 3,488 root tests, 452 native-control
+tests, 49 CanvasUI tests, and 5 Tavern JUnit tests, with zero failures or
+skips. The corrected asset audit passed all 5,014 JSON assets and 41,251
+references; direct package validation passed 19,436 entries, 2,158 classes,
+the `HyARPG` identity, and zero ImmersiveNPCs payload. The JAR built from
+that exact commit has SHA-256
+`4D89CEC91E3B53C499624D155C88B48994771C86C742F441AB2D9AFF940B183C`.
+It was not deployed or accepted in game. A later documentation commit changes
+the embedded source-commit field and therefore produces a different JAR hash;
+record that build separately rather than attributing it to `c2f45417`.
+
+## GitHub integration status
+
+As assessed on 2026-10-10, GitHub `main` was
+`209e38c01ef5db153a18f723ddc3b05866844438`, an ancestor of the recovery
+branch. Publication of `codex/hywind-r250-recovery` and its pull request is
+authorized for review; promotion to `main` requires separate approval. The
+original primary checkout remains on its older local `main` with modified and
+untracked work. Future engineering must use a new worktree from the latest
+verified remote baseline and verify its actual HEAD, rather than infer source
+freshness from the primary checkout or a revision label. Recheck GitHub refs
+before any integration.
+
 ## Preservation and release gates
 
 The full primary checkout and both Teleport worktrees, including untracked
 files and Git metadata, have verified copies outside active checkouts and saves
-under `C:\Users\Zemio\.codex\backups\hywind-recovery-20261010-111255-1589726b`.
-All 297,892 copied files passed source-to-backup SHA-256 comparison. The
-primary checkout, Teleport branches, and active RPG save remain untouched.
+in a local recovery backup. All 297,892 copied files passed source-to-backup
+SHA-256 comparison. The primary checkout, Teleport branches, and active RPG
+save remain untouched.
 
 Do not stage archived saves, player or NPC data, generated binaries, caches,
 large QA evidence archives, sensitive configuration, or unrelated primary
