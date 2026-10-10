@@ -161,6 +161,31 @@ requires its primary folder to be changed to that clone. Future engineering
 must verify the latest remote HEAD and worktree status rather than infer source
 freshness from the old checkout or a revision label.
 
+## Guardian engineering checkpoint (2026-10-10)
+
+`codex/hywind-guardian` branches from authoritative GitHub `main` commit
+`1dfa2cea3085196c7fd4492518c65a03d5e3b49d`. Guardian was implemented
+at `b1a5389caa8a95fa99ce4306b6f62a62390890cd` and its native-control
+report path was corrected at
+`fec2fd65e24eb07cae5df2e0fa74bc10af4cc7d9`. The source remains
+`R250-U7P5B` (`0.2.0-R250-U7P5B`), with the `HyARPG` plugin identity and
+separate ImmersiveNPCs mod unchanged. Guardian's hook is tracked but not
+installed, and the branch has not been pushed or merged.
+
+At exact source commit `fec2fd65e24eb07cae5df2e0fa74bc10af4cc7d9`,
+the complete unmodified offline Gradle `check` passed in 5m 55s. Its JUnit
+reports recorded 3,488 root, 452 native-control, 49 Canvas UI, and 5 Tavern
+tests with zero failures, errors, or skips. The asset audit covered 5,014 JSON
+assets and 41,251 references. The existing offline package validator passed:
+19,436 entries, 2,158 classes, `InigmasGames:HyARPG@0.2.0-R250-U7P5B`, and
+zero ImmersiveNPCs payload entries. That commit's **local, undeployed** JAR has
+SHA-256 `0E951FE0428AD3B66E9B4F034C6D209988F03B65609BA91A5252A33BE6786CB3`.
+Guardian's 19 isolated Git fixture cases passed; its clean preflight took
+653 ms and printed 14 bytes. The completion check validated the receipt and
+warned, correctly, that the commit is local-only. A later documentation-only
+commit changes the JAR's embedded source commit and needs its own checksum.
+Neither offline validation nor this record establishes connected-game QA.
+
 ## Preservation and release gates
 
 The full primary checkout and both Teleport worktrees, including untracked
