@@ -1,5 +1,41 @@
 # HyARPG/Hywind development baseline
 
+## R252 Teleport hazard-permissive QA candidate (2026-10-10)
+
+Source branch `codex/teleport-native-target` descends from the verified GitHub
+`main` commit `b6a2bd10e877800d702ec5ecd8bc1464e1724f83` through the published
+R251 diagnostic task history. Guardian preflight passed. The active RPG save's
+installed R251 JAR was read only; its SHA-256 is
+`9555848D1EA699C89EDD68EFC1E55C68DB6C0AF4AB311C72E2869BB7E0FC772D`.
+
+The R251 trace has eight first-hit `HAZARDOUS_SURFACE` rejections, including
+upward normals on visible grass near the player's feet. Hytale 0.7.0-pre.5.1
+`CollisionConfig` resolves a `Fluid` asset for fluid ID zero, where `Fluid.EMPTY`
+is the non-null empty sentinel. `BlockCollisionData.setBlockData` copies that
+asset to each collision, so the former `fluid != null` predicate rejected dry
+ground. The trace did not capture the three native flags, so this exact field
+assignment is established from native bytecode rather than the eight records.
+
+R252-U7P5B (`0.2.0-R252-U7P5B`) removes hazard metadata from Teleport target
+eligibility and ground-support checks. The native target ray now collides with
+solid and fluid surfaces, while damage-only volumes do not block the ray.
+Teleport explicitly disables Hytale's default damage blocking for target rays
+and body clearance. Full player and summon body clearance still uses native
+solid-block collision; range, elevation, first hit, loaded-world, and support
+checks remain. Failed
+target selections record the individual native hazard flags in the existing
+single rejection event. Environmental damage and effects are untouched.
+This revision is a QA candidate until its exact source commit passes offline
+verification and the user confirms connected-game behavior.
+
+Before the source commit, all 13 focused target-selection JUnit tests passed,
+including native collision-mask assertions and benign grass, damaging ground,
+fluid, support, and solid-body cases. Focused JaCoCo covered 51/62 lines and
+39/54 branches in `HytaleTeleportTarget`; the native world collision adapter
+cannot be exercised offline. Strict SpotBugs passed against the reviewed
+baseline with no new findings. The exact-commit standard `check` and Guardian
+receipt remain to be run; this candidate is not yet deployed.
+
 ## R251 Teleport target diagnostic candidate (2026-10-10)
 
 The source branch `codex/teleport-native-target` starts from freshly fetched GitHub

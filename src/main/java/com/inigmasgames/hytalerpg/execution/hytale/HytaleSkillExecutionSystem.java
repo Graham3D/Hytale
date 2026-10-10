@@ -1315,7 +1315,10 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                             new CombatTrace.Context("teleport-target","teleport-target",java.util.UUID.randomUUID().toString()),
                             Map.of("stage",selection.failure().name(),"feet",feet.toString(),"aim",targetAim.toString(),
                                     "range",range,"contact",String.valueOf(selection.contact()),
-                                    "normal",String.valueOf(selection.normal()),"hitFraction",String.valueOf(selection.hitFraction())));
+                                    "normal",String.valueOf(selection.normal()),"hitFraction",String.valueOf(selection.hitFraction()),
+                                    "willDamage",selection.hit()==null?"no-hit":selection.hit().willDamage(),
+                                    "fluidId",selection.hit()==null?"no-hit":selection.hit().fluidId(),
+                                    "fluidPresent",selection.hit()==null?"no-hit":selection.hit().fluidPresent()));
                     return Validation.reject("TELEPORT_NO_VALID_SURFACE");
                 }
                 movementGround=selection.landing();

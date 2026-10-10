@@ -1,9 +1,10 @@
 # Hywind / HyARPG development baseline
 
-This task branch (`codex/teleport-native-target`) builds the **R251-U7P5B**
-(`0.2.0-R251-U7P5B`) Teleport diagnostic QA candidate. It records the exact
-native target-selection rejection stage without changing Teleport's gameplay
-validation rules. Connected-game acceptance remains pending.
+This task branch (`codex/teleport-native-target`) builds the **R252-U7P5B**
+(`0.2.0-R252-U7P5B`) Teleport QA candidate. Native solid and fluid surfaces
+may be targeted regardless of environmental hazard metadata. Range, elevation,
+loaded terrain, full-body clearance, and summon placement remain checked.
+Connected-game acceptance remains pending.
 
 The current GitHub `main` gameplay baseline is **R250-U7P5B**
 (`0.2.0-R250-U7P5B`). [PR #1](https://github.com/Graham3D/Hytale/pull/1)
@@ -35,7 +36,7 @@ Run validation from an isolated worktree based on the latest verified source:
 
 ```powershell
 .\gradlew.bat --offline --no-daemon check --console=plain
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/Test-HyArpgPackage.ps1 -JarPath build/libs/HyARPG.jar -ExpectedVersion 0.2.0-R251-U7P5B -ExpectedRevision R251-U7P5B
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/Test-HyArpgPackage.ps1 -JarPath build/libs/HyARPG.jar -ExpectedVersion 0.2.0-R252-U7P5B -ExpectedRevision R252-U7P5B
 ```
 
 The full `check` compiles source and runs RPG, native-control, CanvasUI, and

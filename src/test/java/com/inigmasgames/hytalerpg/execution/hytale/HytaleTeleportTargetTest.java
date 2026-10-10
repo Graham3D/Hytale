@@ -10,6 +10,16 @@ class HytaleTeleportTargetTest {
     private static final Vec3 FEET = new Vec3(0, 0, 0);
     private static final Box PLAYER = new Box(-.3, 0, -.3, .3, 1.8, .3);
 
+    @Test void nativeTargetRaySeesSolidAndFluidButDoesNotBlockOnDamageOnly() {
+        var collision = HytaleTeleportTarget.targetCollisionSettings();
+        assertEquals(6, collision.getCollisionByMaterial());
+        assertFalse(collision.isDamageBlocking());
+        assertTrue(collision.isCheckingDamageBlocks());
+        var body = HytaleTeleportTarget.bodyCollisionSettings();
+        assertEquals(4, body.getCollisionByMaterial());
+        assertFalse(body.isDamageBlocking());
+    }
+
     @Test void ordinaryFlatGroundWithinTenBlocksSucceeds() {
         var result = HytaleTeleportTarget.select(new Terrain(), PLAYER, FEET, new Vec3(1, -.3, 0), 10);
         assertEquals(HytaleTeleportTarget.Failure.PASS, result.failure());
@@ -55,17 +65,52 @@ class HytaleTeleportTargetTest {
                 HytaleTeleportTarget.select(lower, PLAYER, FEET, new Vec3(1, 0, 0), 10).failure());
     }
 
-    @Test void noFirstHitAndHazardHaveDistinctFailures() {
+    @Test void noFirstHitAndUndersideHaveDistinctFailures() {
         assertEquals(HytaleTeleportTarget.Failure.NO_TERRAIN_HIT,
                 HytaleTeleportTarget.select(new Terrain(), PLAYER, FEET, new Vec3(1, 0, 0), 10).failure());
-        var terrain = new Terrain();
-        terrain.hazard = true;
-        assertEquals(HytaleTeleportTarget.Failure.HAZARDOUS_SURFACE,
-                HytaleTeleportTarget.select(terrain, PLAYER, FEET, new Vec3(1, -.3, 0), 10).failure());
         var ceiling = new Terrain();
         ceiling.underside = true;
         assertEquals(HytaleTeleportTarget.Failure.UNDERSIDE_HIT,
                 HytaleTeleportTarget.select(ceiling, PLAYER, FEET, new Vec3(0, 1, 0), 10).failure());
+    }
+
+    @Test void benignGrassWithNativeEmptyFluidSentinelIsAccepted() {
+        var grass = new Terrain();
+        grass.fluidPresent = true;
+        var result = HytaleTeleportTarget.select(grass, PLAYER, FEET, new Vec3(1, -.3, 0), 10);
+        assertEquals(HytaleTeleportTarget.Failure.PASS, result.failure());
+        assertFalse(result.hit().willDamage());
+        assertEquals(0, result.hit().fluidId());
+        assertTrue(result.hit().fluidPresent());
+    }
+
+    @Test void damagingGroundAndFluidSurfacesRemainTargetable() {
+        var damage = new Terrain();
+        damage.willDamage = true;
+        assertEquals(HytaleTeleportTarget.Failure.PASS,
+                HytaleTeleportTarget.select(damage, PLAYER, FEET, new Vec3(1, -.3, 0), 10).failure());
+        var fluid = new Terrain();
+        fluid.fluidId = 2;
+        fluid.fluidPresent = true;
+        var result = HytaleTeleportTarget.select(fluid, PLAYER, FEET, new Vec3(1, -.3, 0), 10);
+        assertEquals(HytaleTeleportTarget.Failure.PASS, result.failure());
+        assertEquals(2, result.hit().fluidId());
+    }
+
+    @Test void hazardousSupportMetadataDoesNotBypassSupportOrBodyChecks() {
+        var fluid = new Terrain();
+        fluid.willDamage = true;
+        fluid.fluidId = 2;
+        fluid.fluidPresent = true;
+        assertEquals(HytaleTeleportTarget.Failure.PASS,
+                HytaleTeleportTarget.select(fluid, PLAYER, FEET, new Vec3(1, -.3, 0), 10).failure());
+        fluid.supportMissing = true;
+        assertEquals(HytaleTeleportTarget.Failure.GROUND_SUPPORT_MISSING,
+                HytaleTeleportTarget.select(fluid, PLAYER, FEET, new Vec3(1, -.3, 0), 10).failure());
+        fluid.supportMissing = false;
+        fluid.bodyClear = false;
+        assertEquals(HytaleTeleportTarget.Failure.BODY_BLOCKED,
+                HytaleTeleportTarget.select(fluid, PLAYER, FEET, new Vec3(1, -.3, 0), 10).failure());
     }
 
     @Test void unloadedOriginRayAndDestinationHaveDistinctFailures() {
@@ -106,21 +151,25 @@ class HytaleTeleportTargetTest {
     private static final class Terrain implements HytaleTeleportTarget.Geometry {
         double wallX = Double.POSITIVE_INFINITY;
         double raisedY;
-        boolean hazard, bodyClear = true, supportMissing, underside;
+        boolean willDamage, fluidPresent, bodyClear = true, supportMissing, underside;
+        int fluidId;
         Predicate<Vec3> loaded = point -> true;
         @Override public boolean loaded(Vec3 point) { return loaded.test(point); }
         @Override public boolean bodyClear(Box bounds, Vec3 landing) { return bodyClear; }
         @Override public HytaleTeleportTarget.Hit firstHit(Vec3 origin, Vec3 displacement) {
-            if (underside) return new HytaleTeleportTarget.Hit(.25, new Vec3(0, -1, 0), false);
+            if (underside) return hit(.25, new Vec3(0, -1, 0));
             if (displacement.y() < 0 && supportMissing && origin.x() > 4.7) return null;
             if (displacement.x() > 0 && origin.x() < wallX && origin.x() + displacement.x() >= wallX) {
                 double fraction = (wallX - origin.x()) / displacement.x();
-                return new HytaleTeleportTarget.Hit(fraction, new Vec3(-1, 0, 0), hazard);
+                return hit(fraction, new Vec3(-1, 0, 0));
             }
             double ground = origin.x() >= wallX ? raisedY : 0;
             if (displacement.y() >= 0 || origin.y() <= ground || origin.y() + displacement.y() > ground) return null;
             double fraction = (ground - origin.y()) / displacement.y();
-            return new HytaleTeleportTarget.Hit(fraction, new Vec3(0, 1, 0), hazard);
+            return hit(fraction, new Vec3(0, 1, 0));
+        }
+        private HytaleTeleportTarget.Hit hit(double fraction, Vec3 normal) {
+            return new HytaleTeleportTarget.Hit(fraction, normal, willDamage, fluidId, fluidPresent);
         }
     }
 }

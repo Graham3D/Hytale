@@ -4,6 +4,7 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.shape.Box;
 import com.hypixel.hytale.server.core.modules.collision.BlockCollisionData;
+import com.hypixel.hytale.server.core.modules.collision.CollisionConfig;
 import com.hypixel.hytale.server.core.modules.collision.CollisionModule;
 import com.hypixel.hytale.server.core.modules.collision.CollisionResult;
 import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
@@ -18,14 +19,14 @@ final class HytaleTeleportTarget {
     private HytaleTeleportTarget() { }
 
     enum Failure {
-        PASS, ORIGIN_UNLOADED, NO_TERRAIN_HIT, HAZARDOUS_SURFACE, UNDERSIDE_HIT,
+        PASS, ORIGIN_UNLOADED, NO_TERRAIN_HIT, UNDERSIDE_HIT,
         RAY_PATH_UNLOADED, SIDE_GROUND_UNAVAILABLE, SIDE_TOP_BELOW_CONTACT,
         OUT_OF_RANGE_OR_ELEVATION, DESTINATION_UNLOADED, BOUNDING_BOX_MISSING,
         SUPPORT_UNLOADED, GROUND_SUPPORT_MISSING, BODY_BLOCKED
     }
 
-    record Hit(double fraction, Vec3 normal, boolean hazard) { }
-    record Selection(Vec3 landing, Failure failure, Vec3 contact, Vec3 normal, double hitFraction) {
+    record Hit(double fraction, Vec3 normal, boolean willDamage, int fluidId, boolean fluidPresent) { }
+    record Selection(Vec3 landing, Failure failure, Vec3 contact, Vec3 normal, double hitFraction, Hit hit) {
         boolean valid() { return failure == Failure.PASS; }
     }
     interface Geometry {
@@ -41,18 +42,17 @@ final class HytaleTeleportTarget {
 
     /** Package-visible geometry boundary keeps the native selection rules deterministic in tests. */
     static Selection select(Geometry geometry, Box bounds, Vec3 feet, Vec3 aim, double range) {
-        if (!geometry.loaded(feet)) return rejected(Failure.ORIGIN_UNLOADED, null, null, Double.NaN);
+        if (!geometry.loaded(feet)) return rejected(Failure.ORIGIN_UNLOADED, null, null, Double.NaN, null);
         Vec3 eye = feet.add(new Vec3(0, 1.35, 0));
         Vec3 ray = aim.normalized().multiply(range + 1.35);
         Hit hit = geometry.firstHit(eye, ray);
-        if (hit == null) return rejected(Failure.NO_TERRAIN_HIT, null, null, Double.NaN);
+        if (hit == null) return rejected(Failure.NO_TERRAIN_HIT, null, null, Double.NaN, null);
         Vec3 contact = eye.add(ray.multiply(hit.fraction()));
-        if (hit.hazard()) return rejected(Failure.HAZARDOUS_SURFACE, contact, hit.normal(), hit.fraction());
-        if (hit.normal().y() < -.5) return rejected(Failure.UNDERSIDE_HIT, contact, hit.normal(), hit.fraction());
+        if (hit.normal().y() < -.5) return rejected(Failure.UNDERSIDE_HIT, contact, hit.normal(), hit.fraction(), hit);
         Vec3 segment = contact.subtract(eye);
         for (int i = 0, n = Math.max(1, (int) Math.ceil(segment.length())); i <= n; i++)
             if (!geometry.loaded(eye.add(segment.multiply((double) i / n))))
-                return rejected(Failure.RAY_PATH_UNLOADED, contact, hit.normal(), hit.fraction());
+                return rejected(Failure.RAY_PATH_UNLOADED, contact, hit.normal(), hit.fraction(), hit);
         double x = contact.x(), z = contact.z();
         Vec3 landing;
         if (hit.normal().y() > .5) {
@@ -63,16 +63,16 @@ final class HytaleTeleportTarget {
             z = Math.floor(z - hit.normal().z() * .08) + .5;
             Vec3 top = new Vec3(x, feet.y() + 7, z);
             landing = safeGround(geometry, top, 14).orElse(null);
-            if (landing == null) return rejected(Failure.SIDE_GROUND_UNAVAILABLE, contact, hit.normal(), hit.fraction());
+            if (landing == null) return rejected(Failure.SIDE_GROUND_UNAVAILABLE, contact, hit.normal(), hit.fraction(), hit);
             if (landing.y() + .01 < contact.y())
-                return rejected(Failure.SIDE_TOP_BELOW_CONTACT, contact, hit.normal(), hit.fraction());
+                return rejected(Failure.SIDE_TOP_BELOW_CONTACT, contact, hit.normal(), hit.fraction(), hit);
         }
         Failure validation = validate(geometry, bounds, feet, landing, range);
-        return new Selection(validation == Failure.PASS ? landing : null, validation, contact, hit.normal(), hit.fraction());
+        return new Selection(validation == Failure.PASS ? landing : null, validation, contact, hit.normal(), hit.fraction(), hit);
     }
 
-    private static Selection rejected(Failure failure, Vec3 contact, Vec3 normal, double fraction) {
-        return new Selection(null, failure, contact, normal, fraction);
+    private static Selection rejected(Failure failure, Vec3 contact, Vec3 normal, double fraction, Hit hit) {
+        return new Selection(null, failure, contact, normal, fraction, hit);
     }
 
     static boolean valid(Store<EntityStore> store, Ref<EntityStore> actor, Vec3 start, Vec3 landing, double range) {
@@ -108,21 +108,34 @@ final class HytaleTeleportTarget {
         if (!geometry.loaded(origin)) return Optional.empty();
         Vec3 down = new Vec3(0, -depth, 0);
         Hit hit = geometry.firstHit(origin, down);
-        if (hit == null || hit.normal().y() < .5 || hit.hazard()) return Optional.empty();
+        if (hit == null || hit.normal().y() < .5) return Optional.empty();
         return Optional.of(origin.add(down.multiply(hit.fraction())).add(new Vec3(0, .01, 0)));
     }
 
-    private static boolean hazard(BlockCollisionData hit) {
-        return hit.willDamage || hit.fluidId > 0 || hit.fluid != null;
-    }
-
     private static boolean nativeBodyClear(Store<EntityStore> store, Box bounds, Vec3 landing) {
-        var collision = new CollisionResult();
-        collision.setDefaultPlayerSettings();
-        collision.disableCharacterCollisions();
+        var collision = bodyCollisionSettings();
         CollisionModule.findCollisions(new Box(bounds), new Vector3d(landing.x(), landing.y(), landing.z()),
                 new Vector3d(0, .01, 0), collision, store);
         return collision.getBlockCollisionCount() == 0;
+    }
+
+    static CollisionResult bodyCollisionSettings() {
+        var collision = new CollisionResult();
+        collision.setDefaultPlayerSettings();
+        collision.disableCharacterCollisions();
+        collision.setDamageBlocking(false);
+        return collision;
+    }
+
+    static CollisionResult targetCollisionSettings() {
+        var collision = new CollisionResult();
+        collision.setDefaultPlayerSettings();
+        collision.disableCharacterCollisions();
+        collision.enableDamageBlocks();
+        // Include native fluid surfaces, but let damage-only volumes pass through to geometry.
+        collision.setCollisionByMaterial(CollisionConfig.MATERIAL_SOLID | CollisionConfig.MATERIAL_FLUID);
+        collision.setDamageBlocking(false);
+        return collision;
     }
 
     private static final class NativeGeometry implements Geometry {
@@ -131,11 +144,7 @@ final class HytaleTeleportTarget {
         @Override public boolean loaded(Vec3 point) { return HytaleAreaQueries.loaded(store, point); }
         @Override public boolean bodyClear(Box bounds, Vec3 landing) { return nativeBodyClear(store, bounds, landing); }
         @Override public Hit firstHit(Vec3 origin, Vec3 displacement) {
-            var collision = new CollisionResult();
-            collision.setDefaultPlayerSettings();
-            collision.disableCharacterCollisions();
-            collision.enableDamageBlocks();
-            collision.setDamageBlocking(true);
+            var collision = targetCollisionSettings();
             CollisionModule.findCollisions(new Box(-.01, -.01, -.01, .01, .01, .01),
                     new Vector3d(origin.x(), origin.y(), origin.z()),
                     new Vector3d(displacement.x(), displacement.y(), displacement.z()), collision, store);
@@ -147,7 +156,8 @@ final class HytaleTeleportTarget {
             }
             if (first == null) return null;
             return new Hit(first.collisionStart,
-                    new Vec3(first.collisionNormal.x(), first.collisionNormal.y(), first.collisionNormal.z()), hazard(first));
+                    new Vec3(first.collisionNormal.x(), first.collisionNormal.y(), first.collisionNormal.z()),
+                    first.willDamage, first.fluidId, first.fluid != null);
         }
     }
 }
