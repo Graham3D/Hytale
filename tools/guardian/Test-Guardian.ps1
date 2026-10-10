@@ -208,6 +208,16 @@ Invoke-FixtureGit $feature @('add','--','scratch.txt') | Out-Null
 $commitSafe = Run-Guard $feature @('-Mode','Commit')
 Assert-Case ($commitSafe.ExitCode -eq 0 -and $commitSafe.Text -eq 'GUARDIAN: PASS') 'optional hook keeps safe success compact' $commitSafe.Text
 
+[IO.File]::AppendAllText((Join-Path $feature 'AGENTS.md'), "`nPolicy edit")
+$policyChanges = Run-Guard $feature @('-Mode','Changes','-Scope','AGENTS.md')
+Assert-Case ($policyChanges.ExitCode -eq 2 -and $policyChanges.Text -match 'AGENTS.md changed') 'unreviewed policy edit blocked' $policyChanges.Text
+Invoke-FixtureGit $feature @('add','--','AGENTS.md') | Out-Null
+$policyCommit = Run-Guard $feature @('-Mode','Commit')
+Assert-Case ($policyCommit.ExitCode -eq 2 -and $policyCommit.Text -match 'AGENTS.md changed') 'unreviewed policy commit blocked' $policyCommit.Text
+$policyReviewed = Run-Guard $feature @('-Mode','Commit','-ReviewedPolicyChange')
+Assert-Case ($policyReviewed.ExitCode -eq 0 -and $policyReviewed.Text -match 'GUARDIAN: WARNING') 'reviewed policy override remains visible' $policyReviewed.Text
+Invoke-FixtureGit $feature @('restore','--staged','--worktree','--','AGENTS.md') | Out-Null
+
 foreach ($name in @('a','b','c')) { Remove-Item -LiteralPath (Join-Path $feature "src/data/$name.txt") }
 $mass = Run-Guard $feature @('-Mode','Changes','-MassDeletionThreshold','3')
 Assert-Case ($mass.ExitCode -eq 2 -and $mass.Text -match 'Suspicious mass deletion' -and

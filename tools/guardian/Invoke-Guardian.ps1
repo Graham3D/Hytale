@@ -6,6 +6,7 @@ param(
     [string[]]$Scope = @(),
     [int]$MassDeletionThreshold = 20,
     [switch]$AllowMassDeletion,
+    [switch]$ReviewedPolicyChange,
     [string]$Receipt = 'build/guardian/verification.json',
     [int]$MaxBaselineAgeHours = 24,
     [switch]$Details,
@@ -194,12 +195,14 @@ try {
         $deleted = 0
         $outside = New-Object 'System.Collections.Generic.List[string]'
         $protected = New-Object 'System.Collections.Generic.List[string]'
+        $agentsChanged = $false
         foreach ($line in $statusLines) {
             $xy = $line.Substring(0, 2)
             if ($Mode -eq 'Commit' -and ($xy[0] -eq ' ' -or $xy -eq '??')) { continue }
             $path = $line.Substring(3).Trim('"')
             if ($path.Contains(' -> ')) { $path = ($path -split ' -> ')[-1] }
             $path = $path.Replace('\', '/')
+            if ($path -ceq 'AGENTS.md') { $agentsChanged = $true }
             if ($xy.Contains('D')) { $deleted++ }
             if ($Mode -eq 'Changes' -and -not (Matches-Scope $path)) { $outside.Add($path) }
             if ($path -match '^(AGENTS\.md|gradle\.properties|build\.gradle|settings\.gradle|\.gitattributes|src/main/resources/(manifest\.json|rpg-build\.properties)|docs/(DEVELOPMENT_BASELINE|DEPLOYMENT_REVISIONS)\.md|persistent-npcs/|tools/guardian/)') {
@@ -212,6 +215,9 @@ try {
         }
         if ($outside.Count -gt 0) {
             Add-Blocked ("Changes outside task scope: " + (($outside | Select-Object -First 5) -join ', ') + $(if ($outside.Count -gt 5) { ', ...' } else { '' }))
+        }
+        if ($agentsChanged -and -not $ReviewedPolicyChange) {
+            Add-Blocked 'AGENTS.md changed; explicit user authorization and a reviewed diff are required.'
         }
         if ($protected.Count -gt 0) {
             Add-Warning ("Protected architecture/build paths changed: " + (($protected | Select-Object -First 5) -join ', ') + '. Review the diff.')

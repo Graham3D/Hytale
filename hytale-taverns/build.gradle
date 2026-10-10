@@ -2,6 +2,19 @@ plugins {
     id 'java-library'
 }
 
+if (providers.gradleProperty('guardianCoverage').map { it == 'true' }.getOrElse(false)) {
+    apply plugin: 'jacoco'
+    jacoco { toolVersion = '0.8.15' }
+    tasks.withType(Test).configureEach { jacoco.enabled = true }
+    tasks.named('jacocoTestReport') {
+        dependsOn tasks.named('test')
+        reports { xml.required = true; html.required = true }
+    }
+}
+if (providers.gradleProperty('guardianSpotBugs').map { it == 'true' }.getOrElse(false)) {
+    apply plugin: 'com.github.spotbugs'
+}
+
 group = 'com.inigmasgames.taverns'
 version = '0.1.0-R056-hywind'
 

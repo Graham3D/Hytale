@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<BugCollection version="4.10.2" sequence="0" timestamp="1791658625800" analysisTimestamp="1791658625800" release="">
+  <Project projectName="hytale-taverns (spotbugsMain)">
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\api\LoadedBlocks.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\api\SpatialPlayerItemPolicy.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\ComfortCategory.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\ComfortCountMode.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\ComfortDefinition.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\ComfortManager$CacheEntry.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\ComfortManager.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\ComfortRegistry$Config.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\ComfortRegistry$EntryOverride.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\ComfortRegistry$RegionValues.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\ComfortRegistry$ThresholdConfig.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\ComfortRegistry.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\ComfortScore.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\ComfortThreshold.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\ComfortTooltipInstaller.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\CoreDefinition.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\CoreDefinitions.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\CoreModeManager$ExpansionTransfer.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\CoreModeManager$FaceAxis.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\CoreModeManager$ResizeFace.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\CoreModeManager$Session.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\CoreModeManager$ShardCounterFrame.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\CoreModeManager.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\CoreModePermissionProvider.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\CoreRecord.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\CoreRegistry.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\CoreType.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\CoreValidator.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\Cuboid.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\PatronParticleController.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\PreparedCraftingManager.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\PreparedFoodRegistry$Definition.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\PreparedFoodRegistry$RegistryFile.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\PreparedFoodRegistry.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\PreparedMeal$Details.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\PreparedMeal.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\RegisteredComfortObject.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\RelaxedRegenerationSystem.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\RelaxedSession$RelaxingUpdate.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\RelaxedSession.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TableServingComponent$Part.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TableServingComponent.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TableServingManager$PlacementProfile.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TableServingManager$PlacementResult.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TableServingManager$ServingPose.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TableServingManager$ServingSnapshot.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TableServingManager$ServingState.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TableServingManager$TableKey.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TableServingManager$TableTarget.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TableServingManager.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TableServingUseInteraction.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernComfortSnapshot.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernDoorOperator.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernPatronComponent.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernPatronManager$DoorCandidate.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernPatronManager$Entrance.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernPatronManager$GreetingPhase.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernPatronManager$MealVisualState.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernPatronManager$PatronSession.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernPatronManager$Phase.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernPatronManager$Reservation.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernPatronManager$SeatKey.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernPatronManager$TravelStage.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernPatronManager.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernRecord.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernRepository.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernsHud$ComfortSource.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernsHud$CounterTone.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernsHud.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernsPlugin$1.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernsPlugin$ComfortBrokenSystem.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernsPlugin$ComfortPlacedSystem.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernsPlugin$ComfortTickSystem.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernsPlugin$CoreBrokenSystem.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernsPlugin$CoreModeTickSystem.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernsPlugin$CorePlacedSystem.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernsPlugin$CoreUsedSystem.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernsPlugin$CoreUseInputSystem.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernsPlugin$PreparedCraftPostSystem.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernsPlugin$PreparedCraftPreSystem.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernsPlugin$ServiceAnnouncementTickSystem.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernsPlugin$TableServingBrokenSystem.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernsPlugin$TableServingInputSystem.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernsPlugin$TableServingTrackingSystem.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernsPlugin$TavernPatronHeartbeatSystem.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernsPlugin$TavernPatronTickSystem.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernsPlugin$TavernPatronTrackingSystem.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernsPlugin$TavernServiceUsedSystem.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernsPlugin.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\build\classes\java\main\com\inigmasgames\taverns\TavernStatus.class</Jar>
+    <AuxClasspathEntry>LOCAL_ROOT/AppData\Roaming\Hytale\install\pre-release\package\game\latest\Server\HytaleServer.jar</AuxClasspathEntry>
+    <SrcDir>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\src\main\resources</SrcDir>
+    <SrcDir>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\hytale-taverns\src\main\java</SrcDir>
+  </Project>
+  <BugInstance type="NP_NULL_PARAM_DEREF" priority="2" rank="8" abbrev="NP" category="CORRECTNESS" instanceHash="371865600aabe391430a9611fbbb7b1c" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Method call passes null for non-null parameter</ShortMessage>
+    <LongMessage>Null passed for non-null parameter of merge(ComfortRegistry$Config, ComfortRegistry$Config) in com.inigmasgames.taverns.ComfortRegistry.load(Path, Consumer, Consumer)</LongMessage>
+    <Class classname="com.inigmasgames.taverns.ComfortRegistry" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry" start="29" end="265" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java">
+        <Message>At ComfortRegistry.java:[lines 29-265]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.taverns.ComfortRegistry</Message>
+    </Class>
+    <Method classname="com.inigmasgames.taverns.ComfortRegistry" name="load" signature="(Ljava/nio/file/Path;Ljava/util/function/Consumer;Ljava/util/function/Consumer;)Lcom/inigmasgames/taverns/ComfortRegistry;" isStatic="true" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry" start="45" end="86" startBytecode="0" endBytecode="948" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java"/>
+      <Message>In method com.inigmasgames.taverns.ComfortRegistry.load(Path, Consumer, Consumer)</Message>
+    </Method>
+    <Method classname="com.inigmasgames.taverns.ComfortRegistry" name="merge" signature="(Lcom/inigmasgames/taverns/ComfortRegistry$Config;Lcom/inigmasgames/taverns/ComfortRegistry$Config;)Lcom/inigmasgames/taverns/ComfortRegistry$Config;" isStatic="true" role="METHOD_CALLED">
+      <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry" start="179" end="190" startBytecode="0" endBytecode="272" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java"/>
+      <Message>Called method com.inigmasgames.taverns.ComfortRegistry.merge(ComfortRegistry$Config, ComfortRegistry$Config)</Message>
+    </Method>
+    <Int value="2" role="INT_MAYBE_NULL_ARG">
+      <Message>Argument 2 might be null but must not be null</Message>
+    </Int>
+    <LocalVariable name="overrides" register="6" pc="296" role="LOCAL_VARIABLE_VALUE_OF">
+      <Message>Value loaded from overrides</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry" primary="true" start="76" end="76" startBytecode="298" endBytecode="298" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java" role="SOURCE_LINE_INVOKED">
+      <Message>Method invoked at ComfortRegistry.java:[line 76]</Message>
+    </SourceLine>
+    <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry" start="61" end="61" startBytecode="185" endBytecode="185" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at ComfortRegistry.java:[line 61]</Message>
+    </SourceLine>
+    <Property name="edu.umd.cs.findbugs.detect.NullDerefProperty.LONG_RANGE_NULL_SOURCE" value="true"/>
+  </BugInstance>
+  <BugInstance type="NP_UNWRITTEN_FIELD" priority="2" rank="8" abbrev="NP" category="CORRECTNESS" instanceHash="fde2da641518fa5808059151474cb30f" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="457">
+    <ShortMessage>Read of unwritten field</ShortMessage>
+    <LongMessage>Read of unwritten field countMode in com.inigmasgames.taverns.ComfortRegistry.resolveThresholds(ComfortRegistry$Config)</LongMessage>
+    <Class classname="com.inigmasgames.taverns.ComfortRegistry" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry" start="29" end="265" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java">
+        <Message>At ComfortRegistry.java:[lines 29-265]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.taverns.ComfortRegistry</Message>
+    </Class>
+    <Method classname="com.inigmasgames.taverns.ComfortRegistry" name="resolveThresholds" signature="(Lcom/inigmasgames/taverns/ComfortRegistry$Config;)Ljava/util/Map;" isStatic="true" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry" start="251" end="265" startBytecode="0" endBytecode="311" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java"/>
+      <Message>In method com.inigmasgames.taverns.ComfortRegistry.resolveThresholds(ComfortRegistry$Config)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.taverns.ComfortRegistry$ThresholdConfig" name="countMode" signature="Ljava/lang/String;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry$ThresholdConfig" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java">
+        <Message>In ComfortRegistry.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.taverns.ComfortRegistry$ThresholdConfig.countMode</Message>
+    </Field>
+    <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry" primary="true" start="263" end="263" startBytecode="113" endBytecode="113" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java">
+      <Message>At ComfortRegistry.java:[line 263]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="UWF_UNWRITTEN_FIELD" priority="2" rank="12" abbrev="UwF" category="CORRECTNESS" instanceHash="6895b2b6e8d49acb57dc1f5677eec8e8" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="457">
+    <ShortMessage>Unwritten field</ShortMessage>
+    <LongMessage>Unwritten field: com.inigmasgames.taverns.ComfortRegistry$RegionValues.common</LongMessage>
+    <Class classname="com.inigmasgames.taverns.ComfortRegistry$RegionValues" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry$RegionValues" start="276" end="289" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java">
+        <Message>At ComfortRegistry.java:[lines 276-289]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.taverns.ComfortRegistry$RegionValues</Message>
+    </Class>
+    <Field classname="com.inigmasgames.taverns.ComfortRegistry$RegionValues" name="common" signature="Ljava/lang/Integer;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry$RegionValues" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java">
+        <Message>In ComfortRegistry.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.taverns.ComfortRegistry$RegionValues.common</Message>
+    </Field>
+    <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry$RegionValues" primary="true" start="283" end="283" startBytecode="1" endBytecode="1" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java">
+      <Message>At ComfortRegistry.java:[line 283]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="UWF_UNWRITTEN_FIELD" priority="2" rank="12" abbrev="UwF" category="CORRECTNESS" instanceHash="7b99fbdfc25843599a8e23fc1ffb3876" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="457">
+    <ShortMessage>Unwritten field</ShortMessage>
+    <LongMessage>Unwritten field: com.inigmasgames.taverns.ComfortRegistry$RegionValues.craftable</LongMessage>
+    <Class classname="com.inigmasgames.taverns.ComfortRegistry$RegionValues" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry$RegionValues" start="276" end="289" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java">
+        <Message>At ComfortRegistry.java:[lines 276-289]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.taverns.ComfortRegistry$RegionValues</Message>
+    </Class>
+    <Field classname="com.inigmasgames.taverns.ComfortRegistry$RegionValues" name="craftable" signature="Ljava/lang/Integer;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry$RegionValues" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java">
+        <Message>In ComfortRegistry.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.taverns.ComfortRegistry$RegionValues.craftable</Message>
+    </Field>
+    <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry$RegionValues" primary="true" start="283" end="283" startBytecode="18" endBytecode="18" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java">
+      <Message>At ComfortRegistry.java:[line 283]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="UWF_UNWRITTEN_FIELD" priority="2" rank="12" abbrev="UwF" category="CORRECTNESS" instanceHash="b41fcd91caf402b3752605c371125a2d" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="457">
+    <ShortMessage>Unwritten field</ShortMessage>
+    <LongMessage>Unwritten field: com.inigmasgames.taverns.ComfortRegistry$RegionValues.discoverable</LongMessage>
+    <Class classname="com.inigmasgames.taverns.ComfortRegistry$RegionValues" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry$RegionValues" start="276" end="289" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java">
+        <Message>At ComfortRegistry.java:[lines 276-289]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.taverns.ComfortRegistry$RegionValues</Message>
+    </Class>
+    <Field classname="com.inigmasgames.taverns.ComfortRegistry$RegionValues" name="discoverable" signature="Ljava/lang/Integer;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry$RegionValues" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java">
+        <Message>In ComfortRegistry.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.taverns.ComfortRegistry$RegionValues.discoverable</Message>
+    </Field>
+    <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry$RegionValues" primary="true" start="289" end="289" startBytecode="18" endBytecode="18" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java">
+      <Message>At ComfortRegistry.java:[line 289]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="UWF_UNWRITTEN_FIELD" priority="2" rank="12" abbrev="UwF" category="CORRECTNESS" instanceHash="1c21d780a87dff6fef81daac88e92c47" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="457">
+    <ShortMessage>Unwritten field</ShortMessage>
+    <LongMessage>Unwritten field: com.inigmasgames.taverns.ComfortRegistry$RegionValues.discovery</LongMessage>
+    <Class classname="com.inigmasgames.taverns.ComfortRegistry$RegionValues" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry$RegionValues" start="276" end="289" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java">
+        <Message>At ComfortRegistry.java:[lines 276-289]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.taverns.ComfortRegistry$RegionValues</Message>
+    </Class>
+    <Field classname="com.inigmasgames.taverns.ComfortRegistry$RegionValues" name="discovery" signature="Ljava/lang/Integer;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry$RegionValues" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java">
+        <Message>In ComfortRegistry.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.taverns.ComfortRegistry$RegionValues.discovery</Message>
+    </Field>
+    <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry$RegionValues" primary="true" start="287" end="287" startBytecode="1" endBytecode="1" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java">
+      <Message>At ComfortRegistry.java:[line 287]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="UWF_UNWRITTEN_FIELD" priority="2" rank="12" abbrev="UwF" category="CORRECTNESS" instanceHash="6cf82ca96301a7b3677dd89a042bcbea" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="457">
+    <ShortMessage>Unwritten field</ShortMessage>
+    <LongMessage>Unwritten field: com.inigmasgames.taverns.ComfortRegistry$ThresholdConfig.countMode</LongMessage>
+    <Class classname="com.inigmasgames.taverns.ComfortRegistry$ThresholdConfig" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry$ThresholdConfig" start="293" end="294" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java">
+        <Message>At ComfortRegistry.java:[lines 293-294]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.taverns.ComfortRegistry$ThresholdConfig</Message>
+    </Class>
+    <Field classname="com.inigmasgames.taverns.ComfortRegistry$ThresholdConfig" name="countMode" signature="Ljava/lang/String;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry$ThresholdConfig" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java">
+        <Message>In ComfortRegistry.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.taverns.ComfortRegistry$ThresholdConfig.countMode</Message>
+    </Field>
+    <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry" primary="true" start="258" end="258" startBytecode="107" endBytecode="107" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java">
+      <Message>At ComfortRegistry.java:[line 258]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="UWF_UNWRITTEN_FIELD" priority="2" rank="12" abbrev="UwF" category="CORRECTNESS" instanceHash="c9b0ce0d9e5db93295c4bba92e03dc25" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="457">
+    <ShortMessage>Unwritten field</ShortMessage>
+    <LongMessage>Unwritten field: com.inigmasgames.taverns.ComfortRegistry$ThresholdConfig.density</LongMessage>
+    <Class classname="com.inigmasgames.taverns.ComfortRegistry$ThresholdConfig" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry$ThresholdConfig" start="293" end="294" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java">
+        <Message>At ComfortRegistry.java:[lines 293-294]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.taverns.ComfortRegistry$ThresholdConfig</Message>
+    </Class>
+    <Field classname="com.inigmasgames.taverns.ComfortRegistry$ThresholdConfig" name="density" signature="Ljava/lang/Integer;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry$ThresholdConfig" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java">
+        <Message>In ComfortRegistry.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.taverns.ComfortRegistry$ThresholdConfig.density</Message>
+    </Field>
+    <SourceLine classname="com.inigmasgames.taverns.ComfortRegistry" primary="true" start="258" end="258" startBytecode="102" endBytecode="102" sourcefile="ComfortRegistry.java" sourcepath="com/inigmasgames/taverns/ComfortRegistry.java" relSourcepath="java\com\inigmasgames\taverns\ComfortRegistry.java">
+      <Message>At ComfortRegistry.java:[line 258]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" priority="2" rank="18" abbrev="RCN" category="STYLE" instanceHash="be709d300d3ebb6b396c961017cf5d70" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Redundant nullcheck of value known to be non-null</ShortMessage>
+    <LongMessage>Redundant nullcheck of nativeChain, which is known to be non-null in com.inigmasgames.taverns.TableServingManager.startNativeConsumption(Ref, Ref, TableServingComponent, InteractionContext)</LongMessage>
+    <Class classname="com.inigmasgames.taverns.TableServingManager" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.TableServingManager" start="89" end="1167" sourcefile="TableServingManager.java" sourcepath="com/inigmasgames/taverns/TableServingManager.java" relSourcepath="java\com\inigmasgames\taverns\TableServingManager.java">
+        <Message>At TableServingManager.java:[lines 89-1167]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.taverns.TableServingManager</Message>
+    </Class>
+    <Method classname="com.inigmasgames.taverns.TableServingManager" name="startNativeConsumption" signature="(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/Ref;Lcom/inigmasgames/taverns/TableServingComponent;Lcom/hypixel/hytale/server/core/entity/InteractionContext;)Z" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.TableServingManager" start="616" end="656" startBytecode="0" endBytecode="660" sourcefile="TableServingManager.java" sourcepath="com/inigmasgames/taverns/TableServingManager.java" relSourcepath="java\com\inigmasgames\taverns\TableServingManager.java"/>
+      <Message>In method com.inigmasgames.taverns.TableServingManager.startNativeConsumption(Ref, Ref, TableServingComponent, InteractionContext)</Message>
+    </Method>
+    <LocalVariable name="nativeChain" register="12" pc="220" role="LOCAL_VARIABLE_VALUE_OF">
+      <Message>Value loaded from nativeChain</Message>
+    </LocalVariable>
+    <Method classname="com.hypixel.hytale.server.core.entity.InteractionContext" name="fork" signature="(Lcom/hypixel/hytale/protocol/InteractionType;Lcom/hypixel/hytale/server/core/entity/InteractionContext;Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction;Z)Lcom/hypixel/hytale/server/core/entity/InteractionChain;" isStatic="false" role="METHOD_RETURN_VALUE_OF" classAnnotationNames="javax.annotation.Nonnull">
+      <SourceLine classname="com.hypixel.hytale.server.core.entity.InteractionContext" start="208" end="209" startBytecode="0" endBytecode="123" sourcefile="InteractionContext.java" sourcepath="com/hypixel/hytale/server/core/entity/InteractionContext.java"/>
+      <Message>Return value of com.hypixel.hytale.server.core.entity.InteractionContext.fork(InteractionType, InteractionContext, RootInteraction, boolean) of type com.hypixel.hytale.server.core.entity.InteractionChain</Message>
+    </Method>
+    <SourceLine classname="com.inigmasgames.taverns.TableServingManager" primary="true" start="650" end="650" startBytecode="222" endBytecode="222" sourcefile="TableServingManager.java" sourcepath="com/inigmasgames/taverns/TableServingManager.java" relSourcepath="java\com\inigmasgames\taverns\TableServingManager.java" role="SOURCE_REDUNDANT_NULL_CHECK">
+      <Message>Redundant null check at TableServingManager.java:[line 650]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NONNULL_PARAM_VIOLATION" priority="1" rank="6" abbrev="NP" category="CORRECTNESS" instanceHash="b960524d94a475d45bda8984107666ff" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Method call passes null to a non-null parameter</ShortMessage>
+    <LongMessage>Null passed for non-null parameter of new com.hypixel.hytale.server.core.entity.InteractionManager(PlayerRef, IInteractionSimulationHandler) in new com.inigmasgames.taverns.TavernDoorOperator(Consumer)</LongMessage>
+    <Class classname="com.inigmasgames.taverns.TavernDoorOperator" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.TavernDoorOperator" start="25" end="72" sourcefile="TavernDoorOperator.java" sourcepath="com/inigmasgames/taverns/TavernDoorOperator.java" relSourcepath="java\com\inigmasgames\taverns\TavernDoorOperator.java">
+        <Message>At TavernDoorOperator.java:[lines 25-72]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.taverns.TavernDoorOperator</Message>
+    </Class>
+    <Method classname="com.inigmasgames.taverns.TavernDoorOperator" name="&lt;init&gt;" signature="(Ljava/util/function/Consumer;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.TavernDoorOperator" start="29" end="31" startBytecode="0" endBytecode="119" sourcefile="TavernDoorOperator.java" sourcepath="com/inigmasgames/taverns/TavernDoorOperator.java" relSourcepath="java\com\inigmasgames\taverns\TavernDoorOperator.java"/>
+      <Message>In method new com.inigmasgames.taverns.TavernDoorOperator(Consumer)</Message>
+    </Method>
+    <Method classname="com.hypixel.hytale.server.core.entity.InteractionManager" name="&lt;init&gt;" signature="(Lcom/hypixel/hytale/server/core/universe/PlayerRef;Lcom/hypixel/hytale/server/core/modules/interaction/IInteractionSimulationHandler;)V" isStatic="false" role="METHOD_CALLED">
+      <SourceLine classname="com.hypixel.hytale.server.core.entity.InteractionManager" start="306" end="310" startBytecode="0" endBytecode="297" sourcefile="InteractionManager.java" sourcepath="com/hypixel/hytale/server/core/entity/InteractionManager.java"/>
+      <Message>Called method new com.hypixel.hytale.server.core.entity.InteractionManager(PlayerRef, IInteractionSimulationHandler)</Message>
+    </Method>
+    <Int value="2" role="INT_NULL_ARG">
+      <Message>Argument 2 is definitely null but must not be null</Message>
+    </Int>
+    <SourceLine classname="com.inigmasgames.taverns.TavernDoorOperator" primary="true" start="25" end="25" startBytecode="11" endBytecode="11" sourcefile="TavernDoorOperator.java" sourcepath="com/inigmasgames/taverns/TavernDoorOperator.java" relSourcepath="java\com\inigmasgames\taverns\TavernDoorOperator.java">
+      <Message>At TavernDoorOperator.java:[line 25]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NONNULL_PARAM_VIOLATION" priority="1" rank="6" abbrev="NP" category="CORRECTNESS" instanceHash="663c49fa38ff58ff0b2d024f35cb8138" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Method call passes null to a non-null parameter</ShortMessage>
+    <LongMessage>Null passed for non-null parameter of com.hypixel.hytale.server.npc.role.Role.setMarkedTarget(Ref, ComponentAccessor, String, Ref) in com.inigmasgames.taverns.TavernPatronManager.clearGreetingTarget(TavernPatronManager$PatronSession, NPCEntity, CommandBuffer)</LongMessage>
+    <Class classname="com.inigmasgames.taverns.TavernPatronManager" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.TavernPatronManager" start="77" end="1499" sourcefile="TavernPatronManager.java" sourcepath="com/inigmasgames/taverns/TavernPatronManager.java" relSourcepath="java\com\inigmasgames\taverns\TavernPatronManager.java">
+        <Message>At TavernPatronManager.java:[lines 77-1499]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.taverns.TavernPatronManager</Message>
+    </Class>
+    <Method classname="com.inigmasgames.taverns.TavernPatronManager" name="clearGreetingTarget" signature="(Lcom/inigmasgames/taverns/TavernPatronManager$PatronSession;Lcom/hypixel/hytale/server/npc/entities/NPCEntity;Lcom/hypixel/hytale/component/CommandBuffer;)V" isStatic="true" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.TavernPatronManager" start="789" end="798" startBytecode="0" endBytecode="171" sourcefile="TavernPatronManager.java" sourcepath="com/inigmasgames/taverns/TavernPatronManager.java" relSourcepath="java\com\inigmasgames\taverns\TavernPatronManager.java"/>
+      <Message>In method com.inigmasgames.taverns.TavernPatronManager.clearGreetingTarget(TavernPatronManager$PatronSession, NPCEntity, CommandBuffer)</Message>
+    </Method>
+    <Method classname="com.hypixel.hytale.server.npc.role.Role" name="setMarkedTarget" signature="(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentAccessor;Ljava/lang/String;Lcom/hypixel/hytale/component/Ref;)V" isStatic="false" role="METHOD_CALLED">
+      <SourceLine classname="com.hypixel.hytale.server.npc.role.Role" start="1383" end="1384" startBytecode="0" endBytecode="135" sourcefile="Role.java" sourcepath="com/hypixel/hytale/server/npc/role/Role.java"/>
+      <Message>Called method com.hypixel.hytale.server.npc.role.Role.setMarkedTarget(Ref, ComponentAccessor, String, Ref)</Message>
+    </Method>
+    <Int value="4" role="INT_NULL_ARG">
+      <Message>Argument 4 is definitely null but must not be null</Message>
+    </Int>
+    <SourceLine classname="com.inigmasgames.taverns.TavernPatronManager" primary="true" start="790" end="790" startBytecode="24" endBytecode="24" sourcefile="TavernPatronManager.java" sourcepath="com/inigmasgames/taverns/TavernPatronManager.java" relSourcepath="java\com\inigmasgames\taverns\TavernPatronManager.java">
+      <Message>At TavernPatronManager.java:[line 790]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NONNULL_PARAM_VIOLATION" priority="1" rank="6" abbrev="NP" category="CORRECTNESS" instanceHash="63c05aff7283e1e8ce2377e2bc0c5f02" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Method call passes null to a non-null parameter</ShortMessage>
+    <LongMessage>Null passed for non-null parameter of com.hypixel.hytale.server.npc.entities.PathManager.setTransientPath(IPath) in com.inigmasgames.taverns.TavernPatronManager.setTravelTarget(TavernPatronManager$PatronSession, NPCEntity, TavernPatronManager$TravelStage)</LongMessage>
+    <Class classname="com.inigmasgames.taverns.TavernPatronManager" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.TavernPatronManager" start="77" end="1499" sourcefile="TavernPatronManager.java" sourcepath="com/inigmasgames/taverns/TavernPatronManager.java" relSourcepath="java\com\inigmasgames\taverns\TavernPatronManager.java">
+        <Message>At TavernPatronManager.java:[lines 77-1499]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.taverns.TavernPatronManager</Message>
+    </Class>
+    <Method classname="com.inigmasgames.taverns.TavernPatronManager" name="setTravelTarget" signature="(Lcom/inigmasgames/taverns/TavernPatronManager$PatronSession;Lcom/hypixel/hytale/server/npc/entities/NPCEntity;Lcom/inigmasgames/taverns/TavernPatronManager$TravelStage;)V" isStatic="true" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.TavernPatronManager" start="1386" end="1391" startBytecode="0" endBytecode="121" sourcefile="TavernPatronManager.java" sourcepath="com/inigmasgames/taverns/TavernPatronManager.java" relSourcepath="java\com\inigmasgames\taverns\TavernPatronManager.java"/>
+      <Message>In method com.inigmasgames.taverns.TavernPatronManager.setTravelTarget(TavernPatronManager$PatronSession, NPCEntity, TavernPatronManager$TravelStage)</Message>
+    </Method>
+    <Method classname="com.hypixel.hytale.server.npc.entities.PathManager" name="setTransientPath" signature="(Lcom/hypixel/hytale/server/core/universe/world/path/IPath;)V" isStatic="false" role="METHOD_CALLED">
+      <SourceLine classname="com.hypixel.hytale.server.npc.entities.PathManager" start="68" end="70" startBytecode="0" endBytecode="88" sourcefile="PathManager.java" sourcepath="com/hypixel/hytale/server/npc/entities/PathManager.java"/>
+      <Message>Called method com.hypixel.hytale.server.npc.entities.PathManager.setTransientPath(IPath)</Message>
+    </Method>
+    <Int value="1" role="INT_NULL_ARG">
+      <Message>Argument 1 is definitely null but must not be null</Message>
+    </Int>
+    <SourceLine classname="com.inigmasgames.taverns.TavernPatronManager" primary="true" start="1389" end="1389" startBytecode="20" endBytecode="20" sourcefile="TavernPatronManager.java" sourcepath="com/inigmasgames/taverns/TavernPatronManager.java" relSourcepath="java\com\inigmasgames\taverns\TavernPatronManager.java">
+      <Message>At TavernPatronManager.java:[line 1389]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NONNULL_PARAM_VIOLATION" priority="1" rank="6" abbrev="NP" category="CORRECTNESS" instanceHash="1b4c7c56928191b6036169eda298a63b" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Method call passes null to a non-null parameter</ShortMessage>
+    <LongMessage>Null passed for non-null parameter of com.hypixel.hytale.server.npc.entities.PathManager.setTransientPath(IPath) in com.inigmasgames.taverns.TavernPatronManager.stopNavigation(NPCEntity, TransformComponent)</LongMessage>
+    <Class classname="com.inigmasgames.taverns.TavernPatronManager" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.TavernPatronManager" start="77" end="1499" sourcefile="TavernPatronManager.java" sourcepath="com/inigmasgames/taverns/TavernPatronManager.java" relSourcepath="java\com\inigmasgames\taverns\TavernPatronManager.java">
+        <Message>At TavernPatronManager.java:[lines 77-1499]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.taverns.TavernPatronManager</Message>
+    </Class>
+    <Method classname="com.inigmasgames.taverns.TavernPatronManager" name="stopNavigation" signature="(Lcom/hypixel/hytale/server/npc/entities/NPCEntity;Lcom/hypixel/hytale/server/core/modules/entity/component/TransformComponent;)V" isStatic="true" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.TavernPatronManager" start="1396" end="1398" startBytecode="0" endBytecode="83" sourcefile="TavernPatronManager.java" sourcepath="com/inigmasgames/taverns/TavernPatronManager.java" relSourcepath="java\com\inigmasgames\taverns\TavernPatronManager.java"/>
+      <Message>In method com.inigmasgames.taverns.TavernPatronManager.stopNavigation(NPCEntity, TransformComponent)</Message>
+    </Method>
+    <Method classname="com.hypixel.hytale.server.npc.entities.PathManager" name="setTransientPath" signature="(Lcom/hypixel/hytale/server/core/universe/world/path/IPath;)V" isStatic="false" role="METHOD_CALLED">
+      <SourceLine classname="com.hypixel.hytale.server.npc.entities.PathManager" start="68" end="70" startBytecode="0" endBytecode="88" sourcefile="PathManager.java" sourcepath="com/hypixel/hytale/server/npc/entities/PathManager.java"/>
+      <Message>Called method com.hypixel.hytale.server.npc.entities.PathManager.setTransientPath(IPath)</Message>
+    </Method>
+    <Int value="1" role="INT_NULL_ARG">
+      <Message>Argument 1 is definitely null but must not be null</Message>
+    </Int>
+    <SourceLine classname="com.inigmasgames.taverns.TavernPatronManager" primary="true" start="1396" end="1396" startBytecode="5" endBytecode="5" sourcefile="TavernPatronManager.java" sourcepath="com/inigmasgames/taverns/TavernPatronManager.java" relSourcepath="java\com\inigmasgames\taverns\TavernPatronManager.java">
+      <Message>At TavernPatronManager.java:[line 1396]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="d821cba62de5e53e9182e97f47d9cccb" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.inigmasgames.taverns.TavernRepository.save() due to return value of called method</LongMessage>
+    <Class classname="com.inigmasgames.taverns.TavernRepository" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.TavernRepository" start="31" end="368" sourcefile="TavernRepository.java" sourcepath="com/inigmasgames/taverns/TavernRepository.java" relSourcepath="java\com\inigmasgames\taverns\TavernRepository.java">
+        <Message>At TavernRepository.java:[lines 31-368]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.taverns.TavernRepository</Message>
+    </Class>
+    <Method classname="com.inigmasgames.taverns.TavernRepository" name="save" signature="()V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.taverns.TavernRepository" start="299" end="334" startBytecode="0" endBytecode="896" sourcefile="TavernRepository.java" sourcepath="com/inigmasgames/taverns/TavernRepository.java" relSourcepath="java\com\inigmasgames\taverns\TavernRepository.java"/>
+      <Message>In method com.inigmasgames.taverns.TavernRepository.save()</Message>
+    </Method>
+    <Method classname="java.nio.file.Path" name="getParent" signature="()Ljava/nio/file/Path;" isStatic="false" role="METHOD_CALLED">
+      <SourceLine classname="java.nio.file.Path" sourcefile="Path.java" sourcepath="java/nio/file/Path.java"/>
+      <Message>Called method java.nio.file.Path.getParent()</Message>
+    </Method>
+    <SourceLine classname="com.inigmasgames.taverns.TavernRepository" primary="true" start="321" end="321" startBytecode="376" endBytecode="376" sourcefile="TavernRepository.java" sourcepath="com/inigmasgames/taverns/TavernRepository.java" relSourcepath="java\com\inigmasgames\taverns\TavernRepository.java" role="SOURCE_LINE_INVOKED">
+      <Message>Method invoked at TavernRepository.java:[line 321]</Message>
+    </SourceLine>
+    <SourceLine classname="com.inigmasgames.taverns.TavernRepository" start="321" end="321" startBytecode="367" endBytecode="367" sourcefile="TavernRepository.java" sourcepath="com/inigmasgames/taverns/TavernRepository.java" relSourcepath="java\com\inigmasgames\taverns\TavernRepository.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at TavernRepository.java:[line 321]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugCategory category="CORRECTNESS">
+    <Description>Correctness</Description>
+  </BugCategory>
+  <BugCategory category="STYLE">
+    <Description>Dodgy code</Description>
+  </BugCategory>
+  <BugPattern type="NP_NONNULL_PARAM_VIOLATION" abbrev="NP" category="CORRECTNESS">
+    <ShortDescription>Method call passes null to a non-null parameter</ShortDescription>
+    <Details><![CDATA[
+
+      <p>
+      This method passes a null value as the parameter of a method which
+    must be non-null. Either this parameter has been explicitly marked
+    as @Nonnull, or analysis has determined that this parameter is
+    always dereferenced.
+      </p>
+
+   ]]></Details>
+  </BugPattern>
+  <BugPattern type="UWF_UNWRITTEN_FIELD" abbrev="UwF" category="CORRECTNESS" cweid="457">
+    <ShortDescription>Unwritten field</ShortDescription>
+    <Details><![CDATA[
+
+  <p> This field is never written.&nbsp; All reads of it will return the default
+value. Check for errors (should it have been initialized?), or remove it if it is useless.</p>
+<p>See <a href="https://cwe.mitre.org/data/definitions/457.html">CWE-457: Use of Uninitialized Variable</a>.
+</p>
+
+    ]]></Details>
+  </BugPattern>
+  <BugPattern type="NP_NULL_PARAM_DEREF" abbrev="NP" category="CORRECTNESS">
+    <ShortDescription>Method call passes null for non-null parameter</ShortDescription>
+    <Details><![CDATA[
+
+      <p>
+      This method call passes a null value for a non-null method parameter.
+    Either the parameter is annotated as a parameter that should
+    always be non-null, or analysis has shown that it will always be
+    dereferenced.
+      </p>
+
+   ]]></Details>
+  </BugPattern>
+  <BugPattern type="NP_UNWRITTEN_FIELD" abbrev="NP" category="CORRECTNESS" cweid="457">
+    <ShortDescription>Read of unwritten field</ShortDescription>
+    <Details><![CDATA[
+
+  <p> The program is dereferencing a field that does not seem to ever have a non-null value written to it.
+Unless the field is initialized via some mechanism not seen by the analysis,
+dereferencing this value will generate a null pointer exception.
+</p>
+<p>See <a href="https://cwe.mitre.org/data/definitions/457.html">CWE-457: Use of Uninitialized Variable</a>.
+</p>
+
+    ]]></Details>
+  </BugPattern>
+  <BugPattern type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" abbrev="NP" category="STYLE">
+    <ShortDescription>Possible null pointer dereference due to return value of called method</ShortDescription>
+    <Details><![CDATA[
+
+<p> The return value from a method is dereferenced without a null check,
+and the return value of that method is one that should generally be checked
+for null.  This may lead to a <code>NullPointerException</code> when the code is executed.
+</p>
+
+   ]]></Details>
+  </BugPattern>
+  <BugPattern type="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" abbrev="RCN" category="STYLE">
+    <ShortDescription>Redundant nullcheck of value known to be non-null</ShortDescription>
+    <Details><![CDATA[
+
+<p> This method contains a redundant check of a known non-null value against
+the constant null.</p>
+
+    ]]></Details>
+  </BugPattern>
+  <BugCode abbrev="NP" cweid="476">
+    <Description>Null pointer dereference</Description>
+  </BugCode>
+  <BugCode abbrev="UwF">
+    <Description>Unwritten field</Description>
+  </BugCode>
+  <BugCode abbrev="RCN" cweid="476">
+    <Description>Redundant comparison to null</Description>
+  </BugCode>
+  <Errors errors="0" missingClasses="0"></Errors>
+  <FindBugsSummary timestamp="Sat, 10 Oct 2026 14:57:05 -0400" total_classes="0" referenced_classes="0" total_bugs="14" total_size="0" num_packages="1" java_version="25.0.4" vm_version="25.0.4+7-LTS" cpu_seconds="44.02" clock_seconds="7.87" peak_mbytes="861.33" alloc_mbytes="16168.00" gc_seconds="0.07" priority_2="10" priority_1="4">
+    <FileStats path="com/inigmasgames/taverns/ComfortRegistry.java" bugCount="8" size="0" bugHash="414e6f26027acfa74d8e3ca485a323fa"/>
+    <FileStats path="com/inigmasgames/taverns/TableServingManager.java" bugCount="1" size="0" bugHash="d7428f94601c55e657eba28d7b271761"/>
+    <FileStats path="com/inigmasgames/taverns/TavernDoorOperator.java" bugCount="1" size="0" bugHash="170d95c4400c5beeece73491854f7dc2"/>
+    <FileStats path="com/inigmasgames/taverns/TavernPatronManager.java" bugCount="3" size="0" bugHash="6588222a8b8d2e58f8cdf374387230f5"/>
+    <FileStats path="com/inigmasgames/taverns/TavernRepository.java" bugCount="1" size="0" bugHash="7340f8475ae6c11103af2913ef5eceec"/>
+    <FindBugsProfile></FindBugsProfile>
+  </FindBugsSummary>
+  <ClassFeatures></ClassFeatures>
+  <History></History>
+</BugCollection>
