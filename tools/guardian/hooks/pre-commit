@@ -1,0 +1,9 @@
+#!/bin/sh
+# Active only in worktrees whose own core.hooksPath points here.
+repo=$(git rev-parse --show-toplevel) || exit 2
+if [ "${HYWIND_REVIEWED_POLICY_CHANGE:-}" = 1 ]; then
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$repo/tools/guardian/Invoke-Guardian.ps1" -Mode Commit -Repository "$repo" -ReviewedPolicyChange
+else
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$repo/tools/guardian/Invoke-Guardian.ps1" -Mode Commit -Repository "$repo"
+fi
+exit $?

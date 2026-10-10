@@ -1,5 +1,55 @@
 plugins {
     id 'java'
+    id 'jacoco'
+    id 'com.github.spotbugs' version '6.5.11' apply false
+}
+
+// Coverage and bytecode analysis are explicit engineering runs, not routine check work.
+def guardianCoverage = providers.gradleProperty('guardianCoverage').map { it == 'true' }.getOrElse(false)
+def guardianSpotBugs = providers.gradleProperty('guardianSpotBugs').map { it == 'true' }.getOrElse(false)
+def guardianSpotBugsReport = providers.gradleProperty('guardianSpotBugsReport').map { it == 'true' }.getOrElse(false)
+if (guardianSpotBugs) { apply plugin: 'com.github.spotbugs' }
+
+jacoco { toolVersion = '0.8.15' }
+tasks.withType(Test).configureEach { jacoco.enabled = guardianCoverage }
+tasks.named('jacocoTestReport') {
+    dependsOn tasks.named('test')
+    reports { xml.required = true; html.required = true }
+}
+tasks.register('guardianCoverage', JacocoReport) {
+    group = 'verification'
+    description = 'Opt-in root coverage including standard and native-control JUnit tests.'
+    dependsOn tasks.named('test'), tasks.named('nativeControlTest')
+    executionData files(layout.buildDirectory.file('jacoco/test.exec'),
+        layout.buildDirectory.file('jacoco/nativeControlTest.exec'))
+    sourceSets sourceSets.main
+    reports { xml.required = true; html.required = true }
+    onlyIf { guardianCoverage }
+}
+
+if (guardianSpotBugs) {
+    allprojects {
+        plugins.withId('com.github.spotbugs') {
+            spotbugs { toolVersion = '4.10.2' }
+            tasks.matching { it.name == 'spotbugsTest' }.configureEach { enabled = false }
+            tasks.matching { it.name == 'spotbugsMain' }.configureEach {
+                ignoreFailures = guardianSpotBugsReport
+                if (!guardianSpotBugsReport) {
+                    def baseline = file("${rootProject.projectDir}/config/spotbugs/${project.name}-baseline.xml")
+                    if (baseline.exists()) { baselineFile = baseline }
+                }
+                reports {
+                    xml.required = true
+                    html.required = true
+                }
+            }
+        }
+    }
+    tasks.register('guardianSpotBugs') {
+        group = 'verification'
+        description = 'Opt-in production bytecode analysis for HyARPG, CanvasUI, and Taverns.'
+        dependsOn ':spotbugsMain', ':canvas-ui:spotbugsMain', ':hytale-taverns:spotbugsMain'
+    }
 }
 
 group = maven_group

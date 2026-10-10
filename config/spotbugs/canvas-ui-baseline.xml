@@ -1,0 +1,1064 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<BugCollection version="4.10.2" sequence="0" timestamp="1791658625714" analysisTimestamp="1791658625714" release="">
+  <Project projectName="canvas-ui (spotbugsMain)">
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\Canvas.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\CanvasDefinition$Builder.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\CanvasDefinition.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\CanvasEdge.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\CanvasEvent.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\CanvasEventType.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\CanvasInputBackend.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\CanvasInputCapabilities.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\CanvasInteractionObserver$1.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\CanvasInteractionObserver$Action.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\CanvasInteractionObserver.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\CanvasListener.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\CanvasNode.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\CanvasPersistenceAdapter$1.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\CanvasPersistenceAdapter.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\CanvasPoint.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\CanvasPort.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\CanvasRenderBackend.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\CanvasSearch.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\CanvasSnapshot$EdgeState.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\CanvasSnapshot$NodeState.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\CanvasSnapshot.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\CanvasSnapshotCodec.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\CanvasViewport.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\ConnectionCode.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\ConnectionPolicy.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\ConnectionResult.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\EdgeStyle.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\CursorCanvasEditor$DetailRow.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\CursorCanvasEditor$Inspector.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\CursorCanvasEditor$LibraryEntry.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\CursorCanvasEditor$LibraryKind.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\CursorCanvasEditor$Result.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\CursorCanvasEditor.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\CursorEditorOpenResult.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\LibraryBrowser$Page.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\LibraryBrowser$Window.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\LibraryBrowser.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\PortAnchorResolver.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\SkillTreeViewModel$Link.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\SkillTreeViewModel$Node.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\SkillTreeViewModel$Port.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\SkillTreeViewModel.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\TreeDragController$State.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\TreeDragController.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\TreeDropResolver$Candidate.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\TreeDropResolver$Result.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\TreeDropResolver.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\TreeLinkGeometry$Segment.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\TreeLinkGeometry.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\TreeLinkInteraction$State.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\editor\TreeLinkInteraction.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\GraphValidationException.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\NodeDefinition$Builder.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\NodeDefinition.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\NodeRenderContext.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\NodeRenderer.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\NodeVisual.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\NodeVisualState.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\PanGesture.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\api\PortDirection.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\CanvasUI.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\CanvasUIPlugin.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\demo\CanvasCursorProbeCloseCommand.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\demo\CanvasCursorProbeCommand.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\demo\CanvasDemoCommand.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\demo\CanvasInputProbeCommand.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\demo\DemoDefinitions$1.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\demo\DemoDefinitions.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\demo\FileCanvasPersistenceAdapter.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\CanvasCursorProbeHud$Status.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\CanvasCursorProbeHud.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\CanvasCursorProbePage.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\CanvasGraphEditorHud$DragVisual.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\CanvasGraphEditorHud$PatchMetrics.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\CanvasGraphEditorHud$PreviewVisual.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\CanvasGraphEditorHud.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\CanvasGraphSearchPage$Data.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\CanvasGraphSearchPage.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\CanvasInputProbePage$Data.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\CanvasInputProbePage.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\CanvasPage$Data.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\CanvasPage.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\CanvasRenderer.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\CursorHudCanvasBackend.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\CursorHudGraphEditorBackend.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\EdgeRenderContext.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\EdgeRenderer.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\EdgeSegment.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\HytaleCursorHudInputBackend.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\HytaleCustomUiBackend$1.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\HytaleCustomUiBackend$EdgePart.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\HytaleCustomUiBackend.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\HytaleCustomUiInputBackend.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\rendering\OrthogonalEdgeRenderer.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\CanvasCoordinateTransform.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\CanvasDragController.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\CanvasHitTester$Hit.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\CanvasHitTester.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\CanvasInputController$LinkDragState.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\CanvasInputController.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\CanvasMetrics.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\CanvasPanController.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\CanvasService.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\CanvasSession.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\cursor\CanvasInputGuard$ActiveSlotRequestSystem.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\cursor\CanvasInputGuard$DropItemSystem.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\cursor\CanvasInputGuard$InteractionStartSystem.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\cursor\CanvasInputGuard$Lease.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\cursor\CanvasInputGuard$Observation.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\cursor\CanvasInputGuard.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\cursor\CanvasPointerTransform$Calibration.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\cursor\CanvasPointerTransform$Capture.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\cursor\CanvasPointerTransform$Coordinates.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\cursor\CanvasPointerTransform$Landmark.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\cursor\CanvasPointerTransform$State.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\cursor\CanvasPointerTransform.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\cursor\CursorHudProbeService$Context.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\cursor\CursorHudProbeService$DeathCleanupSystem.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\cursor\CursorHudProbeService$OpenResult.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\cursor\CursorHudProbeService$PointPart.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\cursor\CursorHudProbeService$Session.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\cursor\CursorHudProbeService.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\cursor\CursorProbeInputBuffer$OfferResult.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\cursor\CursorProbeInputBuffer.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\cursor\CursorProbeSample$Kind.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\cursor\CursorProbeSample$Source.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\cursor\CursorProbeSample.class</Jar>
+    <Jar>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\build\classes\java\main\com\inigmasgames\canvasui\runtime\SessionRegistry.class</Jar>
+    <AuxClasspathEntry>LOCAL_ROOT/AppData\Roaming\Hytale\install\pre-release\package\game\latest\Server\HytaleServer.jar</AuxClasspathEntry>
+    <SrcDir>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\src\main\resources</SrcDir>
+    <SrcDir>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui\src\main\java</SrcDir>
+    <SrcDir>LOCAL_ROOT/.codex\worktrees\hywind-guardian\Hytale\canvas-ui-demo\src\main\java</SrcDir>
+  </Project>
+  <BugInstance type="EI_EXPOSE_STATIC_REP2" priority="2" rank="18" abbrev="MS" category="MALICIOUS_CODE" instanceHash="db68eebb1629775f310a704ce031e6b7" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="493">
+    <ShortMessage>May expose internal static state by storing a mutable object into a static field</ShortMessage>
+    <LongMessage>com.inigmasgames.canvasui.CanvasUI.install(CanvasService, CursorHudProbeService) may expose internal static state by storing a mutable object into a static field com.inigmasgames.canvasui.CanvasUI.cursorEditors</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.CanvasUI" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.CanvasUI" start="21" end="82" sourcefile="CanvasUI.java" sourcepath="com/inigmasgames/canvasui/CanvasUI.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\CanvasUI.java">
+        <Message>At CanvasUI.java:[lines 21-82]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.CanvasUI</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.CanvasUI" name="install" signature="(Lcom/inigmasgames/canvasui/runtime/CanvasService;Lcom/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService;)V" isStatic="true" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.CanvasUI" start="56" end="58" startBytecode="0" endBytecode="68" sourcefile="CanvasUI.java" sourcepath="com/inigmasgames/canvasui/CanvasUI.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\CanvasUI.java"/>
+      <Message>In method com.inigmasgames.canvasui.CanvasUI.install(CanvasService, CursorHudProbeService)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.CanvasUI" name="cursorEditors" signature="Lcom/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService;" isStatic="true" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.CanvasUI" sourcefile="CanvasUI.java" sourcepath="com/inigmasgames/canvasui/CanvasUI.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\CanvasUI.java">
+        <Message>In CanvasUI.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.CanvasUI.cursorEditors</Message>
+    </Field>
+    <LocalVariable name="editors" register="1" pc="5" role="LOCAL_VARIABLE_NAMED">
+      <Message>Local variable named editors</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.canvasui.CanvasUI" primary="true" start="57" end="57" startBytecode="5" endBytecode="5" sourcefile="CanvasUI.java" sourcepath="com/inigmasgames/canvasui/CanvasUI.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\CanvasUI.java">
+      <Message>At CanvasUI.java:[line 57]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="900a511108cec8109ad7375d4112383" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.canvasui.demo.CanvasCursorProbeCloseCommand(CursorHudProbeService) may expose internal representation by storing an externally mutable object into CanvasCursorProbeCloseCommand.probe</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.demo.CanvasCursorProbeCloseCommand" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.demo.CanvasCursorProbeCloseCommand" start="18" end="29" sourcefile="CanvasCursorProbeCloseCommand.java" sourcepath="com/inigmasgames/canvasui/demo/CanvasCursorProbeCloseCommand.java" relSourcepath="demo\src\main\java\com\inigmasgames\canvasui\demo\CanvasCursorProbeCloseCommand.java">
+        <Message>At CanvasCursorProbeCloseCommand.java:[lines 18-29]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.demo.CanvasCursorProbeCloseCommand</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.demo.CanvasCursorProbeCloseCommand" name="&lt;init&gt;" signature="(Lcom/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.demo.CanvasCursorProbeCloseCommand" start="18" end="21" startBytecode="0" endBytecode="84" sourcefile="CanvasCursorProbeCloseCommand.java" sourcepath="com/inigmasgames/canvasui/demo/CanvasCursorProbeCloseCommand.java" relSourcepath="demo\src\main\java\com\inigmasgames\canvasui\demo\CanvasCursorProbeCloseCommand.java"/>
+      <Message>In method new com.inigmasgames.canvasui.demo.CanvasCursorProbeCloseCommand(CursorHudProbeService)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.demo.CanvasCursorProbeCloseCommand" name="probe" signature="Lcom/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.demo.CanvasCursorProbeCloseCommand" sourcefile="CanvasCursorProbeCloseCommand.java" sourcepath="com/inigmasgames/canvasui/demo/CanvasCursorProbeCloseCommand.java" relSourcepath="demo\src\main\java\com\inigmasgames\canvasui\demo\CanvasCursorProbeCloseCommand.java">
+        <Message>In CanvasCursorProbeCloseCommand.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.demo.CanvasCursorProbeCloseCommand.probe</Message>
+    </Field>
+    <LocalVariable name="probe" register="1" pc="10" role="LOCAL_VARIABLE_NAMED">
+      <Message>Local variable named probe</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.canvasui.demo.CanvasCursorProbeCloseCommand" primary="true" start="19" end="19" startBytecode="10" endBytecode="10" sourcefile="CanvasCursorProbeCloseCommand.java" sourcepath="com/inigmasgames/canvasui/demo/CanvasCursorProbeCloseCommand.java" relSourcepath="demo\src\main\java\com\inigmasgames\canvasui\demo\CanvasCursorProbeCloseCommand.java">
+      <Message>At CanvasCursorProbeCloseCommand.java:[line 19]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="ca9b4133cd792c8e6fed0c1d090708e5" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.canvasui.demo.CanvasCursorProbeCommand(String, String, CursorHudProbeService, CursorHudProbeService$Context) may expose internal representation by storing an externally mutable object into CanvasCursorProbeCommand.probe</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.demo.CanvasCursorProbeCommand" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.demo.CanvasCursorProbeCommand" start="21" end="40" sourcefile="CanvasCursorProbeCommand.java" sourcepath="com/inigmasgames/canvasui/demo/CanvasCursorProbeCommand.java" relSourcepath="demo\src\main\java\com\inigmasgames\canvasui\demo\CanvasCursorProbeCommand.java">
+        <Message>At CanvasCursorProbeCommand.java:[lines 21-40]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.demo.CanvasCursorProbeCommand</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.demo.CanvasCursorProbeCommand" name="&lt;init&gt;" signature="(Ljava/lang/String;Ljava/lang/String;Lcom/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService;Lcom/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService$Context;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.demo.CanvasCursorProbeCommand" start="21" end="25" startBytecode="0" endBytecode="122" sourcefile="CanvasCursorProbeCommand.java" sourcepath="com/inigmasgames/canvasui/demo/CanvasCursorProbeCommand.java" relSourcepath="demo\src\main\java\com\inigmasgames\canvasui\demo\CanvasCursorProbeCommand.java"/>
+      <Message>In method new com.inigmasgames.canvasui.demo.CanvasCursorProbeCommand(String, String, CursorHudProbeService, CursorHudProbeService$Context)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.demo.CanvasCursorProbeCommand" name="probe" signature="Lcom/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.demo.CanvasCursorProbeCommand" sourcefile="CanvasCursorProbeCommand.java" sourcepath="com/inigmasgames/canvasui/demo/CanvasCursorProbeCommand.java" relSourcepath="demo\src\main\java\com\inigmasgames\canvasui\demo\CanvasCursorProbeCommand.java">
+        <Message>In CanvasCursorProbeCommand.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.demo.CanvasCursorProbeCommand.probe</Message>
+    </Field>
+    <LocalVariable name="probe" register="3" pc="8" role="LOCAL_VARIABLE_NAMED">
+      <Message>Local variable named probe</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.canvasui.demo.CanvasCursorProbeCommand" primary="true" start="22" end="22" startBytecode="8" endBytecode="8" sourcefile="CanvasCursorProbeCommand.java" sourcepath="com/inigmasgames/canvasui/demo/CanvasCursorProbeCommand.java" relSourcepath="demo\src\main\java\com\inigmasgames\canvasui\demo\CanvasCursorProbeCommand.java">
+      <Message>At CanvasCursorProbeCommand.java:[line 22]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="aa22b9bf7e693515f82c5bad516f11dc" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.inigmasgames.canvasui.demo.FileCanvasPersistenceAdapter.save(String, CanvasSnapshot) due to return value of called method</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.demo.FileCanvasPersistenceAdapter" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.demo.FileCanvasPersistenceAdapter" start="25" end="108" sourcefile="FileCanvasPersistenceAdapter.java" sourcepath="com/inigmasgames/canvasui/demo/FileCanvasPersistenceAdapter.java" relSourcepath="demo\src\main\java\com\inigmasgames\canvasui\demo\FileCanvasPersistenceAdapter.java">
+        <Message>At FileCanvasPersistenceAdapter.java:[lines 25-108]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.demo.FileCanvasPersistenceAdapter</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.demo.FileCanvasPersistenceAdapter" name="save" signature="(Ljava/lang/String;Lcom/inigmasgames/canvasui/api/CanvasSnapshot;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.demo.FileCanvasPersistenceAdapter" start="59" end="90" startBytecode="0" endBytecode="1179" sourcefile="FileCanvasPersistenceAdapter.java" sourcepath="com/inigmasgames/canvasui/demo/FileCanvasPersistenceAdapter.java" relSourcepath="demo\src\main\java\com\inigmasgames\canvasui\demo\FileCanvasPersistenceAdapter.java"/>
+      <Message>In method com.inigmasgames.canvasui.demo.FileCanvasPersistenceAdapter.save(String, CanvasSnapshot)</Message>
+    </Method>
+    <Method classname="java.nio.file.Path" name="getParent" signature="()Ljava/nio/file/Path;" isStatic="false" role="METHOD_CALLED">
+      <SourceLine classname="java.nio.file.Path" sourcefile="Path.java" sourcepath="java/nio/file/Path.java"/>
+      <Message>Called method java.nio.file.Path.getParent()</Message>
+    </Method>
+    <SourceLine classname="com.inigmasgames.canvasui.demo.FileCanvasPersistenceAdapter" primary="true" start="83" end="83" startBytecode="567" endBytecode="567" sourcefile="FileCanvasPersistenceAdapter.java" sourcepath="com/inigmasgames/canvasui/demo/FileCanvasPersistenceAdapter.java" relSourcepath="demo\src\main\java\com\inigmasgames\canvasui\demo\FileCanvasPersistenceAdapter.java" role="SOURCE_LINE_INVOKED">
+      <Message>Method invoked at FileCanvasPersistenceAdapter.java:[line 83]</Message>
+    </SourceLine>
+    <SourceLine classname="com.inigmasgames.canvasui.demo.FileCanvasPersistenceAdapter" start="83" end="83" startBytecode="558" endBytecode="558" sourcefile="FileCanvasPersistenceAdapter.java" sourcepath="com/inigmasgames/canvasui/demo/FileCanvasPersistenceAdapter.java" relSourcepath="demo\src\main\java\com\inigmasgames\canvasui\demo\FileCanvasPersistenceAdapter.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at FileCanvasPersistenceAdapter.java:[line 83]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="683a01a134d8b35c5ed9c7f13402b7c6" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.canvasui.rendering.CanvasPage(PlayerRef, CanvasSession, HytaleCustomUiBackend) may expose internal representation by storing an externally mutable object into CanvasPage.backend</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.rendering.CanvasPage" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.CanvasPage" start="19" end="66" sourcefile="CanvasPage.java" sourcepath="com/inigmasgames/canvasui/rendering/CanvasPage.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\CanvasPage.java">
+        <Message>At CanvasPage.java:[lines 19-66]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.rendering.CanvasPage</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.rendering.CanvasPage" name="&lt;init&gt;" signature="(Lcom/hypixel/hytale/server/core/universe/PlayerRef;Lcom/inigmasgames/canvasui/runtime/CanvasSession;Lcom/inigmasgames/canvasui/rendering/HytaleCustomUiBackend;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.CanvasPage" start="24" end="26" startBytecode="0" endBytecode="101" sourcefile="CanvasPage.java" sourcepath="com/inigmasgames/canvasui/rendering/CanvasPage.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\CanvasPage.java"/>
+      <Message>In method new com.inigmasgames.canvasui.rendering.CanvasPage(PlayerRef, CanvasSession, HytaleCustomUiBackend)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.rendering.CanvasPage" name="backend" signature="Lcom/inigmasgames/canvasui/rendering/HytaleCustomUiBackend;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.CanvasPage" sourcefile="CanvasPage.java" sourcepath="com/inigmasgames/canvasui/rendering/CanvasPage.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\CanvasPage.java">
+        <Message>In CanvasPage.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.rendering.CanvasPage.backend</Message>
+    </Field>
+    <LocalVariable name="backend" register="3" pc="18" role="LOCAL_VARIABLE_NAMED">
+      <Message>Local variable named backend</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.canvasui.rendering.CanvasPage" primary="true" start="25" end="25" startBytecode="18" endBytecode="18" sourcefile="CanvasPage.java" sourcepath="com/inigmasgames/canvasui/rendering/CanvasPage.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\CanvasPage.java">
+      <Message>At CanvasPage.java:[line 25]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="f1cff005cd130464e91ea5e4bdb6a7cd" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.canvasui.rendering.CanvasPage(PlayerRef, CanvasSession, HytaleCustomUiBackend) may expose internal representation by storing an externally mutable object into CanvasPage.session</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.rendering.CanvasPage" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.CanvasPage" start="19" end="66" sourcefile="CanvasPage.java" sourcepath="com/inigmasgames/canvasui/rendering/CanvasPage.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\CanvasPage.java">
+        <Message>At CanvasPage.java:[lines 19-66]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.rendering.CanvasPage</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.rendering.CanvasPage" name="&lt;init&gt;" signature="(Lcom/hypixel/hytale/server/core/universe/PlayerRef;Lcom/inigmasgames/canvasui/runtime/CanvasSession;Lcom/inigmasgames/canvasui/rendering/HytaleCustomUiBackend;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.CanvasPage" start="24" end="26" startBytecode="0" endBytecode="101" sourcefile="CanvasPage.java" sourcepath="com/inigmasgames/canvasui/rendering/CanvasPage.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\CanvasPage.java"/>
+      <Message>In method new com.inigmasgames.canvasui.rendering.CanvasPage(PlayerRef, CanvasSession, HytaleCustomUiBackend)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.rendering.CanvasPage" name="session" signature="Lcom/inigmasgames/canvasui/runtime/CanvasSession;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.CanvasPage" sourcefile="CanvasPage.java" sourcepath="com/inigmasgames/canvasui/rendering/CanvasPage.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\CanvasPage.java">
+        <Message>In CanvasPage.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.rendering.CanvasPage.session</Message>
+    </Field>
+    <LocalVariable name="session" register="2" pc="13" role="LOCAL_VARIABLE_NAMED">
+      <Message>Local variable named session</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.canvasui.rendering.CanvasPage" primary="true" start="25" end="25" startBytecode="13" endBytecode="13" sourcefile="CanvasPage.java" sourcepath="com/inigmasgames/canvasui/rendering/CanvasPage.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\CanvasPage.java">
+      <Message>At CanvasPage.java:[line 25]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="b2afb54486345d61af05b7248b899fe5" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend(Canvas, CanvasCursorProbeHud, boolean) may expose internal representation by storing an externally mutable object into CursorHudCanvasBackend.canvas</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend" start="16" end="40" sourcefile="CursorHudCanvasBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/CursorHudCanvasBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\CursorHudCanvasBackend.java">
+        <Message>At CursorHudCanvasBackend.java:[lines 16-40]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend" name="&lt;init&gt;" signature="(Lcom/inigmasgames/canvasui/api/Canvas;Lcom/inigmasgames/canvasui/rendering/CanvasCursorProbeHud;Z)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend" start="19" end="23" startBytecode="0" endBytecode="119" sourcefile="CursorHudCanvasBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/CursorHudCanvasBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\CursorHudCanvasBackend.java"/>
+      <Message>In method new com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend(Canvas, CanvasCursorProbeHud, boolean)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend" name="canvas" signature="Lcom/inigmasgames/canvasui/api/Canvas;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend" sourcefile="CursorHudCanvasBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/CursorHudCanvasBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\CursorHudCanvasBackend.java">
+        <Message>In CursorHudCanvasBackend.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend.canvas</Message>
+    </Field>
+    <LocalVariable name="?" register="-1" pc="11" role="LOCAL_VARIABLE_UNKNOWN">
+      <Message>Local variable stored in JVM register ?</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend" primary="true" start="20" end="20" startBytecode="12" endBytecode="12" sourcefile="CursorHudCanvasBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/CursorHudCanvasBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\CursorHudCanvasBackend.java">
+      <Message>At CursorHudCanvasBackend.java:[line 20]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="b70280a8b219abbf1ac1e4b2eab9442" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend(Canvas, CanvasCursorProbeHud, boolean) may expose internal representation by storing an externally mutable object into CursorHudCanvasBackend.hud</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend" start="16" end="40" sourcefile="CursorHudCanvasBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/CursorHudCanvasBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\CursorHudCanvasBackend.java">
+        <Message>At CursorHudCanvasBackend.java:[lines 16-40]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend" name="&lt;init&gt;" signature="(Lcom/inigmasgames/canvasui/api/Canvas;Lcom/inigmasgames/canvasui/rendering/CanvasCursorProbeHud;Z)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend" start="19" end="23" startBytecode="0" endBytecode="119" sourcefile="CursorHudCanvasBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/CursorHudCanvasBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\CursorHudCanvasBackend.java"/>
+      <Message>In method new com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend(Canvas, CanvasCursorProbeHud, boolean)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend" name="hud" signature="Lcom/inigmasgames/canvasui/rendering/CanvasCursorProbeHud;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend" sourcefile="CursorHudCanvasBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/CursorHudCanvasBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\CursorHudCanvasBackend.java">
+        <Message>In CursorHudCanvasBackend.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend.hud</Message>
+    </Field>
+    <LocalVariable name="?" register="-1" pc="22" role="LOCAL_VARIABLE_UNKNOWN">
+      <Message>Local variable stored in JVM register ?</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.canvasui.rendering.CursorHudCanvasBackend" primary="true" start="21" end="21" startBytecode="23" endBytecode="23" sourcefile="CursorHudCanvasBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/CursorHudCanvasBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\CursorHudCanvasBackend.java">
+      <Message>At CursorHudCanvasBackend.java:[line 21]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="d7be3ece7b4487de55b22092b57625f0" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.canvasui.rendering.CursorHudGraphEditorBackend(Canvas, Runnable, Consumer, Consumer) may expose internal representation by storing an externally mutable object into CursorHudGraphEditorBackend.canvas</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.rendering.CursorHudGraphEditorBackend" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.CursorHudGraphEditorBackend" start="17" end="39" sourcefile="CursorHudGraphEditorBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/CursorHudGraphEditorBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\CursorHudGraphEditorBackend.java">
+        <Message>At CursorHudGraphEditorBackend.java:[lines 17-39]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.rendering.CursorHudGraphEditorBackend</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.rendering.CursorHudGraphEditorBackend" name="&lt;init&gt;" signature="(Lcom/inigmasgames/canvasui/api/Canvas;Ljava/lang/Runnable;Ljava/util/function/Consumer;Ljava/util/function/Consumer;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.CursorHudGraphEditorBackend" start="21" end="26" startBytecode="0" endBytecode="179" sourcefile="CursorHudGraphEditorBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/CursorHudGraphEditorBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\CursorHudGraphEditorBackend.java"/>
+      <Message>In method new com.inigmasgames.canvasui.rendering.CursorHudGraphEditorBackend(Canvas, Runnable, Consumer, Consumer)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.rendering.CursorHudGraphEditorBackend" name="canvas" signature="Lcom/inigmasgames/canvasui/api/Canvas;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.CursorHudGraphEditorBackend" sourcefile="CursorHudGraphEditorBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/CursorHudGraphEditorBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\CursorHudGraphEditorBackend.java">
+        <Message>In CursorHudGraphEditorBackend.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.rendering.CursorHudGraphEditorBackend.canvas</Message>
+    </Field>
+    <LocalVariable name="?" register="-1" pc="11" role="LOCAL_VARIABLE_UNKNOWN">
+      <Message>Local variable stored in JVM register ?</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.canvasui.rendering.CursorHudGraphEditorBackend" primary="true" start="22" end="22" startBytecode="12" endBytecode="12" sourcefile="CursorHudGraphEditorBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/CursorHudGraphEditorBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\CursorHudGraphEditorBackend.java">
+      <Message>At CursorHudGraphEditorBackend.java:[line 22]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="975e51f56a3a6fb4c0cb14be7fd32aba" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend(CanvasSession) may expose internal representation by storing an externally mutable object into HytaleCustomUiBackend.session</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" start="33" end="319" sourcefile="HytaleCustomUiBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/HytaleCustomUiBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\HytaleCustomUiBackend.java">
+        <Message>At HytaleCustomUiBackend.java:[lines 33-319]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" name="&lt;init&gt;" signature="(Lcom/inigmasgames/canvasui/runtime/CanvasSession;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" start="47" end="50" startBytecode="0" endBytecode="124" sourcefile="HytaleCustomUiBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/HytaleCustomUiBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\HytaleCustomUiBackend.java"/>
+      <Message>In method new com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend(CanvasSession)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" name="session" signature="Lcom/inigmasgames/canvasui/runtime/CanvasSession;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" sourcefile="HytaleCustomUiBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/HytaleCustomUiBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\HytaleCustomUiBackend.java">
+        <Message>In HytaleCustomUiBackend.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend.session</Message>
+    </Field>
+    <LocalVariable name="session" register="1" pc="28" role="LOCAL_VARIABLE_NAMED">
+      <Message>Local variable named session</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" primary="true" start="48" end="48" startBytecode="28" endBytecode="28" sourcefile="HytaleCustomUiBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/HytaleCustomUiBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\HytaleCustomUiBackend.java">
+      <Message>At HytaleCustomUiBackend.java:[line 48]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="441487af9770f05d3c8f3445ed9b92c5" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend.attach(CanvasPage, Runnable) may expose internal representation by storing an externally mutable object into HytaleCustomUiBackend.page</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" start="33" end="319" sourcefile="HytaleCustomUiBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/HytaleCustomUiBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\HytaleCustomUiBackend.java">
+        <Message>At HytaleCustomUiBackend.java:[lines 33-319]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" name="attach" signature="(Lcom/inigmasgames/canvasui/rendering/CanvasPage;Ljava/lang/Runnable;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" start="52" end="52" startBytecode="0" endBytecode="72" sourcefile="HytaleCustomUiBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/HytaleCustomUiBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\HytaleCustomUiBackend.java"/>
+      <Message>In method com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend.attach(CanvasPage, Runnable)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" name="page" signature="Lcom/inigmasgames/canvasui/rendering/CanvasPage;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" sourcefile="HytaleCustomUiBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/HytaleCustomUiBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\HytaleCustomUiBackend.java">
+        <Message>In HytaleCustomUiBackend.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend.page</Message>
+    </Field>
+    <LocalVariable name="page" register="1" pc="2" role="LOCAL_VARIABLE_NAMED">
+      <Message>Local variable named page</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" primary="true" start="52" end="52" startBytecode="2" endBytecode="2" sourcefile="HytaleCustomUiBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/HytaleCustomUiBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\HytaleCustomUiBackend.java">
+      <Message>At HytaleCustomUiBackend.java:[line 52]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="URF_UNREAD_FIELD" priority="2" rank="18" abbrev="UrF" category="PERFORMANCE" instanceHash="5bd518462010e04d47a415a998fd99ae" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="563">
+    <ShortMessage>Unread field</ShortMessage>
+    <LongMessage>Unread field: com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend.previewSource</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" start="33" end="319" sourcefile="HytaleCustomUiBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/HytaleCustomUiBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\HytaleCustomUiBackend.java">
+        <Message>At HytaleCustomUiBackend.java:[lines 33-319]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend</Message>
+    </Class>
+    <Field classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" name="previewSource" signature="Lcom/inigmasgames/canvasui/api/CanvasPoint;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" sourcefile="HytaleCustomUiBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/HytaleCustomUiBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\HytaleCustomUiBackend.java">
+        <Message>In HytaleCustomUiBackend.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend.previewSource</Message>
+    </Field>
+    <SourceLine classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" primary="true" start="55" end="55" startBytecode="35" endBytecode="35" sourcefile="HytaleCustomUiBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/HytaleCustomUiBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\HytaleCustomUiBackend.java">
+      <Message>At HytaleCustomUiBackend.java:[line 55]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="URF_UNREAD_FIELD" priority="2" rank="18" abbrev="UrF" category="PERFORMANCE" instanceHash="3a04cf54f0d75919097435a853362feb" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="563">
+    <ShortMessage>Unread field</ShortMessage>
+    <LongMessage>Unread field: com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend.previewTarget</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" start="33" end="319" sourcefile="HytaleCustomUiBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/HytaleCustomUiBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\HytaleCustomUiBackend.java">
+        <Message>At HytaleCustomUiBackend.java:[lines 33-319]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend</Message>
+    </Class>
+    <Field classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" name="previewTarget" signature="Lcom/inigmasgames/canvasui/api/CanvasPoint;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" sourcefile="HytaleCustomUiBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/HytaleCustomUiBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\HytaleCustomUiBackend.java">
+        <Message>In HytaleCustomUiBackend.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend.previewTarget</Message>
+    </Field>
+    <SourceLine classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" primary="true" start="56" end="56" startBytecode="40" endBytecode="40" sourcefile="HytaleCustomUiBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/HytaleCustomUiBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\HytaleCustomUiBackend.java">
+      <Message>At HytaleCustomUiBackend.java:[line 56]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="URF_UNREAD_FIELD" priority="2" rank="18" abbrev="UrF" category="PERFORMANCE" instanceHash="28c1000676bb78f7f3ae512e63756fce" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="563">
+    <ShortMessage>Unread field</ShortMessage>
+    <LongMessage>Unread field: com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend.previewValid</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" start="33" end="319" sourcefile="HytaleCustomUiBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/HytaleCustomUiBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\HytaleCustomUiBackend.java">
+        <Message>At HytaleCustomUiBackend.java:[lines 33-319]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend</Message>
+    </Class>
+    <Field classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" name="previewValid" signature="Z" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" sourcefile="HytaleCustomUiBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/HytaleCustomUiBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\HytaleCustomUiBackend.java">
+        <Message>In HytaleCustomUiBackend.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend.previewValid</Message>
+    </Field>
+    <SourceLine classname="com.inigmasgames.canvasui.rendering.HytaleCustomUiBackend" primary="true" start="130" end="130" startBytecode="12" endBytecode="12" sourcefile="HytaleCustomUiBackend.java" sourcepath="com/inigmasgames/canvasui/rendering/HytaleCustomUiBackend.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\rendering\HytaleCustomUiBackend.java">
+      <Message>At HytaleCustomUiBackend.java:[line 130]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="7dbe4dae9bba152d3f42f6bab979530d" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.canvasui.runtime.CanvasInputController(Canvas, CanvasRenderBackend, Runnable, BooleanSupplier, LongConsumer, BiFunction, Consumer) may expose internal representation by storing an externally mutable object into CanvasInputController.backend</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.runtime.CanvasInputController" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasInputController" start="39" end="256" sourcefile="CanvasInputController.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasInputController.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasInputController.java">
+        <Message>At CanvasInputController.java:[lines 39-256]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.runtime.CanvasInputController</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.runtime.CanvasInputController" name="&lt;init&gt;" signature="(Lcom/inigmasgames/canvasui/api/Canvas;Lcom/inigmasgames/canvasui/api/CanvasRenderBackend;Ljava/lang/Runnable;Ljava/util/function/BooleanSupplier;Ljava/util/function/LongConsumer;Ljava/util/function/BiFunction;Ljava/util/function/Consumer;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasInputController" start="70" end="78" startBytecode="0" endBytecode="353" sourcefile="CanvasInputController.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasInputController.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasInputController.java"/>
+      <Message>In method new com.inigmasgames.canvasui.runtime.CanvasInputController(Canvas, CanvasRenderBackend, Runnable, BooleanSupplier, LongConsumer, BiFunction, Consumer)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.runtime.CanvasInputController" name="backend" signature="Lcom/inigmasgames/canvasui/api/CanvasRenderBackend;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasInputController" sourcefile="CanvasInputController.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasInputController.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasInputController.java">
+        <Message>In CanvasInputController.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.runtime.CanvasInputController.backend</Message>
+    </Field>
+    <LocalVariable name="?" register="-1" pc="90" role="LOCAL_VARIABLE_UNKNOWN">
+      <Message>Local variable stored in JVM register ?</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasInputController" primary="true" start="72" end="72" startBytecode="91" endBytecode="91" sourcefile="CanvasInputController.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasInputController.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasInputController.java">
+      <Message>At CanvasInputController.java:[line 72]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="3f8f3c924c37ff08a199e156a2ff1e89" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.canvasui.runtime.CanvasInputController(Canvas, CanvasRenderBackend, Runnable, BooleanSupplier, LongConsumer, BiFunction, Consumer) may expose internal representation by storing an externally mutable object into CanvasInputController.canvas</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.runtime.CanvasInputController" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasInputController" start="39" end="256" sourcefile="CanvasInputController.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasInputController.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasInputController.java">
+        <Message>At CanvasInputController.java:[lines 39-256]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.runtime.CanvasInputController</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.runtime.CanvasInputController" name="&lt;init&gt;" signature="(Lcom/inigmasgames/canvasui/api/Canvas;Lcom/inigmasgames/canvasui/api/CanvasRenderBackend;Ljava/lang/Runnable;Ljava/util/function/BooleanSupplier;Ljava/util/function/LongConsumer;Ljava/util/function/BiFunction;Ljava/util/function/Consumer;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasInputController" start="70" end="78" startBytecode="0" endBytecode="353" sourcefile="CanvasInputController.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasInputController.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasInputController.java"/>
+      <Message>In method new com.inigmasgames.canvasui.runtime.CanvasInputController(Canvas, CanvasRenderBackend, Runnable, BooleanSupplier, LongConsumer, BiFunction, Consumer)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.runtime.CanvasInputController" name="canvas" signature="Lcom/inigmasgames/canvasui/api/Canvas;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasInputController" sourcefile="CanvasInputController.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasInputController.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasInputController.java">
+        <Message>In CanvasInputController.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.runtime.CanvasInputController.canvas</Message>
+    </Field>
+    <LocalVariable name="?" register="-1" pc="79" role="LOCAL_VARIABLE_UNKNOWN">
+      <Message>Local variable stored in JVM register ?</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasInputController" primary="true" start="71" end="71" startBytecode="80" endBytecode="80" sourcefile="CanvasInputController.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasInputController.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasInputController.java">
+      <Message>At CanvasInputController.java:[line 71]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" priority="2" rank="18" abbrev="RCN" category="STYLE" instanceHash="386e41a6b7002128996034fbebda964e" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Redundant nullcheck of value known to be non-null</ShortMessage>
+    <LongMessage>Redundant nullcheck of playerRef, which is known to be non-null in com.inigmasgames.canvasui.runtime.CanvasService.route(PlayerMouseButtonEvent)</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.runtime.CanvasService" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasService" start="21" end="82" sourcefile="CanvasService.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasService.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasService.java">
+        <Message>At CanvasService.java:[lines 21-82]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.runtime.CanvasService</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.runtime.CanvasService" name="route" signature="(Lcom/hypixel/hytale/server/core/event/events/player/PlayerMouseButtonEvent;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasService" start="62" end="66" startBytecode="0" endBytecode="142" sourcefile="CanvasService.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasService.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasService.java"/>
+      <Message>In method com.inigmasgames.canvasui.runtime.CanvasService.route(PlayerMouseButtonEvent)</Message>
+    </Method>
+    <LocalVariable name="playerRef" register="2" pc="5" role="LOCAL_VARIABLE_VALUE_OF">
+      <Message>Value loaded from playerRef</Message>
+    </LocalVariable>
+    <Method classname="com.hypixel.hytale.server.core.event.events.player.PlayerMouseButtonEvent" name="getPlayerRefComponent" signature="()Lcom/hypixel/hytale/server/core/universe/PlayerRef;" isStatic="false" role="METHOD_RETURN_VALUE_OF" classAnnotationNames="javax.annotation.Nonnull">
+      <SourceLine classname="com.hypixel.hytale.server.core.event.events.player.PlayerMouseButtonEvent" start="49" end="49" startBytecode="0" endBytecode="46" sourcefile="PlayerMouseButtonEvent.java" sourcepath="com/hypixel/hytale/server/core/event/events/player/PlayerMouseButtonEvent.java"/>
+      <Message>Return value of com.hypixel.hytale.server.core.event.events.player.PlayerMouseButtonEvent.getPlayerRefComponent() of type com.hypixel.hytale.server.core.universe.PlayerRef</Message>
+    </Method>
+    <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasService" primary="true" start="63" end="63" startBytecode="6" endBytecode="6" sourcefile="CanvasService.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasService.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasService.java" role="SOURCE_REDUNDANT_NULL_CHECK">
+      <Message>Redundant null check at CanvasService.java:[line 63]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="AT_NONATOMIC_OPERATIONS_ON_SHARED_VARIABLE" priority="2" rank="14" abbrev="AT" category="MT_CORRECTNESS" instanceHash="50e982d2060a7049a591382ed9e06cd6" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="413">
+    <ShortMessage>Operation on shared variable is not atomic</ShortMessage>
+    <LongMessage>Operation on the &quot;pageRebuilds&quot; shared variable in &quot;CanvasSession&quot; class is not atomic</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.runtime.CanvasSession" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" start="25" end="157" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+        <Message>At CanvasSession.java:[lines 25-157]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.runtime.CanvasSession</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.runtime.CanvasSession" name="recordPageRebuild" signature="()V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" start="130" end="130" startBytecode="0" endBytecode="52" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java"/>
+      <Message>In method com.inigmasgames.canvasui.runtime.CanvasSession.recordPageRebuild()</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.runtime.CanvasSession" name="pageRebuilds" signature="J" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+        <Message>In CanvasSession.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.runtime.CanvasSession.pageRebuilds</Message>
+    </Field>
+    <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" primary="true" start="130" end="130" startBytecode="7" endBytecode="7" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+      <Message>At CanvasSession.java:[line 130]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="AT_NONATOMIC_OPERATIONS_ON_SHARED_VARIABLE" priority="2" rank="14" abbrev="AT" category="MT_CORRECTNESS" instanceHash="86ddb2e8914d58074f031efcc7703a65" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="413">
+    <ShortMessage>Operation on shared variable is not atomic</ShortMessage>
+    <LongMessage>Operation on the &quot;latencySamples&quot; shared variable in &quot;CanvasSession&quot; class is not atomic</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.runtime.CanvasSession" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" start="25" end="157" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+        <Message>At CanvasSession.java:[lines 25-157]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.runtime.CanvasSession</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.runtime.CanvasSession" name="recordPointer" signature="(J)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" start="127" end="128" startBytecode="0" endBytecode="98" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java"/>
+      <Message>In method com.inigmasgames.canvasui.runtime.CanvasSession.recordPointer(long)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.runtime.CanvasSession" name="latencySamples" signature="J" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+        <Message>In CanvasSession.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.runtime.CanvasSession.latencySamples</Message>
+    </Field>
+    <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" primary="true" start="127" end="127" startBytecode="17" endBytecode="17" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+      <Message>At CanvasSession.java:[line 127]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="AT_NONATOMIC_OPERATIONS_ON_SHARED_VARIABLE" priority="2" rank="14" abbrev="AT" category="MT_CORRECTNESS" instanceHash="ba781ac5c2053779e5efe334d60d113" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="413">
+    <ShortMessage>Operation on shared variable is not atomic</ShortMessage>
+    <LongMessage>Operation on the &quot;peakLatencyNanos&quot; shared variable in &quot;CanvasSession&quot; class is not atomic</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.runtime.CanvasSession" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" start="25" end="157" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+        <Message>At CanvasSession.java:[lines 25-157]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.runtime.CanvasSession</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.runtime.CanvasSession" name="recordPointer" signature="(J)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" start="127" end="128" startBytecode="0" endBytecode="98" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java"/>
+      <Message>In method com.inigmasgames.canvasui.runtime.CanvasSession.recordPointer(long)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.runtime.CanvasSession" name="peakLatencyNanos" signature="J" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+        <Message>In CanvasSession.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.runtime.CanvasSession.peakLatencyNanos</Message>
+    </Field>
+    <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" primary="true" start="127" end="127" startBytecode="39" endBytecode="39" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+      <Message>At CanvasSession.java:[line 127]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="AT_NONATOMIC_OPERATIONS_ON_SHARED_VARIABLE" priority="2" rank="14" abbrev="AT" category="MT_CORRECTNESS" instanceHash="eda2980b8133628080955263288d7839" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="413">
+    <ShortMessage>Operation on shared variable is not atomic</ShortMessage>
+    <LongMessage>Operation on the &quot;pointerEvents&quot; shared variable in &quot;CanvasSession&quot; class is not atomic</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.runtime.CanvasSession" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" start="25" end="157" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+        <Message>At CanvasSession.java:[lines 25-157]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.runtime.CanvasSession</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.runtime.CanvasSession" name="recordPointer" signature="(J)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" start="127" end="128" startBytecode="0" endBytecode="98" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java"/>
+      <Message>In method com.inigmasgames.canvasui.runtime.CanvasSession.recordPointer(long)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.runtime.CanvasSession" name="pointerEvents" signature="J" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+        <Message>In CanvasSession.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.runtime.CanvasSession.pointerEvents</Message>
+    </Field>
+    <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" primary="true" start="127" end="127" startBytecode="7" endBytecode="7" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+      <Message>At CanvasSession.java:[line 127]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="AT_NONATOMIC_OPERATIONS_ON_SHARED_VARIABLE" priority="2" rank="14" abbrev="AT" category="MT_CORRECTNESS" instanceHash="335e66a478fae5de0f273950d4294da" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="413">
+    <ShortMessage>Operation on shared variable is not atomic</ShortMessage>
+    <LongMessage>Operation on the &quot;processingLatencyNanos&quot; shared variable in &quot;CanvasSession&quot; class is not atomic</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.runtime.CanvasSession" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" start="25" end="157" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+        <Message>At CanvasSession.java:[lines 25-157]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.runtime.CanvasSession</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.runtime.CanvasSession" name="recordPointer" signature="(J)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" start="127" end="128" startBytecode="0" endBytecode="98" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java"/>
+      <Message>In method com.inigmasgames.canvasui.runtime.CanvasSession.recordPointer(long)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.runtime.CanvasSession" name="processingLatencyNanos" signature="J" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+        <Message>In CanvasSession.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.runtime.CanvasSession.processingLatencyNanos</Message>
+    </Field>
+    <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" primary="true" start="127" end="127" startBytecode="27" endBytecode="27" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+      <Message>At CanvasSession.java:[line 127]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="AT_NONATOMIC_OPERATIONS_ON_SHARED_VARIABLE" priority="2" rank="14" abbrev="AT" category="MT_CORRECTNESS" instanceHash="eab0b7cc4771a0bb4c68a4fbf3d76525" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="413">
+    <ShortMessage>Operation on shared variable is not atomic</ShortMessage>
+    <LongMessage>Operation on the &quot;commandsEmitted&quot; shared variable in &quot;CanvasSession&quot; class is not atomic</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.runtime.CanvasSession" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" start="25" end="157" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+        <Message>At CanvasSession.java:[lines 25-157]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.runtime.CanvasSession</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.runtime.CanvasSession" name="recordUiUpdate" signature="(J)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" start="129" end="129" startBytecode="0" endBytecode="72" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java"/>
+      <Message>In method com.inigmasgames.canvasui.runtime.CanvasSession.recordUiUpdate(long)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.runtime.CanvasSession" name="commandsEmitted" signature="J" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+        <Message>In CanvasSession.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.runtime.CanvasSession.commandsEmitted</Message>
+    </Field>
+    <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" primary="true" start="129" end="129" startBytecode="17" endBytecode="17" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+      <Message>At CanvasSession.java:[line 129]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="AT_NONATOMIC_OPERATIONS_ON_SHARED_VARIABLE" priority="2" rank="14" abbrev="AT" category="MT_CORRECTNESS" instanceHash="b4b77df1ad68d723338b1129086f57a8" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="413">
+    <ShortMessage>Operation on shared variable is not atomic</ShortMessage>
+    <LongMessage>Operation on the &quot;uiUpdates&quot; shared variable in &quot;CanvasSession&quot; class is not atomic</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.runtime.CanvasSession" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" start="25" end="157" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+        <Message>At CanvasSession.java:[lines 25-157]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.runtime.CanvasSession</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.runtime.CanvasSession" name="recordUiUpdate" signature="(J)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" start="129" end="129" startBytecode="0" endBytecode="72" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java"/>
+      <Message>In method com.inigmasgames.canvasui.runtime.CanvasSession.recordUiUpdate(long)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.runtime.CanvasSession" name="uiUpdates" signature="J" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+        <Message>In CanvasSession.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.runtime.CanvasSession.uiUpdates</Message>
+    </Field>
+    <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" primary="true" start="129" end="129" startBytecode="7" endBytecode="7" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+      <Message>At CanvasSession.java:[line 129]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP" priority="2" rank="18" abbrev="EI" category="MALICIOUS_CODE" instanceHash="5ce1809cee0286213496be338073f43b" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by returning reference to mutable object</ShortMessage>
+    <LongMessage>com.inigmasgames.canvasui.runtime.CanvasSession.canvas() may expose internal representation by returning CanvasSession.canvas</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.runtime.CanvasSession" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" start="25" end="157" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+        <Message>At CanvasSession.java:[lines 25-157]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.runtime.CanvasSession</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.runtime.CanvasSession" name="canvas" signature="()Lcom/inigmasgames/canvasui/api/Canvas;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" start="59" end="59" startBytecode="0" endBytecode="46" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java"/>
+      <Message>In method com.inigmasgames.canvasui.runtime.CanvasSession.canvas()</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.runtime.CanvasSession" name="canvas" signature="Lcom/inigmasgames/canvasui/api/Canvas;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+        <Message>In CanvasSession.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.runtime.CanvasSession.canvas</Message>
+    </Field>
+    <SourceLine classname="com.inigmasgames.canvasui.runtime.CanvasSession" primary="true" start="59" end="59" startBytecode="4" endBytecode="4" sourcefile="CanvasSession.java" sourcepath="com/inigmasgames/canvasui/runtime/CanvasSession.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\CanvasSession.java">
+      <Message>At CanvasSession.java:[line 59]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="c7cd481ececb93043f7d26135e5dae9d" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$ActiveSlotRequestSystem(CanvasInputGuard) may expose internal representation by storing an externally mutable object into CanvasInputGuard$ActiveSlotRequestSystem.guard</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$ActiveSlotRequestSystem" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$ActiveSlotRequestSystem" start="120" end="132" sourcefile="CanvasInputGuard.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CanvasInputGuard.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CanvasInputGuard.java">
+        <Message>At CanvasInputGuard.java:[lines 120-132]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$ActiveSlotRequestSystem</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$ActiveSlotRequestSystem" name="&lt;init&gt;" signature="(Lcom/inigmasgames/canvasui/runtime/cursor/CanvasInputGuard;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$ActiveSlotRequestSystem" start="124" end="126" startBytecode="0" endBytecode="77" sourcefile="CanvasInputGuard.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CanvasInputGuard.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CanvasInputGuard.java"/>
+      <Message>In method new com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$ActiveSlotRequestSystem(CanvasInputGuard)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$ActiveSlotRequestSystem" name="guard" signature="Lcom/inigmasgames/canvasui/runtime/cursor/CanvasInputGuard;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$ActiveSlotRequestSystem" sourcefile="CanvasInputGuard.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CanvasInputGuard.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CanvasInputGuard.java">
+        <Message>In CanvasInputGuard.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$ActiveSlotRequestSystem.guard</Message>
+    </Field>
+    <LocalVariable name="?" register="-1" pc="13" role="LOCAL_VARIABLE_UNKNOWN">
+      <Message>Local variable stored in JVM register ?</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$ActiveSlotRequestSystem" primary="true" start="125" end="125" startBytecode="14" endBytecode="14" sourcefile="CanvasInputGuard.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CanvasInputGuard.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CanvasInputGuard.java">
+      <Message>At CanvasInputGuard.java:[line 125]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="52f3c0f31d79dc1af6b3f2d08f2719ec" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$DropItemSystem(CanvasInputGuard) may expose internal representation by storing an externally mutable object into CanvasInputGuard$DropItemSystem.guard</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$DropItemSystem" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$DropItemSystem" start="135" end="146" sourcefile="CanvasInputGuard.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CanvasInputGuard.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CanvasInputGuard.java">
+        <Message>At CanvasInputGuard.java:[lines 135-146]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$DropItemSystem</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$DropItemSystem" name="&lt;init&gt;" signature="(Lcom/inigmasgames/canvasui/runtime/cursor/CanvasInputGuard;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$DropItemSystem" start="138" end="140" startBytecode="0" endBytecode="77" sourcefile="CanvasInputGuard.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CanvasInputGuard.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CanvasInputGuard.java"/>
+      <Message>In method new com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$DropItemSystem(CanvasInputGuard)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$DropItemSystem" name="guard" signature="Lcom/inigmasgames/canvasui/runtime/cursor/CanvasInputGuard;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$DropItemSystem" sourcefile="CanvasInputGuard.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CanvasInputGuard.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CanvasInputGuard.java">
+        <Message>In CanvasInputGuard.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$DropItemSystem.guard</Message>
+    </Field>
+    <LocalVariable name="?" register="-1" pc="13" role="LOCAL_VARIABLE_UNKNOWN">
+      <Message>Local variable stored in JVM register ?</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$DropItemSystem" primary="true" start="139" end="139" startBytecode="14" endBytecode="14" sourcefile="CanvasInputGuard.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CanvasInputGuard.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CanvasInputGuard.java">
+      <Message>At CanvasInputGuard.java:[line 139]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="f4dcc3d226263da610471c3430dc54e4" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$InteractionStartSystem(CanvasInputGuard) may expose internal representation by storing an externally mutable object into CanvasInputGuard$InteractionStartSystem.guard</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$InteractionStartSystem" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$InteractionStartSystem" start="104" end="117" sourcefile="CanvasInputGuard.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CanvasInputGuard.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CanvasInputGuard.java">
+        <Message>At CanvasInputGuard.java:[lines 104-117]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$InteractionStartSystem</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$InteractionStartSystem" name="&lt;init&gt;" signature="(Lcom/inigmasgames/canvasui/runtime/cursor/CanvasInputGuard;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$InteractionStartSystem" start="108" end="110" startBytecode="0" endBytecode="77" sourcefile="CanvasInputGuard.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CanvasInputGuard.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CanvasInputGuard.java"/>
+      <Message>In method new com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$InteractionStartSystem(CanvasInputGuard)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$InteractionStartSystem" name="guard" signature="Lcom/inigmasgames/canvasui/runtime/cursor/CanvasInputGuard;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$InteractionStartSystem" sourcefile="CanvasInputGuard.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CanvasInputGuard.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CanvasInputGuard.java">
+        <Message>In CanvasInputGuard.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$InteractionStartSystem.guard</Message>
+    </Field>
+    <LocalVariable name="?" register="-1" pc="13" role="LOCAL_VARIABLE_UNKNOWN">
+      <Message>Local variable stored in JVM register ?</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CanvasInputGuard$InteractionStartSystem" primary="true" start="109" end="109" startBytecode="14" endBytecode="14" sourcefile="CanvasInputGuard.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CanvasInputGuard.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CanvasInputGuard.java">
+      <Message>At CanvasInputGuard.java:[line 109]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP" priority="2" rank="18" abbrev="EI" category="MALICIOUS_CODE" instanceHash="8fb6c0308f7117a80764f62bb9b46770" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by returning reference to mutable object</ShortMessage>
+    <LongMessage>com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService.inputGuard() may expose internal representation by returning CursorHudProbeService.inputGuard</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService" start="119" end="1635" sourcefile="CursorHudProbeService.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CursorHudProbeService.java">
+        <Message>At CursorHudProbeService.java:[lines 119-1635]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService" name="inputGuard" signature="()Lcom/inigmasgames/canvasui/runtime/cursor/CanvasInputGuard;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService" start="150" end="150" startBytecode="0" endBytecode="46" sourcefile="CursorHudProbeService.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CursorHudProbeService.java"/>
+      <Message>In method com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService.inputGuard()</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService" name="inputGuard" signature="Lcom/inigmasgames/canvasui/runtime/cursor/CanvasInputGuard;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService" sourcefile="CursorHudProbeService.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CursorHudProbeService.java">
+        <Message>In CursorHudProbeService.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService.inputGuard</Message>
+    </Field>
+    <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService" primary="true" start="150" end="150" startBytecode="4" endBytecode="4" sourcefile="CursorHudProbeService.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CursorHudProbeService.java">
+      <Message>At CursorHudProbeService.java:[line 150]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" priority="2" rank="18" abbrev="RCN" category="STYLE" instanceHash="7789edddbe384f5b129bcfad136f2840" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Redundant nullcheck of value known to be non-null</ShortMessage>
+    <LongMessage>Redundant nullcheck of playerRef, which is known to be non-null in com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService.route(PlayerMouseButtonEvent)</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService" start="119" end="1635" sourcefile="CursorHudProbeService.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CursorHudProbeService.java">
+        <Message>At CursorHudProbeService.java:[lines 119-1635]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService" name="route" signature="(Lcom/hypixel/hytale/server/core/event/events/player/PlayerMouseButtonEvent;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService" start="317" end="327" startBytecode="0" endBytecode="825" sourcefile="CursorHudProbeService.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CursorHudProbeService.java"/>
+      <Message>In method com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService.route(PlayerMouseButtonEvent)</Message>
+    </Method>
+    <LocalVariable name="playerRef" register="2" pc="5" role="LOCAL_VARIABLE_VALUE_OF">
+      <Message>Value loaded from playerRef</Message>
+    </LocalVariable>
+    <Method classname="com.hypixel.hytale.server.core.event.events.player.PlayerMouseButtonEvent" name="getPlayerRefComponent" signature="()Lcom/hypixel/hytale/server/core/universe/PlayerRef;" isStatic="false" role="METHOD_RETURN_VALUE_OF" classAnnotationNames="javax.annotation.Nonnull">
+      <SourceLine classname="com.hypixel.hytale.server.core.event.events.player.PlayerMouseButtonEvent" start="49" end="49" startBytecode="0" endBytecode="46" sourcefile="PlayerMouseButtonEvent.java" sourcepath="com/hypixel/hytale/server/core/event/events/player/PlayerMouseButtonEvent.java"/>
+      <Message>Return value of com.hypixel.hytale.server.core.event.events.player.PlayerMouseButtonEvent.getPlayerRefComponent() of type com.hypixel.hytale.server.core.universe.PlayerRef</Message>
+    </Method>
+    <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService" primary="true" start="318" end="318" startBytecode="6" endBytecode="6" sourcefile="CursorHudProbeService.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CursorHudProbeService.java" role="SOURCE_REDUNDANT_NULL_CHECK">
+      <Message>Redundant null check at CursorHudProbeService.java:[line 318]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="1a66e787ce8c349fd1e91f3ca4deca99" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService$DeathCleanupSystem(CursorHudProbeService) may expose internal representation by storing an externally mutable object into CursorHudProbeService$DeathCleanupSystem.service</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService$DeathCleanupSystem" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService$DeathCleanupSystem" start="153" end="163" sourcefile="CursorHudProbeService.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CursorHudProbeService.java">
+        <Message>At CursorHudProbeService.java:[lines 153-163]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService$DeathCleanupSystem</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService$DeathCleanupSystem" name="&lt;init&gt;" signature="(Lcom/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService$DeathCleanupSystem" start="155" end="157" startBytecode="0" endBytecode="75" sourcefile="CursorHudProbeService.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CursorHudProbeService.java"/>
+      <Message>In method new com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService$DeathCleanupSystem(CursorHudProbeService)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService$DeathCleanupSystem" name="service" signature="Lcom/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService$DeathCleanupSystem" sourcefile="CursorHudProbeService.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CursorHudProbeService.java">
+        <Message>In CursorHudProbeService.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService$DeathCleanupSystem.service</Message>
+    </Field>
+    <LocalVariable name="?" register="-1" pc="11" role="LOCAL_VARIABLE_UNKNOWN">
+      <Message>Local variable stored in JVM register ?</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService$DeathCleanupSystem" primary="true" start="156" end="156" startBytecode="12" endBytecode="12" sourcefile="CursorHudProbeService.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CursorHudProbeService.java">
+      <Message>At CursorHudProbeService.java:[line 156]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" priority="2" rank="13" abbrev="NP" category="STYLE" instanceHash="3c66b097d586f17b0b49766a20ecb568" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Possible null pointer dereference due to return value of called method</ShortMessage>
+    <LongMessage>Possible null pointer dereference in com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService$Session.persistEditorLayout() due to return value of called method</LongMessage>
+    <Class classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService$Session" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService$Session" start="562" end="1585" sourcefile="CursorHudProbeService.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CursorHudProbeService.java">
+        <Message>At CursorHudProbeService.java:[lines 562-1585]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService$Session</Message>
+    </Class>
+    <Method classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService$Session" name="persistEditorLayout" signature="()V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService$Session" start="1178" end="1204" startBytecode="0" endBytecode="652" sourcefile="CursorHudProbeService.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CursorHudProbeService.java"/>
+      <Message>In method com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService$Session.persistEditorLayout()</Message>
+    </Method>
+    <Method classname="java.nio.file.Path" name="getParent" signature="()Ljava/nio/file/Path;" isStatic="false" role="METHOD_CALLED">
+      <SourceLine classname="java.nio.file.Path" sourcefile="Path.java" sourcepath="java/nio/file/Path.java"/>
+      <Message>Called method java.nio.file.Path.getParent()</Message>
+    </Method>
+    <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService$Session" primary="true" start="1182" end="1182" startBytecode="60" endBytecode="60" sourcefile="CursorHudProbeService.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CursorHudProbeService.java" role="SOURCE_LINE_INVOKED">
+      <Message>Method invoked at CursorHudProbeService.java:[line 1182]</Message>
+    </SourceLine>
+    <SourceLine classname="com.inigmasgames.canvasui.runtime.cursor.CursorHudProbeService$Session" start="1182" end="1182" startBytecode="51" endBytecode="51" sourcefile="CursorHudProbeService.java" sourcepath="com/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService.java" relSourcepath="src\main\java\com\inigmasgames\canvasui\runtime\cursor\CursorHudProbeService.java" role="SOURCE_LINE_KNOWN_NULL">
+      <Message>Known null at CursorHudProbeService.java:[line 1182]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugCategory category="MALICIOUS_CODE">
+    <Description>Malicious code vulnerability</Description>
+  </BugCategory>
+  <BugCategory category="PERFORMANCE">
+    <Description>Performance</Description>
+  </BugCategory>
+  <BugCategory category="STYLE">
+    <Description>Dodgy code</Description>
+  </BugCategory>
+  <BugCategory category="MT_CORRECTNESS">
+    <Description>Multithreaded correctness</Description>
+  </BugCategory>
+  <BugPattern type="EI_EXPOSE_REP2" abbrev="EI2" category="MALICIOUS_CODE" cweid="374">
+    <ShortDescription>May expose internal representation by incorporating reference to mutable object</ShortDescription>
+    <Details><![CDATA[
+
+  <p> This code stores a reference to an externally mutable object into the
+  internal representation of the object.&nbsp;
+   If instances
+   are accessed by untrusted code, and unchecked changes to
+   the mutable object would compromise security or other
+   important properties, you will need to do something different.
+  Storing a copy of the object is better approach in many situations.</p>
+  <p>See <a href="https://cwe.mitre.org/data/definitions/374.html">CWE-374: Passing Mutable Objects to an Untrusted Method</a>.
+</p>
+
+    ]]></Details>
+  </BugPattern>
+  <BugPattern type="EI_EXPOSE_REP" abbrev="EI" category="MALICIOUS_CODE" cweid="374">
+    <ShortDescription>May expose internal representation by returning reference to mutable object</ShortDescription>
+    <Details><![CDATA[
+
+  <p> Returning a reference to a mutable object value stored in one of the object's fields
+  exposes the internal representation of the object.&nbsp;
+   If instances
+   are accessed by untrusted code, and unchecked changes to
+   the mutable object would compromise security or other
+   important properties, you will need to do something different.
+  Returning a new copy of the object is better approach in many situations.</p>
+  <p>See <a href="https://cwe.mitre.org/data/definitions/374.html">CWE-374: Passing Mutable Objects to an Untrusted Method</a>.
+</p>
+
+    ]]></Details>
+  </BugPattern>
+  <BugPattern type="AT_NONATOMIC_OPERATIONS_ON_SHARED_VARIABLE" abbrev="AT" category="MT_CORRECTNESS" cweid="413">
+    <ShortDescription>Operation on shared variable is not atomic</ShortDescription>
+    <Details><![CDATA[
+
+        <p>
+          This write of a variable shared between functions depends on the current value of the variable (either because it's a compound operation - e.g. +=, ++ - or it simply depends on the current value), as such it consists of more than one discrete operation.
+          These operations are not atomic in themselves and need further synchronization.
+          See <a href="https://cmu-sei.github.io/secure-coding-standards/sei-cert-oracle-coding-standard-for-java/rules/visibility-and-atomicity-vna/vna02-j/">SEI CERT rule VNA02-J</a>,
+          <a href="https://cwe.mitre.org/data/definitions/366.html">CWE-366: Race Condition within a Thread</a>,
+          <a href="https://cwe.mitre.org/data/definitions/413.html">CWE-413: Improper Resource Locking</a>,
+          <a href="https://cwe.mitre.org/data/definitions/567.html">CWE-567: Unsynchronized Access to Shared Data in a Multithreaded Context</a>, and
+          <a href="https://cwe.mitre.org/data/definitions/667.html">CWE-667: Improper Locking</a>.
+        </p>
+          Simply declaring a variable volatile fails to guarantee the atomicity of compound operations on the variable,
+          but synchronizing the writes on top of declaring the variable volatile for read operations is sufficient.
+        <p>
+          To solve this issue, synchronize compound operations and other write operations depending on the previous value,
+          use read-write locks, or declare the shared variable with an atomic type.
+        </p>
+
+    ]]></Details>
+  </BugPattern>
+  <BugPattern type="EI_EXPOSE_STATIC_REP2" abbrev="MS" category="MALICIOUS_CODE">
+    <ShortDescription>May expose internal static state by storing a mutable object into a static field</ShortDescription>
+    <Details><![CDATA[
+
+  <p> This code stores a reference to an externally mutable object into a static
+   field.
+   If unchecked changes to
+   the mutable object would compromise security or other
+   important properties, you will need to do something different.
+  Storing a copy of the object is better approach in many situations.</p>
+
+    ]]></Details>
+  </BugPattern>
+  <BugPattern type="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" abbrev="NP" category="STYLE">
+    <ShortDescription>Possible null pointer dereference due to return value of called method</ShortDescription>
+    <Details><![CDATA[
+
+<p> The return value from a method is dereferenced without a null check,
+and the return value of that method is one that should generally be checked
+for null.  This may lead to a <code>NullPointerException</code> when the code is executed.
+</p>
+
+   ]]></Details>
+  </BugPattern>
+  <BugPattern type="URF_UNREAD_FIELD" abbrev="UrF" category="PERFORMANCE" cweid="563">
+    <ShortDescription>Unread field</ShortDescription>
+    <Details><![CDATA[
+
+  <p> This field is never read.&nbsp; Consider removing it from the class.</p>
+  <p>See <a href="https://cwe.mitre.org/data/definitions/563.html">CWE-563: Assignment to Variable without Use</a>.
+</p>
+
+    ]]></Details>
+  </BugPattern>
+  <BugPattern type="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" abbrev="RCN" category="STYLE">
+    <ShortDescription>Redundant nullcheck of value known to be non-null</ShortDescription>
+    <Details><![CDATA[
+
+<p> This method contains a redundant check of a known non-null value against
+the constant null.</p>
+
+    ]]></Details>
+  </BugPattern>
+  <BugCode abbrev="NP" cweid="476">
+    <Description>Null pointer dereference</Description>
+  </BugCode>
+  <BugCode abbrev="AT">
+    <Description>Possible atomicity violation</Description>
+  </BugCode>
+  <BugCode abbrev="EI">
+    <Description>Method may expose internal representation</Description>
+  </BugCode>
+  <BugCode abbrev="MS" cweid="493">
+    <Description>Mutable static field</Description>
+  </BugCode>
+  <BugCode abbrev="UrF">
+    <Description>Unread field</Description>
+  </BugCode>
+  <BugCode abbrev="RCN" cweid="476">
+    <Description>Redundant comparison to null</Description>
+  </BugCode>
+  <BugCode abbrev="EI2">
+    <Description>Storing reference to mutable object</Description>
+  </BugCode>
+  <Errors errors="0" missingClasses="0"></Errors>
+  <FindBugsSummary timestamp="Sat, 10 Oct 2026 14:57:05 -0400" total_classes="0" referenced_classes="0" total_bugs="32" total_size="0" num_packages="5" java_version="25.0.4" vm_version="25.0.4+7-LTS" cpu_seconds="48.05" clock_seconds="7.47" peak_mbytes="808.80" alloc_mbytes="16168.00" gc_seconds="0.06" priority_2="32">
+    <FileStats path="com/inigmasgames/canvasui/CanvasUI.java" bugCount="1" size="0" bugHash="ad6b6eaa44dd9f865872ce5496b478c2"/>
+    <FileStats path="com/inigmasgames/canvasui/demo/CanvasCursorProbeCloseCommand.java" bugCount="1" size="0" bugHash="d5e9049ad1ed1f69b11391cbdc0a268e"/>
+    <FileStats path="com/inigmasgames/canvasui/demo/CanvasCursorProbeCommand.java" bugCount="1" size="0" bugHash="96eb417598e14d12021618d1c77b0747"/>
+    <FileStats path="com/inigmasgames/canvasui/demo/FileCanvasPersistenceAdapter.java" bugCount="1" size="0" bugHash="62dbd97be7d76965093859e3bc94ca50"/>
+    <FileStats path="com/inigmasgames/canvasui/rendering/CanvasPage.java" bugCount="2" size="0" bugHash="4c0b13ff038088d3138217bf001656b8"/>
+    <FileStats path="com/inigmasgames/canvasui/rendering/CursorHudCanvasBackend.java" bugCount="2" size="0" bugHash="72fd2480aa411b952b74b5e3ab2de4de"/>
+    <FileStats path="com/inigmasgames/canvasui/rendering/CursorHudGraphEditorBackend.java" bugCount="1" size="0" bugHash="c710f72f59df7a3afb8fa84a5c7399d2"/>
+    <FileStats path="com/inigmasgames/canvasui/rendering/HytaleCustomUiBackend.java" bugCount="5" size="0" bugHash="9638e9d8fa8e8bb1d1b38305300c3569"/>
+    <FileStats path="com/inigmasgames/canvasui/runtime/CanvasInputController.java" bugCount="2" size="0" bugHash="a6d48340b1d90c447abbdea2019fa235"/>
+    <FileStats path="com/inigmasgames/canvasui/runtime/CanvasService.java" bugCount="1" size="0" bugHash="460449ba67ce98f847fa89567b195c57"/>
+    <FileStats path="com/inigmasgames/canvasui/runtime/CanvasSession.java" bugCount="8" size="0" bugHash="729893ce22fb7ab1c8d41e0a09861c09"/>
+    <FileStats path="com/inigmasgames/canvasui/runtime/cursor/CanvasInputGuard.java" bugCount="3" size="0" bugHash="a07da653d66cc34dca766e654f2ddc88"/>
+    <FileStats path="com/inigmasgames/canvasui/runtime/cursor/CursorHudProbeService.java" bugCount="4" size="0" bugHash="ea26d7ba88ae45a771758796872a684e"/>
+    <FindBugsProfile></FindBugsProfile>
+  </FindBugsSummary>
+  <ClassFeatures></ClassFeatures>
+  <History></History>
+</BugCollection>

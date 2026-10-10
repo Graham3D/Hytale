@@ -4,3 +4,4 @@
 /src/main/resources/rpg/runtime/mantle-of-flame-v1.json text eol=lf
 /src/main/resources/Server/Particles/RPG/HealingPath/RPG_Heal_Path_* text eol=lf
 /src/main/resources/Server/Models/RPG/RPG_Heal_Path_*.json text eol=lf
+/tools/guardian/hooks/pre-commit text eol=lf

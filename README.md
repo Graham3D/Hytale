@@ -45,6 +45,8 @@ original primary checkout.
 ## References
 
 - [Gameplay and QA commands](docs/COMMANDS.md)
+- [Engineering Guardian](docs/GUARDIAN.md)
+- [Focused regression testing, JaCoCo, and SpotBugs](docs/ENGINEERING_ANALYSIS.md)
 - [Deployment and revision ledger](docs/DEPLOYMENT_REVISIONS.md)
 - [Hywind / ImmersiveNPCs split history](docs/HYWIND_SPLIT_BOUNDARY_RECOVERY.md)
 - [Independent ImmersiveNPCs source](persistent-npcs/README.md)
