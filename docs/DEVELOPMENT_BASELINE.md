@@ -26,14 +26,34 @@ world tick's command buffer and waits for its completion before relocating
 summons, presenting arrival, emitting `MOVEMENT_END`, and terminating the
 action lock. Failure, timeout, death, disconnect, and world transfer release
 the retained cast without refunding a committed root. Teleport target rules,
-environmental damage, and other movement skills remain unchanged. Source
-commit, full offline verification, publication, checksum, and deployment are
-pending this candidate's engineering completion; connected-game acceptance
-remains with the owner. Before commit, all 26 focused Teleport, native receipt,
+environmental damage, and other movement skills remain unchanged. At the
+implementation checkpoint, full offline verification, publication, and
+deployment were pending. Before commit, all 26 focused Teleport, native receipt,
 target, and skill tests passed. JaCoCo covered 15/15 lines and 13/16 branches
 in `NativeTeleportReceipt`, and 51/62 lines and 39/54 branches in
 `HytaleTeleportTarget`; the native client cannot be exercised offline. Strict
 SpotBugs passed with no findings outside the reviewed baseline.
+
+The implementation source commit is `ffdd65536f82f827e723a3dd5763a71bb89b8e85`
+on `codex/teleport-native-target`. Its exact-commit unmodified offline `check`
+passed 3,509 root, 452 native-control, 49 CanvasUI, and 5 Tavern JUnit tests
+with zero failures or skips. The 41,251-reference asset audit passed. Package
+validation passed 19,444 entries, 2,166 classes, identity
+`InigmasGames:HyARPG@0.2.0-R253-U7P5B`, and zero ImmersiveNPCs payload.
+Guardian recorded that exact source commit in the JAR, verified SHA-256
+`E57E8F5F77063653982F4190FC64E4178A0B6EC5F00FEF1D4002EEC73FC89730`,
+and confirmed the task branch published on GitHub; `main` integration is
+pending.
+
+On October 10, the prior R252 `Hywind.jar` was preserved outside `Saves` as
+`C:/Users/Zemio/AppData/Roaming/Hytale/Hywind-backups/Hywind-before-R253-20261010T220227914Z.jar`,
+SHA-256 `97C004B06D9592D11337AA89CC70798EBE4FFFB04436B84FEF7A2C4029ED4778`.
+Only the active RPG save's `mods/Hywind.jar` was replaced; its installed
+SHA-256 matches the R253 candidate above and its embedded source commit is
+`ffdd65536f82f827e723a3dd5763a71bb89b8e85`. The save data, game, and
+standalone native server were untouched. Connected-game Teleport acceptance
+remains with the user. This documentation follow-up creates a later Git commit;
+the deployed JAR intentionally embeds the implementation commit.
 
 ## R252 Teleport hazard-permissive QA candidate (2026-10-10)
 
