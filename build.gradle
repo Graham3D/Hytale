@@ -20,7 +20,8 @@ tasks.register('guardianCoverage', JacocoReport) {
     group = 'verification'
     description = 'Opt-in root coverage including standard and native-control JUnit tests.'
     dependsOn tasks.named('test'), tasks.named('nativeControlTest')
-    executionData tasks.named('test'), tasks.named('nativeControlTest')
+    executionData files(layout.buildDirectory.file('jacoco/test.exec'),
+        layout.buildDirectory.file('jacoco/nativeControlTest.exec'))
     sourceSets sourceSets.main
     reports { xml.required = true; html.required = true }
     onlyIf { guardianCoverage }
