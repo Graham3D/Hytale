@@ -15,15 +15,16 @@ final class MonsterPresentationLayoutTest {
             assertEquals(12+height,rows.visualTopY());
             assertTrue(rows.healthbarY()<rows.affixY());
             assertTrue(rows.affixY()<rows.nameY());
-            // The affix row is a native Nameplate whose rendered text lifts above its anchor.
-            assertTrue(rows.nameY()-rows.affixY()>=1.0);
+            // The carrier compensates for native Nameplate lift; visible rows stay close.
+            assertEquals(rows.affixY()-MonsterPresentationLayout.nativeNameplateLift,
+                    rows.affixAnchorPosition().y,1e-9);
             assertEquals(MonsterPresentationLayout.monsterPresentationAffixGap,
                     rows.affixY()-rows.healthbarY(),1e-9);
             assertEquals(MonsterPresentationLayout.monsterPresentationNameGap,
                     rows.nameY()-rows.affixY(),1e-9);
             assertEquals(rows.centerX(),rows.affixAnchorPosition().x);
             assertEquals(rows.centerZ(),rows.affixAnchorPosition().z);
-            assertEquals(rows.affixY(),rows.affixAnchorPosition().y);
+            assertTrue(rows.nameY()>rows.affixY());
             assertEquals(rows.centerX(),rows.nameAnchorPosition().x);
             assertEquals(rows.centerZ(),rows.nameAnchorPosition().z);
             assertEquals(rows.nameY(),rows.nameAnchorPosition().y);

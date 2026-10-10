@@ -93,8 +93,11 @@ public final class NativeHostileNames {
         if(personal!=null&&!personal.isBlank()){state.personal=personal;text=personal;}
         if(!Objects.equals(previousPersonal,state.personal))event(key,"SUPERSEDED_EXTERNAL",npc.getRoleName());
         if(text==null||text.isBlank()){event(key,"MISSING_BASE",npc.getRoleName());return;}
-        if(!text.equals(current)){
-            write(store,ref,Nameplate.getComponentType(),text);
+        // Only this compositor writes the actor plate. The existing per-viewer
+        // glyph renderer may replace its visible text, but never its identity.
+        String visible=combat.hasColoredPromotedName(key.world(),key.actor(),text)?"":text;
+        if(!visible.equals(current)){
+            write(store,ref,Nameplate.getComponentType(),visible);
             event(key,current==null||current.isBlank()?"NAMED":"UPDATED",npc.getRoleName());
         }
         state.owned=text;

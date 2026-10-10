@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 FONT = ROOT / "tools/fonts/hywind-name/Lato-Bold.ttf"
 COMMON = ROOT / "src/main/resources/Common/Items/RPG/NameGlyphs"
 SERVER = ROOT / "src/main/resources/Server/Models/RPG/NameGlyphs"
-COLORS = {"Champion": "#1d4dff", "Unique": "#a000ff", "SuperUnique": "#ff9100"}
+COLORS = {"Champion": "#1d4dff", "Unique": "#ffd24a", "SuperUnique": "#ff9100", "Boss": "#ed3030"}
 CELL = 64
 CHARS = [chr(code) for code in range(33, 127)]
 
@@ -68,7 +68,7 @@ def main() -> None:
         for index, char in enumerate(CHARS):
             x, y = index % 16 * CELL, index // 16 * CELL
             draw.text((x + CELL // 2, y + CELL // 2), char, font=font,
-                      fill=color, anchor="mm", stroke_width=0)
+                      fill=color, anchor="mm", stroke_width=2, stroke_fill="#161922")
             write_json(SERVER / f"HywindName_{rarity}_U{ord(char):04X}.json", {
                 "Model": f"Items/RPG/NameGlyphs/U{ord(char):04X}.blockymodel",
                 "Texture": f"Items/RPG/NameGlyphs/{rarity}.png",

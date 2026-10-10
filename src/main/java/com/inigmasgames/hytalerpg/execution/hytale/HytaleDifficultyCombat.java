@@ -39,6 +39,9 @@ public final class HytaleDifficultyCombat {
     private final Map<UUID,Entry> statusActors=new ConcurrentHashMap<>();
     private final NativeHostileNames names=new NativeHostileNames(this);
     public NativeHostileNames names(){return names;}
+    boolean hasColoredPromotedName(UUID world,UUID actor,String text){
+        return healthBars.hasColoredName(world,actor,text);
+    }
     private final EnemyHealthBarPresentation healthBars=new EnemyHealthBarPresentation();
     public EnemyHealthBarPresentation healthBars(){return healthBars;}
     private final Set<String> nameplateWarnings=ConcurrentHashMap.newKeySet();
@@ -289,7 +292,10 @@ public final class HytaleDifficultyCombat {
         // Only the native Healthbar follows the damaging viewer's three-second window.
         if(urgentProtectionChange)notifyEnemyDisplay(world,descriptor.entityId());
     }
-    public HytaleDifficultyCombat(RpgSkillTracer trace){this.trace=Objects.requireNonNull(trace);}
+    public HytaleDifficultyCombat(RpgSkillTracer trace){
+        this.trace=Objects.requireNonNull(trace);
+        healthBars.configureNativeNameRestore(names::request);
+    }
     public synchronized Object begin(UUID world,UUID enemy){
         var key=new Key(world,enemy);if(active.size()>=EncounterContributions.MAX_ENCOUNTERS&&!active.containsKey(key))throw new IllegalStateException("DIFFICULTY_PROJECTION_CAPACITY");
         var entry=new Entry();var previous=active.put(key,entry);if(previous!=null)statusActors.remove(enemy,previous);return entry.ticket;

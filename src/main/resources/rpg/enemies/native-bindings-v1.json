@@ -669,6 +669,20 @@
         ]
       },
       {
+        "canonicalRoleId": "Skeleton_Frost_Archer",
+        "nativeRoleIds": [
+          "Skeleton_Frost_Archer_Patrol",
+          "Skeleton_Frost_Archer_Wander"
+        ]
+      },
+      {
+        "canonicalRoleId": "Skeleton_Frost_Ranger",
+        "nativeRoleIds": [
+          "Skeleton_Frost_Ranger_Patrol",
+          "Skeleton_Frost_Ranger_Wander"
+        ]
+      },
+      {
         "canonicalRoleId": "Skeleton_Frost_Mage",
         "nativeRoleIds": [
           "Skeleton_Frost_Mage_Wander"
@@ -1842,6 +1856,41 @@
             "actions": [
               {
                 "rootId": "Skeleton_Frost_Archer_Bow_Shoot",
+                "strikeKeys": [
+                  "projectile"
+                ],
+                "channel": "Projectile"
+              }
+            ]
+          },
+          {
+            "roleId": "Skeleton_Frost_Ranger",
+            "parentRoleId": "Template_Intelligent",
+            "modelAssetId": "Skeleton_Frost_Ranger",
+            "defaultTextureAssetIds": [
+              "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
+              "Characters/Body_Attachments/Eyebrows/Medium_Greyscale.png",
+              "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
+              "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
+              "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
+              "Characters/Player_Textures/Player_Greyscale.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Archer/Head_Texture/Purple.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Cosmetics/Head/Eyes/Eyes_Blue.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Frost_Archer/Chest_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Frost_Archer/Feet_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Frost_Archer/Hands_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Frost_Archer/Quiver_Texture.png",
+              "NPC/Undead/Skeleton/Models/Attachments/Frost_Archer/Shoulders_Texture.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/Frost.png",
+              "NPC/Undead/Skeleton/Models/Model_Textures/White.png"
+            ],
+            "nativeLootSourceId": "Drop_Skeleton_Frost_Ranger",
+            "nativeImmunityChannels": [],
+            "nativeStunStaggerImmune": false,
+            "nativeSlowImmune": false,
+            "actions": [
+              {
+                "rootId": "Skeleton_Frost_Ranger_Bow_Shoot",
                 "strikeKeys": [
                   "projectile"
                 ],

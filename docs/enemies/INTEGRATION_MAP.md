@@ -575,3 +575,7 @@ R244 consolidates primary hostile text in `NativeHostileNames`; reward/profile a
 ## R245 — natural Elite birth transaction repair
 
 See [R245_ELITE_BIRTH_TRANSACTION_REPAIR.md](R245_ELITE_BIRTH_TRANSACTION_REPAIR.md) and the read-only [evidence inventory](R245_EVIDENCE.json). Native Health readiness uses `Role.getInitialMaxHealth()` while the existing frozen RPG profile remains the target. A transient exact created-flock reference survives native dissolution during rollback. Existing birth, file-store, pack-capacity and LOAD owners handle completion/compensation/recovery; the continuation is a single callback owner, not new gameplay. New roots retain frozen all-actor attachment sources; legacy checksummed roots are accepted without save rewriting. No affix owner, tuning, population policy or native-server patch changes.
+
+## R249 — promoted names and Frost bow coverage
+
+`NativeHostileNames` remains the sole actor Nameplate writer and retains the authoritative display text. It blanks the actor plate only while `EnemyHealthBarPresentation` owns a prepared, matching per-viewer colored glyph row; a failed glyph delivery restores the native fallback. Affix anchors and colored names consume one hitbox-derived `MonsterPresentationLayout`. The pinned native projectile archetype now certifies Frost Ranger and the exact Frost Archer/Ranger movement variants without extending projectile affix capabilities. See [R249 release candidate](R249_RELEASE_CANDIDATE.md).

@@ -18,6 +18,7 @@ class ProductionEliteArchetypeAssetTest {
         var expected=Map.of("Skeleton_Archer","Skeleton_Archer_Bow_Shoot",
                 "Skeleton_Burnt_Archer","Skeleton_Burnt_Archer_Bow_Shoot",
                 "Skeleton_Frost_Archer","Skeleton_Frost_Archer_Bow_Shoot",
+                "Skeleton_Frost_Ranger","Skeleton_Frost_Ranger_Bow_Shoot",
                 "Skeleton_Soldier","Root_NPC_Skeleton_Soldier_Attack");
         try(var zip=new ZipFile(ASSETS.toFile())){
             for(var entry:expected.entrySet()){
@@ -31,7 +32,9 @@ class ProductionEliteArchetypeAssetTest {
                         :zip.stream().filter(path->path.getName().endsWith("/"+entry.getValue()+".json")
                                 &&path.getName().startsWith("Server/Item/RootInteractions/")).findFirst().orElse(null),id);
             }
-            for(var id:List.of("Skeleton_Archer_Wander","Skeleton_Burnt_Archer_Wander","Skeleton_Soldier_Wander")){
+            for(var id:List.of("Skeleton_Archer_Wander","Skeleton_Burnt_Archer_Wander","Skeleton_Soldier_Wander",
+                    "Skeleton_Frost_Archer_Patrol","Skeleton_Frost_Archer_Wander",
+                    "Skeleton_Frost_Ranger_Patrol","Skeleton_Frost_Ranger_Wander")){
                 var alias=catalog.aliases().stream().filter(r->r.roleId().equals(id)).findFirst().orElseThrow();
                 var nativeRole=read(zip,alias.assetPath());var parent=nativeRole.get("Reference").getAsString();
                 assertEquals(parent,bindings.role(id).orElseThrow().canonicalRoleId());
@@ -39,6 +42,20 @@ class ProductionEliteArchetypeAssetTest {
                 assertTrue(bindings.productionEligibilityRejection(id).isEmpty(),id);
             }
         }
+    }
+    @Test void frostBowAliasesKeepHellProfilesAndProjectileAffixLimits() {
+        var bindings=EnemyNativeBindings.load();
+        for(var id:List.of("Skeleton_Frost_Archer_Wander","Skeleton_Frost_Archer_Patrol",
+                "Skeleton_Frost_Ranger","Skeleton_Frost_Ranger_Patrol","Skeleton_Frost_Ranger_Wander")){
+            var role=bindings.role(id).orElseThrow();
+            assertTrue(bindings.productionEligibilityRejection(id).isEmpty(),id);
+            assertTrue(role.profiles().get(DifficultyId.HELL).contains("/"+id+"/HELL"),id);
+            assertEquals(java.util.Map.of("Projectile","PHYSICAL"),role.actions().getFirst().channels());
+            assertTrue(role.actions().getFirst().supportedAffixIds().contains("ME-002"));
+            assertFalse(role.actions().getFirst().supportedAffixIds().contains("ME-015"));
+        }
+        assertTrue(bindings.productionEligibilityRejection("Skeleton_Frost_Archmage").isPresent());
+        assertTrue(bindings.productionEligibilityRejection("Skeleton_Frost_Scout").isPresent());
     }
     private static final Path ASSETS=Path.of(System.getProperty("user.home"),
             "AppData/Roaming/Hytale/install/pre-release/package/game/latest/Assets.zip");

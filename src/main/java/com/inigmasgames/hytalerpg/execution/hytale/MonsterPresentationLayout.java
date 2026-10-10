@@ -11,16 +11,17 @@ final class MonsterPresentationLayout {
     // World-space row positions all start from the owning actor's actual hitbox top.
     static final double monsterPresentationBaseMargin = 0.12;
     static final double monsterPresentationAffixGap = 0.30;
-    // The native affix Nameplate renders above its zero-volume anchor; glyphs render at nameY.
-    // Reserve that native lift inside this shared row spacing so the glyph name clears the affixes.
-    static final double monsterPresentationNameGap = 1.00;
+    // Hytale lifts Nameplate text above its zero-volume carrier. Place the
+    // carrier below the desired visible row instead of lifting the whole stack.
+    static final double nativeNameplateLift = 1.00;
+    static final double monsterPresentationNameGap = 0.38;
     // Server/Entity/UI/Healthbar.json is a shared native client-pixel offset.
     static final float NATIVE_HEALTHBAR_HITBOX_OFFSET_Y = -48f;
 
     record Rows(double centerX, double centerZ, double visualTopY,
                 double healthbarY, double affixY, double nameY) {
         Vector3d affixAnchorPosition() {
-            return new Vector3d(centerX, affixY, centerZ);
+            return new Vector3d(centerX, affixY-nativeNameplateLift, centerZ);
         }
         Vector3d nameAnchorPosition() {
             return new Vector3d(centerX, nameY, centerZ);

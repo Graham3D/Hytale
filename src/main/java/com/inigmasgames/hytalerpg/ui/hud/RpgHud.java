@@ -59,15 +59,13 @@ final class RpgHud extends CustomUIHud {
         commands.set("#RpgEnemyTarget.Visible",target!=null&&frame!=null);
         if(target==null||frame==null)return;
         boolean minion=target.packRoleLabel().equals("Minion");
-        boolean promoted=target.rarityLabel().equals("Champion")||target.rarityLabel().equals("Unique")
-                ||target.rarityLabel().equals("Super Unique");
         var root=new Anchor();root.setHorizontal(Value.of(frame.horizontal()));root.setVertical(Value.of(frame.vertical()));
         root.setWidth(Value.of(frame.panelWidth()));root.setHeight(Value.of(minion?frame.fontSize()+6:
-                frame.panelHeight()+(promoted?0:frame.fontSize()+1)));
+                frame.panelHeight()+frame.fontSize()+1));
         commands.setObject("#RpgEnemyTarget.Anchor",root);
-        int font=frame.fontSize(),barTop=promoted?font+5:font*2+5;
+        int font=frame.fontSize(),barTop=font*2+5;
         commands.set("#RpgEnemyHealth.Visible",!minion);
-        commands.set("#RpgEnemyIdentity.Visible",!promoted&&!minion);
+        commands.set("#RpgEnemyIdentity.Visible",!minion);
         commands.set("#RpgEnemyAffixes.Visible",!minion);
         var bar=new Anchor();bar.setTop(Value.of(barTop));bar.setWidth(Value.of(frame.frameWidth()));bar.setHeight(Value.of(frame.frameHeight()));
         commands.setObject("#RpgEnemyHealth.Anchor",bar);
@@ -83,14 +81,13 @@ final class RpgHud extends CustomUIHud {
         commands.set("#RpgEnemyIdentity.Style.FontSize",Math.max(8,font-2));
         commands.set("#RpgEnemyAffixes.Style.FontSize",Math.max(8,font-2));
         commands.set("#RpgEnemyName.Text",target==null?"":target.name());
-        commands.set("#RpgEnemyIdentity.Text",promoted?"":target.rarityLabel()+" · Lv "+target.combatLevel());
-        var tags=promoted?java.util.stream.Stream.concat(target.ownAffixTags().stream(),
-                target.inheritedEffectTags().stream()):target.orderedTags().stream();
+        commands.set("#RpgEnemyIdentity.Text",target.rarityLabel()+" · Lv "+target.combatLevel());
+        var tags=target.orderedTags().stream();
         commands.set("#RpgEnemyAffixes.Text",tags
                 .map(com.inigmasgames.hytalerpg.enemies.EnemyDisplayDto.EnemyTag::fallbackText)
                 .collect(java.util.stream.Collectors.joining("   ")));
         String rarityColor=switch(target.rarityLabel()){
-            case "Champion"->"#1d4dff";case "Unique"->"#a000ff";case "Super Unique"->"#ff9100";case "Boss"->"#f18d8d";default->"#f2eee5";};
+            case "Champion"->"#1d4dff";case "Unique"->"#ffd24a";case "Super Unique"->"#ff9100";case "Boss"->"#ed3030";default->"#f2eee5";};
         commands.set("#RpgEnemyName.Style.TextColor",rarityColor);
     }
     static int enemyHealthFillWidth(double current,double maximum){

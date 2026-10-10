@@ -25,6 +25,7 @@ GROUPS = {
                              "Toad_Rhino", "Toad_Rhino_Magma"),
     "CHAIN_REPEATED_MELEE": ("Goblin_Scrapper",),
     "SINGLE_PROJECTILE": ("Eye_Void", "Skeleton_Archer", "Skeleton_Burnt_Archer", "Skeleton_Frost_Archer",
+                          "Skeleton_Frost_Ranger",
                           "Skeleton_Burnt_Gunner", "Skeleton_Frost_Mage",
                           "Skeleton_Incandescent_Mage", "Skeleton_Mage", "Skeleton_Sand_Mage"),
     "MIXED_NATIVE_ACTIONS": ("Outlander_Berserker", "Outlander_Hunter"),
@@ -41,6 +42,8 @@ CONDITIONAL_AFFIXES = ["ME-002", "ME-003", "ME-004", "ME-017", "ME-018", "ME-026
 # world-spawn table names only their parents. Their installed Variant data is
 # checked below before sharing a parent's combat certificate.
 REPORTED_FLOCK_VARIANTS = {"Skeleton_Archer_Wander", "Skeleton_Burnt_Archer_Wander",
+                           "Skeleton_Frost_Archer_Patrol", "Skeleton_Frost_Archer_Wander", "Skeleton_Frost_Ranger_Patrol",
+                           "Skeleton_Frost_Ranger_Wander",
                            "Skeleton_Soldier_Wander"}
 
 

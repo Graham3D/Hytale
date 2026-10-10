@@ -13,8 +13,31 @@ class PromotedNameGlyphsTest {
         assertEquals("Champion", PromotedNameGlyphs.rarityAsset("Champion"));
         assertEquals("Unique", PromotedNameGlyphs.rarityAsset("Unique"));
         assertEquals("SuperUnique", PromotedNameGlyphs.rarityAsset("Super Unique"));
+        assertEquals("Boss", PromotedNameGlyphs.rarityAsset("Boss"));
         assertNull(PromotedNameGlyphs.rarityAsset("Normal"));
         assertEquals("HywindName_Unique_U0041", PromotedNameGlyphs.assetId("Unique", 'A'));
+    }
+    @Test void packagedGlyphAtlasesHaveExactRarityColorsAndDarkOutline() throws Exception {
+        var colors=java.util.Map.of("Champion",0xff1d4dff,"Unique",0xffffd24a,
+                "SuperUnique",0xffff9100,"Boss",0xffed3030);
+        for(var entry:colors.entrySet()){
+            String prefix="Common/Items/RPG/NameGlyphs/";
+            try(var input=getClass().getClassLoader().getResourceAsStream(prefix+entry.getKey()+".png")){
+                assertNotNull(input,entry.getKey());
+                var image=javax.imageio.ImageIO.read(input);
+                boolean color=false,outline=false;
+                for(int y=0;y<image.getHeight()&&!(color&&outline);y++)
+                    for(int x=0;x<image.getWidth();x++){
+                        int pixel=image.getRGB(x,y);
+                        color|=pixel==entry.getValue();
+                        outline|=pixel==0xff161922;
+                    }
+                assertTrue(color,entry.getKey()+" fill");
+                assertTrue(outline,entry.getKey()+" outline");
+            }
+            assertNotNull(getClass().getClassLoader().getResource(
+                    "Server/Models/RPG/NameGlyphs/HywindName_"+entry.getKey()+"_U0041.json"));
+        }
     }
 
     @Test void twoViewersGetIndependentUprightFrontFacingPositions() {

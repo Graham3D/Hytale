@@ -149,8 +149,8 @@ Certification describes a role's native binding. At each natural birth, the exis
 | Skeleton_Fighter_Patrol | Skeleton_Fighter | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Skeleton_Fighter_Wander | Skeleton_Fighter | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
 | Skeleton_Frost_Archer | Skeleton_Frost_Archer | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
-| Skeleton_Frost_Archer_Patrol | Skeleton_Frost_Archer | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
-| Skeleton_Frost_Archer_Wander | Skeleton_Frost_Archer | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
+| Skeleton_Frost_Archer_Patrol | Skeleton_Frost_Archer | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
+| Skeleton_Frost_Archer_Wander | Skeleton_Frost_Archer | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
 | Skeleton_Frost_Archmage | Skeleton_Frost_Archmage | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Skeleton_Frost_Archmage_Patrol | Skeleton_Frost_Archmage | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Skeleton_Frost_Archmage_Wander | Skeleton_Frost_Archmage | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
@@ -163,9 +163,9 @@ Certification describes a role's native binding. At each natural birth, the exis
 | Skeleton_Frost_Mage | Skeleton_Frost_Mage | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
 | Skeleton_Frost_Mage_Patrol | Skeleton_Frost_Mage | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Skeleton_Frost_Mage_Wander | Skeleton_Frost_Mage | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
-| Skeleton_Frost_Ranger | Skeleton_Frost_Ranger | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
-| Skeleton_Frost_Ranger_Patrol | Skeleton_Frost_Ranger | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
-| Skeleton_Frost_Ranger_Wander | Skeleton_Frost_Ranger | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
+| Skeleton_Frost_Ranger | Skeleton_Frost_Ranger | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
+| Skeleton_Frost_Ranger_Patrol | Skeleton_Frost_Ranger | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
+| Skeleton_Frost_Ranger_Wander | Skeleton_Frost_Ranger | yes | yes | Y/Y/Y | Y/Y/Y | — | — |
 | Skeleton_Frost_Scout | Skeleton_Frost_Scout | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Skeleton_Frost_Scout_Patrol | Skeleton_Frost_Scout | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
 | Skeleton_Frost_Scout_Wander | Skeleton_Frost_Scout | no | no | — | — | — | NATIVE_BINDING_NOT_CERTIFIED |
@@ -1534,6 +1534,70 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
+### Skeleton_Frost_Archer_Patrol
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-006 Cold Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-007 Lightning Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-008 Poison Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-009 Wind Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-010 Earth Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-011 Void Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-012 Spectral Hit | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-013 Mana Burn | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-014 Cursed | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-015 Knockback | NATIVE_KNOCKBACK_NOT_CERTIFIED |
+| ME-016 Vampiric | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-021 Empowered Minions | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-022 Horde | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
+
+### Skeleton_Frost_Archer_Wander
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-006 Cold Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-007 Lightning Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-008 Poison Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-009 Wind Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-010 Earth Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-011 Void Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-012 Spectral Hit | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-013 Mana Burn | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-014 Cursed | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-015 Knockback | NATIVE_KNOCKBACK_NOT_CERTIFIED |
+| ME-016 Vampiric | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-021 Empowered Minions | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-022 Horde | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
+
 ### Skeleton_Frost_Fighter
 
 | Affix | Decision |
@@ -1695,6 +1759,102 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Frost_Mage_Wander
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-006 Cold Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-007 Lightning Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-008 Poison Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-009 Wind Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-010 Earth Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-011 Void Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-012 Spectral Hit | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-013 Mana Burn | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-014 Cursed | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-015 Knockback | NATIVE_KNOCKBACK_NOT_CERTIFIED |
+| ME-016 Vampiric | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-021 Empowered Minions | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-022 Horde | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
+
+### Skeleton_Frost_Ranger
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-006 Cold Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-007 Lightning Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-008 Poison Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-009 Wind Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-010 Earth Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-011 Void Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-012 Spectral Hit | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-013 Mana Burn | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-014 Cursed | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-015 Knockback | NATIVE_KNOCKBACK_NOT_CERTIFIED |
+| ME-016 Vampiric | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-021 Empowered Minions | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-022 Horde | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
+
+### Skeleton_Frost_Ranger_Patrol
+
+| Affix | Decision |
+| --- | --- |
+| ME-001 Extra Fast | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-002 Extra Strong | LEGAL |
+| ME-003 Magic Resistant | LEGAL |
+| ME-004 Stone Skin | LEGAL |
+| ME-005 Fire Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-006 Cold Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-007 Lightning Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-008 Poison Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-009 Wind Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-010 Earth Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-011 Void Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-012 Spectral Hit | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-013 Mana Burn | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-014 Cursed | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-015 Knockback | NATIVE_KNOCKBACK_NOT_CERTIFIED |
+| ME-016 Vampiric | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-017 Unwavering | LEGAL |
+| ME-018 Unstoppable | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-020 Avenger | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-021 Empowered Minions | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-022 Horde | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
+
+### Skeleton_Frost_Ranger_Wander
 
 | Affix | Decision |
 | --- | --- |

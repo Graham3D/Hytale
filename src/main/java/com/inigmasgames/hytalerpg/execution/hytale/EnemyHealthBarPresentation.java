@@ -54,10 +54,15 @@ public final class EnemyHealthBarPresentation {
     private final Map<Enemy, Anchor> nameAnchors = new ConcurrentHashMap<>();
     private final Map<Enemy, Anchor> affixAnchors = new ConcurrentHashMap<>();
     private final Map<Enemy, PromotedNameGlyphs.Name> coloredNames = new ConcurrentHashMap<>();
+    private final Set<Enemy> glyphDisabled = ConcurrentHashMap.newKeySet();
     private final PromotedNameBillboards coloredPackets = new PromotedNameBillboards();
     private final java.util.Set<String> coloredNameFailures = ConcurrentHashMap.newKeySet();
     private final Map<Enemy, String> traceOutcomes = new ConcurrentHashMap<>();
     private final java.util.concurrent.atomic.AtomicBoolean missingAssetLogged = new java.util.concurrent.atomic.AtomicBoolean();
+    private java.util.function.BiConsumer<Store<EntityStore>,Ref<EntityStore>> nativeNameRestore=(store,actor)->{};
+    public void configureNativeNameRestore(java.util.function.BiConsumer<Store<EntityStore>,Ref<EntityStore>> restore){
+        nativeNameRestore=java.util.Objects.requireNonNull(restore);
+    }
     private HytaleBossBarTracker bosses;
     @FunctionalInterface public interface TargetDamageObserver {
         void accept(UUID world, UUID enemy, UUID player);
@@ -74,7 +79,9 @@ public final class EnemyHealthBarPresentation {
                                           com.inigmasgames.hytalerpg.enemies.EnemyDisplayDto display) {
         var key = new Enemy(store.getExternalData().getWorld().getWorldConfig().getUuid(), id);
         String affixText = MonsterAffixLabel.row(display);
-        if (affixText.isBlank()) { removeAnchors(store, key); return false; }
+        boolean coloredEligible=PromotedNameGlyphs.rarityAsset(display.rarityLabel())!=null
+                &&!display.packRoleLabel().equals("Minion")&&!glyphDisabled.contains(key);
+        if (affixText.isBlank()&&!coloredEligible) { removeAnchors(store, key); return false; }
         var position = store.getComponent(enemy, TransformComponent.getComponentType());
         var box = store.getComponent(enemy, BoundingBox.getComponentType());
         var asset = ModelAsset.getAssetMap().getAsset("Invisible_Projectile");
@@ -87,18 +94,43 @@ public final class EnemyHealthBarPresentation {
         var rows = MonsterPresentationLayout.resolve(position.getPosition(), box.getBoundingBox(),
                 store.getComponent(enemy,ModelComponent.getComponentType()),
                 store.getComponent(enemy,com.inigmasgames.hytalerpg.enemies.EnemyActorIdentity.getComponentType()));
-        var priorAffix=affixAnchors.get(key);
-        if(priorAffix!=null&&priorAffix.ref().isValid())
-            updateAnchor(store,affixAnchors,key,priorAffix,affixText);
+        if(affixText.isBlank())removeAnchor(store,affixAnchors.remove(key));
         else {
-            removeAnchor(store,affixAnchors.remove(key));
-            affixAnchors.put(key,new Anchor(createAnchor(store,asset,rows.affixAnchorPosition(),affixText),affixText));
+            var priorAffix=affixAnchors.get(key);
+            if(priorAffix!=null&&priorAffix.ref().isValid())
+                updateAnchor(store,affixAnchors,key,priorAffix,affixText);
+            else {
+                removeAnchor(store,affixAnchors.remove(key));
+                affixAnchors.put(key,new Anchor(createAnchor(store,asset,rows.affixAnchorPosition(),affixText),affixText));
+            }
         }
-        // R244 primary identity belongs to the native actor's Nameplate compositor.
+        // The native compositor retains the authoritative text. A prepared glyph row
+        // lets it suppress the duplicate white plate for this exact display name.
         removeAnchor(store,nameAnchors.remove(key));
-        coloredNames.remove(key);
-        coloredPackets.removeOwner(store,id);
-        return true;
+        if (coloredEligible) {
+            var prior=coloredNames.get(key);
+            if(prior==null||!prior.text().equals(display.name())||!prior.rarity().equals(display.rarityLabel())) {
+                try { coloredNames.put(key,PromotedNameGlyphs.prepare(display.name(),display.rarityLabel())); }
+                catch(RuntimeException unavailable) {
+                    glyphDisabled.add(key);
+                    coloredNames.remove(key);
+                    coloredPackets.removeOwner(store,id);
+                    if(coloredNameFailures.add(display.rarityLabel()+":"+unavailable.getMessage()))
+                        com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
+                                "RPG_ENEMY_COLORED_NAME_UNAVAILABLE rarity=%s reason=%s",
+                                display.rarityLabel(),unavailable.toString());
+                }
+            }
+        } else {
+            coloredNames.remove(key);
+            coloredPackets.removeOwner(store,id);
+        }
+        return affixAnchors.containsKey(key)||coloredNames.containsKey(key);
+    }
+
+    boolean hasColoredName(UUID world,UUID id,String text) {
+        var name=coloredNames.get(new Enemy(world,id));
+        return name!=null&&name.valid()&&name.text().equals(text);
     }
 
     private static Ref<EntityStore> createAnchor(Store<EntityStore> store,ModelAsset asset,
@@ -205,15 +237,15 @@ public final class EnemyHealthBarPresentation {
         boolean enabled=store.getExternalData().getWorld().getGameplayConfig().getCombatConfig().isDisplayHealthBars();
         var asset=EntityUIComponent.getAssetMap().getAsset("Healthbar");
         com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log(
-                "RPG_ENEMY_QA_PRESENTATION_FINAL enemy=%s mode=%s gameplayNativeBars=%s canonicalIds=%s listContainsNativeBar=%s healthStatIndex=%s healthRegistered=%s health=%s max=%s nativeHitboxOffset=%s affixAnchor=%s",
+                "RPG_ENEMY_QA_PRESENTATION_FINAL enemy=%s mode=%s gameplayNativeBars=%s canonicalIds=%s listContainsNativeBar=%s healthStatIndex=%s healthRegistered=%s health=%s max=%s nativeHitboxOffset=%s primaryNameOwner=%s affixAnchor=%s coloredGlyphAvailable=%s",
                 id,qaNativeEnabled(store.getExternalData().getWorld().getWorldConfig().getUuid(),id)?"SHARED_LIST_QA_CONTROL":"VIEWER_LOCAL_NATIVE",
                 enabled,ui==null?"missing":Arrays.toString(ui.getComponentIds()),present,
                 asset==null?"missing":asset.toPacket().entityStatIndex,health!=null,
                 health==null?"missing":health.get(),health==null?"missing":health.getMax(),
                 asset==null?"missing":asset.toPacket().hitboxOffset,
-                (nameAnchors.containsKey(new Enemy(store.getExternalData().getWorld().getWorldConfig().getUuid(),id))
-                        ||coloredNames.containsKey(new Enemy(store.getExternalData().getWorld().getWorldConfig().getUuid(),id)))
-                        && affixAnchors.containsKey(new Enemy(store.getExternalData().getWorld().getWorldConfig().getUuid(),id)));
+                "NativeHostileNames",
+                affixAnchors.containsKey(new Enemy(store.getExternalData().getWorld().getWorldConfig().getUuid(),id)),
+                coloredNames.containsKey(new Enemy(store.getExternalData().getWorld().getWorldConfig().getUuid(),id)));
     }
 
     /** Remove only the QA-added Healthbar; keep other owners' UI components. */
@@ -373,6 +405,7 @@ public final class EnemyHealthBarPresentation {
         qaNative.remove(new Enemy(world, enemy));
         qaCanonicalQueuePending.remove(new Enemy(world, enemy));
         baselines.remove(new Enemy(world, enemy));
+        glyphDisabled.remove(key);
         traceOutcomes.remove(new Enemy(world,enemy));
         for (var active : viewers.values()) active.remove(enemy);
     }
@@ -393,6 +426,7 @@ public final class EnemyHealthBarPresentation {
         nameAnchors.keySet().removeIf(key -> key.world().equals(world));
         affixAnchors.keySet().removeIf(key -> key.world().equals(world));
         coloredNames.keySet().removeIf(key -> key.world().equals(world));
+        glyphDisabled.removeIf(key -> key.world().equals(world));
         coloredPackets.forgetWorld(world);
         baselines.keySet().removeIf(key -> key.world().equals(world));
         qaNative.removeIf(key -> key.world().equals(world));
@@ -472,6 +506,10 @@ public final class EnemyHealthBarPresentation {
                                     store.getComponent(actor,ModelComponent.getComponentType()),
                                     store.getComponent(actor,com.inigmasgames.hytalerpg.enemies.EnemyActorIdentity.getComponentType())));
                 } catch(RuntimeException failure) {
+                    owner.coloredPackets.removeOwner(store,key.id());
+                    owner.coloredNames.remove(key,entry.getValue());
+                    owner.glyphDisabled.add(key);
+                    owner.nativeNameRestore.accept(store,actor);
                     String reason=failure.getClass().getSimpleName()+":"+failure.getMessage();
                     if(owner.coloredNameFailures.add(reason))
                         com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(

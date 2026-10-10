@@ -1,4 +1,4 @@
-"""Offline package/reference guard against deployed R247 and the reviewed R248 asset delta."""
+"""Offline package/reference guard against deployed R248 and the reviewed R249 asset delta."""
 import argparse
 import hashlib
 import json
@@ -9,7 +9,7 @@ from collections import Counter
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent.parent
-BASELINE = HERE / 'tools/u7p5-r247-package-baseline.json'
+BASELINE = HERE / 'tools/u7p5-r248-package-baseline.json'
 CATEGORIES = {
     'Quality': 'Item/Qualities', 'PlayerAnimationsId': 'Item/Animations',
     'ItemPlayerAnimationsId': 'Item/Animations', 'ItemSoundSetId': 'Audio/ItemSounds',
@@ -29,8 +29,8 @@ def validate(package, installed, report):
     baseline = json.loads(BASELINE.read_text())
     failures = []
     checked_references = 0
-    if baseline.get('baselineJarSha256') != '819cc21b80e49ef10ff079361c6b24f413aba3a6dbb8dfc0d5eedfc4e8667599':
-        failures.append('Deployed R247 baseline identity changed')
+    if baseline.get('baselineJarSha256') != 'b68c61c4ca1a40b75d6238b604b1e71e69ce5028fcf062e5fd4d49a490251803':
+        failures.append('Deployed R248 baseline identity changed')
     try:
         runpy.run_path(str(HERE / 'tools/Build-ProductionEliteRemaining.py'),
                        run_name='r229_asset_builder')['main'](check=True)
@@ -107,13 +107,18 @@ def validate(package, installed, report):
         allowed_added = set(baseline['allowedAdded'])
         allowed_changed = set(baseline['allowedChanged'])
         if len(actual) != baseline['jsonAssetCount'] + len(allowed_added):
-            failures.append('R248 JSON asset count differs from pinned R247 plus reviewed additions')
+            failures.append('R249 JSON asset count differs from pinned R248 plus reviewed additions')
         if not allowed_added.issubset(actual) or not allowed_changed.issubset(actual):
-            failures.append('Reviewed R248 JSON asset is missing')
+            failures.append('Reviewed R249 JSON asset is missing')
         unchanged = {name: hashlib.sha256(candidate.read(name)).hexdigest()
                      for name in actual - allowed_added - allowed_changed}
         if asset_root(unchanged) != baseline['unchangedJsonSha256']:
-            failures.append('Unreviewed JSON asset set or contents differ from deployed R247')
+            failures.append('Unreviewed JSON asset set or contents differ from deployed R248')
+        for rarity in ('Champion', 'Unique', 'SuperUnique', 'Boss'):
+            name = f'Common/Items/RPG/NameGlyphs/{rarity}.png'
+            source = HERE / 'src/main/resources' / name
+            if name not in own_names or not source.is_file() or candidate.read(name) != source.read_bytes():
+                failures.append(f'{name}: glyph atlas missing or differs from checked source')
         counts = Counter()
         for name in sorted(actual):
             document = json.loads(candidate.read(name))

@@ -55,5 +55,16 @@ class EnemyNativePaletteTest {
         assertSame(unique,HytaleEnemyPalette.visualScaleOnly(unique,original.getScale(),EnemyRarity.UNIQUE));
         assertEquals(unique.getScale(),HytaleEnemyPalette.visualScaleOnly(unique,original.getScale(),EnemyRarity.UNIQUE).getScale());
     }
+    @Test void polarBearRarityScaleCannotReplaceNativeFurOrGradient(){
+        var original=new Model("Bear_Polar",1f,Map.of(),null,new Box(-1,0,-1,1,2,1),
+                "NPC/Beast/Bear_Polar/Models/Model.blockymodel","NPC/Beast/Bear_Polar/Models/Texture.png",
+                null,null,1.8f,-.5f,-.8f,-1.2f,Map.of(),null,null,null,null,null,Map.of(),null,null);
+        var unique=HytaleEnemyPalette.visualScaleOnly(original,1f,EnemyRarity.UNIQUE);
+        assertEquals(original.getTexture(),unique.getTexture());
+        assertEquals(original.getGradientSet(),unique.getGradientSet());
+        assertEquals(original.getGradientId(),unique.getGradientId());
+        assertSame(original.getAttachments(),unique.getAttachments());
+        assertEquals(1.30f,unique.getScale());
+    }
     private static void bounds(Box expected,Box actual){assertEquals(expected.min,actual.min);assertEquals(expected.max,actual.max);}
 }

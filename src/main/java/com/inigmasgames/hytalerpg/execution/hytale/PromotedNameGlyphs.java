@@ -52,6 +52,7 @@ final class PromotedNameGlyphs {
             case "Champion" -> "Champion";
             case "Unique" -> "Unique";
             case "Super Unique" -> "SuperUnique";
+            case "Boss" -> "Boss";
             default -> null;
         };
     }

@@ -90,6 +90,7 @@ final class PromotedNameBillboards {
                     com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
                             "RPG_ENEMY_COLORED_NAME_PACKET_FAILED actor=%s viewer=%s reason=%s",
                             actorId, playerId, failure.toString());
+                    throw new IllegalStateException("PROMOTED_NAME_PACKET_DELIVERY_FAILED",failure);
                 }
                 continue;
             }
