@@ -34,6 +34,17 @@ not a release checksum. The complete exact-commit check and Guardian receipt
 must follow the source commit. Connected QA is still needed to identify the
 failed native stage and establish gameplay acceptance.
 
+The implementation commit is `df70c72d2c5261b8835dd3181a4c6576ce16c5ca`
+on `codex/teleport-native-target`. Its exact-commit unmodified `check` passed
+the same 4,003 JUnit tests and offline asset/package gates; Guardian's
+verification receipt confirms JAR SHA-256
+`EF50A65FB8F2D378EC199F96C754C7E421B80F3710D24A69B051A74E1DB887DF`
+with the embedded source commit `df70c72d2c5261b8835dd3181a4c6576ce16c5ca`.
+That JAR has not been deployed. This documentation follow-up creates a new
+Git commit and therefore requires its own exact-commit check, package receipt,
+and checksum before publication or deployment. GitHub synchronization and
+connected QA are pending at this checkpoint.
+
 ## R250 recovery and promoted development baseline (2026-10-10)
 
 The source starting point was `codex/teleport-r250-latest` at
