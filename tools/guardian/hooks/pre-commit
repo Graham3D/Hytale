@@ -1,0 +1,5 @@
+#!/bin/sh
+# Optional template. Never active until the owner explicitly installs it.
+repo=$(git rev-parse --show-toplevel) || exit 2
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$repo/tools/guardian/Invoke-Guardian.ps1" -Mode Commit -Repository "$repo"
+exit $?
