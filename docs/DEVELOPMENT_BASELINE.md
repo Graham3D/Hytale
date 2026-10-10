@@ -241,7 +241,10 @@ Guardian's 32 isolated fixtures pass. Targeted JaCoCo instrumentation of the
 existing Elite birth/persistence test produced root HTML and XML reports;
 `FileEncounterStore.java` measured 446 covered of 709 lines and 333 covered
 of 811 branches in that focused run. These numbers describe exercised source
-paths, not defect status. The initial exploratory SpotBugs analysis reported
+paths, not defect status. A broad instrumented run tripped one existing
+scheduling-sensitive backlog assertion; focused root/native coverage passed,
+while the uninstrumented full `check` remains the engineering gate. The
+initial exploratory SpotBugs analysis reported
 546 root, 32 CanvasUI, and 14 Taverns findings. Strict analysis passed against
 the reviewed baseline files, and removing one baseline finding made it fail as
 expected. See [engineering analysis](ENGINEERING_ANALYSIS.md) for commands,

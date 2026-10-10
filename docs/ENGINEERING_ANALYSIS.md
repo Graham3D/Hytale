@@ -10,7 +10,13 @@ JaCoCo **0.8.15** runs only with `-PguardianCoverage=true`. This focused example
 .\gradlew.bat --offline --no-daemon -PguardianCoverage=true :test --tests com.inigmasgames.hytalerpg.enemies.EnemyBirthPersistenceTest :jacocoTestReport --console=plain
 ```
 
-The root reports are `build/reports/jacoco/test/html/index.html` and `build/reports/jacoco/test/jacocoTestReport.xml`. For broader root coverage, run `-PguardianCoverage=true guardianCoverage`; that task combines root `test` and `nativeControlTest` execution data and reports to `build/reports/jacoco/guardianCoverage/`. To cover the independent CanvasUI and Taverns tests too, add `:canvas-ui:jacocoTestReport :hytale-taverns:jacocoTestReport`; their reports live under each module's `build/reports/jacoco/test/`. Reports measure production source sets only. Routine `check` attaches no JaCoCo agent and runs no coverage report.
+The root reports are `build/reports/jacoco/test/html/index.html` and `build/reports/jacoco/test/jacocoTestReport.xml`. For a combined root/native report, select relevant classes on both test tasks:
+
+```powershell
+.\gradlew.bat --offline --no-daemon -PguardianCoverage=true :test --tests com.inigmasgames.hytalerpg.enemies.EnemyBirthPersistenceTest :nativeControlTest --tests com.inigmasgames.hytalerpg.execution.hytale.R244NamesTest guardianCoverage --console=plain
+```
+
+The combined HTML/XML reports are under `build/reports/jacoco/guardianCoverage/`. To cover independent CanvasUI and Taverns tests, add `:canvas-ui:jacocoTestReport :hytale-taverns:jacocoTestReport`; their reports live under each module's `build/reports/jacoco/test/`. Reports measure production source sets only. Routine `check` attaches no JaCoCo agent and runs no coverage report. An exploratory full-suite instrumented run tripped the existing timing assertion in `Stage13V2RecoveryEdgesTest` (`maxCheckpointBacklog` 1 versus expected 2). Use focused coverage for diagnosis; the uninstrumented full `check` remains the release gate until that scheduling-sensitive test is made robust under instrumentation.
 
 ## Optional SpotBugs analysis
 
