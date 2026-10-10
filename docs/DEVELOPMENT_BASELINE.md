@@ -169,8 +169,8 @@ at `b1a5389caa8a95fa99ce4306b6f62a62390890cd` and its native-control
 report path was corrected at
 `fec2fd65e24eb07cae5df2e0fa74bc10af4cc7d9`. The source remains
 `R250-U7P5B` (`0.2.0-R250-U7P5B`), with the `HyARPG` plugin identity and
-separate ImmersiveNPCs mod unchanged. Guardian's hook is tracked but not
-installed, and the branch has not been pushed or merged.
+separate ImmersiveNPCs mod unchanged. At that checkpoint, Guardian's hook was
+tracked but not installed, and the branch had not been pushed or merged.
 
 At exact source commit `fec2fd65e24eb07cae5df2e0fa74bc10af4cc7d9`,
 the complete unmodified offline Gradle `check` passed in 5m 55s. Its JUnit
@@ -225,6 +225,35 @@ A live completion query returned exit code 1: the task branch remained
 unpublished, `main` integration pending, and deployment and connected-game
 acceptance unverified. The gameplay revision and version remain R250-U7P5B
 and 0.2.0-R250-U7P5B.
+
+## Guardian production and analysis tooling (2026-10-10)
+
+Infrastructure commit `a4bc11e6bb82870613c07434c8443b95ab458751`
+continues the Guardian branch from `0c51f8b2141ad91f1be2939465618440e9f801ea`.
+It installs opt-in JaCoCo 0.8.15 and SpotBugs Gradle plugin 6.5.11
+(engine 4.10.2) for the R250-U7P5B source. The local Guardian worktree has a
+worktree-specific pre-commit hook; the canonical main checkout does not. Its
+uncommitted `AGENTS.md` addition remains preserved there. The policy and
+regression guidance on this branch were reviewed separately; no gameplay
+source, plugin identity, ImmersiveNPCs runtime, save, or deployed JAR changed.
+
+Guardian's 32 isolated fixtures pass. Targeted JaCoCo instrumentation of the
+existing Elite birth/persistence test produced root HTML and XML reports;
+`FileEncounterStore.java` measured 446 covered of 709 lines and 333 covered
+of 811 branches in that focused run. These numbers describe exercised source
+paths, not defect status. The initial exploratory SpotBugs analysis reported
+546 root, 32 CanvasUI, and 14 Taverns findings. Strict analysis passed against
+the reviewed baseline files, and removing one baseline finding made it fail as
+expected. See [engineering analysis](ENGINEERING_ANALYSIS.md) for commands,
+reports, and initial triage.
+
+At this checkpoint, the authoritative GitHub `main` starting point was
+`1dfa2cea3085196c7fd4492518c65a03d5e3b49d`. Guardian's remote completion
+check, rather than this historical statement, determines whether the task
+branch has since been published and integrated. A full exact-commit `check`
+and package receipt are required before publication. This infrastructure
+work does not establish a new gameplay revision, deployment, or connected-game
+acceptance.
 
 ## Preservation and release gates
 
