@@ -1,0 +1,30 @@
+{
+  "revision": "R249-U7P5A",
+  "sourceCommitEmbeddedInJar": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
+  "candidateJarSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E",
+  "offlineCheck": "PASS",
+  "tests": {
+    "core": {"run": 3464, "failures": 0, "errors": 0, "skipped": 0},
+    "nativeControl": {"run": 452, "failures": 0, "errors": 0, "skipped": 0},
+    "canvasUi": {"run": 49, "failures": 0, "errors": 0, "skipped": 0},
+    "taverns": {"run": 5, "failures": 0, "errors": 0, "skipped": 0}
+  },
+  "beforeAfter": {
+    "frostRanger": "R248 native binding missing; R249 exact pinned bow root and supported projectile capabilities verified",
+    "frostArcherWander": "R248 native binding missing; R249 movement-only native alias resolves certified combat graph",
+    "coloredNames": "R248 publication removed promoted glyph state; R249 prepares glyph state and suppresses native white plate only while matching colored glyph state exists",
+    "affixPlacement": "R248 carrier used visible row directly; R249 compensates native Nameplate lift in shared hitbox-derived layout"
+  },
+  "assetAudit": {
+    "result": "PASS",
+    "baselineRevision": "R248-U7P5A",
+    "baselineJarSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803",
+    "jsonAssetsChecked": 5014,
+    "referencesChecked": 41251,
+    "failures": 0
+  },
+  "polarBearMaterial": "UNCHANGED; same-light connected comparison pending",
+  "nativeServerStarted": false,
+  "connectedAcceptance": "NOT_RUN",
+  "ownerAccepted": false
+}
