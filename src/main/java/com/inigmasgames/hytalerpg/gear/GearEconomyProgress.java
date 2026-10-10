@@ -16,6 +16,11 @@ public record GearEconomyProgress(Map<String,Long> materials,Map<String,Integer>
         materials.forEach((key,count)->{GearEconomy.Material.parse(key);if(count<0)throw new IllegalArgumentException("Negative components");});
         baseRanks.forEach((key,rank)->{if(!key.matches("[a-z][a-z0-9_]{0,95}")||rank<1||rank>20)throw new IllegalArgumentException("Invalid base skill rank");});
     }
+    /** Operator QA changes only the saved base rank, leaving materials and economy receipts intact. */
+    public GearEconomyProgress withBaseRank(String skill,int rank){
+        var ranks=new TreeMap<>(baseRanks);ranks.put(skill,rank);
+        return new GearEconomyProgress(materials,ranks,receipts);
+    }
     public GearEconomyProgress salvage(String operation,GearInstance item){
         var prior=receipts.get(operation);if(prior!=null){if(!prior.operation().equals("SALVAGE")||!prior.subject().equals(item.identity().toString()))throw new IllegalArgumentException("Receipt conflict");return this;}
         if(receipts.values().stream().anyMatch(r->r.operation().equals("SALVAGE")&&r.subject().equals(item.identity().toString())))throw new IllegalArgumentException("Item already salvaged");

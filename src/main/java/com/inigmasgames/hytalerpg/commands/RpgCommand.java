@@ -107,6 +107,7 @@ public final class RpgCommand extends AbstractCommandCollection {
         if(loadouts instanceof com.inigmasgames.hytalerpg.progress.RpgLoadoutService authority){
             addSubCommand(new RpgProgressionCommand(authority));
             addSubCommand(new RpgLevelCommand(authority,uiProjection,hud));
+            addSubCommand(new RpgSkillLevelQaCommand(catalog,authority));
             addSubCommand(new RpgIronSentinelQaCommand(authority));
             addSubCommand(new RpgTeleportQaCommand(authority));
             addSubCommand(new RpgReadyPathCommand(authority));
