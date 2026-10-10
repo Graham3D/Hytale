@@ -1096,12 +1096,6 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 Map.of("distance", finalPosition.subtract(motion.plan.origin()).horizontalLength(), "clamped", clamped,
                         "durationSeconds", motion.elapsed,"validatedTravelMeters",motion.travel.meters(),
                         "travelEvidenceValid",motion.travel.valid(),"momentumIncreased",motion.travel.increased(motion.context)));
-        if(motion.context.profile().skillId().equals("teleport")){
-            Store<EntityStore> store=buffer.getStore();
-            presentAuthoredParticle(motion.context,store,motion.plan.origin(),"Teleport","TELEPORT_ORIGIN");
-            presentAuthoredParticle(motion.context,store,finalPosition,"Cinematic_Portal_Appear_XXL","TELEPORT_ARRIVAL");
-            if(summons!=null)summons.relocateOwned(store,actor,motion.context.target().worldId(),finalPosition);
-        }
         if (motion.context.profile().hasFamily(Stage04SkillProfile.Family.STRIKE)&&!motion.context.profile().movement().details().pathDamage()
                 &&movementSupported(buffer.getStore(),motion.actor,finalPosition)) {
             Ref<EntityStore> ref = motion.actor;
@@ -1127,6 +1121,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         private Vec3 areaPlacement;
         private Vec3 areaDirection;
         private Vec3 movementGround;
+        private List<HytaleSummonSystem.Relocation> teleportGroup;
         private com.inigmasgames.hytalerpg.combat.power.WeaponLightAttackProfile capturedLight;
         @Override public com.inigmasgames.hytalerpg.combat.power.WeaponLightAttackProfile captureWeaponLightAttack(Equipment held){
             if(capturedLight==null||!capturedLight.weaponId().equals(held.mainHand().itemId()))capturedLight=NativeWeaponLightProfiles.capture(held);
@@ -1308,6 +1303,16 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 return Validation.pass();
             }
             if (profile.family() == Stage04SkillProfile.Family.REACTION) return Validation.pass();
+            if(profile.skillId().equals("teleport")){
+                var states=store.getComponent(actor,com.hypixel.hytale.server.core.entity.movement.MovementStatesComponent.getComponentType());
+                if(states==null||!states.getMovementStates().onGround)return Validation.reject("TELEPORT_REQUIRES_GROUND");
+                Vec3 feet=vec(store.getComponent(actor,TransformComponent.getComponentType()).getPosition());
+                double range=com.inigmasgames.hytalerpg.execution.TeleportScaling.effectiveRange(effectiveSkillLevel,profile);
+                movementGround=HytaleTeleportTarget.select(store,actor,feet,aim(store,actor),range).orElse(null);
+                if(movementGround==null)return Validation.reject("TELEPORT_NO_VALID_SURFACE");
+                teleportGroup=summons==null?List.of():summons.preflightRelocation(store,playerRef.getUuid(),playerRef.getWorldUuid(),movementGround).orElse(null);
+                return teleportGroup==null?Validation.reject("TELEPORT_SUMMON_PLACEMENT_UNAVAILABLE"):Validation.pass();
+            }
             if(profile.movement()!=null&&profile.movement().details().groundTarget()) {
                 Vec3 feet=vec(store.getComponent(actor,TransformComponent.getComponentType()).getPosition());
                 movementGround=HytaleAreaQueries.ground(store,feet.add(new Vec3(0,1.35,0)),aim(store,actor),profile.movement().maxDistance()+1.35).orElse(null);
@@ -1404,6 +1409,14 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             if(motions.containsKey(playerRef.getUuid())||windupEnds.containsKey(playerRef.getUuid())||reactions.active(playerRef.getUuid()).isPresent())
                 return Validation.reject("INCOMPATIBLE_ACTIVE_STATE");
             Vec3 feet=vec(store.getComponent(actor,TransformComponent.getComponentType()).getPosition());
+            if(profile.skillId().equals("teleport")){
+                var states=store.getComponent(actor,com.hypixel.hytale.server.core.entity.movement.MovementStatesComponent.getComponentType());
+                if(states==null||!states.getMovementStates().onGround)return Validation.reject("TELEPORT_REQUIRES_GROUND");
+                double range=com.inigmasgames.hytalerpg.execution.TeleportScaling.effectiveRange(context.effectiveSkillLevel(),profile);
+                if(!HytaleTeleportTarget.valid(store,actor,feet,target.point(),range))return Validation.reject("TELEPORT_DESTINATION_CHANGED");
+                teleportGroup=summons==null?List.of():summons.preflightRelocation(store,playerRef.getUuid(),playerRef.getWorldUuid(),target.point()).orElse(null);
+                return teleportGroup==null?Validation.reject("TELEPORT_SUMMON_PLACEMENT_UNAVAILABLE"):Validation.pass();
+            }
             if(context.conditionalRepeat()&&target.entityId()!=null){
                 var reference=store.getExternalData().getRefFromUUID(target.entityId());var selected=candidate(reference);
                 if(selected==null||selected.protectedTarget()||!HytaleAreaQueries.hostile(store,reference,actor))return Validation.reject("CONDITIONAL_ENTITY_INVALID");
@@ -2220,6 +2233,17 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         @Override public SkillExecutionResult executeMovement(SkillExecutionContext context) {
             TransformComponent transform = store.getComponent(actor, TransformComponent.getComponentType());
             Vec3 origin = vec(transform.getPosition());
+            if(context.profile().skillId().equals("teleport")){
+                if(teleportGroup==null)throw new IllegalStateException("TELEPORT_PREFLIGHT_MISSING");
+                Vec3 landing=context.target().point();
+                player.moveTo(actor,landing.x(),landing.y(),landing.z(),store);
+                Vec3 actual=vec(transform.getPosition());
+                if(actual.distanceSquared(landing)>.0001)throw new IllegalStateException("TELEPORT_NATIVE_WRITE_NOT_CONFIRMED");
+                if(summons!=null)summons.relocateOwned(store,landing,teleportGroup);
+                presentAuthoredParticle(context,store,landing.add(new Vec3(0,1.99,0)),"RPG_Teleport_Landing","TELEPORT_ARRIVAL");
+                emit(context,RpgTraceEventType.MOVEMENT_END,Map.of("distance",actual.subtract(origin).length(),"kind","TELEPORT","summons",teleportGroup.size()));
+                return SkillExecutionResult.committed("TELEPORTED",0,actual.subtract(origin).length());
+            }
             Vec3 direction; double distance = context.profile().movement().maxDistance();
             if(context.target()!=null) {
                 direction=context.target().point().subtract(origin);distance=Math.min(distance,direction.horizontalLength());

@@ -74,9 +74,21 @@ public final class RpgUiProjectionService {
             if(plan!=null&&stage04.supports(id.get().value())){
                 var profile=new com.inigmasgames.hytalerpg.execution.CompiledProfileResolver().resolve(stage04.require(id.get().value()),plan);
                 if(resourceService!=null){
+                    var nativeResources=readOnlyResources(resources);
+                    var gear=gearEffects.apply(player);
+                    var declared=profile.skillId().equals("teleport")
+                            ?new com.inigmasgames.hytalerpg.combat.resource.ResourceCost(
+                                com.inigmasgames.hytalerpg.combat.resource.ResourceType.MANA,
+                                resources.mana().maximum()*com.inigmasgames.hytalerpg.execution.TeleportScaling.manaFraction(
+                                    com.inigmasgames.hytalerpg.execution.EffectiveSkillLevel.resolveBase(
+                                        loadouts.baseSkillRank(player,"teleport"),gear.allSkillRanks())))
+                            :new com.inigmasgames.hytalerpg.combat.resource.ResourceCost(
+                                com.inigmasgames.hytalerpg.combat.resource.ResourceType.valueOf(profile.resourceType()),profile.resourceCost());
                     var cost=com.inigmasgames.hytalerpg.execution.GearResourceModifiers.activation(resourceService,
-                            profile,plan,attunement.applyAsInt(player,slot),gearEffects.apply(player).snapshot(),readOnlyResources(resources));
-                    if(!resourceService.canAfford(player,cost,readOnlyResources(resources)))resourceFailure="LOW_"+cost.type().name();
+                            profile,plan,attunement.applyAsInt(player,slot),gear.snapshot(),declared);
+                    if(!resourceService.canAfford(player,cost,nativeResources)
+                            ||profile.skillId().equals("teleport")&&cost.type()==com.inigmasgames.hytalerpg.combat.resource.ResourceType.MANA
+                                &&cost.amount()>usableMana(player,resources)+1e-9)resourceFailure="LOW_"+cost.type().name();
                 }
                 var cooldownTerms=com.inigmasgames.hytalerpg.execution.BlizzardCooldownPolicy.terms(profile,plan,currentDerived);
                 duration=cooldowns.calculate(player,cooldownTerms.baseSeconds(),cooldownTerms.durationFactor(),cooldownTerms.recovery(),cooldownTerms.modifiers()).finalSeconds();

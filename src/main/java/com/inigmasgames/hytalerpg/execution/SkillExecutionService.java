@@ -389,10 +389,13 @@ public final class SkillExecutionService {
             emitProjectileRejection(request, root, instance, profile, family.code());
             throw new Rejection(family.code(), instance);
         }
-        ResourceCost declared = new ResourceCost(ResourceType.valueOf(profile.resourceType()), profile.resourceCost());
+        ResourceCost declared = declaredCost(profile,effectiveSkillLevel,port);
         int stacks=attunementFor(request,plan);
         ruthlessFor(request,plan); // Capacity and origin check before any payment or windup.
-        ResourceCost cost = GearResourceModifiers.activation(kernel.resources(),profile,plan,stacks,gear,port.resources());
+        ResourceCost cost = GearResourceModifiers.activation(kernel.resources(),profile,plan,stacks,gear,declared);
+        if(profile.skillId().equals("teleport")&&cost.type()==ResourceType.MANA
+                &&cost.amount()>kernel.resources().spendableMaximum(request.actorId(),ResourceType.MANA,port.resources())+1e-9)
+            throw new Rejection("INSUFFICIENT_SPENDABLE_MANA",instance);
         if(profile.support()!=null&&profile.support().upkeepPerSecond()>0){
             var first=kernel.resources().evaluateUpkeep(new ResourceCost(ResourceType.MANA,profile.support().upkeepPerSecond()*.25*plan.supportModifiers().commitmentFactor()),plan.kernelModifiers(),
                     GearResourceModifiers.factor(gear,ResourceType.MANA,false,false));
@@ -431,13 +434,13 @@ public final class SkillExecutionService {
         try{
             int stacks=attunementFor(prepared.request,prepared.plan);
             boolean powered=ruthlessFor(prepared.request,prepared.plan);
-            var declared=new ResourceCost(ResourceType.valueOf(prepared.profile.resourceType()),prepared.profile.resourceCost());
-            var cost=GearResourceModifiers.activation(kernel.resources(),prepared.profile,prepared.plan,stacks,
-                    prepared.gearSnapshot,port.resources());
             var profile=CompiledProfileResolver.ruthless(compiledProfiles.resolve(profiles.require(prepared.profile.skillId()),prepared.plan),powered);
             // HEAD resolves learned mastery at release. The accepted item's bonus stays frozen.
             int effectiveSkillLevel=EffectiveSkillLevel.resolveBase(loadouts.baseSkillRank(prepared.request.actorId(),profile.skillId()),
                     prepared.itemSkillLevels);
+            var declared=declaredCost(profile,effectiveSkillLevel,port);
+            var cost=GearResourceModifiers.activation(kernel.resources(),profile,prepared.plan,stacks,
+                    prepared.gearSnapshot,declared);
             prepared=new Prepared(prepared.request,prepared.rootCastId,prepared.instanceId,profile,prepared.plan,cost,prepared.equipment,stacks,powered,
                     effectiveSkillLevel,prepared.itemSkillLevels,prepared.windupSeconds,prepared.gearSnapshot,prepared.gearSourceItemId);
         }catch(RuntimeException failed){lifecycle.terminate(prepared.request.actorId(),prepared.instanceId);return reject(prepared.request,prepared.rootCastId,prepared.instanceId,"COMMIT_RESOURCE_MODIFIER_REJECTED");}
@@ -610,6 +613,9 @@ public final class SkillExecutionService {
             commitStage="RELEASE_VALIDATION";
             var ownerValidation=port.validateDurableCompletion(context);
             if(!ownerValidation.accepted())throw new IllegalStateException(ownerValidation.code());
+            if(prepared.profile.skillId().equals("teleport")&&prepared.cost.type()==ResourceType.MANA
+                    &&prepared.cost.amount()>kernel.resources().spendableMaximum(prepared.request.actorId(),ResourceType.MANA,port.resources())+1e-9)
+                throw new IllegalStateException("INSUFFICIENT_SPENDABLE_MANA");
             commitStage="RESOURCE_COMMIT";
             kernel.resources().commitCost(token,port.resources());resourceCommitted=true;
             commitStage="ATTUNEMENT_COMMIT";
@@ -782,6 +788,14 @@ public final class SkillExecutionService {
         if(!context.derivedRelease()) terminate(context,"RELEASE_CANCELLED");
         emit(context.request(),RpgTraceEventType.SKILL_RELEASE_CANCELLED,context.rootCastId(),context.skillInstanceId(),
                 Map.of("reason",reason,"refund",false));
+    }
+
+    private static ResourceCost declaredCost(Stage04SkillProfile profile,int effectiveSkillLevel,SkillExecutionPort port) {
+        if(!profile.skillId().equals("teleport"))
+            return new ResourceCost(ResourceType.valueOf(profile.resourceType()),profile.resourceCost());
+        double maximum=port.resources().maximum(ResourceType.MANA);
+        if(!Double.isFinite(maximum)||maximum<=0)throw new IllegalStateException("TELEPORT_MAX_MANA_UNAVAILABLE");
+        return new ResourceCost(ResourceType.MANA,maximum*TeleportScaling.manaFraction(effectiveSkillLevel));
     }
 
     private DerivedStats derive(UUID actor,SkillExecutionPort port) {

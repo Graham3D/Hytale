@@ -14,8 +14,18 @@ public final class GearResourceModifiers {
             int attunementStacks,GearEffectSnapshot gear,
             com.inigmasgames.hytalerpg.combat.resource.NativeResourcePort resources) {
         ResourceType type=ResourceType.valueOf(profile.resourceType());
-        return owner.evaluateActivation(new com.inigmasgames.hytalerpg.combat.resource.ResourceCost(type,profile.resourceCost()),
-                plan,attunementStacks,factor(gear,type,false,profile.summon()!=null));
+        return activation(owner,profile,plan,attunementStacks,gear,
+                new com.inigmasgames.hytalerpg.combat.resource.ResourceCost(type,profile.resourceCost()));
+    }
+
+    /** Allows percentage-based skills to supply their authoritative base quote. */
+    public static com.inigmasgames.hytalerpg.combat.resource.ResourceCost activation(
+            com.inigmasgames.hytalerpg.combat.resource.RpgResourceService owner,
+            Stage04SkillProfile profile,com.inigmasgames.hytalerpg.domain.CompiledSkillPlan plan,
+            int attunementStacks,GearEffectSnapshot gear,
+            com.inigmasgames.hytalerpg.combat.resource.ResourceCost declared) {
+        return owner.evaluateActivation(declared,plan,attunementStacks,
+                factor(gear,declared.type(),false,profile.summon()!=null));
     }
 
     public static double reduction(GearEffectSnapshot gear, ResourceType type, boolean upkeep, boolean summon) {

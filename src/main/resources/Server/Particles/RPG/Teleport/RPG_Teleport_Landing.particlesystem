@@ -1,0 +1,9 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "MagicPortal_StonesSpawn"
+    }
+  ],
+  "BoundingRadius": 10,
+  "IsImportant": false
+}

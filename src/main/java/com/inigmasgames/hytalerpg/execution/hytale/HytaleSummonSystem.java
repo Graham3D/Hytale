@@ -662,23 +662,61 @@ public final class HytaleSummonSystem extends EntityTickingSystem<EntityStore> {
             }
         }
     }
-    /** Relocates existing native entities only; ownership, Health, expiry and attack clocks remain untouched. */
-    public int relocateOwned(Store<EntityStore> store,UUID owner,UUID world,Vec3 destination){
+    public record Relocation(SummonRegistry.Lease lease,Ref<EntityStore> entity,Vec3 landing) { }
+    private static final Set<String> TELEPORT_GROUNDED_ROLES=Set.of("RPG_Summon_Wolf","RPG_Summon_Crawler",
+            "RPG_Summon_Broodling","RPG_Summon_Decoy","RPG_Summon_Skeleton_Archer");
+
+    /** Place every live owned summon before a Teleport cost can commit. */
+    public Optional<List<Relocation>> preflightRelocation(Store<EntityStore> store,UUID owner,UUID world,Vec3 destination){
         var leases=registry.owned(Objects.requireNonNull(owner),Objects.requireNonNull(world));
-        var points=com.inigmasgames.hytalerpg.execution.summon.SummonFormation.points(Objects.requireNonNull(destination),Math.max(1,leases.size()));
-        int moved=0;
-        for(int i=0;i<leases.size();i++){
+        if(leases.isEmpty())return Optional.of(List.of());
+        int count=leases.size();double radius=count==1?2:Math.max(2,1.4/(2*Math.sin(Math.PI/count)));
+        var ownerRef=store.getExternalData().getRefFromUUID(owner);
+        if(ownerRef==null||!ownerRef.isValid())return Optional.empty();
+        var placed=new ArrayList<Relocation>(count);
+        for(int i=0;i<count;i++){
             var lease=leases.get(i);var ref=store.getExternalData().getRefFromUUID(lease.entity());
-            if(!alive(store,ref))continue;
-            Vec3 requested=points.get(i),ground=HytaleAreaQueries.ground(store,requested.add(new Vec3(0,2,0)),new Vec3(0,-1,0),4).orElse(destination);
+            if(!alive(store,ref))return Optional.empty();
+            var npc=store.getComponent(ref,NPCEntity.getComponentType());
+            if(npc==null||npc.getRole()==null)return Optional.empty();
+            double angle=2*Math.PI*i/count;
+            Vec3 requested=destination.add(new Vec3(radius*Math.cos(angle),0,radius*Math.sin(angle)));
+            boolean grounded=lease.ironSentinel()||TELEPORT_GROUNDED_ROLES.contains(lease.roleId())
+                    ||npc.getRole().isOnGround();
+            Vec3 landing=grounded
+                    ?HytaleTeleportTarget.safeGround(store,requested.add(new Vec3(0,2,0)),4).orElse(null)
+                    :requested.add(new Vec3(0,1.5,0));
+            if(landing==null||Math.abs(landing.y()-destination.y())>2
+                    ||!HytaleTeleportTarget.clearBody(store,ref,landing))return Optional.empty();
+            if(overlap(store,ref,landing,ownerRef,destination))return Optional.empty();
+            for(var earlier:placed)if(overlap(store,ref,landing,earlier.entity(),earlier.landing()))return Optional.empty();
+            placed.add(new Relocation(lease,ref,landing));
+        }
+        return Optional.of(List.copyOf(placed));
+    }
+
+    /** Native entities and leases remain intact, preserving Health, expiry and attack clocks. */
+    public int relocateOwned(Store<EntityStore> store,Vec3 destination,List<Relocation> placed){
+        for(var row:placed)if(!alive(store,row.entity())||!HytaleTeleportTarget.clearBody(store,row.entity(),row.landing()))
+            throw new IllegalStateException("TELEPORT_SUMMON_PLACEMENT_CHANGED");
+        int moved=0;
+        for(var row:placed){
+            var lease=row.lease();var ref=row.entity();Vec3 ground=row.landing();
             var transform=store.getComponent(ref,TransformComponent.getComponentType());
-            if(transform==null)continue;
+            if(transform==null)throw new IllegalStateException("TELEPORT_SUMMON_TRANSFORM_MISSING");
             transform.teleportPosition(vector(ground));
             var marker=store.getComponent(ref,SummonProjection.getComponentType());if(marker!=null)marker.nextQuery=0;
             var npc=store.getComponent(ref,NPCEntity.getComponentType());if(npc!=null)npc.saveLeashInformation(vector(destination),transform.getRotation());
             moved++;emit(lease,RpgTraceEventType.SUMMON_FOLLOW_STATE,Map.of("state","TELEPORT_WITH_OWNER","destination",ground.toString(),"preservedState",true));
         }
         return moved;
+    }
+    private static boolean overlap(Store<EntityStore> store,Ref<EntityStore> a,Vec3 pa,Ref<EntityStore> b,Vec3 pb){
+        var aa=store.getComponent(a,BoundingBox.getComponentType()).getBoundingBox();
+        var bb=store.getComponent(b,BoundingBox.getComponentType()).getBoundingBox();
+        return pa.x()+aa.min.x()<pb.x()+bb.max.x()&&pa.x()+aa.max.x()>pb.x()+bb.min.x()
+                &&pa.y()+aa.min.y()<pb.y()+bb.max.y()&&pa.y()+aa.max.y()>pb.y()+bb.min.y()
+                &&pa.z()+aa.min.z()<pb.z()+bb.max.z()&&pa.z()+aa.max.z()>pb.z()+bb.min.z();
     }
     @Override public Query<EntityStore> getQuery(){return Query.and(SummonProjection.getComponentType(),NPCEntity.getComponentType(),TransformComponent.getComponentType());}
     @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(new SystemDependency<>(Order.BEFORE,RoleSystems.BehaviourTickSystem.class));}
