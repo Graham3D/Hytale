@@ -23,11 +23,25 @@ reported as cosmetic and cannot hold the completed cast. Failed, cancelled,
 and timed-out Teleports do not enter arrival presentation. No save migration
 or changes to targeting, movement, Mana, cooldowns, summons, or hazard rules.
 
-At the implementation checkpoint, all 11 focused Teleport arrival, native
-receipt, and cast-lifecycle JUnit tests passed with zero failures or skips.
-Strict SpotBugs passed with no findings outside the reviewed baseline.
-Exact-commit offline `check`, GitHub publication, deployment, and connected-game
-QA are pending. They must be recorded separately when complete.
+The implementation commit is `a33cda5618715e06a928273d34ee62dbe73666f0`.
+All 11 focused Teleport arrival, native receipt, and cast-lifecycle JUnit tests
+passed with zero failures or skips. Strict SpotBugs passed. Its exact-commit
+offline `check` passed 3,513 root, 452 native-control, 49 CanvasUI, and 5
+Tavern JUnit tests with zero failures or skips. Guardian package validation
+passed and recorded the JAR SHA-256
+`FE2CCF595D47DBD58DE363D145F3C8FCCF8F13E62D29F45F86D630288082D04F`.
+Guardian confirmed `codex/teleport-landing-sound` published on GitHub; `main`
+integration remains pending.
+
+The previous R254 JAR was backed up outside `Saves` at
+`C:/Users/Zemio/AppData/Roaming/Hytale/Hywind-backups/Hywind-before-R255-20261010T225523356Z.jar`,
+SHA-256 `7353B2A657AD8D9249B7617B9BE66F7008028AA65C23609B60901BBAE25C1031`.
+Only the active `Saves/RPG/mods/Hywind.jar` was replaced. Its installed SHA-256
+matches the R255 candidate, and its embedded source commit is the implementation
+commit above. Save data, the game, and standalone native servers were untouched.
+Connected-game Teleport acceptance remains with the user. This deployment
+record is a later documentation checkpoint and does not change the deployed
+JAR's source identity.
 
 ## R254 operator skill-level QA command (2026-10-10)
 
