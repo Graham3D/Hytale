@@ -1,4 +1,4 @@
-"""Offline package/reference guard against deployed R248 and the reviewed R249 asset delta."""
+"""Offline package/reference guard for R250, retaining the historical R248 baseline."""
 import argparse
 import hashlib
 import json
@@ -10,6 +10,9 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent.parent
 BASELINE = HERE / 'tools/u7p5-r248-package-baseline.json'
+R250_REVIEW = HERE / 'tools/u7p5-r250-reviewed-json-baseline.json'
+R248_BASELINE_NORMALIZED_SHA256 = '69464e8c153519ca2f97cf76f9a6e17055401a3f2f1a18084c1672ca57e8c168'
+GENERATED_STOCK_JSON = 'Server/Prefabs/Testing/VolumeShowcase/Trigger_Volume_Showcase.prefab.json'
 CATEGORIES = {
     'Quality': 'Item/Qualities', 'PlayerAnimationsId': 'Item/Animations',
     'ItemPlayerAnimationsId': 'Item/Animations', 'ItemSoundSetId': 'Audio/ItemSounds',
@@ -25,12 +28,25 @@ def asset_root(entries):
     return hashlib.sha256(lines.encode()).hexdigest()
 
 
+def normalized_json_sha256(data):
+    # Checkout platforms may change CRLF to LF. Preserve every other byte.
+    return hashlib.sha256(data.replace(b'\r\n', b'\n')).hexdigest()
+
+
 def validate(package, installed, report):
-    baseline = json.loads(BASELINE.read_text())
+    baseline_bytes = BASELINE.read_bytes()
     failures = []
+    if normalized_json_sha256(baseline_bytes) != R248_BASELINE_NORMALIZED_SHA256:
+        failures.append('Historical R248 baseline JSON file SHA-256 changed')
+    baseline = json.loads(baseline_bytes)
+    review = json.loads(R250_REVIEW.read_text())
     checked_references = 0
     if baseline.get('baselineJarSha256') != 'b68c61c4ca1a40b75d6238b604b1e71e69ce5028fcf062e5fd4d49a490251803':
         failures.append('Deployed R248 baseline identity changed')
+    if (review.get('revision') != 'R250-U7P5B' or
+            review.get('referenceJarSha256') != 'a0ea6eeb80577aa30aa787475e7b7750417f5de7530a57ec7df72de7d8e13101' or
+            review.get('reviewedSourceCommit') != '44184d936d750e0a6729a8f797e7f6a4fe30356f'):
+        failures.append('Reviewed R250 asset reference identity changed')
     try:
         runpy.run_path(str(HERE / 'tools/Build-ProductionEliteRemaining.py'),
                        run_name='r229_asset_builder')['main'](check=True)
@@ -103,17 +119,49 @@ def validate(package, installed, report):
                                         'Server/ProjectileConfigs/')) and not '[' in value:
                         if not has('Item/Interactions', value) and not has('Item/RootInteractions', value):
                             failures.append(f'{path}: unresolved action {field}/{value}')
-        actual = {name for name in own_names if name.endswith('.json') and name != 'manifest.json'}
+        json_entries = [name for name in candidate.namelist()
+                        if name.endswith('.json') and name != 'manifest.json']
+        actual = set(json_entries)
+        if len(json_entries) != len(actual):
+            failures.append('Duplicate JSON asset entry in package')
         allowed_added = set(baseline['allowedAdded'])
         allowed_changed = set(baseline['allowedChanged'])
-        if len(actual) != baseline['jsonAssetCount'] + len(allowed_added):
-            failures.append('R249 JSON asset count differs from pinned R248 plus reviewed additions')
-        if not allowed_added.issubset(actual) or not allowed_changed.issubset(actual):
-            failures.append('Reviewed R249 JSON asset is missing')
-        unchanged = {name: hashlib.sha256(candidate.read(name)).hexdigest()
-                     for name in actual - allowed_added - allowed_changed}
-        if asset_root(unchanged) != baseline['unchangedJsonSha256']:
-            failures.append('Unreviewed JSON asset set or contents differ from deployed R248')
+        r249_added = review['r249AddedNormalizedSha256']
+        r249_changed = review['r249ChangedNormalizedSha256']
+        r250_changed = review['r250ChangedNormalizedSha256']
+        teleport_paths = {'rpg/catalog/skills.json', 'rpg/runtime/lightning-v2.json'}
+        if (set(r249_added) != allowed_added or set(r249_changed) != allowed_changed or
+                set(r250_changed) != teleport_paths or
+                len(allowed_added) != 94 or len(allowed_changed) != 1 or
+                review['jsonAssetCount'] != baseline['jsonAssetCount'] + len(allowed_added) or
+                review['guardedJsonCount'] + len(allowed_added) + len(allowed_changed) + len(teleport_paths)
+                != review['jsonAssetCount']):
+            failures.append('Reviewed R250 JSON partition differs from R248/R249 history')
+        if len(actual) != review['jsonAssetCount']:
+            failures.append('R250 JSON asset count differs from reviewed package')
+        resource_roots = (HERE / 'src/main/resources', HERE / 'hytale-taverns/src/main/resources')
+        source_paths = {}
+        for root in resource_roots:
+            for source in root.rglob('*.json'):
+                name = source.relative_to(root).as_posix()
+                if name != 'manifest.json':
+                    if name in source_paths:
+                        failures.append(f'{name}: duplicate JSON source path')
+                    source_paths[name] = source
+        if set(source_paths) != actual - {GENERATED_STOCK_JSON}:
+            failures.append('Packaged JSON asset paths differ from checked source paths')
+        reviewed = {**r249_added, **r249_changed, **r250_changed}
+        if not set(reviewed).issubset(actual):
+            failures.append('Reviewed R249/R250 JSON asset is missing')
+        guarded_names = actual - set(reviewed)
+        if len(guarded_names) != review['guardedJsonCount']:
+            failures.append('Guarded R250 JSON asset count differs from reviewed package')
+        guarded = {name: normalized_json_sha256(candidate.read(name)) for name in guarded_names}
+        if asset_root(guarded) != review['guardedNormalizedJsonSha256']:
+            failures.append('Guarded R250 JSON asset set or normalized contents changed')
+        for name, expected in reviewed.items():
+            if name in actual and normalized_json_sha256(candidate.read(name)) != expected:
+                failures.append(f'{name}: reviewed normalized JSON content changed')
         for rarity in ('Champion', 'Unique', 'SuperUnique', 'Boss'):
             name = f'Common/Items/RPG/NameGlyphs/{rarity}.png'
             source = HERE / 'src/main/resources' / name
@@ -121,11 +169,16 @@ def validate(package, installed, report):
                 failures.append(f'{name}: glyph atlas missing or differs from checked source')
         counts = Counter()
         for name in sorted(actual):
-            document = json.loads(candidate.read(name))
-            if name in allowed_added or name in allowed_changed:
-                source = HERE / 'src/main/resources' / name
-                if not source.is_file() or source.read_bytes() != candidate.read(name):
-                    failures.append(f'{name}: packaged reviewed asset differs from checked source')
+            package_bytes = candidate.read(name)
+            document = json.loads(package_bytes)
+            source = source_paths.get(name)
+            if source is not None:
+                source_bytes = source.read_bytes()
+                if name in reviewed:
+                    if source_bytes != package_bytes:
+                        failures.append(f'{name}: packaged reviewed asset differs from checked source')
+                elif normalized_json_sha256(source_bytes) != normalized_json_sha256(package_bytes):
+                    failures.append(f'{name}: packaged guarded asset differs from checked source')
             if name.startswith('Server/'):
                 counts['/'.join(name.split('/')[1:3])] += 1
                 walk(document, name)
@@ -147,7 +200,9 @@ def validate(package, installed, report):
                 if key not in language: failures.append(f'{name}: missing translation {key}')
     result = {'result': 'PASS' if not failures else 'FAIL', 'patch': '0.7.0-pre.5.1',
               'baselineRevision': baseline['baselineRevision'], 'baselineJarSha256': baseline['baselineJarSha256'],
-              'jsonAssetsChecked': len(actual), 'serverAssetCounts': dict(counts),
+              'reviewedRevision': review['revision'], 'jsonAssetsChecked': len(actual),
+              'guardedJsonChecked': len(guarded_names), 'reviewedJsonChecked': len(reviewed),
+              'jsonNormalization': 'CRLF_TO_LF_ONLY', 'serverAssetCounts': dict(counts),
               'referencesChecked': checked_references, 'failures': failures,
               'nativeServerStarted': False, 'saveMigration': 'R200 spatial catalog revision 3 preserved; R230 has no inventory migration',
               'connectedAcceptance': 'USER_TEST_PENDING'}
