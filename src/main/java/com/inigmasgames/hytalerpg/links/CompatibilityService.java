@@ -10,6 +10,7 @@ import java.util.Set;
 public final class CompatibilityService {
     /** Component-introduction seam: do not grant radius to the original projectile carrier. */
     public CompatibilityResult assess(SkillDefinition skill,PassiveDefinition passive,java.util.List<PassiveDefinition> selected) {
+        if(skill.id().value().equals("teleport"))return assess(skill,passive);
         boolean orbit=selected.stream().anyMatch(p->p.id().value().equals("orbit"))&&com.inigmasgames.hytalerpg.execution.ProfileComponentPolicy.orbit(skill.id().value());
         if(orbit&&(passive.id().value().equals("terror")||passive.id().value().equals("hemorrhage")&&skill.tags().contains("PHYSICAL")))
             return CompatibilityResult.accepted(Set.of("CONVERTED_ORBIT_DIRECT_HIT","DAMAGE"));
@@ -40,6 +41,14 @@ public final class CompatibilityService {
                 Set.of("COMPONENT_SHRAPNEL","AREA","BURST","DAMAGE","HAS_RADIUS"));
     }
     public CompatibilityResult assess(SkillDefinition skill, PassiveDefinition passive) {
+        if(skill.id().value().equals("teleport")){
+            var allowed=Set.of("efficiency","long_reach","second_wind","lifeblood","attunement");
+            return allowed.contains(passive.id().value())
+                    ?CompatibilityResult.accepted(skill.linkCompatibilityTags())
+                    :CompatibilityResult.rejected(ValidationCode.NO_SCALABLE_FIELD,
+                    "Teleport exposes only an instant movement range and a finite Mana payment.",
+                    Set.of("TELEPORT_RANGE_OR_RESOURCE_COMPONENT"),skill.linkCompatibilityTags());
+        }
         if(skill.id().value().equals("lightning_coil")){
             String id=passive.id().value();
             var component=new LinkedHashSet<>(skill.linkCompatibilityTags());component.addAll(skill.tags());

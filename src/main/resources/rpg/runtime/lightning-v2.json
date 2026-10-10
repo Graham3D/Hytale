@@ -32,10 +32,10 @@
     {
       "skillId": "teleport", "family": "MOVEMENT", "secondaryFamilies": [],
       "allowedMainHandKinds": [], "requiredOffHandKinds": [],
-      "resourceType": "MANA", "resourceCost": 16, "cooldownSeconds": 8, "windupSeconds": 0,
+      "resourceType": "MANA", "resourceCost": 0, "cooldownSeconds": 2.5, "windupSeconds": 0,
       "basePowerSource": "NONE", "innateBasePower": 0, "scaling": "NONE",
-      "movement": {"kind": "DASH", "maxDistance": 14, "minimumDurationSeconds": 0.05, "maximumDurationSeconds": 0.05,
-        "apexHeight": 0, "landingRadius": 0, "details": {"groundTarget": true, "travelSpeed": 100}}
+      "movement": {"kind": "DASH", "maxDistance": 10, "minimumDurationSeconds": 0, "maximumDurationSeconds": 0,
+        "apexHeight": 0, "landingRadius": 0, "details": {"groundTarget": true, "travelSpeed": 0}}
     },
     {
       "skillId": "static_field", "family": "GROUND_ZONE", "secondaryFamilies": [],

@@ -108,6 +108,7 @@ public final class RpgCommand extends AbstractCommandCollection {
             addSubCommand(new RpgProgressionCommand(authority));
             addSubCommand(new RpgLevelCommand(authority,uiProjection,hud));
             addSubCommand(new RpgIronSentinelQaCommand(authority));
+            addSubCommand(new RpgTeleportQaCommand(authority));
             addSubCommand(new RpgReadyPathCommand(authority));
         }
         addSubCommand(new StatsCommand(loadouts, kernel, combatTrace));

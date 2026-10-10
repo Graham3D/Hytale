@@ -77,7 +77,7 @@ class LightningSkillUpdateTest {
         assertEquals(18,p.require("ball_lightning").resourceCost());assertEquals(10,p.require("ball_lightning").cooldownSeconds());assertEquals(.35,p.require("ball_lightning").connection().coefficient());
         assertEquals(22,p.require("lightning_coil").resourceCost());assertEquals(18,p.require("lightning_coil").cooldownSeconds());assertEquals(5,p.require("lightning_coil").area().lifetimeSeconds());
         assertEquals(6,p.require("lightning_coil").area().radius());assertEquals(1.8,p.require("lightning_coil").area().coefficient());
-        assertEquals(16,p.require("teleport").resourceCost());assertEquals(8,p.require("teleport").cooldownSeconds());assertEquals(14,p.require("teleport").movement().maxDistance());
+        assertEquals(0,p.require("teleport").resourceCost());assertEquals(2.5,p.require("teleport").cooldownSeconds());assertEquals(10,p.require("teleport").movement().maxDistance());
         assertEquals(24,p.require("static_field").resourceCost());assertEquals(18,p.require("static_field").cooldownSeconds());assertEquals(0,p.require("static_field").area().coefficient());
         assertEquals(0,p.require("storm_strike").resourceCost());assertEquals(1.75,p.require("storm_strike").strike().coefficient());
         assertEquals(8,p.require("lightning_arrow").resourceCost());assertEquals(3,p.require("lightning_arrow").cooldownSeconds());assertEquals(1.05,p.require("lightning_arrow").projectile().coefficient());
