@@ -1,11 +1,10 @@
 # Hywind / HyARPG development baseline
 
-This task branch (`codex/skill-level-qa`) builds **R254-U7P5B**
-(`0.2.0-R254-U7P5B`) on the R253 Teleport QA source. The operator-only
-`/rpg skilllevel <skillId> <1..20>` command changes a learned skill's saved
-base level for connected QA; equipment bonuses remain separate. Teleport's
-native relocation and targeting rules are unchanged. Connected-game acceptance
-remains pending.
+This task branch (`codex/teleport-landing-sound`) builds **R255-U7P5B**
+(`0.2.0-R255-U7P5B`) on the verified R254 source. A native positional
+`SFX_Portal_Neutral_Teleport_Local` sound now plays once at a confirmed
+Teleport landing. Native relocation, targeting, resource costs, and the R254
+skill-level QA command remain unchanged. Connected-game acceptance is pending.
 
 The current GitHub `main` gameplay baseline is **R250-U7P5B**
 (`0.2.0-R250-U7P5B`). [PR #1](https://github.com/Graham3D/Hytale/pull/1)
@@ -37,7 +36,7 @@ Run validation from an isolated worktree based on the latest verified source:
 
 ```powershell
 .\gradlew.bat --offline --no-daemon check --console=plain
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/Test-HyArpgPackage.ps1 -JarPath build/libs/HyARPG.jar -ExpectedVersion 0.2.0-R254-U7P5B -ExpectedRevision R254-U7P5B
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/Test-HyArpgPackage.ps1 -JarPath build/libs/HyARPG.jar -ExpectedVersion 0.2.0-R255-U7P5B -ExpectedRevision R255-U7P5B
 ```
 
 The full `check` compiles source and runs RPG, native-control, CanvasUI, and

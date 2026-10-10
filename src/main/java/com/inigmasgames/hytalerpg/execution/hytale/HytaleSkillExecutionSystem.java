@@ -1126,7 +1126,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         Vec3 actual = transform == null ? null : vec(transform.getPosition());
         var state = pending.receipt.inspect(actual, valid, System.nanoTime());
         if (state == NativeTeleportReceipt.State.WAITING) return;
-        teleports.remove(owner, pending);
+        if (!teleports.remove(owner, pending)) return;
         if (state == NativeTeleportReceipt.State.FAILED) {
             failTeleport(pending.context, pending.receipt.failure());
             return;
@@ -1135,6 +1135,17 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             if (summons != null) summons.relocateOwned(store, pending.landing, pending.group);
             presentAuthoredParticle(pending.context, store, pending.landing.add(new Vec3(0, 1.99, 0)),
                     "RPG_Teleport_Landing", "TELEPORT_ARRIVAL");
+            pending.sound.present(state, pending.landing, (eventId, category, point) -> {
+                int index=com.hypixel.hytale.server.core.asset.type.soundevent.config.SoundEvent.getAssetMap().getIndex(eventId);
+                if(index<0)throw new IllegalStateException("SOUND_EVENT_UNRESOLVED");
+                com.hypixel.hytale.server.core.universe.world.SoundUtil.playSoundEvent3d(index,category,
+                        point.x(),point.y(),point.z(),store);
+                emit(pending.context,RpgTraceEventType.AREA_PRESENTATION,
+                        Map.of("phase","TELEPORT_ARRIVAL_SOUND","sound",eventId,"pointX",point.x(),
+                                "pointY",point.y(),"pointZ",point.z(),"connectedProof",false));
+            }, failure -> emit(pending.context,RpgTraceEventType.AREA_PRESENTATION,
+                    Map.of("phase","TELEPORT_ARRIVAL_SOUND_FAILED","sound",TeleportLandingSound.EVENT_ID,
+                            "error",failure.getClass().getSimpleName(),"message",boundedMessage(failure),"connectedProof",false)));
             emit(pending.context, RpgTraceEventType.MOVEMENT_END,
                     Map.of("distance", actual.subtract(pending.origin).length(), "kind", "TELEPORT",
                             "nativeTeleport", true, "summons", pending.group.size()));
@@ -1151,7 +1162,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
     }
 
     private record PendingTeleport(SkillExecutionContext context, Vec3 origin, Vec3 landing,
-                                   List<HytaleSummonSystem.Relocation> group, NativeTeleportReceipt receipt) { }
+                                   List<HytaleSummonSystem.Relocation> group, NativeTeleportReceipt receipt,
+                                   TeleportLandingSound sound) { }
 
     private final class Port implements SkillExecutionPort {
         private final Store<EntityStore> store; private final Ref<EntityStore> actor;
@@ -2296,7 +2308,7 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 if (head != null) nativeTeleport.setHeadRotation(head.getRotation());
                 nativeTeleport.setOnComplete(completion);
                 var pending = new PendingTeleport(context, origin, landing, List.copyOf(teleportGroup),
-                        new NativeTeleportReceipt(completion, landing, System.nanoTime()));
+                        new NativeTeleportReceipt(completion, landing, System.nanoTime()),new TeleportLandingSound());
                 emit(context, RpgTraceEventType.MOVEMENT_BEGIN,
                         Map.of("kind", "TELEPORT", "nativeTeleport", true,
                                 "requestedDistance", landing.subtract(origin).length()));

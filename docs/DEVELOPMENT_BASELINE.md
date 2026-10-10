@@ -1,5 +1,34 @@
 # HyARPG/Hywind development baseline
 
+## R255 Teleport landing sound QA candidate (2026-10-10)
+
+Source branch `codex/teleport-landing-sound` starts from verified, published
+R254 commit `f6cc79b1820a5dce2f84bf96895ad1a7421b3902`, which descends from
+the refreshed GitHub `main` commit `b6a2bd10e877800d702ec5ecd8bc1464e1724f83`.
+Guardian preflight passed; the primary checkout's unrelated modified
+`AGENTS.md` remains untouched. The active RPG save carries R254 at SHA-256
+`7353B2A657AD8D9249B7617B9BE66F7008028AA65C23609B60901BBAE25C1031`
+before this candidate.
+
+R255-U7P5B (`0.2.0-R255-U7P5B`) adds only the Teleport landing cue. The
+installed Hytale 0.7.0-pre.5.1 `Assets.zip` contains native event
+`Server/Audio/SoundEvents/SFX/Magic/Portals/SFX_Portal_Neutral_Teleport_Local.json`.
+Its ID is `SFX_Portal_Neutral_Teleport_Local`; Hywind does not duplicate the
+asset. After native relocation succeeds, the arrival particle is followed by
+`SoundUtil.playSoundEvent3d` with `SoundCategory.SFX` at the saved destination.
+Hytale's native sound event has a 16 m default maximum range and its 3D method
+addresses players in the event's spatial range. A per-Teleport presentation
+gate and pending-map removal prevent duplicate playback. Audio failure is
+reported as cosmetic and cannot hold the completed cast. Failed, cancelled,
+and timed-out Teleports do not enter arrival presentation. No save migration
+or changes to targeting, movement, Mana, cooldowns, summons, or hazard rules.
+
+At the implementation checkpoint, all 11 focused Teleport arrival, native
+receipt, and cast-lifecycle JUnit tests passed with zero failures or skips.
+Strict SpotBugs passed with no findings outside the reviewed baseline.
+Exact-commit offline `check`, GitHub publication, deployment, and connected-game
+QA are pending. They must be recorded separately when complete.
+
 ## R254 operator skill-level QA command (2026-10-10)
 
 Source branch `codex/skill-level-qa` starts from the verified R253 documentation
