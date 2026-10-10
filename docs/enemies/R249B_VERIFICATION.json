@@ -1,0 +1,32 @@
+{
+  "revision": "R249-U7P5B",
+  "sourceCommitEmbeddedInJar": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+  "candidateJarSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101",
+  "offlineCheck": "PASS",
+  "tests": {
+    "core": {"run": 3466, "failures": 0, "errors": 0, "skipped": 0},
+    "nativeControl": {"run": 452, "failures": 0, "errors": 0, "skipped": 0},
+    "canvasUi": {"run": 49, "failures": 0, "errors": 0, "skipped": 0},
+    "taverns": {"run": 5, "failures": 0, "errors": 0, "skipped": 0}
+  },
+  "presentation": {
+    "nameHeight": "UNCHANGED: visualTop + 0.80 world units",
+    "visibleAffixHeight": "visualTop + 0.60 world units; raised 0.18 world units",
+    "visibleNameAffixGap": "0.20 world units",
+    "nativeNameplateLift": "1.00 world unit compensated by affix carrier",
+    "fullLabels": "PASS: no overhead enchantment/resistance abbreviations; Packbound count hidden overhead",
+    "smallMediumLargeMovementScaleRebindGeometry": "PASS: pure shared-layout regression tests",
+    "connectedPlacement": "NOT_RUN"
+  },
+  "assetAudit": {
+    "result": "PASS",
+    "baselineRevision": "R248-U7P5A",
+    "baselineJarSha256": "B68C61C4CA1A40B75D6238B604B1E71E69CE5028FCF062E5FD4D49A490251803",
+    "jsonAssetsChecked": 5014,
+    "referencesChecked": 41251,
+    "failures": 0
+  },
+  "nativeServerStarted": false,
+  "connectedAcceptance": "NOT_RUN",
+  "ownerAccepted": false
+}

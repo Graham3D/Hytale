@@ -9,8 +9,8 @@
   "installedServerSha256": "a032a64e03390ca0aeb6c03c3b1600eaa892c8bc833d1bf3ac39307ccdf3cb20",
   "installedAssetsSha256": "eddf425546559bfbc3f2656babf30daa4008543c38ee5aa4499c605ed1732236",
   "worldConfigSha256": "3D7E86AB1B97F36E41F124FD3E03C682923F77F59B898FCE8CA0221542DF7986",
-  "candidateSourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-  "candidateJarSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E",
+  "candidateSourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+  "candidateJarSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101",
   "requirements": [
     {
       "id": "ENEMY_ACTION",
@@ -30,8 +30,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Wrapped Selector fork fails against the baseline raw operation comparison and passes after unwrapping. Connected Goblin/Bear contacts, stale/duplicate execution and long combat remain unverified.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ORDINARY_DIFFICULTY",
@@ -51,8 +51,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Deferred handoff path is source-checked and profile resolver tested; native Hell fallback Health/damage and alternate ingress routes need connected proof.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "SKELETON_BINDINGS",
@@ -76,8 +76,8 @@
         "docs/enemies/R249_DEPLOYMENT.md"
       ],
       "missingOrFailure": "The exact Frost Ranger bow root and Frost Archer Wander movement alias now resolve pinned native bindings; the prior seven certifications remain. Natural combat, promotion and LOAD require connected proof.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "CHAMPION_IDENTITY",
@@ -100,8 +100,8 @@
         "docs/enemies/R249_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Offline Champion prefix and blue glyph semantics pass. Connected localized rendering, long names, clustered packs and LOAD still need proof.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "CHAMPION_COMPOSITION",
@@ -120,8 +120,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Planner produces peer CHAMPION/MEMBER actors; native publication and LOAD need connected proof.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "PLAYER_CAST",
@@ -140,8 +140,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Charged Bolt trace proves validation PASS followed by COMMIT_FAILED_IllegalStateException, but the prior trace lost the inner cause. New bounded stage/cause diagnostic awaits a connected recurrence.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ADMISSION",
@@ -161,8 +161,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "R247 connected publications exist; full R248 natural source/rollback/profile and capacity paths are not yet connected verified.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "PRESENTATION",
@@ -176,7 +176,8 @@
         "com.inigmasgames.hytalerpg.enemies.EnemyDisplayDtoTest",
         "com.inigmasgames.hytalerpg.execution.hytale.MonsterPresentationLayoutTest",
         "com.inigmasgames.hytalerpg.execution.hytale.PromotedNameGlyphsTest",
-        "com.inigmasgames.hytalerpg.enemies.EnemyNativePaletteTest"
+        "com.inigmasgames.hytalerpg.enemies.EnemyNativePaletteTest",
+        "com.inigmasgames.hytalerpg.execution.hytale.MonsterAffixLabelTest"
       ],
       "evidence": [
         "docs/enemies/R248_RELEASE_CANDIDATE.md",
@@ -184,11 +185,14 @@
         "docs/enemies/R248_DEPLOYMENT.md",
         "docs/enemies/R249_RELEASE_CANDIDATE.md",
         "docs/enemies/R249_VERIFICATION.json",
-        "docs/enemies/R249_DEPLOYMENT.md"
+        "docs/enemies/R249_DEPLOYMENT.md",
+        "docs/enemies/R249B_PRESENTATION_CORRECTION.md",
+        "docs/enemies/R249B_VERIFICATION.json",
+        "docs/enemies/R249B_DEPLOYMENT.md"
       ],
-      "missingOrFailure": "Offline color atlas, single-name owner, fallback and hitbox layout checks pass. Native client glyph visibility, clustered names, affix alignment, target-card completeness, Healthbar and unload/reload require connected screenshots; Polar Bear washout cause remains unproven.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "missingOrFailure": "R249B offline tests prove full overhead affix spelling and a 0.20 visible name-to-affix gap while the name height stays fixed. Native client spacing, crowded packs, movement, rebind, rich target card, Healthbar and Polar Bear washout still need connected evidence.",
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "REWARDS",
@@ -208,8 +212,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Exactly-once death, economic receipt and restart behavior on this candidate have no connected proof.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "LIFECYCLE",
@@ -229,8 +233,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Full spawn, profile, fight, wound, unload, reload, republish, defeat, rewards and restart sequence is NOT_RUN on the candidate.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-001",
@@ -251,8 +255,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-002",
@@ -273,8 +277,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-003",
@@ -295,8 +299,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-004",
@@ -317,8 +321,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-005",
@@ -339,8 +343,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-006",
@@ -361,8 +365,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-007",
@@ -383,8 +387,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-008",
@@ -405,8 +409,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-009",
@@ -427,8 +431,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-010",
@@ -449,8 +453,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-011",
@@ -471,8 +475,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-012",
@@ -493,8 +497,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-013",
@@ -515,8 +519,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-014",
@@ -537,8 +541,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-015",
@@ -559,8 +563,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-016",
@@ -581,8 +585,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-017",
@@ -603,8 +607,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-018",
@@ -625,8 +629,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-019",
@@ -647,8 +651,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-020",
@@ -669,8 +673,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-021",
@@ -691,8 +695,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-022",
@@ -713,8 +717,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-023",
@@ -735,8 +739,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-024",
@@ -757,8 +761,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-025",
@@ -779,8 +783,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-026",
@@ -801,8 +805,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     },
     {
       "id": "ME-027",
@@ -823,8 +827,8 @@
         "docs/enemies/R248_DEPLOYMENT.md"
       ],
       "missingOrFailure": "Existing implementation and partial offline fixtures are mapped; individual native positive/negative, era, persistence, cleanup and connected evidence are incomplete for this card.",
-      "sourceCommit": "2f2f74098f70c38ed3a77da5b010e83ece58817c",
-      "buildSha256": "8666C66C3127C4E0593A2263CC5729C850E43A5F135071A21E144FCBEFD46E7E"
+      "sourceCommit": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "buildSha256": "A0EA6EEB80577AA30AA787475E7B7750417F5DE7530A57EC7DF72DE7D8E13101"
     }
   ]
 }
