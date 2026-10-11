@@ -4,7 +4,8 @@
 
 Branch `codex/r261a1-cyclone-hardening` starts from published R261-A
 `e418e1ee1fa430a288b45307310ebe7cc2197912`. The implementation
-source commit is `896b750b20434984ce52fe1fdc8f4291b63f9975`.
+source commits are `896b750b20434984ce52fe1fdc8f4291b63f9975` and
+`52554e223554d3df0fe4ab185e8e40c9f336c959` (final implementation).
 Build revision/version are R261A1-U7P5B / `0.2.0-R261A1-U7P5B`.
 The [durability contract](CYCLONE_DURABILITY.md) now specifies that
 reconnect with an uncertain native Mana payment durably invalidates the
@@ -12,9 +13,10 @@ barrier without another debit or an unproven refund. The existing cooldown
 authority and activation history remain intact. The feature gate remains
 disabled and R260 is still the deployed RPG build.
 
-Thirty focused Cyclone durability JUnit cases passed, including native Mana
+Thirty-three focused Cyclone durability JUnit cases passed, including native Mana
 rollback and retained-payment scenarios, cooldown recovery, reconnect
-races, forced-write failure, and multi-player latency profiling. The
+races, forced-write failure, equal-revision journal conflict, capacity
+ceilings, and multi-player latency profiling. The
 240-hit local profile measured repeated p50/p95/p99/worst at
 2.267/3.589/4.014/5.300 ms; eight concurrent threads on one player at
 2.297/70.534/93.142/96.398 ms; and eight independent players at
