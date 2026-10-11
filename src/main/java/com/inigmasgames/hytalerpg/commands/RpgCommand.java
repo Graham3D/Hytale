@@ -566,9 +566,10 @@ public final class RpgCommand extends AbstractCommandCollection {
 
     private static DerivedStats derive(RpgLoadoutOperations loadouts, UUID actor, RpgCombatKernel kernel) {
         Map<RpgAttribute, Integer> raw = new EnumMap<>(RpgAttribute.class);
-        var persisted = loadouts.getLoadout(actor).state().attributes;
+        var state = loadouts.getLoadout(actor).state();
+        var persisted = state.attributes;
         for (RpgAttribute attribute : RpgAttribute.values()) raw.put(attribute, persisted.getOrDefault(attribute.name(), 10));
-        return kernel.derivedStats().derive(raw);
+        return kernel.derivedStats().derive(raw,state.level);
     }
     private static EntityStatMap requireStats(Store<EntityStore> store, Ref<EntityStore> ref) {
         EntityStatMap stats = store.getComponent(ref, EntityStatMap.getComponentType());

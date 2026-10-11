@@ -78,6 +78,19 @@ public final class GearAffixQaSuite {
                 allFixtures.add(row);
             }
         }
+        // Protected v2 A/B fixture; the frozen 160-row v1 coverage manifest remains intact.
+        var manaAffix=catalog.affix("GA-161");
+        var manaBase=catalog.bases().stream().filter(b->b.category()==GearCatalog.Category.ARMOR
+                &&b.era()==com.inigmasgames.hytalerpg.difficulty.DifficultyId.HELL
+                &&bindings.require(b.id()).mapped()&&GearDropGenerator.eligible(manaAffix,b))
+                .sorted(Comparator.comparing(GearCatalog.Base::id)).findFirst().orElseThrow();
+        for(boolean control:new boolean[]{true,false}){
+            var row=new Fixture("ab-ga-161-"+(control?"control":"affixed"),manaBase.id(),
+                    manaBase.sourceWindow().getLast(),"MAGIC","armor",control?List.of():List.of("GA-161"));
+            createUnchecked(row,UUID.nameUUIDFromBytes(("r261c/validation/"+row.fixtureId()).getBytes(StandardCharsets.UTF_8)));
+            if(ids.putIfAbsent(row.fixtureId(),row)!=null)throw new IllegalStateException("Duplicate R261-C fixture");
+            allFixtures.add(row);
+        }
         var combined=new LinkedHashMap<String,List<List<String>>>();
         for(var affix:catalog.affixes()) {
             var single=ids.get("ab-"+affix.id().toLowerCase(Locale.ROOT)+"-affixed");

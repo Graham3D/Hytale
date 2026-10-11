@@ -1,5 +1,21 @@
 # HyARPG/Hywind development baseline
 
+## R261-C progression, Mana Before Life, and resource HUD development (2026-10-11)
+
+Branch `codex/r261c-progression-mana-hud` starts from published R261-B
+`bfa9a6c25a5658dfd10b21a8dd2227ae22daf0b7`. R261-A and A.1 are
+ancestors. Build identity is R261C-U7P5B / `0.2.0-R261C-U7P5B` once the
+implementation is committed and Guardian verifies the exact commit.
+The [R261-C contract](R261C_ENGINEERING.md) describes the level 1–99
+Health curve, effective STR/INT coefficients, versioned armor affix,
+post-barrier native Mana conversion, and read-only resource presentation.
+The [R261-C offline evidence map](QA-R261C-DEVELOPMENT.md) identifies the
+focused checks and remaining R261 Final acceptance boundaries.
+The active RPG save and R260 JAR remain untouched. R261 Final must review
+the known reconnect, Shared Aegis, and damage-thread latency limitations.
+Exact verification, package checksum, and publication are established by
+Guardian after this record is committed, not by this in-progress text.
+
 ## R261-B live Cyclone Armor candidate (2026-10-11)
 
 Branch `codex/r261b-live-cyclone` starts from published R261-A.1

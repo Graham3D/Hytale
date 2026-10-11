@@ -9,7 +9,7 @@ import java.util.*;
 
 /** Authored definition compiler. Definition presence never grants a native capability. */
 public final class GearCatalog {
-    public static final String REVISION="gm.1.1.stage1.v1";
+    public static final String REVISION="gm.1.1.stage1.v2";
     public enum Category { HELD, ARMOR, TOOL }
     public enum Slot { HELD, HEAD, CHEST, HANDS, LEGS }
     public enum Side { PREFIX, SUFFIX }
@@ -95,6 +95,7 @@ public final class GearCatalog {
     private record Tooltips(int schemaVersion,String specification,String sourceSha256,List<TooltipRow> templates) {}
     private final Map<String,Base> bases;
     private final Map<String,Affix> affixes;
+    private final List<Affix> legacyAffixes;
     private GearCatalog(Bases baseData,Affixes affixData,Tooltips tooltipData) {
         if(baseData.schemaVersion()!=1 || affixData.schemaVersion()!=1 || !baseData.documentSha256().equals(affixData.documentSha256()))
             throw new IllegalArgumentException("Gear source revision mismatch");
@@ -117,6 +118,17 @@ public final class GearCatalog {
         if(b.size()!=447 || a.size()!=160 || !templates.isEmpty()) throw new IllegalArgumentException("Incomplete Gear Master import or unexpected tooltip ID");
         for(int i=1;i<=160;i++) if(!a.containsKey((i<=158?"WA-":"GA-")+String.format(Locale.ROOT,"%03d",i)))
             throw new IllegalArgumentException("Missing authored affix "+i);
+        legacyAffixes=List.copyOf(a.values());
+        var extension=read("affixes-v2.json",Affixes.class);
+        if(extension.schemaVersion()!=2 || extension.affixes().size()!=1)
+            throw new IllegalArgumentException("Invalid Gear Master v2 extension");
+        for(var row:extension.affixes()) {
+            if(!row.id().equals("GA-161") || !row.operator().equals("MANA_BEFORE_LIFE")
+                    || !row.eligibility().equals("All armor") || row.topRange()==null)
+                throw new IllegalArgumentException("Unexpected Gear Master v2 affix");
+            GearAffixDisplay.validateTemplate(row.playerTooltipTemplate());
+            if(a.putIfAbsent(row.id(),row)!=null)throw new IllegalArgumentException("Duplicate Gear Master v2 affix");
+        }
         bases=Collections.unmodifiableMap(b); affixes=Collections.unmodifiableMap(a);
     }
     public static GearCatalog load() { return new GearCatalog(read("bases-v1.json",Bases.class),read("affixes-v1.json",Affixes.class),
@@ -130,6 +142,8 @@ public final class GearCatalog {
     public Base base(String id) { var value=bases.get(id); if(value==null) throw new IllegalArgumentException("Unknown base "+id); return value; }
     public Affix affix(String id) { var value=affixes.get(id); if(value==null) throw new IllegalArgumentException("Unknown affix "+id); return value; }
     public Collection<Base> bases() { return bases.values(); }
-    public Collection<Affix> affixes() { return affixes.values(); }
+    /** Historical v1 enumeration remains pinned for the v1 QA coverage manifest. */
+    public Collection<Affix> affixes() { return legacyAffixes; }
+    public Collection<Affix> rollableAffixes() { return affixes.values(); }
     public List<Base> eligible(DifficultyId era,int combatLevel) { return bases.values().stream().filter(b->b.eligible(era,combatLevel)).toList(); }
 }

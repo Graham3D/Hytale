@@ -44,7 +44,7 @@ public final class HytaleGearEquipment {
             Ref<EntityStore> actor,ComponentAccessor<EntityStore> accessor) {
         var view=view(actor,accessor);
         var effects=resolveEffects(actor,accessor,view);
-        return DERIVED.derive(effects.raw(view.baseline()),effects.health(),effects.stamina(),effects.mana());
+        return DERIVED.derive(effects.raw(view.baseline()),view.level(),effects.health(),effects.stamina(),effects.mana());
     }
     private GearAffixRuntime.Effects resolveEffects(Ref<EntityStore> actor,ComponentAccessor<EntityStore> accessor,View view) {
         var owner=accessor.getComponent(actor,PlayerRef.getComponentType()).getUuid();
@@ -155,7 +155,7 @@ public final class HytaleGearEquipment {
         }
         var nativeStats=accessor.getComponent(actor,EntityStatMap.getComponentType());
         var applied=resolveEffects(actor,accessor,view);
-        var baseline=DERIVED.derive(view.baseline());var total=applied.derive(DERIVED,view.baseline());
+        var baseline=DERIVED.derive(view.baseline(),view.level());var total=applied.derive(DERIVED,view.baseline(),view.level());
         health=total.maxHealth()-baseline.maxHealth();mana=total.maxMana()-baseline.maxMana();stamina=total.maxStamina()-baseline.maxStamina();
         if(nativeStats!=null) DerivedStatEntityAdapter.applyGearCapacity(nativeStats,health,mana,stamina);
         var effects=accessor.getComponent(actor,EffectControllerComponent.getComponentType());

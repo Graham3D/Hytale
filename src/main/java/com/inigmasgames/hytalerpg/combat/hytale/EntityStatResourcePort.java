@@ -5,6 +5,7 @@ import com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue;
 import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
 import com.inigmasgames.hytalerpg.combat.resource.NativeResourcePort;
 import com.inigmasgames.hytalerpg.combat.resource.ResourceType;
+import com.inigmasgames.hytalerpg.combat.resource.RpgResourceService;
 
 /** Direct adapter over Hytale's live EntityStatMap. */
 public final class EntityStatResourcePort implements NativeResourcePort {
@@ -17,6 +18,12 @@ public final class EntityStatResourcePort implements NativeResourcePort {
         return type==ResourceType.MANA?NativeManaReservationProjection.totalMaximum(value(type)):value(type).getMax();
     }
     @Override public void setReservedMana(double amount){NativeManaReservationProjection.project(stats,amount);}
+    @Override public double drainManaAtMost(double amount,double minimum){
+        var mana=value(ResourceType.MANA);float before=mana.get();
+        float after=RpgResourceService.nativeDebitTarget(before,amount,minimum);
+        if(after<before)stats.setStatValue(DefaultEntityStatTypes.getMana(),after);
+        return Math.max(0,before-mana.get());
+    }
     @Override public double restoreResourceAtMost(ResourceType type,double amount,double cap){
         if(type!=ResourceType.MANA&&type!=ResourceType.STAMINA)throw new IllegalArgumentException("Only Mana/Stamina credit allowed");
         var stat=value(type);double before=stat.get();

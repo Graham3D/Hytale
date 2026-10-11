@@ -188,6 +188,7 @@ public final class Phase00Plugin extends JavaPlugin {
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleStatusDeathSystem(skillExecutionSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleStatusDeathSystem.Removal(skillExecutionSystem));
         uiProjection.configureActiveRemaining(skillExecutionSystem::activeSkillRemaining);
+        uiProjection.configureBarrierReader(supportSystem::barrierView);
         uiProjection.configureResourceReadiness(combatKernel.resources(),executions::attunementStacks);
         rpgHud = new RpgHudCoordinator(uiProjection, uiTrace);
         rpgHud.configureFinisherPips(executions::finisherPips);
@@ -241,6 +242,7 @@ public final class Phase00Plugin extends JavaPlugin {
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects.Removal(supportSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.Shield(supportSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.HealthCap(supportSystem));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.ManaBeforeLife(combatKernel.resources()));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.BeforeApply());
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.Reflect(supportSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleRetaliationSystem(skillExecutionSystem));
@@ -288,7 +290,7 @@ public final class Phase00Plugin extends JavaPlugin {
             if(slots!=null)nativeAbilities.install(playerRef.getUuid(),slots);
             EnumMap<RpgAttribute,Integer> raw=new EnumMap<>(RpgAttribute.class);
             for(var attribute:RpgAttribute.values())raw.put(attribute,view.state().attributes.getOrDefault(attribute.name(),10));
-            new DerivedStatEntityAdapter().apply(statMap,combatKernel.derivedStats().derive(raw));
+            new DerivedStatEntityAdapter().apply(statMap,combatKernel.derivedStats().derive(raw,view.state().level));
             rpgHud.install(playerRef,entity,statMap);
             return true;
         });

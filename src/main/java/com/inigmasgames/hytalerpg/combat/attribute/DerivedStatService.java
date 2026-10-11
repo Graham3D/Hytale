@@ -12,9 +12,15 @@ public final class DerivedStatService {
         this.profile = profile; this.effective = effective;
     }
 
-    public DerivedStats derive(Map<RpgAttribute, Integer> raw) { return derive(raw, 0.0, 0.0, 0.0); }
+    public DerivedStats derive(Map<RpgAttribute, Integer> raw) { return derive(raw, 1, 0.0, 0.0, 0.0); }
+
+    public DerivedStats derive(Map<RpgAttribute, Integer> raw, int level) { return derive(raw, level, 0.0, 0.0, 0.0); }
 
     public DerivedStats derive(Map<RpgAttribute, Integer> raw, double flatHealth, double flatStamina, double flatMana) {
+        return derive(raw, 1, flatHealth, flatStamina, flatMana);
+    }
+
+    public DerivedStats derive(Map<RpgAttribute, Integer> raw, int level, double flatHealth, double flatStamina, double flatMana) {
         EnumMap<RpgAttribute, Integer> normalized = new EnumMap<>(RpgAttribute.class);
         EnumMap<RpgAttribute, Double> values = new EnumMap<>(RpgAttribute.class);
         for (RpgAttribute attribute : RpgAttribute.values()) {
@@ -31,9 +37,9 @@ public final class DerivedStatService {
         double luck = values.get(RpgAttribute.LUCK);
         double primary = profile.primaryScalingPerEffectivePoint;
         return new DerivedStats(normalized, values,
-                profile.startingResourceMaximum + profile.healthPerEffectiveStrength * (strength - baselineEffective) + flatHealth,
+                CharacterHealthCurve.naturalMaximum(level) + profile.healthPerEffectiveStrength * Math.max(0, strength - baselineEffective) + flatHealth,
                 profile.startingResourceMaximum + profile.staminaPerEffectiveDexterity * (dexterity - baselineEffective) + flatStamina,
-                profile.startingResourceMaximum + profile.manaPerEffectiveIntelligence * (intelligence - baselineEffective) + flatMana,
+                profile.startingResourceMaximum + profile.manaPerEffectiveIntelligence * Math.max(0, intelligence - baselineEffective) + flatMana,
                 1.0 + primary * strength, 1.0 + primary * dexterity,
                 1.0 + primary * intelligence, 1.0 + primary * wisdom,
                 profile.wisdomCooldownNumerator * wisdom / (wisdom + profile.wisdomCooldownDenominator),

@@ -26,8 +26,8 @@ class GearAffixQaSuiteTest {
         assertTrue(suite.fixtures().stream().anyMatch(f->f.fixtureId().startsWith("combo-")&&f.affixIds().size()>1));
         assertTrue(suite.fixtures().stream().filter(f->f.fixtureId().startsWith("combo-"))
                 .flatMap(f->f.affixIds().stream()).allMatch(GearAffixRuntime.ENABLED::contains));
-        assertEquals(160,suite.fixtures().stream().filter(f->f.fixtureId().endsWith("-affixed")).count());
-        assertEquals(160,suite.fixtures().stream().filter(f->f.fixtureId().endsWith("-control")).count());
+        assertEquals(161,suite.fixtures().stream().filter(f->f.fixtureId().endsWith("-affixed")).count());
+        assertEquals(161,suite.fixtures().stream().filter(f->f.fixtureId().endsWith("-control")).count());
         assertEquals(160,suite.coverage().size());
         assertTrue(suite.coverage().stream().allMatch(r->Set.of("GATED","FUNCTIONAL").contains(r.status())));
         assertTrue(suite.coverage().stream().filter(r->r.status().equals("FUNCTIONAL"))
