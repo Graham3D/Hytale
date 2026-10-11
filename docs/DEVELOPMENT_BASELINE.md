@@ -4,7 +4,9 @@
 
 Branch `codex/r261-final` starts from the published R261-C commit
 `e1c5562728b4617ac2dfab4c3a8f10445cc36b92`, with R261-A, A.1, and B
-in ancestry. The development-only build identity is R261FDEV-U7P5B /
+in ancestry. The reviewed R261FDEV implementation source commit is
+`3d38e675b35abb3fd785d49517e941200f57f261`. The development-only build
+identity is R261FDEV-U7P5B /
 `0.2.0-R261FDEV-U7P5B`. [The requirement audit](R261_FINAL_MATRIX.md)
 records what has been confirmed offline and the remaining release blockers.
 It includes a native Mana value/marker recovery path for plain durable
