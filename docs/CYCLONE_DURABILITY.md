@@ -130,8 +130,10 @@ confirmed child debit; a failed child write leaves that portion of the hit
 unchanged. Child depletion does not refill on disconnect. A CLOSED parent
 intent allows safe compaction of depleted child journals while preventing
 later duplicate admission. Revocation, recipient death, and caster death
-forfeit remaining child protection. NPC recipients attach on a prepared
-native entity lease; player recipients attach through ReadyPath.
+forfeit remaining child protection. A caster death sweep that cannot finish
+keeps that caster's children ineligible for further absorption until cleanup
+succeeds. NPC recipients attach on a prepared native entity lease; player
+recipients attach through ReadyPath.
 
 Recipient recovery loads the caster's saved native Mana record asynchronously
 when the caster is offline. It accepts a surviving child only if that loaded

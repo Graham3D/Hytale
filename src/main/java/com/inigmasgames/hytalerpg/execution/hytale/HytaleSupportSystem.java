@@ -112,7 +112,7 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
     }
     private java.util.concurrent.CompletableFuture<Void> preloadNpcSharedAegis(UUID recipient){
         return java.util.concurrent.CompletableFuture.supplyAsync(
-                        ()->preloadSharedAegis(recipient,HytaleSupportSystem::sharedNpcGrantEligible))
+                        ()->preloadSharedAegis(recipient,this::sharedNpcGrantEligible))
                 .thenCompose(stage->stage)
                 .toCompletableFuture();
     }
@@ -134,11 +134,12 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         }catch(RuntimeException unavailable){return com.inigmasgames.hytalerpg.ui.model.BarrierView.NONE;}
     }
     private boolean sharedPlayerGrantEligible(CycloneSharedAegisLedger.Grant grant){
-        return grant.trustGeneration()!=null&&trustedAllies!=null
+        return !pendingCasterDeathSweeps.contains(grant.caster())
+                &&grant.trustGeneration()!=null&&trustedAllies!=null
                 &&grant.trustGeneration().equals(trustedAllies.generation(grant.caster(),grant.recipient()));
     }
-    private static boolean sharedNpcGrantEligible(CycloneSharedAegisLedger.Grant grant){
-        return grant.trustGeneration()==null;
+    private boolean sharedNpcGrantEligible(CycloneSharedAegisLedger.Grant grant){
+        return !pendingCasterDeathSweeps.contains(grant.caster())&&grant.trustGeneration()==null;
     }
     boolean retainSharedPaymentMarker(UUID generation){return cycloneShared.hasUnspentGrant(generation);}
     void cyclonePaymentMarked(PlayerRef player,UUID generation){
