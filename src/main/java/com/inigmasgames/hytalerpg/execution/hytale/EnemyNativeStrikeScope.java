@@ -68,6 +68,7 @@ public final class EnemyNativeStrikeScope implements NativeEnemyDamageInteractio
         calculated=true;return vector;
     }
     @Override public boolean sourceFactorsResolved(){return true;}
+    @Override public EnemyOffenseSnapshot offenseSnapshot(){return offense;}
     @Override public Consumer<HytaleDamageAdapter.NativeResult> component(Damage damage){
         if(closed||!calculated||!currentBinding.getAsBoolean())throw new IllegalStateException("ENEMY_STRIKE_RECEIPT_BINDING");
         if(deliverySource==null){

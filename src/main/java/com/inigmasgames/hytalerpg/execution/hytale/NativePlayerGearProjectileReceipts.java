@@ -27,6 +27,10 @@ public final class NativePlayerGearProjectileReceipts extends DamageEventSystem 
     }
     @Override public Query<EntityStore> getQuery(){return Query.any();}
     @Override public SystemGroup<EntityStore> getGroup(){return DamageModule.get().getGatherDamageGroup();}
+    @Override public java.util.Set<com.hypixel.hytale.component.dependency.Dependency<EntityStore>> getDependencies(){
+        return java.util.Set.of(new com.hypixel.hytale.component.dependency.SystemDependency<>(
+                com.hypixel.hytale.component.dependency.Order.BEFORE,
+                com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageLifecycleSystems.Gather.class));}
     @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,
             CommandBuffer<EntityStore> buffer,Damage damage){
             try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.DAMAGE)){
@@ -65,7 +69,7 @@ public final class NativePlayerGearProjectileReceipts extends DamageEventSystem 
                     shooter,victim,shooterId.getUuid(),victimId.getUuid(),receipt,
                     result.healthBefore()-result.healthAfter(),result.healthAfter(),hp.getMax()));}
             catch(RuntimeException ignored){} // Reflection cannot alter the original gear impact.
-        });}
+        },null,projectileId.getUuid());}
         catch(RuntimeException ignored){} // A missing receipt cannot alter native gear damage.
     
             }}

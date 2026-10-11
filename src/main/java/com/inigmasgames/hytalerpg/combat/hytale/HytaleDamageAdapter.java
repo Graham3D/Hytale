@@ -38,6 +38,24 @@ public final class HytaleDamageAdapter {
     }
     private static final MetaKey<CriticalParts> CRITICAL_PARTS=Damage.META_REGISTRY.registerMetaObject(
             ignored->null,false,"InigmasGames:FrozenCriticalParts",null);
+    private static final MetaKey<DamageCalculationService.Result> OFFENSE_RESULT=Damage.META_REGISTRY.registerMetaObject(
+            ignored->null,false,"InigmasGames:CombatOffenseResult",null);
+    /** The exact authored request inputs captured at calculation time, before native filtering. */
+    public record OffenseInputs(String scalingAttribute,double effectiveAttribute,
+            com.inigmasgames.hytalerpg.combat.damage.ModifierBuckets buckets,
+            double coefficient,double criticalChance){
+        public OffenseInputs {java.util.Objects.requireNonNull(scalingAttribute);java.util.Objects.requireNonNull(buckets);}
+    }
+    private static final MetaKey<OffenseInputs> OFFENSE_INPUTS=Damage.META_REGISTRY.registerMetaObject(
+            ignored->null,false,"InigmasGames:CombatOffenseInputs",null);
+    public static DamageCalculationService.Result offenseResult(Damage damage){return damage.getIfPresentMetaObject(OFFENSE_RESULT);}
+    public static OffenseInputs offenseInputs(Damage damage){return damage.getIfPresentMetaObject(OFFENSE_INPUTS);}
+    /** Attach the same result and inputs already used by the native submission; no diagnostic recomputation. */
+    public static void attachOffenseEvidence(Damage damage,DamageCalculationService.Result result,OffenseInputs inputs){
+        if(offenseResult(damage)!=null||offenseInputs(damage)!=null)throw new IllegalArgumentException("DUPLICATE_OFFENSE_EVIDENCE");
+        damage.putMetaObject(OFFENSE_RESULT,java.util.Objects.requireNonNull(result));
+        damage.putMetaObject(OFFENSE_INPUTS,java.util.Objects.requireNonNull(inputs));
+    }
     public static GearHitSource gearHit(Damage damage){return damage.getIfPresentMetaObject(GEAR_HIT);}
     /** Skill owners attach these when they know the precrit and critical components. */
     public static void attachCriticalParts(Damage damage,CriticalParts parts){
@@ -180,7 +198,7 @@ public final class HytaleDamageAdapter {
                 parts=new CriticalParts(total/hit.hit().criticalMultiplier(),total);
             }
             if(channel==null&&parts==null||!player&&(parts==null||defense.empty()))return;
-            double amount=damage.getAmount();
+            double amount=damage.getAmount(),beforeGear=amount;
             if(parts!=null&&parts.critical()>0)amount*=com.inigmasgames.hytalerpg.gear.GearDefenseEffects
                     .criticalAmount(defense,parts.ordinary(),parts.critical())/parts.critical();
             if(player&&channel!=null){
@@ -197,6 +215,14 @@ public final class HytaleDamageAdapter {
             }
             if(!Double.isFinite(amount)||amount<0||amount>Float.MAX_VALUE){damage.setCancelled(true);return;}
             damage.setAmount((float)amount);damage.putMetaObject(APPLIED,true);
+            if(HytaleDamageLifecycleSystems.combatTraceActive()){
+                var sources=new java.util.ArrayList<java.util.Map<String,Object>>();
+                for(var item:defense.items())for(var roll:item.affixes())if(sources.size()<48)
+                    sources.add(java.util.Map.of("itemId",item.identity().toString(),"affixId",roll.familyId(),"value",roll.value()));
+                HytaleDamageLifecycleSystems.combatStage(damage,"Hywind recipient gear","GEAR_DEFENSE",beforeGear,
+                        damage.getAmount(),java.util.Map.of("revision",defense.revision(),"sources",sources,
+                                "channel",channel==null?"CRITICAL_ONLY":channel.name()));
+            }
         }
     }
     public static WeaponComponent weaponComponent(Damage damage){return damage.getIfPresentMetaObject(WEAPON_COMPONENT);}
@@ -232,19 +258,25 @@ public final class HytaleDamageAdapter {
                       Ref<EntityStore> source, DamageCause cause,
                       HytaleDamageMetadata metadata, DamageCalculationService.Result calculation) {
         return applyResolved(target,accessor,source,cause,metadata,calculation.preMitigationDamage(),null,null,null,null,
-                calculation.critical()?new CriticalParts(calculation.preCritDamage(),calculation.preMitigationDamage()):null);
+                calculation.critical()?new CriticalParts(calculation.preCritDamage(),calculation.preMitigationDamage()):null,calculation);
     }
     public NativeResult applyObserved(Ref<EntityStore> target,ComponentAccessor<EntityStore> accessor,Ref<EntityStore> source,DamageCause cause,
             HytaleDamageMetadata metadata,DamageCalculationService.Result calculation,com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage conditional){
         return applyResolved(target,accessor,source,cause,metadata,calculation.preMitigationDamage(),conditional,null,null,null,
-                calculation.critical()?new CriticalParts(calculation.preCritDamage(),calculation.preMitigationDamage()):null);
+                calculation.critical()?new CriticalParts(calculation.preCritDamage(),calculation.preMitigationDamage()):null,calculation);
     }
     /** Already-resolved secondary amount (e.g. a post-mitigation split), not another offensive scaling pass. */
     public NativeResult applyObserved(Ref<EntityStore> target,ComponentAccessor<EntityStore> accessor,Ref<EntityStore> source,DamageCause cause,
             HytaleDamageMetadata metadata,DamageCalculationService.Result calculation,com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage conditional,
             com.inigmasgames.hytalerpg.execution.SkillExecutionContext context){
         return applyResolved(target,accessor,source,cause,metadata,calculation.preMitigationDamage(),conditional,context,null,null,
-                calculation.critical()?new CriticalParts(calculation.preCritDamage(),calculation.preMitigationDamage()):null);
+                calculation.critical()?new CriticalParts(calculation.preCritDamage(),calculation.preMitigationDamage()):null,calculation);
+    }
+    public NativeResult applyObserved(Ref<EntityStore> target,ComponentAccessor<EntityStore> accessor,Ref<EntityStore> source,DamageCause cause,
+            HytaleDamageMetadata metadata,DamageCalculationService.Result calculation,com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage conditional,
+            com.inigmasgames.hytalerpg.execution.SkillExecutionContext context,OffenseInputs inputs){
+        return applyResolved(target,accessor,source,cause,metadata,calculation.preMitigationDamage(),conditional,context,null,null,
+                calculation.critical()?new CriticalParts(calculation.preCritDamage(),calculation.preMitigationDamage()):null,calculation,inputs);
     }
     public NativeResult applyResolved(Ref<EntityStore> target,ComponentAccessor<EntityStore> accessor,
                       Ref<EntityStore> source,DamageCause cause,HytaleDamageMetadata metadata,double amount){
@@ -290,12 +322,19 @@ public final class HytaleDamageAdapter {
             GearCombatEffects.Hit hit,GearCombatEffects.Channel channel,
             com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage conditional,
             com.inigmasgames.hytalerpg.execution.SkillExecutionContext context,WeaponComponent witness){
+        return applyGearResolved(target,accessor,source,cause,metadata,hit,channel,conditional,context,witness,null);
+    }
+    public NativeResult applyGearResolved(Ref<EntityStore> target,ComponentAccessor<EntityStore> accessor,
+            Ref<EntityStore> source,DamageCause cause,HytaleDamageMetadata metadata,
+            GearCombatEffects.Hit hit,GearCombatEffects.Channel channel,
+            com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage conditional,
+            com.inigmasgames.hytalerpg.execution.SkillExecutionContext context,WeaponComponent witness,OffenseInputs inputs){
         if(cause==null||!metadata.rootCastId().equals(hit.rootId())
                 ||GearCombatEffects.nativeChannel(cause.getId())!=channel||hit.amount(channel)<=0)
             throw new IllegalArgumentException("FOREIGN_GEAR_CHANNEL");
         double amount=witness==null?hit.amount(channel):witness.decision().directAmount(witness.componentId(),hit.amount(channel));
         var gearSource=new GearHitSource(hit,metadata.correlationId(),channel);
-        return applyResolved(target,accessor,source,cause,metadata,amount,conditional,context,witness,gearSource);
+        return applyResolved(target,accessor,source,cause,metadata,amount,conditional,context,witness,gearSource,null,null,inputs);
     }
     /** Exact native Damage construction used by the dispatch path, exposed for deterministic adapter checks. */
     public static Damage prepareGearDamage(Ref<EntityStore> source,DamageCause cause,HytaleDamageMetadata metadata,
@@ -331,6 +370,20 @@ public final class HytaleDamageAdapter {
                       com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage conditional,
                       com.inigmasgames.hytalerpg.execution.SkillExecutionContext context,WeaponComponent witness,
                       GearHitSource gear,CriticalParts critical){
+        return applyResolved(target,accessor,source,cause,metadata,amount,conditional,context,witness,gear,critical,null);
+    }
+    private NativeResult applyResolved(Ref<EntityStore> target,ComponentAccessor<EntityStore> accessor,
+                      Ref<EntityStore> source,DamageCause cause,HytaleDamageMetadata metadata,double amount,
+                      com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage conditional,
+                      com.inigmasgames.hytalerpg.execution.SkillExecutionContext context,WeaponComponent witness,
+                      GearHitSource gear,CriticalParts critical,DamageCalculationService.Result offense){
+        return applyResolved(target,accessor,source,cause,metadata,amount,conditional,context,witness,gear,critical,offense,null);
+    }
+    private NativeResult applyResolved(Ref<EntityStore> target,ComponentAccessor<EntityStore> accessor,
+                      Ref<EntityStore> source,DamageCause cause,HytaleDamageMetadata metadata,double amount,
+                      com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage conditional,
+                      com.inigmasgames.hytalerpg.execution.SkillExecutionContext context,WeaponComponent witness,
+                      GearHitSource gear,CriticalParts critical,DamageCalculationService.Result offense,OffenseInputs inputs){
         if(!Double.isFinite(amount)||amount<0||amount>Float.MAX_VALUE)throw new IllegalArgumentException("Invalid native damage amount");
         if(cause==null)throw new IllegalArgumentException("NATIVE_DAMAGE_CAUSE_MISSING");
         // Resolve former generic Arcane by the actual authored producer, before native cause filtering.
@@ -349,6 +402,11 @@ public final class HytaleDamageAdapter {
                 metadata.effectInstanceId(),metadata.canProc(),metadata.origin(),metadata.monsterAffix());
         Damage damage=newDamage(source,cause,complete,amount,conditional,context,witness,gear);
         if(critical!=null)attachCriticalParts(damage,critical);
+        if(HytaleDamageLifecycleSystems.combatTraceActive()){
+            if(offense!=null&&inputs!=null)attachOffenseEvidence(damage,offense,inputs);
+            else {if(offense!=null)damage.putMetaObject(OFFENSE_RESULT,offense);
+                if(inputs!=null)damage.putMetaObject(OFFENSE_INPUTS,inputs);}
+        }
         DamageSystems.executeDamage(target, accessor, damage);
         double after = targetStats == null || targetStats.get(DefaultEntityStatTypes.getHealth()) == null
                 ? Double.NaN : targetStats.get(DefaultEntityStatTypes.getHealth()).get();

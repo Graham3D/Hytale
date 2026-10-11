@@ -64,6 +64,26 @@ public final class BoundedTraceWriter implements AutoCloseable {
             accepted.incrementAndGet();return true;
         }catch(RejectedExecutionException full){bytes.addAndGet(-line.length);if(!closed)drop(full);return false;}
     }
+    /** Queue an already immutable, size-bounded diagnostic snapshot; serialize off the combat thread. */
+    public boolean submitDeferred(Object record,int reservationBytes){
+        if(closed){dropped.incrementAndGet();return false;}
+        if(record==null||reservationBytes<1||reservationBytes>QUEUE_BYTES){drop(new IllegalArgumentException("TRACE_DEFERRED_RESERVATION"));return false;}
+        long prior;
+        do{prior=bytes.get();if(prior+reservationBytes>QUEUE_BYTES){drop(new IllegalStateException("TRACE_QUEUE_BYTE_LIMIT"));return false;}}
+        while(!bytes.compareAndSet(prior,prior+reservationBytes));
+        try{
+            worker.execute(()->{
+                try{
+                    var limited=new LimitedWriter();json.toJson(record,limited);
+                    byte[] line=(limited.value+System.lineSeparator()).getBytes(StandardCharsets.UTF_8);
+                    if(line.length>reservationBytes){dropped.incrementAndGet();notifyFailure(new IllegalArgumentException("TRACE_DEFERRED_RECORD_LIMIT"));return;}
+                    writeGap();sink.write(line);written.incrementAndGet();
+                }catch(Exception error){failed.incrementAndGet();notifyFailure(error);}
+                finally{bytes.addAndGet(-reservationBytes);}
+            });
+            accepted.incrementAndGet();return true;
+        }catch(RejectedExecutionException full){bytes.addAndGet(-reservationBytes);if(!closed)drop(full);return false;}
+    }
     private void drop(Throwable error){dropped.incrementAndGet();notifyFailure(error);}
     private void notifyFailure(Throwable error){try{failure.accept(error);}catch(RuntimeException ignored){}}
     private void writeGap()throws Exception{
@@ -78,7 +98,7 @@ public final class BoundedTraceWriter implements AutoCloseable {
         current.write(line);
     }
     private static String inferKind(java.nio.file.Path path){String name=path.getFileName().toString().toLowerCase(java.util.Locale.ROOT);
-        return name.startsWith("ui-")?"UI":name.startsWith("gear-")?"GEAR":"SKILL";}
+        return name.startsWith("ui-")?"UI":name.startsWith("gear-")?"GEAR":name.startsWith("combat-")?"COMBAT":"SKILL";}
     public Metrics metrics(){var current=segmentWriter;return new Metrics(accepted.get(),written.get(),dropped.get(),failed.get(),
             worker.getQueue().size(),bytes.get(),current==null?0:current.activeBytes(),current==null?0:current.activeEvents());}
     public TraceArchiveManager.Metrics archiveMetrics(){var current=segmentWriter;return current==null?null:current.archive().metrics();}

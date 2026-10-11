@@ -17,21 +17,34 @@ public final class NativeDamageLeafReceipts {
         /** Called only for the active native leaf's own actor/target and non-RPG component. */
         java.util.function.Consumer<HytaleDamageAdapter.NativeResult> component(Damage damage);
         default boolean sourceFactorsResolved(){return false;}
+        default com.inigmasgames.hytalerpg.enemies.EnemyOffenseSnapshot offenseSnapshot(){return null;}
     }
     private static final class Observation {
         final java.util.function.Consumer<HytaleDamageAdapter.NativeResult> consumer;
         final double sourceAmount;
         final boolean sourceFactorsResolved;
+        final com.inigmasgames.hytalerpg.enemies.EnemyOffenseSnapshot offense;
+        final UUID projectileId;
         double before=Double.NaN;boolean sampled,completed;
-        Observation(java.util.function.Consumer<HytaleDamageAdapter.NativeResult> consumer,double amount,boolean resolved){this.consumer=consumer;sourceAmount=amount;sourceFactorsResolved=resolved;}
+        Observation(java.util.function.Consumer<HytaleDamageAdapter.NativeResult> consumer,double amount,boolean resolved,
+                com.inigmasgames.hytalerpg.enemies.EnemyOffenseSnapshot offense,UUID projectileId){
+            this.consumer=consumer;sourceAmount=amount;sourceFactorsResolved=resolved;this.offense=offense;this.projectileId=projectileId;}
     }
     private static final MetaKey<Observation> RECEIPT=Damage.META_REGISTRY.registerMetaObject(ignored->null,false,"InigmasGames:NativeLeafReceipt",null);
     public static boolean sourceFactorsResolved(Damage damage){var observation=damage.getIfPresentMetaObject(RECEIPT);return observation!=null&&observation.sourceFactorsResolved;}
+    public static com.inigmasgames.hytalerpg.enemies.EnemyOffenseSnapshot offense(Damage damage){
+        var observation=damage.getIfPresentMetaObject(RECEIPT);return observation==null?null:observation.offense;}
+    public static UUID projectileId(Damage damage){var observation=damage.getIfPresentMetaObject(RECEIPT);
+        return observation==null?null:observation.projectileId;}
     /** Reuse the same native post-Apply Health observer for a certified original projectile packet. */
     public static void observeProjectile(Damage damage,java.util.function.Consumer<HytaleDamageAdapter.NativeResult> consumer){
+        observeProjectile(damage,consumer,null,null);
+    }
+    public static void observeProjectile(Damage damage,java.util.function.Consumer<HytaleDamageAdapter.NativeResult> consumer,
+            com.inigmasgames.hytalerpg.enemies.EnemyOffenseSnapshot offense,UUID projectileId){
         Objects.requireNonNull(damage);Objects.requireNonNull(consumer);
         if(damage.getIfPresentMetaObject(RECEIPT)!=null)throw new IllegalStateException("NATIVE_PROJECTILE_PACKET_REPLAY");
-        damage.putMetaObject(RECEIPT,new Observation(consumer,damage.getAmount(),true));
+        damage.putMetaObject(RECEIPT,new Observation(consumer,damage.getAmount(),true,offense,projectileId));
     }
     private static double health(ArchetypeChunk<EntityStore> chunk,int index){
         var stats=chunk.getComponent(index,EntityStatMap.getComponentType());
@@ -40,6 +53,8 @@ public final class NativeDamageLeafReceipts {
     public static final class Gather extends DamageEventSystem {
         @Override public Query<EntityStore> getQuery(){return Query.any();}
         @Override public SystemGroup<EntityStore> getGroup(){return DamageModule.get().getGatherDamageGroup();}
+        @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(
+                new SystemDependency<>(Order.BEFORE,HytaleDamageLifecycleSystems.Gather.class));}
         @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){
             var call=NativeDamageLeafInteraction.currentInvocation();
             if(call==null||!(call.scope() instanceof Scope scope)||HytaleDamageAdapter.metadata(damage)!=null
@@ -50,7 +65,8 @@ public final class NativeDamageLeafReceipts {
                     ||context.getOwningEntity()!=source.getRef())return;
             if(damage.getIfPresentMetaObject(RECEIPT)!=null)throw new IllegalStateException("NATIVE_LEAF_PACKET_REPLAY");
             var consumer=scope.component(damage);
-            if(consumer!=null)damage.putMetaObject(RECEIPT,new Observation(consumer,damage.getAmount(),scope.sourceFactorsResolved()));
+            if(consumer!=null)damage.putMetaObject(RECEIPT,new Observation(consumer,damage.getAmount(),
+                    scope.sourceFactorsResolved(),scope.offenseSnapshot(),null));
         }
     }
     public static final class Before extends DamageEventSystem {

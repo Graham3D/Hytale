@@ -39,6 +39,13 @@ class GearCombatProductionTest {
         return GearCombatEffects.attack(new GearEffectSnapshot(List.of(item)),item.identity(),"root-1",physical,1,
                 true,false,0,null,0,1.5,false,new Vec3(0,0,0));
     }
+    @Test void committedNativeGearHitRetainsSubmittedSourcePowerAndCoefficient(){
+        var hit=attack(sword(null),42);
+        assertEquals(42,hit.submittedSourcePower());
+        assertEquals(1,hit.submittedCoefficient());
+        assertEquals(0,hit.appliedCriticalChance());
+        assertEquals("GEAR_ATTACK",hit.sourceKind());
+    }
     private GearInstance sword(String affixId){
         var base=catalog.base("gm.sword_adamantite.h");
         List<GearInstance.AffixRoll> rolls=List.of();

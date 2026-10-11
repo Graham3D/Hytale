@@ -1,10 +1,10 @@
 # Hywind / HyARPG development baseline
 
-This task branch (`codex/cyclone-armor`) builds **R256-U7P5B**
-(`0.2.0-R256-U7P5B`) on the verified R255 source. It introduces a Cyclone
-Armor barrier absorption and caster-attached visual QA candidate. Projectile
-redirection remains gated pending a verified pre-impact native return path.
-Connected-game acceptance is pending.
+This task branch (`codex/combat-damage-trace`) builds **R257-U7P5B**
+(`0.2.0-R257-U7P5B`) on the verified R256 source. It adds an operator-only
+incoming/outgoing combat and NPC profile trace for the active RPG world.
+The R256 Cyclone Armor candidate remains the gameplay baseline. Connected
+Goblin-event evidence and combat trace acceptance are pending.
 
 The current GitHub `main` gameplay baseline is **R250-U7P5B**
 (`0.2.0-R250-U7P5B`). [PR #1](https://github.com/Graham3D/Hytale/pull/1)

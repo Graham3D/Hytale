@@ -218,7 +218,8 @@ public final class NativeGearAttackAcceptance {
             amounts.putAll(hit.amounts());amounts.put(GearCombatEffects.Channel.PHYSICAL,deadly);
             hit=new GearCombatEffects.Hit(hit.itemId(),hit.revision(),hit.rootId(),amounts,
                     hit.penetration(),hit.increased(),hit.critical(),hit.criticalMultiplier(),
-                    hit.snapshot(),hit.origin());
+                    hit.snapshot(),hit.origin(),hit.submittedSourcePower(),hit.submittedCoefficient(),
+                    hit.appliedCriticalChance(),hit.sourceKind());
         }
         capture(new Accepted(world,actor,hit,ordinary,procCoefficient,melee,false,authoredSelector));
         return hit;

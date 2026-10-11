@@ -1,5 +1,19 @@
 # HyARPG/Hywind development baseline
 
+## R257 combat damage trace candidate (2026-10-11)
+
+Branch `codex/combat-damage-trace` starts from verified R256 documentation
+commit `df833376e5dfa212035e7ddd19fc363baee133cd`; the built R256 source is
+`5ee89e07032aac1141562e9121fd02f6d0fc7154`. The primary checkout's
+unrelated edits and the RPG save remain untouched. R257-U7P5B
+(`0.2.0-R257-U7P5B`) adds bounded, operator-only native combat hit receipts,
+authored offensive inputs, gear and NPC defense stages, and NPC profile
+outcomes. Source-level evidence identifies an initial Goblin breach route that
+spawns `Goblin_Scrapper`; the connected event's actual roles, difficulty
+profiles, and lethal hit are pending owner QA. No balance coefficients change.
+Build verification, exact implementation source commit, GitHub publication,
+deployment, and connected acceptance are pending at this source checkpoint.
+
 ## R256 Cyclone Armor barrier QA candidate (2026-10-10)
 
 Source branch `codex/cyclone-armor` starts from verified, published R255

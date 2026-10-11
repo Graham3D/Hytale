@@ -332,11 +332,19 @@ public final class HytaleDifficultyCombat {
             com.inigmasgames.hytalerpg.enemies.EnemyDescriptor descriptor,com.inigmasgames.hytalerpg.enemies.EnemyAffixSnapshot providers){
         if(!store.isInThread())throw new IllegalStateException("DIFFICULTY_PROJECTION_WRONG_WORLD_THREAD");
         UUID world=store.getExternalData().getWorld().getWorldConfig().getUuid();var key=new Key(world,enemy);var entry=active.get(key);
-        if(entry==null||entry.ticket!=ticket)return;
+        if(entry==null||entry.ticket!=ticket){HytaleDamageLifecycleSystems.combatNpcEvent(world,enemy,"DUPLICATE_OR_STALE",
+                Map.of("reason","TICKET_NOT_CURRENT"));return;}
         var ref=store.getExternalData().getRefFromUUID(enemy);
-        if(ref==null||!ref.isValid()||HytaleEncounterRewards.excluded(store,ref)||saved.isEmpty()||saved.get().combat()==null){remove(key,entry);return;}
+        if(ref==null||!ref.isValid()||HytaleEncounterRewards.excluded(store,ref)||saved.isEmpty()||saved.get().combat()==null){
+            HytaleDamageLifecycleSystems.combatNpcEvent(world,enemy,"NOT_APPLIED",Map.of("reason",
+                    ref==null||!ref.isValid()?"ENTITY_NOT_LOADED":HytaleEncounterRewards.excluded(store,ref)?"EXCLUDED":
+                            saved.isEmpty()?"NO_AUTHORED_PROFILE":"NO_COMBAT_PROFILE","freshSpawn",fresh));
+            remove(key,entry);return;}
         var spawn=saved.get();var npc=store.getComponent(ref,NPCEntity.getComponentType());
-        if(!spawn.roleId().equals(npc.getRoleName())){remove(key,entry);return;}
+        if(npc==null||!spawn.roleId().equals(npc.getRoleName())){
+            HytaleDamageLifecycleSystems.combatNpcEvent(world,enemy,"NOT_APPLIED",Map.of("reason","RUNTIME_ROLE_MISMATCH",
+                    "profileRole",spawn.roleId(),"runtimeRole",npc==null?"MISSING":npc.getRoleName()));
+            remove(key,entry);return;}
         if((descriptor==null)!=(providers==null)||descriptor==null&&spawn.enemyRewards()!=null)
             throw new IllegalStateException("ENEMY_HEALTH_DESCRIPTOR_REQUIRED");
         if(descriptor!=null&&(!descriptor.worldId().equals(world)||!descriptor.entityId().equals(enemy)||!descriptor.nativeRoleId().equals(spawn.roleId())
@@ -351,7 +359,11 @@ public final class HytaleDifficultyCombat {
         var healthProjection=store.getComponent(ref,DifficultyHealthProjection.getComponentType());
         double savedHealth=healthProjection==null?Double.NaN:healthProjection.healthFor(spawn);
         if(npc.getRole()==null)throw new IllegalStateException("DIFFICULTY_NATIVE_ROLE_MISSING");
-        projectHealth(stats,spawn.combat(),providers,fresh,npc.getRole().getInitialMaxHealth());
+        try{projectHealth(stats,spawn.combat(),providers,fresh,npc.getRole().getInitialMaxHealth());}
+        catch(RuntimeException rejected){HytaleDamageLifecycleSystems.combatNpcEvent(world,enemy,"NATIVE_STAT_REJECTED",
+                Map.of("runtimeRole",spawn.roleId(),"profile",spawn.registryProfile(),
+                        "reason",rejected.getClass().getSimpleName()+":"+String.valueOf(rejected.getMessage())));
+            throw rejected;}
         if(!fresh&&Double.isFinite(savedHealth))stats.setStatValue(DefaultEntityStatTypes.getHealth(),(float)Math.min(savedHealth,stats.get(DefaultEntityStatTypes.getHealth()).getMax()));
         if(healthProjection==null){
             healthProjection=new DifficultyHealthProjection(world,enemy,spawn.registryProfile(),stats.get(DefaultEntityStatTypes.getHealth()).get());
@@ -362,6 +374,18 @@ public final class HytaleDifficultyCombat {
         catch(RuntimeException presentationFailure){warnPresentation(spawn.roleId(),presentationFailure);}
         entry.enemyState=descriptor==null?null:new EnemyState(descriptor,providers);
         entry.spawn=spawn;
+        if(HytaleDamageLifecycleSystems.combatTraceActive()){
+            var profileEvent=new LinkedHashMap<String,Object>();
+            profileEvent.put("runtimeRole",spawn.roleId());profileEvent.put("profile",spawn.registryProfile());
+            profileEvent.put("difficulty",spawn.combat().difficulty().toString());profileEvent.put("combatLevel",spawn.level());
+            profileEvent.put("nativeHealthBaseline",spawn.combat().nativeHealthBaseline());
+            profileEvent.put("expectedMaximumHealth",spawn.combat().maxHealth());
+            profileEvent.put("actualMaximumHealth",stats.get(DefaultEntityStatTypes.getHealth()).getMax());
+            profileEvent.put("actualCurrentHealth",stats.get(DefaultEntityStatTypes.getHealth()).get());
+            profileEvent.put("difficultyDamageFactor",spawn.combat().difficultyDamageFactor());
+            profileEvent.put("rank",spawn.rank().toString());profileEvent.put("freshSpawn",fresh);
+            HytaleDamageLifecycleSystems.combatNpcEvent(world,enemy,fresh?"APPLIED":"RESTORED",profileEvent);
+        }
         trace.trace(RpgTraceRecord.create(null,RpgTraceEventType.DIFFICULTY_PROFILE_APPLIED,enemy.toString(),Map.of(
                 "world",world,"enemy",enemy,"difficulty",spawn.combat().difficulty(),"sourceCombatLevel",spawn.level(),"profile",spawn.registryProfile(),
                 "health",stats.get(DefaultEntityStatTypes.getHealth()).get(),"maximum",stats.get(DefaultEntityStatTypes.getHealth()).getMax(),
@@ -496,6 +520,12 @@ public final class HytaleDifficultyCombat {
                 amount*=entry.enemyState.providers().rarityDirectFactor();
             if(!Double.isFinite(amount)||amount>Float.MAX_VALUE){damage.setCancelled(true);return;}
             damage.setAmount((float)amount);trace(damage,entry.spawn,before,"NATIVE_OUTGOING_DIFFICULTY_ONCE");
+            HytaleDamageLifecycleSystems.combatStage(damage,"Hywind difficulty","NATIVE_OUTGOING_DIFFICULTY_ONCE",
+                    before,damage.getAmount(),Map.of("difficultyFactor",entry.spawn.combat().difficultyDamageFactor(),
+                            "rarityFactor",entry.enemyState!=null&&entry.enemyState.descriptor().spawnOrigin()==
+                                    com.inigmasgames.hytalerpg.enemies.EnemyRewardContext.Origin.QA
+                                    ?entry.enemyState.providers().rarityDirectFactor():1.0,
+                            "profile",entry.spawn.registryProfile(),"level",entry.spawn.level()));
             }
         }
     }
@@ -518,6 +548,9 @@ public final class HytaleDifficultyCombat {
             double before=damage.getAmount();var result=resistance.resolve(channel,before,penetration(damage));damage.setAmount((float)result.amount());
             if(resistance.immune(channel))damage.setCancelled(true);
             trace(damage,entry.spawn,before,result.reason());
+            HytaleDamageLifecycleSystems.combatStage(damage,"Hywind NPC resistance","ELEMENTAL_RESISTANCE",before,damage.getAmount(),
+                    Map.of("channel",channel.name(),"resistance",resistance.effective(channel),
+                            "penetration",penetration(damage),"immune",resistance.immune(channel),"reason",result.reason()));
             }
         }
     }

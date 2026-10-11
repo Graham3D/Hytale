@@ -823,8 +823,11 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
             if(damage.getSource() instanceof Damage.EntitySource source&&HytaleAreaQueries.hostile(store,source.getRef(),ref)){
                 support.runtime.hostileDamage(actor,now);support.kernel.hostileCombat().markHostile(actor);
             }
-            try{var hit=support.runtime.absorbDetailed(actor,damage.getAmount(),now,support.port(store,ref));
-                damage.setAmount((float)hit.remainder());SupportDamageSystems.reflectAbsorbed(support,hit.absorption(),damage,ref,store,now);}
+            try{double before=damage.getAmount();var hit=support.runtime.absorbDetailed(actor,damage.getAmount(),now,support.port(store,ref));
+                damage.setAmount((float)hit.remainder());
+                HytaleDamageLifecycleSystems.combatStage(damage,"Hywind player barrier","BARRIER_ABSORB",before,damage.getAmount(),
+                        Map.of("absorbed",before-damage.getAmount(),"identity",hit.absorption()==null?"NONE":hit.absorption().effect().key().toString()));
+                SupportDamageSystems.reflectAbsorbed(support,hit.absorption(),damage,ref,store,now);}
             catch(RuntimeException failure){
                 // Failed persistence leaves the original native amount unchanged; never grant unrecorded shielding.
                 com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(failure).log("RPG_BARRIER_REJECTED player=%s",actor);

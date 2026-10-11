@@ -16,6 +16,22 @@ import static org.junit.jupiter.api.Assertions.*;
 class Stage13BoundedTraceTest {
     @TempDir Path directory;
 
+    @Test void deferredSerializationRespectsByteReservationAndReportsIncompleteEvidence() {
+        var lines=new CopyOnWriteArrayList<String>();var producer=Thread.currentThread();var wrongThread=new AtomicBoolean();
+        var writer=new BoundedTraceWriter(directory.resolve("combat-trace.jsonl"),65_536,2,e->{},line->{
+            wrongThread.compareAndSet(false,Thread.currentThread()==producer);
+            lines.add(new String(line,StandardCharsets.UTF_8));
+        });
+        assertTrue(writer.submitDeferred(Map.of("eventType","TOO_LARGE","payload","x".repeat(2000)),128));
+        assertTrue(writer.submitDeferred(Map.of("eventType","AFTER"),256));
+        writer.close();
+        assertFalse(wrongThread.get());assertEquals(1,writer.metrics().dropped());
+        assertEquals(1,writer.metrics().written());assertEquals(0,writer.metrics().retainedBytes());
+        assertTrue(lines.stream().anyMatch(line->line.contains("TRACE_GAP")));
+        assertTrue(lines.stream().anyMatch(line->line.contains("AFTER")));
+        assertFalse(lines.stream().anyMatch(line->line.contains("TOO_LARGE")));
+    }
+
     @Test void stalledDiskCannotCreateAnUnboundedQueueOrRunIoOnTheProducer() throws Exception {
         var started=new CountDownLatch(1);var release=new CountDownLatch(1);var lines=new CopyOnWriteArrayList<String>();
         var producer=Thread.currentThread();var wrongThread=new AtomicBoolean();

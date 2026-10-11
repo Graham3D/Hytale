@@ -2519,6 +2519,14 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 default -> 0.0;
             };
         }
+        private String scalingAttribute(SkillExecutionContext context){
+            return switch(context.profile().scaling()){
+                case "HEAVY"->"STR";case "LIGHT"->"DEX";case "MAGIC"->"INT";
+                case "WEAPON_CLASS"->context.snapshot().weaponClass().scalingAttribute()
+                        .map(Enum::name).orElse("NONE");
+                default->"NONE";
+            };
+        }
         private DamageOutcome damage(SkillExecutionContext context,
                                      StrikeGeometryService.Candidate<Ref<EntityStore>> target, int hitIndex,
                                      double coefficient, double criticalChance, DamageCause cause, boolean periodic) {
@@ -2559,6 +2567,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     context.snapshot().basePower(), effective, coefficient,
                     buckets, !periodic, criticalChance,
                     context.snapshot().criticalMultiplier()));
+            var offenseInputs=com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageLifecycleSystems.combatTraceActive()
+                    ?new HytaleDamageAdapter.OffenseInputs(scalingAttribute(context),effective,
+                            buckets,coefficient,criticalChance):null;
             CombatTrace.Context ids = ids(context);
             trace.emit(playerRef.getUuid(), RpgTraceEventType.DAMAGE_CALC_BEGIN, ids,
                     Map.of("basePower", weaponHit==null?context.snapshot().basePower():component.sourceAmount(), "effectiveAttribute", effective,
@@ -2596,12 +2607,12 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             var nativeResult=!periodic&&com.inigmasgames.hytalerpg.gear.GearCombatEffects.needsSkillEnvelope(context.gearSnapshot())
                     &&com.inigmasgames.hytalerpg.gear.GearCombatEffects.nativeChannel(cause.getId())!=null
                     ?applySkillGear(context,target,hitIndex,coefficient,cause,effectId,canProc,buckets,result,rule,origin,
-                            weaponHit,component,fireDecision)
+                            weaponHit,component,fireDecision,offenseInputs)
                     :new HytaleDamageAdapter().applyObserved(target.handle(), damageAccessor(), actor, cause,
                     new HytaleDamageMetadata(playerRef.getUuid(), context.rootCastId(), context.skillInstanceId(),
                             context.request().correlationId()+"/"+effectId+"/"+hitIndex,
                             result.preMitigationDamage(), Double.NaN,effectId,canProc,origin), result,
-                    com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage.calculated(context.compiledPlan().hitConditions(),buckets,result,context.snapshot().criticalMultiplier(),rule),context);
+                    com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage.calculated(context.compiledPlan().hitConditions(),buckets,result,context.snapshot().criticalMultiplier(),rule),context,offenseInputs);
             double after = health(targetStats);
             if(mantleEligible&&!periodic&&canProc)chargeMantles(playerRef.getUuid(),UUID.fromString(target.stableId()),Math.max(0,before-after),System.nanoTime()/1e9);
             if(leechEligible)recoverObservedLeech(context,target,nativeResult,effectId);
@@ -2642,7 +2653,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 HytaleDamageMetadata.Origin origin,
                 com.inigmasgames.hytalerpg.execution.strike.WeaponLightHit weaponHit,
                 com.inigmasgames.hytalerpg.combat.damage.WeaponDamageExecution.Component component,
-                com.inigmasgames.hytalerpg.combat.damage.WeaponFireDecision fireDecision){
+                com.inigmasgames.hytalerpg.combat.damage.WeaponFireDecision fireDecision,
+                HytaleDamageAdapter.OffenseInputs offenseInputs){
             String source=context.profile().basePowerSource();
             boolean spell=context.compiledPlan().finalTags().contains("SPELL_CAST");
             boolean attack=source.equals("WEAPON")||source.equals("OFFHAND_WEAPON");
@@ -2682,7 +2694,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                 var witness=component!=null&&part==channel&&fireDecision!=null
                         ?new HytaleDamageAdapter.WeaponComponent(fireDecision,component.componentId()):null;
                 var nativeResult=adapter.applyGearResolved(target.handle(),damageAccessor(),actor,nativeCause,metadata,
-                        hit,part,conditional,context,witness);
+                        hit,part,conditional,context,witness,offenseInputs==null?null:new HytaleDamageAdapter.OffenseInputs(
+                                offenseInputs.scalingAttribute(),offenseInputs.effectiveAttribute(),appliedBuckets,
+                                offenseInputs.coefficient(),offenseInputs.criticalChance()));
                 if(first){before=nativeResult.healthBefore();victimFactor=nativeResult.victimCoefficientFactor();}
                 after=nativeResult.healthAfter();nativeAmount+=nativeResult.nativeAmount();
                 preMitigation+=nativeResult.preMitigationAmount();cancelled&=nativeResult.cancelled();first=false;

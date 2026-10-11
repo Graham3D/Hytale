@@ -7,12 +7,24 @@ import com.inigmasgames.hytalerpg.combat.hytale.*;
 import java.util.*;
 
 /** Same native outgoing-effect calculation, moved to acceptance only for witnessed ME source snapshots. */
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value="NP_NONNULL_PARAM_VIOLATION",
+        justification="Installed native MetaRegistry accepts a null codec for nonpersistent Damage metadata.")
 public final class NativeEnemyOutgoingEffects extends DamageSystems.ScaleOutgoingDamageFromEntityEffects {
+    public record Observed(double before,double after){}
+    private static final com.hypixel.hytale.server.core.meta.MetaKey<Observed> TRACE_EFFECT=
+            Damage.META_REGISTRY.registerMetaObject(ignored->null,false,"InigmasGames:TraceNativeOutgoingEffect",null);
+    public static Observed observed(Damage damage){return damage.getIfPresentMetaObject(TRACE_EFFECT);}
     @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,
             CommandBuffer<EntityStore> buffer,Damage damage){
             try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.DAMAGE)){
         if(NativeDamageLeafReceipts.sourceFactorsResolved(damage))return;
+        float before=damage.getAmount();
         super.handle(index,chunk,store,buffer,damage);
+        if(HytaleDamageLifecycleSystems.combatTraceActive())damage.putMetaObject(TRACE_EFFECT,
+                new Observed(before,damage.getAmount()));
+        if(HytaleDamageLifecycleSystems.combatTracked(damage))
+            HytaleDamageLifecycleSystems.combatStage(damage,"Native source entity effects","OUTGOING_EFFECTS",before,damage.getAmount(),
+                    Map.of("cancelled",damage.isCancelled()));
     
             }}
     /** These amount carriers are never submitted to an event system or native Health. */

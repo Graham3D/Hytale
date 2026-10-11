@@ -52,11 +52,20 @@ public final class GearCombatEffects {
     public record Hit(UUID itemId,String revision,String rootId,Map<Channel,Double> amounts,
                       Map<Channel,Double> penetration,Map<Channel,Double> increased,
                       boolean critical,double criticalMultiplier,
-                      GearEffectSnapshot snapshot,com.inigmasgames.hytalerpg.execution.math.Vec3 origin) {
+                      GearEffectSnapshot snapshot,com.inigmasgames.hytalerpg.execution.math.Vec3 origin,
+                      double submittedSourcePower,double submittedCoefficient,double appliedCriticalChance,
+                      String sourceKind) {
         public Hit {
             Objects.requireNonNull(revision);Objects.requireNonNull(rootId);
             Objects.requireNonNull(snapshot);amounts=Map.copyOf(amounts);penetration=Map.copyOf(penetration);
-            increased=Map.copyOf(increased);
+            increased=Map.copyOf(increased);Objects.requireNonNull(sourceKind);
+        }
+        public Hit(UUID itemId,String revision,String rootId,Map<Channel,Double> amounts,
+                   Map<Channel,Double> penetration,Map<Channel,Double> increased,
+                   boolean critical,double criticalMultiplier,GearEffectSnapshot snapshot,
+                   com.inigmasgames.hytalerpg.execution.math.Vec3 origin){
+            this(itemId,revision,rootId,amounts,penetration,increased,critical,criticalMultiplier,snapshot,
+                    origin,Double.NaN,Double.NaN,Double.NaN,"UNOBSERVABLE_LEGACY_CONSTRUCTOR");
         }
         public double amount(Channel channel){return amounts.getOrDefault(channel,0d);}
         public double penetration(Channel channel){return penetration.getOrDefault(channel,0d);}
@@ -119,7 +128,7 @@ public final class GearCombatEffects {
             if(channel!=Channel.PHYSICAL)penetration.put(channel,equipped.percent(PENETRATION[index(channel)]));
         }
         return new Hit(itemId,equipped.revision(),rootId,result,penetration,increasedByChannel,
-                critical,multiplier,equipped,origin);
+                critical,multiplier,equipped,origin,physical,coefficient,chance,"GEAR_ATTACK");
     }
     private static long stableHash(String text){long hash=0xcbf29ce484222325L;
         for(int i=0;i<text.length();i++){hash^=text.charAt(i);hash*=0x100000001b3L;}return hash;}
@@ -219,7 +228,7 @@ public final class GearCombatEffects {
             if(channel!=Channel.PHYSICAL)penetration.put(channel,equipped.percent(PENETRATION[index(channel)]));
         }
         return new Hit(itemId,equipped.revision(),rootId,amounts,penetration,increases,
-                result.critical(),criticalMultiplier,equipped,origin);
+                result.critical(),criticalMultiplier,equipped,origin,source,coefficient,Double.NaN,"GEAR_SKILL");
     }
     public static double resistance(GearEffectSnapshot defense,Channel channel,double nonGear){
         if(channel==Channel.PHYSICAL)return 0;

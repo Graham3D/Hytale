@@ -81,6 +81,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
     private com.inigmasgames.hytalerpg.ui.inventory.NativeInventoryDropTraceProbe nativeDropTraceProbe;
     private com.inigmasgames.hytalerpg.execution.hytale.HealingPresentationProbe healingProbe;
     private RpgSkillTraceService skillTrace;
+    private com.inigmasgames.hytalerpg.diagnostics.CombatDamageTraceService combatDamageTrace;
     private RpgLoadoutService loadouts;
     private RpgCombatKernel combatKernel;
     private RpgUiTraceService uiTrace;
@@ -313,6 +314,15 @@ public final class HyArpgPlugin extends TavernsPlugin {
                 progressionProfiles.biomeBands().stream().mapToInt(b->b.verifiedNativeBiomeIds().size()).sum());
         SkillTraceConfiguration configuration = SkillTraceConfiguration.load();
         skillTrace = new RpgSkillTraceService(rpgDataDirectory().resolve("logs").resolve("rpg").resolve("skill-trace.jsonl"), configuration);
+        var combatWriteFailures=new java.util.concurrent.atomic.AtomicLong();
+        combatDamageTrace=new com.inigmasgames.hytalerpg.diagnostics.CombatDamageTraceService(
+                rpgDataDirectory().resolve("logs").resolve("rpg").resolve("combat-trace.jsonl"),
+                failure->{long count=combatWriteFailures.incrementAndGet();if(count<=3||count%100==0)
+                    LOGGER.atWarning().log("RPG_COMBAT_TRACE_WRITE_FAILED count=%s reason=%s",count,failure.toString());},
+                line->LOGGER.atInfo().log("%s",line));
+        HytaleDamageLifecycleSystems.configureCombatDamageTrace(combatDamageTrace);
+        getEventRegistry().registerGlobal(PlayerDisconnectEvent.class,
+                event->combatDamageTrace.disconnect(event.getPlayerRef().getUuid()));
         com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.configure(skillTrace);
         var repository = new FileRpgPlayerStateRepository(rpgDataDirectory().resolve("players"));
         var compatibility = new CompatibilityService();
@@ -439,6 +449,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
                     == com.inigmasgames.hytalerpg.ui.inventory.SpatialBagComponent.OwnershipMode.NATIVE;
         });
         var difficultyCombat=new com.inigmasgames.hytalerpg.execution.hytale.HytaleDifficultyCombat(skillTrace);
+        combatDamageTrace.difficulty(difficultyCombat);
         enemyHealthBars=difficultyCombat.healthBars();
         hostileNames=difficultyCombat.names();
         difficultyCombat.healthBars().configureBossBars(bosses);
@@ -744,7 +755,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
             LOGGER.atInfo().log("RPG_HEAL_PROBE revision=R032-AP enabled=true permission=inigmasgames.rpg.healingprobe liveTest=%s disposableWorldRequired=%s connectedProof=false",
                     com.inigmasgames.hytalerpg.execution.hytale.HealingProbePolicy.liveTestBuild(),!com.inigmasgames.hytalerpg.execution.hytale.HealingProbePolicy.liveTestBuild());
         }
-        getCommandRegistry().registerCommand(new com.inigmasgames.hytalerpg.commands.RpgTraceCommand(skillTrace));
+        getCommandRegistry().registerCommand(new com.inigmasgames.hytalerpg.commands.RpgTraceCommand(skillTrace,combatDamageTrace));
         if(Boolean.getBoolean("rpg.projectileSpawnAudit"))getCommandRegistry().registerCommand(
                 new com.inigmasgames.hytalerpg.execution.hytale.NativeProjectileSpawnAuditCommand(skillExecutionSystem));
         var productionPowers=com.inigmasgames.hytalerpg.combat.power.NativeItemPowerRegistry.loadProduction();
@@ -810,6 +821,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
         getEventRegistry().registerGlobal(com.hypixel.hytale.server.core.universe.world.events.RemoveWorldEvent.class,
                 event->{if(!event.isCancelled()){
                     var worldId=event.getWorld().getWorldConfig().getUuid();
+                    combatDamageTrace.worldUnload(worldId);
                     gearRecovery.cancelWorld(worldId);gearSignatures.clearWorld(worldId);
                     gearStatuses.clearWorld(worldId);itemAffixes.worldUnload(worldId);summonSystem.worldUnload(worldId);
                     difficultyCombat.healthBars().forgetWorld(worldId);
@@ -1239,7 +1251,9 @@ public final class HyArpgPlugin extends TavernsPlugin {
                 try { if (loadouts != null) { var closing=loadouts;loadouts=null;closing.close(); } }
                 finally {
                     try { if (uiTrace != null) { var closing=uiTrace;uiTrace=null;closing.close(); } }
-                    finally { if (skillTrace != null) { var closing=skillTrace;skillTrace=null;closing.close(); } }
+                    finally { HytaleDamageLifecycleSystems.configureCombatDamageTrace(null);
+                        if(combatDamageTrace!=null){var closing=combatDamageTrace;combatDamageTrace=null;closing.close();}
+                        if (skillTrace != null) { var closing=skillTrace;skillTrace=null;closing.close(); } }
                 }
             }
         }

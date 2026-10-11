@@ -21,6 +21,10 @@ public final class NativeEnemyProjectileDamage extends DamageEventSystem {
     }
     @Override public Query<EntityStore> getQuery(){return Query.any();}
     @Override public SystemGroup<EntityStore> getGroup(){return DamageModule.get().getGatherDamageGroup();}
+    @Override public java.util.Set<com.hypixel.hytale.component.dependency.Dependency<EntityStore>> getDependencies(){
+        return java.util.Set.of(new com.hypixel.hytale.component.dependency.SystemDependency<>(
+                com.hypixel.hytale.component.dependency.Order.BEFORE,
+                com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageLifecycleSystems.Gather.class));}
     @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,
             CommandBuffer<EntityStore> buffer,Damage damage){
             try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.DAMAGE)){
@@ -85,7 +89,7 @@ public final class NativeEnemyProjectileDamage extends DamageEventSystem {
             NativeDamageLeafReceipts.observeProjectile(damage,result->{
                 try{actions.deliveredProjectile(store,buffer,sourceRef,victim,receipt,result);}
                 catch(RuntimeException uncertain){actions.quarantineWorld(world);throw uncertain;}
-            });
+            },receipt.offense(),projectileId.getUuid());
             damage.setAmount(amount);
         }catch(RuntimeException unsupported){
             damage.setCancelled(true); // Never admit an unsnapshotted ME projectile into native Health.

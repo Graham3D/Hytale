@@ -121,6 +121,8 @@ public final class SupportDamageSystems {
                 if(!HytaleSupportSystem.alive(store,owner)||!HytaleSupportSystem.eligibleAlly(store,owner,recipient)){support.runtime().finite().remove(effect.key());continue;}
                 double before=damage.getAmount();double after=cap.get().apply(before,hp.getMax(),com.inigmasgames.hytalerpg.combat.damage.MaxHealthDamageCap.Origin.DIRECT_HOSTILE);
                 damage.setAmount((float)after);
+                HytaleDamageLifecycleSystems.combatStage(damage,"Hywind finite support","MAX_HEALTH_DAMAGE_CAP",before,damage.getAmount(),
+                        Map.of("effect",effect.key().toString(),"maximumHealth",hp.getMax()));
                 support.traceFinite(effect,RpgTraceEventType.FINITE_SUPPORT_RESOLVED,Map.of("component","MaxHealthDamageCap","postMitigationBefore",before,"afterCap",after,"currentMaxHealth",hp.getMax(),"perHit",true));
                 break; // Identical caps never compound, irrespective of caster count.
             }
@@ -152,6 +154,7 @@ public final class SupportDamageSystems {
                 var owner=store.getExternalData().getRefFromUUID(effect.key().owner());
                 if(!HytaleSupportSystem.alive(store,owner)||!HytaleSupportSystem.eligibleAlly(store,owner,ref))support.runtime().finite().remove(effect.key());
             }
+            double shieldBefore=damage.getAmount();
             var hit=support.runtime().finite().shieldHit(world,id,damage.getAmount(),!secondaryCannotReflect(metadata),now,(shield,amount)->{
                 var caster=store.getExternalData().getRefFromUUID(shield.key().owner());
                 if(!HytaleSupportSystem.alive(store,caster)||SupportNativeEffects.control(store,caster,support.bosses()).protectedEntity())return false;
@@ -166,23 +169,39 @@ public final class SupportDamageSystems {
                 return !result.cancelled();
             });
             damage.setAmount((float)hit.remainder());
+            double shieldCursor=shieldBefore;
             for(var absorption:hit.intrinsicAllocations()){
+                double next=Math.max(0,shieldCursor-absorption.amount());
+                HytaleDamageLifecycleSystems.combatStage(damage,"Hywind intrinsic shield","BARRIER_ABSORB",shieldCursor,next,
+                        Map.of("absorbed",absorption.amount(),"capacityAfter",absorption.after(),"identity",absorption.toString()));
+                shieldCursor=next;
                 var projection=store.getComponent(ref,com.inigmasgames.hytalerpg.enemies.EnemyShieldProjection.getComponentType());
                 if(projection==null)throw new IllegalStateException("BULWARK_NATIVE_SAVE_PROJECTION_MISSING");
                 projection.consumed(absorption.after());
                 support.traceIntrinsic(absorption,damage);
             }
-            for(var absorption:hit.allocations())support.traceFinite(absorption.effect(),RpgTraceEventType.BARRIER_ABSORBED,
+            for(var absorption:hit.allocations()){
+                double next=Math.max(0,shieldCursor-absorption.amount());
+                HytaleDamageLifecycleSystems.combatStage(damage,"Hywind finite shield","BARRIER_ABSORB",shieldCursor,next,
+                        Map.of("absorbed",absorption.amount(),"capacityAfter",absorption.remaining(),
+                                "identity",absorption.effect().key().toString(),"kind",absorption.effect().kind().name()));
+                shieldCursor=next;
+                support.traceFinite(absorption.effect(),RpgTraceEventType.BARRIER_ABSORBED,
                     Map.of("absorbed",absorption.amount(),"shieldRemaining",absorption.remaining(),"nativeAmountAfterShield",hit.remainder(),
                             "redirected",hit.redirected(),"authority",absorption.effect().kind().name()+"_POST_FILTER"));
+            }
             for(var absorption:hit.allocations())reflectAbsorbed(support,absorption,damage,ref,store,now);
             for(var offered:support.runtime().sharedGuards(world,id,now)){
                 var owner=store.getExternalData().getRefFromUUID(offered.key().owner());
                 if(!HytaleSupportSystem.alive(store,owner)||!HytaleSupportSystem.eligibleAlly(store,owner,ref)||!HytaleSupportSystem.inRange(store,owner,ref,8))continue;
                 if(damage.getSource() instanceof Damage.EntitySource source&&HytaleAreaQueries.hostile(store,source.getRef(),ref))support.runtime().hostileDamage(offered.key().owner(),now);
                 try{
+                    double beforeShared=damage.getAmount();
                     var shared=support.runtime().absorbShared(offered,damage.getAmount(),now,support.port(store,owner));
-                    damage.setAmount((float)shared.remainder());reflectAbsorbed(support,shared.absorption(),damage,ref,store,now);
+                    damage.setAmount((float)shared.remainder());
+                    HytaleDamageLifecycleSystems.combatStage(damage,"Hywind shared guard","BARRIER_ABSORB",beforeShared,damage.getAmount(),
+                            Map.of("identity",offered.key().toString(),"absorbed",beforeShared-damage.getAmount()));
+                    reflectAbsorbed(support,shared.absorption(),damage,ref,store,now);
                 }catch(RuntimeException failure){support.traceFinite(offered,RpgTraceEventType.NATIVE_SUPPORT_REJECTED,
                         Map.of("boundary","SHARED_AEGIS_DURABLE_ABSORB_FAILED","exception",failure.getClass().getName()));}
             }

@@ -102,6 +102,31 @@ public final class NativeEnemyArmor extends DamageSystems.ArmorDamageReduction {
 
     @Override public void handle(int index, ArchetypeChunk<EntityStore> chunk, Store<EntityStore> store,
                                  CommandBuffer<EntityStore> buffer, Damage damage) {
+        float before=damage.getAmount();
+        handleOwned(index,chunk,store,buffer,damage);
+        if(com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageLifecycleSystems.combatTracked(damage)){
+            var details=new LinkedHashMap<String,Object>();
+            details.put("cause",damage.getCause()==null?"UNKNOWN":damage.getCause().getId());
+            details.put("cancelled",damage.isCancelled());
+            if(chunk.getComponent(index,com.hypixel.hytale.server.core.universe.PlayerRef.getComponentType())!=null
+                    &&damage.getCause()!=null&&!damage.getCause().doesBypassResistances())try{
+                var target=chunk.getReferenceTo(index);
+                var armor=buffer.getComponent(target,InventoryComponent.Armor.getComponentType());
+                var inventory=armor==null?EmptyItemContainer.INSTANCE:armor.getInventory();
+                var effects=chunk.getComponent(index,EffectControllerComponent.getComponentType());
+                var modifiers=getResistanceModifiers(buffer.getExternalData().getWorld(),inventory,
+                        ItemUtils.canApplyItemStackPenalties(target,buffer),effects);
+                var packet=modifiers.get(damage.getCause());
+                details.put("nativeFlatReduction",packet==null?0:packet.flatModifier);
+                details.put("nativeMultiplierProtection",packet==null?0:packet.multiplierModifier);
+                details.put("nativeParentCause",packet==null||packet.inheritedParentId==null?"NONE":packet.inheritedParentId.getId());
+            }catch(RuntimeException unavailable){details.put("nativeCollectorOutcome","UNOBSERVABLE:"+unavailable.getClass().getSimpleName());}
+            com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageLifecycleSystems.combatStage(
+                    damage,"Native armor/resistance","ARMOR",before,damage.getAmount(),details);
+        }
+    }
+    private void handleOwned(int index, ArchetypeChunk<EntityStore> chunk, Store<EntityStore> store,
+                             CommandBuffer<EntityStore> buffer, Damage damage) {
             try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.DAMAGE)){
         var cause = damage.getCause();
         if (damage.isCancelled() || cause == null || cause.doesBypassResistances()) {

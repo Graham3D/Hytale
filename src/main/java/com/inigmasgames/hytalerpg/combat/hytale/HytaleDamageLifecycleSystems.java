@@ -31,6 +31,24 @@ import com.inigmasgames.hytalerpg.execution.hytale.EnemyHealthBarPresentation;
 /** Evidence hooks around Hytale's native Gather -> Filter -> Apply -> Inspect sequence. */
 public final class HytaleDamageLifecycleSystems {
     private HytaleDamageLifecycleSystems() { }
+    private static volatile com.inigmasgames.hytalerpg.diagnostics.CombatDamageTraceService combatDamageTrace;
+    private static final java.util.concurrent.atomic.AtomicLong TRACE_FAILURES=new java.util.concurrent.atomic.AtomicLong();
+    private static void diagnostic(Runnable operation){try{operation.run();}catch(RuntimeException failure){
+        long count=TRACE_FAILURES.incrementAndGet();
+        if(count<=3||count%100==0)com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
+                "RPG_COMBAT_DIAGNOSTIC_FAILED count=%s reason=%s",count,failure.toString());
+    }}
+    public static void configureCombatDamageTrace(com.inigmasgames.hytalerpg.diagnostics.CombatDamageTraceService service){
+        combatDamageTrace=service;
+    }
+    public static void combatStage(Damage damage,String owner,String operation,double before,double after,Map<String,Object> details){
+        var detailed=combatDamageTrace;if(detailed!=null)diagnostic(()->detailed.stage(damage,owner,operation,before,after,details));
+    }
+    public static void combatNpcEvent(UUID world,UUID npc,String kind,Map<String,Object> fields){
+        var detailed=combatDamageTrace;if(detailed!=null)diagnostic(()->detailed.npcEvent(world,npc,kind,fields));
+    }
+    public static boolean combatTraceActive(){var detailed=combatDamageTrace;return detailed!=null&&detailed.active();}
+    public static boolean combatTracked(Damage damage){var detailed=combatDamageTrace;return detailed!=null&&detailed.tracked(damage);}
     private static final com.hypixel.hytale.server.core.meta.MetaKey<Double> HEALTH_BEFORE_APPLY =
             Damage.META_REGISTRY.registerMetaObject(ignored -> null,false,
                     "InigmasGames:RpgHealthImmediatelyBeforeApply",null);
@@ -73,6 +91,8 @@ public final class HytaleDamageLifecycleSystems {
                 new SystemDependency<>(Order.BEFORE,DamageSystems.ApplyDamage.class));}
         @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,
                                      CommandBuffer<EntityStore> buffer,Damage damage){
+            var detailed=combatDamageTrace;
+            if(detailed!=null)diagnostic(()->detailed.accepted(damage));
             if(HytaleDamageAdapter.metadata(damage)!=null)
                 damage.putMetaObject(ACCEPTED_BEFORE_ABSORPTION,damage.isCancelled()?0:Math.max(0,(double)damage.getAmount()));
         }
@@ -93,10 +113,12 @@ public final class HytaleDamageLifecycleSystems {
                 new SystemDependency<>(Order.BEFORE,DamageSystems.ApplyDamage.class));}
         @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,
                                      CommandBuffer<EntityStore> buffer,Damage damage){
-            if(HytaleDamageAdapter.metadata(damage)==null)return;
+            var detailed=combatDamageTrace;
+            if(HytaleDamageAdapter.metadata(damage)==null&&(detailed==null||!detailed.tracked(damage)))return;
             var stats=chunk.getComponent(index,EntityStatMap.getComponentType());
             var health=stats==null?null:stats.get(DefaultEntityStatTypes.getHealth());
             if(health!=null)damage.putMetaObject(HEALTH_BEFORE_APPLY,(double)health.get());
+            if(detailed!=null)diagnostic(()->detailed.beforeApply(damage,health==null?null:(double)health.get()));
         }
     }
     private abstract static class TraceSystem extends DamageEventSystem {
@@ -162,6 +184,24 @@ public final class HytaleDamageLifecycleSystems {
             }
             details.put("amount",damage.getAmount());details.put("cancelled",damage.isCancelled());
             emit(damage, RpgTraceEventType.DAMAGE_GATHERED, details);
+            var detailed=combatDamageTrace;
+            if(detailed!=null&&detailed.active())diagnostic(()->{
+                var targetId=chunk.getComponent(index,com.hypixel.hytale.server.core.entity.UUIDComponent.getComponentType());
+                var targetNpc=chunk.getComponent(index,com.hypixel.hytale.server.npc.entities.NPCEntity.getComponentType());
+                com.hypixel.hytale.component.Ref<EntityStore> sourceRef=null;
+                if(damage.getSource() instanceof Damage.EntitySource entity)sourceRef=entity.getRef();
+                else if(damage.getSource() instanceof Damage.ProjectileSource projectile)sourceRef=projectile.getRef();
+                var sourceId=sourceRef==null||!sourceRef.isValid()?null:buffer.getComponent(sourceRef,
+                        com.hypixel.hytale.server.core.entity.UUIDComponent.getComponentType());
+                var sourceNpc=sourceRef==null||!sourceRef.isValid()?null:buffer.getComponent(sourceRef,
+                        com.hypixel.hytale.server.npc.entities.NPCEntity.getComponentType());
+                var stats=chunk.getComponent(index,EntityStatMap.getComponentType());
+                var hp=stats==null?null:stats.get(DefaultEntityStatTypes.getHealth());
+                detailed.begin(damage,store.getExternalData().getWorld().getWorldConfig().getUuid(),
+                        sourceId==null?null:sourceId.getUuid(),targetId==null?null:targetId.getUuid(),
+                        sourceNpc==null?null:sourceNpc.getRoleName(),targetNpc==null?null:targetNpc.getRoleName(),
+                        hp==null?null:(double)hp.get(),hp==null?null:(double)hp.getMax());
+            });
 
         }
     }
@@ -220,6 +260,12 @@ public final class HytaleDamageLifecycleSystems {
         try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.DAMAGE)){
             emit(damage, RpgTraceEventType.DAMAGE_APPLIED,
                     Map.of("nativeAmount", damage.getAmount(), "cancelled", damage.isCancelled()));
+            var detailed=combatDamageTrace;
+            if(detailed!=null){
+                var stats=chunk.getComponent(index,EntityStatMap.getComponentType());
+                var hp=stats==null?null:stats.get(DefaultEntityStatTypes.getHealth());
+                diagnostic(()->detailed.applied(damage,hp==null?null:(double)hp.get()));
+            }
             if(observer!=null){
                 var metadata=HytaleDamageAdapter.metadata(damage);
                 var before=damage.getIfPresentMetaObject(HEALTH_BEFORE_APPLY);
