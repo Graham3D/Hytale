@@ -17,7 +17,12 @@ checksums in `StartupCaptures/20261011T150803Z-8909cada`.
 
 Offline PowerShell 5.1 syntax checks, `-CheckOnly`, synthetic process
 identity checks, and generated JFR missing/empty/incomplete/locked/valid
-tests passed. Guardian change and commit checks passed. No Hytale server
+tests passed. An offline log-copy fixture passed. A one-minute no-server
+timeout produced a `FAILED` manifest with the reason, retained its
+capture folder, and removed `JAVA_TOOL_OPTIONS` as expected. Guardian
+change and commit checks passed. Guardian's gameplay completion gate
+requires a matching build receipt, so it remains unverified for this
+diagnostics-only commit. The branch remains local and unpublished. No Hytale server
 was launched for verification. This is a startup diagnostics correction
 only: build revision/version remain R258-U7P5B /
 `0.2.0-R258-U7P5B`; no gameplay JAR or RPG save was changed.
