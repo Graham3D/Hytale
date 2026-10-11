@@ -1,11 +1,11 @@
 # HyARPG/Hywind development baseline
 
-## R258 icon-preserved deployment candidate (2026-10-11)
+## R258 icon-preserved deployment (2026-10-11)
 
 Branch `codex/r258-icon-preserved-deploy` starts from the published, locally
 Guardian-verified R258 documentation commit
-`6ad419d92f3086c5211aeef313eb6dc70218cf30`. The active RPG
-`mods/Hywind.jar` is R256-U7P5B with SHA-256
+`6ad419d92f3086c5211aeef313eb6dc70218cf30`. The previously active RPG
+`mods/Hywind.jar` was R256-U7P5B with SHA-256
 `84AF5EE7F843BB13480258D10A412838A6A435B9C92F9CAA59AEF10425B7DBE7`.
 Read-only comparison of all registered icon paths found one asset missing from
 R258 source: Cyclone Armor's legacy `SkillSpiritshield.png` native/UI pair.
@@ -18,9 +18,24 @@ registered icon bytes already match the active JAR. The U7P5 asset audit pins
 the old and new normalized rune JSON hashes and both packaged PNG hashes;
 its existing guard still covers every other asset. The primary checkout's
 unrelated edits, PSD, alpha art and player save data remain untouched.
-Final source commit, verification, GitHub publication and authorized JAR-only
-deployment are pending at this checkpoint. Connected acceptance remains with
-the user.
+The exact R258-U7P5B (`0.2.0-R258-U7P5B`) deployment source is
+`03abca2f55400bf157e42bae53f9a691267b79cd`. Its full offline `check`
+passed 3,527 root, 466 native-control, 49 CanvasUI, and 5 Tavern JUnit tests
+with zero failures or skips, plus asset and package validation. The focused
+icon tests passed, and `Update-RpgIcons.ps1 -CheckOnly` found 19 supplied icons
+with zero pending changes. All 38 icon entries present in the old deployed
+JAR match the candidate byte for byte. Guardian recorded the source and
+published `origin/codex/r258-icon-preserved-deploy`; the verified deployment
+JAR SHA-256 is
+`3DA33D47F2990B25FE99EFB6CEAD8543630054D35193932F261BD2F51648CA12`.
+The old JAR was backed up outside `Saves` at
+`Hytale/data/pre-release/HywindBackups/Hywind-before-R258-20261011T143105Z-84AF5EE7F843BB13480258D10A412838A6A435B9C92F9CAA59AEF10425B7DBE7.jar`;
+its hash matches the old JAR. The active `Saves/RPG/mods/Hywind.jar` has the
+new verified hash and embeds the exact deployment source commit. The deployed
+JAR passes package validation and a default-target icon `-CheckOnly` run with
+zero pending changes. Only one authoritative `Hywind.jar` is present. This
+documentation checkpoint follows deployment; connected QA and acceptance
+remain with the user.
 
 ## R258 unified diagnostic commands offline QA candidate (2026-10-11)
 
