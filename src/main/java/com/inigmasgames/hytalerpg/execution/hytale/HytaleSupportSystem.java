@@ -88,11 +88,10 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
             try{
                 var binding=cycloneConnections.get(id);
                 if(binding!=null&&binding.player()==player&&durableCyclone.paymentRecoveryRequired(binding.lease()))
-                    durableCyclone.reconcilePaymentAfterRestart(binding.lease(),kernel.resources(),
-                            new EntityStatResourcePort(store.getComponent(actor,EntityStatMap.getComponentType())));
+                    durableCyclone.invalidateUncertainPayment(binding.lease());
             }catch(RuntimeException recoveryFailure){
                 com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(recoveryFailure)
-                        .log("RPG_CYCLONE_PAYMENT_RECONCILIATION_FAILED player=%s",id);
+                        .log("RPG_CYCLONE_UNCERTAIN_PAYMENT_INVALIDATION_FAILED player=%s",id);
                 return false;
             }
         }

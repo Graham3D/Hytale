@@ -1,7 +1,5 @@
 package com.inigmasgames.hytalerpg.execution.support;
 
-import com.inigmasgames.hytalerpg.combat.resource.NativeResourcePort;
-import com.inigmasgames.hytalerpg.combat.resource.RpgResourceService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -195,19 +193,15 @@ public final class CycloneBarrierLedger {
     public boolean paymentRecoveryRequired(Lease lease){
         Holder h=holder(lease.player());synchronized(h){check(h,lease);return h.paymentRecoveryRequired;}
     }
-    /** A new process cannot prove that the native Mana save included the original debit.
-     * Re-charge through the existing reservation-aware authority before re-enabling
-     * protection. A short payment durably depletes the barrier. This intentionally
-     * permits conservative double payment after a crash, never free protection. */
-    public boolean reconcilePaymentAfterRestart(Lease lease,RpgResourceService resources,NativeResourcePort nativePort){
-        Objects.requireNonNull(resources);Objects.requireNonNull(nativePort);
+    /** Native Mana has no durable payment identity shared with this journal. A new
+     * connection cannot prove whether the original debit survived its player save,
+     * so forfeit protection without charging or refunding Mana. The forced DEPLETED
+     * record must complete before the new connection becomes ready. */
+    public State invalidateUncertainPayment(Lease lease){
         Holder h=holder(lease.player());synchronized(h){check(h,lease);
-            if(!h.paymentRecoveryRequired)return h.state.phase()==Phase.ACTIVE;
-            if(h.state.phase()!=Phase.ACTIVE){h.paymentRecoveryRequired=false;return false;}
-            double required=h.state.manaPaid();
-            double paid=resources.drainSpendableMana(lease.player(),required,nativePort,()->true);
-            if(paid+1e-5>=required){h.paymentRecoveryRequired=false;return true;}
-            clearForDeath(lease);return false;
+            if(!h.paymentRecoveryRequired)return h.state;
+            if(h.state.phase()!=Phase.ACTIVE){h.paymentRecoveryRequired=false;return h.state;}
+            return clearForDeath(lease);
         }
     }
     public boolean activationSeen(Lease lease,UUID activation){

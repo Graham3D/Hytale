@@ -63,12 +63,19 @@ crash, but never grants protection on a guessed payment. The journal does not
 pretend native Mana and plugin storage form one atomic transaction.
 
 Native Mana persistence can itself roll back after a disconnect or process
-crash. Every new connection therefore quarantines a surviving ACTIVE barrier
-until `RpgResourceService` re-debits its recorded amount from unreserved,
-spendable native Mana. A full observed debit lifts quarantine; insufficient
-payment durably depletes the barrier. This deliberately permits a second
-Mana charge when the original native payment did persist. R261-B must present
-and evaluate this conservative recovery policy before enabling the gate.
+crash. Hytale 0.7.0-pre.5.1 stores `EntityStatMap` values, but its native
+`setStatValue` API has no durable transaction identity shared with this
+journal. The recorded cost token proves only the original in-memory debit
+and readback; it cannot distinguish a saved debit from a rolled-back one.
+Every new connection therefore quarantines a surviving ACTIVE barrier and
+forces a DEPLETED record before marking that connection ready. Recovery does
+not call the native resource authority, charge Mana, or refund a possibly
+saved payment. The existing cooldown spend is left with its owner and is
+not automatically refunded. A failed invalidation force leaves the session
+uncertain and denies protection and ready completion. A later replay may
+retry; it never infers a payment from the current Mana balance. This policy
+may forfeit paid protection after reconnect, and R261-B must resolve that
+gameplay tradeoff before enabling the gate.
 Death durably depletes the barrier through a native death hook, with support
 tick as a fallback. An old connection's lease cannot detach a newer session.
 
@@ -81,5 +88,29 @@ absorption path. Existing temporary shields, Managuard, encounter shields,
 and other skills remain on their current paths. R261-A does not change the
 Cyclone formula, cost, duration, HUD, or Mana Before Life behavior.
 
-The measured forced-write sample is recorded in the focused JUnit XML.
-It is a local storage measurement, not a connected-game latency guarantee.
+The forced debit runs synchronously on the native damage-processing call
+stack. `debit` locks only its player's holder, then appends and calls
+`FileChannel.force(true)` before returning any absorbed damage. There is no
+global Java journal lock, although filesystem and device contention can
+affect unrelated players. The focused test records p50/p95/p99 and worst
+wall-clock debit latency for repeated hits and concurrent same-player and
+multi-player hits. These local measurements are not connected-game latency
+guarantees. Moving the force to an asynchronous queue would violate the
+current no-acknowledgment-before-durability rule; R261-B should evaluate
+the measured pause budget before wiring the coordinator into live damage.
+
+## R261-A invariant coverage
+
+| Invariant or failure boundary | Automated coverage |
+| --- | --- |
+| Native Mana and cooldown receipts precede ACTIVE; admission is singular | `nativeManaAndCooldownAuthorityReceiptsGateActivation`, `cooldownProofAndManaProofAreRequiredBeforeProtection`, `simultaneousCastRequestsProduceOnePendingGeneration` |
+| Pending stages, failed compensation, and cooldown persistence failures never publish protection | `interruptedActivationAtEveryProofStageCannotGrantFreeBarrier`, `uncertainCompensationSettlesConservativelyAndRetryCanProceed`, `compensationCanSettleAfterOneFailureWithoutDoubleRefund`, `cooldownPersistenceFailureLeavesNoBarrierAndCanCompensateMana` |
+| Reconnect cannot charge Mana again or publish uncertain protection; cooldown debt and activation history survive; stale leases cannot affect the next session | `nativeManaRollbackAndPersistedManaBothForfeitWithoutAnotherCharge`, `restartWithUncertainNativeManaDepletesInsteadOfChargingAgain`, `recoveredCooldownDebtSurvivesUncertainBarrierInvalidation`, `delayedOldSessionCannotInvalidateNewBarrierOrSession`, `preloadedReconnectDoesNotRefillAndOldLeaseCannotClearNewSession` |
+| Recovery storage failure is fail closed | `uncertainRecoveryWriteFailureNeverPublishesProtection`, `nativeDamageCanOnlyBeReducedAfterConfirmedForcedWrite` |
+| Durable debit, duplicate receipt, exact overflow, numeric narrowing, and death depletion | `forcedDebitSurvivesRestartWithoutRefill`, `duplicateAndStaleReceiptsCannotDebitTwice`, `concurrentHitsAreSerializedAndOverflowIsExact`, `tinyUnrepresentableDamageNeverGetsFreeAbsorption`, `nativeFloatNarrowingCannotGrantUnrecordedAbsorption`, `oldSaveWithoutSidecarIsEmptyAndDeathPersists` |
+| Torn write, malformed transition, checkpoint rotation, and activation replay fail closed | `tornTailIsIgnoredButCompletedCorruptionFailsClosed`, `duplicateOrOutOfOrderDurableRevisionFailsClosed`, `twoSlotCheckpointPreservesDebitsAndReceiptHistory`, `tornInactiveCheckpointCannotRestoreAbsorbedDamage`, `oldActivationIdCannotBeReplayedAfterAnotherGeneration` |
+| Forced-write latency and same-player versus unrelated-player contention remain visible | `multiPlayerForcedDebitLatencyProfile`, `repeatedHitBenchmarkRecordsBoundedPerPlayerSyncCost`, `simultaneousHitBenchmarkRecordsLockContention` |
+
+The activation compensation callback's production implementation, native
+player-save flush timing, and connected-client damage latency remain R261-B
+integration gates. The gate stays disabled in R261-A.1.
