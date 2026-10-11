@@ -1,5 +1,37 @@
 # Integrated-server startup bottleneck: evidence and capture
 
+## Connected capture: 2026-10-11 12:55:47 EDT
+
+The owner-run JFR in `StartupCaptures/20261011T165547Z-9ff067cb` is a
+valid 90-second integrated-server recording. Its matching client and RPG
+server logs were copied read-only into the same capture folder with
+`recovery.json` checksums because the original capture command did not
+leave a manifest. The deployed gameplay JAR was R258-U7P5B.
+
+JFR `hywind.ReadyPath` records a 6.925-second
+`RPG_GEAR_GLOBAL_RECORD_SCAN` on `RPG-gear-receipts`, starting at
+12:56:13.530 EDT. A `jdk.JavaMonitorEnter` event shows the main setup
+thread waiting 6.89 seconds at
+`FileEncounterStore.configureGearDelivery` for that worker's store
+monitor. Execution samples place the worker in
+`FileEncounterStore.gearRecords` and Gson receipt parsing. More than
+2,000 loot receipts and 500 spatial-stock receipts were present in the
+active save. The all-record scan held the store monitor across file reads.
+Additional encounter worker waits of 2.19 and 2.82 seconds occurred
+around 12:56:35-42 EDT.
+
+The separate 47-second client loading gap occurred **after** the server
+reported booted at 12:56:37 EDT. The client log records
+`Handle RequiredAssets` at 12:56:38.939 and completion at 12:57:25.823,
+46.875 seconds later; `SettingUp -> Playing` took 47.887 seconds.
+The server remained active, and its ReadyPath event marking a native
+common-assets request appeared at 12:57:25.829. The server JFR cannot
+identify which Hytale client operation consumed that interval. The
+encounter-store lock explains part of server setup and should be fixed,
+but it does not explain the 46.875-second `RequiredAssets` handling
+interval. A client CPU/file-I/O capture is needed to attribute that
+interval further before changing asset or cache behavior.
+
 ## Current boundary (2026-10-11)
 
 The latest verified source is `codex/r258-icon-preserved-deploy` at

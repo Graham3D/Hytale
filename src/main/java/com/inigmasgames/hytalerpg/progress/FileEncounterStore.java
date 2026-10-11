@@ -575,6 +575,8 @@ public final class FileEncounterStore implements AutoCloseable {
     private volatile EncounterLog journal;
     private boolean durabilityV2,preallocate=true;
     private Consumer<DurabilityBoundary> durabilityFault=ignored->{};
+    private static final int GEAR_RECORD_READ_BATCH=16;
+    private IntConsumer gearRecordBatchBoundary=ignored->{};
     private volatile boolean closed,uncertain,closing,legacyReservation;
     private final EncounterPersistenceTimings timings=new EncounterPersistenceTimings();
     private final EncounterBarrierArbiter barriers=new EncounterBarrierArbiter(timings);
@@ -597,10 +599,22 @@ public final class FileEncounterStore implements AutoCloseable {
     /** Bounded diagnostic/projection query, executed only on the gear IO worker. */
     public <T> List<T> gearRecords(String namespace,Class<T> type){
         if(!Set.of("loot","salvage","sentinels","spatial-pickups","spatial-equipment","spatial-stock","spatial-stock-drop").contains(namespace))throw new IllegalArgumentException("Gear namespace");
-        return locked(()->{var result=new ArrayList<T>();Path folder=directory.resolve("gear").resolve(namespace);if(!Files.exists(folder))return List.of();
-            try(var files=Files.newDirectoryStream(folder,"*.json")){for(Path path:files){if(result.size()>=4096)throw new IllegalStateException("Gear projection index capacity; archival index required");result.add(read(path,type));}}
-            catch(IOException error){throw persistenceFailure(error);}return List.copyOf(result);});
+        // Individual receipts are checksum-validated and atomically replaced. Snapshot the
+        // bounded path set, then release the encounter writer monitor between small read
+        // batches so setup, encounter admission and durable effects can make progress.
+        var paths=locked(()->{var found=new ArrayList<Path>();Path folder=directory.resolve("gear").resolve(namespace);if(!Files.exists(folder))return List.<Path>of();
+            try(var files=Files.newDirectoryStream(folder,"*.json")){for(Path path:files){if(found.size()>=4096)throw new IllegalStateException("Gear projection index capacity; archival index required");found.add(path);}}
+            catch(IOException error){throw persistenceFailure(error);}found.sort(Comparator.naturalOrder());return List.copyOf(found);});
+        var result=new ArrayList<T>(paths.size());
+        for(int start=0;start<paths.size();start+=GEAR_RECORD_READ_BATCH){
+            int first=start,last=Math.min(start+GEAR_RECORD_READ_BATCH,paths.size());
+            result.addAll(locked(()->{var batch=new ArrayList<T>(last-first);for(int i=first;i<last;i++)batch.add(read(paths.get(i),type));return batch;}));
+            gearRecordBatchBoundary.accept(last);
+        }
+        return List.copyOf(result);
     }
+    /** Fault-injection boundary for deterministic concurrency tests; runs outside the store monitor. */
+    void gearRecordBatchBoundary(IntConsumer boundary){gearRecordBatchBoundary=Objects.requireNonNull(boundary);}
     public FileEncounterStore(Path directory){this(directory,ignored->{});}
     /** Fault injection is for process-interruption tests only. */
     public FileEncounterStore(Path directory,Consumer<Boundary> fault){this(directory,fault,ignored->{});}
