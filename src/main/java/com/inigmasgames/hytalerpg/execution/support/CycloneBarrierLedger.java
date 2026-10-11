@@ -68,18 +68,23 @@ public final class CycloneBarrierLedger {
     }
     private final Path root;
     private final long segmentBytes;
+    private final int maxRecords;
     private final ConcurrentHashMap<UUID,Holder> holders=new ConcurrentHashMap<>();
     private record Prepared(State state,HashSet<String> receipts,HashSet<UUID> activations,int slot,
                             boolean paymentRecoveryRequired){}
     private final ConcurrentHashMap<UUID,Prepared> preloaded=new ConcurrentHashMap<>();
     private final LongAdder writes=new LongAdder(),totalNanos=new LongAdder(),failedWrites=new LongAdder();
     private volatile long maximumNanos;
-    public CycloneBarrierLedger(Path root){this(root,SEGMENT_BYTES);}
+    public CycloneBarrierLedger(Path root){this(root,SEGMENT_BYTES,MAX_RECORDS);}
     /** Small thresholds are used by deterministic rotation tests; production uses 16 MB. */
-    public CycloneBarrierLedger(Path root,long segmentBytes){
+    public CycloneBarrierLedger(Path root,long segmentBytes){this(root,segmentBytes,MAX_RECORDS);}
+    /** Package-private bound for deterministic ceiling tests; production always uses MAX_RECORDS. */
+    CycloneBarrierLedger(Path root,long segmentBytes,int maxRecords){
         this.root=Objects.requireNonNull(root).toAbsolutePath().normalize();
         if(segmentBytes<4096||segmentBytes>SEGMENT_BYTES)throw new IllegalArgumentException("CYCLONE_SEGMENT_LIMIT");
+        if(maxRecords<1||maxRecords>MAX_RECORDS)throw new IllegalArgumentException("CYCLONE_RECORD_LIMIT");
         this.segmentBytes=segmentBytes;
+        this.maxRecords=maxRecords;
     }
     public Metrics metrics(){return new Metrics(writes.sum(),totalNanos.sum(),maximumNanos,failedWrites.sum());}
     /** Run from ReadyPath's worker before the native player installation callback. */
@@ -213,7 +218,7 @@ public final class CycloneBarrierLedger {
         Holder h=holder(lease.player());synchronized(h){check(h,lease);
             if(h.state.activation()!=null&&h.state.activation().equals(activation))return h.state;
             if(h.activations.contains(activation))throw new IllegalStateException("CYCLONE_ACTIVATION_REPLAY");
-            if(h.activations.size()>=MAX_RECORDS)throw new IllegalStateException("CYCLONE_ACTIVATION_BUDGET");
+            if(h.activations.size()>=maxRecords)throw new IllegalStateException("CYCLONE_ACTIVATION_BUDGET");
             if(h.state.phase()!=Phase.NONE&&h.state.phase()!=Phase.DEPLETED)
                 throw new IllegalStateException("CYCLONE_BARRIER_ALREADY_ACTIVE_OR_PENDING");
             var next=new State(SCHEMA,lease.player(),"spirit_shield",generation,activation,h.state.revision()+1,
@@ -260,7 +265,7 @@ public final class CycloneBarrierLedger {
             double used=Math.min(damage,old.remaining());
             if(used<=0||old.remaining()-used==old.remaining())
                 return new Debit(damage,0,old.remaining(),damage,old.generation(),receipt,old.revision(),false,true);
-            if(h.receipts.size()>=MAX_RECORDS){
+            if(h.receipts.size()>=maxRecords){
                 // Bounded journal lifetime: forfeit the remaining pool instead of silently
                 // absorbing without a receipt or permanently blocking recast.
                 clearForDeath(lease);
@@ -348,7 +353,7 @@ public final class CycloneBarrierLedger {
                     receipts.addAll(Arrays.asList(parsed.receipts()));
                     activations.addAll(Arrays.asList(parsed.activations()));
                     if(receipts.size()!=parsed.receipts().length||activations.size()!=parsed.activations().length
-                            ||activations.size()>MAX_RECORDS||receipts.size()>MAX_RECORDS
+                            ||activations.size()>maxRecords||receipts.size()>maxRecords
                             ||next.phase()!=Phase.NONE&&!activations.contains(next.activation()))
                         throw new IllegalStateException("CYCLONE_CHECKPOINT_SET_INVALID");
                     state=next;start=i+1;first=false;continue;
@@ -361,12 +366,12 @@ public final class CycloneBarrierLedger {
                     throw new IllegalStateException("CYCLONE_JOURNAL_TRANSITION");
                 if(newGeneration){
                     if(!activations.add(next.activation()))throw new IllegalStateException("CYCLONE_ACTIVATION_REPLAY");
-                    if(activations.size()>MAX_RECORDS)throw new IllegalStateException("CYCLONE_ACTIVATION_BUDGET");
+                    if(activations.size()>maxRecords)throw new IllegalStateException("CYCLONE_ACTIVATION_BUDGET");
                     receipts.clear();
                 }
                 if(parsed.receipt()!=null&&!receipts.add(parsed.receipt()))
                     throw new IllegalStateException("CYCLONE_DUPLICATE_DURABLE_RECEIPT");
-                if(receipts.size()>MAX_RECORDS)throw new IllegalStateException("CYCLONE_DEBIT_BUDGET");
+                if(receipts.size()>maxRecords)throw new IllegalStateException("CYCLONE_DEBIT_BUDGET");
                 state=next;start=i+1;first=false;
             }
             return end==0?null:new Recovered(state,receipts,activations);
