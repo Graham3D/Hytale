@@ -1,6 +1,6 @@
 # HyARPG/Hywind development baseline
 
-## R258 unified diagnostic commands candidate (2026-10-11)
+## R258 unified diagnostic commands offline QA candidate (2026-10-11)
 
 Branch `codex/unified-diagnostics` starts from the locally Guardian-verified
 R257 documentation commit `cb1b1b5e2609e2080c06402405f4c4fcbcad4002`;
@@ -11,9 +11,17 @@ personal skill capture and independently filtered UI/Inventory/Skill Tree
 sessions, retains separate Gear/Sentinel evidence and native one-shot probes,
 and moves WA-155 calibration under `/rpg lightqa`. The previous trace wrappers
 are retired after source-level migration; the underlying recorders remain.
-The primary checkout's unrelated edits and the RPG save are untouched.
-Exact-commit verification, GitHub publication and connected acceptance are
-pending at this source checkpoint.
+The implementation source commit is
+`94badeac23de0bb7917687152d2d25de21535dc8`. Its exact-commit offline
+`check` passed 3,524 root, 466 native-control, 49 CanvasUI and 5 Tavern JUnit
+tests with zero failures or skips, plus asset and package validation. Strict
+SpotBugs passed. Guardian recorded the implementation JAR SHA-256 as
+`A6CBF9FD2340186D1FB305A74B526A5FCB14D2A0FE885174DDD0EF8EB75DFE8B`
+and published `origin/codex/unified-diagnostics` at that commit. A later
+documentation checkpoint changes only this baseline record and receives its
+own exact-commit package identity. The primary checkout's unrelated edits and
+the RPG save remain untouched. No R258 JAR has been deployed; connected
+command behavior and acceptance remain with the user.
 
 ## R257 combat damage trace offline QA candidate (2026-10-11)
 
