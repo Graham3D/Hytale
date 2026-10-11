@@ -1,5 +1,28 @@
 # HyARPG/Hywind development baseline
 
+## ReadyPath capture correction (2026-10-11)
+
+Startup diagnostic source on `codex/startup-bottleneck-capture` is commit
+`9181d3b4551feb0fdabd691737989d3c9ab45e89`, based on the R258
+diagnostic checkpoint below. Windows PowerShell 5.1 previously terminated
+when `jfr summary` wrote `file is empty` to stderr while the JFR was
+still being produced. The corrected capture matches the new integrated
+server to the new Hytale client by PID, process creation time, bundled Java
+and native server JAR; waits for a finished, stable JFR; retries missing,
+empty, incomplete and locked files; and writes a failure manifest if no
+valid recording arrives. Matching client and RPG server logs are copied
+into each capture folder outside `Saves`. The owner's first failed run
+finalized as a valid 38-second JFR, recovered with log snapshots and
+checksums in `StartupCaptures/20261011T150803Z-8909cada`.
+
+Offline PowerShell 5.1 syntax checks, `-CheckOnly`, synthetic process
+identity checks, and generated JFR missing/empty/incomplete/locked/valid
+tests passed. Guardian change and commit checks passed. No Hytale server
+was launched for verification. This is a startup diagnostics correction
+only: build revision/version remain R258-U7P5B /
+`0.2.0-R258-U7P5B`; no gameplay JAR or RPG save was changed.
+The corrected capture awaits the owner's next connected launch.
+
 ## Startup bottleneck capture checkpoint (2026-10-11)
 
 Branch `codex/startup-bottleneck-capture` starts from verified R258
