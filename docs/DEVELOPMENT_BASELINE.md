@@ -1,6 +1,6 @@
 # HyARPG/Hywind development baseline
 
-## R257 combat damage trace candidate (2026-10-11)
+## R257 combat damage trace offline QA candidate (2026-10-11)
 
 Branch `codex/combat-damage-trace` starts from verified R256 documentation
 commit `df833376e5dfa212035e7ddd19fc363baee133cd`; the built R256 source is
@@ -11,8 +11,21 @@ authored offensive inputs, gear and NPC defense stages, and NPC profile
 outcomes. Source-level evidence identifies an initial Goblin breach route that
 spawns `Goblin_Scrapper`; the connected event's actual roles, difficulty
 profiles, and lethal hit are pending owner QA. No balance coefficients change.
-Build verification, exact implementation source commit, GitHub publication,
-deployment, and connected acceptance are pending at this source checkpoint.
+The implementation source commit is
+`73c5d9d955f9e90a82bd136868c8fdfce393958a` (following the gameplay
+commit `25cfe14cf2ce0d1c3c4fd3b3ea187f7333abaa96`). Its exact-commit
+offline `check` passed 3,520 root, 462 native-control, 49 CanvasUI, and 5
+Tavern JUnit tests with zero failures or skips, plus asset compatibility and
+package validation. Strict SpotBugs passed. Guardian recorded the R257 JAR
+SHA-256 as
+`0A746AAD5E3FE0F0E18352C4AD8B40C88DED49F4C3B2320D8DA366BAE838D008`.
+The identical QA copy is `build/qa/Hywind-R257-U7P5B.jar`. Guardian local
+completion is VERIFIED; GitHub synchronization has not been checked. The
+branch has not been published, and the RPG save has not been changed.
+The active RPG `Hywind.jar` contains user icon updates absent from this
+source branch, so deploying this candidate directly would lose those icons.
+Actual event-Goblin scaling and per-hit calculations still require connected
+owner QA; no connected acceptance is claimed.
 
 ## R256 Cyclone Armor barrier QA candidate (2026-10-10)
 
