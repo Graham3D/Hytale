@@ -6,6 +6,9 @@ import com.inigmasgames.hytalerpg.execution.support.CycloneArmorFormula;
 import com.inigmasgames.hytalerpg.execution.support.FiniteSupportEffects;
 import com.inigmasgames.hytalerpg.execution.support.SupportMagnitude;
 import com.inigmasgames.hytalerpg.domain.PassiveSlot;
+import com.inigmasgames.hytalerpg.combat.attribute.EffectiveAttributeService;
+import com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute;
+import com.inigmasgames.hytalerpg.combat.balance.CombatBalanceProfile;
 import org.junit.jupiter.api.Test;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,14 +17,66 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CycloneArmorTest {
     @Test void exactIntrinsicScalingAndInvalidInputs(){
-        assertEquals(150,CycloneArmorFormula.capacity(100,1),1e-12);
-        assertEquals(157.5,CycloneArmorFormula.capacity(100,5),1e-12);
-        assertEquals(166.875,CycloneArmorFormula.capacity(100,10),1e-12);
-        assertEquals(176.25,CycloneArmorFormula.capacity(100,15),1e-12);
-        assertEquals(185.625,CycloneArmorFormula.capacity(100,20),1e-12);
-        assertEquals(195,CycloneArmorFormula.capacity(100,25),1e-12);
-        assertThrows(IllegalArgumentException.class,()->CycloneArmorFormula.capacity(-1,1));
-        assertThrows(IllegalArgumentException.class,()->CycloneArmorFormula.capacity(100,0));
+        var profile=CombatBalanceProfile.loadCanonical();
+        var effective=new EffectiveAttributeService(profile);
+        double baseline=effective.effective(profile.startingRawAttribute);
+        assertEquals(10,baseline,1e-12);
+        assertEquals(30,CycloneArmorFormula.calculate(0,baseline,baseline,1).intrinsicBarrier(),1e-12);
+        assertEquals(31.5,CycloneArmorFormula.calculate(0,baseline,baseline,5).intrinsicBarrier(),1e-12);
+        assertEquals(33.375,CycloneArmorFormula.calculate(0,baseline,baseline,10).intrinsicBarrier(),1e-12);
+        assertEquals(35.25,CycloneArmorFormula.calculate(0,baseline,baseline,15).intrinsicBarrier(),1e-12);
+        assertEquals(37.125,CycloneArmorFormula.calculate(0,baseline,baseline,20).intrinsicBarrier(),1e-12);
+        assertEquals(175.725,CycloneArmorFormula.calculate(0,baseline+320,baseline,20).intrinsicBarrier(),1e-9);
+        assertEquals(96.525,CycloneArmorFormula.calculate(0,baseline,baseline+320,20).intrinsicBarrier(),1e-9);
+        assertEquals(211.365,CycloneArmorFormula.calculate(0,baseline+320,baseline+192,20).intrinsicBarrier(),1e-9);
+        var geared=CycloneArmorFormula.calculate(8,baseline+320,baseline+192,20);
+        assertEquals(42,geared.baseBarrier(),1e-12);
+        assertEquals(112,geared.wisdomContribution(),1e-12);
+        assertEquals(28.8,geared.intelligenceContribution(),1e-12);
+        var equal=CycloneArmorFormula.calculate(0,baseline+320,baseline+320,1);
+        assertEquals(7d/3d,equal.wisdomContribution()/equal.intelligenceContribution(),1e-12);
+        assertEquals(1.2375,geared.skillLevelFactor(),1e-12);
+        assertEquals(226.215,geared.intrinsicBarrier(),1e-9);
+        for(double invalid:new double[]{-1,Double.NaN,Double.POSITIVE_INFINITY,Double.MAX_VALUE})
+            assertThrows(IllegalArgumentException.class,()->CycloneArmorFormula.calculate(invalid,baseline,baseline,1));
+        assertThrows(IllegalArgumentException.class,()->CycloneArmorFormula.calculate(0,Double.NaN,baseline,1));
+        assertThrows(IllegalArgumentException.class,()->CycloneArmorFormula.calculate(0,-1,baseline,1));
+        assertThrows(IllegalArgumentException.class,()->CycloneArmorFormula.calculate(0,baseline,Double.POSITIVE_INFINITY,1));
+        assertThrows(IllegalArgumentException.class,()->CycloneArmorFormula.calculate(0,baseline,-1,1));
+        assertThrows(IllegalArgumentException.class,()->CycloneArmorFormula.calculate(0,baseline,baseline,0));
+        assertEquals(30,CycloneArmorFormula.calculate(0,0,0,1).intrinsicBarrier(),1e-12);
+    }
+
+    @Test void rawAttributeDiminishingReturnsAreUsedOnce(){
+        var profile=CombatBalanceProfile.loadCanonical();
+        var effective=new EffectiveAttributeService(profile);
+        double baseline=effective.effective(profile.startingRawAttribute);
+        assertEquals(330,effective.effective(550),1e-12);
+        assertEquals(175.725,CycloneArmorFormula.calculate(0,effective.effective(550),baseline,20).intrinsicBarrier(),1e-9);
+        assertEquals(271.0125,CycloneArmorFormula.calculate(0,550,baseline,20).intrinsicBarrier(),1e-9);
+        assertEquals(96.525,CycloneArmorFormula.calculate(0,baseline,effective.effective(550),20).intrinsicBarrier(),1e-9);
+        assertEquals(137.3625,CycloneArmorFormula.calculate(0,baseline,550,20).intrinsicBarrier(),1e-9);
+        assertTrue(CycloneArmorFormula.calculate(0,effective.effective(550),baseline,20).intrinsicBarrier()
+                >CycloneArmorFormula.calculate(0,baseline,effective.effective(550),20).intrinsicBarrier());
+        assertTrue(effective.effective(650)-effective.effective(550)<effective.effective(110)-effective.effective(10));
+    }
+
+    @Test void committedAttributeSnapshotAvoidsWisdomHealingDoubleScaling(){
+        var h=new Stage09BarrierSupportTest.Harness("spirit_shield");
+        assertTrue(h.bundle.service().setDevelopmentAttribute(h.actor,RpgAttribute.WIS,150).success());
+        assertTrue(h.bundle.service().setDevelopmentAttribute(h.actor,RpgAttribute.INT,110).success());
+        assertTrue(h.cast().committed());
+        var stats=h.context.snapshot().derivedStats();
+        var expected=CycloneArmorFormula.calculate(0,stats.effective(RpgAttribute.WIS),
+                stats.effective(RpgAttribute.INT),h.context.effectiveSkillLevel());
+        assertEquals(expected.intrinsicBarrier(),SupportMagnitude.shield(h.context,1),1e-9);
+        assertEquals(expected.intrinsicBarrier(),h.shield(),1e-9);
+        assertTrue(stats.healingMultiplier()>1);
+        var trace=SupportMagnitude.cycloneTrace(h.context,SupportMagnitude.shieldCalculation(h.context,1));
+        assertEquals(150d,trace.get("rawWisdom"));
+        assertEquals(stats.effective(RpgAttribute.WIS),trace.get("effectiveWisdom"));
+        assertEquals(expected.wisdomContribution(),trace.get("wisdomContribution"));
+        assertEquals(h.shield(),trace.get("finalCapacity"));
     }
 
     @Test void stableSavedIdentityIsTheOnlyLearnableCycloneEntry(){
@@ -46,18 +101,18 @@ class CycloneArmorTest {
         var h=new Stage09BarrierSupportTest.Harness("spirit_shield");
         assertTrue(h.cast().committed());
         assertEquals(82,h.mana);
-        assertEquals(30.9,SupportMagnitude.shield(h.context,1),1e-9);
+        assertEquals(30,SupportMagnitude.shield(h.context,1),1e-9);
         var first=h.runtime.finite().shieldHit(h.world,h.actor,10,true,0,(effect,amount)->fail("No ally damage transfer"));
-        assertEquals(0,first.remainder());assertEquals(20.9,h.shield(),1e-9);
+        assertEquals(0,first.remainder());assertEquals(20,h.shield(),1e-9);
         var second=h.runtime.finite().shieldHit(h.world,h.actor,50,true,0,(effect,amount)->fail("No ally damage transfer"));
-        assertEquals(29.1,second.remainder(),1e-9);assertEquals(0,h.runtime.finite().size());
+        assertEquals(30,second.remainder(),1e-9);assertEquals(0,h.runtime.finite().size());
     }
 
     @Test void rejectionExpiryRecastAndWardAreBounded(){
         var rejected=new Stage09BarrierSupportTest.Harness("spirit_shield");rejected.mana=17;
         assertFalse(rejected.cast().committed());assertEquals(17,rejected.mana);assertEquals(0,rejected.runtime.finite().size());
         var h=new Stage09BarrierSupportTest.Harness("spirit_shield");h.link("reflective_ward",PassiveSlot.PASSIVE01);
-        assertTrue(h.cast().committed());assertEquals(30.9*.8,h.shield(),1e-9);
+        assertTrue(h.cast().committed());assertEquals(30*.8,h.shield(),1e-9);
         var hit=h.runtime.finite().shieldHit(h.world,h.actor,5,false,0,(effect,amount)->fail());
         assertEquals(1,SupportMagnitude.wardReflection(h.context,hit.absorbed()),1e-9);
         assertEquals(1,h.runtime.finite().size());

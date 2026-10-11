@@ -1,5 +1,24 @@
 # HyARPG/Hywind development baseline
 
+## R260 Cyclone Armor barrier rebalance candidate (2026-10-11)
+
+Task branch `codex/cyclone-barrier-rebalance` starts from published R259
+documentation commit `d72ad29b32d8b34b4552ced8d4b8315e6a40b0be` and
+retains the R259 encounter-store correction. Build revision/version are
+R260-U7P5B / `0.2.0-R260-U7P5B`. Cyclone Armor now takes flat gear Healing
+Power plus 0.35 per effective Wisdom and 0.15 per effective Intelligence
+point above the starting effective attribute, then applies the existing
+skill-level factor and downstream barrier modifiers once. It no longer
+multiplies by Wisdom-derived Healing Power. Saved skill identity and barrier
+lifecycle are unchanged. The existing skill trace now reports the capacity
+calculation; absorption traces already report damage absorbed and remaining
+capacity. See [the balance table](CYCLONE_ARMOR_BALANCE.md).
+
+Focused Cyclone, gear, barrier, healing, support, and attribute JUnit suites
+passed offline. The full package/Guardian gate, publication, deployment,
+and connected-game acceptance are pending at this candidate checkpoint.
+The active RPG JAR remains the verified R259 build until deployment.
+
 ## R259 encounter-store contention correction (2026-10-11)
 
 The published `codex/ready-path-gear-lock` branch contains gameplay commit

@@ -2,6 +2,9 @@ package com.inigmasgames.hytalerpg.execution.support;
 
 import com.inigmasgames.hytalerpg.execution.SkillExecutionContext;
 import com.inigmasgames.hytalerpg.combat.healing.HealingCalculationService;
+import com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute;
+import com.inigmasgames.hytalerpg.gear.GearEffectSnapshot;
+import java.util.Map;
 
 public final class SupportMagnitude {
     private SupportMagnitude(){}
@@ -26,17 +29,53 @@ public final class SupportMagnitude {
         if(!Double.isFinite(absorbed)||absorbed<0)throw new IllegalArgumentException("Invalid actual absorption");
         return context.compiledPlan().supportModifiers().reflectiveWard()?absorbed*.2:0;
     }
-    public static double shield(SkillExecutionContext context,double mastery){
-        double healingPower=20+context.gearSnapshot().total(com.inigmasgames.hytalerpg.gear.GearEffectSnapshot.Operator.HEALING_POWER);
-        double wisdom=context.snapshot().derivedStats().healingMultiplier();
-        double intrinsic="spirit_shield".equals(context.profile().skillId())
-                ?CycloneArmorFormula.capacity(healingPower*wisdom,context.effectiveSkillLevel())
-                :new HealingCalculationService().direct(healingPower,context.profile().support().coefficient(),wisdom,mastery,0);
+    public record ShieldCalculation(double finalCapacity, CycloneArmorFormula.Breakdown cyclone) { }
+
+    public static CycloneArmorFormula.Breakdown cyclone(SkillExecutionContext context) {
+        if (!"spirit_shield".equals(context.profile().skillId()))
+            throw new IllegalArgumentException("NOT_CYCLONE_ARMOR");
+        return CycloneArmorFormula.calculate(context.gearSnapshot().total(GearEffectSnapshot.Operator.HEALING_POWER),
+                context.snapshot().derivedStats().effective(RpgAttribute.WIS),
+                context.snapshot().derivedStats().effective(RpgAttribute.INT), context.effectiveSkillLevel());
+    }
+
+    public static ShieldCalculation shieldCalculation(SkillExecutionContext context,double mastery){
+        double healingPower=20+context.gearSnapshot().total(GearEffectSnapshot.Operator.HEALING_POWER);
+        CycloneArmorFormula.Breakdown cyclone="spirit_shield".equals(context.profile().skillId())?cyclone(context):null;
+        double intrinsic=cyclone!=null?cyclone.intrinsicBarrier()
+                :new HealingCalculationService().direct(healingPower,context.profile().support().coefficient(),
+                        context.snapshot().derivedStats().healingMultiplier(),mastery,0);
         double capacity=intrinsic*context.snapshot().modifiers().factor()*context.compiledPlan().supportModifiers().barrierFactor()
-                *(1+context.gearSnapshot().percent(com.inigmasgames.hytalerpg.gear.GearEffectSnapshot.Operator.BARRIER_STRENGTH));
+                *(1+context.gearSnapshot().percent(GearEffectSnapshot.Operator.BARRIER_STRENGTH));
         if(!Double.isFinite(capacity)||capacity<=0||capacity>Float.MAX_VALUE)
             throw new IllegalArgumentException("INVALID_BARRIER_CAPACITY");
-        return capacity;
+        return new ShieldCalculation(capacity,cyclone);
+    }
+    public static double shield(SkillExecutionContext context,double mastery){
+        return shieldCalculation(context,mastery).finalCapacity();
+    }
+    public static Map<String,Object> cycloneTrace(SkillExecutionContext context,ShieldCalculation result){
+        var c=result.cyclone();
+        if(c==null)throw new IllegalArgumentException("NOT_CYCLONE_ARMOR");
+        var stats=context.snapshot().derivedStats();
+        return Map.ofEntries(
+                Map.entry("target",context.target().entityId().toString()),
+                Map.entry("rawWisdom",stats.raw(RpgAttribute.WIS)),
+                Map.entry("effectiveWisdom",stats.effective(RpgAttribute.WIS)),
+                Map.entry("rawIntelligence",stats.raw(RpgAttribute.INT)),
+                Map.entry("effectiveIntelligence",stats.effective(RpgAttribute.INT)),
+                Map.entry("startingEffectiveAttribute",c.startingEffective()),
+                Map.entry("flatHealingPowerFromGear",context.gearSnapshot().total(GearEffectSnapshot.Operator.HEALING_POWER)),
+                Map.entry("baseBarrier",c.baseBarrier()),
+                Map.entry("wisdomContribution",c.wisdomContribution()),
+                Map.entry("intelligenceContribution",c.intelligenceContribution()),
+                Map.entry("effectiveSkillLevel",c.effectiveSkillLevel()),
+                Map.entry("skillLevelFactor",c.skillLevelFactor()),
+                Map.entry("intrinsicBarrier",c.intrinsicBarrier()),
+                Map.entry("combatModifierFactor",context.snapshot().modifiers().factor()),
+                Map.entry("supportBarrierFactor",context.compiledPlan().supportModifiers().barrierFactor()),
+                Map.entry("gearBarrierStrengthPercent",context.gearSnapshot().percent(GearEffectSnapshot.Operator.BARRIER_STRENGTH)),
+                Map.entry("finalCapacity",result.finalCapacity()));
     }
     public static double healing(SkillExecutionContext context,double mastery,double current,double maximum){
         var old=context.snapshot().modifiers();var increased=new java.util.ArrayList<>(old.increased());

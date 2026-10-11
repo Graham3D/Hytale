@@ -658,7 +658,8 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
             }
             try{
                 if(p.kind()==SupportProfile.Kind.SHIELD){
-                    double capacity=SupportMagnitude.shield(context,masteryMultiplier(context));
+                    var shield=SupportMagnitude.shieldCalculation(context,masteryMultiplier(context));
+                    double capacity=shield.finalCapacity();
                     effects.applyShield(context,ids,seconds,capacity,now);
                     if(context.compiledPlan().supportModifiers().sharedAegis()&&context.request().actorId().equals(context.target().entityId())){
                         var child=effects.shareCreatedShield(context,nearestAlly(context),now);
@@ -667,6 +668,12 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
                             if(buffer!=null)buffer.ensureComponent(childRef,SupportEffectProjection.getComponentType());else store.ensureComponent(childRef,SupportEffectProjection.getComponentType());
                             traceFinite(child.get(),RpgTraceEventType.BARRIER_CREATED,Map.of("derived",true,"capacity",child.get().shieldRemaining(),"canShareAgain",false));
                         }
+                    }
+                    if(shield.cyclone()!=null)try{
+                        trace(context,"BARRIER_CREATED",SupportMagnitude.cycloneTrace(context,shield));
+                    }catch(RuntimeException failure){
+                        com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(failure)
+                                .log("RPG_CYCLONE_TRACE_FAILED actor=%s",player.getUuid());
                     }
                 }else effects.apply(context,ids,seconds,now);
                 for(var ref:refs){

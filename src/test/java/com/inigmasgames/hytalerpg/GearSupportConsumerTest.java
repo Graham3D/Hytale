@@ -95,6 +95,28 @@ class GearSupportConsumerTest {
             assertEquals(h.context.skillInstanceId(),current.skillInstanceId());
         }
     }
+    @Test void cycloneGearHealingAndBarrierStrengthApplyOnce(){
+        var healing=item("gm.staff_prismatic.h","WA-103",8);
+        var barrier=item("gm.staff_prismatic.h","WA-105",20);
+        var gear=new GearEffectSnapshot(List.of(healing,barrier));
+        var h=new Stage09BarrierSupportTest.Harness("spirit_shield"){
+            @Override public GearAffixRuntime.Effects gearEffects(){
+                return new GearAffixRuntime.Effects(Map.of(com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.WIS,30),
+                        0,0,0,0,0,0,gear);
+            }
+        };
+        assertTrue(h.cast().committed());
+        assertEquals(40,h.context.snapshot().derivedStats().raw(com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.WIS),1e-9);
+        assertEquals(8,h.context.gearSnapshot().total(GearEffectSnapshot.Operator.HEALING_POWER),1e-9);
+        assertEquals(.2,h.context.gearSnapshot().percent(GearEffectSnapshot.Operator.BARRIER_STRENGTH),1e-9);
+        assertEquals(52.5,com.inigmasgames.hytalerpg.execution.support.SupportMagnitude.cyclone(h.context).intrinsicBarrier(),1e-9);
+        assertEquals(63,h.shield(),1e-9);
+        var trace=com.inigmasgames.hytalerpg.execution.support.SupportMagnitude.cycloneTrace(h.context,
+                com.inigmasgames.hytalerpg.execution.support.SupportMagnitude.shieldCalculation(h.context,1));
+        assertEquals(8d,trace.get("flatHealingPowerFromGear"));
+        assertEquals(.2,trace.get("gearBarrierStrengthPercent"));
+        assertEquals(63d,trace.get("finalCapacity"));
+    }
     @Test void genericStatusOwnerCleanseEmitsOnlyAfterActualRemovalAndGrantsRespite(){
         var clock=new java.util.concurrent.atomic.AtomicLong();
         var statuses=new com.inigmasgames.hytalerpg.combat.status.StatusService(

@@ -89,18 +89,18 @@ class Stage09BarrierSupportTest {
         var shield=h.bundle.catalog().skill(new SkillId("spirit_shield")).orElseThrow();assertFalse(shield.canCrit());
         assertFalse(shield.linkCompatibilityTags().contains("DIRECT_HIT"));assertTrue(shield.linkCompatibilityTags().contains("SCALABLE_PAYLOAD"));
     }
-    @Test void shieldUsesWisdomPotencyAndNoCrit(){
+    @Test void shieldUsesPotencyOnceAndNoCrit(){
         var h=new Harness("spirit_shield");h.link("potency",PassiveSlot.PASSIVE01);assertTrue(h.cast().committed());
-        assertEquals(82,h.mana);assertEquals(40,h.health);assertEquals(30*1.03*1.15,h.shield(),1e-8);
+        assertEquals(82,h.mana);assertEquals(40,h.health);assertEquals(30*1.15,h.shield(),1e-8);
     }
     @Test void selfShieldDoesNotRedirectAndAbsorbsBeforeHealth(){
         var h=new Harness("spirit_shield");h.cast();var hit=h.runtime.finite().shieldHit(h.world,h.actor,40,true,0,(shield,amount)->fail("Self cannot redirect"));
-        assertEquals(30.9,hit.absorbed(),1e-8);assertEquals(9.1,hit.remainder(),1e-8);assertEquals(0,hit.redirected());assertEquals(0,h.runtime.finite().size());
+        assertEquals(30,hit.absorbed(),1e-8);assertEquals(10,hit.remainder(),1e-8);assertEquals(0,hit.redirected());assertEquals(0,h.runtime.finite().size());
     }
     @Test void historicalAllyFixtureCannotTransferCycloneDamage(){
         var h=new Harness("spirit_shield");h.target=UUID.randomUUID();h.cast();int[] transfers={0};
         var hit=h.runtime.finite().shieldHit(h.world,h.target,40,true,0,(shield,amount)->{transfers[0]++;return true;});
-        assertEquals(0,transfers[0]);assertEquals(0,hit.redirected());assertEquals(30.9,hit.absorbed(),1e-8);assertEquals(9.1,hit.remainder(),1e-8);
+        assertEquals(0,transfers[0]);assertEquals(0,hit.redirected());assertEquals(30,hit.absorbed(),1e-8);assertEquals(10,hit.remainder(),1e-8);
         assertEquals(40,hit.redirected()+hit.absorbed()+hit.remainder(),1e-8);
     }
     @Test void rejectedRedirectDoesNotEraseTwentyPercentDamage(){
