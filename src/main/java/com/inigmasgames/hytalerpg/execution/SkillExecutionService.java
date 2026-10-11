@@ -389,8 +389,6 @@ public final class SkillExecutionService {
             emitProjectileRejection(request, root, instance, profile, family.code());
             throw new Rejection(family.code(), instance);
         }
-        if(durableCyclone(profile,port)&&plan.supportModifiers().sharedAegis())
-            throw new Rejection("CYCLONE_SHARED_AEGIS_DURABLE_UNAVAILABLE",instance);
         ResourceCost declared = declaredCost(profile,effectiveSkillLevel,port);
         int stacks=attunementFor(request,plan);
         ruthlessFor(request,plan); // Capacity and origin check before any payment or windup.
@@ -439,8 +437,6 @@ public final class SkillExecutionService {
             int stacks=attunementFor(prepared.request,prepared.plan);
             boolean powered=ruthlessFor(prepared.request,prepared.plan);
             var profile=CompiledProfileResolver.ruthless(compiledProfiles.resolve(profiles.require(prepared.profile.skillId()),prepared.plan),powered);
-            if(durableCyclone(profile,port)&&prepared.plan.supportModifiers().sharedAegis())
-                throw new IllegalStateException("CYCLONE_SHARED_AEGIS_DURABLE_UNAVAILABLE");
             // HEAD resolves learned mastery at release. The accepted item's bonus stays frozen.
             int effectiveSkillLevel=EffectiveSkillLevel.resolveBase(loadouts.baseSkillRank(prepared.request.actorId(),profile.skillId()),
                     prepared.itemSkillLevels);
@@ -740,7 +736,8 @@ public final class SkillExecutionService {
                 throw new IllegalStateException("CYCLONE_CAPACITY_INVALID");
             var transaction=authority.transaction();var lease=authority.lease();
             var reservedToken=token;
-            var begunResult=transaction.begin(lease,activation,UUID.randomUUID(),capacity,
+            UUID generation=UUID.randomUUID();
+            var begunResult=transaction.begin(lease,activation,generation,capacity,
                     port::actorAliveAndUsable,()->port.resources().current(ResourceType.MANA)+1e-9>=reservedToken.cost().amount(),
                     ()->true);
             if(begunResult!=com.inigmasgames.hytalerpg.execution.support.CycloneActivationTransaction.Result.PREPARED)
@@ -752,6 +749,8 @@ public final class SkillExecutionService {
             manaConfirmed=true;
             stage="COOLDOWN_AND_JOURNAL";
             transaction.commitNativeCooldown(lease,activation,kernel.cooldowns(),spend);
+            stage="FROZEN_CYCLONE_BEHAVIOR";
+            port.cyclonePreparePublication(context,generation);
             stage="BARRIER_PUBLICATION";
             publishAttempted=true;
             var publishedState=transaction.publish(lease,activation);

@@ -32,7 +32,15 @@ public final class ManaBeforeLifeStage {
         catch (RuntimeException failure) { uncertain = true; }
         double after;
         try { after = nativeResources.current(ResourceType.MANA); }
-        catch (RuntimeException unavailable) { return new Resolution(incoming, 0, intended, true); }
+        catch (RuntimeException unavailable) {
+            // drainSpendableMana returns only after its own native readback and
+            // allowance check. A later diagnostic read failure cannot erase
+            // that already confirmed debit; a thrown drain remains uncertain.
+            double confirmed=!uncertain&&Double.isFinite(reported)&&reported>=0&&reported<=intended
+                    ?reported:0;
+            return new Resolution(CycloneBarrierLedger.nativeRemainder(incoming-confirmed),
+                    confirmed,intended,true);
+        }
         // The native readback is the authority even when a write threw after it committed.
         double confirmed = Double.isFinite(before) && Double.isFinite(after)
                 ? Math.max(0, Math.min(intended, before - after)) : 0;

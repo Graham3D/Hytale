@@ -39,35 +39,183 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
     private final Set<UUID> cooldownSaveWarnings=java.util.concurrent.ConcurrentHashMap.newKeySet();
     private final Set<String> mantlePresentationRoots=java.util.concurrent.ConcurrentHashMap.newKeySet();
     private final Set<UUID> initialized=java.util.concurrent.ConcurrentHashMap.newKeySet(),initializing=java.util.concurrent.ConcurrentHashMap.newKeySet();
+    private final Set<UUID> completedCasterDeathSweeps=java.util.concurrent.ConcurrentHashMap.newKeySet();
+    private final Set<UUID> pendingCasterDeathSweeps=java.util.concurrent.ConcurrentHashMap.newKeySet();
+    private final Set<UUID> casterDeathSweepWarnings=java.util.concurrent.ConcurrentHashMap.newKeySet();
     /** R261-A integration seam: production configures this false until R261-B owns activation. */
     private boolean durableCycloneEnabled;
     private CycloneBarrierLedger durableCyclone;
+    private CycloneReflectionJournal cycloneReflections;
+    private CycloneSharedAegisLedger cycloneShared;
+    private TrustedPlayerAllies trustedAllies;
     private CycloneActivationTransaction cycloneActivations;
     private record CycloneConnection(PlayerRef player,CycloneBarrierLedger.Lease lease){}
     private final Map<UUID,CycloneConnection> cycloneConnections=new java.util.concurrent.ConcurrentHashMap<>();
+    private record LivePayment(PlayerRef player,Set<UUID> generations){}
+    private final Map<UUID,LivePayment> liveSharedPayments=new java.util.concurrent.ConcurrentHashMap<>();
+    private record SharedConnection(PlayerRef player,CycloneSharedAegisLedger.Lease lease){}
+    private final Map<UUID,SharedConnection> sharedConnections=new java.util.concurrent.ConcurrentHashMap<>();
+    private record NpcSharedConnection(Ref<EntityStore> entity,CycloneSharedAegisLedger.Lease lease){}
+    private final Map<UUID,NpcSharedConnection> npcSharedConnections=new java.util.concurrent.ConcurrentHashMap<>();
+    private final Map<UUID,java.util.concurrent.CompletableFuture<Void>> npcSharedPreloads=new java.util.concurrent.ConcurrentHashMap<>();
     private record CycloneLive(PlayerRef player,UUID generation,SkillExecutionContext context,
-            java.util.concurrent.atomic.AtomicInteger reflections,java.util.concurrent.atomic.AtomicBoolean presented,
+            CycloneReflectionJournal.Behavior behavior,java.util.concurrent.atomic.AtomicBoolean presented,
             java.util.concurrent.atomic.AtomicBoolean reflectionFailureReported){}
     private final Map<UUID,CycloneLive> cycloneLive=new java.util.concurrent.ConcurrentHashMap<>();
     public void configureDurableCyclone(java.nio.file.Path directory,boolean enabled){
         durableCyclone=new CycloneBarrierLedger(directory);
+        cycloneReflections=new CycloneReflectionJournal(directory);
+        cycloneShared=new CycloneSharedAegisLedger(directory);
         cycloneActivations=new CycloneActivationTransaction(durableCyclone);
         durableCycloneEnabled=enabled;
     }
+    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value="EI_EXPOSE_REP2",
+            justification="The registered support and command handlers intentionally share one server trust authority.")
+    public void configureTrustedPlayerAllies(TrustedPlayerAllies allies){trustedAllies=Objects.requireNonNull(allies);}
     public void preloadDurableCyclone(UUID player){
-        if(durableCycloneEnabled)durableCyclone.preload(player);
+        if(durableCycloneEnabled){durableCyclone.preload(player);cycloneReflections.preload(player);}
+    }
+    /** ReadyPath composes native caster-save reads asynchronously. The child is
+     * attached only after loaded native Mana evidence has been checked. */
+    public java.util.concurrent.CompletionStage<Void> preloadSharedAegis(UUID recipient){
+        return preloadSharedAegis(recipient,this::sharedPlayerGrantEligible);
+    }
+    private java.util.concurrent.CompletionStage<Void> preloadSharedAegis(UUID recipient,
+            java.util.function.Predicate<CycloneSharedAegisLedger.Grant> eligible){
+        if(!durableCycloneEnabled)return java.util.concurrent.CompletableFuture.completedStage(null);
+        var grants=cycloneShared.childGrants(recipient);
+        if(grants.isEmpty()){
+            cycloneShared.preload(recipient,(caster,generation)->false,eligible);
+            return java.util.concurrent.CompletableFuture.completedStage(null);
+        }
+        var proofs=new java.util.HashMap<UUID,java.util.concurrent.CompletableFuture<Boolean>>();
+        for(var grant:grants){
+            proofs.computeIfAbsent(grant.parentGeneration(),generation->{
+                if(pendingCasterDeathSweeps.contains(grant.caster()))
+                    return java.util.concurrent.CompletableFuture.completedFuture(false);
+                var current=liveSharedPayments.get(grant.caster());
+                if(current!=null&&current.generations().contains(generation))
+                    return java.util.concurrent.CompletableFuture.completedFuture(true);
+                return
+                    com.hypixel.hytale.server.core.universe.Universe.get().getPlayerStorage().load(grant.caster())
+                            .orTimeout(10,java.util.concurrent.TimeUnit.SECONDS)
+                            .thenApply(holder->{
+                                var stats=holder==null?null:holder.getComponent(EntityStatMap.getComponentType());
+                                return CycloneNativePaymentMarker.kind(stats,generation)!=CycloneNativePaymentMarker.Kind.NONE;
+                            }).exceptionally(failure->false);});
+        }
+        return java.util.concurrent.CompletableFuture.allOf(proofs.values().toArray(java.util.concurrent.CompletableFuture[]::new))
+                .thenRunAsync(()->cycloneShared.preload(recipient,(caster,generation)->
+                                !pendingCasterDeathSweeps.contains(caster)
+                                        &&Boolean.TRUE.equals(proofs.get(generation).getNow(false)),
+                        eligible));
+    }
+    private java.util.concurrent.CompletableFuture<Void> preloadNpcSharedAegis(UUID recipient){
+        return java.util.concurrent.CompletableFuture.supplyAsync(
+                        ()->preloadSharedAegis(recipient,HytaleSupportSystem::sharedNpcGrantEligible))
+                .thenCompose(stage->stage)
+                .toCompletableFuture();
     }
     boolean durableCycloneEnabled(){return durableCycloneEnabled;}
     public com.inigmasgames.hytalerpg.ui.model.BarrierView barrierView(UUID player){
         if(!durableCycloneEnabled||durableCyclone==null)return com.inigmasgames.hytalerpg.ui.model.BarrierView.NONE;
-        var binding=cycloneConnections.get(player);
-        if(binding==null)return com.inigmasgames.hytalerpg.ui.model.BarrierView.NONE;
+        var binding=cycloneConnections.get(player);var shared=sharedConnections.get(player);
         try{
-            var state=durableCyclone.state(binding.lease());
-            return state.phase()==CycloneBarrierLedger.Phase.ACTIVE
-                    ?new com.inigmasgames.hytalerpg.ui.model.BarrierView(state.revision(),state.generation(),state.remaining(),state.capacity())
+            var state=binding==null?null:durableCyclone.state(binding.lease());
+            var child=shared==null?null:cycloneShared.view(shared.lease(),this::sharedPlayerGrantEligible);
+            boolean own=state!=null&&state.phase()==CycloneBarrierLedger.Phase.ACTIVE;
+            if(!own&&child==null)return state==null?com.inigmasgames.hytalerpg.ui.model.BarrierView.NONE
                     :new com.inigmasgames.hytalerpg.ui.model.BarrierView(state.revision(),null,0,0);
+            UUID generation=own&&child==null?state.generation():!own?child.generation()
+                    :UUID.nameUUIDFromBytes((state.generation()+"/"+child.generation()).getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            return new com.inigmasgames.hytalerpg.ui.model.BarrierView((own?state.revision():0)+(child==null?0:child.revision()),
+                    generation,(own?state.remaining():0)+(child==null?0:child.remaining()),
+                    (own?state.capacity():0)+(child==null?0:child.capacity()));
         }catch(RuntimeException unavailable){return com.inigmasgames.hytalerpg.ui.model.BarrierView.NONE;}
+    }
+    private boolean sharedPlayerGrantEligible(CycloneSharedAegisLedger.Grant grant){
+        return grant.trustGeneration()!=null&&trustedAllies!=null
+                &&grant.trustGeneration().equals(trustedAllies.generation(grant.caster(),grant.recipient()));
+    }
+    private static boolean sharedNpcGrantEligible(CycloneSharedAegisLedger.Grant grant){
+        return grant.trustGeneration()==null;
+    }
+    boolean retainSharedPaymentMarker(UUID generation){return cycloneShared.hasUnspentGrant(generation);}
+    void cyclonePaymentMarked(PlayerRef player,UUID generation){
+        liveSharedPayments.compute(player.getUuid(),(id,prior)->{
+            var generations=new HashSet<UUID>();
+            if(prior!=null&&prior.player()==player)generations.addAll(prior.generations());
+            generations.add(generation);
+            return new LivePayment(player,Set.copyOf(generations));
+        });
+    }
+    private boolean sharedEligible(Store<EntityStore> store,Ref<EntityStore> actor,Ref<EntityStore> candidate){
+        if(candidate.equals(actor)||!alive(store,candidate)
+                ||store.getComponent(candidate,Invulnerable.getComponentType())!=null)return false;
+        var actorId=store.getComponent(actor,UUIDComponent.getComponentType());
+        var recipientId=store.getComponent(candidate,UUIDComponent.getComponentType());
+        if(actorId==null||recipientId==null||!kernel.statuses().allowsExternalMutation(actorId.getUuid(),recipientId.getUuid()))return false;
+        var player=store.getComponent(candidate,PlayerRef.getComponentType());
+        if(player!=null){
+            var binding=sharedConnections.get(recipientId.getUuid());
+            return binding!=null&&binding.player()==player&&trustedAllies!=null
+                    &&trustedAllies.generation(actorId.getUuid(),recipientId.getUuid())!=null;
+        }
+        var binding=npcSharedConnections.get(recipientId.getUuid());
+        return binding!=null&&binding.entity().equals(candidate)&&eligibleAlly(store,actor,candidate);
+    }
+    private List<Ref<EntityStore>> sharedCandidates(Store<EntityStore> store,Ref<EntityStore> actor){
+        var query=Query.and(UUIDComponent.getComponentType(),EntityStatMap.getComponentType(),
+                TransformComponent.getComponentType(),BoundingBox.getComponentType());
+        if(store.getEntityCountFor(query)>4096)throw new IllegalStateException("SHARED_AEGIS_SCAN_BUDGET");
+        var found=new ArrayList<SharedAegisRecipientSelector.Candidate<Ref<EntityStore>>>();
+        var origin=position(store,actor).add(new Vec3(0,1.35,0));
+        boolean overflow=store.forEachChunk(query,(chunk,buffer)->{
+            for(int i=0;i<chunk.size();i++){
+                var candidate=chunk.getReferenceTo(i);
+                if(!sharedEligible(store,actor,candidate))continue;
+                var bounds=bounds(store,candidate);
+                double distance=ConnectionShape.pointDistanceSquared(origin,bounds);
+                if(distance>SharedAegisRecipientSelector.RANGE_METERS*SharedAegisRecipientSelector.RANGE_METERS+1e-9)continue;
+                if(found.size()>=64)return true;
+                var id=store.getComponent(candidate,UUIDComponent.getComponentType()).getUuid();
+                found.add(new SharedAegisRecipientSelector.Candidate<>(candidate,id,distance,
+                        HytaleAreaQueries.clear(store,origin,bounds.centre())));
+            }
+            return false;
+        });
+        if(overflow)throw new IllegalStateException("SHARED_AEGIS_TARGET_BUDGET");
+        return SharedAegisRecipientSelector.ordered(found);
+    }
+    void cycloneGrantShared(Store<EntityStore> store,Ref<EntityStore> actor,PlayerRef caster,
+            SkillExecutionContext context,UUID generation){
+        if(!context.compiledPlan().supportModifiers().sharedAegis())return;
+        var state=durableCyclone.state(cycloneAuthority(caster).lease());
+        if(state.phase()!=CycloneBarrierLedger.Phase.ACTIVE||!generation.equals(state.generation()))return;
+        for(var recipient:sharedCandidates(store,actor)){
+            UUID recipientId=store.getComponent(recipient,UUIDComponent.getComponentType()).getUuid();
+            var player=store.getComponent(recipient,PlayerRef.getComponentType());
+            CycloneSharedAegisLedger.Lease lease;
+            UUID trustGeneration=null;
+            if(player!=null){
+                var binding=sharedConnections.get(recipientId);
+                if(binding==null||binding.player()!=player)continue;
+                trustGeneration=trustedAllies.generation(caster.getUuid(),recipientId);
+                if(trustGeneration==null)continue;
+                lease=binding.lease();
+            }else{
+                var binding=npcSharedConnections.get(recipientId);
+                if(binding==null||!binding.entity().equals(recipient))continue;
+                lease=binding.lease();
+            }
+            try{if(cycloneShared.grant(state,recipientId,lease,trustGeneration))return;}
+            catch(RuntimeException failure){
+                com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(failure)
+                        .log("RPG_CYCLONE_SHARED_GRANT_FAILED caster=%s recipient=%s",caster.getUuid(),recipientId);
+                return;
+            }
+            return; // A recipient was selected; never silently choose a farther ally.
+        }
     }
     SkillExecutionPort.CycloneAuthority cycloneAuthority(PlayerRef player){
         if(!durableCycloneEnabled||cycloneActivations==null)
@@ -77,25 +225,40 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
             throw new IllegalStateException("CYCLONE_SESSION_NOT_READY");
         return new SkillExecutionPort.CycloneAuthority(cycloneActivations,binding.lease());
     }
+    void cyclonePreparePublication(PlayerRef player,SkillExecutionContext context,UUID generation){
+        if(!context.compiledPlan().supportModifiers().reflectiveWard())return;
+        var state=durableCyclone.state(cycloneAuthority(player).lease());
+        if(state.phase()!=CycloneBarrierLedger.Phase.PENDING||!generation.equals(state.generation()))
+            throw new IllegalStateException("CYCLONE_REFLECTION_PARENT_PENDING_REQUIRED");
+        cycloneReflections.install(new CycloneReflectionJournal.Behavior(1,player.getUuid(),generation,
+                state.activation(),context.rootCastId(),context.skillInstanceId(),
+                context.request().correlationId(),.2,state.capacity()));
+    }
     void cyclonePublished(PlayerRef player,SkillExecutionContext context,UUID generation){
         var authority=cycloneAuthority(player);
         var state=durableCyclone.state(authority.lease());
         if(state.phase()!=CycloneBarrierLedger.Phase.ACTIVE||!generation.equals(state.generation()))
             throw new IllegalStateException("CYCLONE_PUBLICATION_MISMATCH");
+        var behavior=context.compiledPlan().supportModifiers().reflectiveWard()?cycloneReflections.load(state):null;
+        if(context.compiledPlan().supportModifiers().reflectiveWard()&&behavior==null)
+            throw new IllegalStateException("CYCLONE_REFLECTION_FROZEN_STATE_MISSING");
         cycloneLive.compute(player.getUuid(),(id,existing)->
                 existing!=null&&existing.player()==player&&existing.generation().equals(generation)
-                        ?existing:new CycloneLive(player,generation,context,
-                                new java.util.concurrent.atomic.AtomicInteger(),new java.util.concurrent.atomic.AtomicBoolean(),
+                        ?existing:new CycloneLive(player,generation,context,behavior,
+                                new java.util.concurrent.atomic.AtomicBoolean(),
                                 new java.util.concurrent.atomic.AtomicBoolean()));
     }
     SkillExecutionContext durableCycloneContext(PlayerRef player,UUID generation){
         var live=cycloneLive.get(player.getUuid());
         return live!=null&&live.player()==player&&live.generation().equals(generation)?live.context():null;
     }
-    boolean claimDurableReflection(PlayerRef player,UUID generation){
+    CycloneReflectionJournal.Behavior durableReflectionBehavior(PlayerRef player,UUID generation){
         var live=cycloneLive.get(player.getUuid());
-        if(live==null||live.player()!=player||!live.generation().equals(generation))return false;
-        return live.reflections().getAndUpdate(value->Math.min(16,value+1))<16;
+        return live!=null&&live.player()==player&&live.generation().equals(generation)?live.behavior():null;
+    }
+    boolean claimDurableReflection(PlayerRef player,UUID generation,String receipt){
+        var behavior=durableReflectionBehavior(player,generation);
+        return behavior!=null&&cycloneReflections.claim(behavior,receipt);
     }
     void reportDurableReflectionFailure(PlayerRef player,UUID generation,String receipt,RuntimeException failure){
         var live=cycloneLive.get(player.getUuid());
@@ -107,18 +270,22 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
     }
     void traceDurableCyclone(PlayerRef player,CycloneBarrierLedger.Debit debit){
         var context=durableCycloneContext(player,debit.generation());
-        if(context==null)return;
+        var behavior=durableReflectionBehavior(player,debit.generation());
+        if(context==null&&behavior==null)return;
         trace.emit(player.getUuid(),RpgTraceEventType.BARRIER_ABSORBED,
-                new CombatTrace.Context(context.rootCastId(),context.skillInstanceId(),context.request().correlationId()),
+                context!=null?new CombatTrace.Context(context.rootCastId(),context.skillInstanceId(),context.request().correlationId())
+                        :new CombatTrace.Context(behavior.rootCastId(),behavior.skillInstanceId(),behavior.correlationId()),
                 Map.of("absorbed",debit.absorbed(),"remaining",debit.remaining(),"damageRemaining",debit.damageRemaining(),
                         "receipt",debit.receipt(),"durable",debit.durable(),"duplicate",debit.duplicate()));
     }
     void traceDurableReflection(PlayerRef player,CycloneBarrierLedger.Debit debit,double requested,
             HytaleDamageAdapter.NativeResult result,String channel){
         var context=durableCycloneContext(player,debit.generation());
-        if(context==null)return;
+        var behavior=durableReflectionBehavior(player,debit.generation());
+        if(context==null&&behavior==null)return;
         trace.emit(player.getUuid(),RpgTraceEventType.DAMAGE_REFLECTED,
-                new CombatTrace.Context(context.rootCastId(),context.skillInstanceId(),context.request().correlationId()),
+                context!=null?new CombatTrace.Context(context.rootCastId(),context.skillInstanceId(),context.request().correlationId())
+                        :new CombatTrace.Context(behavior.rootCastId(),behavior.skillInstanceId(),behavior.correlationId()),
                 Map.of("actuallyAbsorbed",debit.absorbed(),"requestedReflection",requested,
                         "originalChannel",channel,"cancelled",result.cancelled(),"noProc",true,"noCrit",true));
     }
@@ -153,6 +320,103 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
             return null; // Keep all unconfirmed damage in the native event.
         }
     }
+    CycloneSharedAegisLedger.Debit durableSharedDebit(PlayerRef player,String receipt,float damage){
+        if(!durableCycloneEnabled||damage<=0)return null;
+        var binding=sharedConnections.get(player.getUuid());
+        if(binding==null||binding.player()!=player)return null;
+        try{return cycloneShared.debit(binding.lease(),receipt,damage,this::sharedPlayerGrantEligible);}
+        catch(RuntimeException failure){
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(failure)
+                    .log("RPG_CYCLONE_SHARED_DEBIT_REJECTED recipient=%s",player.getUuid());
+            return null;
+        }
+    }
+    CycloneSharedAegisLedger.Debit durableNpcSharedDebit(Store<EntityStore> store,Ref<EntityStore> recipient,UUID id,
+            String receipt,float damage){
+        if(!durableCycloneEnabled||damage<=0)return null;
+        var binding=npcSharedConnections.get(id);
+        if(binding==null||!binding.entity().equals(recipient))return null;
+        try{return cycloneShared.debit(binding.lease(),receipt,damage,grant->{
+            if(!sharedNpcGrantEligible(grant))return false;
+            var caster=store.getExternalData().getRefFromUUID(grant.caster());
+            return caster==null||!caster.isValid()||eligibleAlly(store,caster,recipient);
+        });}
+        catch(RuntimeException failure){
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(failure)
+                    .log("RPG_CYCLONE_SHARED_NPC_DEBIT_REJECTED recipient=%s",id);
+            return null;
+        }
+    }
+    private void bindNpcShared(Ref<EntityStore> ref,UUID id){
+        if(!durableCycloneEnabled)return;
+        var existing=npcSharedConnections.get(id);
+        if(existing!=null&&existing.entity().equals(ref))return;
+        if(existing!=null&&npcSharedConnections.remove(id,existing))cycloneShared.detach(existing.lease());
+        var future=npcSharedPreloads.computeIfAbsent(id,this::preloadNpcSharedAegis);
+        if(!future.isDone()||future.isCompletedExceptionally())return;
+        try{npcSharedConnections.put(id,new NpcSharedConnection(ref,cycloneShared.attachPrepared(id)));}
+        catch(RuntimeException unavailable){/* No unconfirmed recipient protection is published. */}
+    }
+    private void unbindNpcShared(Ref<EntityStore> ref,UUID id,boolean death){
+        var binding=npcSharedConnections.get(id);
+        if(binding==null||!binding.entity().equals(ref)||!npcSharedConnections.remove(id,binding))return;
+        try{if(death)cycloneShared.clearForDeath(binding.lease());}
+        catch(RuntimeException failure){
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(failure)
+                    .log("RPG_CYCLONE_SHARED_NPC_DEATH_CLEAR_FAILED recipient=%s",id);
+        }
+        finally{cycloneShared.detach(binding.lease());}
+    }
+    /** NPC recipients use the same child journal; native caster proof is loaded
+     * asynchronously and the world thread only attaches a completed lease. */
+    public static final class NpcSharedBindings extends EntityTickingSystem<EntityStore>{
+        private final HytaleSupportSystem owner;
+        @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value="EI_EXPOSE_REP2",
+                justification="The native ECS system intentionally shares the registered support authority.")
+        public NpcSharedBindings(HytaleSupportSystem owner){this.owner=owner;}
+        @Override public Query<EntityStore> getQuery(){return Query.and(
+                com.hypixel.hytale.server.npc.entities.NPCEntity.getComponentType(),
+                UUIDComponent.getComponentType(),EntityStatMap.getComponentType());}
+        @Override public void tick(float delta,int index,ArchetypeChunk<EntityStore> chunk,
+                Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
+            var ref=chunk.getReferenceTo(index);
+            if(alive(store,ref))owner.bindNpcShared(ref,chunk.getComponent(index,UUIDComponent.getComponentType()).getUuid());
+        }
+    }
+    public static final class NpcSharedRemoval extends com.hypixel.hytale.component.system.RefSystem<EntityStore>{
+        private final HytaleSupportSystem owner;
+        @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value="EI_EXPOSE_REP2",
+                justification="The native ECS system intentionally shares the registered support authority.")
+        public NpcSharedRemoval(HytaleSupportSystem owner){this.owner=owner;}
+        @Override public Query<EntityStore> getQuery(){return Query.and(
+                com.hypixel.hytale.server.npc.entities.NPCEntity.getComponentType(),UUIDComponent.getComponentType());}
+        @Override public void onEntityAdded(Ref<EntityStore> ref,AddReason reason,
+                Store<EntityStore> store,CommandBuffer<EntityStore> buffer){}
+        @Override public void onEntityRemove(Ref<EntityStore> ref,RemoveReason reason,
+                Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
+            var identity=store.getComponent(ref,UUIDComponent.getComponentType());
+            if(identity!=null)owner.unbindNpcShared(ref,identity.getUuid(),false);
+        }
+    }
+    public static final class NpcSharedDeath extends com.hypixel.hytale.server.core.modules.entity.damage.DeathSystems.OnDeathSystem{
+        private final HytaleSupportSystem owner;
+        @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value="EI_EXPOSE_REP2",
+                justification="The native ECS system intentionally shares the registered support authority.")
+        public NpcSharedDeath(HytaleSupportSystem owner){this.owner=owner;}
+        @Override public Query<EntityStore> getQuery(){return Query.and(
+                com.hypixel.hytale.server.npc.entities.NPCEntity.getComponentType(),UUIDComponent.getComponentType());}
+        @Override public void onComponentAdded(Ref<EntityStore> ref,DeathComponent death,
+                Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
+            var identity=store.getComponent(ref,UUIDComponent.getComponentType());
+            if(identity!=null)owner.unbindNpcShared(ref,identity.getUuid(),true);
+        }
+    }
+    boolean durableOwnReceiptSeen(PlayerRef player,String receipt){
+        var binding=cycloneConnections.get(player.getUuid());
+        if(binding==null||binding.player()!=player)return false;
+        try{return durableCyclone.receiptSeen(binding.lease(),receipt);}
+        catch(RuntimeException unavailable){return true;}
+    }
     public void beginReady(UUID actor){initialized.remove(actor);initializing.remove(actor);}
     public boolean sessionReady(UUID actor){return initialized.contains(actor)&&loadouts.ready(actor);}
     public boolean connectionReady(Store<EntityStore> store,Ref<EntityStore> actor){
@@ -176,8 +440,14 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
                 var binding=cycloneConnections.get(id);
                 if(binding!=null&&binding.player()==player&&durableCyclone.paymentRecoveryRequired(binding.lease())){
                     var stats=store.getComponent(actor,EntityStatMap.getComponentType());
-                    var recovered=CycloneNativePaymentMarker.recover(durableCyclone,binding.lease(),stats);
+                    var pending=durableCyclone.state(binding.lease());
+                    var recovered=CycloneNativePaymentMarker.recover(durableCyclone,binding.lease(),stats,cycloneReflections);
                     if(recovered.phase()==CycloneBarrierLedger.Phase.ACTIVE){
+                        var behavior=CycloneNativePaymentMarker.kind(stats,pending.generation())
+                                ==CycloneNativePaymentMarker.Kind.REFLECTIVE?cycloneReflections.load(recovered):null;
+                        if(behavior!=null)cycloneLive.put(id,new CycloneLive(player,recovered.generation(),null,
+                                behavior,new java.util.concurrent.atomic.AtomicBoolean(true),
+                                new java.util.concurrent.atomic.AtomicBoolean()));
                         try{CycloneArmorPresentation.applyDurable(store,actor);}
                         catch(RuntimeException presentationFailure){
                             com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning()
@@ -191,6 +461,10 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
                         .log("RPG_CYCLONE_PAYMENT_RECOVERY_FAILED player=%s",id);
                 return false;
             }
+            var existingShared=sharedConnections.get(id);
+            if(existingShared==null||existingShared.player()!=player)try{
+                sharedConnections.put(id,new SharedConnection(player,cycloneShared.attachPrepared(id)));
+            }catch(RuntimeException unavailable){return false;}
         }
         initialized.add(id);return true;
     }
@@ -505,7 +779,11 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         runtime.pollMaintenance();
         if(!sessionReady(player.getUuid()))return;
         var stats=chunk.getComponent(index,EntityStatMap.getComponentType());
-        if(durableCycloneEnabled&&!alive(store,ref))clearDurableCycloneOnDeath(player);
+        if(durableCycloneEnabled){
+            if(!alive(store,ref))clearDurableCycloneOnDeath(player);
+            else completedCasterDeathSweeps.remove(player.getUuid());
+            retryCasterDeathSweep(player.getUuid());
+        }
         var liveGear=com.inigmasgames.hytalerpg.gear.GearNativeItems.effects(ref,store).snapshot();
         syncItemAuras(store,ref,player,buffer,liveGear);
         runtime.finite().reprojectShieldCapacity(player.getUuid(),liveGear,System.nanoTime()/1e9);
@@ -593,22 +871,47 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         if(player!=null)cycloneLive.computeIfPresent(player.getUuid(),
                 (id,live)->live.player()==player?null:live);
         if(durableCycloneEnabled&&player!=null){
+            liveSharedPayments.computeIfPresent(player.getUuid(),(id,proof)->proof.player()==player?null:proof);
             var binding=cycloneConnections.get(player.getUuid());
             if(binding!=null&&binding.player()==player&&cycloneConnections.remove(player.getUuid(),binding))
                 durableCyclone.detach(binding.lease());
+            var shared=sharedConnections.get(player.getUuid());
+            if(shared!=null&&shared.player()==player&&sharedConnections.remove(player.getUuid(),shared))
+                cycloneShared.detach(shared.lease());
         }
         try{CycloneArmorPresentation.remove(store,actor);}catch(RuntimeException ignored){/* cosmetic */}
         if(player!=null){beginReady(player.getUuid());cooldownSaveWarnings.remove(player.getUuid());runtime.detach(player.getUuid(),reason,port(store,actor));}
     }
     void clearDurableCycloneOnDeath(PlayerRef player){
+        liveSharedPayments.computeIfPresent(player.getUuid(),(id,proof)->proof.player()==player?null:proof);
+        if(!completedCasterDeathSweeps.contains(player.getUuid()))pendingCasterDeathSweeps.add(player.getUuid());
         var binding=cycloneConnections.get(player.getUuid());
-        if(binding==null||binding.player()!=player)return;
-        try{durableCyclone.clearForDeath(binding.lease());}
+        if(binding!=null&&binding.player()==player)try{durableCyclone.clearForDeath(binding.lease());}
         catch(RuntimeException failure){
             com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(failure)
                     .log("RPG_CYCLONE_DURABLE_DEATH_CLEAR_FAILED player=%s",player.getUuid());
         }
-        cycloneLive.remove(player.getUuid());
+        cycloneLive.computeIfPresent(player.getUuid(),(id,live)->live.player()==player?null:live);
+        var shared=sharedConnections.get(player.getUuid());
+        if(shared!=null&&shared.player()==player)try{cycloneShared.clearForDeath(shared.lease());}
+        catch(RuntimeException failure){
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(failure)
+                    .log("RPG_CYCLONE_SHARED_DEATH_CLEAR_FAILED recipient=%s",player.getUuid());
+        }
+        retryCasterDeathSweep(player.getUuid());
+    }
+    private void retryCasterDeathSweep(UUID caster){
+        if(!pendingCasterDeathSweeps.contains(caster))return;
+        try{
+            cycloneShared.clearCasterForDeath(caster);
+            pendingCasterDeathSweeps.remove(caster);
+            completedCasterDeathSweeps.add(caster);
+            casterDeathSweepWarnings.remove(caster);
+        }catch(RuntimeException failure){
+            if(casterDeathSweepWarnings.add(caster))
+                com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(failure)
+                        .log("RPG_CYCLONE_SHARED_CASTER_DEATH_CLEAR_FAILED caster=%s",caster);
+        }
     }
     /** Native death callback is earlier than the next support tick; tick remains a fallback. */
     public static final class CycloneDeath extends com.hypixel.hytale.server.core.modules.entity.damage.DeathSystems.OnDeathSystem {
@@ -634,8 +937,6 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         var id=store.getComponent(actor,PlayerRef.getComponentType()).getUuid();
         try{
             if(durableCycloneEnabled&&profile.skillId().equals("spirit_shield")){
-                if(plan.supportModifiers().sharedAegis())
-                    return SkillExecutionPort.Validation.reject("CYCLONE_SHARED_AEGIS_DURABLE_UNAVAILABLE");
                 var authority=cycloneAuthority(store.getComponent(actor,PlayerRef.getComponentType()));
                 var state=durableCyclone.state(authority.lease());
                 if(state.phase()!=CycloneBarrierLedger.Phase.NONE&&state.phase()!=CycloneBarrierLedger.Phase.DEPLETED)
@@ -652,7 +953,7 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
             }
             if(profile.support().allyAura())allyRefs(store,actor,profile.support().radius()*plan.executionModifiers().radiusFactor()*plan.supportModifiers().radiusFactor(),true);
             if(profile.support().hostileAura())hostileRefs(store,actor,profile.support().radius()*plan.executionModifiers().radiusFactor()*plan.supportModifiers().radiusFactor());
-            if(plan.supportModifiers().sharedAegis())allyRefs(store,actor,8);
+            if(plan.supportModifiers().sharedAegis())sharedCandidates(store,actor);
             return SkillExecutionPort.Validation.pass();
         }catch(RuntimeException error){return SkillExecutionPort.Validation.reject("SUPPORT_PREFLIGHT_"+error.getMessage());}
     }

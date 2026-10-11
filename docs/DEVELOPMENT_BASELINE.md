@@ -1,5 +1,21 @@
 # HyARPG/Hywind development baseline
 
+## R261 Final engineering candidate (2026-10-11)
+
+Branch `codex/r261-final` continues the published R261FDEV checkpoint
+`60e718532b463cbb0ffc8503f0ae0049d55c56e6` and contains the frozen
+Reflective Ward journal, durable Shared Aegis recipient journal, native Mana
+payment reconciliation, and mutually consented trusted-player ally authority.
+Build revision/version are R261-U7P5B / `0.2.0-R261-U7P5B` only after the
+reviewed implementation is committed and the exact-commit offline gates pass.
+The [R261 Final matrix](R261_FINAL_MATRIX.md) maps implementation and
+regression evidence; [the acceptance checklist](QA-R261-FINAL.md) is reserved
+for the owner's later connected-game QA. This candidate has not been deployed.
+The active RPG save and R260 `Hywind.jar` are unchanged. The exact source
+commit, final build SHA-256, and GitHub integration status must be verified
+after publication and mainline integration; this entry does not predeclare
+their outcome.
+
 ## R261 Final development checkpoint (2026-10-11)
 
 Branch `codex/r261-final` starts from the published R261-C commit

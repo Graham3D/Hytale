@@ -172,13 +172,13 @@ class CycloneDurableLiveTest {
         assertEquals(0,h.ledger.debit(h.lease,h.generation,"post-death",15).absorbed());
     }
 
-    @Test void unsupportedSharedAegisRejectsBeforeManaOrCooldown(){
+    @Test void sharedAegisLinkAllowsPaidParentActivation(){
         var h=new Live(root);h.mana=150;h.link("shared_aegis",PassiveSlot.PASSIVE01);
         var result=h.cast();
-        assertEquals("CYCLONE_SHARED_AEGIS_DURABLE_UNAVAILABLE",result.code());
-        assertEquals(150,h.mana);
-        assertEquals(CycloneBarrierLedger.Phase.NONE,h.ledger.state(h.lease).phase());
-        assertTrue(h.kernel.cooldowns().canActivate(h.actor,"spirit_shield"));
+        assertTrue(result.committed(),result.toString());
+        assertEquals(0,h.mana);
+        assertEquals(CycloneBarrierLedger.Phase.ACTIVE,h.ledger.state(h.lease).phase());
+        assertFalse(h.kernel.cooldowns().canActivate(h.actor,"spirit_shield"));
     }
 
     @Test void finalCommitRequotesTheEntireCurrentSpendableBalance(){

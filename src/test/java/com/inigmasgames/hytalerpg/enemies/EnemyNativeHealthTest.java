@@ -107,7 +107,43 @@ class EnemyNativeHealthTest {
         CycloneNativePaymentMarker.mark(persisted,second,true);
         assertFalse(CycloneNativePaymentMarker.confirms(persisted,first));
         assertFalse(CycloneNativePaymentMarker.confirms(persisted,second));
+        assertEquals(CycloneNativePaymentMarker.Kind.REFLECTIVE,CycloneNativePaymentMarker.kind(persisted,second));
+        var reflectiveReload=EntityStatMap.CODEC.decode(EntityStatMap.CODEC.encode(persisted,
+                new com.hypixel.hytale.codec.ExtraInfo()),new com.hypixel.hytale.codec.ExtraInfo());
+        assertEquals(CycloneNativePaymentMarker.Kind.REFLECTIVE,
+                CycloneNativePaymentMarker.kind(reflectiveReload,second));
         assertEquals(37,persisted.get(mana).get(),.001);
+    }
+    @Test void recastRetainsOnlyPaymentMarkersNeededBySurvivingSharedChildren(){
+        com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier.CODEC.register(
+                "Static",StaticModifier.class,StaticModifier.ENTITY_CODEC);
+        var nativeStats=stats();nativeStats.setStatValue(DefaultEntityStatTypes.getMana(),15);
+        UUID retained=UUID.randomUUID(),expired=UUID.randomUUID(),current=UUID.randomUUID();
+        CycloneNativePaymentMarker.mark(nativeStats,retained,false);
+        CycloneNativePaymentMarker.mark(nativeStats,expired,true,generation->generation.equals(retained));
+        CycloneNativePaymentMarker.mark(nativeStats,current,false,generation->generation.equals(retained));
+        var loaded=EntityStatMap.CODEC.decode(EntityStatMap.CODEC.encode(nativeStats,
+                new com.hypixel.hytale.codec.ExtraInfo()),new com.hypixel.hytale.codec.ExtraInfo());
+        assertEquals(CycloneNativePaymentMarker.Kind.PLAIN,CycloneNativePaymentMarker.kind(loaded,retained));
+        assertEquals(CycloneNativePaymentMarker.Kind.NONE,CycloneNativePaymentMarker.kind(loaded,expired));
+        assertEquals(CycloneNativePaymentMarker.Kind.PLAIN,CycloneNativePaymentMarker.kind(loaded,current));
+        assertEquals(15,loaded.get(DefaultEntityStatTypes.getMana()).get(),.001);
+    }
+    @Test void nativeEquivalentSavedStatFixtureRequiresMatchingPaidGeneration(@TempDir java.nio.file.Path directory) throws Exception {
+        com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier.CODEC.register(
+                "Static",StaticModifier.class,StaticModifier.ENTITY_CODEC);
+        UUID paid=UUID.randomUUID(),unpaid=UUID.randomUUID();
+        var original=stats();original.setStatValue(DefaultEntityStatTypes.getMana(),0);
+        CycloneNativePaymentMarker.mark(original,paid,false);
+        var snapshot=EntityStatMap.CODEC.encode(original,new com.hypixel.hytale.codec.ExtraInfo());
+        var file=directory.resolve("native-entity-stats.json");
+        java.nio.file.Files.writeString(file,snapshot.asDocument().toJson());
+        var loaded=EntityStatMap.CODEC.decode(
+                org.bson.BsonDocument.parse(java.nio.file.Files.readString(file)),
+                new com.hypixel.hytale.codec.ExtraInfo());
+        assertEquals(0,loaded.get(DefaultEntityStatTypes.getMana()).get(),.001);
+        assertEquals(CycloneNativePaymentMarker.Kind.PLAIN,CycloneNativePaymentMarker.kind(loaded,paid));
+        assertEquals(CycloneNativePaymentMarker.Kind.NONE,CycloneNativePaymentMarker.kind(loaded,unpaid));
     }
     @Test void recoveredNativePaymentPreservesOnlyProvenPlainBarrier(@TempDir java.nio.file.Path root){
         com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier.CODEC.register(
@@ -135,6 +171,38 @@ class EnemyNativeHealthTest {
             assertEquals(mode==1?75:0,recovered.remaining());
             assertEquals(60,loaded.get(DefaultEntityStatTypes.getMana()).get(),.001);
             assertEquals(mode==1?10:0,restarted.debit(reconnect,generation,"after-recovery",10).absorbed());
+        }
+    }
+    @Test void reflectiveRecoveryRequiresBothLoadedNativePaymentAndFrozenBehavior(@TempDir java.nio.file.Path root){
+        com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier.CODEC.register(
+                "Static",StaticModifier.class,StaticModifier.ENTITY_CODEC);
+        for(int mode=0;mode<5;mode++){
+            UUID player=UUID.randomUUID(),generation=UUID.randomUUID(),activation=UUID.randomUUID();
+            var path=root.resolve("reflective-"+mode);
+            var ledger=new CycloneBarrierLedger(path);var lease=ledger.attach(player);
+            var tx=new CycloneActivationTransaction(ledger);
+            tx.begin(lease,activation,generation,80,()->true,()->true,()->true);
+            tx.manaCommitted(lease,activation,"native-paid",100);
+            tx.cooldownCommitted(lease,activation,"cooldown-paid");
+            var frozen=new com.inigmasgames.hytalerpg.execution.support.CycloneReflectionJournal.Behavior(
+                    1,player,mode==2?UUID.randomUUID():generation,activation,"root","instance","corr",.2,80);
+            var reflections=new com.inigmasgames.hytalerpg.execution.support.CycloneReflectionJournal(path);
+            if(mode!=1)reflections.install(frozen);
+            tx.publish(lease,activation);
+            assertEquals(25,ledger.debit(lease,generation,"absorbed",25).absorbed());
+            var nativeStats=stats();nativeStats.setStatValue(DefaultEntityStatTypes.getMana(),0);
+            if(mode!=3)CycloneNativePaymentMarker.mark(nativeStats,generation,true);
+            if(mode==4)nativeStats.setStatValue(DefaultEntityStatTypes.getHealth(),0);
+            var loaded=EntityStatMap.CODEC.decode(EntityStatMap.CODEC.encode(nativeStats,
+                    new com.hypixel.hytale.codec.ExtraInfo()),new com.hypixel.hytale.codec.ExtraInfo());
+            var restarted=new CycloneBarrierLedger(path);var connected=restarted.attach(player);
+            var frozenReload=new com.inigmasgames.hytalerpg.execution.support.CycloneReflectionJournal(path);
+            frozenReload.preload(player);
+            var result=CycloneNativePaymentMarker.recover(restarted,connected,loaded,frozenReload);
+            assertEquals(mode==0?CycloneBarrierLedger.Phase.ACTIVE:CycloneBarrierLedger.Phase.DEPLETED,result.phase());
+            assertEquals(mode==0?55:0,result.remaining());
+            assertEquals(0,loaded.get(DefaultEntityStatTypes.getMana()).get(),.001);
+            assertEquals(mode==0?10:0,restarted.debit(connected,generation,"new-hit",10).absorbed());
         }
     }
     @Test void playerCapacityRecalculationPreservesNativeCurrentAndClampsOnReduction(){

@@ -45,6 +45,10 @@ R212-U7P5 resolves each of those nine anchors with Hytale's native walking-NPC c
 | `/rpg link <sourceNode> <targetNode>` / `/rpg unlink <sourceNode>` | Edit a validated Link Tree edge. | Adventure; changes loadout |
 | `/rpg loadout` / `/rpg compile` | Inspect the equipped graph or validate its compiled plan. | Adventure; read-only |
 | `/rpg managuard <1..50>` | Set the percentage of Mana reserved for Managuard; does not refill Mana or shield. | Adventure; changes allocation |
+| `/rpg trusted request <exactOnlineName\|playerUuid>` | Record a Shared Aegis player ally request by stable UUID. The other player must explicitly accept before either player becomes eligible. | Adventure; writes the server trust journal; R261 development build with durable Cyclone gate enabled |
+| `/rpg trusted accept <exactOnlineName\|playerUuid>` | Accept that player's pending request, creating a mutually trusted pair. Offline players can be named by UUID. | Adventure; writes the server trust journal; R261 development build with durable Cyclone gate enabled |
+| `/rpg trusted revoke <exactOnlineName\|playerUuid>` | Revoke a trusted pair or pending request. Existing Shared Aegis protection from that pair becomes ineligible; renewed consent creates a new identity. | Adventure; writes the server trust journal; R261 development build with durable Cyclone gate enabled |
+| `/rpg trusted list` | Show incoming requests and trusted player UUIDs. | Adventure; read-only; R261 development build |
 | `/rpg unsummon` | Dismiss owned summons, including Iron Sentinel; consumed bound gear stays consumed. | Adventure; changes active summons |
 
 ## Generated gear and gameplay QA

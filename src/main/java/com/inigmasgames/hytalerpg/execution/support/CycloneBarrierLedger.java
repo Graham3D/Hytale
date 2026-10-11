@@ -59,7 +59,7 @@ public final class CycloneBarrierLedger {
         float narrowed=(float)damage;
         return narrowed<damage?Math.nextUp(narrowed):narrowed;
     }
-    public record Metrics(long writes,long totalNanos,long maximumNanos,long failedWrites) {}
+    public record Metrics(long writes,long totalNanos,long maximumNanos,long failedWrites,long debitLockWaitNanos) {}
     private static final class Holder {
         UUID session;State state;boolean uncertain;int slot;boolean loaded,paymentRecoveryRequired;
         final HashSet<String> receipts=new HashSet<>();
@@ -74,6 +74,7 @@ public final class CycloneBarrierLedger {
                             boolean paymentRecoveryRequired){}
     private final ConcurrentHashMap<UUID,Prepared> preloaded=new ConcurrentHashMap<>();
     private final LongAdder writes=new LongAdder(),totalNanos=new LongAdder(),failedWrites=new LongAdder();
+    private final LongAdder debitLockWaitNanos=new LongAdder();
     private volatile long maximumNanos;
     public CycloneBarrierLedger(Path root){this(root,SEGMENT_BYTES,MAX_RECORDS);}
     /** Small thresholds are used by deterministic rotation tests; production uses 16 MB. */
@@ -86,7 +87,8 @@ public final class CycloneBarrierLedger {
         this.segmentBytes=segmentBytes;
         this.maxRecords=maxRecords;
     }
-    public Metrics metrics(){return new Metrics(writes.sum(),totalNanos.sum(),maximumNanos,failedWrites.sum());}
+    public Metrics metrics(){return new Metrics(writes.sum(),totalNanos.sum(),maximumNanos,
+            failedWrites.sum(),debitLockWaitNanos.sum());}
     /** Run from ReadyPath's worker before the native player installation callback. */
     public void preload(UUID player){
         Objects.requireNonNull(player);
@@ -222,6 +224,9 @@ public final class CycloneBarrierLedger {
     public boolean activationSeen(Lease lease,UUID activation){
         Holder h=holder(lease.player());synchronized(h){check(h,lease);return h.activations.contains(activation);}
     }
+    public boolean receiptSeen(Lease lease,String receipt){
+        Holder h=holder(lease.player());synchronized(h){check(h,lease);return h.receipts.contains(receipt);}
+    }
     public State begin(Lease lease,UUID activation,UUID generation,double capacity){
         if(activation==null||generation==null||!Double.isFinite(capacity)||capacity<=0||capacity>Float.MAX_VALUE)
             throw new IllegalArgumentException("INVALID_CYCLONE_ACTIVATION");
@@ -264,7 +269,10 @@ public final class CycloneBarrierLedger {
     public Debit debit(Lease lease,UUID generation,String receipt,double damage){
         if(receipt==null||receipt.isBlank()||receipt.length()>64||!Double.isFinite(damage)||damage<0)
             throw new IllegalArgumentException("INVALID_CYCLONE_DAMAGE_RECEIPT");
-        Holder h=holder(lease.player());synchronized(h){check(h,lease);
+        long waitingSince=System.nanoTime();
+        Holder h=holder(lease.player());synchronized(h){
+            debitLockWaitNanos.add(System.nanoTime()-waitingSince);
+            check(h,lease);
             State old=h.state;
             if(old.phase()!=Phase.ACTIVE||!Objects.equals(generation,old.generation()))
                 return new Debit(damage,0,old.remaining(),damage,old.generation(),receipt,old.revision(),false,true);

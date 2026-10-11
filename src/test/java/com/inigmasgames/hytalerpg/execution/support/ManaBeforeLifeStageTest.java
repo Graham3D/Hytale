@@ -10,9 +10,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class ManaBeforeLifeStageTest {
     private static final UUID PLAYER=UUID.randomUUID();
     private static final class Port implements NativeResourcePort {
-        double mana,maximum;boolean failBefore,failAfter,failReadBefore,failReadback,written;
+        double mana,maximum;boolean failBefore,failAfter,failReadBefore,failReadback,failOuterReadback,written;int postWriteReads;
         Port(double mana,double maximum){this.mana=mana;this.maximum=maximum;}
-        public double current(ResourceType type){if(failReadBefore||failReadback&&written)throw new IllegalStateException("readback");return mana;}
+        public double current(ResourceType type){if(failReadBefore||failReadback&&written
+                ||failOuterReadback&&written&&++postWriteReads>1)throw new IllegalStateException("readback");return mana;}
         public double maximum(ResourceType type){return maximum;}
         public void setCurrent(ResourceType type,double value){
             if(failBefore)throw new IllegalStateException("prewrite");
@@ -52,6 +53,12 @@ class ManaBeforeLifeStageTest {
         var port=new Port(100,100);port.failReadback=true;
         var result=ManaBeforeLifeStage.apply(100,.5,PLAYER,owner(new ReservationService()),port);
         assertEquals(50,port.mana);assertTrue(result.uncertain());assertEquals(0,result.manaSpent());assertEquals(100,result.healthDamage());
+    }
+    @Test void laterReadFailureKeepsAlreadyConfirmedNativeDebit(){
+        var port=new Port(100,100);port.failOuterReadback=true;
+        var result=ManaBeforeLifeStage.apply(100,.5,PLAYER,owner(new ReservationService()),port);
+        assertEquals(50,port.mana);assertTrue(result.uncertain());
+        assertEquals(50,result.manaSpent());assertEquals(50,result.healthDamage());
     }
     @Test void unavailableInitialManaAndZeroAffixLeaveDamageIntact(){
         var owner=owner(new ReservationService());var port=new Port(100,100);

@@ -1208,10 +1208,19 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         @Override public NativeResourcePort resources() { return new EntityStatResourcePort(stats,()->{if(support!=null)support.invalidateHealthCredit(playerRef.getWorldUuid(),playerRef.getUuid());}); }
         @Override public boolean durableCycloneEnabled(){return support!=null&&support.durableCycloneEnabled();}
         @Override public CycloneAuthority cycloneAuthority(){return support.cycloneAuthority(playerRef);}
+        @Override public void cyclonePreparePublication(SkillExecutionContext context,UUID generation){
+            support.cyclonePreparePublication(playerRef,context,generation);
+        }
         @Override public void cyclonePublished(SkillExecutionContext context,UUID generation){
             support.cyclonePublished(playerRef,context,generation);
             CycloneNativePaymentMarker.mark(stats,generation,
-                    context.compiledPlan().supportModifiers().reflectiveWard());
+                    context.compiledPlan().supportModifiers().reflectiveWard(),support::retainSharedPaymentMarker);
+            support.cyclonePaymentMarked(playerRef,generation);
+            try{support.cycloneGrantShared(store,actor,playerRef,context,generation);}
+            catch(RuntimeException grantFailure){
+                com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(grantFailure)
+                        .log("RPG_CYCLONE_SHARED_GRANT_UNAVAILABLE caster=%s generation=%s",playerRef.getUuid(),generation);
+            }
         }
         @Override public java.util.concurrent.CompletionStage<Void> prepareDurable(SkillExecutionContext context){
             java.util.concurrent.CompletionStage<Void> existing;

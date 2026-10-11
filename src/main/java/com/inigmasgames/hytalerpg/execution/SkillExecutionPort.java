@@ -10,6 +10,8 @@ public interface SkillExecutionPort {
             com.inigmasgames.hytalerpg.execution.support.CycloneBarrierLedger.Lease lease){}
     default boolean durableCycloneEnabled(){return false;}
     default CycloneAuthority cycloneAuthority(){throw new IllegalStateException("CYCLONE_AUTHORITY_UNAVAILABLE");}
+    /** Force frozen secondary behavior before the parent barrier becomes ACTIVE. */
+    default void cyclonePreparePublication(SkillExecutionContext context,java.util.UUID generation){}
     default void cyclonePublished(SkillExecutionContext context,java.util.UUID generation){}
     boolean actorAliveAndUsable();
     /** Manual skill requests only; ordinary native Primary/Secondary attacks bypass this port. */

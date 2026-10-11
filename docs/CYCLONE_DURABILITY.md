@@ -1,9 +1,9 @@
 # Cyclone Armor durable barrier contract
 
-R261-B connects the R261-A/A.1 durable `spirit_shield` authority to live casts
+R261 connects the R261-A/A.1 durable `spirit_shield` authority to live casts
 and post-mitigation damage behind an opt-in gate. The gate defaults to false;
 the owner's active RPG save still uses the deployed R260 JAR and ten-second
-finite Cyclone. The R261-B JAR is a protected-test candidate, not accepted
+finite Cyclone. The R261 JAR is an offline development candidate, not accepted
 gameplay. Set JVM property `-Dhywind.cyclone.durable=true` on an isolated
 test launch to enable it; remove the property and restart to restore R260
 behavior. The gate is read once at plugin startup, not toggled during a cast.
@@ -70,16 +70,17 @@ crash. Hytale 0.7.0-pre.5.1 stores `EntityStatMap` values, but its native
 `setStatValue` API has no durable transaction identity shared with this
 journal. The recorded cost token proves only the original in-memory debit
 and readback; it cannot distinguish a saved debit from a rolled-back one.
-R261-B therefore quarantines every surviving ACTIVE barrier and forces a
-DEPLETED record before marking that connection ready. R261FDEV's conditional
-native marker reconciliation is described below. Recovery does
+R261 reconciles a surviving ACTIVE barrier only when the newly loaded native
+Mana record contains the matching zero-effect generation marker. Reflective
+Ward also requires its exact frozen behavior journal. Otherwise recovery
+forces a DEPLETED record before marking that connection ready. Recovery does
 not call the native resource authority, charge Mana, or refund a possibly
 saved payment. The existing cooldown spend is left with its owner and is
 not automatically refunded. A failed invalidation force leaves the session
 uncertain and denies protection and ready completion. A later replay may
 retry; it never infers a payment from the current Mana balance. This policy
-may forfeit paid protection after reconnect; it remains a known R261-B
-gameplay limitation during protected testing.
+may forfeit paid protection if the native save predates the marker; this is a
+known protected-test limitation, not an automatic second Mana charge.
 Death durably depletes the barrier through a native death hook, with support
 tick as a fallback. An old connection's lease cannot detach a newer session.
 
@@ -104,16 +105,42 @@ regeneration, or native Health/Mana coupling exists. The native infinite
 and skill icon without a countdown and is removed after depletion, death,
 disconnect, or failed reconnect recovery.
 
-The confirmed durable absorption uses the frozen cast's Reflective Ward
-selection and returns 20% of actual absorbed damage through the existing
-secondary native damage path. Duplicate receipts return zero absorption and
-cannot reflect twice. Reflection uses the established 16 secondary-hit
-budget and REFLECTED metadata to prevent recursion. Existing finite effects,
-monster shields, and Managuard remain in their respective downstream paths.
-Shared Aegis's derived ally shield is not created by the durable Cyclone path;
-casts with that linked passive reject before payment. It remains available
-on R260's finite path and needs a separate durable multi-recipient design
-before use with this opt-in candidate.
+The confirmed durable absorption uses a versioned frozen Reflective Ward
+record tied to the exact paid generation. It returns 20% of actual absorbed
+damage through the established native secondary path. Each reflection receipt
+is forced before native damage; a crash between claim and application may
+forfeit that reflection but cannot duplicate it. The 16-hit budget, hostile
+attacker check, REFLECTED metadata, no recursion, and cast-time attribution
+survive reconnect without consulting the current Link Tree. Existing finite
+effects, monster shields, and Managuard remain downstream.
+
+Shared Aegis grants one durable child equal to exactly half the frozen parent
+capacity. Native 8 m point-to-bounds distance and line of sight select the
+nearest eligible recipient, with UUID tie breaking. NPCs still require
+Friendly/Revered attitude; players require persisted mutual trust. The
+`/rpg trusted` commands record UUID-based requests, explicit acceptance, and
+revocation. Renewed consent creates a new trust generation, so old grants do
+not revive. No party membership is inferred from proximity or PvP settings.
+
+The caster's forced ACTIVE journal, confirmed live payment and native marker
+precede a forced one-recipient parent intent and child INIT. A retry can only
+use the same recipient and derived generation. The child has its own forced
+debit receipts and remaining HP. Native damage is reduced only after a
+confirmed child debit; a failed child write leaves that portion of the hit
+unchanged. Child depletion does not refill on disconnect. A CLOSED parent
+intent allows safe compaction of depleted child journals while preventing
+later duplicate admission. Revocation, recipient death, and caster death
+forfeit remaining child protection. NPC recipients attach on a prepared
+native entity lease; player recipients attach through ReadyPath.
+
+Recipient recovery loads the caster's saved native Mana record asynchronously
+when the caster is offline. It accepts a surviving child only if that loaded
+record contains the exact parent generation marker and the relationship still
+qualifies. During the caster's current connection, a confirmed post-marker
+in-memory proof can preserve the child through recipient world transitions;
+that proof is discarded on caster disconnect. Missing or uncertain proof
+forfeits the child without charging either player or refunding Mana. This
+does not make native save and plugin journals one atomic transaction.
 
 The forced debit runs synchronously on the native damage-processing call
 stack. `debit` locks only its player's holder, then appends and calls
@@ -123,12 +150,11 @@ affect unrelated players. The focused test records p50/p95/p99 and worst
 wall-clock debit latency for repeated hits and concurrent same-player and
 multi-player hits. These local measurements are not connected-game latency
 guarantees. Moving the force to an asynchronous queue would violate the
-current no-acknowledgment-before-durability rule; R261-B should evaluate
-the measured pause budget before production acceptance. R261-B's offline
-`CycloneDamageStageTest` profiles the exact journal debit and native float
-bridge invoked by the handler. It excludes ECS traversal and connected-game
-storage contention; the disabled-by-default gate and owner-only protected
-test are essential. See [R261-B QA notes](QA-R261B-CYCLONE.md).
+current no-acknowledgment-before-durability rule. The R261 Final active-stage
+offline profile includes the parent debit, child debit, reflection claim,
+downstream shield, and Mana Before Life on every sample. It excludes ECS
+traversal and connected-game storage contention; the disabled-by-default gate
+and owner acceptance test remain essential. See [R261 Final matrix](R261_FINAL_MATRIX.md).
 
 ## R261-A invariant coverage
 
@@ -144,36 +170,40 @@ test are essential. See [R261-B QA notes](QA-R261B-CYCLONE.md).
 | Forced-write latency and same-player versus unrelated-player contention remain visible | `multiPlayerForcedDebitLatencyProfile`, `repeatedHitBenchmarkRecordsBoundedPerPlayerSyncCost`, `simultaneousHitBenchmarkRecordsLockContention` |
 
 Native player-save flush timing and connected-client damage latency remain
-unverified. The gate remains disabled by default in R261-B.
+unverified. The gate remains disabled by default pending owner acceptance.
 
-## R261 Final development payment-recovery probe
+## Native payment record and remaining limits
 
-R261FDEV adds a narrowly scoped recovery path for a plain durable Cyclone
+R261 adds a narrowly scoped recovery path for durable Cyclone
 barrier. After the native Mana debit and cooldown receipts have been confirmed
 and the ACTIVE journal record has been forced, the native owner adds a zero
 effect StaticModifier to the Mana `EntityStatValue`. Its key contains the
 barrier generation. Hytale 0.7.0-pre.5.1 serializes `Value` and `Modifiers`
 inside that same `EntityStatValue` codec, and `DiskPlayerStorage.save` first
 serializes the player holder to one BSON document before asynchronous writing.
-The native codec round-trip test confirms the marker and current Mana value
-survive together. The marker is never added before publication, so a native
+Native codec and offline BSON save/reload fixtures confirm the marker and
+current Mana value survive together. The marker is never added before
+publication, so a native
 snapshot made before payment confirmation cannot satisfy recovery. The marker
 does not prove the native save was forced at cast time; recovery relies only on
 what the newly loaded native stat actually contains. A missing, stale, or
 unrecognized marker follows the existing forced-DEPLETED policy without a
 second Mana charge or a speculative refund.
 
-Only a non-Reflective-Ward generation is reconciled. Reflective
-Ward's original cast context is currently volatile and required for its native
-secondary-damage path. A Reflective Ward generation therefore remains
-fail-closed on reconnect even when its native marker survived. Shared Aegis
-still rejects durable Cyclone before payment; it needs a durable ally record
-and a verified source-payment link, including recipient recovery while the
-caster is offline. These are release blockers. R261FDEV is a development
-checkpoint, not R261 Final, and the feature gate remains disabled by default.
+Plain and Reflective Ward generations are reconciled by their matching marker;
+Reflective Ward additionally requires the frozen behavior journal. Old native
+markers remain only while a Shared Aegis child from that generation has
+unspent HP. Recipient recovery while the caster is offline is limited by
+whether the native caster save actually contains that marker. A saved marker
+is proof from the loaded record, not a forced native-save acknowledgment at
+cast time. The feature gate remains disabled by default until the owner
+accepts the connected-game result.
 
 R261-C adds player progression and Mana Before Life downstream of confirmed
 Cyclone absorption. Its native resource conversion cannot establish a durable
 payment identity across a crash; see [R261-C development contract](R261C_ENGINEERING.md).
-R261FDEV conditionally recovers plain paid barriers, while Reflective Ward
-reconnect and durable Shared Aegis remain open release boundaries.
+The offline path cannot prove integrated-server frame timing, native client
+rendering, or filesystem survival under a device-wide write failure. Forced
+journal writes run on the synchronous native damage path. The focused active
+stage profile measures these costs separately from journal monitor wait, but
+connected-game latency and save ordering remain for owner acceptance.

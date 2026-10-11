@@ -95,23 +95,24 @@ public final class SupportDamageSystems {
             Damage damage,Ref<EntityStore> recipient,Store<EntityStore> store){
         if(secondaryCannotReflect(HytaleDamageAdapter.metadata(damage))
                 ||!(damage.getSource() instanceof Damage.EntitySource attacker))return;
-        var context=support.durableCycloneContext(player,debit.generation());
-        if(context==null||!context.compiledPlan().supportModifiers().reflectiveWard())return;
+        var behavior=support.durableReflectionBehavior(player,debit.generation());
+        if(behavior==null)return;
         var source=attacker.getRef();
         if(source.equals(recipient)||!HytaleSupportSystem.alive(store,source)
                 ||!HytaleAreaQueries.hostile(store,source,recipient)
                 ||SupportNativeEffects.control(store,source,support.bosses()).protectedEntity())return;
         var cause=damage.getCause();
-        if(cause==null||!support.claimDurableReflection(player,debit.generation()))return;
-        double amount=com.inigmasgames.hytalerpg.execution.support.SupportMagnitude.wardReflection(context,debit.absorbed());
+        if(cause==null)return;
+        double amount=behavior.coefficient()*debit.absorbed();
         if(amount<=0)return;
+        if(!support.claimDurableReflection(player,debit.generation(),debit.receipt()))return;
         var stats=store.getComponent(source,EntityStatMap.getComponentType());
         var hp=stats==null?null:stats.get(DefaultEntityStatTypes.getHealth());
         var attempt=SecondaryDamageAttempt.once(()->hp==null?Double.NaN:hp.get(),
                 ()->new HytaleDamageAdapter().applyResolved(source,store,null,cause,
-                        new HytaleDamageMetadata(player.getUuid(),context.rootCastId(),context.skillInstanceId(),
-                                context.request().correlationId(),amount,Double.NaN,
-                                context.skillInstanceId()+"/REFLECTED/"+debit.receipt(),false,
+                        new HytaleDamageMetadata(player.getUuid(),behavior.rootCastId(),behavior.skillInstanceId(),
+                                behavior.correlationId(),amount,Double.NaN,
+                                behavior.skillInstanceId()+"/REFLECTED/"+debit.receipt(),false,
                                 HytaleDamageMetadata.Origin.REFLECTED),amount,null));
         var result=attempt.completed();
         if(result!=null)try{support.traceDurableReflection(player,debit,amount,result,cause.getId());}
@@ -199,6 +200,7 @@ public final class SupportDamageSystems {
                 if(receipt==null||receipt.isEmpty()){
                     receipt=UUID.randomUUID().toString();damage.putMetaObject(CYCLONE_RECEIPT,receipt);
                 }
+                boolean previousOwnHit=support.durableOwnReceiptSeen(player,receipt);
                 durable=support.durableCycloneDebit(player,receipt,damage.getAmount());
                 if(durable!=null&&durable.debit().absorbed()>0){
                     var debit=durable.debit();
@@ -209,6 +211,28 @@ public final class SupportDamageSystems {
                     damage.setAmount(remainder);
                     try{support.traceDurableCyclone(player,debit);}
                     catch(RuntimeException cosmetic){/* Confirmed native damage remains authoritative. */}
+                }
+                if(damage.getAmount()>0&&!previousOwnHit&&(durable==null||!durable.debit().duplicate())){
+                    var sharedDurable=support.durableSharedDebit(player,receipt,damage.getAmount());
+                    if(sharedDurable!=null&&sharedDurable.absorbed()>0){
+                        float remainder=sharedDurable.nativeRemainder();
+                        HytaleDamageLifecycleSystems.combatStage(damage,"Hywind durable Shared Aegis","BARRIER_ABSORB",
+                                damage.getAmount(),remainder,Map.of("absorbed",sharedDurable.absorbed(),"receipt",receipt));
+                        damage.setAmount(remainder);
+                    }
+                }
+            }else if(player==null&&damage.getAmount()>0&&support.durableCycloneEnabled()
+                    &&store.getComponent(ref,com.hypixel.hytale.server.npc.entities.NPCEntity.getComponentType())!=null){
+                String receipt=damage.getIfPresentMetaObject(CYCLONE_RECEIPT);
+                if(receipt==null||receipt.isEmpty()){
+                    receipt=UUID.randomUUID().toString();damage.putMetaObject(CYCLONE_RECEIPT,receipt);
+                }
+                var sharedDurable=support.durableNpcSharedDebit(store,ref,id,receipt,damage.getAmount());
+                if(sharedDurable!=null&&sharedDurable.absorbed()>0){
+                    float remainder=sharedDurable.nativeRemainder();
+                    HytaleDamageLifecycleSystems.combatStage(damage,"Hywind durable Shared Aegis","BARRIER_ABSORB",
+                            damage.getAmount(),remainder,Map.of("absorbed",sharedDurable.absorbed(),"receipt",receipt));
+                    damage.setAmount(remainder);
                 }
             }
             double shieldBefore=damage.getAmount();

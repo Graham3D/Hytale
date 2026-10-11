@@ -155,9 +155,19 @@ public final class Phase00Plugin extends JavaPlugin {
         // Opt in only on a protected test launch. Restart to change the gate.
         boolean durableCyclone=Boolean.getBoolean("hywind.cyclone.durable");
         supportSystem.configureDurableCyclone(getDataDirectory().resolve("cyclone-barriers"),durableCyclone);
+        com.inigmasgames.hytalerpg.execution.support.TrustedPlayerAllies trustedAllies=null;
+        if(durableCyclone){
+            trustedAllies=new com.inigmasgames.hytalerpg.execution.support.TrustedPlayerAllies(getDataDirectory());
+            supportSystem.configureTrustedPlayerAllies(trustedAllies);
+        }
         com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo()
                 .log("RPG_CYCLONE_DURABLE_GATE enabled=%s",durableCyclone);
         getEntityStoreRegistry().registerSystem(new HytaleSupportSystem.CycloneDeath(supportSystem));
+        if(durableCyclone){
+            getEntityStoreRegistry().registerSystem(new HytaleSupportSystem.NpcSharedBindings(supportSystem));
+            getEntityStoreRegistry().registerSystem(new HytaleSupportSystem.NpcSharedRemoval(supportSystem));
+            getEntityStoreRegistry().registerSystem(new HytaleSupportSystem.NpcSharedDeath(supportSystem));
+        }
         var nativeWeaponFire=new com.inigmasgames.hytalerpg.combat.hytale.NativeWeaponFireProducer(
                 supportSystem::routeManagedWeaponFire,supportSystem::nativeWeaponOffensiveFactor);
         getCodecRegistry(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.CODEC)
@@ -197,6 +207,7 @@ public final class Phase00Plugin extends JavaPlugin {
                 uiProjection, allocation, uiTrace, rpgHud, skillTreeProjection, skillTreeMutations, nativeAbilities,
                 getDataDirectory().resolve("skill-tree-port-bindings"));
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgManaguardCommand(supportSystem));
+        if(durableCyclone)rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgTrustedAllyCommand(trustedAllies));
         getCommandRegistry().registerCommand(rpgCommand);
         if(Boolean.getBoolean("rpg.healingPresentationProbe")||com.inigmasgames.hytalerpg.execution.hytale.HealingProbePolicy.liveTestBuild()){
             healingProbe=new com.inigmasgames.hytalerpg.execution.hytale.HealingPresentationProbe(skillTrace);
@@ -295,6 +306,7 @@ public final class Phase00Plugin extends JavaPlugin {
             return true;
         });
         persistenceReady.configureAdditionalPreload(supportSystem::preloadDurableCyclone);
+        persistenceReady.configureAdditionalAsyncPreload(supportSystem::preloadSharedAegis);
         getEntityStoreRegistry().registerSystem(persistenceReady);
         getEventRegistry().registerGlobal(PlayerReadyEvent.class, event -> {
             var ref = event.getPlayerRef();

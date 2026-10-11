@@ -38,10 +38,13 @@ hits. It consumes at most the eligible current spendable, unreserved native
 Mana at one Mana per damage. Native readback determines the confirmed spend
 and the Health reduction. If a write fails before changing Mana, Health
 damage stays intact. If it throws after a readable native debit, only that
-observed debit protects Health. If readback is unavailable, full Health
-damage remains; no speculative refund or retry is issued. This conservative
-boundary can produce a double cost if native Mana changed but became
-unreadable, so it must be audited in R261 Final.
+observed debit protects Health. R261 Final now retains protection if the
+resource owner's native debit already returned a confirmed bounded readback
+but the stage's later diagnostic read fails. If the debit itself throws and
+no later native readback is available, full Health damage remains; no
+speculative refund or retry is issued. A native write that changes Mana but
+never yields readable evidence can still be lost as protection. The native
+stat API does not provide an atomic damage/Mana commit for that failure case.
 The before/write/readback interval holds the existing resource-owner lock so
 concurrent hits cannot claim one another's Mana debit. That lock is shared
 across players and is part of the performance review.
