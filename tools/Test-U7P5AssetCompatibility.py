@@ -11,6 +11,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent.parent
 BASELINE = HERE / 'tools/u7p5-r248-package-baseline.json'
 R250_REVIEW = HERE / 'tools/u7p5-r250-reviewed-json-baseline.json'
+CYCLONE_REVIEW = HERE / 'tools/u7p5-r256-cyclone-reviewed-assets.json'
 R248_BASELINE_NORMALIZED_SHA256 = '69464e8c153519ca2f97cf76f9a6e17055401a3f2f1a18084c1672ca57e8c168'
 GENERATED_STOCK_JSON = 'Server/Prefabs/Testing/VolumeShowcase/Trigger_Volume_Showcase.prefab.json'
 CATEGORIES = {
@@ -40,6 +41,7 @@ def validate(package, installed, report):
         failures.append('Historical R248 baseline JSON file SHA-256 changed')
     baseline = json.loads(baseline_bytes)
     review = json.loads(R250_REVIEW.read_text())
+    cyclone = json.loads(CYCLONE_REVIEW.read_text())
     checked_references = 0
     if baseline.get('baselineJarSha256') != 'b68c61c4ca1a40b75d6238b604b1e71e69ce5028fcf062e5fd4d49a490251803':
         failures.append('Deployed R248 baseline identity changed')
@@ -137,8 +139,19 @@ def validate(package, installed, report):
                 review['guardedJsonCount'] + len(allowed_added) + len(allowed_changed) + len(teleport_paths)
                 != review['jsonAssetCount']):
             failures.append('Reviewed R250 JSON partition differs from R248/R249 history')
-        if len(actual) != review['jsonAssetCount']:
-            failures.append('R250 JSON asset count differs from reviewed package')
+        cyclone_changes = cyclone['jsonChangesNormalizedSha256']
+        prior_guarded = cyclone['replacedGuardedNormalizedSha256']
+        particle_assets = cyclone['newParticleAssetsSha256']
+        if (cyclone['revision'] != 'R256-U7P5B' or set(cyclone_changes) != {
+                'rpg/catalog/skills.json', 'rpg/runtime/stage-09-support-cohort-c.json',
+                'rpg/presentation/icon-index.json', 'Server/Entity/Effects/RPG/RPG_Cyclone_Armor.json'} or
+                set(prior_guarded) != {'rpg/runtime/stage-09-support-cohort-c.json',
+                                       'rpg/presentation/icon-index.json'} or
+                set(particle_assets) != {'Server/Particles/RPG/Wind_Swoosh_CycloneArmor.particlespawner',
+                                        'Server/Particles/RPG/RPG_Cyclone_Armor.particlesystem'}):
+            failures.append('Cyclone reviewed asset inventory changed')
+        if len(actual) != review['jsonAssetCount'] + 1:
+            failures.append('R256 JSON asset count differs from reviewed package')
         resource_roots = (HERE / 'src/main/resources', HERE / 'hytale-taverns/src/main/resources')
         source_paths = {}
         for root in resource_roots:
@@ -153,15 +166,23 @@ def validate(package, installed, report):
         reviewed = {**r249_added, **r249_changed, **r250_changed}
         if not set(reviewed).issubset(actual):
             failures.append('Reviewed R249/R250 JSON asset is missing')
-        guarded_names = actual - set(reviewed)
-        if len(guarded_names) != review['guardedJsonCount']:
+        guarded_names = actual - set(reviewed) - set(cyclone_changes)
+        if len(guarded_names) + len(prior_guarded) != review['guardedJsonCount']:
             failures.append('Guarded R250 JSON asset count differs from reviewed package')
         guarded = {name: normalized_json_sha256(candidate.read(name)) for name in guarded_names}
+        guarded.update(prior_guarded)
         if asset_root(guarded) != review['guardedNormalizedJsonSha256']:
             failures.append('Guarded R250 JSON asset set or normalized contents changed')
         for name, expected in reviewed.items():
-            if name in actual and normalized_json_sha256(candidate.read(name)) != expected:
+            if name in actual and name not in cyclone_changes and normalized_json_sha256(candidate.read(name)) != expected:
                 failures.append(f'{name}: reviewed normalized JSON content changed')
+        for name, expected in cyclone_changes.items():
+            if name not in actual or normalized_json_sha256(candidate.read(name)) != expected:
+                failures.append(f'{name}: reviewed Cyclone JSON content changed')
+        for name, expected in particle_assets.items():
+            source = HERE / 'src/main/resources' / name
+            if name not in own_names or not source.is_file() or candidate.read(name) != source.read_bytes() or hashlib.sha256(candidate.read(name)).hexdigest() != expected:
+                failures.append(f'{name}: reviewed Cyclone particle asset changed')
         for rarity in ('Champion', 'Unique', 'SuperUnique', 'Boss'):
             name = f'Common/Items/RPG/NameGlyphs/{rarity}.png'
             source = HERE / 'src/main/resources' / name
@@ -174,7 +195,7 @@ def validate(package, installed, report):
             source = source_paths.get(name)
             if source is not None:
                 source_bytes = source.read_bytes()
-                if name in reviewed:
+                if name in reviewed or name in cyclone_changes:
                     if source_bytes != package_bytes:
                         failures.append(f'{name}: packaged reviewed asset differs from checked source')
                 elif normalized_json_sha256(source_bytes) != normalized_json_sha256(package_bytes):

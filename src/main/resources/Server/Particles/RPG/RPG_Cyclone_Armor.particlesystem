@@ -1,0 +1,7 @@
+{
+  "Spawners": [
+    {"SpawnerId":"Wind_Swoosh_CycloneArmor"}
+  ],
+  "BoundingRadius": 2,
+  "IsImportant": true
+}

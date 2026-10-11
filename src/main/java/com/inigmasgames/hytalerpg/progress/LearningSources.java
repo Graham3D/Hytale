@@ -32,7 +32,7 @@ public final class LearningSources {
                     new ProgressionDelta(learned?ProgressionDelta.Kind.LEARNING_SUCCESS:ProgressionDelta.Kind.LEARNING_FAILURE,skill,source,0),defeat.milestone(),defeat.goldPot());
         }
     }
-    private final Map<String,SkillDefinition> signatures;
+    private final Map<String,List<SkillDefinition>> signatures;
     private final Map<String,Binding> bindings;
     private record Document(int schemaVersion,List<Binding> bindings,String reason){}
     public static LearningSources load(RpgCatalog catalog){
@@ -44,12 +44,15 @@ public final class LearningSources {
         }catch(java.io.IOException error){throw new IllegalStateException("LEARNING_SOURCES_UNREADABLE",error);}
     }
     public LearningSources(RpgCatalog catalog,List<Binding> authoredBindings){
-        var sources=new TreeMap<String,SkillDefinition>();
+        var sources=new TreeMap<String,List<SkillDefinition>>();
         for(var skill:catalog.skills()){
             String source=skill.sourceAcquisition().signatureEnemyId();
             if(source.startsWith("UNASSIGNED"))continue;
-            if(sources.putIfAbsent(sourceKey(source),skill)!=null)throw new IllegalArgumentException("SOURCE_HAS_MULTIPLE_SIGNATURES");
+            sources.computeIfAbsent(sourceKey(source),ignored->new ArrayList<>()).add(skill);
         }
+        for(var group:sources.values())
+            if(group.stream().filter(skill->"VERIFIED_CONNECTED".equals(skill.sourceAcquisition().validationState())).count()>1)
+                throw new IllegalArgumentException("SOURCE_HAS_MULTIPLE_VERIFIED_SIGNATURES");
         if(authoredBindings.size()>2048)throw new IllegalArgumentException("LEARNING_BINDING_BUDGET");
         var identities=new TreeMap<String,Binding>();var rarities=new HashMap<String,ProgressionMath.AcquisitionRarity>();
         for(var binding:authoredBindings){
@@ -58,16 +61,21 @@ public final class LearningSources {
             var old=rarities.putIfAbsent(binding.source(),binding.rarity());
             if(old!=null&&old!=binding.rarity())throw new IllegalArgumentException("ALIASES_MUST_SHARE_ACQUISITION_RARITY");
         }
-        signatures=Map.copyOf(sources);bindings=Map.copyOf(identities);
+        var frozen=new TreeMap<String,List<SkillDefinition>>();
+        sources.forEach((source,skills)->frozen.put(source,List.copyOf(skills)));
+        signatures=Map.copyOf(frozen);bindings=Map.copyOf(identities);
     }
     public Optional<Opportunity> resolve(String combatIdentity,ProgressionMath.Rank rank,double effectiveWisdom){
         var binding=bindings.get(combatIdentity);if(binding==null)return Optional.empty();
-        var skill=signatures.get(binding.source());
-        if(!"VERIFIED_CONNECTED".equals(skill.sourceAcquisition().validationState())||tier(skill.tier())>rank.signatureTierCeiling)return Optional.empty();
+        var skill=signatures.get(binding.source()).stream()
+                .filter(candidate->"VERIFIED_CONNECTED".equals(candidate.sourceAcquisition().validationState()))
+                .findFirst().orElse(null);
+        if(skill==null||tier(skill.tier())>rank.signatureTierCeiling)return Optional.empty();
         return Optional.of(new Opportunity(skill.id().value(),binding.source(),binding.rarity(),effectiveWisdom));
     }
     public int assignedSources(){return signatures.size();}
-    public int verifiedBindings(){return (int)bindings.values().stream().filter(b->signatures.get(b.source()).sourceAcquisition().validationState().equals("VERIFIED_CONNECTED")).count();}
+    public int verifiedBindings(){return (int)bindings.values().stream().filter(b->signatures.get(b.source()).stream()
+            .anyMatch(skill->"VERIFIED_CONNECTED".equals(skill.sourceAcquisition().validationState()))).count();}
     public static String sourceKey(String canonicalName){
         if(canonicalName==null||canonicalName.startsWith("UNASSIGNED"))throw new IllegalArgumentException("SOURCE_UNASSIGNED");
         String key=canonicalName.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9]+","_").replaceAll("^_|_$","");

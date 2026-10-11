@@ -370,6 +370,13 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         NativeStaminaRegenerationAdapter.install(stats,()->liveGear
                 .percent(com.inigmasgames.hytalerpg.gear.GearEffectSnapshot.Operator.STAMINA_REGEN));
         runtime.tick(player.getUuid(),System.nanoTime()/1e9,alive(store,ref),new Port(store,ref,buffer));
+        // Depletion removes the finite shield inside the damage callback. Retire its cosmetic
+        // entity effect on the next owner tick; native Health protection already ended at impact.
+        if(runtime.finite().forTarget(SupportNativeEffects.world(store),player.getUuid(),System.nanoTime()/1e9)
+                .stream().noneMatch(effect->effect.key().owner().equals(player.getUuid())
+                        &&effect.key().skill().equals("spirit_shield")
+                        &&effect.kind()==SupportProfile.Kind.SHIELD))
+            try{CycloneArmorPresentation.remove(store,ref);}catch(RuntimeException ignored){/* cosmetic */}
         kernel.cooldowns().setAuraRate(player.getUuid(),cooldownRecoveryIncreased(player.getUuid(),System.nanoTime()/1e9)
                 +kernel.statuses().cooldownRecoveryRate(player.getUuid()),1,.25);
         try{if(kernel.cooldowns().checkpoint(player.getUuid()))cooldownSaveWarnings.remove(player.getUuid());}
@@ -425,6 +432,7 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
     }
     public void detach(Store<EntityStore> store,Ref<EntityStore> actor,String reason){
         var player=store.getComponent(actor,PlayerRef.getComponentType());
+        try{CycloneArmorPresentation.remove(store,actor);}catch(RuntimeException ignored){/* cosmetic */}
         if(player!=null){beginReady(player.getUuid());cooldownSaveWarnings.remove(player.getUuid());runtime.detach(player.getUuid(),reason,port(store,actor));}
     }
     public SkillExecutionPort.Validation preflight(Store<EntityStore> store,Ref<EntityStore> actor,Stage04SkillProfile profile,CompiledSkillPlan plan){
@@ -673,6 +681,12 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
             }
         }
         public void present(SkillExecutionContext context,double radius,double duration){
+            if(context.profile().skillId().equals("spirit_shield")&&context.profile().support().kind()==SupportProfile.Kind.SHIELD){
+                try{CycloneArmorPresentation.apply(store,actor,(float)FiniteSupportEffects.durationSeconds(context));}
+                catch(RuntimeException failure){com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(failure)
+                        .log("RPG_CYCLONE_VISUAL_FAILED actor=%s",player.getUuid());}
+                return;
+            }
             if(context.profile().support().kind()==SupportProfile.Kind.MANTLE_OF_FLAME){
                 java.util.function.Consumer<Store<EntityStore>> renew=s->{
                     if(runtime.activeContext(context.request().actorId(),"mantle_of_flame")!=context||!actor.isValid())return;

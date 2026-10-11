@@ -4889,16 +4889,15 @@
     "schemaVersion": 1,
     "id": "spirit_shield",
     "skillId": "rpg.skill.spirit_shield",
-    "name": "Spirit Shield",
-    "description": "Create a protective spirit barrier that absorbs damage and can redirect part of incoming damage away from an ally.",
+    "name": "Cyclone Armor",
+    "description": "Surround yourself with a Wind barrier that absorbs incoming combat damage for up to 10 seconds.",
     "tier": "II",
     "phase": 9,
     "tags": [
       "BARRIER",
-      "DAMAGE_REDIRECT",
-      "HOLY"
+      "WIND"
     ],
-    "weaponRequirement": "Staffs / Spellbooks",
+    "weaponRequirement": "None",
     "scalingClass": "Wisdom",
     "basePowerSource": "NONE",
     "innateBasePower": null,
@@ -4907,15 +4906,15 @@
     "upkeep": "",
     "castTime": "Instant",
     "cooldown": "14 s",
-    "targetMode": "18 m ally or self  /  single-target barrier",
-    "maxRange": "18 m ally or self",
-    "geometry": "single-target barrier",
+    "targetMode": "Self",
+    "maxRange": "Self",
+    "geometry": "self barrier",
     "travelSpeed": "N/A",
-    "lifetime": "8 s",
-    "powerCoefficient": "Shield = 1.50x Healing Power",
+    "lifetime": "10 s",
+    "powerCoefficient": "1.50 x Healing Power x (1 + 0.0125 x (effective level - 1))",
     "canCrit": false,
     "statusApplications": [
-      "Capacity 1.50*HealingPower(WIS), duration 8 s; one 20% post-mitigation redirect to caster on ally hits while shield exists."
+      "Capacity scales with Healing Power and effective skill level; duration 10 s."
     ],
     "vfxRecipeId": "rpg.vfx.skill.spirit_shield",
     "soundRecipeId": "rpg.sound.skill.spirit_shield",
@@ -4923,13 +4922,10 @@
       "ABSORBS_DAMAGE",
       "BARRIER",
       "CAN_SHARE",
-      "DAMAGE_REDIRECT",
       "DISCRETE_ACTIVATION",
       "FINITE_RESOURCE_COST",
       "HAS_COOLDOWN",
-      "HAS_FINITE_DURATION",
-      "HAS_RANGE",
-      "HOLY",
+      "WIND",
       "MANA_RESOURCE",
       "SCALABLE_PAYLOAD",
       "SELF_TARGETED_BARRIER",
@@ -4937,13 +4933,16 @@
       "SPELL_CAST"
     ],
     "sourceAcquisition": {
-      "signatureEnemyId": "UNASSIGNED - distinct signature enemy required",
-      "validationState": "UNASSIGNED",
-      "learnChance": null,
-      "acquisitionRarity": "NORMAL",
+      "signatureEnemyId": "Scarak_Defender",
+      "validationState": "PROPOSED",
+      "learnChance": 0.05,
+      "acquisitionRarity": "RARE",
       "difficultyVariant": "NORMAL"
     },
     "aliases": [
+      "Cyclone Armor",
+      "cyclone_armor",
+      "rpg.skill.cyclone_armor",
       "Spirit Shield",
       "spirit_shield",
       "rpg.skill.spirit_shield"

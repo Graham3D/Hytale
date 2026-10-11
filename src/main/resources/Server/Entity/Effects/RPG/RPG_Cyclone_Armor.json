@@ -1,0 +1,10 @@
+{
+  "Duration": 10,
+  "Infinite": false,
+  "OverlapBehavior": "Overwrite",
+  "Debuff": false,
+  "ApplicationEffects": {
+    "Particles": [{"SystemId":"RPG_Cyclone_Armor","TargetEntityPart":"Self","Scale":0.8,"ClearParticlesOnRemove":true}],
+    "FirstPersonParticles": [{"SystemId":"RPG_Cyclone_Armor","TargetEntityPart":"Self","Scale":0.55,"ClearParticlesOnRemove":true}]
+  }
+}

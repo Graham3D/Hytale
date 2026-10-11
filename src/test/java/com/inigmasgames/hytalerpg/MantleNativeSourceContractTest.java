@@ -43,6 +43,19 @@ class MantleNativeSourceContractTest {
         assertEquals("Impact_Fire",p.systemId);assertEquals(1.25f,p.positionOffset.y());assertEquals(1,p.scale);
         assertTrue(p.clearParticlesOnRemove);assertFalse(p.detachedFromModel);assertNull(app.abilityEffects);
     }
+    @Test void cycloneArmorEntityParticlesDecodeWithPinnedNativeCodec()throws Exception{
+        var json=JsonParser.parseString(Files.readString(Path.of("src/main/resources/Server/Entity/Effects/RPG/RPG_Cyclone_Armor.json"))).getAsJsonObject();
+        var app=com.hypixel.hytale.server.core.asset.type.entityeffect.config.ApplicationEffects.CODEC.decode(
+                org.bson.BsonDocument.parse(json.get("ApplicationEffects").toString()),new com.hypixel.hytale.codec.ExtraInfo()).toPacket();
+        assertEquals(1,app.particles.length);
+        assertEquals(1,app.firstPersonParticles.length);
+        assertEquals("RPG_Cyclone_Armor",app.particles[0].systemId);
+        assertEquals(com.hypixel.hytale.protocol.EntityPart.Self,app.particles[0].targetEntityPart);
+        assertTrue(app.particles[0].clearParticlesOnRemove);
+        assertTrue(app.firstPersonParticles[0].clearParticlesOnRemove);
+        assertEquals(.8f,app.particles[0].scale);
+        assertEquals(.55f,app.firstPersonParticles[0].scale);
+    }
     static final DamageCause FIRE=new DamageCause("Fire"),PHYSICAL=new DamageCause("Physical");
     static HytaleAssetStore<String,DamageCause,IndexedLookupTableAssetMap<String,DamageCause>> assets;
     static HytaleAssetStore<String,ParticleSystem,DefaultAssetMap<String,ParticleSystem>> particleAssets;
@@ -51,7 +64,7 @@ class MantleNativeSourceContractTest {
     static class ParticleKeys extends DefaultAssetMap<String,ParticleSystem> {
         void seed(){
             var values=new HashMap<String,ParticleSystem>();
-            for(var id:List.of("RPG_Mantle_Aura","Impact_Fire"))values.put(id,new ParticleSystem(id,1,new ParticleSpawnerGroup[0],64,10,true));
+            for(var id:List.of("RPG_Mantle_Aura","Impact_Fire","RPG_Cyclone_Armor"))values.put(id,new ParticleSystem(id,1,new ParticleSpawnerGroup[0],64,10,true));
             putAll("MantleCodecKeys",ParticleSystem.CODEC,values,Map.of(),Map.of());
         }
     }

@@ -57,7 +57,7 @@ class Stage09FinalSupportPassivesTest {
     @Test void sharedSpiritShieldHasHalfCreatedCapacityAndSameExpiry(){
         var h=shield("shared_aegis","reflective_ward");var ally=UUID.randomUUID();h.members.add(ally);h.cast();
         var child=h.runtime.finite().forTarget(h.world,ally,0).getFirst();assertEquals(SupportProfile.Kind.SHARED_SHIELD,child.kind());
-        assertEquals(30.9*.8*.5,child.shieldRemaining(),1e-9);assertEquals(8,child.ends());assertEquals(h.context.rootCastId(),child.rootCastId());
+        assertEquals(30.9*.8*.5,child.shieldRemaining(),1e-9);assertEquals(10,child.ends());assertEquals(h.context.rootCastId(),child.rootCastId());
         assertEquals(h.context.skillInstanceId(),child.skillInstanceId());assertEquals(h.context.request().correlationId(),child.correlationId());
     }
     @Test void sharedChildNeverRedirectsOrSharesRecursively(){
@@ -125,7 +125,7 @@ class Stage09FinalSupportPassivesTest {
     @Test void finiteSecondaryBudgetIsSharedWithTheDerivedAllyAndReportsOnlyFirstRejection(){
         var h=shield("shared_aegis","reflective_ward");var ally=UUID.randomUUID();h.members.add(ally);h.cast();var effect=h.runtime.finite().forTarget(h.world,ally,0).getFirst();
         for(int i=0;i<15;i++)assertEquals(1,h.runtime.claimSupportSecondary(effect,0));assertEquals(-1,h.runtime.claimSupportSecondary(effect,0));
-        for(int i=0;i<100;i++)assertEquals(0,h.runtime.claimSupportSecondary(effect,0));h.runtime.finite().expire(8);assertEquals(0,h.runtime.finite().secondaryRootCount());
+        for(int i=0;i<100;i++)assertEquals(0,h.runtime.claimSupportSecondary(effect,0));h.runtime.finite().expire(10);assertEquals(0,h.runtime.finite().secondaryRootCount());
     }
     @Test void auraWardSecondaryBudgetRenewsWithoutAccumulatingUnusedTokens(){
         var h=guard("shared_aegis","reflective_ward");var ally=UUID.randomUUID();h.members.add(ally);h.cast();var effect=h.runtime.sharedGuards(h.world,ally,0).getFirst();

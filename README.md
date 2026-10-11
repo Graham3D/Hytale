@@ -1,10 +1,10 @@
 # Hywind / HyARPG development baseline
 
-This task branch (`codex/teleport-landing-sound`) builds **R255-U7P5B**
-(`0.2.0-R255-U7P5B`) on the verified R254 source. A native positional
-`SFX_Portal_Neutral_Teleport_Local` sound now plays once at a confirmed
-Teleport landing. Native relocation, targeting, resource costs, and the R254
-skill-level QA command remain unchanged. Connected-game acceptance is pending.
+This task branch (`codex/cyclone-armor`) builds **R256-U7P5B**
+(`0.2.0-R256-U7P5B`) on the verified R255 source. It introduces a Cyclone
+Armor barrier absorption and caster-attached visual QA candidate. Projectile
+redirection remains gated pending a verified pre-impact native return path.
+Connected-game acceptance is pending.
 
 The current GitHub `main` gameplay baseline is **R250-U7P5B**
 (`0.2.0-R250-U7P5B`). [PR #1](https://github.com/Graham3D/Hytale/pull/1)

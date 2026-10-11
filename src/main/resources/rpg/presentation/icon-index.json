@@ -555,7 +555,7 @@
     {
       "kind": "Skill",
       "id": "spirit_shield",
-      "name": "Spirit Shield",
+      "name": "Cyclone Armor",
       "fileName": "SkillSpiritshield.png",
       "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Spirit_Shield.json"
     },

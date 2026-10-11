@@ -78,7 +78,7 @@ class GearSupportConsumerTest {
         double spent=effects.forTarget(h.world,h.actor,0).getFirst().shieldRemaining();
         effects.reprojectShieldCapacity(h.actor,GearEffectSnapshot.EMPTY,0);
         var reduced=effects.forTarget(h.world,h.actor,0).getFirst();
-        assertEquals(created/1.2,reduced.magnitude(),1e-9);
+        assertEquals(created,reduced.magnitude(),1e-9);
         assertEquals(spent,reduced.shieldRemaining(),1e-9);
         effects.reprojectShieldCapacity(h.actor,new GearEffectSnapshot(List.of(shield)),0);
         assertEquals(created,effects.forTarget(h.world,h.actor,0).getFirst().magnitude(),1e-9);
@@ -86,7 +86,7 @@ class GearSupportConsumerTest {
         for(int cycle=0;cycle<20;cycle++){
             effects.reprojectShieldCapacity(h.actor,GearEffectSnapshot.EMPTY,0);
             effects.reprojectShieldCapacity(h.actor,GearEffectSnapshot.EMPTY,0);
-            assertEquals(created/1.2,effects.forTarget(h.world,h.actor,0).getFirst().magnitude(),1e-9);
+            assertEquals(created,effects.forTarget(h.world,h.actor,0).getFirst().magnitude(),1e-9);
             effects.reprojectShieldCapacity(h.actor,new GearEffectSnapshot(List.of(shield)),0);
             effects.reprojectShieldCapacity(h.actor,new GearEffectSnapshot(List.of(shield)),0);
             var current=effects.forTarget(h.world,h.actor,0).getFirst();

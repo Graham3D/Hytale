@@ -1,0 +1,17 @@
+{
+  "revision": "R256-U7P5B",
+  "jsonChangesNormalizedSha256": {
+    "rpg/catalog/skills.json": "1805518d576ee1c69795255c21359efa667c16f55c0e11617366f90aa0f071ee",
+    "rpg/runtime/stage-09-support-cohort-c.json": "023963f76365f23ba539e0f691cd28bf300f3482bc136260680699ba273a63a4",
+    "rpg/presentation/icon-index.json": "c8477067ef9862fbf9aeff25c85cf34467badc0999633de7921a37baa47900cf",
+    "Server/Entity/Effects/RPG/RPG_Cyclone_Armor.json": "751ff7fe94434b8395e10b49c5d9a316493185f6fe366b0f746eb3dbdf55d80d"
+  },
+  "replacedGuardedNormalizedSha256": {
+    "rpg/runtime/stage-09-support-cohort-c.json": "749e9548fbd1ce965216f9fab1b343ece0045cd389c303993cbc2eebe479cab5",
+    "rpg/presentation/icon-index.json": "2b0e90c57fd80411ec9111c64925a6fcff0caaae65895461bed1653edee99544"
+  },
+  "newParticleAssetsSha256": {
+    "Server/Particles/RPG/Wind_Swoosh_CycloneArmor.particlespawner": "96ae20f9f6ab99a8dfeba5e60d87bdec968cc6637182362453d22705d026ccd9",
+    "Server/Particles/RPG/RPG_Cyclone_Armor.particlesystem": "7b9d64f95507580bbd3598268524f5856095befe3d4c5fb4aa204a3704207e1a"
+  }
+}

@@ -35,11 +35,30 @@ class Stage12AcquisitionTest {
         var skill=new Gson().fromJson(json,SkillDefinition.class);
         return new RpgCatalog(C.skills().stream().map(s->s.id().equals(skill.id())?skill:s).toList(),C.passives());
     }
-    @Test void shippedCatalogHas66ProposedAnd21UnassignedNoPublicRoll(){
+    @Test void shippedCatalogKeepsProposedSourcesWithoutPublicRoll(){
         var sources=new LearningSources(C,List.of(new LearningSources.Binding("goblin_scrapper","goblin_scrapper",ProgressionMath.AcquisitionRarity.COMMON)));
         assertEquals(66,sources.assignedSources());assertEquals(0,sources.verifiedBindings());
         assertTrue(sources.resolve("goblin_scrapper",ProgressionMath.Rank.BOSS,500).isEmpty());
-        assertEquals(31,C.skills().stream().filter(s->s.sourceAcquisition().signatureEnemyId().startsWith("UNASSIGNED")).count()); // Includes five Lightning skills and Iron Sentinel.
+        assertEquals(30,C.skills().stream().filter(s->s.sourceAcquisition().signatureEnemyId().startsWith("UNASSIGNED")).count()); // Cyclone Armor now proposes Scarak Defender.
+    }
+    @Test void sharedScarakProposalHasNoRollUntilOneSignatureIsVerified(){
+        assertEquals(LearningSources.sourceKey("Scarak Defender"),LearningSources.sourceKey("Scarak_Defender"));
+        var binding=new LearningSources.Binding("scarak_defender","scarak_defender",ProgressionMath.AcquisitionRarity.RARE);
+        var proposed=new LearningSources(C,List.of(binding));
+        assertTrue(proposed.resolve("scarak_defender",ProgressionMath.Rank.BOSS,100).isEmpty());
+        var original=C.skill(new SkillId("spirit_shield")).orElseThrow();
+        var json=new Gson().toJsonTree(original).getAsJsonObject();
+        json.getAsJsonObject("sourceAcquisition").addProperty("validationState","VERIFIED_CONNECTED");
+        var verified=new Gson().fromJson(json,SkillDefinition.class);
+        var catalog=new RpgCatalog(C.skills().stream().map(s->s.id().equals(verified.id())?verified:s).toList(),C.passives());
+        var eligible=new LearningSources(catalog,List.of(binding));
+        assertEquals("spirit_shield",eligible.resolve("scarak_defender",ProgressionMath.Rank.BOSS,100).orElseThrow().skill());
+        var thorns=C.skills().stream().filter(s->s.name().equals("Thorns Aura")).findFirst().orElseThrow();
+        var duplicateJson=new Gson().toJsonTree(thorns).getAsJsonObject();
+        duplicateJson.getAsJsonObject("sourceAcquisition").addProperty("validationState","VERIFIED_CONNECTED");
+        var duplicate=new Gson().fromJson(duplicateJson,SkillDefinition.class);
+        var ambiguous=new RpgCatalog(catalog.skills().stream().map(s->s.id().equals(duplicate.id())?duplicate:s).toList(),catalog.passives());
+        assertThrows(IllegalArgumentException.class,()->new LearningSources(ambiguous,List.of(binding)));
     }
     @Test void verifiedExplicitAliasesShareOneSourceAndUnknownIdentitiesCannotRoll(){
         var sources=new LearningSources(verifiedFixture(),List.of(new LearningSources.Binding("goblin_scrapper","goblin_scrapper",ProgressionMath.AcquisitionRarity.COMMON),new LearningSources.Binding("goblin_patrol","goblin_scrapper",ProgressionMath.AcquisitionRarity.COMMON)));

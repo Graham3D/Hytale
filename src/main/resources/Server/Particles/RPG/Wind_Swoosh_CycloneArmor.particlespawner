@@ -1,0 +1,161 @@
+{
+  "RenderMode": "BlendAdd",
+  "EmitOffset": {
+    "X": {
+      "Min": -0.45,
+      "Max": 0.45
+    },
+    "Y": {
+      "Min": 0.15,
+      "Max": 1.7
+    },
+    "Z": {
+      "Min": -0.45,
+      "Max": 0.45
+    }
+  },
+  "ParticleRotationInfluence": "None",
+  "LinearFiltering": true,
+  "LightInfluence": 1,
+  "ParticleRotateWithSpawner": true,
+  "MaxConcurrentParticles": 20,
+  "ParticleLifeSpan": {
+    "Min": 0.4,
+    "Max": 0.6
+  },
+  "SpawnRate": {
+    "Min": 3,
+    "Max": 3
+  },
+  "InitialVelocity": {
+    "Yaw": {
+      "Min": -180,
+      "Max": 180
+    },
+    "Pitch": {
+      "Min": 80,
+      "Max": 100
+    }
+  },
+  "Attractors": [
+    {
+      "Position": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "RadialAxis": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "Radius": 0,
+      "RadialAcceleration": 0,
+      "RadialTangentAcceleration": 0,
+      "LinearAcceleration": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "RadialImpulse": 0,
+      "RadialTangentImpulse": 0,
+      "LinearImpulse": {
+        "X": 0,
+        "Y": 0,
+        "Z": 0
+      },
+      "DampingMultiplier": {
+        "X": 1,
+        "Y": 0.6898697810559999,
+        "Z": 1
+      }
+    }
+  ],
+  "Particle": {
+    "Texture": "Particles/Textures/Basic/Ball7.png",
+    "ScaleRatioConstraint": "OneToOne",
+    "UVOption": "None",
+    "Animation": {
+      "0": {
+        "FrameIndex": {
+          "Min": 0,
+          "Max": 0
+        },
+        "Opacity": 0,
+        "Scale": {
+          "X": {
+            "Min": 3,
+            "Max": 3
+          },
+          "Y": {
+            "Min": 3,
+            "Max": 3
+          }
+        },
+        "Rotation": {
+          "Z": {
+            "Min": 1,
+            "Max": 1
+          }
+        }
+      },
+      "90": {
+        "Opacity": 1
+      },
+      "100": {
+        "Opacity": 0,
+        "Scale": {
+          "X": {
+            "Min": 1,
+            "Max": 1
+          },
+          "Y": {
+            "Min": 1,
+            "Max": 1
+          }
+        },
+        "Rotation": {
+          "Z": {
+            "Min": -220,
+            "Max": -220
+          }
+        }
+      }
+    },
+    "InitialAnimationFrame": {
+      "Scale": {
+        "X": {
+          "Min": 0.06,
+          "Max": 0.08
+        },
+        "Y": {
+          "Min": 0.06,
+          "Max": 0.08
+        }
+      },
+      "Opacity": 0.892,
+      "FrameIndex": {
+        "Min": 0,
+        "Max": 0
+      },
+      "Rotation": {
+        "X": {
+          "Min": 100,
+          "Max": 120
+        },
+        "Y": {
+          "Max": 360
+        },
+        "Z": {
+          "Max": 360
+        }
+      },
+      "Color": "#7bdcff"
+    }
+  },
+  "SpawnBurst": true,
+  "WaveDelay": {
+    "Min": 0.4,
+    "Max": 0.4
+  }
+}

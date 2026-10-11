@@ -255,6 +255,7 @@ public final class FiniteSupportEffects {
         var profile=Objects.requireNonNull(context).profile().support();
         if(profile==null)throw new IllegalArgumentException("Support profile missing");
         double base=profile.durationSeconds();
+        if(context.profile().skillId().equals("spirit_shield"))return 10;
         if(!profile.finiteEffect()||profile.hostileTarget())return base;
         return base*(1+context.gearSnapshot().percent(
                 com.inigmasgames.hytalerpg.gear.GearEffectSnapshot.Operator.FINITE_SUPPORT_DURATION));
@@ -278,7 +279,8 @@ public final class FiniteSupportEffects {
         double currentFactor=1+live.percent(com.inigmasgames.hytalerpg.gear.GearEffectSnapshot.Operator.BARRIER_STRENGTH);
         for(var entry:List.copyOf(effects.entrySet())){
             var effect=entry.getValue();
-            if(!effect.key.owner.equals(owner)||!Set.of(SupportProfile.Kind.SHIELD,SupportProfile.Kind.SHARED_SHIELD).contains(effect.kind))continue;
+            if(!effect.key.owner.equals(owner)||effect.key.skill.equals("spirit_shield")
+                    ||!Set.of(SupportProfile.Kind.SHIELD,SupportProfile.Kind.SHARED_SHIELD).contains(effect.kind))continue;
             double capacity=effect.baseShieldCapacity*currentFactor;
             double remaining=Math.min(effect.shieldRemaining,capacity);
             effects.put(entry.getKey(),new Effect(effect.key,effect.kind,capacity,effect.movement,effect.starts,effect.ends,
@@ -397,7 +399,8 @@ public final class FiniteSupportEffects {
                 .sorted(Comparator.comparingDouble(Effect::starts).thenComparing(e->e.key.owner.toString())).toList();
         double remaining=incoming,redirected=0,absorbed=0;var allocations=new ArrayList<Absorption>();
         if(mayRedirect){
-            var chosen=shields.stream().filter(e->e.kind==SupportProfile.Kind.SHIELD&&!e.key.owner.equals(target)).findFirst();
+            var chosen=shields.stream().filter(e->e.kind==SupportProfile.Kind.SHIELD&&!e.key.owner.equals(target)
+                    &&!e.key.skill.equals("spirit_shield")).findFirst();
             if(chosen.isPresent()&&transfer.transfer(chosen.get(),incoming*.2)){redirected=incoming*.2;remaining-=redirected;}
         }
         for(var shield:shields){

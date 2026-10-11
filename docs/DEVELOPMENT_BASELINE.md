@@ -1,5 +1,33 @@
 # HyARPG/Hywind development baseline
 
+## R256 Cyclone Armor barrier QA candidate (2026-10-10)
+
+Source branch `codex/cyclone-armor` starts from verified, published R255
+commit `18987e622b02f5dfb593d3821af9f5e241292e28`, descending from
+GitHub `main` commit `b6a2bd10e877800d702ec5ecd8bc1464e1724f83`.
+Guardian preflight passed. The primary checkout's unrelated modified
+`AGENTS.md` remains untouched.
+
+R256-U7P5B (`0.2.0-R256-U7P5B`) replaces the historical Spirit Shield
+design while keeping its saved `spirit_shield` ID. Cyclone Armor is a self
+Wind barrier costing 18 Mana with a 14-second cooldown, ten-second maximum
+duration, authoritative post-mitigation absorption, level-scaled effective
+Healing Power, and a caster-attached Wind Swoosh particle. `/rpg cyclone`
+provides an operator-protected grant for QA. The required Scarak Defender
+acquisition mapping remains proposed and cannot roll publicly until connected
+validation. The normalized source is also proposed by Thorns Aura; learning
+source admission now permits multiple proposals but refuses ambiguous verified
+signatures. Existing save data remains compatible.
+
+This is an absorption and visual QA candidate. Projectile return is not
+enabled: the pinned native impact paths expose callbacks before the native hit
+interaction, but this pass has not established a safe ownership/payload-preserving
+return for the legacy and modern projectile implementations. The original hit
+continues through normal barrier absorption. Healing Breeze, Gale Cutter, and
+Hurricane are absent from the current catalog, so their synergies are not yet
+testable here. An exact-commit verification, GitHub publication, and deployment
+record follows once this candidate passes the offline release gate.
+
 ## R255 Teleport landing sound QA candidate (2026-10-10)
 
 Source branch `codex/teleport-landing-sound` starts from verified, published

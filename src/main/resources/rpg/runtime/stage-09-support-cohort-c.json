@@ -83,10 +83,7 @@
     {
       "skillId": "spirit_shield",
       "family": "BARRIER",
-      "allowedMainHandKinds": [
-        "STAFF",
-        "SPELLBOOK"
-      ],
+      "allowedMainHandKinds": [],
       "requiredOffHandKinds": [],
       "secondaryFamilies": [],
       "resourceType": "MANA",
@@ -98,12 +95,12 @@
       "scaling": "UTILITY",
       "support": {
         "kind": "SHIELD",
-        "range": 18,
+        "range": 0,
         "radius": 0,
         "coefficient": 1.5,
         "reservationFraction": 0,
         "toggleLockSeconds": 0,
-        "durationSeconds": 8,
+        "durationSeconds": 10,
         "movementIncreased": 0
       }
     }

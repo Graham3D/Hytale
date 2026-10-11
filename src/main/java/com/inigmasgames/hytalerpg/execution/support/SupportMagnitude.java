@@ -27,9 +27,16 @@ public final class SupportMagnitude {
         return context.compiledPlan().supportModifiers().reflectiveWard()?absorbed*.2:0;
     }
     public static double shield(SkillExecutionContext context,double mastery){
-        return new HealingCalculationService().direct(20,context.profile().support().coefficient(),
-                context.snapshot().derivedStats().healingMultiplier(),mastery,0)*context.snapshot().modifiers().factor()*context.compiledPlan().supportModifiers().barrierFactor()
+        double healingPower=20+context.gearSnapshot().total(com.inigmasgames.hytalerpg.gear.GearEffectSnapshot.Operator.HEALING_POWER);
+        double wisdom=context.snapshot().derivedStats().healingMultiplier();
+        double intrinsic="spirit_shield".equals(context.profile().skillId())
+                ?CycloneArmorFormula.capacity(healingPower*wisdom,context.effectiveSkillLevel())
+                :new HealingCalculationService().direct(healingPower,context.profile().support().coefficient(),wisdom,mastery,0);
+        double capacity=intrinsic*context.snapshot().modifiers().factor()*context.compiledPlan().supportModifiers().barrierFactor()
                 *(1+context.gearSnapshot().percent(com.inigmasgames.hytalerpg.gear.GearEffectSnapshot.Operator.BARRIER_STRENGTH));
+        if(!Double.isFinite(capacity)||capacity<=0||capacity>Float.MAX_VALUE)
+            throw new IllegalArgumentException("INVALID_BARRIER_CAPACITY");
+        return capacity;
     }
     public static double healing(SkillExecutionContext context,double mastery,double current,double maximum){
         var old=context.snapshot().modifiers();var increased=new java.util.ArrayList<>(old.increased());

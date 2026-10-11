@@ -97,10 +97,10 @@ class Stage09BarrierSupportTest {
         var h=new Harness("spirit_shield");h.cast();var hit=h.runtime.finite().shieldHit(h.world,h.actor,40,true,0,(shield,amount)->fail("Self cannot redirect"));
         assertEquals(30.9,hit.absorbed(),1e-8);assertEquals(9.1,hit.remainder(),1e-8);assertEquals(0,hit.redirected());assertEquals(0,h.runtime.finite().size());
     }
-    @Test void allyShieldSplitsOnceBeforeAbsorb(){
+    @Test void historicalAllyFixtureCannotTransferCycloneDamage(){
         var h=new Harness("spirit_shield");h.target=UUID.randomUUID();h.cast();int[] transfers={0};
-        var hit=h.runtime.finite().shieldHit(h.world,h.target,40,true,0,(shield,amount)->{transfers[0]++;assertEquals(8,amount);return true;});
-        assertEquals(1,transfers[0]);assertEquals(8,hit.redirected());assertEquals(30.9,hit.absorbed(),1e-8);assertEquals(1.1,hit.remainder(),1e-8);
+        var hit=h.runtime.finite().shieldHit(h.world,h.target,40,true,0,(shield,amount)->{transfers[0]++;return true;});
+        assertEquals(0,transfers[0]);assertEquals(0,hit.redirected());assertEquals(30.9,hit.absorbed(),1e-8);assertEquals(9.1,hit.remainder(),1e-8);
         assertEquals(40,hit.redirected()+hit.absorbed()+hit.remainder(),1e-8);
     }
     @Test void rejectedRedirectDoesNotEraseTwentyPercentDamage(){
@@ -110,7 +110,7 @@ class Stage09BarrierSupportTest {
     }
     @Test void shieldExpiryAndOwnerRemovalHaveNoRefund(){
         var h=new Harness("spirit_shield");h.cast();
-        assertEquals(20,h.runtime.finite().shieldHit(h.world,h.target,20,true,8,(shield,amount)->true).remainder());assertEquals(82,h.mana);
+        assertEquals(20,h.runtime.finite().shieldHit(h.world,h.target,20,true,10,(shield,amount)->true).remainder());assertEquals(82,h.mana);
         h.runtime.finite().applyShield(h.context,List.of(h.target),8,40,9);h.runtime.finite().forget(h.actor);assertEquals(0,h.runtime.finite().size());
     }
     @Test void replacementDoesNotAddCapacityAndRespectsNewCap(){
@@ -121,7 +121,7 @@ class Stage09BarrierSupportTest {
         var h=new Harness("spirit_shield");h.target=UUID.randomUUID();h.cast();var other=new Harness("spirit_shield");other.cast();
         h.runtime.finite().applyShield(world(other.context,h.world,h.target),List.of(h.target),8,30,0);
         int[] count={0};var hit=h.runtime.finite().shieldHit(h.world,h.target,100,true,0,(shield,amount)->{count[0]++;return true;});
-        assertEquals(1,count[0]);assertEquals(20,hit.redirected());assertEquals(100,hit.redirected()+hit.absorbed()+hit.remainder(),1e-8);
+        assertEquals(0,count[0]);assertEquals(0,hit.redirected());assertEquals(100,hit.absorbed()+hit.remainder(),1e-8);
     }
     @Test void flameWeaponNativeGateRejectsBeforeCostAndCooldown(){
         var h=new Harness("flame_weapon");var r=h.cast();assertFalse(r.committed());assertTrue(r.code().contains("NATIVE_ROOT_WEAPON_CONTACT_ID_UNAVAILABLE"));
@@ -168,7 +168,7 @@ class Stage09BarrierSupportTest {
         @Override public CommittedTarget captureTarget(Stage04SkillProfile p,CompiledSkillPlan plan,SkillExecutionRequest request){return new CommittedTarget(world,Vec3.ZERO,Vec3.ZERO,Vec3.FORWARD,target);}
         @Override public void finiteEffect(SkillExecutionContext c,FiniteSupportEffects effects,double now){
             var targets=c.profile().support().recipientBurst()?List.copyOf(members):List.of(target);
-            if(c.profile().support().kind()==SupportProfile.Kind.SHIELD){effects.applyShield(c,targets,c.profile().support().durationSeconds(),SupportMagnitude.shield(c,masteryMultiplier(c)),now);
+            if(c.profile().support().kind()==SupportProfile.Kind.SHIELD){effects.applyShield(c,targets,FiniteSupportEffects.durationSeconds(c),SupportMagnitude.shield(c,masteryMultiplier(c)),now);
                 if(c.compiledPlan().supportModifiers().sharedAegis())effects.shareCreatedShield(c,nearestAlly(c),now);}
             else effects.apply(c,targets,c.profile().support().durationSeconds(),now);
         }
