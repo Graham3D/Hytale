@@ -1,0 +1,9 @@
+{
+  "revision": "R258-U7P5B",
+  "itemAsset": "Server/Item/Items/RPG/Abilities/RPG_Ability_Spirit_Shield.json",
+  "priorNormalizedSha256": "7a05852fca50605288c30a25a91f6bdabe8d63f822c4bc55ef727b94ce5e68a2",
+  "updatedNormalizedSha256": "f17118018958a11907b2aaa8b62fc065e34c68309a42aba7b40055a15039fdd8",
+  "priorIcon": "Icons/ItemsGenerated/Rune_Aoe_Up.png",
+  "updatedIcon": "Icons/Items/RPG/SkillSpiritshield.png",
+  "iconPngSha256": "b5314257f45fd1a738c462dea8e6abd86dd67fd5ece37db3789b2488a78545cc"
+}

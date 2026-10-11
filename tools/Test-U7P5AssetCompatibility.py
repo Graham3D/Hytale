@@ -12,6 +12,7 @@ HERE = Path(__file__).resolve().parent.parent
 BASELINE = HERE / 'tools/u7p5-r248-package-baseline.json'
 R250_REVIEW = HERE / 'tools/u7p5-r250-reviewed-json-baseline.json'
 CYCLONE_REVIEW = HERE / 'tools/u7p5-r256-cyclone-reviewed-assets.json'
+ICON_REVIEW = HERE / 'tools/u7p5-r258-icon-reviewed-assets.json'
 R248_BASELINE_NORMALIZED_SHA256 = '69464e8c153519ca2f97cf76f9a6e17055401a3f2f1a18084c1672ca57e8c168'
 GENERATED_STOCK_JSON = 'Server/Prefabs/Testing/VolumeShowcase/Trigger_Volume_Showcase.prefab.json'
 CATEGORIES = {
@@ -42,6 +43,13 @@ def validate(package, installed, report):
     baseline = json.loads(baseline_bytes)
     review = json.loads(R250_REVIEW.read_text())
     cyclone = json.loads(CYCLONE_REVIEW.read_text())
+    icon_review = json.loads(ICON_REVIEW.read_text())
+    icon_path = 'Server/Item/Items/RPG/Abilities/RPG_Ability_Spirit_Shield.json'
+    if (icon_review.get('revision') != 'R258-U7P5B' or
+            icon_review.get('itemAsset') != icon_path or
+            icon_review.get('priorIcon') != 'Icons/ItemsGenerated/Rune_Aoe_Up.png' or
+            icon_review.get('updatedIcon') != 'Icons/Items/RPG/SkillSpiritshield.png'):
+        failures.append('R258 icon review identity changed')
     checked_references = 0
     if baseline.get('baselineJarSha256') != 'b68c61c4ca1a40b75d6238b604b1e71e69ce5028fcf062e5fd4d49a490251803':
         failures.append('Deployed R248 baseline identity changed')
@@ -166,11 +174,12 @@ def validate(package, installed, report):
         reviewed = {**r249_added, **r249_changed, **r250_changed}
         if not set(reviewed).issubset(actual):
             failures.append('Reviewed R249/R250 JSON asset is missing')
-        guarded_names = actual - set(reviewed) - set(cyclone_changes)
-        if len(guarded_names) + len(prior_guarded) != review['guardedJsonCount']:
+        guarded_names = actual - set(reviewed) - set(cyclone_changes) - {icon_path}
+        if len(guarded_names) + len(prior_guarded) + 1 != review['guardedJsonCount']:
             failures.append('Guarded R250 JSON asset count differs from reviewed package')
         guarded = {name: normalized_json_sha256(candidate.read(name)) for name in guarded_names}
         guarded.update(prior_guarded)
+        guarded[icon_path] = icon_review['priorNormalizedSha256']
         if asset_root(guarded) != review['guardedNormalizedJsonSha256']:
             failures.append('Guarded R250 JSON asset set or normalized contents changed')
         for name, expected in reviewed.items():
@@ -179,6 +188,24 @@ def validate(package, installed, report):
         for name, expected in cyclone_changes.items():
             if name not in actual or normalized_json_sha256(candidate.read(name)) != expected:
                 failures.append(f'{name}: reviewed Cyclone JSON content changed')
+        if icon_path not in actual or normalized_json_sha256(candidate.read(icon_path)) != icon_review['updatedNormalizedSha256']:
+            failures.append(f'{icon_path}: reviewed R258 icon reference changed')
+        else:
+            item = json.loads(candidate.read(icon_path))
+            if item.get('Icon') != icon_review['updatedIcon']:
+                failures.append(f'{icon_path}: native icon path changed')
+        icon_index = json.loads(candidate.read('rpg/presentation/icon-index.json'))
+        matching_icons = [row for row in icon_index['entries'] if row.get('id') == 'spirit_shield']
+        if (len(matching_icons) != 1 or matching_icons[0].get('fileName') != 'SkillSpiritshield.png' or
+                matching_icons[0].get('itemAsset') != icon_path):
+            failures.append('Cyclone icon index no longer targets the reviewed item')
+        for icon_file in ('Common/Icons/Items/RPG/SkillSpiritshield.png',
+                          'Common/UI/Custom/Icons/RPG/SkillSpiritshield.png'):
+            source = HERE / 'src/main/resources' / icon_file
+            if (icon_file not in own_names or not source.is_file() or
+                    candidate.read(icon_file) != source.read_bytes() or
+                    hashlib.sha256(candidate.read(icon_file)).hexdigest() != icon_review['iconPngSha256']):
+                failures.append(f'{icon_file}: reviewed Cyclone icon missing or changed')
         for name, expected in particle_assets.items():
             source = HERE / 'src/main/resources' / name
             if name not in own_names or not source.is_file() or candidate.read(name) != source.read_bytes() or hashlib.sha256(candidate.read(name)).hexdigest() != expected:
@@ -195,7 +222,7 @@ def validate(package, installed, report):
             source = source_paths.get(name)
             if source is not None:
                 source_bytes = source.read_bytes()
-                if name in reviewed or name in cyclone_changes:
+                if name in reviewed or name in cyclone_changes or name == icon_path:
                     if source_bytes != package_bytes:
                         failures.append(f'{name}: packaged reviewed asset differs from checked source')
                 elif normalized_json_sha256(source_bytes) != normalized_json_sha256(package_bytes):
@@ -223,6 +250,7 @@ def validate(package, installed, report):
               'baselineRevision': baseline['baselineRevision'], 'baselineJarSha256': baseline['baselineJarSha256'],
               'reviewedRevision': review['revision'], 'jsonAssetsChecked': len(actual),
               'guardedJsonChecked': len(guarded_names), 'reviewedJsonChecked': len(reviewed),
+              'reviewedIconAssetsChecked': 3,
               'jsonNormalization': 'CRLF_TO_LF_ONLY', 'serverAssetCounts': dict(counts),
               'referencesChecked': checked_references, 'failures': failures,
               'nativeServerStarted': False, 'saveMigration': 'R200 spatial catalog revision 3 preserved; R230 has no inventory migration',

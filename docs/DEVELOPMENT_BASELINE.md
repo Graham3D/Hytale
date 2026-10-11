@@ -14,7 +14,9 @@ existing `spirit_shield` native item to it, and retains its internal skill ID.
 It also carries the existing bulk icon updater correction: the RPG target is
 `Hywind.jar`, canonical display-name inputs map through the icon registry, and
 duplicates and invalid filenames are rejected before mutation. All other
-registered icon bytes already match the active JAR. The primary checkout's
+registered icon bytes already match the active JAR. The U7P5 asset audit pins
+the old and new normalized rune JSON hashes and both packaged PNG hashes;
+its existing guard still covers every other asset. The primary checkout's
 unrelated edits, PSD, alpha art and player save data remain untouched.
 Final source commit, verification, GitHub publication and authorized JAR-only
 deployment are pending at this checkpoint. Connected acceptance remains with
