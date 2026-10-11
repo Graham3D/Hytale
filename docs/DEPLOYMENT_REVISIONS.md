@@ -11,6 +11,7 @@ carry the same revision.
 
 | Revision | Version | Deployed (EDT) | SHA-256 | Purpose |
 | --- | --- | --- | --- | --- |
+| R260-U7P5B | `0.2.0-R260-U7P5B` | 2026-10-11 14:18:30 | `487C9B89274496C329A24D65C13F232ED9E01E5A4A5430E0DD5D0F808BFB23FD` | Cyclone Armor effective-WIS/INT barrier rebalance and bounded skill trace; deployed source commit `8d392e9199dc9a751f05c98349d6e6777a580c7d`. Connected QA pending. |
 | R259-U7P5B | `0.2.0-R259-U7P5B` | 2026-10-11 13:26:31 | `044835B0540478000CA9FDDB3D20D746D0D20785F66FF77ADD7FC66E7BD1E1CE` | QA candidate for bounded encounter gear receipt scanning; source commit `2c20529767a5c776067050dd5bcf99b04b34551d`. The separate client RequiredAssets stall remains unconfirmed. |
 | R141 | `0.1.0-merge.91` | 2026-10-04 13:28:50 | `18298D5F25582118DE92AA7B27585015C9245B06450B8C0A3C3D5256379091A8` | Remove invalid `Dropped` CustomUI event binding from the inventory Group backdrop; retain native ItemGrid and explicit Drop Selected handling. |
 | R140 | `0.1.0-merge.90` | 2026-10-04 13:21:34 | `CDC979D893FF36DD0DE934C58F58FB3392A3BD807377381412576C5839F6837F` | R139 CustomUI repair plus bounded read compatibility for preserved operator-QA loot receipts that exceed production rarity affix budgets. |

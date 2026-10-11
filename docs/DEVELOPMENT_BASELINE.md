@@ -1,10 +1,11 @@
 # HyARPG/Hywind development baseline
 
-## R260 Cyclone Armor barrier rebalance candidate (2026-10-11)
+## R260 Cyclone Armor barrier rebalance QA deployment (2026-10-11)
 
-Task branch `codex/cyclone-barrier-rebalance` starts from published R259
-documentation commit `d72ad29b32d8b34b4552ced8d4b8315e6a40b0be` and
-retains the R259 encounter-store correction. Build revision/version are
+Published task branch `codex/cyclone-barrier-rebalance` starts from R259
+documentation commit `d72ad29b32d8b34b4552ced8d4b8315e6a40b0be`; its
+deployed gameplay build source is `8d392e9199dc9a751f05c98349d6e6777a580c7d`.
+It retains the R259 encounter-store correction. Build revision/version are
 R260-U7P5B / `0.2.0-R260-U7P5B`. Cyclone Armor now takes flat gear Healing
 Power plus 0.35 per effective Wisdom and 0.15 per effective Intelligence
 point above the starting effective attribute, then applies the existing
@@ -15,9 +16,19 @@ calculation; absorption traces already report damage absorbed and remaining
 capacity. See [the balance table](CYCLONE_ARMOR_BALANCE.md).
 
 Focused Cyclone, gear, barrier, healing, support, and attribute JUnit suites
-passed offline. The full package/Guardian gate, publication, deployment,
-and connected-game acceptance are pending at this candidate checkpoint.
-The active RPG JAR remains the verified R259 build until deployment.
+passed offline. Full offline Gradle `check` passed 4,051 JUnit tests across
+449 reports; strict Guardian SpotBugs passed, the R260 package validator
+passed, and Guardian recorded the matching release receipt and verified
+GitHub task-branch publication. On 2026-10-11 at 14:18:30 EDT, the R260
+candidate replaced `RPG/mods/Hywind.jar`. Deployed SHA-256 is
+`487C9B89274496C329A24D65C13F232ED9E01E5A4A5430E0DD5D0F808BFB23FD`;
+the deployed JAR embeds source commit `8d392e91`. The prior R259 JAR is
+backed up outside `Saves` at
+`data/pre-release/HywindJarBackups/Hywind-before-R260-20261011T181830Z-044835B05404.jar`
+with its original SHA-256
+`044835B0540478000CA9FDDB3D20D746D0D20785F66FF77ADD7FC66E7BD1E1CE`.
+No standalone server was launched, and no player save data were changed.
+GitHub `main` integration and connected-game acceptance remain pending.
 
 ## R259 encounter-store contention correction (2026-10-11)
 
