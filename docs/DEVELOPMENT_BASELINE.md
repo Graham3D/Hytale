@@ -2,8 +2,9 @@
 
 ## R259 encounter-store contention correction (2026-10-11)
 
-The local `codex/ready-path-gear-lock` branch contains gameplay source commit
-`98576f40d4e8a167a2c117bb3d279a387a7996e6` (R259-U7P5B,
+The published `codex/ready-path-gear-lock` branch contains gameplay commit
+`98576f40d4e8a167a2c117bb3d279a387a7996e6` and deployed build commit
+`2c20529767a5c776067050dd5bcf99b04b34551d` (R259-U7P5B,
 `0.2.0-R259-U7P5B`). In the owner's valid integrated-server JFR under
 `StartupCaptures/20261011T165547Z-9ff067cb`, a gear receipt scan held the
 `FileEncounterStore` monitor for 6.925 seconds while reading receipt JSON.
@@ -15,12 +16,17 @@ validation and atomic file replacement remain in place. A targeted
 concurrency regression confirms that encounter configuration and a second
 durable gear write proceed during a paused scan, then verifies the read
 receipts. Focused encounter/gear JUnit and the full offline Gradle `check`
-passed. The locally built `HyARPG.jar` SHA-256 was
-`4583496F4E53C6B4169A67F408D63A0ADE7A445DEF15B208A4C6E198F6052117`
-at the gameplay commit; the documentation completion commit requires a fresh
-matching package check and Guardian receipt. No server was launched, and no
-RPG save or deployed `Hywind.jar` was changed. GitHub publication and
-connected-game acceptance remain pending.
+passed at the deployed source commit; Guardian recorded matching verification
+and confirmed the GitHub task branch publication. On 2026-10-11 at 13:26 EDT,
+the candidate was deployed as `RPG/mods/Hywind.jar`, SHA-256
+`044835B0540478000CA9FDDB3D20D746D0D20785F66FF77ADD7FC66E7BD1E1CE`.
+The previous JAR, SHA-256
+`3DA33D47F2990B25FE99EFB6CEAD8543630054D35193932F261BD2F51648CA12`,
+has checksum-verified backups under `data/pre-release/HywindJarBackups`,
+outside `Saves`. The deployed package validator passed; its embedded source
+commit matches `2c205297`. The active RPG player/save data were untouched,
+and no Hytale server was launched. GitHub `main` integration and connected
+game acceptance remain pending.
 
 The server completed boot at 12:56:37 EDT. The client then spent 46.875
 seconds in `RequiredAssets` from 12:56:38.939 to 12:57:25.823 EDT. The

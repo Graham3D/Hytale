@@ -11,6 +11,7 @@ carry the same revision.
 
 | Revision | Version | Deployed (EDT) | SHA-256 | Purpose |
 | --- | --- | --- | --- | --- |
+| R259-U7P5B | `0.2.0-R259-U7P5B` | 2026-10-11 13:26:31 | `044835B0540478000CA9FDDB3D20D746D0D20785F66FF77ADD7FC66E7BD1E1CE` | QA candidate for bounded encounter gear receipt scanning; source commit `2c20529767a5c776067050dd5bcf99b04b34551d`. The separate client RequiredAssets stall remains unconfirmed. |
 | R141 | `0.1.0-merge.91` | 2026-10-04 13:28:50 | `18298D5F25582118DE92AA7B27585015C9245B06450B8C0A3C3D5256379091A8` | Remove invalid `Dropped` CustomUI event binding from the inventory Group backdrop; retain native ItemGrid and explicit Drop Selected handling. |
 | R140 | `0.1.0-merge.90` | 2026-10-04 13:21:34 | `CDC979D893FF36DD0DE934C58F58FB3392A3BD807377381412576C5839F6837F` | R139 CustomUI repair plus bounded read compatibility for preserved operator-QA loot receipts that exceed production rarity affix budgets. |
 | R139 | `0.1.0-merge.89` | 2026-10-04 13:16:58 | `DD5D557CE91CC58A9079DD8A0BA0BA65756A1D094E8A70DAD9D35772B4C1D004` | Repair Hywind inventory CustomUI import after split; package the shared grid style and textures under Hywind ownership. |
