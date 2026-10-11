@@ -75,6 +75,13 @@ integrated Java server starts a bounded 150-second JFR recording and enables
 existing Hywind ReadyPath spans before plugin initialization. It removes the
 option once it sees the integrated server, or on timeout/error. Recordings and
 manifests go under `Hytale/data/pre-release/StartupCaptures`, outside `Saves`.
+The capture folder also contains snapshots of the matching `client.log` and
+`server.log`, so Codex can read the JFR, logs and manifest together. It matches
+the server's `--client-pid`, creation time, Java runtime and native server JAR
+to the newly launched client before accepting its PID. It waits for the JFR
+to finish and stabilize before validating it; empty, incomplete or temporarily
+locked recordings are retried. On timeout or error, it retains partial evidence
+and writes an explicit failure status and reason to `manifest.json`.
 The capture is limited to 256 MiB per run. It never edits the mod JAR or player
 data. If PowerShell is forcibly closed before cleanup, run the same script with
 `-Restore`; it removes only a ReadyPath-tagged option. An existing unrelated
@@ -84,13 +91,22 @@ The owner should label at least two normal and two delayed launches; six to
 ten total attempts may be needed to catch the intermittent stall. Keep the
 same RPG save, game build, mod set and cache conditions. Provide each capture
 folder and tell Codex which runs felt slow. Each `manifest.json` records mod
-hashes, native asset size, process observation time, JFR validity and paths to
-the matching client/server logs. The JFR begins at JVM startup **only if the
+hashes, native asset size, process observation time, JFR validity and paths and
+checksums for the copied client/server logs. The JFR begins at JVM startup **only if the
 new launcher process inherits `JAVA_TOOL_OPTIONS`**. The first capture must be
 checked for the JVM's `Picked up JAVA_TOOL_OPTIONS` line and `hywind.ReadyPath`
 events; if missing, that run is not a valid before-startup capture. The
 `-CheckOnly` command is read-only. The installed Java 26 runtime successfully
 created and validated a short offline JFR using these options.
+
+The first owner-run capture on 2026-10-11 ended early when Windows PowerShell
+treated `jfr summary: file is empty` as a terminating native-command error.
+The file subsequently finalized as a valid 5,532,143-byte, 38-second JFR.
+Its matching client and RPG server logs were copied into
+`StartupCaptures/20261011T150803Z-8909cada` without changing the original
+recording; `recovery.json` records their checksums. That shorter recording
+resulted from the game stopping before the planned 150 seconds. The corrected
+script and its offline tests require no game launch.
 
 JFR profile events can show blocking stacks, allocation, class loading and
 recorded I/O. Profile thresholds may omit short reads, so summed JFR file-read

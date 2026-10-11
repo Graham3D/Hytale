@@ -15,6 +15,8 @@ $jfr = Join-Path $runtime 'jfr.exe'
 $mods = Join-Path $data 'Saves\RPG\mods'
 $captureRoot = Join-Path $data 'StartupCaptures'
 $optionName = 'JAVA_TOOL_OPTIONS'
+. (Join-Path $PSScriptRoot 'ReadyPathCapture.Core.ps1')
+$serverJar = Join-Path $env:APPDATA 'Hytale\install\pre-release\package\game\latest\Server\HytaleServer.jar'
 
 function Broadcast-Environment {
     if (-not ('ReadyPathEnvironmentNotice' -as [type])) {
@@ -38,6 +40,19 @@ function Integrated-Server {
             $_.CommandLine -match '(?i)(?:^|\s)--singleplayer(?:\s|$)' })
 }
 function Sha256([string]$path) { (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash }
+function Copy-LaunchLog([string]$sourceDir, [string]$filter, [datetime]$since, [datetime]$until, [string]$destination) {
+    if (-not (Test-Path -LiteralPath $sourceDir -PathType Container)) { return $null }
+    $source = Get-ChildItem -LiteralPath $sourceDir -File -Filter $filter |
+        Where-Object { $_.CreationTimeUtc -ge $since.AddSeconds(-10) -and $_.CreationTimeUtc -le $until.AddSeconds(10) } |
+        Sort-Object CreationTimeUtc -Descending | Select-Object -First 1
+    if (-not $source) { return $null }
+    $inputStream = [IO.File]::Open($source.FullName, [IO.FileMode]::Open, [IO.FileAccess]::Read, [IO.FileShare]::ReadWrite)
+    try {
+        $outputStream = [IO.File]::Open($destination, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::None)
+        try { $inputStream.CopyTo($outputStream) } finally { $outputStream.Dispose() }
+    } finally { $inputStream.Dispose() }
+    return [ordered]@{source=$source.FullName;copy=$destination;bytes=(Get-Item -LiteralPath $destination).Length;sha256=(Sha256 $destination)}
+}
 
 $userOption = [Environment]::GetEnvironmentVariable($optionName, 'User')
 if ($Restore) {
@@ -82,6 +97,13 @@ $options = "-Dhywind.readypath.enabled=true -Dhywind.readypath.run=$run " +
 $installed = $false
 $server = $null
 $captureStatus = 'NO_SERVER_OBSERVED'
+$failureReason = $null
+$observedAt = $null
+$matchedClient = $null
+$lastJfrReason = $null
+$clientLog = $null
+$serverLog = $null
+$clients = @{}
 try {
     [Environment]::SetEnvironmentVariable($optionName, $options, 'User')
     $installed = $true
@@ -90,12 +112,14 @@ try {
     Write-Output 'Now launch Hytale normally and enter the existing RPG save. Leave this PowerShell window open.'
     $deadline = (Get-Date).AddMinutes($WaitMinutes)
     while ((Get-Date) -lt $deadline) {
-        $server = @(Integrated-Server | Select-Object -First 1)
-        if ($server.Count) { break }
-        Start-Sleep -Milliseconds 250
+        foreach ($candidate in @(Get-CimInstance Win32_Process -Filter "Name = 'HytaleClient.exe'")) {
+            if ($candidate.CreationDate.ToUniversalTime() -ge $armedAt.AddSeconds(-2)) { $clients[$candidate.ProcessId] = $candidate }
+        }
+        $match = Select-ReadyPathServer @($clients.Values) @(Integrated-Server) $armedAt $java $serverJar
+        if ($match) { $server = $match.Server; $matchedClient = $match.Client; break }
+        Start-Sleep -Seconds 1
     }
-    if (-not $server.Count) { throw "No integrated server appeared within $WaitMinutes minutes." }
-    $server = $server[0]
+    if (-not $server) { throw "No integrated server belonging to a newly launched Hytale client appeared within $WaitMinutes minutes." }
     $observedAt = [DateTime]::UtcNow
     $captureStatus = 'SERVER_SEEN_RECORDING_PENDING'
     Write-Output "Integrated server PID $($server.ProcessId) detected. Waiting for the bounded JFR recording."
@@ -105,46 +129,67 @@ try {
         Broadcast-Environment
         $installed = $false
     }
-    $finishBy = (Get-Date).AddSeconds($RecordingSeconds + 45)
-    while ((Get-Date) -lt $finishBy) {
-        if (Test-Path -LiteralPath $recording -PathType Leaf) {
-            $null = & $jfr summary $recording 2>$null
-            if ($LASTEXITCODE -eq 0) { $captureStatus = 'JFR_VALID'; break }
-        }
+    $serverStarted = $server.CreationDate.ToUniversalTime()
+    $finishBy = $serverStarted.AddSeconds($RecordingSeconds + 60)
+    $previousLength = -1L
+    $stablePolls = 0
+    $serverExitedAt = $null
+    while ([DateTime]::UtcNow -lt $finishBy) {
+        $running = Get-CimInstance Win32_Process -Filter "ProcessId = $($server.ProcessId)" -ErrorAction SilentlyContinue
+        if (-not $running -and -not $serverExitedAt) { $serverExitedAt = [DateTime]::UtcNow }
+        $finalizationExpected = [DateTime]::UtcNow -ge $serverStarted.AddSeconds($RecordingSeconds + 3) -or
+            ($serverExitedAt -and [DateTime]::UtcNow -ge $serverExitedAt.AddSeconds(4))
+        $check = Test-ReadyPathRecording $recording $jfr $previousLength $stablePolls ([bool]$finalizationExpected)
+        $previousLength = $check.Length
+        $stablePolls = $check.StablePolls
+        $lastJfrReason = $check.Reason
+        if ($check.Ready) { $captureStatus = 'JFR_VALID'; break }
         Start-Sleep -Seconds 2
     }
     if ($captureStatus -ne 'JFR_VALID') {
         $captureStatus = 'JFR_MISSING_OR_INCOMPLETE'
-        Write-Warning 'No complete JFR was found. Check whether the launcher inherited JAVA_TOOL_OPTIONS.'
+        $failureReason = "No complete JFR was ready before the deadline. Last check: $lastJfrReason"
     }
-    $jarFiles = @(Get-ChildItem -LiteralPath $mods -File -Filter '*.jar' | ForEach-Object {
-        [ordered]@{name=$_.Name;bytes=$_.Length;sha256=(Sha256 $_.FullName)}
-    })
-    $assetFile = Get-Item -LiteralPath (Join-Path $env:APPDATA 'Hytale\install\pre-release\package\game\latest\Assets.zip')
-    $clientLog = @(Get-ChildItem -LiteralPath (Join-Path $data 'Logs') -File -Filter '*_client.log' |
-        Where-Object { $_.CreationTimeUtc -ge $armedAt.AddSeconds(-10) } |
-        Sort-Object CreationTimeUtc -Descending | Select-Object -First 1)
-    $serverLog = @(Get-ChildItem -LiteralPath (Join-Path $data 'Saves\RPG\logs') -File -Filter '*_server.log' |
-        Where-Object { $_.CreationTimeUtc -ge $armedAt.AddSeconds(-10) } |
-        Sort-Object CreationTimeUtc -Descending | Select-Object -First 1)
-    [ordered]@{
-        schemaVersion=1;run=$run;status=$captureStatus;armedAtUtc=$armedAt.ToString('o')
-        serverObservedAtUtc=$observedAt.ToString('o');serverPid=$server.ProcessId
-        serverProcessCreatedAtUtc=$server.CreationDate.ToUniversalTime().ToString('o')
-        recordingSeconds=$RecordingSeconds;jfrPath=$recording
-        jfrSha256=if($captureStatus -eq 'JFR_VALID'){Sha256 $recording}else{$null}
-        clientLog=if($clientLog.Count){$clientLog[0].FullName}else{$null}
-        serverLog=if($serverLog.Count){$serverLog[0].FullName}else{$null}
-        nativeAssetsZipBytes=$assetFile.Length;nativeAssetsZipModifiedUtc=$assetFile.LastWriteTimeUtc.ToString('o')
-        mods=$jarFiles;connectedOutcome='OWNER_TO_LABEL_NORMAL_OR_SLOW'
-        note='JFR and ReadyPath observe server work; logs do not prove client-visible play.'
-    } | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $folder 'manifest.json') -Encoding UTF8
-    Write-Output "CAPTURE $captureStatus`: $folder"
-    Write-Output 'Tell Codex which runs felt normal or delayed, and provide this capture folder with its client/server logs.'
+} catch {
+    if ($captureStatus -ne 'JFR_MISSING_OR_INCOMPLETE') { $captureStatus = 'FAILED' }
+    $failureReason = $_.Exception.Message
 } finally {
     if ($installed -and [Environment]::GetEnvironmentVariable($optionName, 'User') -ceq $options) {
-        [Environment]::SetEnvironmentVariable($optionName, $null, 'User')
-        Broadcast-Environment
-        Write-Output 'ReadyPath Java startup option restored to unset.'
+        try {
+            [Environment]::SetEnvironmentVariable($optionName, $null, 'User')
+            Broadcast-Environment
+            Write-Output 'ReadyPath Java startup option restored to unset.'
+        } catch { $captureStatus = 'FAILED'; $failureReason = "Environment cleanup failed: $($_.Exception.Message)" }
     }
+    try {
+        $clientUntil = if ($matchedClient) { $matchedClient.CreationDate.ToUniversalTime().AddSeconds(60) } else { [DateTime]::UtcNow }
+        $clientLog = Copy-LaunchLog (Join-Path $data 'Logs') '*_client.log' $armedAt $clientUntil (Join-Path $folder 'client.log')
+        if ($server) {
+            $serverStart = $server.CreationDate.ToUniversalTime()
+            $serverLog = Copy-LaunchLog (Join-Path $data 'Saves\RPG\logs') '*_server.log' $serverStart.AddSeconds(-10) $serverStart.AddSeconds(60) (Join-Path $folder 'server.log')
+        }
+    } catch { $captureStatus = 'FAILED'; $failureReason = "Log snapshot failed: $($_.Exception.Message)" }
+    try {
+        $jarFiles = @(Get-ChildItem -LiteralPath $mods -File -Filter '*.jar' | ForEach-Object {
+            [ordered]@{name=$_.Name;bytes=$_.Length;sha256=(Sha256 $_.FullName)}
+        })
+        $assetFile = Get-Item -LiteralPath (Join-Path $env:APPDATA 'Hytale\install\pre-release\package\game\latest\Assets.zip')
+        [ordered]@{
+            schemaVersion=2;run=$run;status=$captureStatus;failureReason=$failureReason;armedAtUtc=$armedAt.ToString('o')
+            serverObservedAtUtc=if($observedAt){$observedAt.ToString('o')}else{$null}
+            serverPid=if($server){$server.ProcessId}else{$null}
+            clientPid=if($matchedClient){$matchedClient.ProcessId}else{$null}
+            serverProcessCreatedAtUtc=if($server){$server.CreationDate.ToUniversalTime().ToString('o')}else{$null}
+            recordingSeconds=$RecordingSeconds;jfrPath=$recording
+            jfrBytes=if(Test-Path -LiteralPath $recording -PathType Leaf){(Get-Item -LiteralPath $recording).Length}else{0}
+            jfrSha256=if($captureStatus -eq 'JFR_VALID'){Sha256 $recording}else{$null}
+            clientLog=$clientLog;serverLog=$serverLog
+            nativeAssetsZipBytes=$assetFile.Length;nativeAssetsZipModifiedUtc=$assetFile.LastWriteTimeUtc.ToString('o')
+            mods=$jarFiles;connectedOutcome='OWNER_TO_LABEL_NORMAL_OR_SLOW'
+            note='JFR and ReadyPath observe server work; logs do not prove client-visible play.'
+        } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $folder 'manifest.json') -Encoding UTF8
+    } catch { $captureStatus = 'FAILED'; $failureReason = "Manifest write failed: $($_.Exception.Message)" }
 }
+Write-Output "CAPTURE $($captureStatus): $folder"
+if ($captureStatus -ne 'JFR_VALID') { throw "Capture failed: $failureReason. Partial files were retained in $folder" }
+Write-Output 'JFR and client/server log snapshots are in this folder. Tell Codex whether this launch felt normal or delayed.'
