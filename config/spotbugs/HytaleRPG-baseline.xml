@@ -15874,6 +15874,393 @@ to instruct SpotBugs that ignoring the return value of this method is acceptable
   <BugCode abbrev="FE">
     <Description>Test for floating point equality</Description>
   </BugCode>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="bad44e5f4047e468e94695b637669309" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.hytalerpg.commands.RpgManaguardCommand(HytaleSupportSystem) may expose internal representation by storing an externally mutable object into RpgManaguardCommand.support</LongMessage>
+    <Class classname="com.inigmasgames.hytalerpg.commands.RpgManaguardCommand" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.commands.RpgManaguardCommand" start="18" end="29" sourcefile="RpgManaguardCommand.java" sourcepath="com/inigmasgames/hytalerpg/commands/RpgManaguardCommand.java" relSourcepath="java\com\inigmasgames\hytalerpg\commands\RpgManaguardCommand.java">
+        <Message>At RpgManaguardCommand.java:[lines 18-29]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.hytalerpg.commands.RpgManaguardCommand</Message>
+    </Class>
+    <Method classname="com.inigmasgames.hytalerpg.commands.RpgManaguardCommand" name="&lt;init&gt;" signature="(Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.commands.RpgManaguardCommand" start="20" end="22" startBytecode="0" endBytecode="99" sourcefile="RpgManaguardCommand.java" sourcepath="com/inigmasgames/hytalerpg/commands/RpgManaguardCommand.java" relSourcepath="java\com\inigmasgames\hytalerpg\commands\RpgManaguardCommand.java"/>
+      <Message>In method new com.inigmasgames.hytalerpg.commands.RpgManaguardCommand(HytaleSupportSystem)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.hytalerpg.commands.RpgManaguardCommand" name="support" signature="Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.commands.RpgManaguardCommand" sourcefile="RpgManaguardCommand.java" sourcepath="com/inigmasgames/hytalerpg/commands/RpgManaguardCommand.java" relSourcepath="java\com\inigmasgames\hytalerpg\commands\RpgManaguardCommand.java">
+        <Message>In RpgManaguardCommand.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.hytalerpg.commands.RpgManaguardCommand.support</Message>
+    </Field>
+    <LocalVariable name="support" register="1" pc="25" role="LOCAL_VARIABLE_NAMED">
+      <Message>Local variable named support</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.hytalerpg.commands.RpgManaguardCommand" primary="true" start="21" end="21" startBytecode="25" endBytecode="25" sourcefile="RpgManaguardCommand.java" sourcepath="com/inigmasgames/hytalerpg/commands/RpgManaguardCommand.java" relSourcepath="java\com\inigmasgames\hytalerpg\commands\RpgManaguardCommand.java">
+      <Message>At RpgManaguardCommand.java:[line 21]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP" priority="2" rank="18" abbrev="EI" category="MALICIOUS_CODE" instanceHash="2ddf63f5846b323d9171ebb61ca98fb3" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by returning reference to mutable object</ShortMessage>
+    <LongMessage>com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem.configureSupport(RpgLoadoutService) may expose internal representation by returning HytaleSkillExecutionSystem.support</LongMessage>
+    <Class classname="com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem" start="127" end="4656" sourcefile="HytaleSkillExecutionSystem.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\HytaleSkillExecutionSystem.java">
+        <Message>At HytaleSkillExecutionSystem.java:[lines 127-4656]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem</Message>
+    </Class>
+    <Method classname="com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem" name="configureSupport" signature="(Lcom/inigmasgames/hytalerpg/progress/RpgLoadoutService;)Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem" start="585" end="586" startBytecode="0" endBytecode="131" sourcefile="HytaleSkillExecutionSystem.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\HytaleSkillExecutionSystem.java"/>
+      <Message>In method com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem.configureSupport(RpgLoadoutService)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem" name="support" signature="Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem" sourcefile="HytaleSkillExecutionSystem.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\HytaleSkillExecutionSystem.java">
+        <Message>In HytaleSkillExecutionSystem.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem.support</Message>
+    </Field>
+    <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem" primary="true" start="586" end="586" startBytecode="66" endBytecode="66" sourcefile="HytaleSkillExecutionSystem.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\HytaleSkillExecutionSystem.java">
+      <Message>At HytaleSkillExecutionSystem.java:[line 586]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="11bd4e826cf1554bdc44ad8ef1b98c6d" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem$Absorb(HytaleSupportSystem) may expose internal representation by storing an externally mutable object into HytaleSupportSystem$Absorb.support</LongMessage>
+    <Class classname="com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem$Absorb" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem$Absorb" start="893" end="922" sourcefile="HytaleSupportSystem.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\HytaleSupportSystem.java">
+        <Message>At HytaleSupportSystem.java:[lines 893-922]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem$Absorb</Message>
+    </Class>
+    <Method classname="com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem$Absorb" name="&lt;init&gt;" signature="(Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem$Absorb" start="895" end="895" startBytecode="0" endBytecode="61" sourcefile="HytaleSupportSystem.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\HytaleSupportSystem.java"/>
+      <Message>In method new com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem$Absorb(HytaleSupportSystem)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem$Absorb" name="support" signature="Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem$Absorb" sourcefile="HytaleSupportSystem.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\HytaleSupportSystem.java">
+        <Message>In HytaleSupportSystem.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem$Absorb.support</Message>
+    </Field>
+    <LocalVariable name="support" register="1" pc="6" role="LOCAL_VARIABLE_NAMED">
+      <Message>Local variable named support</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem$Absorb" primary="true" start="895" end="895" startBytecode="6" endBytecode="6" sourcefile="HytaleSupportSystem.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\HytaleSupportSystem.java">
+      <Message>At HytaleSupportSystem.java:[line 895]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="a47839c2bceb9bec6e5eeb3cc16ffb9d" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem$Removal(HytaleSupportSystem) may expose internal representation by storing an externally mutable object into HytaleSupportSystem$Removal.support</LongMessage>
+    <Class classname="com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem$Removal" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem$Removal" start="926" end="936" sourcefile="HytaleSupportSystem.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\HytaleSupportSystem.java">
+        <Message>At HytaleSupportSystem.java:[lines 926-936]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem$Removal</Message>
+    </Class>
+    <Method classname="com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem$Removal" name="&lt;init&gt;" signature="(Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem$Removal" start="926" end="926" startBytecode="0" endBytecode="61" sourcefile="HytaleSupportSystem.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\HytaleSupportSystem.java"/>
+      <Message>In method new com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem$Removal(HytaleSupportSystem)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem$Removal" name="support" signature="Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem$Removal" sourcefile="HytaleSupportSystem.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\HytaleSupportSystem.java">
+        <Message>In HytaleSupportSystem.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem$Removal.support</Message>
+    </Field>
+    <LocalVariable name="support" register="1" pc="6" role="LOCAL_VARIABLE_NAMED">
+      <Message>Local variable named support</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem$Removal" primary="true" start="926" end="926" startBytecode="6" endBytecode="6" sourcefile="HytaleSupportSystem.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\HytaleSupportSystem.java">
+      <Message>At HytaleSupportSystem.java:[line 926]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="dff8e3f8ec9fd51b45865aa850fa3596" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyAura(HytaleDifficultyCombat, HytaleSupportSystem, EnemyNativeBindings, EnemyBalance) may expose internal representation by storing an externally mutable object into NativeEnemyAura.support</LongMessage>
+    <Class classname="com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyAura" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyAura" start="24" end="135" sourcefile="NativeEnemyAura.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/NativeEnemyAura.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\NativeEnemyAura.java">
+        <Message>At NativeEnemyAura.java:[lines 24-135]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyAura</Message>
+    </Class>
+    <Method classname="com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyAura" name="&lt;init&gt;" signature="(Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleDifficultyCombat;Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;Lcom/inigmasgames/hytalerpg/enemies/EnemyNativeBindings;Lcom/inigmasgames/hytalerpg/enemies/EnemyBalance;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyAura" start="26" end="30" startBytecode="0" endBytecode="173" sourcefile="NativeEnemyAura.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/NativeEnemyAura.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\NativeEnemyAura.java"/>
+      <Message>In method new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyAura(HytaleDifficultyCombat, HytaleSupportSystem, EnemyNativeBindings, EnemyBalance)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyAura" name="support" signature="Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyAura" sourcefile="NativeEnemyAura.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/NativeEnemyAura.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\NativeEnemyAura.java">
+        <Message>In NativeEnemyAura.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyAura.support</Message>
+    </Field>
+    <LocalVariable name="?" register="-1" pc="33" role="LOCAL_VARIABLE_UNKNOWN">
+      <Message>Local variable stored in JVM register ?</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyAura" primary="true" start="27" end="27" startBytecode="34" endBytecode="34" sourcefile="NativeEnemyAura.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/NativeEnemyAura.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\NativeEnemyAura.java">
+      <Message>At NativeEnemyAura.java:[line 27]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="b75e5871cb0c6a448c6fc58a3924a56c" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyStatuses(HytaleSkillExecutionSystem, HytaleSupportSystem, HytaleDifficultyCombat, RpgCombatKernel, HytaleBossBarTracker, CombatTrace) may expose internal representation by storing an externally mutable object into NativeEnemyStatuses.support</LongMessage>
+    <Class classname="com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyStatuses" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyStatuses" start="10" end="87" sourcefile="NativeEnemyStatuses.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/NativeEnemyStatuses.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\NativeEnemyStatuses.java">
+        <Message>At NativeEnemyStatuses.java:[lines 10-87]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyStatuses</Message>
+    </Class>
+    <Method classname="com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyStatuses" name="&lt;init&gt;" signature="(Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem;Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleDifficultyCombat;Lcom/inigmasgames/hytalerpg/combat/RpgCombatKernel;Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleBossBarTracker;Lcom/inigmasgames/hytalerpg/combat/diagnostics/CombatTrace;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyStatuses" start="16" end="19" startBytecode="0" endBytecode="202" sourcefile="NativeEnemyStatuses.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/NativeEnemyStatuses.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\NativeEnemyStatuses.java"/>
+      <Message>In method new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyStatuses(HytaleSkillExecutionSystem, HytaleSupportSystem, HytaleDifficultyCombat, RpgCombatKernel, HytaleBossBarTracker, CombatTrace)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyStatuses" name="support" signature="Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyStatuses" sourcefile="NativeEnemyStatuses.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/NativeEnemyStatuses.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\NativeEnemyStatuses.java">
+        <Message>In NativeEnemyStatuses.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyStatuses.support</Message>
+    </Field>
+    <LocalVariable name="?" register="-1" pc="33" role="LOCAL_VARIABLE_UNKNOWN">
+      <Message>Local variable stored in JVM register ?</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyStatuses" primary="true" start="17" end="17" startBytecode="34" endBytecode="34" sourcefile="NativeEnemyStatuses.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/NativeEnemyStatuses.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\NativeEnemyStatuses.java">
+      <Message>At NativeEnemyStatuses.java:[line 17]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="f2c905ea91f290461f26595615372237" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.hytalerpg.execution.hytale.NativeSentinelItemAuras(HytaleSupportSystem, RpgCombatKernel, HytaleBossBarTracker, CombatTrace) may expose internal representation by storing an externally mutable object into NativeSentinelItemAuras.support</LongMessage>
+    <Class classname="com.inigmasgames.hytalerpg.execution.hytale.NativeSentinelItemAuras" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.NativeSentinelItemAuras" start="26" end="154" sourcefile="NativeSentinelItemAuras.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/NativeSentinelItemAuras.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\NativeSentinelItemAuras.java">
+        <Message>At NativeSentinelItemAuras.java:[lines 26-154]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.hytalerpg.execution.hytale.NativeSentinelItemAuras</Message>
+    </Class>
+    <Method classname="com.inigmasgames.hytalerpg.execution.hytale.NativeSentinelItemAuras" name="&lt;init&gt;" signature="(Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;Lcom/inigmasgames/hytalerpg/combat/RpgCombatKernel;Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleBossBarTracker;Lcom/inigmasgames/hytalerpg/combat/diagnostics/CombatTrace;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.NativeSentinelItemAuras" start="37" end="40" startBytecode="0" endBytecode="188" sourcefile="NativeSentinelItemAuras.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/NativeSentinelItemAuras.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\NativeSentinelItemAuras.java"/>
+      <Message>In method new com.inigmasgames.hytalerpg.execution.hytale.NativeSentinelItemAuras(HytaleSupportSystem, RpgCombatKernel, HytaleBossBarTracker, CombatTrace)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.hytalerpg.execution.hytale.NativeSentinelItemAuras" name="support" signature="Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.NativeSentinelItemAuras" sourcefile="NativeSentinelItemAuras.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/NativeSentinelItemAuras.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\NativeSentinelItemAuras.java">
+        <Message>In NativeSentinelItemAuras.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.hytalerpg.execution.hytale.NativeSentinelItemAuras.support</Message>
+    </Field>
+    <LocalVariable name="?" register="-1" pc="44" role="LOCAL_VARIABLE_UNKNOWN">
+      <Message>Local variable stored in JVM register ?</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.NativeSentinelItemAuras" primary="true" start="38" end="38" startBytecode="45" endBytecode="45" sourcefile="NativeSentinelItemAuras.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/NativeSentinelItemAuras.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\NativeSentinelItemAuras.java">
+      <Message>At NativeSentinelItemAuras.java:[line 38]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="8d376cca3da6df01ac576988e310b3b4" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$HealthCap(HytaleSupportSystem) may expose internal representation by storing an externally mutable object into SupportDamageSystems$HealthCap.support</LongMessage>
+    <Class classname="com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$HealthCap" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$HealthCap" start="91" end="131" sourcefile="SupportDamageSystems.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportDamageSystems.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportDamageSystems.java">
+        <Message>At SupportDamageSystems.java:[lines 91-131]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$HealthCap</Message>
+    </Class>
+    <Method classname="com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$HealthCap" name="&lt;init&gt;" signature="(Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$HealthCap" start="94" end="94" startBytecode="0" endBytecode="83" sourcefile="SupportDamageSystems.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportDamageSystems.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportDamageSystems.java"/>
+      <Message>In method new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$HealthCap(HytaleSupportSystem)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$HealthCap" name="support" signature="Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$HealthCap" sourcefile="SupportDamageSystems.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportDamageSystems.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportDamageSystems.java">
+        <Message>In SupportDamageSystems.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$HealthCap.support</Message>
+    </Field>
+    <LocalVariable name="support" register="1" pc="20" role="LOCAL_VARIABLE_NAMED">
+      <Message>Local variable named support</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$HealthCap" primary="true" start="94" end="94" startBytecode="20" endBytecode="20" sourcefile="SupportDamageSystems.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportDamageSystems.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportDamageSystems.java">
+      <Message>At SupportDamageSystems.java:[line 94]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="dd1cc6cc3b015f8020f6f56ed30a6a40" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$Reflect(HytaleSupportSystem) may expose internal representation by storing an externally mutable object into SupportDamageSystems$Reflect.support</LongMessage>
+    <Class classname="com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$Reflect" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$Reflect" start="243" end="294" sourcefile="SupportDamageSystems.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportDamageSystems.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportDamageSystems.java">
+        <Message>At SupportDamageSystems.java:[lines 243-294]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$Reflect</Message>
+    </Class>
+    <Method classname="com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$Reflect" name="&lt;init&gt;" signature="(Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$Reflect" start="246" end="246" startBytecode="0" endBytecode="61" sourcefile="SupportDamageSystems.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportDamageSystems.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportDamageSystems.java"/>
+      <Message>In method new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$Reflect(HytaleSupportSystem)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$Reflect" name="support" signature="Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$Reflect" sourcefile="SupportDamageSystems.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportDamageSystems.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportDamageSystems.java">
+        <Message>In SupportDamageSystems.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$Reflect.support</Message>
+    </Field>
+    <LocalVariable name="support" register="1" pc="6" role="LOCAL_VARIABLE_NAMED">
+      <Message>Local variable named support</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$Reflect" primary="true" start="246" end="246" startBytecode="6" endBytecode="6" sourcefile="SupportDamageSystems.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportDamageSystems.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportDamageSystems.java">
+      <Message>At SupportDamageSystems.java:[line 246]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="255fe3a5b802987ae82aeffd39d8eebf" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$Shield(HytaleSupportSystem) may expose internal representation by storing an externally mutable object into SupportDamageSystems$Shield.support</LongMessage>
+    <Class classname="com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$Shield" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$Shield" start="133" end="227" sourcefile="SupportDamageSystems.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportDamageSystems.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportDamageSystems.java">
+        <Message>At SupportDamageSystems.java:[lines 133-227]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$Shield</Message>
+    </Class>
+    <Method classname="com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$Shield" name="&lt;init&gt;" signature="(Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$Shield" start="135" end="135" startBytecode="0" endBytecode="61" sourcefile="SupportDamageSystems.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportDamageSystems.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportDamageSystems.java"/>
+      <Message>In method new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$Shield(HytaleSupportSystem)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$Shield" name="support" signature="Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$Shield" sourcefile="SupportDamageSystems.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportDamageSystems.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportDamageSystems.java">
+        <Message>In SupportDamageSystems.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$Shield.support</Message>
+    </Field>
+    <LocalVariable name="support" register="1" pc="6" role="LOCAL_VARIABLE_NAMED">
+      <Message>Local variable named support</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems$Shield" primary="true" start="135" end="135" startBytecode="6" endBytecode="6" sourcefile="SupportDamageSystems.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportDamageSystems.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportDamageSystems.java">
+      <Message>At SupportDamageSystems.java:[line 135]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="cb7f012b45f237813ceb50c425b40bf2" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$DirectDamageBreak(HytaleSupportSystem) may expose internal representation by storing an externally mutable object into SupportNativeEffects$DirectDamageBreak.support</LongMessage>
+    <Class classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$DirectDamageBreak" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$DirectDamageBreak" start="312" end="328" sourcefile="SupportNativeEffects.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportNativeEffects.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportNativeEffects.java">
+        <Message>At SupportNativeEffects.java:[lines 312-328]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$DirectDamageBreak</Message>
+    </Class>
+    <Method classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$DirectDamageBreak" name="&lt;init&gt;" signature="(Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$DirectDamageBreak" start="314" end="314" startBytecode="0" endBytecode="61" sourcefile="SupportNativeEffects.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportNativeEffects.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportNativeEffects.java"/>
+      <Message>In method new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$DirectDamageBreak(HytaleSupportSystem)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$DirectDamageBreak" name="support" signature="Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$DirectDamageBreak" sourcefile="SupportNativeEffects.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportNativeEffects.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportNativeEffects.java">
+        <Message>In SupportNativeEffects.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$DirectDamageBreak.support</Message>
+    </Field>
+    <LocalVariable name="support" register="1" pc="6" role="LOCAL_VARIABLE_NAMED">
+      <Message>Local variable named support</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$DirectDamageBreak" primary="true" start="314" end="314" startBytecode="6" endBytecode="6" sourcefile="SupportNativeEffects.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportNativeEffects.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportNativeEffects.java">
+      <Message>At SupportNativeEffects.java:[line 314]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="45c4eabd43240079db974c1dd823cd80" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$NativeOutgoing(HytaleSupportSystem) may expose internal representation by storing an externally mutable object into SupportNativeEffects$NativeOutgoing.support</LongMessage>
+    <Class classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$NativeOutgoing" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$NativeOutgoing" start="277" end="310" sourcefile="SupportNativeEffects.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportNativeEffects.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportNativeEffects.java">
+        <Message>At SupportNativeEffects.java:[lines 277-310]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$NativeOutgoing</Message>
+    </Class>
+    <Method classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$NativeOutgoing" name="&lt;init&gt;" signature="(Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$NativeOutgoing" start="279" end="279" startBytecode="0" endBytecode="61" sourcefile="SupportNativeEffects.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportNativeEffects.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportNativeEffects.java"/>
+      <Message>In method new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$NativeOutgoing(HytaleSupportSystem)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$NativeOutgoing" name="support" signature="Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$NativeOutgoing" sourcefile="SupportNativeEffects.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportNativeEffects.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportNativeEffects.java">
+        <Message>In SupportNativeEffects.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$NativeOutgoing.support</Message>
+    </Field>
+    <LocalVariable name="support" register="1" pc="6" role="LOCAL_VARIABLE_NAMED">
+      <Message>Local variable named support</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$NativeOutgoing" primary="true" start="279" end="279" startBytecode="6" endBytecode="6" sourcefile="SupportNativeEffects.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportNativeEffects.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportNativeEffects.java">
+      <Message>At SupportNativeEffects.java:[line 279]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="6f79a13557a5b99172c76e7ec644b3ca" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Projection(HytaleSupportSystem) may expose internal representation by storing an externally mutable object into SupportNativeEffects$Projection.support</LongMessage>
+    <Class classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Projection" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Projection" start="148" end="210" sourcefile="SupportNativeEffects.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportNativeEffects.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportNativeEffects.java">
+        <Message>At SupportNativeEffects.java:[lines 148-210]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Projection</Message>
+    </Class>
+    <Method classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Projection" name="&lt;init&gt;" signature="(Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Projection" start="148" end="148" startBytecode="0" endBytecode="61" sourcefile="SupportNativeEffects.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportNativeEffects.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportNativeEffects.java"/>
+      <Message>In method new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Projection(HytaleSupportSystem)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Projection" name="support" signature="Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Projection" sourcefile="SupportNativeEffects.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportNativeEffects.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportNativeEffects.java">
+        <Message>In SupportNativeEffects.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Projection.support</Message>
+    </Field>
+    <LocalVariable name="support" register="1" pc="6" role="LOCAL_VARIABLE_NAMED">
+      <Message>Local variable named support</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Projection" primary="true" start="148" end="148" startBytecode="6" endBytecode="6" sourcefile="SupportNativeEffects.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportNativeEffects.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportNativeEffects.java">
+      <Message>At SupportNativeEffects.java:[line 148]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="75ae683efc2d8dbc4d6b1ef6ccdc6df3" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Removal(HytaleSupportSystem) may expose internal representation by storing an externally mutable object into SupportNativeEffects$Removal.support</LongMessage>
+    <Class classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Removal" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Removal" start="332" end="342" sourcefile="SupportNativeEffects.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportNativeEffects.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportNativeEffects.java">
+        <Message>At SupportNativeEffects.java:[lines 332-342]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Removal</Message>
+    </Class>
+    <Method classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Removal" name="&lt;init&gt;" signature="(Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Removal" start="332" end="332" startBytecode="0" endBytecode="61" sourcefile="SupportNativeEffects.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportNativeEffects.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportNativeEffects.java"/>
+      <Message>In method new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Removal(HytaleSupportSystem)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Removal" name="support" signature="Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Removal" sourcefile="SupportNativeEffects.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportNativeEffects.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportNativeEffects.java">
+        <Message>In SupportNativeEffects.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Removal.support</Message>
+    </Field>
+    <LocalVariable name="support" register="1" pc="6" role="LOCAL_VARIABLE_NAMED">
+      <Message>Local variable named support</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Removal" primary="true" start="332" end="332" startBytecode="6" endBytecode="6" sourcefile="SupportNativeEffects.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportNativeEffects.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportNativeEffects.java">
+      <Message>At SupportNativeEffects.java:[line 332]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="11d4b2cd6bd357d351a6d3e5e823fc5f" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Retreat(HytaleSupportSystem) may expose internal representation by storing an externally mutable object into SupportNativeEffects$Retreat.support</LongMessage>
+    <Class classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Retreat" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Retreat" start="215" end="275" sourcefile="SupportNativeEffects.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportNativeEffects.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportNativeEffects.java">
+        <Message>At SupportNativeEffects.java:[lines 215-275]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Retreat</Message>
+    </Class>
+    <Method classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Retreat" name="&lt;init&gt;" signature="(Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Retreat" start="215" end="215" startBytecode="0" endBytecode="61" sourcefile="SupportNativeEffects.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportNativeEffects.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportNativeEffects.java"/>
+      <Message>In method new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Retreat(HytaleSupportSystem)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Retreat" name="support" signature="Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Retreat" sourcefile="SupportNativeEffects.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportNativeEffects.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportNativeEffects.java">
+        <Message>In SupportNativeEffects.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Retreat.support</Message>
+    </Field>
+    <LocalVariable name="support" register="1" pc="6" role="LOCAL_VARIABLE_NAMED">
+      <Message>Local variable named support</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects$Retreat" primary="true" start="215" end="215" startBytecode="6" endBytecode="6" sourcefile="SupportNativeEffects.java" sourcepath="com/inigmasgames/hytalerpg/execution/hytale/SupportNativeEffects.java" relSourcepath="java\com\inigmasgames\hytalerpg\execution\hytale\SupportNativeEffects.java">
+      <Message>At SupportNativeEffects.java:[line 215]</Message>
+    </SourceLine>
+  </BugInstance>
   <Errors errors="0" missingClasses="0"></Errors>
   <FindBugsSummary timestamp="Sat, 10 Oct 2026 14:57:05 -0400" total_classes="0" referenced_classes="0" total_bugs="546" total_size="0" num_packages="32" java_version="25.0.4" vm_version="25.0.4+7-LTS" cpu_seconds="111.00" clock_seconds="34.48" peak_mbytes="1853.96" alloc_mbytes="16168.00" gc_seconds="0.38" priority_2="522" priority_1="24">
     <FileStats path="com/inigmasgames/hytalerpg/combat/RpgCombatKernel.java" bugCount="5" size="0" bugHash="a111fe651ee4d2399c3eca94dc75bc9a"/>

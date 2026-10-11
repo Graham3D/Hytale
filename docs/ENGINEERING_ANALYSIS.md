@@ -41,3 +41,12 @@ The initial R250-U7P5B exploratory pass found **546** root, **32** CanvasUI, and
 - **Understandable false positive or accepted API design:** `EnemyAffixRegistry` null-path warnings overlook its throwing `require` guard; `RpgCombatKernel` intentionally returns mutable service references to internal collaborators. These remain visible in the exploratory report.
 
 The initial baseline records the current findings only; it is not a declaration that every warning is harmless. Do not change gameplay to silence analysis without a targeted defect and regression test. The user's in-game QA workflow remains unchanged.
+
+R261-A review added 15 existing collaborator-reference findings to the root
+SpotBugs baseline: 14 `EI_EXPOSE_REP2` findings for intentionally injected
+Hywind support authorities and one `EI_EXPOSE_REP` finding for the existing
+`configureSupport` authority return. Their constructors and return path are
+internal registration wiring, not untrusted object exposure. No gameplay code
+was changed to suppress these legacy findings; exploratory reports retain
+them. The new Cyclone coordinator and death hook use narrowly justified
+source annotations for the same intentional injection pattern.

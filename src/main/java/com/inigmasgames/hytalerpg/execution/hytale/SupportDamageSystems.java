@@ -22,6 +22,8 @@ public final class SupportDamageSystems {
             ignored->Double.NaN,false,"InigmasGames:SupportHealthBefore",Codec.DOUBLE);
     private static final com.hypixel.hytale.server.core.meta.MetaKey<Boolean> OBSERVED=Damage.META_REGISTRY.registerMetaObject(
             ignored->false,false,"InigmasGames:SupportDamageObserved",Codec.BOOLEAN);
+    private static final com.hypixel.hytale.server.core.meta.MetaKey<String> CYCLONE_RECEIPT=Damage.META_REGISTRY.registerMetaObject(
+            ignored->"",false,"InigmasGames:CycloneDurableDebitReceipt",Codec.STRING);
     private static double health(ArchetypeChunk<EntityStore> chunk,int index){
         var stats=chunk.getComponent(index,EntityStatMap.getComponentType());
         var value=stats==null?null:stats.get(DefaultEntityStatTypes.getHealth());return value==null?Double.NaN:value.get();
@@ -168,7 +170,27 @@ public final class SupportDamageSystems {
                         "noProc",true,"noLeech",true,"noCredit",true));
                 return !result.cancelled();
             });
-            damage.setAmount((float)hit.remainder());
+            double afterFinite=hit.remainder();
+            boolean durableAbsorbed=false;
+            var player=store.getComponent(ref,com.hypixel.hytale.server.core.universe.PlayerRef.getComponentType());
+            if(player!=null&&afterFinite>0&&support.durableCycloneEnabled()){
+                String receipt=damage.getIfPresentMetaObject(CYCLONE_RECEIPT);
+                if(receipt==null||receipt.isEmpty()){
+                    receipt=UUID.randomUUID().toString();damage.putMetaObject(CYCLONE_RECEIPT,receipt);
+                }
+                var durable=support.durableCycloneDebit(player,receipt,afterFinite);
+                if(durable!=null&&durable.absorbed()>0){
+                    durableAbsorbed=true;
+                    afterFinite=durable.damageRemaining();
+                    HytaleDamageLifecycleSystems.combatStage(damage,"Hywind durable Cyclone barrier","BARRIER_ABSORB",
+                            hit.remainder(),afterFinite,Map.of("absorbed",durable.absorbed(),"remaining",durable.remaining(),
+                                    "generation",String.valueOf(durable.generation()),"receipt",receipt));
+                }
+            }
+            float nativeRemaining=durableAbsorbed
+                    ?com.inigmasgames.hytalerpg.execution.support.CycloneBarrierLedger.nativeRemainder(afterFinite)
+                    :(float)afterFinite;
+            damage.setAmount(nativeRemaining);
             double shieldCursor=shieldBefore;
             for(var absorption:hit.intrinsicAllocations()){
                 double next=Math.max(0,shieldCursor-absorption.amount());

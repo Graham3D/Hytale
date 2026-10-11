@@ -21,13 +21,15 @@ public final class HytalePlayerPersistenceReady extends EntityTickingSystem<Enti
     private final Map<UUID,PlayerRef> connections=new java.util.concurrent.ConcurrentHashMap<>();
     @FunctionalInterface public interface OwnerInstall {boolean install(Store<EntityStore> store,Ref<EntityStore> ref,PlayerRef player,Player entity,EntityStatMap stats);}
     private final OwnerInstall install;
+    private java.util.function.Consumer<UUID> additionalPreload=ignored->{};
+    public void configureAdditionalPreload(java.util.function.Consumer<UUID> loader){additionalPreload=Objects.requireNonNull(loader);}
     public HytalePlayerPersistenceReady(RpgLoadoutService loadouts,OwnerInstall install){this.loadouts=loadouts;this.install=install;this.preparation=new com.inigmasgames.hytalerpg.readypath.PlayerEntryPreparation(loadouts);}
     /** The SDK awaits this future before World.addPlayer; no world handles enter worker jobs. */
     public java.util.concurrent.CompletableFuture<Void> preConnect(PlayerRef player,UUID world){
         if(Boolean.getBoolean("hywind.readypath.legacy"))return java.util.concurrent.CompletableFuture.completedFuture(null);
         connections.put(player.getUuid(),player);
         return preparation.prepare(player.getUuid(),world,com.inigmasgames.hytalerpg.content.RpgCatalog.prepared().revision())
-                .thenApply(view->(Void)null).whenComplete((ignored,error)->{
+                .thenApply(view->{additionalPreload.accept(player.getUuid());return (Void)null;}).whenComplete((ignored,error)->{
                     if(error!=null&&connections.remove(player.getUuid(),player))preparation.detach(player.getUuid());
                 });
     }

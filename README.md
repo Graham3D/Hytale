@@ -1,11 +1,11 @@
 # Hywind / HyARPG development baseline
 
-The current local development candidate is **R260-U7P5B**
-(`0.2.0-R260-U7P5B`) on `codex/cyclone-barrier-rebalance`, starting from the
-published R259 encounter-store correction. Cyclone Armor now uses effective
-Wisdom and Intelligence for barrier capacity without reusing Wisdom's healing
-multiplier. See [the balance table](docs/CYCLONE_ARMOR_BALANCE.md) and
-[the baseline](docs/DEVELOPMENT_BASELINE.md) for verification and QA status.
+The current feature branch candidate is **R261A-U7P5B**
+(`0.2.0-R261A-U7P5B`) on `codex/r261a-durable-cyclone`, starting from the
+published R260 Cyclone Armor rebalance. R261-A adds a gated, crash-conscious
+barrier journal and activation coordinator. The gate is disabled; R260 remains
+the active RPG-save build. See [the durability contract](docs/CYCLONE_DURABILITY.md)
+and [the baseline](docs/DEVELOPMENT_BASELINE.md) for verification status.
 
 The current GitHub `main` gameplay baseline is **R250-U7P5B**
 (`0.2.0-R250-U7P5B`). [PR #1](https://github.com/Graham3D/Hytale/pull/1)

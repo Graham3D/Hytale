@@ -39,6 +39,35 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
     private final Set<UUID> cooldownSaveWarnings=java.util.concurrent.ConcurrentHashMap.newKeySet();
     private final Set<String> mantlePresentationRoots=java.util.concurrent.ConcurrentHashMap.newKeySet();
     private final Set<UUID> initialized=java.util.concurrent.ConcurrentHashMap.newKeySet(),initializing=java.util.concurrent.ConcurrentHashMap.newKeySet();
+    /** R261-A integration seam: production configures this false until R261-B owns activation. */
+    private boolean durableCycloneEnabled;
+    private CycloneBarrierLedger durableCyclone;
+    private record CycloneConnection(PlayerRef player,CycloneBarrierLedger.Lease lease){}
+    private final Map<UUID,CycloneConnection> cycloneConnections=new java.util.concurrent.ConcurrentHashMap<>();
+    public void configureDurableCyclone(java.nio.file.Path directory,boolean enabled){
+        durableCyclone=new CycloneBarrierLedger(directory);
+        durableCycloneEnabled=enabled;
+    }
+    public void preloadDurableCyclone(UUID player){
+        if(durableCycloneEnabled)durableCyclone.preload(player);
+    }
+    boolean durableCycloneEnabled(){return durableCycloneEnabled;}
+    CycloneBarrierLedger.Debit durableCycloneDebit(PlayerRef player,String receipt,double damage){
+        if(!durableCycloneEnabled||durableCyclone==null)return null;
+        var binding=cycloneConnections.get(player.getUuid());
+        if(binding==null||binding.player()!=player)return null;
+        var lease=binding.lease();
+        try{
+            var state=durableCyclone.state(lease);
+            if(state.phase()!=CycloneBarrierLedger.Phase.ACTIVE)return null;
+            return durableCyclone.debit(lease,state.generation(),receipt,damage);
+        }
+        catch(RuntimeException failure){
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(failure)
+                    .log("RPG_CYCLONE_DURABLE_DEBIT_REJECTED player=%s",player.getUuid());
+            return null; // Keep all unconfirmed damage in the native event.
+        }
+    }
     public void beginReady(UUID actor){initialized.remove(actor);initializing.remove(actor);}
     public boolean sessionReady(UUID actor){return initialized.contains(actor)&&loadouts.ready(actor);}
     public boolean connectionReady(Store<EntityStore> store,Ref<EntityStore> actor){
@@ -49,6 +78,24 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         if(!runtime.settled(id)||!kernel.cooldowns().persistenceReady(id))return false;
         kernel.cooldowns().restore(id);
         kernel.reservations().removeAll(id,new EntityStatResourcePort(store.getComponent(actor,EntityStatMap.getComponentType())));
+        if(durableCycloneEnabled){
+            var player=store.getComponent(actor,PlayerRef.getComponentType());
+            var existing=cycloneConnections.get(id);
+            if(existing==null||existing.player()!=player){
+                try{cycloneConnections.put(id,new CycloneConnection(player,durableCyclone.attachPrepared(id)));}
+                catch(IllegalStateException pending){return false;}
+            }
+            try{
+                var binding=cycloneConnections.get(id);
+                if(binding!=null&&binding.player()==player&&durableCyclone.paymentRecoveryRequired(binding.lease()))
+                    durableCyclone.reconcilePaymentAfterRestart(binding.lease(),kernel.resources(),
+                            new EntityStatResourcePort(store.getComponent(actor,EntityStatMap.getComponentType())));
+            }catch(RuntimeException recoveryFailure){
+                com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(recoveryFailure)
+                        .log("RPG_CYCLONE_PAYMENT_RECONCILIATION_FAILED player=%s",id);
+                return false;
+            }
+        }
         initialized.add(id);return true;
     }
     @FunctionalInterface public interface AuraPayload {void apply(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Ref<EntityStore> actor,SkillExecutionContext context,List<UUID> targets,int tick,boolean chill);}
@@ -362,6 +409,7 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         runtime.pollMaintenance();
         if(!sessionReady(player.getUuid()))return;
         var stats=chunk.getComponent(index,EntityStatMap.getComponentType());
+        if(durableCycloneEnabled&&!alive(store,ref))clearDurableCycloneOnDeath(player);
         var liveGear=com.inigmasgames.hytalerpg.gear.GearNativeItems.effects(ref,store).snapshot();
         syncItemAuras(store,ref,player,buffer,liveGear);
         runtime.finite().reprojectShieldCapacity(player.getUuid(),liveGear,System.nanoTime()/1e9);
@@ -432,8 +480,38 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
     }
     public void detach(Store<EntityStore> store,Ref<EntityStore> actor,String reason){
         var player=store.getComponent(actor,PlayerRef.getComponentType());
+        if(durableCycloneEnabled&&player!=null){
+            var binding=cycloneConnections.get(player.getUuid());
+            if(binding!=null&&binding.player()==player&&cycloneConnections.remove(player.getUuid(),binding))
+                durableCyclone.detach(binding.lease());
+        }
         try{CycloneArmorPresentation.remove(store,actor);}catch(RuntimeException ignored){/* cosmetic */}
         if(player!=null){beginReady(player.getUuid());cooldownSaveWarnings.remove(player.getUuid());runtime.detach(player.getUuid(),reason,port(store,actor));}
+    }
+    void clearDurableCycloneOnDeath(PlayerRef player){
+        var binding=cycloneConnections.get(player.getUuid());
+        if(binding==null||binding.player()!=player)return;
+        try{durableCyclone.clearForDeath(binding.lease());}
+        catch(RuntimeException failure){
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(failure)
+                    .log("RPG_CYCLONE_DURABLE_DEATH_CLEAR_FAILED player=%s",player.getUuid());
+        }
+    }
+    /** Native death callback is earlier than the next support tick; tick remains a fallback. */
+    public static final class CycloneDeath extends com.hypixel.hytale.server.core.modules.entity.damage.DeathSystems.OnDeathSystem {
+        private final HytaleSupportSystem owner;
+        @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value="EI_EXPOSE_REP2",
+                justification="The native death system intentionally shares the registered support authority.")
+        public CycloneDeath(HytaleSupportSystem owner){this.owner=owner;}
+        @Override public Query<EntityStore> getQuery(){return PlayerRef.getComponentType();}
+        @Override public void onComponentAdded(Ref<EntityStore> ref,
+                com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent death,
+                Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
+            if(owner.durableCycloneEnabled){
+                var player=store.getComponent(ref,PlayerRef.getComponentType());
+                if(player!=null)owner.clearDurableCycloneOnDeath(player);
+            }
+        }
     }
     public SkillExecutionPort.Validation preflight(Store<EntityStore> store,Ref<EntityStore> actor,Stage04SkillProfile profile,CompiledSkillPlan plan){
         var id=store.getComponent(actor,PlayerRef.getComponentType()).getUuid();

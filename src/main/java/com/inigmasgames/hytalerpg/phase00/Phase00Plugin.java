@@ -151,6 +151,9 @@ public final class Phase00Plugin extends JavaPlugin {
         skillExecutionSystem = new HytaleSkillExecutionSystem(abilityInputs, executions, combatKernel,
                 combatTrace, reactions, vfx, bosses);
         var supportSystem=skillExecutionSystem.configureSupport(loadouts);
+        // R261-A foundation is installed but inactive; R260 Cyclone gameplay remains authoritative.
+        supportSystem.configureDurableCyclone(getDataDirectory().resolve("cyclone-barriers"),false);
+        getEntityStoreRegistry().registerSystem(new HytaleSupportSystem.CycloneDeath(supportSystem));
         var nativeWeaponFire=new com.inigmasgames.hytalerpg.combat.hytale.NativeWeaponFireProducer(
                 supportSystem::routeManagedWeaponFire,supportSystem::nativeWeaponOffensiveFactor);
         getCodecRegistry(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.CODEC)
@@ -285,6 +288,7 @@ public final class Phase00Plugin extends JavaPlugin {
             rpgHud.install(playerRef,entity,statMap);
             return true;
         });
+        persistenceReady.configureAdditionalPreload(supportSystem::preloadDurableCyclone);
         getEntityStoreRegistry().registerSystem(persistenceReady);
         getEventRegistry().registerGlobal(PlayerReadyEvent.class, event -> {
             var ref = event.getPlayerRef();
