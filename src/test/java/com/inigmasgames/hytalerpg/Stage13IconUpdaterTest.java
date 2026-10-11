@@ -131,7 +131,8 @@ class Stage13IconUpdaterTest {
         var update=run(); assertEquals(0,update.exit,update.output); byte[] installed=Files.readAllBytes(jar);
         Path backup; try(var files=Files.list(backups)){backup=files.filter(p->p.toString().endsWith(".jar")).findFirst().orElseThrow();}
         Files.write(backup,new byte[]{9},StandardOpenOption.APPEND);
-        var result=run("-RestoreLast"); assertNotEquals(0,result.exit); assertTrue(result.output.contains("backup hash mismatch"),result.output);
+        var result=run("-RestoreLast"); assertNotEquals(0,result.exit);
+        assertTrue(result.output.replaceAll("\\s+"," ").contains("backup hash mismatch"),result.output);
         assertArrayEquals(installed,Files.readAllBytes(jar));
     }
     @Test void doubleClickWorkspaceDefaultsResolveInWindowsPowerShellWithoutCallerWorkingDirectory() throws Exception {
