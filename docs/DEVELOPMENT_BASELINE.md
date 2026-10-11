@@ -25,8 +25,29 @@ interaction, but this pass has not established a safe ownership/payload-preservi
 return for the legacy and modern projectile implementations. The original hit
 continues through normal barrier absorption. Healing Breeze, Gale Cutter, and
 Hurricane are absent from the current catalog, so their synergies are not yet
-testable here. An exact-commit verification, GitHub publication, and deployment
-record follows once this candidate passes the offline release gate.
+testable here.
+
+The gameplay implementation commit is
+`74e3465c9afc70b5419e66a760fb23aee162e711`; the icon owner inventory
+correction commit is `5ee89e07032aac1141562e9121fd02f6d0fc7154`.
+The latter is the exact source commit embedded in the R256 build. Focused
+Cyclone, acquisition, presentation, and icon tests passed. Strict root
+SpotBugs passed. The exact-commit offline `check` passed 3,519 root, 453
+native-control, 49 CanvasUI, and 5 Tavern JUnit tests with zero failures or
+skips, plus asset compatibility and package validation. Guardian recorded
+the JAR SHA-256
+`5CE7C8D8E2A9E5E412C57D52C0DE328FCEF8CAEB9FAEEDE1298F9176FC226A7B`
+and confirmed `codex/cyclone-armor` published on GitHub at the build commit;
+`main` integration remains pending.
+
+The previous R255 JAR was backed up outside `Saves` at
+`C:/Users/Zemio/AppData/Roaming/Hytale/Hywind-backups/Hywind-before-R256-20261011T023615128Z.jar`,
+SHA-256 `FE2CCF595D47DBD58DE363D145F3C8FCCF8F13E62D29F45F86D630288082D04F`.
+Only `Saves/RPG/mods/Hywind.jar` was replaced. Its installed SHA-256 and
+embedded source commit match the verified R256 build. Save data, the game,
+and standalone native servers were untouched. Connected-game Cyclone Armor
+acceptance remains with the user. This documentation checkpoint does not
+change the deployed JAR's source identity.
 
 ## R255 Teleport landing sound QA candidate (2026-10-10)
 
