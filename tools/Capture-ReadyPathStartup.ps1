@@ -84,8 +84,8 @@ $server = $null
 $captureStatus = 'NO_SERVER_OBSERVED'
 try {
     [Environment]::SetEnvironmentVariable($optionName, $options, 'User')
-    Broadcast-Environment
     $installed = $true
+    Broadcast-Environment
     Write-Output "ARMED: $folder"
     Write-Output 'Now launch Hytale normally and enter the existing RPG save. Leave this PowerShell window open.'
     $deadline = (Get-Date).AddMinutes($WaitMinutes)

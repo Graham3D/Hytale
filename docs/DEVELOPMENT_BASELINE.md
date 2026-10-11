@@ -1,5 +1,25 @@
 # HyARPG/Hywind development baseline
 
+## Startup bottleneck capture checkpoint (2026-10-11)
+
+Branch `codex/startup-bottleneck-capture` starts from verified R258
+documentation commit `21292be88598dde1a3e39a60d1eb5892c1f6d98b`.
+The diagnostic source commit is
+`7d4b7fdf52843a52816ff162f17431e149d24a41`.
+It adds an owner-run, opt-in Java startup JFR/ReadyPath capture and the
+[startup investigation](STARTUP_BOTTLENECK_INVESTIGATION.md). Five existing
+R256 integrated-server logs show one 29.463-second boot and four
+18.708–20.626-second boots. A variable approximately nine-second interval
+falls within RPG plugin setup, but no JFR or thread evidence identifies its
+cause; none of those logs measures the current R258 JAR. The bundled Java 26
+runtime successfully created a short startup JFR offline. PowerShell 5.1
+`-CheckOnly` and `-Restore` passed; the temporary environment setting was
+confirmed removed. Guardian preflight and change/commit checks passed.
+No gameplay source, packaged assets, save data or deployed JAR changed.
+The build revision/version remain R258-U7P5B / `0.2.0-R258-U7P5B`; this
+diagnostic checkpoint is not a new gameplay revision. Connected captures,
+root-cause attribution, correction and before/after acceptance remain open.
+
 ## R258 icon-preserved deployment (2026-10-11)
 
 Branch `codex/r258-icon-preserved-deploy` starts from the published, locally
