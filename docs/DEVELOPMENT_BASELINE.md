@@ -1,5 +1,33 @@
 # HyARPG/Hywind development baseline
 
+## R259 encounter-store contention correction (2026-10-11)
+
+The local `codex/ready-path-gear-lock` branch contains gameplay source commit
+`98576f40d4e8a167a2c117bb3d279a387a7996e6` (R259-U7P5B,
+`0.2.0-R259-U7P5B`). In the owner's valid integrated-server JFR under
+`StartupCaptures/20261011T165547Z-9ff067cb`, a gear receipt scan held the
+`FileEncounterStore` monitor for 6.925 seconds while reading receipt JSON.
+Main-thread `configureGearDelivery` waited 6.89 seconds for that monitor,
+and encounter-effect workers also waited. The active save contains 2,082
+gear receipt files. The scan now snapshots its file list and reads records
+in batches of 16, releasing the monitor between batches; checksummed record
+validation and atomic file replacement remain in place. A targeted
+concurrency regression confirms that encounter configuration and a second
+durable gear write proceed during a paused scan, then verifies the read
+receipts. Focused encounter/gear JUnit and the full offline Gradle `check`
+passed. The locally built `HyARPG.jar` SHA-256 was
+`4583496F4E53C6B4169A67F408D63A0ADE7A445DEF15B208A4C6E198F6052117`
+at the gameplay commit; the documentation completion commit requires a fresh
+matching package check and Guardian receipt. No server was launched, and no
+RPG save or deployed `Hywind.jar` was changed. GitHub publication and
+connected-game acceptance remain pending.
+
+The server completed boot at 12:56:37 EDT. The client then spent 46.875
+seconds in `RequiredAssets` from 12:56:38.939 to 12:57:25.823 EDT. The
+server JFR demonstrates the pre-boot lock contention but does not attribute
+the later client asset wait. Client CPU/file-I/O evidence is needed before
+claiming a fix for that separate interval.
+
 ## ReadyPath capture correction (2026-10-11)
 
 Startup diagnostic source on `codex/startup-bottleneck-capture` is commit

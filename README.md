@@ -1,13 +1,12 @@
 # Hywind / HyARPG development baseline
 
-The R258 implementation branch (`codex/unified-diagnostics`) builds
-**R258-U7P5B** (`0.2.0-R258-U7P5B`) on the locally verified R257 combat
-trace source. It unifies diagnostic commands under `/rpg-trace` while
-retaining each recorder and its permission boundary. This
-`codex/r258-icon-preserved-deploy` follow-up carries the existing Cyclone
-Armor icon into the R258 source and keeps the bulk icon updater aligned with
-the active `Hywind.jar`. Connected command and Goblin-event acceptance remain
-pending; deployment status is recorded in [the baseline](docs/DEVELOPMENT_BASELINE.md).
+The current local development candidate is **R259-U7P5B**
+(`0.2.0-R259-U7P5B`) on `codex/ready-path-gear-lock`. The encounter gear
+receipt scan now releases its store monitor between bounded read batches,
+allowing encounter setup and other durable gear operations to proceed. The
+startup capture separately shows a 46.875-second client RequiredAssets wait;
+its cause remains under investigation. Offline verification and deployment
+status are recorded in [the baseline](docs/DEVELOPMENT_BASELINE.md).
 
 The current GitHub `main` gameplay baseline is **R250-U7P5B**
 (`0.2.0-R250-U7P5B`). [PR #1](https://github.com/Graham3D/Hytale/pull/1)
@@ -39,7 +38,7 @@ Run validation from an isolated worktree based on the latest verified source:
 
 ```powershell
 .\gradlew.bat --offline --no-daemon check --console=plain
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/Test-HyArpgPackage.ps1 -JarPath build/libs/HyARPG.jar -ExpectedVersion 0.2.0-R255-U7P5B -ExpectedRevision R255-U7P5B
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/Test-HyArpgPackage.ps1 -JarPath build/libs/HyARPG.jar -ExpectedVersion 0.2.0-R259-U7P5B -ExpectedRevision R259-U7P5B
 ```
 
 The full `check` compiles source and runs RPG, native-control, CanvasUI, and
