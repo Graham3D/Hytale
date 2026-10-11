@@ -64,7 +64,9 @@ class R261CCombatLatencyTest {
         for(boolean separate:List.of(false,true)){
             String scenario=separate?"eight-players":"one-player";
             var actors=new ArrayList<Actor>();
-            for(int i=0;i<(separate?8:1);i++)actors.add(actor(scenario,i,separate?1:0,1000));
+            // Keep a substantial barrier phase, then force each actor through
+            // Mana Before Life. Both stages must appear in the contention sample.
+            for(int i=0;i<(separate?8:1);i++)actors.add(actor(scenario,i,separate?20:160,1000));
             var pool=Executors.newFixedThreadPool(8);
             var ready=new CountDownLatch(8);
             var start=new CountDownLatch(1);

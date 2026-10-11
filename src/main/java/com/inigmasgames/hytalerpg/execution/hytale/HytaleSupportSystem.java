@@ -174,11 +174,21 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
             }
             try{
                 var binding=cycloneConnections.get(id);
-                if(binding!=null&&binding.player()==player&&durableCyclone.paymentRecoveryRequired(binding.lease()))
-                    durableCyclone.invalidateUncertainPayment(binding.lease());
+                if(binding!=null&&binding.player()==player&&durableCyclone.paymentRecoveryRequired(binding.lease())){
+                    var stats=store.getComponent(actor,EntityStatMap.getComponentType());
+                    var recovered=CycloneNativePaymentMarker.recover(durableCyclone,binding.lease(),stats);
+                    if(recovered.phase()==CycloneBarrierLedger.Phase.ACTIVE){
+                        try{CycloneArmorPresentation.applyDurable(store,actor);}
+                        catch(RuntimeException presentationFailure){
+                            com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning()
+                                    .withCause(presentationFailure)
+                                    .log("RPG_CYCLONE_RECOVERED_VISUAL_FAILED player=%s",id);
+                        }
+                    }
+                }
             }catch(RuntimeException recoveryFailure){
                 com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(recoveryFailure)
-                        .log("RPG_CYCLONE_UNCERTAIN_PAYMENT_INVALIDATION_FAILED player=%s",id);
+                        .log("RPG_CYCLONE_PAYMENT_RECOVERY_FAILED player=%s",id);
                 return false;
             }
         }

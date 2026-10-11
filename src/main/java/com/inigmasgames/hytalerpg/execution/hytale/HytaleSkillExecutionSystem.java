@@ -1210,6 +1210,8 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
         @Override public CycloneAuthority cycloneAuthority(){return support.cycloneAuthority(playerRef);}
         @Override public void cyclonePublished(SkillExecutionContext context,UUID generation){
             support.cyclonePublished(playerRef,context,generation);
+            CycloneNativePaymentMarker.mark(stats,generation,
+                    context.compiledPlan().supportModifiers().reflectiveWard());
         }
         @Override public java.util.concurrent.CompletionStage<Void> prepareDurable(SkillExecutionContext context){
             java.util.concurrent.CompletionStage<Void> existing;

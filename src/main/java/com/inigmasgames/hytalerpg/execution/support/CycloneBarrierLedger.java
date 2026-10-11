@@ -198,9 +198,19 @@ public final class CycloneBarrierLedger {
     public boolean paymentRecoveryRequired(Lease lease){
         Holder h=holder(lease.player());synchronized(h){check(h,lease);return h.paymentRecoveryRequired;}
     }
-    /** Native Mana has no durable payment identity shared with this journal. A new
-     * connection cannot prove whether the original debit survived its player save,
-     * so forfeit protection without charging or refunding Mana. The forced DEPLETED
+    /** The caller must have read a matching marker from the loaded native Mana stat.
+     * That marker is serialized beside the debited value, after ACTIVE was forced. */
+    public State reconcileNativePayment(Lease lease,UUID generation){
+        Holder h=holder(lease.player());synchronized(h){check(h,lease);
+            if(h.state.phase()!=Phase.ACTIVE||!Objects.equals(h.state.generation(),generation)
+                    ||h.state.manaReceipt()==null||h.state.cooldownReceipt()==null)
+                throw new IllegalStateException("CYCLONE_PAYMENT_RECONCILIATION_MISMATCH");
+            h.paymentRecoveryRequired=false;
+            return h.state;
+        }
+    }
+    /** If the loaded native Mana record lacks a matching post-payment marker,
+     * forfeit protection without charging or refunding Mana. The forced DEPLETED
      * record must complete before the new connection becomes ready. */
     public State invalidateUncertainPayment(Lease lease){
         Holder h=holder(lease.player());synchronized(h){check(h,lease);

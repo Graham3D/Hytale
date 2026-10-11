@@ -1,5 +1,21 @@
 # HyARPG/Hywind development baseline
 
+## R261 Final development checkpoint (2026-10-11)
+
+Branch `codex/r261-final` starts from the published R261-C commit
+`e1c5562728b4617ac2dfab4c3a8f10445cc36b92`, with R261-A, A.1, and B
+in ancestry. The development-only build identity is R261FDEV-U7P5B /
+`0.2.0-R261FDEV-U7P5B`. [The requirement audit](R261_FINAL_MATRIX.md)
+records what has been confirmed offline and the remaining release blockers.
+It includes a native Mana value/marker recovery path for plain durable
+Cyclone, while Reflective Ward reconnect context and Shared Aegis durable
+recipient protection remain incomplete. The feature gate stays off by
+default. This is **not** a completed R261 revision and must not be merged to
+`main` or deployed as the owner's first R261 QA build. The active RPG JAR and
+player saves remain R260 and untouched. Exact source commit, verification,
+package hash, and publication status are established by Guardian after this
+entry is committed; this record does not predeclare them.
+
 ## R261-C progression, Mana Before Life, and resource HUD development (2026-10-11)
 
 Branch `codex/r261c-progression-mana-hud` starts from published R261-B

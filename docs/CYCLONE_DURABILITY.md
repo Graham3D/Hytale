@@ -70,8 +70,9 @@ crash. Hytale 0.7.0-pre.5.1 stores `EntityStatMap` values, but its native
 `setStatValue` API has no durable transaction identity shared with this
 journal. The recorded cost token proves only the original in-memory debit
 and readback; it cannot distinguish a saved debit from a rolled-back one.
-Every new connection therefore quarantines a surviving ACTIVE barrier and
-forces a DEPLETED record before marking that connection ready. Recovery does
+R261-B therefore quarantines every surviving ACTIVE barrier and forces a
+DEPLETED record before marking that connection ready. R261FDEV's conditional
+native marker reconciliation is described below. Recovery does
 not call the native resource authority, charge Mana, or refund a possibly
 saved payment. The existing cooldown spend is left with its owner and is
 not automatically refunded. A failed invalidation force leaves the session
@@ -145,7 +146,34 @@ test are essential. See [R261-B QA notes](QA-R261B-CYCLONE.md).
 Native player-save flush timing and connected-client damage latency remain
 unverified. The gate remains disabled by default in R261-B.
 
+## R261 Final development payment-recovery probe
+
+R261FDEV adds a narrowly scoped recovery path for a plain durable Cyclone
+barrier. After the native Mana debit and cooldown receipts have been confirmed
+and the ACTIVE journal record has been forced, the native owner adds a zero
+effect StaticModifier to the Mana `EntityStatValue`. Its key contains the
+barrier generation. Hytale 0.7.0-pre.5.1 serializes `Value` and `Modifiers`
+inside that same `EntityStatValue` codec, and `DiskPlayerStorage.save` first
+serializes the player holder to one BSON document before asynchronous writing.
+The native codec round-trip test confirms the marker and current Mana value
+survive together. The marker is never added before publication, so a native
+snapshot made before payment confirmation cannot satisfy recovery. The marker
+does not prove the native save was forced at cast time; recovery relies only on
+what the newly loaded native stat actually contains. A missing, stale, or
+unrecognized marker follows the existing forced-DEPLETED policy without a
+second Mana charge or a speculative refund.
+
+Only a non-Reflective-Ward generation is reconciled. Reflective
+Ward's original cast context is currently volatile and required for its native
+secondary-damage path. A Reflective Ward generation therefore remains
+fail-closed on reconnect even when its native marker survived. Shared Aegis
+still rejects durable Cyclone before payment; it needs a durable ally record
+and a verified source-payment link, including recipient recovery while the
+caster is offline. These are release blockers. R261FDEV is a development
+checkpoint, not R261 Final, and the feature gate remains disabled by default.
+
 R261-C adds player progression and Mana Before Life downstream of confirmed
 Cyclone absorption. Its native resource conversion cannot establish a durable
 payment identity across a crash; see [R261-C development contract](R261C_ENGINEERING.md).
-The R261-B reconnect forfeiture and Shared Aegis boundaries remain open.
+R261FDEV conditionally recovers plain paid barriers, while Reflective Ward
+reconnect and durable Shared Aegis remain open release boundaries.

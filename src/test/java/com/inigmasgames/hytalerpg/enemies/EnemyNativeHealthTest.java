@@ -10,12 +10,16 @@ import com.hypixel.hytale.server.core.modules.entitystats.asset.*;
 import com.hypixel.hytale.server.core.modules.entitystats.modifier.StaticModifier;
 import com.inigmasgames.hytalerpg.difficulty.*;
 import com.inigmasgames.hytalerpg.execution.hytale.HytaleDifficultyCombat;
+import com.inigmasgames.hytalerpg.execution.hytale.CycloneNativePaymentMarker;
+import com.inigmasgames.hytalerpg.execution.support.CycloneActivationTransaction;
+import com.inigmasgames.hytalerpg.execution.support.CycloneBarrierLedger;
 import com.inigmasgames.hytalerpg.combat.hytale.DerivedStatEntityAdapter;
 import com.inigmasgames.hytalerpg.combat.attribute.DerivedStatService;
 import com.inigmasgames.hytalerpg.combat.attribute.EffectiveAttributeService;
 import com.inigmasgames.hytalerpg.combat.balance.CombatBalanceProfile;
 import java.util.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.*;
 
 /** Exercises the same native stat map and difficulty modifier used at publication. No server startup. */
@@ -65,6 +69,74 @@ class EnemyNativeHealthTest {
             new MonsterResistanceProfile(Map.of(),Set.of()),EncounterProfileResolver.Evidence.FIXTURE_ONLY);}
     private static EnemyAffixSnapshot providers(double rarity,double empowered){return new EnemyAffixSnapshot(rarity,1,empowered,1,1,0,0,0,Map.of(),0,Map.of(),false,false,false,null,0,false,false);}
     private static EntityStatMap stats(){var stats=new EntityStatMap();stats.update();return stats;}
+    @Test void nativeManaValueAndZeroPaymentMarkerRoundTripTogether(){
+        com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier.CODEC.register(
+                "Static",StaticModifier.class,StaticModifier.ENTITY_CODEC);
+        var map=stats();int mana=DefaultEntityStatTypes.getMana();
+        String marker="hytalerpg:cyclone-payment/"+UUID.randomUUID();
+        map.setStatValue(mana,0);
+        map.putModifier(mana,marker,new StaticModifier(
+                com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier.ModifierTarget.MAX,
+                StaticModifier.CalculationType.ADDITIVE,0));
+        map.update();
+        var encoded=EntityStatMap.CODEC.encode(map,new com.hypixel.hytale.codec.ExtraInfo());
+        var decoded=EntityStatMap.CODEC.decode(encoded,new com.hypixel.hytale.codec.ExtraInfo());
+        assertEquals(0,decoded.get(mana).get(),.001);
+        assertNotNull(decoded.get(mana).getModifier(marker));
+    }
+    @Test void cycloneMarkerProvesOnlyItsPaidGenerationAndPreservesMana(){
+        com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier.CODEC.register(
+                "Static",StaticModifier.class,StaticModifier.ENTITY_CODEC);
+        int mana=DefaultEntityStatTypes.getMana();
+        var nativeStats=stats();nativeStats.setStatValue(mana,37);
+        UUID first=UUID.randomUUID(),second=UUID.randomUUID();
+        assertFalse(CycloneNativePaymentMarker.confirms(nativeStats,first));
+        CycloneNativePaymentMarker.mark(nativeStats,first,false);
+        assertEquals(37,nativeStats.get(mana).get(),.001);
+        assertEquals(100,nativeStats.get(mana).getMax(),.001);
+        assertTrue(CycloneNativePaymentMarker.confirms(nativeStats,first));
+        var balance=CombatBalanceProfile.loadCanonical();
+        new DerivedStatEntityAdapter().apply(nativeStats,
+                new DerivedStatService(balance,new EffectiveAttributeService(balance)).derive(Map.of(),99));
+        assertTrue(CycloneNativePaymentMarker.confirms(nativeStats,first));
+        var persisted=EntityStatMap.CODEC.decode(EntityStatMap.CODEC.encode(nativeStats,
+                new com.hypixel.hytale.codec.ExtraInfo()),new com.hypixel.hytale.codec.ExtraInfo());
+        assertTrue(CycloneNativePaymentMarker.confirms(persisted,first));
+        assertEquals(37,persisted.get(mana).get(),.001);
+        assertFalse(CycloneNativePaymentMarker.confirms(persisted,second));
+        CycloneNativePaymentMarker.mark(persisted,second,true);
+        assertFalse(CycloneNativePaymentMarker.confirms(persisted,first));
+        assertFalse(CycloneNativePaymentMarker.confirms(persisted,second));
+        assertEquals(37,persisted.get(mana).get(),.001);
+    }
+    @Test void recoveredNativePaymentPreservesOnlyProvenPlainBarrier(@TempDir java.nio.file.Path root){
+        com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier.CODEC.register(
+                "Static",StaticModifier.class,StaticModifier.ENTITY_CODEC);
+        for(int mode=0;mode<5;mode++){
+            var player=UUID.randomUUID();var generation=UUID.randomUUID();var activation=UUID.randomUUID();
+            var path=root.resolve("case-"+mode);
+            var journal=new CycloneBarrierLedger(path);var first=journal.attach(player);
+            var tx=new CycloneActivationTransaction(journal);
+            tx.begin(first,activation,generation,100,()->true,()->true,()->true);
+            tx.manaCommitted(first,activation,"native-confirmed",40);
+            tx.cooldownCommitted(first,activation,"cooldown-confirmed");tx.publish(first,activation);
+            assertEquals(25,journal.debit(first,generation,"first-hit",25).absorbed());
+            var nativeStats=stats();nativeStats.setStatValue(DefaultEntityStatTypes.getMana(),60);
+            nativeStats.setStatValue(DefaultEntityStatTypes.getHealth(),mode==3?0:100);
+            if(mode!=0)CycloneNativePaymentMarker.mark(nativeStats,
+                    mode==4?UUID.randomUUID():generation,mode==2);
+            var loaded=EntityStatMap.CODEC.decode(EntityStatMap.CODEC.encode(nativeStats,
+                    new com.hypixel.hytale.codec.ExtraInfo()),new com.hypixel.hytale.codec.ExtraInfo());
+            var restarted=new CycloneBarrierLedger(path);var reconnect=restarted.attach(player);
+            assertEquals(0,restarted.debit(reconnect,generation,"held-hit",10).absorbed());
+            var recovered=CycloneNativePaymentMarker.recover(restarted,reconnect,loaded);
+            assertEquals(mode==1?CycloneBarrierLedger.Phase.ACTIVE:CycloneBarrierLedger.Phase.DEPLETED,
+                    recovered.phase());
+            assertEquals(mode==1?75:0,recovered.remaining());
+            assertEquals(60,loaded.get(DefaultEntityStatTypes.getMana()).get(),.001);
+            assertEquals(mode==1?10:0,restarted.debit(reconnect,generation,"after-recovery",10).absorbed());
+        }
+    }
     @Test void playerCapacityRecalculationPreservesNativeCurrentAndClampsOnReduction(){
         var map=stats();var projection=new DerivedStatEntityAdapter();
         var derived=new DerivedStatService(CombatBalanceProfile.loadCanonical(),new EffectiveAttributeService(CombatBalanceProfile.loadCanonical()));

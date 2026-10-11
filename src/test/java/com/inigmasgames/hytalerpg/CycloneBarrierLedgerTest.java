@@ -350,6 +350,22 @@ class CycloneBarrierLedgerTest {
         var again=new CycloneBarrierLedger(root);var recovered=again.attach(a.player);
         assertEquals(CycloneBarrierLedger.Phase.DEPLETED,again.state(recovered).phase());
     }
+    @Test void nativePaidGenerationReconcilesOnlyRemainingProtectionAfterRestart(){
+        var a=active();
+        assertEquals(35,a.ledger.debit(a.lease,a.generation,"first-hit",35).absorbed());
+        var restarted=new CycloneBarrierLedger(root);var lease=restarted.attach(a.player);
+        assertTrue(restarted.paymentRecoveryRequired(lease));
+        assertEquals(0,restarted.debit(lease,a.generation,"held-hit",10).absorbed());
+        assertThrows(IllegalStateException.class,()->restarted.reconcileNativePayment(lease,UUID.randomUUID()));
+        assertTrue(restarted.paymentRecoveryRequired(lease));
+        var recovered=restarted.reconcileNativePayment(lease,a.generation);
+        assertEquals(115,recovered.remaining());
+        assertFalse(restarted.paymentRecoveryRequired(lease));
+        assertEquals(0,restarted.debit(lease,a.generation,"first-hit",35).absorbed());
+        assertEquals(40,restarted.debit(lease,a.generation,"second-hit",40).absorbed());
+        assertEquals(75,restarted.state(lease).remaining());
+        assertThrows(IllegalStateException.class,()->restarted.reconcileNativePayment(a.lease,a.generation));
+    }
     @Test void nativeManaRollbackAndPersistedManaBothForfeitWithoutAnotherCharge() {
         for(double nativeMana:List.of(200.0,160.0)){
             var a=active();var restarted=new CycloneBarrierLedger(root);
