@@ -1,11 +1,13 @@
 # Hywind / HyARPG development baseline
 
-This task branch (`codex/unified-diagnostics`) builds **R258-U7P5B**
-(`0.2.0-R258-U7P5B`) on the locally verified R257 combat trace source.
-It unifies diagnostic commands under `/rpg-trace` while retaining each
-recorder and its permission boundary. Connected command and Goblin-event
-acceptance are pending; the R256 Cyclone Armor candidate remains the
-latest deployed gameplay baseline.
+The R258 implementation branch (`codex/unified-diagnostics`) builds
+**R258-U7P5B** (`0.2.0-R258-U7P5B`) on the locally verified R257 combat
+trace source. It unifies diagnostic commands under `/rpg-trace` while
+retaining each recorder and its permission boundary. This
+`codex/r258-icon-preserved-deploy` follow-up carries the existing Cyclone
+Armor icon into the R258 source and keeps the bulk icon updater aligned with
+the active `Hywind.jar`. Connected command and Goblin-event acceptance remain
+pending; deployment status is recorded in [the baseline](docs/DEVELOPMENT_BASELINE.md).
 
 The current GitHub `main` gameplay baseline is **R250-U7P5B**
 (`0.2.0-R250-U7P5B`). [PR #1](https://github.com/Graham3D/Hytale/pull/1)

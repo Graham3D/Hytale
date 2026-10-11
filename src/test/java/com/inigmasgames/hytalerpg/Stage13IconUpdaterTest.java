@@ -93,12 +93,52 @@ class Stage13IconUpdaterTest {
         assertArrayEquals(updated, Files.readAllBytes(jar));
         var undo = run("-RestoreLast"); assertEquals(0, undo.exit, undo.output); assertArrayEquals(original, Files.readAllBytes(jar));
     }
+    @Test void canonicalCycloneNameAndAnotherSkillInstallInOneBatch() throws Exception {
+        setup(); byte[] image = artwork();
+        Files.write(art.resolve("Skills/SkillCycloneArmor.png"), image);
+        Files.write(art.resolve("Skills/SkillWhirlwind.png"), image);
+        var result = run();
+        assertEquals(0, result.exit, result.output);
+        assertTrue(result.output.contains("Cyclone Armor <- SkillCycloneArmor.png (installed as SkillSpiritshield.png)"), result.output);
+        var after = contents();
+        for (String prefix : List.of("Common/Icons/Items/RPG/", "Common/UI/Custom/Icons/RPG/")) {
+            assertArrayEquals(image, after.get(prefix + "SkillSpiritshield.png"));
+            assertArrayEquals(image, after.get(prefix + "SkillWhirlwind.png"));
+        }
+        assertArrayEquals(image, Files.readAllBytes(source.resolve("Common/Icons/Items/RPG/SkillSpiritshield.png")));
+        assertArrayEquals(image, Files.readAllBytes(source.resolve("Common/UI/Custom/Icons/RPG/SkillSpiritshield.png")));
+        assertEquals("Icons/Items/RPG/SkillSpiritshield.png", JsonParser.parseString(
+                new String(after.get("Server/Item/Items/RPG/Abilities/RPG_Ability_Spirit_Shield.json"), StandardCharsets.UTF_8))
+                .getAsJsonObject().get("Icon").getAsString());
+    }
+    @Test void duplicateLegacyAndDisplayNamesAbortBeforeAnyIconChanges() throws Exception {
+        setup(); byte[] before = Files.readAllBytes(jar), image = artwork();
+        Files.write(art.resolve("Skills/SkillCycloneArmor.png"), image);
+        Files.write(art.resolve("Skills/SkillSpiritshield.png"), image);
+        Files.write(art.resolve("Skills/SkillWhirlwind.png"), image);
+        var result = run("-CheckOnly");
+        assertNotEquals(0, result.exit);
+        assertTrue(result.output.contains("Duplicate Skill icon for 'spirit_shield'"), result.output);
+        assertArrayEquals(before, Files.readAllBytes(jar));
+        assertFalse(Files.exists(backups));
+    }
     @Test void typoAbortsEntireBatchBeforeValidImageIsInstalled() throws Exception {
         setup(); byte[] before=Files.readAllBytes(jar);
         Files.write(art.resolve("Skills/SkillWhirlwind.png"), artwork());
         Files.write(art.resolve("Skills/SkillWhirwind.png"), artwork());
         var result=run(); assertNotEquals(0,result.exit); assertTrue(result.output.contains("Unknown Skill PNG"), result.output);
         assertArrayEquals(before,Files.readAllBytes(jar)); assertFalse(Files.exists(backups));
+    }
+    @Test void checkOnlyReportsEveryUnknownFilenameWithoutWriting() throws Exception {
+        setup(); byte[] before = Files.readAllBytes(jar), image = artwork();
+        Files.write(art.resolve("Skills/SkillWhirwind.png"), image);
+        Files.write(art.resolve("Skills/SkillCyclonArmor.png"), image);
+        var result = run("-CheckOnly");
+        assertNotEquals(0, result.exit);
+        assertTrue(result.output.contains("SkillWhirwind.png"), result.output);
+        assertTrue(result.output.contains("SkillCyclonArmor.png"), result.output);
+        assertArrayEquals(before, Files.readAllBytes(jar));
+        assertFalse(Files.exists(backups));
     }
     @Test void malformedPngAbortsWithoutChangingJar() throws Exception {
         setup(); byte[] before=Files.readAllBytes(jar);

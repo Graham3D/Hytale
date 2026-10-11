@@ -3,7 +3,7 @@
     "Name": "server.items.RPG_Ability_Spirit_Shield.name",
     "Description": "server.items.RPG_Ability_Spirit_Shield.description"
   },
-  "Icon": "Icons/ItemsGenerated/Rune_Aoe_Up.png",
+  "Icon": "Icons/Items/RPG/SkillSpiritshield.png",
   "Quality": "Rare",
   "Categories": [
     "Items.Ingredients"

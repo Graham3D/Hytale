@@ -1,5 +1,25 @@
 # HyARPG/Hywind development baseline
 
+## R258 icon-preserved deployment candidate (2026-10-11)
+
+Branch `codex/r258-icon-preserved-deploy` starts from the published, locally
+Guardian-verified R258 documentation commit
+`6ad419d92f3086c5211aeef313eb6dc70218cf30`. The active RPG
+`mods/Hywind.jar` is R256-U7P5B with SHA-256
+`84AF5EE7F843BB13480258D10A412838A6A435B9C92F9CAA59AEF10425B7DBE7`.
+Read-only comparison of all registered icon paths found one asset missing from
+R258 source: Cyclone Armor's legacy `SkillSpiritshield.png` native/UI pair.
+The candidate adds that identical 30,514-byte PNG in both paths, points the
+existing `spirit_shield` native item to it, and retains its internal skill ID.
+It also carries the existing bulk icon updater correction: the RPG target is
+`Hywind.jar`, canonical display-name inputs map through the icon registry, and
+duplicates and invalid filenames are rejected before mutation. All other
+registered icon bytes already match the active JAR. The primary checkout's
+unrelated edits, PSD, alpha art and player save data remain untouched.
+Final source commit, verification, GitHub publication and authorized JAR-only
+deployment are pending at this checkpoint. Connected acceptance remains with
+the user.
+
 ## R258 unified diagnostic commands offline QA candidate (2026-10-11)
 
 Branch `codex/unified-diagnostics` starts from the locally Guardian-verified
