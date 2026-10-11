@@ -658,8 +658,15 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
             }
             try{
                 if(p.kind()==SupportProfile.Kind.SHIELD){
-                    double capacity=SupportMagnitude.shield(context,masteryMultiplier(context));
+                    var shield=SupportMagnitude.shieldCalculation(context,masteryMultiplier(context));
+                    double capacity=shield.finalCapacity();
                     effects.applyShield(context,ids,seconds,capacity,now);
+                    if(shield.cyclone()!=null)try{
+                        trace(context,"BARRIER_CREATED",SupportMagnitude.cycloneTrace(context,shield));
+                    }catch(RuntimeException failure){
+                        com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(failure)
+                                .log("RPG_CYCLONE_TRACE_FAILED actor=%s",player.getUuid());
+                    }
                     if(context.compiledPlan().supportModifiers().sharedAegis()&&context.request().actorId().equals(context.target().entityId())){
                         var child=effects.shareCreatedShield(context,nearestAlly(context),now);
                         if(child.isPresent()){

@@ -43,7 +43,7 @@ class Stage09FinalSupportPassivesTest {
         assertThrows(IllegalArgumentException.class,()->SupportModifiers.NONE.healingIncreased(101,100));
     }
     @Test void wardReducesSpiritShieldCapacityOnce(){
-        var h=shield("reflective_ward","potency");h.cast();assertEquals(30.9*1.15*.8,h.shield(),1e-9);assertEquals(82,h.mana);
+        var h=shield("reflective_ward","potency");h.cast();assertEquals(30*1.15*.8,h.shield(),1e-9);assertEquals(82,h.mana);
     }
     @Test void wardAndConservationComposeOnActualManaguardReservation(){
         var h=guard("reflective_ward","conservation");h.cast();assertEquals(40,h.reserved);assertEquals(28.8,h.saved.managuard().lastValidatedCapacity(),1e-9);
@@ -51,13 +51,13 @@ class Stage09FinalSupportPassivesTest {
     }
     @Test void wardUsesActuallyConsumedCapacityNotIncomingDamageOrCurrentHealthLoss(){
         var h=shield("reflective_ward");h.cast();var hit=h.runtime.finite().shieldHit(h.world,h.actor,100,false,0,(e,a)->false);
-        assertEquals(24.72,hit.absorbed(),1e-9);assertEquals(24.72*.2,SupportMagnitude.wardReflection(h.context,hit.absorbed()),1e-9);
+        assertEquals(24,hit.absorbed(),1e-9);assertEquals(24*.2,SupportMagnitude.wardReflection(h.context,hit.absorbed()),1e-9);
         assertEquals(0,SupportMagnitude.wardReflection(h.context,0));assertThrows(IllegalArgumentException.class,()->SupportMagnitude.wardReflection(h.context,Double.NaN));
     }
     @Test void sharedSpiritShieldHasHalfCreatedCapacityAndSameExpiry(){
         var h=shield("shared_aegis","reflective_ward");var ally=UUID.randomUUID();h.members.add(ally);h.cast();
         var child=h.runtime.finite().forTarget(h.world,ally,0).getFirst();assertEquals(SupportProfile.Kind.SHARED_SHIELD,child.kind());
-        assertEquals(30.9*.8*.5,child.shieldRemaining(),1e-9);assertEquals(10,child.ends());assertEquals(h.context.rootCastId(),child.rootCastId());
+        assertEquals(30*.8*.5,child.shieldRemaining(),1e-9);assertEquals(10,child.ends());assertEquals(h.context.rootCastId(),child.rootCastId());
         assertEquals(h.context.skillInstanceId(),child.skillInstanceId());assertEquals(h.context.request().correlationId(),child.correlationId());
     }
     @Test void sharedChildNeverRedirectsOrSharesRecursively(){
