@@ -16,7 +16,14 @@ class R050IconSourcePipelineTest {
         var index=new Gson().fromJson(Files.readString(root.resolve("src/main/resources/rpg/presentation/icon-index.json")),
                 RpgSkillIcons.Index.class);
         var rows=new HashMap<String,RpgSkillIcons.Entry>();
-        for(var row:index.entries())rows.put(row.fileName().toLowerCase(),row);
+        for(var row:index.entries()){
+            rows.put(row.fileName().toLowerCase(),row);
+            if("Skill".equals(row.kind())){
+                String displayFile="Skill"+row.name().replaceAll("[^A-Za-z0-9]","")+".png";
+                var previous=rows.putIfAbsent(displayFile.toLowerCase(),row);
+                assertTrue(previous==null||previous.id().equals(row.id()),"Ambiguous display icon "+displayFile);
+            }
+        }
         int checked=0;
         for(String kind:new String[]{"Skill","Passive"}){
             Path art=root.resolve("art").resolve(kind+"s");if(!Files.isDirectory(art))continue;
