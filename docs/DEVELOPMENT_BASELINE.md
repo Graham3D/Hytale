@@ -1,16 +1,29 @@
 # HyARPG/Hywind development baseline
 
-## R261-A durable Cyclone architecture candidate (2026-10-11)
+## R261-A durable Cyclone architecture (2026-10-11)
 
 Branch `codex/r261a-durable-cyclone` starts from the verified R260 baseline
 documentation commit `ac33ff4c30848079eddc97f590921c0f98ec81c5`.
+Its implementation source commit is
+`609a78e5f64777b4b1ab0c48bce4a7915bce4c8e`.
 Build revision/version are R261A-U7P5B / `0.2.0-R261A-U7P5B`.
 The [durability contract](CYCLONE_DURABILITY.md) describes the versioned
 per-player journal, forced damage debit, conservative payment recovery, and
 R261-B integration boundary. R261-A's feature gate is disabled, so R260
-Cyclone gameplay and the deployed R260 JAR remain authoritative. Publication,
-offline release verification, and connected QA status are recorded in the
-completion follow-up to this entry.
+Cyclone gameplay and the deployed R260 JAR remain authoritative.
+
+The 25 focused Cyclone durability JUnit cases passed, including crash and
+checkpoint fault injection. At the implementation commit, the complete
+offline Gradle `check` passed 4,076 JUnit tests across 450 reports in 5m31s,
+with zero failures or skips. Strict SpotBugs passed after the
+reviewed baseline recorded 15 existing internal collaborator-reference
+findings; no new Cyclone finding remains. Guardian's 32 fixture cases passed,
+including an old-commit/fresh-reflog regression for its baseline-age check.
+The active `RPG/mods/Hywind.jar` retained SHA-256
+`487C9B89274496C329A24D65C13F232ED9E01E5A4A5430E0DD5D0F808BFB23FD`.
+No R261-A build was deployed; player saves and connected-game QA remain
+untouched. The final exact-commit verification receipt and live publication
+status are established by Guardian after this record is committed.
 
 ## R260 Cyclone Armor barrier rebalance QA deployment (2026-10-11)
 

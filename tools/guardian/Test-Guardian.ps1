@@ -65,7 +65,12 @@ $commitA = Invoke-FixtureGit $main @('rev-parse','HEAD')
 Invoke-FixtureGit $main @('push','--quiet','origin','main') | Out-Null
 Write-Fixture 'note.txt' 'approved baseline B'
 Invoke-FixtureGit $main @('add','--','note.txt') | Out-Null
-Invoke-FixtureGit $main @('commit','--quiet','-m','Fixture baseline B') | Out-Null
+# An unchanged, freshly observed remote tip can have an old commit date.
+$historicalDate = (Get-Date).AddDays(-3).ToString('yyyy-MM-ddTHH:mm:sszzz')
+$env:GIT_AUTHOR_DATE = $historicalDate
+$env:GIT_COMMITTER_DATE = $historicalDate
+try { Invoke-FixtureGit $main @('commit','--quiet','-m','Fixture baseline B') | Out-Null }
+finally { Remove-Item Env:GIT_AUTHOR_DATE,Env:GIT_COMMITTER_DATE -ErrorAction SilentlyContinue }
 Invoke-FixtureGit $main @('push','--quiet','origin','main') | Out-Null
 
 $current = Run-Guard $main @('-Mode','Preflight')

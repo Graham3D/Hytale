@@ -134,9 +134,13 @@ try {
         if ($behind.Code -eq 0) { Add-Blocked "Checkout $branch is behind the locally known approved baseline." }
         else { Add-Blocked "Checkout $branch diverges from the locally known approved baseline." }
     }
-    $baselineTime = Run-Git @('reflog', '-1', '--format=%ct', $BaselineRef)
+    # %ct is the commit's committer-time, which does not advance when an unchanged
+    # origin/main is fetched. %gD with --date=unix records the reflog observation.
+    $baselineTime = Run-Git @('reflog', '-1', '--date=unix', '--format=%gD', $BaselineRef)
+    $observation = [regex]::Match($baselineTime.Text.Trim(), '@\{(?<epoch>\d+)\}$')
     $epoch = [long]0
-    if ($baselineTime.Code -ne 0 -or -not [long]::TryParse($baselineTime.Text.Trim(), [ref]$epoch)) {
+    if ($baselineTime.Code -ne 0 -or -not $observation.Success -or
+            -not [long]::TryParse($observation.Groups['epoch'].Value, [ref]$epoch)) {
         Add-Warning 'Local baseline refresh time is unknown; verify origin/main before relying on this result.'
     } else {
         $ageHours = ([DateTimeOffset]::UtcNow - [DateTimeOffset]::FromUnixTimeSeconds($epoch)).TotalHours
