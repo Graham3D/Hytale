@@ -1,5 +1,31 @@
 # HyARPG/Hywind development baseline
 
+## R261-A.1 Cyclone durability hardening (2026-10-11)
+
+Branch `codex/r261a1-cyclone-hardening` starts from published R261-A
+`e418e1ee1fa430a288b45307310ebe7cc2197912`. The implementation
+source commit is `896b750b20434984ce52fe1fdc8f4291b63f9975`.
+Build revision/version are R261A1-U7P5B / `0.2.0-R261A1-U7P5B`.
+The [durability contract](CYCLONE_DURABILITY.md) now specifies that
+reconnect with an uncertain native Mana payment durably invalidates the
+barrier without another debit or an unproven refund. The existing cooldown
+authority and activation history remain intact. The feature gate remains
+disabled and R260 is still the deployed RPG build.
+
+Thirty focused Cyclone durability JUnit cases passed, including native Mana
+rollback and retained-payment scenarios, cooldown recovery, reconnect
+races, forced-write failure, and multi-player latency profiling. The
+240-hit local profile measured repeated p50/p95/p99/worst at
+2.267/3.589/4.014/5.300 ms; eight concurrent threads on one player at
+2.297/70.534/93.142/96.398 ms; and eight independent players at
+3.580/4.119/4.553/4.622 ms. These are offline measurements with run-to-run
+variance, not connected-game latency guarantees. Full offline verification,
+package validation, strict static analysis, and exact-commit publication
+are reported by Guardian's receipt and completion check for this branch.
+The active `RPG/mods/Hywind.jar` remains the R260 artifact; no R261-A.1
+build is deployed and no player save is modified. Connected-game QA is
+pending R261-B integration and owner testing.
+
 ## R261-A durable Cyclone architecture (2026-10-11)
 
 Branch `codex/r261a-durable-cyclone` starts from the verified R260 baseline
