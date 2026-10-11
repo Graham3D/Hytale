@@ -1,12 +1,13 @@
 # Hywind / HyARPG development baseline
 
-The current feature branch candidate is **R261C-U7P5B**
-(`0.2.0-R261C-U7P5B`) on `codex/r261c-progression-mana-hud`. It adds
-character Health/Mana progression, Mana Before Life armor, and a resource
-HUD to the R261-B opt-in Cyclone implementation. The Cyclone gate defaults
-off; R260 remains the active RPG-save build. See the
-[R261-C engineering contract](docs/R261C_ENGINEERING.md),
-[offline evidence map](docs/QA-R261C-DEVELOPMENT.md), and
+The current development checkpoint is **R261FDEV-U7P5B**
+(`0.2.0-R261FDEV-U7P5B`) on `codex/r261-final`. It adds conditional native
+payment recovery for plain Cyclone barriers to R261-C. Reflective Ward
+reconnect behavior and durable Shared Aegis remain release blockers, so this
+branch is not a completed R261 release and must not be merged or deployed.
+The Cyclone gate defaults off; R260 remains the active RPG-save build. See
+the [R261 requirement audit](docs/R261_FINAL_MATRIX.md),
+[durability contract](docs/CYCLONE_DURABILITY.md), and
 [baseline](docs/DEVELOPMENT_BASELINE.md) for verification status.
 
 The current GitHub `main` gameplay baseline is **R250-U7P5B**
@@ -39,7 +40,7 @@ Run validation from an isolated worktree based on the latest verified source:
 
 ```powershell
 .\gradlew.bat --offline --no-daemon check --console=plain
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/Test-HyArpgPackage.ps1 -JarPath build/libs/HyARPG.jar -ExpectedVersion 0.2.0-R260-U7P5B -ExpectedRevision R260-U7P5B
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/Test-HyArpgPackage.ps1 -JarPath build/libs/HyARPG.jar -ExpectedVersion 0.2.0-R261FDEV-U7P5B -ExpectedRevision R261FDEV-U7P5B
 ```
 
 The full `check` compiles source and runs RPG, native-control, CanvasUI, and
