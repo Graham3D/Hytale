@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 2,
+  "affixes": [
+    {
+      "id": "GA-161",
+      "name": "of Warding Mana",
+      "side": "SUFFIX",
+      "firstItemLevel": 1,
+      "tierModel": "Q",
+      "featureDisposition": "TEST",
+      "eligibility": "All armor",
+      "topAndGroup": "top 12–18% Damage Taken from Mana Before Life",
+      "exclusionGroup": "mana_before_life",
+      "operator": "MANA_BEFORE_LIFE",
+      "scopeContract": "Diverts V% of post-barrier damage to spendable Mana at 1:1; additive equipment total capped at 60%. All armor. Require: BASE-CORE.",
+      "featureRequirement": "R261-C protected development",
+      "topRange": [12.0, 18.0],
+      "weightCode": "F",
+      "weight": 1000,
+      "requirementPolicy": "BASE-CORE",
+      "armorExtension": "Armor-only definition; no weapon extension.",
+      "effectContract": "V% Damage Taken from Mana Before Life. Require: BASE-CORE. Armor: all armor.",
+      "authoredCells": ["GA-161 of Warding Mana Suffix", "ilvl 1+ | Q | TEST All armor; top 12–18% | weight F"],
+      "playerTooltipTemplate": "V% Damage Taken from Mana Before Life"
+    }
+  ]
+}

@@ -18,7 +18,7 @@ class Qa159PackTest {
         assertEquals(11,PACK.stream().filter(f->f.affixIds().size()==9).count());
         var ids=PACK.stream().flatMap(f->f.affixIds().stream()).toList();
         assertEquals(159,ids.size());assertEquals(159,new HashSet<>(ids).size());
-        assertEquals(GearAffixRuntime.ENABLED,new HashSet<>(ids));assertFalse(ids.contains("WA-155"));
+        assertEquals(GearAffixRuntime.V1_ENABLED,new HashSet<>(ids));assertFalse(ids.contains("WA-155"));
         assertEquals(Set.of(GearCatalog.Slot.HEAD,GearCatalog.Slot.CHEST,GearCatalog.Slot.HANDS,GearCatalog.Slot.LEGS),
                 PACK.stream().limit(4).map(f->CATALOG.base(f.itemBaseId()).slot()).collect(java.util.stream.Collectors.toSet()));
         var owner=UUID.randomUUID();var report=new StringBuilder("# QA159 connected gear pack — R195\n\n17 distinct legal carriers; 159 unique functional affixes. WA-155 excluded. Six items have ten affixes; eleven have nine.\n\nThe approved 17-item adjustment preserves the thirteen mutually exclusive skill-rank affixes on thirteen held items plus four armor pieces.\n\nRolls use the upper legal endpoint of the first legal tier, with the native source window, requirements and selector restrictions retained. Legendary is a QA carrier quality, not a new random loot outcome.\n\n## Fixtures\n\n");

@@ -58,6 +58,17 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         if(durableCycloneEnabled)durableCyclone.preload(player);
     }
     boolean durableCycloneEnabled(){return durableCycloneEnabled;}
+    public com.inigmasgames.hytalerpg.ui.model.BarrierView barrierView(UUID player){
+        if(!durableCycloneEnabled||durableCyclone==null)return com.inigmasgames.hytalerpg.ui.model.BarrierView.NONE;
+        var binding=cycloneConnections.get(player);
+        if(binding==null)return com.inigmasgames.hytalerpg.ui.model.BarrierView.NONE;
+        try{
+            var state=durableCyclone.state(binding.lease());
+            return state.phase()==CycloneBarrierLedger.Phase.ACTIVE
+                    ?new com.inigmasgames.hytalerpg.ui.model.BarrierView(state.revision(),state.generation(),state.remaining(),state.capacity())
+                    :new com.inigmasgames.hytalerpg.ui.model.BarrierView(state.revision(),null,0,0);
+        }catch(RuntimeException unavailable){return com.inigmasgames.hytalerpg.ui.model.BarrierView.NONE;}
+    }
     SkillExecutionPort.CycloneAuthority cycloneAuthority(PlayerRef player){
         if(!durableCycloneEnabled||cycloneActivations==null)
             throw new IllegalStateException("CYCLONE_AUTHORITY_DISABLED");

@@ -10,6 +10,10 @@ import com.hypixel.hytale.server.core.modules.entitystats.asset.*;
 import com.hypixel.hytale.server.core.modules.entitystats.modifier.StaticModifier;
 import com.inigmasgames.hytalerpg.difficulty.*;
 import com.inigmasgames.hytalerpg.execution.hytale.HytaleDifficultyCombat;
+import com.inigmasgames.hytalerpg.combat.hytale.DerivedStatEntityAdapter;
+import com.inigmasgames.hytalerpg.combat.attribute.DerivedStatService;
+import com.inigmasgames.hytalerpg.combat.attribute.EffectiveAttributeService;
+import com.inigmasgames.hytalerpg.combat.balance.CombatBalanceProfile;
 import java.util.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -61,6 +65,23 @@ class EnemyNativeHealthTest {
             new MonsterResistanceProfile(Map.of(),Set.of()),EncounterProfileResolver.Evidence.FIXTURE_ONLY);}
     private static EnemyAffixSnapshot providers(double rarity,double empowered){return new EnemyAffixSnapshot(rarity,1,empowered,1,1,0,0,0,Map.of(),0,Map.of(),false,false,false,null,0,false,false);}
     private static EntityStatMap stats(){var stats=new EntityStatMap();stats.update();return stats;}
+    @Test void playerCapacityRecalculationPreservesNativeCurrentAndClampsOnReduction(){
+        var map=stats();var projection=new DerivedStatEntityAdapter();
+        var derived=new DerivedStatService(CombatBalanceProfile.loadCanonical(),new EffectiveAttributeService(CombatBalanceProfile.loadCanonical()));
+        int health=DefaultEntityStatTypes.getHealth(),mana=DefaultEntityStatTypes.getMana();
+        map.setStatValue(health,45);map.setStatValue(mana,25);
+        var level99=derived.derive(Map.of(),99);
+        for(int i=0;i<3;i++)projection.apply(map,level99);
+        assertEquals(388,map.get(health).getMax(),.001);
+        assertEquals(45,map.get(health).get(),.001);
+        assertEquals(25,map.get(mana).get(),.001);
+        projection.apply(map,derived.derive(Map.of(),1));
+        assertEquals(100,map.get(health).getMax(),.001);
+        assertEquals(45,map.get(health).get(),.001);
+        map.setStatValue(health,0);
+        projection.apply(map,level99);
+        assertEquals(0,map.get(health).get(),.001);
+    }
     @Test void rarityAndEmpoweredHealthUseExactlyOneNativeModifierWithoutRefilling(){
         var stats=stats();var profile=profile();int health=DefaultEntityStatTypes.getHealth();
         var providers=providers(1.15,.45);

@@ -100,7 +100,7 @@ class Stage02CombatKernelTest {
         var stats = derived.derive(raw(500, 500, 500, 500, 10));
         assertAll(() -> assertEquals(720.0, stats.maxHealth(), 1e-12),
                 () -> assertEquals(255.0, stats.maxStamina(), 1e-12),
-                () -> assertEquals(332.5, stats.maxMana(), 1e-12),
+                () -> assertEquals(720.0, stats.maxMana(), 1e-12),
                 () -> assertEquals(1.96, stats.heavyDamageMultiplier(), 1e-12),
                 () -> assertEquals(1.96, stats.lightDamageMultiplier(), 1e-12),
                 () -> assertEquals(1.96, stats.magicDamageMultiplier(), 1e-12),

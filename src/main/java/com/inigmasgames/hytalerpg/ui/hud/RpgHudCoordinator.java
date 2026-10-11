@@ -181,6 +181,8 @@ public final class RpgHudCoordinator {
         try {
             RpgHudViewModel previous = session.model;
             RpgHudViewModel next = projection.hud(playerRef.getUuid(), resources.read(stats), xpFixtures.get(playerRef.getUuid()));
+            next=next.withBarrier(selectBarrier(previous.barrier(),next.barrier(),session.barrierHighWater));
+            session.barrierHighWater=Math.max(session.barrierHighWater,next.barrier().revision());
             session.hud.refreshSkillFailure(session.skillFailure.view(now), !nativeWeaponReady
                     && next.skills().stream().anyMatch(slot -> slot.skillId() != null && !slot.skillId().isBlank()));
             session.combo.refresh(next,finisherPips.applyAsInt(playerRef.getUuid()));
@@ -202,6 +204,12 @@ public final class RpgHudCoordinator {
                     "error", error.getClass().getSimpleName(), "message", String.valueOf(error.getMessage())));
             try { teardown(playerRef.getUuid(), "REFRESH_FAILURE"); } catch (RuntimeException ignored) { }
         }
+    }
+    static com.inigmasgames.hytalerpg.ui.model.BarrierView selectBarrier(
+            com.inigmasgames.hytalerpg.ui.model.BarrierView previous,
+            com.inigmasgames.hytalerpg.ui.model.BarrierView proposed,long highWater){
+        return proposed.revision()>0&&(proposed.revision()<highWater
+                ||previous.revision()==0&&highWater>0&&proposed.revision()==highWater)?previous:proposed;
     }
 
     public void setXpFixture(UUID player, Double percent) {
@@ -255,7 +263,7 @@ public final class RpgHudCoordinator {
     private static final class Session {
         private final SkillFailureNotice skillFailure = new SkillFailureNotice();
         private final PlayerRef playerRef; private final HudManager manager;
-        private final RpgHud hud; private RpgHudViewModel model; private long lastPollNanos; private boolean emptyHand;
+        private final RpgHud hud; private RpgHudViewModel model; private long lastPollNanos; private long barrierHighWater; private boolean emptyHand;
         private final FinisherHud combo;
         private boolean sentinelAffixesOn;
         private UUID enemyWorld,enemyEntity,recentDamagedEntity;
@@ -264,7 +272,7 @@ public final class RpgHudCoordinator {
                         RpgHudViewModel model, long now) {
             this.combo=combo;
             this.playerRef = playerRef; this.manager = manager; this.hud = hud;
-            this.model = model; this.lastPollNanos = now;
+            this.model = model; this.lastPollNanos = now; this.barrierHighWater=model.barrier().revision();
         }
         private boolean ownsActiveHuds() {
             return manager.getCustomHud(RpgHud.KEY) == hud

@@ -928,7 +928,7 @@ public final class SkillExecutionService {
         EnumMap<RpgAttribute, Integer> raw = new EnumMap<>(RpgAttribute.class);
         for (RpgAttribute attribute : RpgAttribute.values()) raw.put(attribute,
                 state.attributes.getOrDefault(attribute.name(), 10));
-        return port.gearEffects().derive(kernel.derivedStats(),raw);
+        return port.gearEffects().derive(kernel.derivedStats(),raw,state.level);
     }
 
     /** Capture the exact valid held instance while the equipment and cost quote are accepted. */

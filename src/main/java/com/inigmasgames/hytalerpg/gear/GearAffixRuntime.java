@@ -7,7 +7,7 @@ import java.util.*;
 public final class GearAffixRuntime {
     private GearAffixRuntime() {}
     // WA-155 awaits the owner-measured metre/native-radius calibration.
-    public static final Set<String> ENABLED = Set.of("WA-001","WA-002","WA-003","WA-004","WA-005","WA-006","WA-007","WA-008","WA-009","WA-010",
+    public static final Set<String> V1_ENABLED = Set.of("WA-001","WA-002","WA-003","WA-004","WA-005","WA-006","WA-007","WA-008","WA-009","WA-010",
             "WA-011","WA-012","WA-013","WA-014","WA-015","WA-016","WA-017","WA-018","WA-019","WA-020",
             "WA-021","WA-022","WA-023","WA-024","WA-025","WA-026","WA-027","WA-028","WA-029","WA-030",
             "WA-031","WA-032","WA-033","WA-034","WA-035","WA-036","WA-037","WA-038","WA-039","WA-040",
@@ -23,6 +23,8 @@ public final class GearAffixRuntime {
             "WA-131","WA-132","WA-133","WA-134","WA-135","WA-136","WA-137","WA-138","WA-139","WA-140",
             "WA-141","WA-142","WA-143","WA-144","WA-145","WA-146","WA-147","WA-148","WA-149","WA-150",
             "WA-151","WA-152","WA-153","WA-154","WA-156","WA-157","WA-158","GA-159","GA-160");
+    public static final Set<String> ENABLED=java.util.stream.Stream.concat(V1_ENABLED.stream(),java.util.stream.Stream.of("GA-161"))
+            .collect(java.util.stream.Collectors.toUnmodifiableSet());
     private static final GearCatalog CATALOG=GearCatalog.load();
     private static final double RECOVERY_CAP=com.inigmasgames.hytalerpg.combat.balance.CombatBalanceProfile.loadCanonical().cooldownRecoveryCap;
     private static final double CRITICAL_CAP=com.inigmasgames.hytalerpg.combat.balance.CombatBalanceProfile.loadCanonical().criticalChanceCap;
@@ -72,7 +74,10 @@ public final class GearAffixRuntime {
             attributes.forEach((key,value)->result.merge(key,value,Math::addExact));return Map.copyOf(result);
         }
         public DerivedStats derive(DerivedStatService owner,Map<RpgAttribute,Integer> baseline) {
-            var d=owner.derive(raw(baseline),health,stamina,mana);
+            return derive(owner,baseline,1);
+        }
+        public DerivedStats derive(DerivedStatService owner,Map<RpgAttribute,Integer> baseline,int level) {
+            var d=owner.derive(raw(baseline),level,health,stamina,mana);
             return new DerivedStats(d.rawAttributes(),d.effectiveAttributes(),d.maxHealth(),d.maxStamina(),d.maxMana(),
                     d.heavyDamageMultiplier(),d.lightDamageMultiplier(),d.magicDamageMultiplier(),d.healingMultiplier(),
                     Math.min(RECOVERY_CAP,d.cooldownRecovery()+cooldownRecovery),d.learnRate(),

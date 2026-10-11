@@ -136,6 +136,8 @@ final class RpgHud extends CustomUIHud {
         this.emptyHand = emptyHand;
         UICommandBuilder update = new UICommandBuilder();
         if (!previous.xp().equals(next.xp())) writeXp(update, next);
+        if (!previous.health().equals(next.health()) || !previous.mana().equals(next.mana())
+                || !previous.barrier().equals(next.barrier())) writeResources(update,next);
         if (previous.pendingLevelUpPoints() != next.pendingLevelUpPoints()) writeNotice(update, next);
         if(!previous.skills().equals(next.skills()))writeCooldowns(update,next);
         if(handChanged||!previous.skills().equals(next.skills()))writeEmptyHandSkills(update,next,emptyHand);
@@ -144,6 +146,7 @@ final class RpgHud extends CustomUIHud {
 
     private static void writeAll(UICommandBuilder commands, RpgHudViewModel model, boolean emptyHand) {
         writeXp(commands, model);
+        writeResources(commands,model);
         writeNotice(commands, model);
         writeCooldowns(commands,model);
         writeEmptyHandSkills(commands,model,emptyHand);
@@ -188,6 +191,26 @@ final class RpgHud extends CustomUIHud {
 
     private static void writeXp(UICommandBuilder commands, RpgHudViewModel model) {
         commands.setObject("#ExperienceFill.Anchor", leftFill(xpFillWidth(model.xp().progress()), 3, 3, 22));
+    }
+
+    static void writeResources(UICommandBuilder commands,RpgHudViewModel model){
+        commands.set("#RpgHealthValue.Text","Health "+resourceText(model.health()));
+        commands.set("#RpgManaValue.Text","Mana "+resourceText(model.mana()));
+        var barrier=model.barrier();
+        commands.set("#RpgBarrierMeter.Visible",barrier.active());
+        if(barrier.active()){
+            commands.setObject("#RpgBarrierFill.Anchor",leftFill(barrierFillWidth(barrier),3,3,16));
+            commands.set("#RpgBarrierValue.Text","Barrier "+number(barrier.current())+" / "+number(barrier.maximum()));
+        }
+    }
+    static int barrierFillWidth(com.inigmasgames.hytalerpg.ui.model.BarrierView barrier){
+        return barrier.active()?proportionalWidth(barrier.current()/barrier.maximum(),404):0;
+    }
+    static String resourceText(com.inigmasgames.hytalerpg.ui.model.NativeResourceView value){
+        return number(value.current())+" / "+number(value.maximum());
+    }
+    private static String number(double value){
+        return String.format(java.util.Locale.ROOT,"%.1f",value);
     }
 
     private static void writeNotice(UICommandBuilder commands, RpgHudViewModel model) {

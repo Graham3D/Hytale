@@ -18,7 +18,7 @@ public final class GearEffectSnapshot {
         LIFE_ON_HIT, LIFE_ON_KILL, LIGHT_RADIUS, LOCAL_ARMOR_FLAT, LOCAL_ARMOR_INCREASED,
         LOCAL_ATTACK_SPEED, LOCAL_ELEMENT_FLAT, LOCAL_MAGIC_FLAT, LOCAL_PHYS_FLAT,
         LOCAL_PHYS_INC, LOCAL_PHYS_MAX, LOCAL_PHYS_MIN, MAGIC_FIND, MANA_COST, MANA_LEECH,
-        MANA_ON_HIT, MANA_REGEN, MAX_HEALTH, MAX_MANA, MAX_STAMINA, MELEE_REACH,
+        MANA_ON_HIT, MANA_REGEN, MANA_BEFORE_LIFE, MAX_HEALTH, MAX_MANA, MAX_STAMINA, MELEE_REACH,
         MINION_ATTACK_SPEED, MINION_DAMAGE, MINION_DEFENSE, MINION_DURATION, MINION_HEALTH,
         MINION_MOVEMENT, MINION_RESISTANCE, PHYSICAL_DAMAGE_GLOBAL, PICKUP_RADIUS,
         PROJECTILE_RANGE, PROJECTILE_SPEED, REDUCED_REQUIREMENTS, RESIST_EARTH, RESIST_FIRE,
@@ -95,6 +95,12 @@ public final class GearEffectSnapshot {
     public double percent(Operator operator) { return total(operator)/100.0; }
     public double value(String affixId) { return values.getOrDefault(affixId,0.0); }
     public double percent(String affixId) { return value(affixId)/100.0; }
+    /** Only admitted armor can provide this new defensive conversion; cap the combined total once. */
+    public double manaBeforeLifeFraction(){
+        return Math.min(.60,items.stream().filter(item->item.category()==GearCatalog.Category.ARMOR)
+                .flatMap(item->item.affixes().stream()).filter(roll->roll.familyId().equals("GA-161"))
+                .mapToDouble(roll->roll.value()/100.0).sum());
+    }
     public GearEffectSnapshot forItem(UUID itemId) {
         if(items.size()==1&&items.getFirst().identity().equals(itemId))return this;
         return localSnapshots.getOrDefault(itemId,EMPTY);

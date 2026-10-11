@@ -24,6 +24,13 @@ public final class SupportDamageSystems {
             ignored->false,false,"InigmasGames:SupportDamageObserved",Codec.BOOLEAN);
     private static final com.hypixel.hytale.server.core.meta.MetaKey<String> CYCLONE_RECEIPT=Damage.META_REGISTRY.registerMetaObject(
             ignored->"",false,"InigmasGames:CycloneDurableDebitReceipt",Codec.STRING);
+    private static final com.hypixel.hytale.server.core.meta.MetaKey<Boolean> MANA_BEFORE_LIFE_DONE=Damage.META_REGISTRY.registerMetaObject(
+            ignored->false,false,"InigmasGames:ManaBeforeLifeProcessed",Codec.BOOLEAN);
+    static boolean claimManaBeforeLife(Damage damage){
+        if(damage.isCancelled()||damage.getAmount()<=0||Boolean.TRUE.equals(damage.getIfPresentMetaObject(MANA_BEFORE_LIFE_DONE)))return false;
+        damage.putMetaObject(MANA_BEFORE_LIFE_DONE,true);
+        return true;
+    }
     private static double health(ArchetypeChunk<EntityStore> chunk,int index){
         var stats=chunk.getComponent(index,EntityStatMap.getComponentType());
         var value=stats==null?null:stats.get(DefaultEntityStatTypes.getHealth());return value==null?Double.NaN:value.get();
@@ -263,12 +270,44 @@ public final class SupportDamageSystems {
         }
     }
     }
+    /** Runs once on the same native hit after all barriers and support defenses, before native Health. */
+    public static final class ManaBeforeLife extends DamageEventSystem {
+        private final com.inigmasgames.hytalerpg.combat.resource.RpgResourceService resources;
+        public ManaBeforeLife(com.inigmasgames.hytalerpg.combat.resource.RpgResourceService resources){this.resources=Objects.requireNonNull(resources);}
+        @Override public Query<EntityStore> getQuery(){return Query.and(com.hypixel.hytale.server.core.universe.PlayerRef.getComponentType(),EntityStatMap.getComponentType());}
+        @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(
+                new SystemDependency<>(Order.AFTER,HytaleSupportSystem.Absorb.class),
+                new SystemDependency<>(Order.AFTER,Shield.class),
+                new SystemDependency<>(Order.BEFORE,BeforeApply.class),
+                new SystemDependency<>(Order.BEFORE,DamageSystems.ApplyDamage.class));}
+        @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){
+            if(!claimManaBeforeLife(damage))return;
+            var ref=chunk.getReferenceTo(index);
+            var player=chunk.getComponent(index,com.hypixel.hytale.server.core.universe.PlayerRef.getComponentType());
+            var stats=chunk.getComponent(index,EntityStatMap.getComponentType());
+            try{
+                var equipped=com.inigmasgames.hytalerpg.gear.GearNativeItems.effects(ref,store).snapshot();
+                double fraction=equipped.manaBeforeLifeFraction();
+                if(fraction<=0)return;
+                float before=damage.getAmount();
+                var result=com.inigmasgames.hytalerpg.execution.support.ManaBeforeLifeStage.apply(before,fraction,
+                        player.getUuid(),resources,new EntityStatResourcePort(stats));
+                if(result.manaSpent()>0)damage.setAmount(result.healthDamage());
+                HytaleDamageLifecycleSystems.combatStage(damage,"Hywind Mana Before Life","MANA_BEFORE_LIFE",
+                        before,damage.getAmount(),Map.of("manaSpent",result.manaSpent(),"intended",result.intended(),"uncertain",result.uncertain()));
+            }catch(RuntimeException failure){
+                com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(failure)
+                        .log("RPG_MANA_BEFORE_LIFE_FAILED player=%s",player.getUuid());
+            }
+        }
+    }
     /** Captures actual pre-Apply HP after all absorption, including native non-RPG incoming damage. */
     public static final class BeforeApply extends DamageEventSystem {
         @Override public Query<EntityStore> getQuery(){return EntityStatMap.getComponentType();}
         @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(
                 new SystemDependency<>(Order.AFTER,HytaleSupportSystem.Absorb.class),
                 new SystemDependency<>(Order.AFTER,Shield.class),
+                new SystemDependency<>(Order.AFTER,ManaBeforeLife.class),
                 new SystemDependency<>(Order.BEFORE,DamageSystems.ApplyDamage.class));}
         @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){
         try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.SUPPORT)){

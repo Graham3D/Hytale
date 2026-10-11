@@ -47,7 +47,7 @@ public final class Qa159Pack {
                         ||!GearDropGenerator.eligible(catalog.affix(id),base)||!evidence(id).get("result").getAsString().equals("FUNCTIONAL"))
                     throw new IllegalStateException("QA159 duplicate, gated or illegal affix "+id+" on "+base.id());
             }
-            if(affixes.size()!=159||affixes.contains("WA-155")||!affixes.equals(GearAffixRuntime.ENABLED))
+            if(affixes.size()!=159||affixes.contains("WA-155")||!affixes.equals(GearAffixRuntime.V1_ENABLED))
                 throw new IllegalStateException("QA159 coverage mismatch");
             return List.copyOf(file.fixtures());
         }catch(java.io.IOException error){throw new java.io.UncheckedIOException(error);}

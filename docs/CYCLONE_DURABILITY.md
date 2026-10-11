@@ -144,3 +144,8 @@ test are essential. See [R261-B QA notes](QA-R261B-CYCLONE.md).
 
 Native player-save flush timing and connected-client damage latency remain
 unverified. The gate remains disabled by default in R261-B.
+
+R261-C adds player progression and Mana Before Life downstream of confirmed
+Cyclone absorption. Its native resource conversion cannot establish a durable
+payment identity across a crash; see [R261-C development contract](R261C_ENGINEERING.md).
+The R261-B reconnect forfeiture and Shared Aegis boundaries remain open.

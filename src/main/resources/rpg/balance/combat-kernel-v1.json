@@ -9,7 +9,7 @@
   "startingResourceMaximum": 100.0,
   "healthPerEffectiveStrength": 2.0,
   "staminaPerEffectiveDexterity": 0.5,
-  "manaPerEffectiveIntelligence": 0.75,
+  "manaPerEffectiveIntelligence": 2.0,
   "primaryScalingPerEffectivePoint": 0.003,
   "potencyIncreased": 0.15,
   "wisdomCooldownNumerator": 0.30,

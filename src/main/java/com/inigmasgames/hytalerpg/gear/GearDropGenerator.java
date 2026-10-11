@@ -12,7 +12,7 @@ public final class GearDropGenerator {
     public String revision(){
         if(fingerprint!=null)return fingerprint;
         var definition=new StringBuilder(GearRandom.VERSION).append(new TreeSet<>(capabilities));
-        for(String file:List.of("bases-v1.json","affixes-v1.json","native-bindings-v1.json","quality-profile-v1.json"))try(var input=getClass().getResourceAsStream("/rpg/gear/"+file)){
+        for(String file:List.of("bases-v1.json","affixes-v1.json","affixes-v2.json","native-bindings-v1.json","quality-profile-v1.json"))try(var input=getClass().getResourceAsStream("/rpg/gear/"+file)){
             byte[] bytes=Objects.requireNonNull(input).readAllBytes();definition.append(bytes.length).append(new String(bytes,StandardCharsets.UTF_8));
         }catch(java.io.IOException error){throw new java.io.UncheckedIOException(error);}
         return fingerprint=com.inigmasgames.hytalerpg.progress.RewardIntent.digest(definition.toString());
@@ -106,7 +106,7 @@ public final class GearDropGenerator {
         if(rarity==GearRarity.NORMAL)return List.of();
         if(rarity==GearRarity.COMMON||rarity==GearRarity.UNCOMMON)throw new IllegalArgumentException("Legacy quality cannot be generated");
         var options=new ArrayList<Choice>();
-        for(var affix:catalog.affixes())if(capabilities.contains(affix.id())&&eligible(affix,base))for(var tier:GearAffixTiers.compile(affix))
+        for(var affix:catalog.rollableAffixes())if(capabilities.contains(affix.id())&&eligible(affix,base))for(var tier:GearAffixTiers.compile(affix))
             if(tier.minimumItemLevel()<=level&&GearAffixTiers.rarityAllows(affix,tier,rarity)
                     &&rollable(affix,base,tier))
                 options.add(new Choice(affix,tier,new GearRequirements.Gate(tier.requiredLevel(),Map.of(affix.requirementAttribute(base),affix.attributeFloor(5-tier.tier(),tier.minimumItemLevel())))));

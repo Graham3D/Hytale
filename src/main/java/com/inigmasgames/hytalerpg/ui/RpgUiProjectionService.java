@@ -30,6 +30,8 @@ public final class RpgUiProjectionService {
     private java.util.function.Function<UUID,com.inigmasgames.hytalerpg.gear.GearAffixRuntime.Effects> gearEffects=actor->com.inigmasgames.hytalerpg.gear.GearAffixRuntime.Effects.NONE;
     public void configureGearEffects(java.util.function.Function<UUID,com.inigmasgames.hytalerpg.gear.GearAffixRuntime.Effects> provider){gearEffects=java.util.Objects.requireNonNull(provider);}
     private java.util.function.ToDoubleBiFunction<UUID,String> activeRemaining=(owner,skill)->0;
+    private java.util.function.Function<UUID,com.inigmasgames.hytalerpg.ui.model.BarrierView> barrierReader=ignored->com.inigmasgames.hytalerpg.ui.model.BarrierView.NONE;
+    public void configureBarrierReader(java.util.function.Function<UUID,com.inigmasgames.hytalerpg.ui.model.BarrierView> reader){barrierReader=java.util.Objects.requireNonNull(reader);}
     public void configureActiveRemaining(java.util.function.ToDoubleBiFunction<UUID,String> reader){activeRemaining=java.util.Objects.requireNonNull(reader);}
     private com.inigmasgames.hytalerpg.combat.resource.RpgResourceService resourceService;
     private java.util.function.ToIntBiFunction<UUID,SkillSlot> attunement=(actor,slot)->0;
@@ -105,7 +107,7 @@ public final class RpgUiProjectionService {
                             : resourceFailure,duration));
         }
         return new RpgHudViewModel(view.state().revision, resources.mana(), resources.health(), resources.stamina(),
-                projectedXp, view.state().pendingLevelUpPoints, slots);
+                projectedXp, view.state().pendingLevelUpPoints, slots,barrierReader.apply(player));
     }
 
     public CharacterXpProjectionService xp() { return xp; }
@@ -151,7 +153,7 @@ public final class RpgUiProjectionService {
         EnumMap<RpgAttribute, Integer> raw = new EnumMap<>(RpgAttribute.class);
         for (RpgAttribute attribute : RpgAttribute.values())
             raw.put(attribute, view.state().attributes.getOrDefault(attribute.name(), 10));
-        return gearEffects.apply(player).derive(derivedStats,raw);
+        return gearEffects.apply(player).derive(derivedStats,raw,view.state().level);
     }
 
     private static String abilityAction(SkillSlot slot) { return "Ability" + (slot.index() + 2); }

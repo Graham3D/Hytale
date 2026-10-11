@@ -1,0 +1,10 @@
+{
+  "revision": "R261C-U7P5B",
+  "jsonAssetsNormalizedSha256": {
+    "rpg/balance/combat-kernel-v1.json": "0be362b0e44a8e4dc824ee37a2fbca81a854c42c12f794e08d38c4f46687487a",
+    "rpg/gear/affixes-v2.json": "f50ecb0f250b45e64d1d4512e4a42dadc788ab4039212074708a4482009639b9"
+  },
+  "replacedGuardedNormalizedSha256": {
+    "rpg/balance/combat-kernel-v1.json": "aa18db4745ea5e4c724de1fe4d1f7b38a7029d63183bd1e71be7b8a4b3bc5b17"
+  }
+}

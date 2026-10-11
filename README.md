@@ -1,12 +1,13 @@
 # Hywind / HyARPG development baseline
 
-The current feature branch candidate is **R261B-U7P5B**
-(`0.2.0-R261B-U7P5B`) on `codex/r261b-live-cyclone`. It integrates the
-R261-A/A.1 durable barrier into opt-in Cyclone casting and damage. The gate
-defaults off; R260 remains the active RPG-save build. See
-[the durability contract](docs/CYCLONE_DURABILITY.md),
-[protected test notes](docs/QA-R261B-CYCLONE.md), and
-[the baseline](docs/DEVELOPMENT_BASELINE.md) for verification status.
+The current feature branch candidate is **R261C-U7P5B**
+(`0.2.0-R261C-U7P5B`) on `codex/r261c-progression-mana-hud`. It adds
+character Health/Mana progression, Mana Before Life armor, and a resource
+HUD to the R261-B opt-in Cyclone implementation. The Cyclone gate defaults
+off; R260 remains the active RPG-save build. See the
+[R261-C engineering contract](docs/R261C_ENGINEERING.md),
+[offline evidence map](docs/QA-R261C-DEVELOPMENT.md), and
+[baseline](docs/DEVELOPMENT_BASELINE.md) for verification status.
 
 The current GitHub `main` gameplay baseline is **R250-U7P5B**
 (`0.2.0-R250-U7P5B`). [PR #1](https://github.com/Graham3D/Hytale/pull/1)

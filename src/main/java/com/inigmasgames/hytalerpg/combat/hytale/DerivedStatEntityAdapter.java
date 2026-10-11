@@ -7,7 +7,7 @@ import com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier;
 import com.hypixel.hytale.server.core.modules.entitystats.modifier.StaticModifier;
 import com.inigmasgames.hytalerpg.combat.attribute.DerivedStats;
 
-/** Projects RPG maxima into native EntityStatMap modifiers while preserving current percentage. */
+/** Projects RPG maxima into native EntityStatMap modifiers while preserving current resource amounts. */
 public final class DerivedStatEntityAdapter {
     private static final String GEAR_KEY = "hytalerpg:gear-capacity";
     private static final String HEALTH_KEY = "hytalerpg:derived-max-health";
@@ -36,7 +36,6 @@ public final class DerivedStatEntityAdapter {
         var gear=before.getModifier(GEAR_KEY);
         double priorCurrent=before.get();
         if(gear instanceof StaticModifier modifier) desiredMaximum+=modifier.getAmount()*NativeManaReservationProjection.maximumMultiplier(before);
-        double percentage = before.getMax() <= 0.0 ? 1.0 : before.get() / before.getMax();
         stats.removeModifier(index, key);
         stats.update();
         EntityStatValue base = stats.get(index);
@@ -45,7 +44,7 @@ public final class DerivedStatEntityAdapter {
                 StaticModifier.CalculationType.ADDITIVE, additive));
         stats.update();
         EntityStatValue after = stats.get(index);
-        stats.setStatValue(index, (float) Math.max(after.getMin(), Math.min(after.getMax(), gear==null?percentage * after.getMax():priorCurrent)));
+        stats.setStatValue(index, (float) Math.max(after.getMin(), Math.min(after.getMax(), priorCurrent)));
     }
 
     /** Gear adds native capacity without granting resource. Existing reservations remain authoritative. */

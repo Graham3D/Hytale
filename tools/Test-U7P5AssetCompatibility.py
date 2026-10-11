@@ -14,6 +14,7 @@ R250_REVIEW = HERE / 'tools/u7p5-r250-reviewed-json-baseline.json'
 CYCLONE_REVIEW = HERE / 'tools/u7p5-r256-cyclone-reviewed-assets.json'
 ICON_REVIEW = HERE / 'tools/u7p5-r258-icon-reviewed-assets.json'
 R261B_REVIEW = HERE / 'tools/u7p5-r261b-cyclone-reviewed-assets.json'
+R261C_REVIEW = HERE / 'tools/u7p5-r261c-resource-reviewed-assets.json'
 R248_BASELINE_NORMALIZED_SHA256 = '69464e8c153519ca2f97cf76f9a6e17055401a3f2f1a18084c1672ca57e8c168'
 GENERATED_STOCK_JSON = 'Server/Prefabs/Testing/VolumeShowcase/Trigger_Volume_Showcase.prefab.json'
 CATEGORIES = {
@@ -50,6 +51,13 @@ def validate(package, installed, report):
     r261b_changes = r261b_review.get('jsonAssetsNormalizedSha256', {})
     if r261b_review.get('revision') != 'R261B-U7P5B' or set(r261b_changes) != {r261b_asset}:
         failures.append('R261-B Cyclone reviewed asset inventory changed')
+    r261c_review = json.loads(R261C_REVIEW.read_text())
+    r261c_changes = r261c_review.get('jsonAssetsNormalizedSha256', {})
+    r261c_prior = r261c_review.get('replacedGuardedNormalizedSha256', {})
+    if (r261c_review.get('revision') != 'R261C-U7P5B' or
+            set(r261c_changes) != {'rpg/balance/combat-kernel-v1.json', 'rpg/gear/affixes-v2.json'} or
+            set(r261c_prior) != {'rpg/balance/combat-kernel-v1.json'}):
+        failures.append('R261-C resource reviewed asset inventory changed')
     icon_path = 'Server/Item/Items/RPG/Abilities/RPG_Ability_Spirit_Shield.json'
     if (icon_review.get('revision') != 'R258-U7P5B' or
             icon_review.get('itemAsset') != icon_path or
@@ -164,8 +172,8 @@ def validate(package, installed, report):
                 set(particle_assets) != {'Server/Particles/RPG/Wind_Swoosh_CycloneArmor.particlespawner',
                                         'Server/Particles/RPG/RPG_Cyclone_Armor.particlesystem'}):
             failures.append('Cyclone reviewed asset inventory changed')
-        if len(actual) != review['jsonAssetCount'] + 1 + len(r261b_changes):
-            failures.append('R256/R261-B JSON asset count differs from reviewed package')
+        if len(actual) != review['jsonAssetCount'] + 1 + len(r261b_changes) + 1:
+            failures.append('R256/R261-B/R261-C JSON asset count differs from reviewed package')
         resource_roots = (HERE / 'src/main/resources', HERE / 'hytale-taverns/src/main/resources')
         source_paths = {}
         for root in resource_roots:
@@ -180,11 +188,12 @@ def validate(package, installed, report):
         reviewed = {**r249_added, **r249_changed, **r250_changed}
         if not set(reviewed).issubset(actual):
             failures.append('Reviewed R249/R250 JSON asset is missing')
-        guarded_names = actual - set(reviewed) - set(cyclone_changes) - set(r261b_changes) - {icon_path}
-        if len(guarded_names) + len(prior_guarded) + 1 != review['guardedJsonCount']:
+        guarded_names = actual - set(reviewed) - set(cyclone_changes) - set(r261b_changes) - set(r261c_changes) - {icon_path}
+        if len(guarded_names) + len(prior_guarded) + len(r261c_prior) + 1 != review['guardedJsonCount']:
             failures.append('Guarded R250 JSON asset count differs from reviewed package')
         guarded = {name: normalized_json_sha256(candidate.read(name)) for name in guarded_names}
         guarded.update(prior_guarded)
+        guarded.update(r261c_prior)
         guarded[icon_path] = icon_review['priorNormalizedSha256']
         if asset_root(guarded) != review['guardedNormalizedJsonSha256']:
             failures.append('Guarded R250 JSON asset set or normalized contents changed')
@@ -197,6 +206,9 @@ def validate(package, installed, report):
         for name, expected in r261b_changes.items():
             if name not in actual or normalized_json_sha256(candidate.read(name)) != expected:
                 failures.append(f'{name}: reviewed R261-B JSON content changed')
+        for name, expected in r261c_changes.items():
+            if name not in actual or normalized_json_sha256(candidate.read(name)) != expected:
+                failures.append(f'{name}: reviewed R261-C JSON content changed')
         if r261b_asset in actual:
             durable_effect = json.loads(candidate.read(r261b_asset))
             if (durable_effect.get('Infinite') is not True or 'Duration' in durable_effect or
@@ -236,7 +248,7 @@ def validate(package, installed, report):
             source = source_paths.get(name)
             if source is not None:
                 source_bytes = source.read_bytes()
-                if name in reviewed or name in cyclone_changes or name in r261b_changes or name == icon_path:
+                if name in reviewed or name in cyclone_changes or name in r261b_changes or name in r261c_changes or name == icon_path:
                     if source_bytes != package_bytes:
                         failures.append(f'{name}: packaged reviewed asset differs from checked source')
                 elif normalized_json_sha256(source_bytes) != normalized_json_sha256(package_bytes):

@@ -6,7 +6,16 @@ Group {
   }
   Label #SkillWeaponHint { Anchor: (Right: 30, Bottom: 145, Width: 310, Height: 28); Text: "Hold a weapon to cast skills"; Visible: false; Style: (FontSize: 14, TextColor: #f2d488, Alignment: Center); }
   // Centering is implicit when Width is specified without Left/Right/Horizontal.
-  // Native Hytale exclusively owns Health, Mana, and Stamina presentation.
+  // Native Hytale keeps the Health/Mana bars; these are read-only exact values.
+  Group #RpgResourceValues { Anchor: (Bottom: 173, Width: 490, Height: 24);
+    Label #RpgHealthValue { Anchor: (Left: 0, Top: 0, Width: 245, Height: 24); Text: "Health"; Style: (FontSize: 14, RenderBold: true, TextColor: #ed6868, Alignment: Center); }
+    Label #RpgManaValue { Anchor: (Left: 245, Top: 0, Width: 245, Height: 24); Text: "Mana"; Style: (FontSize: 14, RenderBold: true, TextColor: #6eacff, Alignment: Center); }
+  }
+  Group #RpgBarrierMeter { Anchor: (Bottom: 201, Width: 410, Height: 22); Visible: false;
+    Group #RpgBarrierBackground { Anchor: (Full: 0); Background: (Color: #15232bdc); }
+    Group #RpgBarrierFill { Anchor: (Left: 3, Top: 3, Width: 0, Height: 16); Background: (Color: #75d7df); }
+    Label #RpgBarrierValue { Anchor: (Full: 0); Text: ""; Style: (FontSize: 13, RenderBold: true, TextColor: #ffffff, Alignment: Center); }
+  }
   // Exact XP layer order: background, left-anchored fill, then owner frame.
   Group #ExperienceHud { Anchor: (Bottom: 138, Width: 702, Height: 28);
     Group #ExperienceBackground { Anchor: (Left: 3, Top: 0, Width: 696, Height: 28); Background: (TexturePath: "Assets/RpgHud/ExperienceBackground.png"); }
