@@ -4,34 +4,25 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
-import com.hypixel.hytale.server.core.command.system.arguments.system.OptionalArg;
 import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractCommandCollection;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.inigmasgames.hytalerpg.gear.GearQaTrace;
 
-/** Per-player gear diagnostics; same author gate as protected gear fixtures. */
-public final class RpgGearTraceCommand extends AbstractCommandCollection {
+/** WA-155 calibration fixture; intentionally separate from observational gear tracing. */
+public final class RpgLightQaCommand extends AbstractCommandCollection {
     private record LightProbe(java.util.UUID token,java.util.UUID world,
                               com.hypixel.hytale.protocol.ColorLight before,
                               com.hypixel.hytale.protocol.ColorLight applied,boolean created) {}
     private final java.util.Map<java.util.UUID,LightProbe> lightProbes=new java.util.concurrent.ConcurrentHashMap<>();
-    public RpgGearTraceCommand(GearQaTrace trace){
-        super("geartrace","Bounded enemy gear, combat, stat and Sentinel QA trace.");
+    public RpgLightQaCommand(){
+        super("lightqa","WA-155 light readout and temporary calibration fixture.");
         requirePermission(RpgGearCommand.AUTHOR_PERMISSION);
-        addSubCommand(new AbstractPlayerCommand("on","Start a gear trace."){
-            @Override protected void execute(CommandContext c,Store<EntityStore> s,Ref<EntityStore> r,PlayerRef p,World w){c.sendMessage(Message.raw(trace.on(p.getUuid())));}
-        });
-        addSubCommand(new AbstractPlayerCommand("off","Stop and save the gear trace."){
-            @Override protected void execute(CommandContext c,Store<EntityStore> s,Ref<EntityStore> r,PlayerRef p,World w){c.sendMessage(Message.raw(trace.off(p.getUuid())));}
-        });
-        addSubCommand(new AbstractPlayerCommand("status","Show gear trace state."){
-            @Override protected void execute(CommandContext c,Store<EntityStore> s,Ref<EntityStore> r,PlayerRef p,World w){c.sendMessage(Message.raw(trace.status(p.getUuid())));}
-        });
+        setPermissionGroups();
         addSubCommand(new AbstractPlayerCommand("light","Show WA-155 target metres and native radius units."){
+            {requirePermission(RpgGearCommand.AUTHOR_PERMISSION);setPermissionGroups();}
             @Override protected void execute(CommandContext c,Store<EntityStore> s,Ref<EntityStore> r,PlayerRef p,World w){
                 var type=com.inigmasgames.hytalerpg.gear.NativeAffixLightSystem.stateType();
                 var state=type==null?null:s.getComponent(r,type);
@@ -44,6 +35,7 @@ public final class RpgGearTraceCommand extends AbstractCommandCollection {
             }
         });
         addSubCommand(new AbstractPlayerCommand("lightprobe","Temporarily set native actor light for renderer calibration; zero restores."){
+            {requirePermission(RpgGearCommand.AUTHOR_PERMISSION);setPermissionGroups();}
             final com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg<Integer> radius=
                     withRequiredArg("radius","0 restores; 1..127 probes signed-byte native units",ArgTypes.INTEGER);
             @Override protected void execute(CommandContext c,Store<EntityStore> s,Ref<EntityStore> r,PlayerRef p,World w){
@@ -80,10 +72,11 @@ public final class RpgGearTraceCommand extends AbstractCommandCollection {
                                 else lightProbes.remove(owner,probe);
                             }
                         }));
-                c.sendMessage(Message.raw("Native actor light probe="+units+" units for 30 s; use /rpg geartrace lightprobe 0 to restore"));
+                c.sendMessage(Message.raw("Native actor light probe="+units+" units for 30 s; use /rpg lightqa lightprobe 0 to restore"));
             }
         });
         addSubCommand(new AbstractPlayerCommand("lightcal","Fit three measured native radius/metre pairs and a verified ceiling."){
+            {requirePermission(RpgGearCommand.AUTHOR_PERMISSION);setPermissionGroups();}
             final com.hypixel.hytale.server.core.command.system.arguments.system.RequiredArg<String> measurements=
                     withRequiredArg("samples","r1:m1,r2:m2,r3:m3,ceiling,toleranceMetres",ArgTypes.STRING);
             @Override protected void execute(CommandContext c,Store<EntityStore> s,Ref<EntityStore> r,PlayerRef p,World w){
@@ -103,11 +96,6 @@ public final class RpgGearTraceCommand extends AbstractCommandCollection {
                 return new com.inigmasgames.hytalerpg.gear.NativeAffixLightProjection.Observation(
                         Integer.parseInt(parts[0]),Double.parseDouble(parts[1]));
             }
-        });
-        addSubCommand(new AbstractPlayerCommand("mark","Mark an action in the gear trace."){
-            final OptionalArg<String> label=withOptionalArg("label","Optional short label",ArgTypes.GREEDY_STRING);
-            @Override protected void execute(CommandContext c,Store<EntityStore> s,Ref<EntityStore> r,PlayerRef p,World w){
-                c.sendMessage(Message.raw(trace.mark(p.getUuid(),c.provided(label)?c.get(label):"")));}
         });
     }
     private void restoreLightProbe(java.util.UUID owner,Store<EntityStore> store,Ref<EntityStore> actor,World world){

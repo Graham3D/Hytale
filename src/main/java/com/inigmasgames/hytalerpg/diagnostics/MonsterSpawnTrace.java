@@ -83,7 +83,8 @@ public final class MonsterSpawnTrace implements AutoCloseable {
         var current=session;
         if(current==null)return new Status(false,0,lastEvents,lastDetails,lastFile,lastError,lastCounts);
         return new Status(true,Math.max(0,(current.deadline-System.currentTimeMillis()+999)/1000),
-                current.total,current.details.size()+current.priorityDetails.size(),lastFile,lastError,Map.copyOf(current.counts));
+                current.total,current.details.size()+current.priorityDetails.size(),
+                directory.resolve("monster-spawn-"+current.started+".jsonl").toString(),lastError,Map.copyOf(current.counts));
     }
     public static boolean enabled(){return installed!=null;}
     public static void event(String stage,UUID world,int environment,String role,String detail){

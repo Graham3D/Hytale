@@ -177,6 +177,8 @@ tasks.test {
     exclude '**/NativeGearTargetGridTest*'
     exclude '**/GearStatusBindingsTest*'
     exclude '**/GearStatusAcceptanceIntegrationTest*'
+    exclude '**/UnifiedTraceCommandTest*'
+    exclude '**/SkillCaptureSessionsTest*'
     exclude '**/SentinelSourceConsumerTest*'
     exclude '**/SentinelConditionalActionTest*'
     exclude '**/MasterAffixCombatCompletionTest*'
@@ -197,6 +199,8 @@ tasks.register('nativeControlTest', Test) {
     classpath = sourceSets.test.runtimeClasspath
     useJUnitPlatform()
     include '**/CombatDamageTraceServiceTest.class'
+    include '**/UnifiedTraceCommandTest.class'
+    include '**/SkillCaptureSessionsTest.class'
     include '**/R244NamesTest.class'
     include '**/R245FlockRollbackTest.class'
     include '**/R244PopulationProjectionTest.class'

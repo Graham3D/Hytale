@@ -73,9 +73,6 @@ public final class RpgCommand extends AbstractCommandCollection {
     private final RpgCharacterCommand characterCommand;
     private final com.inigmasgames.hytalerpg.ui.inventory.CommandInventoryEntryAdapter inventoryEntry;
     public com.inigmasgames.hytalerpg.ui.inventory.CommandInventoryEntryAdapter inventoryEntry() { return inventoryEntry; }
-    public void configureTabTrace(com.inigmasgames.hytalerpg.ui.inventory.TabTraceProbe probe) {
-        addSubCommand(new RpgTabTraceCommand(probe));
-    }
     public void configureInventoryProbe(com.inigmasgames.hytalerpg.ui.inventory.NativeInventoryEntryProbe probe) {
         addSubCommand(new RpgInventoryProbeCommand(probe));
     }

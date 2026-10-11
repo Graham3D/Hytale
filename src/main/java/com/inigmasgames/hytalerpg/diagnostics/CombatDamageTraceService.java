@@ -64,11 +64,13 @@ public final class CombatDamageTraceService implements AutoCloseable {
         }
     }
     private final ConcurrentHashMap<UUID,Session> sessions=new ConcurrentHashMap<>();
+    private final Path path;
     private final AtomicLong sequence=new AtomicLong();
     private final BoundedTraceWriter writer;
     private final Consumer<String> live;
     private volatile HytaleDifficultyCombat difficulty;
     public CombatDamageTraceService(Path path,Consumer<Throwable> failure,Consumer<String> live){
+        this.path=path.toAbsolutePath();
         writer=new BoundedTraceWriter(path,8L*1024*1024,8,failure);
         this.live=Objects.requireNonNull(live);
     }
@@ -87,6 +89,7 @@ public final class CombatDamageTraceService implements AutoCloseable {
         sessions.put(player,session);return session.id;
     }
     public Status stop(UUID player){var session=sessions.get(player);if(session!=null)session.active=false;return status(player);}
+    public Path path(){return path;}
     public void disconnect(UUID player){sessions.remove(player);}
     public Status status(UUID player){var session=sessions.get(player);long now=System.currentTimeMillis();
         if(session==null)return new Status(false,"",0,0,0,0,0,writer.metrics());

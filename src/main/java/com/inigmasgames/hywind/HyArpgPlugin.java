@@ -564,17 +564,15 @@ public final class HyArpgPlugin extends TavernsPlugin {
         interactionTrace = new com.inigmasgames.hytalerpg.ui.trace.UiInteractionTrace(
                 rpgDataDirectory().resolve("evidence").resolve("ui-trace"));
         com.inigmasgames.hytalerpg.ui.trace.UiInteractionTrace.install(interactionTrace);
-        rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgUiTraceCommand(interactionTrace));
         gearQaTrace = new com.inigmasgames.hytalerpg.gear.GearQaTrace(
                 rpgDataDirectory().resolve("evidence").resolve("gear-trace"));
         com.inigmasgames.hytalerpg.gear.GearQaTrace.install(gearQaTrace);
         gearQaTrace.actorOwner(actor -> summonSystem.registry().findByEntity(actor).map(lease -> lease.owner()).orElse(actor));
         sentinelQaTrace = new com.inigmasgames.hytalerpg.gear.GearQaTrace(
                 rpgDataDirectory().resolve("evidence").resolve("sentinel-trace"),"Sentinel");
-        rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgSentinelTraceCommand(sentinelQaTrace,summonSystem));
         getEventRegistry().registerGlobal(PlayerDisconnectEvent.class,
                 event -> sentinelQaTrace.disconnect(event.getPlayerRef().getUuid()));
-        rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgGearTraceCommand(gearQaTrace));
+        rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgLightQaCommand());
         getEventRegistry().registerGlobal(PlayerDisconnectEvent.class,
                 event -> gearQaTrace.disconnect(event.getPlayerRef().getUuid()));
         getEventRegistry().registerGlobal(PlayerDisconnectEvent.class,
@@ -610,13 +608,11 @@ public final class HyArpgPlugin extends TavernsPlugin {
         }
         tabTraceProbe = new com.inigmasgames.hytalerpg.ui.inventory.TabTraceProbe(
                 rpgDataDirectory().resolve("logs").resolve("rpg"));
-        rpgCommand.configureTabTrace(tabTraceProbe);
         getEntityStoreRegistry().registerSystem(tabTraceProbe.new Tick());
         getEventRegistry().registerGlobal(PlayerDisconnectEvent.class,
                 event -> tabTraceProbe.detach(event.getPlayerRef().getUuid()));
         nativeDropTraceProbe = new com.inigmasgames.hytalerpg.ui.inventory.NativeInventoryDropTraceProbe(
                 rpgDataDirectory().resolve("logs").resolve("rpg"), inventoryEntryProbe);
-        rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgNativeDropTraceCommand(nativeDropTraceProbe));
         getEntityStoreRegistry().registerSystem(nativeDropTraceProbe.new PlayerRequestObserver());
         getEntityStoreRegistry().registerSystem(nativeDropTraceProbe.new DropObserver());
         getEventRegistry().registerGlobal(PlayerDisconnectEvent.class,
@@ -627,7 +623,6 @@ public final class HyArpgPlugin extends TavernsPlugin {
         monsterSpawnTrace=new com.inigmasgames.hytalerpg.diagnostics.MonsterSpawnTrace(
                 rpgDataDirectory().resolve("logs").resolve("rpg").resolve("monster-spawn-trace"),
                 world->enemyWorldAdmission==null?null:enemyWorldAdmission.activePackReservations(world));
-        rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgSpawnTraceCommand(monsterSpawnTrace,worldSpawnDensity));
         getChunkStoreRegistry().registerSystem(worldSpawnDensity.new Tick());
         monsterSpawnTrace.configureManifest(()->java.util.Map.of("worldConfigRevision",worldConfiguration.snapshot().configRevision(),
                 "nativeDensityMultiplier",worldSpawnDensity.multiplier(),"populationPolicy",worldConfiguration.snapshot().population().toString(),
@@ -755,7 +750,11 @@ public final class HyArpgPlugin extends TavernsPlugin {
             LOGGER.atInfo().log("RPG_HEAL_PROBE revision=R032-AP enabled=true permission=inigmasgames.rpg.healingprobe liveTest=%s disposableWorldRequired=%s connectedProof=false",
                     com.inigmasgames.hytalerpg.execution.hytale.HealingProbePolicy.liveTestBuild(),!com.inigmasgames.hytalerpg.execution.hytale.HealingProbePolicy.liveTestBuild());
         }
-        getCommandRegistry().registerCommand(new com.inigmasgames.hytalerpg.commands.RpgTraceCommand(skillTrace,combatDamageTrace));
+        getCommandRegistry().registerCommand(new com.inigmasgames.hytalerpg.commands.RpgTraceCommand(
+                skillTrace,combatDamageTrace,interactionTrace,gearQaTrace,sentinelQaTrace,summonSystem,
+                monsterSpawnTrace,worldSpawnDensity,tabTraceProbe,nativeDropTraceProbe));
+        getEventRegistry().registerGlobal(PlayerDisconnectEvent.class,
+                event -> skillTrace.disconnect(event.getPlayerRef().getUuid()));
         if(Boolean.getBoolean("rpg.projectileSpawnAudit"))getCommandRegistry().registerCommand(
                 new com.inigmasgames.hytalerpg.execution.hytale.NativeProjectileSpawnAuditCommand(skillExecutionSystem));
         var productionPowers=com.inigmasgames.hytalerpg.combat.power.NativeItemPowerRegistry.loadProduction();

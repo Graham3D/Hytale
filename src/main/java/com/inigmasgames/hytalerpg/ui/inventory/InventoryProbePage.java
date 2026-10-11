@@ -1212,7 +1212,7 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
                 result -> world.execute(() -> {
                     var diagnostic = UiInteractionTrace.current();
                     if (diagnostic != null) diagnostic.event(player.getUuid(), "DOMAIN_OPERATION", correlation,
-                            Map.of("operation", "UNEQUIP", "equipmentSlot", nativeSlot, "result", result));
+                            Map.of("page", "inventory", "operation", "UNEQUIP", "equipmentSlot", nativeSlot, "result", result));
                     if (dismissed || !ref.isValid()) return;
                     savePending = false;
                     var update = new UICommandBuilder();
@@ -1384,7 +1384,7 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
                 result -> world.execute(() -> {
                     var diagnostic = UiInteractionTrace.current();
                     if (diagnostic != null) diagnostic.event(player.getUuid(), "DOMAIN_OPERATION", correlation,
-                            Map.of("operation", "EQUIP", "equipmentSlot", destination, "result", result));
+                            Map.of("page", "inventory", "operation", "EQUIP", "equipmentSlot", destination, "result", result));
                     if (dismissed || !ref.isValid()) return;
                     savePending = false;
                     var update = new UICommandBuilder();

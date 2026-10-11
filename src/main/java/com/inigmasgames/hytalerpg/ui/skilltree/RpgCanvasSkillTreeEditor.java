@@ -76,9 +76,9 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
         MutationResult mutation = mutations.assignCanvas(player, revision, node, entry.id());
         if (!mutation.success()) return reject(mutation.code() + ": " + mutation.message(), presentationSnapshot);
         restoreDormant(node);
-        return new Result(true, entry.name() + " assigned to " + node.externalId()
+        return observed("ASSIGN",node.externalId(),new Result(true, entry.name() + " assigned to " + node.externalId()
                 + (node == LinkNodeId.SKILL03 ? " (stored unbound; this build has no native Ability4 input)" : ""),
-                authoritativeSnapshot(presentationSnapshot));
+                authoritativeSnapshot(presentationSnapshot)));
     }
 
     @Override public Result commit(CanvasSnapshot candidateSnapshot) {
@@ -103,8 +103,9 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
                 .filter(edge->edge.sourceNodeId()==acceptedCandidate.source&&edge.targetNodeId()==acceptedCandidate.target).findFirst()
                 .orElseThrow(()->new IllegalStateException("ACCEPTED_LINK_MISSING"));
         portBindings.bind(player,accepted,acceptedCandidate.sourcePort,acceptedCandidate.targetPort);
-        return new Result(true, "Parented " + acceptedCandidate.source.externalId() + " → " + acceptedCandidate.target.externalId(),
-                authoritativeSnapshot(candidateSnapshot));
+        return observed("LINK",acceptedCandidate.source.externalId()+"->"+acceptedCandidate.target.externalId(),
+                new Result(true, "Parented " + acceptedCandidate.source.externalId() + " → " + acceptedCandidate.target.externalId(),
+                authoritativeSnapshot(candidateSnapshot)));
     }
 
     @Override public Result breakLink(String linkId, CanvasSnapshot presentationSnapshot) {
@@ -114,7 +115,7 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
             if(presentationSnapshot.edges().stream().noneMatch(edge->edge.edgeId().equals(linkId)))
                 return reject("Link is no longer present",presentationSnapshot);
             portBindings.remove(player,linkId);
-            return new Result(true,"Link broken",authoritativeSnapshot(withoutEdge(presentationSnapshot,linkId)));
+            return observed("UNLINK_PRESENTATION",linkId,new Result(true,"Link broken",authoritativeSnapshot(withoutEdge(presentationSnapshot,linkId))));
         }
         Set<String> removal=detachedAfterRemoval(live,linkId);
         Set<String> dormant=new LinkedHashSet<>(removal);dormant.remove(linkId);
@@ -125,7 +126,7 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
         if (!result.success()) return reject(result.code() + ": " + result.message(), presentationSnapshot);
         portBindings.remove(player,linkId);
         portBindings.prune(player,mutations.view(player).state().linkEdges());
-        return new Result(true, "Link broken", authoritativeSnapshot(presentationSnapshot));
+        return observed("UNLINK",linkId,new Result(true, "Link broken", authoritativeSnapshot(presentationSnapshot)));
     }
 
     private static Set<String> detachedAfterRemoval(List<LinkEdge> links,String selected){
@@ -152,14 +153,14 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
         portBindings.preserveForClear(player,node,presentationSnapshot);
         MutationResult result=mutations.clear(player,mutations.view(player).state().revision,node);
         if(!result.success())return reject(result.code()+": "+result.message(),presentationSnapshot);
-        return new Result(true,"Unequipped "+projected.title()+"; topology preserved",authoritativeSnapshot(presentationSnapshot));
+        return observed("CLEAR",node.externalId(),new Result(true,"Unequipped "+projected.title()+"; topology preserved",authoritativeSnapshot(presentationSnapshot)));
     }
 
     @Override public Result resetTree(CanvasSnapshot presentationSnapshot){
         MutationResult result=mutations.reset(player,mutations.view(player).state().revision);
         if(!result.success())return reject(result.code()+": "+result.message(),presentationSnapshot);
         portBindings.clear(player);
-        return new Result(true,"Skill Tree reset and reorganized",authoritativeSnapshot(canonicalResetLayout(presentationSnapshot)));
+        return observed("RESET","tree",new Result(true,"Skill Tree reset and reorganized",authoritativeSnapshot(canonicalResetLayout(presentationSnapshot))));
     }
 
     @Override public Inspector inspect(String entryId,String nodeId){
@@ -176,7 +177,17 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
     }
 
     private Result reject(String message, CanvasSnapshot presentation) {
-        return new Result(false, message, authoritativeSnapshot(presentation));
+        return observed("MUTATION","rejected",new Result(false, message, authoritativeSnapshot(presentation)));
+    }
+
+    private Result observed(String operation,String target,Result result){
+        try{
+            var trace=com.inigmasgames.hytalerpg.ui.trace.UiInteractionTrace.current();
+            if(trace!=null)trace.event(player,"SKILLTREE_"+operation+(result.accepted()?"_COMMITTED":"_REJECTED"),"",
+                    Map.of("target",target,"result",result.message(),"resultAccepted",result.accepted(),
+                            "authoritativeMutation",result.accepted()&&!operation.contains("PRESENTATION")));
+        }catch(RuntimeException ignored){/* Diagnostic failure must not change the authoritative mutation. */}
+        return result;
     }
 
     private LibraryEntry find(String id) {

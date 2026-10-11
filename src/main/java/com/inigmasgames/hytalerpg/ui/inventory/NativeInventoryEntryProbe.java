@@ -108,7 +108,7 @@ public final class NativeInventoryEntryProbe implements AutoCloseable {
                     if (!(nativeWindow instanceof FieldCraftingWindow) || nativeWindow.getType() != WindowType.PocketCrafting) return;
                     var diagnostic = UiInteractionTrace.current();
                     if (diagnostic != null) diagnostic.event(player.getUuid(), "FIELD_CRAFTING_WINDOW", "",
-                            Map.of("windowId", 0, "windowType", "PocketCrafting", "observation", "OPEN"));
+                            Map.of("page", "inventory", "windowId", 0, "windowType", "PocketCrafting", "observation", "OPEN"));
                     if (entry.open(player, ref, store)) {
                         // Close only the exact window we observed. Never touch other
                         // crafting stations or a replacement opened meanwhile.

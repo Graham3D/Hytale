@@ -1,10 +1,11 @@
 # Hywind / HyARPG development baseline
 
-This task branch (`codex/combat-damage-trace`) builds **R257-U7P5B**
-(`0.2.0-R257-U7P5B`) on the verified R256 source. It adds an operator-only
-incoming/outgoing combat and NPC profile trace for the active RPG world.
-The R256 Cyclone Armor candidate remains the gameplay baseline. Connected
-Goblin-event evidence and combat trace acceptance are pending.
+This task branch (`codex/unified-diagnostics`) builds **R258-U7P5B**
+(`0.2.0-R258-U7P5B`) on the locally verified R257 combat trace source.
+It unifies diagnostic commands under `/rpg-trace` while retaining each
+recorder and its permission boundary. Connected command and Goblin-event
+acceptance are pending; the R256 Cyclone Armor candidate remains the
+latest deployed gameplay baseline.
 
 The current GitHub `main` gameplay baseline is **R250-U7P5B**
 (`0.2.0-R250-U7P5B`). [PR #1](https://github.com/Graham3D/Hytale/pull/1)

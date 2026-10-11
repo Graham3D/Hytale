@@ -25,6 +25,10 @@ public final class RpgUiTraceService implements AutoCloseable {
         writer=new BoundedTraceWriter(path,configuration.maxFileMb()*1024L*1024L,configuration.retainedFiles(),this::logFailureOnce,
                 TraceArchiveManager.Compression.valueOf(configuration.archiveCompression()),configuration.archiveVerify());}
     public void trace(UUID player,String event,String correlationId,Map<String,?> details){
+        if (event.startsWith("SKILLTREE")) {
+            var interaction = UiInteractionTrace.current();
+            if (interaction != null) interaction.event(player, event, correlationId, details);
+        }
         var enriched=new LinkedHashMap<String,Object>();enriched.put("page",inferredPage(event));
         enriched.put("component",event.toLowerCase(java.util.Locale.ROOT));enriched.putAll(details);
         writer.submit(new Record(Instant.now().toString(),BuildIdentity.REVISION,BuildIdentity.VERSION,

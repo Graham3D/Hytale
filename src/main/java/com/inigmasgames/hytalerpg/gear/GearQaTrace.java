@@ -23,6 +23,9 @@ public final class GearQaTrace implements AutoCloseable {
     private java.util.function.Function<UUID,UUID> actorOwner=actor->actor;
     private final ConcurrentHashMap<UUID,GearEffectSnapshot> equipmentSnapshots=new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID,Session> sessions=new ConcurrentHashMap<>();
+    private final Map<UUID,String> lastResults=java.util.Collections.synchronizedMap(new LinkedHashMap<>(){
+        @Override protected boolean removeEldestEntry(Map.Entry<UUID,String> eldest){return size()>256;}
+    });
     private final ConcurrentHashMap<UUID,Map<String,Double>> statSnapshots=new ConcurrentHashMap<>();
     private final ScheduledThreadPoolExecutor expiry=new ScheduledThreadPoolExecutor(1,task->{
         var thread=new Thread(task,"gear-qa-trace-expiry");thread.setDaemon(true);return thread;
@@ -79,24 +82,30 @@ public final class GearQaTrace implements AutoCloseable {
         }
         data.put("operatorValues",values);record(owner,"VALID_EQUIPMENT_SNAPSHOT",data);
     }
-    public String on(UUID player){
-        off(player);
+    public synchronized String on(UUID player){
+        var prior=sessions.get(player);if(prior!=null)return channel+" trace already ON; "+status(player);
+        if(sessions.size()>=64)return channel+" trace unavailable: 64 active sessions already recording.";
         statSnapshots.remove(player);
         var path=directory.resolve(channel.toLowerCase(java.util.Locale.ROOT)+"-trace-"+STAMP.format(Instant.now())+"-"+UUID.randomUUID().toString().substring(0,8)+".jsonl");
-        var session=new Session(player,path);sessions.put(player,session);
+        var session=new Session(player,path);prior=sessions.putIfAbsent(player,session);
+        if(prior!=null){session.writer.close();return channel+" trace already ON; "+status(player);}
         session.write("SESSION_START",Map.of("limitEvents",3000,"limitMinutes",10,
                 "buildRevision",com.inigmasgames.hytalerpg.phase00.BuildIdentity.REVISION,
                 "gameVersion",com.inigmasgames.hytalerpg.phase00.BuildIdentity.HYTALE_VERSION,
                 "affixContract","Master_Affix_v1.0"));
-        expiry.schedule(()->{if(sessions.remove(player,session)){equipmentSnapshots.remove(player);statSnapshots.remove(player);session.close("TIME_LIMIT");}},10,TimeUnit.MINUTES);
+        expiry.schedule(()->{if(sessions.remove(player,session)){equipmentSnapshots.remove(player);statSnapshots.remove(player);session.close("TIME_LIMIT");
+            lastResults.put(player,"completed=TIME_LIMIT; events="+session.count.get()+"; file="+session.path
+                    +"; writer="+session.writer.metrics());}},10,TimeUnit.MINUTES);
         return channel+" trace ON; "+path;
     }
     public String off(UUID player){equipmentSnapshots.remove(player);statSnapshots.remove(player);var session=sessions.remove(player);if(session==null)return channel+" trace is off.";
-        session.close("SESSION_END");return channel+" trace OFF; "+session.path;}
-    public String mark(UUID player,String label){var session=sessions.get(player);if(session==null)return "Gear trace is off.";
-        session.write("MARK",Map.of("label",label==null?"":label.substring(0,Math.min(64,label.length()))));return "Gear trace mark saved.";}
-    public String status(UUID player){var session=sessions.get(player);return session==null?"Gear trace is off.":
-        "Gear trace ON; events="+session.count.get()+"; "+session.path;}
+        session.close("SESSION_END");lastResults.put(player,"completed=SESSION_END; events="+session.count.get()+"; file="+session.path
+                +"; writer="+session.writer.metrics());
+        return channel+" trace OFF; "+session.path;}
+    public String mark(UUID player,String label){var session=sessions.get(player);if(session==null)return channel+" trace is off.";
+        session.write("MARK",Map.of("label",label==null?"":label.substring(0,Math.min(64,label.length()))));return channel+" trace mark saved.";}
+    public String status(UUID player){var session=sessions.get(player);return session==null?channel+" trace is off; "+lastResults.getOrDefault(player,"no saved capture"):
+        channel+" trace ON; events="+session.count.get()+"; "+session.path+"; writer="+session.writer.metrics();}
     public void disconnect(UUID player){off(player);}
     public static void advanced(UUID player,Map<String,Double> authoritative,
                                 Map<String,String> projected,Map<String,Double> gearContribution,
@@ -117,22 +126,38 @@ public final class GearQaTrace implements AutoCloseable {
     }
     @Override public void close(){if(installed==this)installed=null;for(var player:sessions.keySet())off(player);expiry.shutdownNow();}
     private final class Session {
-        final UUID player;final Path path;final BoundedTraceWriter writer;final AtomicInteger count=new AtomicInteger();
+        final UUID player,id=UUID.randomUUID();final Path path;final BoundedTraceWriter writer;final AtomicInteger count=new AtomicInteger();
         final long started=System.nanoTime();volatile boolean closed;
         Session(UUID player,Path path){this.player=player;this.path=path;
             writer=new BoundedTraceWriter(path,4L*1024*1024,1,writerFailure);}
         synchronized void write(String event,Map<String,?> details){
             if(closed)return;
             if(System.nanoTime()-started>TimeUnit.MINUTES.toNanos(10)||count.incrementAndGet()>3000){
-                sessions.remove(player,this);equipmentSnapshots.remove(player);statSnapshots.remove(player);close("TRACE_LIMIT");return;
+                if(sessions.remove(player,this)){
+                    equipmentSnapshots.remove(player);statSnapshots.remove(player);
+                    lastResults.put(player,"completed=TRACE_LIMIT; events="+count.get()+"; file="+path
+                            +"; writer="+writer.metrics());
+                }
+                closeAsync("TRACE_LIMIT");return;
             }
             var row=new LinkedHashMap<String,Object>();row.put("timestamp",Instant.now().toString());
             row.put("sequence",count.get());row.put("elapsedMicros",(System.nanoTime()-started)/1000L);
+            details.forEach((key,value)->row.put(key,value));
             row.put("event",event);row.put("playerUuid",player.toString());
-            details.forEach((key,value)->row.put(key,value));writer.submit(row);
+            row.put("traceType",channel.toUpperCase(java.util.Locale.ROOT));
+            row.put("traceSessionId",id.toString());
+            row.putIfAbsent("correlationId","");
+            writer.submit(row);
         }
         synchronized void close(String reason){if(closed)return;closed=true;
-            writer.submit(Map.of("timestamp",Instant.now().toString(),"event",reason,"recorded",count.get()));
+            writer.submit(Map.of("timestamp",Instant.now().toString(),"event",reason,"recorded",count.get(),
+                    "traceType",channel.toUpperCase(java.util.Locale.ROOT),"traceSessionId",id.toString(),
+                    "playerUuid",player.toString()));
             writer.close();}
+        synchronized void closeAsync(String reason){if(closed)return;closed=true;
+            writer.submit(Map.of("timestamp",Instant.now().toString(),"event",reason,"recorded",count.get(),
+                    "traceType",channel.toUpperCase(java.util.Locale.ROOT),"traceSessionId",id.toString(),
+                    "playerUuid",player.toString()));
+            Thread.ofVirtual().name("gear-trace-close").start(writer::close);}
     }
 }

@@ -61,6 +61,12 @@ public final class TabTraceProbe implements AutoCloseable {
     private static final DateTimeFormatter STAMP = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'").withZone(ZoneOffset.UTC);
     private final Path directory;
     private final Map<UUID, Session> sessions = new ConcurrentHashMap<>();
+    private final Map<UUID, String> lastResult = java.util.Collections.synchronizedMap(
+            new java.util.LinkedHashMap<>() {
+                @Override protected boolean removeEldestEntry(Map.Entry<UUID, String> eldest) {
+                    return size() > 256;
+                }
+            });
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(task -> {
         Thread thread = new Thread(task, "hywind-tab-trace"); thread.setDaemon(true); return thread;
     });
@@ -177,6 +183,22 @@ public final class TabTraceProbe implements AutoCloseable {
         if (session != null) finish(session, "PLAYER_DISCONNECTED");
     }
 
+    /** Cancel only this player's one-shot capture, retaining all collected evidence. */
+    public String cancel(UUID player) {
+        Session session = sessions.get(player);
+        if (session == null) return "Tab trace is not armed. " + lastResult.getOrDefault(player, "");
+        finish(session, "OPERATOR_CANCELLED");
+        return status(player);
+    }
+
+    public String status(UUID player) {
+        Session session = sessions.get(player);
+        if (session != null) return "Tab trace " + (session.active() ? "recording" : "armed")
+                + "; file=" + session.path + "; events=" + session.eventCount()
+                + "; dropped=" + session.dropped();
+        return "Tab trace stopped; " + lastResult.getOrDefault(player, "no saved capture");
+    }
+
     private void finish(Session session, String reason) {
         if (!sessions.remove(session.player, session)) return;
         List<Event> events = session.stop(reason);
@@ -190,7 +212,12 @@ public final class TabTraceProbe implements AutoCloseable {
                 writer.newLine();
             }
             LOG.info("TAB_TRACE_SAVED path=" + session.path + " events=" + events.size() + " dropped=" + session.dropped());
-        } catch (IOException error) { LOG.log(Level.WARNING, "TAB_TRACE_SAVE_FAILED path=" + session.path, error); }
+            lastResult.put(session.player, "file=" + session.path + "; events=" + events.size()
+                    + "; dropped=" + session.dropped() + "; reason=" + reason);
+        } catch (IOException error) {
+            lastResult.put(session.player, "SAVE_FAILED file=" + session.path + "; reason=" + error.getMessage());
+            LOG.log(Level.WARNING, "TAB_TRACE_SAVE_FAILED path=" + session.path, error);
+        }
     }
 
     @Override public void close() {
@@ -217,6 +244,7 @@ public final class TabTraceProbe implements AutoCloseable {
             return active && !finished && System.nanoTime() - epochNanos < TimeUnit.MILLISECONDS.toNanos(CAPTURE_MS);
         }
         synchronized long dropped() { return dropped; }
+        synchronized int eventCount() { return events.size(); }
         synchronized void start() { epochNanos = System.nanoTime(); active = true; append("GO", Map.of("captureMs", CAPTURE_MS)); }
         synchronized void note(String kind, Map<String, ?> details) { append(kind, details); }
         synchronized void capture(String kind, Map<String, ?> details) { if (active()) append(kind, details); }

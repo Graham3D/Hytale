@@ -21,8 +21,11 @@ import java.util.function.Supplier;
 
 /** Opt-in, per-player, bounded action trace. No work beyond a map lookup when off. */
 public final class UiInteractionTrace implements AutoCloseable {
+    public enum Scope { UI, INVENTORY, SKILLTREE }
+    private record Key(UUID player, Scope scope) { }
     private static final Logger LOGGER = Logger.getLogger(UiInteractionTrace.class.getName());
     private static final int MAX_EVENTS = 2500;
+    private static final int MAX_SESSIONS = 64;
     private static final long MAX_AGE_NANOS = 10L * 60 * 1_000_000_000L;
     private static final DateTimeFormatter STAMP = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmssSSS'Z'")
             .withZone(ZoneOffset.UTC);
@@ -30,7 +33,12 @@ public final class UiInteractionTrace implements AutoCloseable {
     private static volatile UiInteractionTrace installed;
 
     private final Path directory;
-    private final ConcurrentHashMap<UUID, Session> sessions = new ConcurrentHashMap<>();
+    private final Object sessionStartLock = new Object();
+    private final ConcurrentHashMap<Key, Session> sessions = new ConcurrentHashMap<>();
+    private final Map<Key, String> lastResults = java.util.Collections.synchronizedMap(
+            new java.util.LinkedHashMap<>() {
+                @Override protected boolean removeEldestEntry(Map.Entry<Key, String> eldest) { return size() > 256; }
+            });
     private final ScheduledThreadPoolExecutor expiry = new ScheduledThreadPoolExecutor(1, task -> {
         var thread = new Thread(task, "ui-interaction-trace-expiry");
         thread.setDaemon(true);
@@ -45,12 +53,14 @@ public final class UiInteractionTrace implements AutoCloseable {
     public static UiInteractionTrace current() { return installed; }
     public static boolean active(UUID player) {
         var trace = installed;
-        return trace != null && trace.sessions.containsKey(player);
+        if (trace == null) return false;
+        for (Scope scope : Scope.values()) if (trace.sessions.containsKey(new Key(player, scope))) return true;
+        return false;
     }
     public static Action beginIfActive(UUID player, String component, String elementId,
                                        String action, Supplier<Map<String, ?>> details) {
         var trace = installed;
-        if (trace == null || !trace.sessions.containsKey(player)) return Action.OFF;
+        if (!active(player)) return Action.OFF;
         try { return trace.begin(player, component, elementId, action, details.get()); }
         catch (RuntimeException diagnosticFailure) {
             LOGGER.log(Level.WARNING, "UI interaction trace could not observe an action", diagnosticFailure);
@@ -58,82 +68,129 @@ public final class UiInteractionTrace implements AutoCloseable {
         }
     }
 
-    public String on(UUID player) {
-        off(player);
-        var id = UUID.randomUUID();
-        var path = directory.resolve("ui-trace-" + STAMP.format(Instant.now()) + "-" + id.toString().substring(0, 8) + ".jsonl");
-        var session = new Session(player, id, path);
-        sessions.put(player, session);
-        session.write("SESSION_START", "", Map.of("limitEvents", MAX_EVENTS, "limitMinutes", 10));
-        session.timeout = expiry.schedule(() -> {
-            if (sessions.remove(player, session)) {
-                session.limit("TIME_LIMIT");
-                session.close();
-            }
-        }, 10, TimeUnit.MINUTES);
-        return "UI trace ON; session " + id + "; " + path;
+    public String on(UUID player) { return on(player, Scope.UI); }
+
+    public String on(UUID player, Scope scope) {
+        synchronized (sessionStartLock) {
+            Key key = new Key(player, scope);
+            Session prior = sessions.get(key);
+            if (prior != null) return scope + " trace already ON; session " + prior.id + "; " + prior.path;
+            if (sessions.size() >= MAX_SESSIONS) return scope + " trace unavailable: 64 active sessions already recording.";
+            var id = UUID.randomUUID();
+            var prefix = scope == Scope.UI ? "ui" : scope.name().toLowerCase(java.util.Locale.ROOT);
+            var path = directory.resolve(prefix + "-trace-" + STAMP.format(Instant.now()) + "-" + id.toString().substring(0, 8) + ".jsonl");
+            var session = new Session(key, id, path);
+            prior = sessions.putIfAbsent(key, session);
+            if (prior != null) { session.close(); return scope + " trace already ON; session " + prior.id + "; " + prior.path; }
+            session.write("SESSION_START", "", Map.of("traceType", scope.name(), "limitEvents", MAX_EVENTS, "limitMinutes", 10));
+            session.timeout = expiry.schedule(() -> {
+                if (sessions.remove(key, session)) {
+                    session.limit("TIME_LIMIT");
+                    session.close();
+                    lastResults.put(key, "expired; file=" + path + "; events=" + session.count.get()
+                            + "; writer=" + session.writer.metrics());
+                }
+            }, 10, TimeUnit.MINUTES);
+            return scope + " trace ON; session " + id + "; " + path;
+        }
     }
 
-    public String off(UUID player) {
-        var session = sessions.remove(player);
-        if (session == null) return "UI trace is off.";
+    public String off(UUID player) { return off(player, Scope.UI); }
+
+    public String off(UUID player, Scope scope) {
+        Key key = new Key(player, scope);
+        var session = sessions.remove(key);
+        if (session == null) return scope + " trace is off. " + lastResults.getOrDefault(key, "");
         session.write("SESSION_END", "", Map.of("recorded", session.count.get()));
         session.close();
-        return "UI trace OFF; " + session.path;
+        lastResults.put(key, "stopped; file=" + session.path + "; events=" + session.count.get()
+                + "; writer=" + session.writer.metrics());
+        return scope + " trace OFF; " + session.path;
     }
 
-    public String mark(UUID player, String label) {
-        var session = sessions.get(player);
-        if (session == null) return "UI trace is off; use /rpg uitrace on first.";
+    public String mark(UUID player, String label) { return mark(player, Scope.UI, label); }
+
+    public String mark(UUID player, Scope scope, String label) {
+        var session = sessions.get(new Key(player, scope));
+        if (session == null) return scope + " trace is off; start it first.";
         session.write("MARK", "", Map.of("label", limited(label == null ? "" : label, 64)));
-        return "UI trace mark saved.";
+        return scope + " trace mark saved.";
     }
 
-    public void disconnect(UUID player) { off(player); }
+    public String status(UUID player, Scope scope) {
+        Key key = new Key(player, scope);
+        Session session = sessions.get(key);
+        return session == null ? scope + " trace off; " + lastResults.getOrDefault(key, "no saved capture")
+                : scope + " trace ON; session=" + session.id + "; events=" + session.count.get()
+                + "; file=" + session.path + "; writer=" + session.writer.metrics();
+    }
+
+    public void disconnect(UUID player) { for (Scope scope : Scope.values()) off(player, scope); }
 
     public Action begin(UUID player, String component, String elementId, String action, Map<String, ?> details) {
-        var session = sessions.get(player);
-        if (session == null) return Action.OFF;
+        var matching = matching(player, component, elementId, action, details);
+        if (matching.isEmpty()) return Action.OFF;
         String correlation = UUID.randomUUID().toString().substring(0, 8);
         var base = new LinkedHashMap<String, Object>();
         base.put("component", limited(component, 64));
         base.put("elementId", limited(elementId, 128));
         base.put("action", limited(action, 64));
         add(base, details);
-        session.write("INPUT_RECEIVED", correlation, base);
-        session.write("TARGET_RESOLVED", correlation, Map.of("elementId", base.get("elementId")));
-        session.write("HANDLER_ENTER", correlation, Map.of("handler", base.get("component")));
-        return new Action(session, correlation, component, elementId, action);
+        for (Session session : matching) {
+            session.write("INPUT_RECEIVED", correlation, base);
+            session.write("TARGET_RESOLVED", correlation, Map.of("elementId", base.get("elementId")));
+            session.write("HANDLER_ENTER", correlation, Map.of("handler", base.get("component")));
+        }
+        return new Action(matching, correlation, component, elementId, action);
     }
 
     public void event(UUID player, String event, String correlation, Map<String, ?> details) {
-        var session = sessions.get(player);
-        if (session != null) try { session.write(event, correlation == null ? "" : correlation, details); }
-        catch (RuntimeException error) { LOGGER.log(Level.WARNING, "UI trace observation lost", error); }
+        for (Session session : matching(player, event, "", event, details))
+            try { session.write(event, correlation == null ? "" : correlation, details); }
+            catch (RuntimeException error) { LOGGER.log(Level.WARNING, "UI trace observation lost", error); }
+    }
+
+    private java.util.List<Session> matching(UUID player, String component, String element, String action,
+                                              Map<String, ?> details) {
+        var result = new java.util.ArrayList<Session>(3);
+        String domain = (String.valueOf(component) + " " + String.valueOf(element) + " " + String.valueOf(action)
+                + " " + String.valueOf(details == null ? "" : details.get("canvasId"))
+                + " " + String.valueOf(details == null ? "" : details.get("page"))
+                + " " + String.valueOf(details == null ? "" : details.get("handler")))
+                .toLowerCase(java.util.Locale.ROOT);
+        for (Scope scope : Scope.values()) {
+            Session session = sessions.get(new Key(player, scope));
+            if (session == null) continue;
+            if (scope == Scope.UI || scope == Scope.INVENTORY && (domain.contains("inventory")
+                    || domain.contains("character") || domain.contains("spatialbag"))
+                    || scope == Scope.SKILLTREE && (domain.contains("skilltree")
+                    || domain.contains("skill-tree") || domain.contains("skill_tree"))) result.add(session);
+        }
+        return result;
     }
 
     public static final class Action {
-        private static final Action OFF = new Action(null, "", "", "", "");
-        private final Session session;
+        private static final Action OFF = new Action(java.util.List.of(), "", "", "", "");
+        private final java.util.List<Session> recipients;
         private final String correlation, component, element, action;
         private final AtomicBoolean completed = new AtomicBoolean();
-        private Action(Session session, String correlation, String component, String element, String action) {
-            this.session = session; this.correlation = correlation; this.component = component;
+        private Action(java.util.List<Session> recipients, String correlation, String component, String element, String action) {
+            this.recipients = recipients; this.correlation = correlation; this.component = component;
             this.element = element; this.action = action;
         }
-        public boolean active() { return session != null; }
+        public boolean active() { return !recipients.isEmpty(); }
         public String correlation() { return correlation; }
         public void stage(String stage, Map<String, ?> details) {
-            if (session != null) try { session.write(stage, correlation, details); }
+            for (Session session : recipients) try { session.write(stage, correlation, details); }
             catch (RuntimeException error) { LOGGER.log(Level.WARNING, "UI trace stage lost", error); }
         }
         public void complete(String result, Map<String, ?> details) {
-            if (session == null || !completed.compareAndSet(false, true)) return;
+            if (recipients.isEmpty() || !completed.compareAndSet(false, true)) return;
             var value = result == null || result.isBlank() ? "HANDLED" : result;
             var finished = new LinkedHashMap<String, Object>();
             finished.put("result", limited(value, 96));
             add(finished, details);
-            try { session.write("HANDLER_EXIT", correlation, finished); }
+            for (Session session : recipients) try { session.write("HANDLER_EXIT", correlation, finished); }
             catch (RuntimeException error) { LOGGER.log(Level.WARNING, "UI trace completion lost", error); }
             LOGGER.log(Level.INFO, "UI_TRACE [" + correlation + "] " + limited(component, 40)
                     + " element=" + limited(element, 80) + " action=" + limited(action, 40)
@@ -142,6 +199,7 @@ public final class UiInteractionTrace implements AutoCloseable {
     }
 
     private final class Session {
+        final Key key;
         final UUID player, id;
         final Path path;
         final BoundedTraceWriter writer;
@@ -149,23 +207,26 @@ public final class UiInteractionTrace implements AutoCloseable {
         final AtomicBoolean closed = new AtomicBoolean();
         final long started = System.nanoTime();
         volatile ScheduledFuture<?> timeout;
-        Session(UUID player, UUID id, Path path) {
-            this.player = player; this.id = id; this.path = path;
+        Session(Key key, UUID id, Path path) {
+            this.key = key; this.player = key.player(); this.id = id; this.path = path;
             this.writer = new BoundedTraceWriter(path, 4L * 1024 * 1024, 1,
                     error -> LOGGER.log(Level.WARNING, "UI interaction trace lost records: " + path, error));
         }
         void write(String event, String correlation, Map<String, ?> details) {
             if (closed.get()) return;
             if (System.nanoTime() - started > MAX_AGE_NANOS || count.incrementAndGet() > MAX_EVENTS) {
-                if (sessions.remove(player, this)) {
+                if (sessions.remove(key, this)) {
                     limit("TIME_OR_EVENT_LIMIT");
                     closeAsync();
+                    lastResults.put(key, "limit reached; file=" + path + "; events=" + count.get()
+                            + "; writer=" + writer.metrics());
                 }
                 return;
             }
             var row = new LinkedHashMap<String, Object>();
             row.put("timestamp", MILLIS.format(Instant.now()));
             row.put("event", limited(event, 64));
+            row.put("traceType", key.scope().name());
             row.put("traceSessionId", id.toString());
             row.put("correlationId", limited(correlation, 64));
             row.put("playerUuid", player.toString());
@@ -174,7 +235,7 @@ public final class UiInteractionTrace implements AutoCloseable {
         }
         void limit(String reason) {
             writer.submit(Map.of("timestamp", MILLIS.format(Instant.now()), "event", "TRACE_LIMIT",
-                    "traceSessionId", id.toString(), "playerUuid", player.toString(),
+                    "traceSessionId", id.toString(), "traceType", key.scope().name(), "playerUuid", player.toString(),
                     "correlationId", "", "reason", reason));
         }
         void close() {
@@ -207,7 +268,7 @@ public final class UiInteractionTrace implements AutoCloseable {
     }
     @Override public void close() {
         if (installed == this) installed = null;
-        for (UUID player : sessions.keySet()) off(player);
+        for (Key key : java.util.List.copyOf(sessions.keySet())) off(key.player(), key.scope());
         expiry.shutdownNow();
     }
 }

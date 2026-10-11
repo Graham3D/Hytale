@@ -48,6 +48,12 @@ public final class NativeInventoryDropTraceProbe implements AutoCloseable {
     private final Path directory;
     private final NativeInventoryEntryProbe entry;
     private final Map<UUID, Session> sessions = new ConcurrentHashMap<>();
+    private final Map<UUID, String> lastResult = java.util.Collections.synchronizedMap(
+            new java.util.LinkedHashMap<>() {
+                @Override protected boolean removeEldestEntry(Map.Entry<UUID, String> eldest) {
+                    return size() > 256;
+                }
+            });
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(task -> {
         Thread thread = new Thread(task, "native-inventory-drop-trace");
         thread.setDaemon(true);
@@ -176,6 +182,22 @@ public final class NativeInventoryDropTraceProbe implements AutoCloseable {
         if (session != null) finish(session, "PLAYER_DISCONNECTED");
     }
 
+    /** Cancel observation and restore page substitution while retaining the evidence. */
+    public String cancel(UUID player) {
+        Session session = sessions.get(player);
+        if (session == null) return status(player);
+        finish(session, "OPERATOR_CANCELLED");
+        return status(player);
+    }
+
+    public String status(UUID player) {
+        Session session = sessions.get(player);
+        if (session != null) return "Native drop trace " + (session.active() ? "recording" : "armed")
+                + "; file=" + session.path + "; events=" + session.eventCount()
+                + "; dropped=" + session.dropped();
+        return "Native drop trace stopped; " + lastResult.getOrDefault(player, "no saved capture");
+    }
+
     private void finish(Session session, String reason) {
         if (!sessions.remove(session.player, session)) return;
         if (entry != null) entry.nativeTraceBypass(session.player, false);
@@ -193,7 +215,12 @@ public final class NativeInventoryDropTraceProbe implements AutoCloseable {
                 writer.newLine();
             }
             LOG.info("NATIVE_DROP_TRACE_SAVED path=" + session.path + " events=" + events.size());
-        } catch (IOException error) { LOG.log(Level.WARNING, "NATIVE_DROP_TRACE_SAVE_FAILED path=" + session.path, error); }
+            lastResult.put(session.player, "file=" + session.path + "; events=" + events.size()
+                    + "; dropped=" + session.dropped() + "; reason=" + reason);
+        } catch (IOException error) {
+            lastResult.put(session.player, "SAVE_FAILED file=" + session.path + "; reason=" + error.getMessage());
+            LOG.log(Level.WARNING, "NATIVE_DROP_TRACE_SAVE_FAILED path=" + session.path, error);
+        }
     }
 
     @Override public void close() {
@@ -218,6 +245,7 @@ public final class NativeInventoryDropTraceProbe implements AutoCloseable {
             return active && !finished && System.nanoTime() - startNanos < TimeUnit.MILLISECONDS.toNanos(CAPTURE_MS);
         }
         synchronized long dropped() { return dropped; }
+        synchronized int eventCount() { return events.size(); }
         synchronized void capture(String kind, Map<String, ?> details) { if (active()) append(kind, details); }
         private void append(String kind, Map<String, ?> details) {
             if (events.size() >= MAX_EVENTS) { dropped++; return; }

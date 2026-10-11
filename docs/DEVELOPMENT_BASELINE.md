@@ -1,5 +1,20 @@
 # HyARPG/Hywind development baseline
 
+## R258 unified diagnostic commands candidate (2026-10-11)
+
+Branch `codex/unified-diagnostics` starts from the locally Guardian-verified
+R257 documentation commit `cb1b1b5e2609e2080c06402405f4c4fcbcad4002`;
+the exact R257 implementation source embedded in its JAR is
+`73c5d9d955f9e90a82bd136868c8fdfce393958a`. R258-U7P5B
+(`0.2.0-R258-U7P5B`) consolidates commands under `/rpg-trace`, adds bounded
+personal skill capture and independently filtered UI/Inventory/Skill Tree
+sessions, retains separate Gear/Sentinel evidence and native one-shot probes,
+and moves WA-155 calibration under `/rpg lightqa`. The previous trace wrappers
+are retired after source-level migration; the underlying recorders remain.
+The primary checkout's unrelated edits and the RPG save are untouched.
+Exact-commit verification, GitHub publication and connected acceptance are
+pending at this source checkpoint.
+
 ## R257 combat damage trace offline QA candidate (2026-10-11)
 
 Branch `codex/combat-damage-trace` starts from verified R256 documentation

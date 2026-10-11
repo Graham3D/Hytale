@@ -63,4 +63,37 @@ class UiInteractionTraceTest {
             assertEquals(2, Files.list(temporary).filter(path -> path.toString().endsWith(".jsonl")).count());
         } finally { UiInteractionTrace.install(null); }
     }
+
+    @Test void filteredScopesCaptureIndependentlyWithoutOverwriting() throws Exception {
+        UUID player = UUID.randomUUID();
+        try (var trace = new UiInteractionTrace(temporary)) {
+            UiInteractionTrace.install(trace);
+            trace.on(player, UiInteractionTrace.Scope.UI);
+            trace.on(player, UiInteractionTrace.Scope.INVENTORY);
+            trace.on(player, UiInteractionTrace.Scope.SKILLTREE);
+            assertTrue(trace.on(player, UiInteractionTrace.Scope.INVENTORY).contains("already ON"));
+            var action = trace.begin(player, "canvasui", "canvas.bag.cell", "Dropped",
+                    Map.of("canvasId", "rpg-inventory", "itemId", "bow"));
+            action.complete("NO_FIT", Map.of("authoritativeAccepted", false));
+            trace.event(player, "SKILLTREE_LINK_COMMITTED", "link-1",
+                    Map.of("target", "skill01", "authoritativeMutation", true));
+            assertTrue(trace.off(player, UiInteractionTrace.Scope.INVENTORY).contains("INVENTORY trace OFF"));
+            assertTrue(UiInteractionTrace.active(player));
+            trace.event(player, "SKILLTREE_LINK_REJECTED", "link-2", Map.of("result", "INVALID"));
+            trace.off(player, UiInteractionTrace.Scope.SKILLTREE);
+            trace.off(player, UiInteractionTrace.Scope.UI);
+            var inventory = Files.list(temporary).filter(path -> path.getFileName().toString().startsWith("inventory-trace-")).findFirst().orElseThrow();
+            var skilltree = Files.list(temporary).filter(path -> path.getFileName().toString().startsWith("skilltree-trace-")).findFirst().orElseThrow();
+            var ui = Files.list(temporary).filter(path -> path.getFileName().toString().startsWith("ui-trace-")).findFirst().orElseThrow();
+            String inventoryJson = Files.readString(inventory), skilltreeJson = Files.readString(skilltree), uiJson = Files.readString(ui);
+            assertTrue(inventoryJson.contains("INPUT_RECEIVED"));
+            assertFalse(inventoryJson.contains("SKILLTREE_LINK"));
+            assertTrue(skilltreeJson.contains("SKILLTREE_LINK_COMMITTED"));
+            assertTrue(skilltreeJson.contains("SKILLTREE_LINK_REJECTED"));
+            assertFalse(skilltreeJson.contains("INPUT_RECEIVED"));
+            assertTrue(uiJson.contains("INPUT_RECEIVED"));
+            assertTrue(uiJson.contains("SKILLTREE_LINK_COMMITTED"));
+            assertEquals(1, Files.readAllLines(inventory).stream().filter(line -> line.contains("INPUT_RECEIVED")).count());
+        } finally { UiInteractionTrace.install(null); }
+    }
 }

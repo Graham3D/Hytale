@@ -16,6 +16,27 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class R045CanvasSkillTreeEditorTest {
     @TempDir Path temporary;
+    @Test void filteredTraceRecordsAuthoritativeAssignmentAndRejection() throws Exception {
+        var bundle=Stage01BTestSupport.bundle();
+        var layout=new StaticSkillTreeLayout();
+        UUID player=UUID.randomUUID();
+        try(var trace=new com.inigmasgames.hytalerpg.ui.trace.UiInteractionTrace(temporary.resolve("trace"))){
+            com.inigmasgames.hytalerpg.ui.trace.UiInteractionTrace.install(trace);
+            trace.on(player,com.inigmasgames.hytalerpg.ui.trace.UiInteractionTrace.Scope.SKILLTREE);
+            var editor=new RpgCanvasSkillTreeEditor(player,
+                    new RpgSkillTreeProjectionService(bundle.catalog(),bundle.service(),layout,true),
+                    new RpgSkillTreeMutationService(bundle.service(),layout));
+            assertFalse(editor.assign("fire_bolt","passive01",editor.canvas().snapshot()).accepted());
+            assertTrue(editor.assign("fire_bolt","skill01",editor.canvas().snapshot()).accepted());
+            trace.off(player,com.inigmasgames.hytalerpg.ui.trace.UiInteractionTrace.Scope.SKILLTREE);
+            var file=java.nio.file.Files.list(temporary.resolve("trace"))
+                    .filter(path->path.toString().endsWith(".jsonl")).findFirst().orElseThrow();
+            String rows=java.nio.file.Files.readString(file);
+            assertTrue(rows.contains("SKILLTREE_MUTATION_REJECTED"));
+            assertTrue(rows.contains("SKILLTREE_ASSIGN_COMMITTED"));
+            assertTrue(rows.contains("authoritativeMutation"));
+        } finally {com.inigmasgames.hytalerpg.ui.trace.UiInteractionTrace.install(null);}
+    }
     @Test void libraryDropsAreTypedAndPersistThroughTheAuthoritativeRpgMutation() {
         var bundle = Stage01BTestSupport.bundle();
         var layout = new StaticSkillTreeLayout();
