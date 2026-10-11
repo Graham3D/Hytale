@@ -389,10 +389,14 @@ public final class SkillExecutionService {
             emitProjectileRejection(request, root, instance, profile, family.code());
             throw new Rejection(family.code(), instance);
         }
+        if(durableCyclone(profile,port)&&plan.supportModifiers().sharedAegis())
+            throw new Rejection("CYCLONE_SHARED_AEGIS_DURABLE_UNAVAILABLE",instance);
         ResourceCost declared = declaredCost(profile,effectiveSkillLevel,port);
         int stacks=attunementFor(request,plan);
         ruthlessFor(request,plan); // Capacity and origin check before any payment or windup.
-        ResourceCost cost = GearResourceModifiers.activation(kernel.resources(),profile,plan,stacks,gear,declared);
+        ResourceCost cost = durableCyclone(profile,port)
+                ?durableCycloneCost(request.actorId(),port)
+                :GearResourceModifiers.activation(kernel.resources(),profile,plan,stacks,gear,declared);
         if(profile.skillId().equals("teleport")&&cost.type()==ResourceType.MANA
                 &&cost.amount()>kernel.resources().spendableMaximum(request.actorId(),ResourceType.MANA,port.resources())+1e-9)
             throw new Rejection("INSUFFICIENT_SPENDABLE_MANA",instance);
@@ -435,11 +439,15 @@ public final class SkillExecutionService {
             int stacks=attunementFor(prepared.request,prepared.plan);
             boolean powered=ruthlessFor(prepared.request,prepared.plan);
             var profile=CompiledProfileResolver.ruthless(compiledProfiles.resolve(profiles.require(prepared.profile.skillId()),prepared.plan),powered);
+            if(durableCyclone(profile,port)&&prepared.plan.supportModifiers().sharedAegis())
+                throw new IllegalStateException("CYCLONE_SHARED_AEGIS_DURABLE_UNAVAILABLE");
             // HEAD resolves learned mastery at release. The accepted item's bonus stays frozen.
             int effectiveSkillLevel=EffectiveSkillLevel.resolveBase(loadouts.baseSkillRank(prepared.request.actorId(),profile.skillId()),
                     prepared.itemSkillLevels);
             var declared=declaredCost(profile,effectiveSkillLevel,port);
-            var cost=GearResourceModifiers.activation(kernel.resources(),profile,prepared.plan,stacks,
+            var cost=durableCyclone(profile,port)
+                    ?durableCycloneCost(prepared.request.actorId(),port)
+                    :GearResourceModifiers.activation(kernel.resources(),profile,prepared.plan,stacks,
                     prepared.gearSnapshot,declared);
             prepared=new Prepared(prepared.request,prepared.rootCastId,prepared.instanceId,profile,prepared.plan,cost,prepared.equipment,stacks,powered,
                     effectiveSkillLevel,prepared.itemSkillLevels,prepared.windupSeconds,prepared.gearSnapshot,prepared.gearSourceItemId);
@@ -590,6 +598,7 @@ public final class SkillExecutionService {
         return finishPersistence(pending,port);
     }
     private SkillExecutionResult finishPersistence(PendingCommit pending,SkillExecutionPort port){
+        if(durableCyclone(pending.prepared.profile,port))return finishDurableCyclone(pending,port);
         var prepared=pending.prepared;var context=pending.context;var token=pending.token;
         var releaseModifiers=prepared.plan.executionModifiers();
         boolean resourceCommitted=false;boolean cooldownStarted=false;
@@ -690,6 +699,114 @@ public final class SkillExecutionService {
         }
         retainExecutionLifecycle(context);
         return result;
+    }
+
+    /** The journal is the only Cyclone protection authority. No finite support dispatch occurs here. */
+    private SkillExecutionResult finishDurableCyclone(PendingCommit pending,SkillExecutionPort port){
+        var prepared=pending.prepared;var context=pending.context;
+        var actor=prepared.request.actorId();
+        var token=pending.token;
+        com.inigmasgames.hytalerpg.combat.cooldown.RpgCooldownService.Spend spend=null;
+        SkillExecutionPort.CycloneAuthority authority=null;
+        UUID activation=UUID.nameUUIDFromBytes(prepared.instanceId.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        boolean begun=false,manaAttempted=false,manaConfirmed=false,publishAttempted=false,published=false;
+        String stage="COOLDOWN_RECEIPT";
+        try{
+            spend=pending.cooldown.getNow(null);
+            if(spend==null)throw new IllegalStateException("CYCLONE_COOLDOWN_RECEIPT_MISSING");
+            stage="AUTHORITY_RECEIPT";
+            pending.authority.getNow(null);
+            stage="OWNER_VALIDATION";
+            if(!port.actorAliveAndUsable()||!port.equipment().equals(prepared.equipment)
+                    ||!lifecycle.owns(actor,prepared.instanceId))
+                throw new IllegalStateException("CYCLONE_OWNER_CHANGED");
+            var plan=loadouts.getPresentationView(actor).plans().get(prepared.request.slot());
+            if(plan==null||!plan.planHash().equals(prepared.plan.planHash()))
+                throw new IllegalStateException("CYCLONE_LOADOUT_CHANGED");
+            if(!port.validateDurableCompletion(context).accepted())
+                throw new IllegalStateException("CYCLONE_RELEASE_INVALID");
+            stage="RESOURCE_REQUOTE";
+            kernel.resources().refundIfUncommitted(token);
+            var full=durableCycloneCost(actor,port);
+            token=kernel.resources().reserveCost(actor,full,port.resources());
+            stage="CYCLONE_BEGIN";
+            authority=port.cycloneAuthority();
+            var stats=context.snapshot().derivedStats();
+            double capacity=com.inigmasgames.hytalerpg.execution.support.CycloneArmorFormula.durableCapacity(
+                    stats.effective(RpgAttribute.WIS),stats.effective(RpgAttribute.INT),context.effectiveSkillLevel());
+            capacity=Math.floor(capacity*context.compiledPlan().supportModifiers().barrierFactor()
+                    *(1+context.gearSnapshot().percent(com.inigmasgames.hytalerpg.gear.GearEffectSnapshot.Operator.BARRIER_STRENGTH)));
+            if(!Double.isFinite(capacity)||capacity<=0||capacity>Float.MAX_VALUE)
+                throw new IllegalStateException("CYCLONE_CAPACITY_INVALID");
+            var transaction=authority.transaction();var lease=authority.lease();
+            var reservedToken=token;
+            var begunResult=transaction.begin(lease,activation,UUID.randomUUID(),capacity,
+                    port::actorAliveAndUsable,()->port.resources().current(ResourceType.MANA)+1e-9>=reservedToken.cost().amount(),
+                    ()->true);
+            if(begunResult!=com.inigmasgames.hytalerpg.execution.support.CycloneActivationTransaction.Result.PREPARED)
+                throw new IllegalStateException("CYCLONE_ACTIVATION_REPLAY");
+            begun=true;
+            stage="NATIVE_MANA_AND_JOURNAL";
+            manaAttempted=true;
+            transaction.commitNativeMana(lease,activation,kernel.resources(),token,port.resources());
+            manaConfirmed=true;
+            stage="COOLDOWN_AND_JOURNAL";
+            transaction.commitNativeCooldown(lease,activation,kernel.cooldowns(),spend);
+            stage="BARRIER_PUBLICATION";
+            publishAttempted=true;
+            var publishedState=transaction.publish(lease,activation);
+            published=true;
+            try{port.cyclonePublished(context,publishedState.generation());}
+            catch(RuntimeException presentationFailure){recordExecutionFailure(context,"CYCLONE_CONTEXT_PRESENTATION",presentationFailure);}
+            kernel.resources().finish(token);
+        }catch(RuntimeException failure){
+            final var rollbackToken=token;
+            final var rollbackSpend=spend;
+            if(published){
+                kernel.resources().finish(rollbackToken);
+                releases.finish(prepared.instanceId);lifecycle.terminate(actor,prepared.instanceId);
+                recordExecutionFailure(context,"CYCLONE_POST_PUBLICATION",failure);
+                return SkillExecutionResult.committed("CYCLONE_BARRIER_ACTIVE",1,0);
+            }
+            if(begun&&authority!=null){
+                if(publishAttempted||manaAttempted&&!manaConfirmed){
+                    // A native debit or final forced write may have landed. Never invent a refund.
+                    try{authority.transaction().quarantine(authority.lease(),activation);}
+                    catch(RuntimeException quarantineFailure){failure.addSuppressed(quarantineFailure);}
+                    kernel.resources().finish(rollbackToken);
+                }else{
+                    try{authority.transaction().abort(authority.lease(),activation,manaConfirmed,
+                            rollbackSpend!=null,false,new com.inigmasgames.hytalerpg.execution.support.CycloneActivationTransaction.Compensation(){
+                                public void refundCooldown(){kernel.cooldowns().acceptSpend(rollbackSpend);
+                                    kernel.cooldowns().submitRefund(rollbackSpend);}
+                                public void refundMana(){kernel.resources().refundCommittedCost(rollbackToken,port.resources());}
+                            });}
+                    catch(RuntimeException abortFailure){failure.addSuppressed(abortFailure);}
+                    if(!manaConfirmed)try{kernel.resources().refundIfUncommitted(rollbackToken);}catch(RuntimeException ignored){}
+                }
+            }else{
+                try{kernel.resources().refundIfUncommitted(rollbackToken);}catch(RuntimeException ignored){}
+                if(rollbackSpend!=null)try{kernel.cooldowns().acceptSpend(rollbackSpend);
+                    kernel.cooldowns().submitRefund(rollbackSpend);}catch(RuntimeException settlementFailure){failure.addSuppressed(settlementFailure);}
+            }
+            emit(prepared.request,RpgTraceEventType.SKILL_COMMIT_FAILED,prepared.rootCastId,prepared.instanceId,
+                    Map.of("skillId","spirit_shield","stage",stage,"exceptionType",failure.getClass().getSimpleName()));
+            port.abandonDurable(context);releases.finish(prepared.instanceId);lifecycle.terminate(actor,prepared.instanceId);
+            return reject(prepared.request,prepared.rootCastId,prepared.instanceId,"CYCLONE_COMMIT_FAILED");
+        }
+        emit(prepared.request,RpgTraceEventType.SKILL_COMMITTED,prepared.rootCastId,prepared.instanceId,
+                Map.of("skillId","spirit_shield","resourceType",ResourceType.MANA,
+                        "resourceCost",token.cost().amount(),"cooldownSeconds",context.snapshot().cooldownSeconds()));
+        releases.finish(prepared.instanceId);
+        try{
+            var result=executors.require(prepared.profile.family()).execute(context,port);
+            lifecycle.terminate(actor,prepared.instanceId);
+            return result.committed()?result:SkillExecutionResult.committed("CYCLONE_BARRIER_ACTIVE",1,0);
+        }catch(RuntimeException cosmetic){
+            recordExecutionFailure(context,"CYCLONE_PRESENTATION",cosmetic);
+            lifecycle.terminate(actor,prepared.instanceId);
+            return SkillExecutionResult.committed("CYCLONE_BARRIER_ACTIVE",1,0);
+        }
     }
 
     private void retainExecutionLifecycle(SkillExecutionContext context) {
@@ -796,6 +913,14 @@ public final class SkillExecutionService {
         double maximum=port.resources().maximum(ResourceType.MANA);
         if(!Double.isFinite(maximum)||maximum<=0)throw new IllegalStateException("TELEPORT_MAX_MANA_UNAVAILABLE");
         return new ResourceCost(ResourceType.MANA,maximum*TeleportScaling.manaFraction(effectiveSkillLevel));
+    }
+    private static boolean durableCyclone(Stage04SkillProfile profile,SkillExecutionPort port){
+        return profile.skillId().equals("spirit_shield")&&port.durableCycloneEnabled();
+    }
+    private ResourceCost durableCycloneCost(UUID actor,SkillExecutionPort port){
+        double available=kernel.resources().spendableCurrentMana(actor,port.resources());
+        if(available+1e-9<100)throw new Rejection("CYCLONE_REQUIRES_100_SPENDABLE_MANA",null);
+        return new ResourceCost(ResourceType.MANA,available);
     }
 
     private DerivedStats derive(UUID actor,SkillExecutionPort port) {

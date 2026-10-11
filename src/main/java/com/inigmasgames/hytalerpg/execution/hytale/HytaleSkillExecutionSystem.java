@@ -1206,6 +1206,11 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
                     ?com.inigmasgames.hytalerpg.execution.GearSkillRanks.bonus(gearEffects().snapshot(),profile):0;
         }
         @Override public NativeResourcePort resources() { return new EntityStatResourcePort(stats,()->{if(support!=null)support.invalidateHealthCredit(playerRef.getWorldUuid(),playerRef.getUuid());}); }
+        @Override public boolean durableCycloneEnabled(){return support!=null&&support.durableCycloneEnabled();}
+        @Override public CycloneAuthority cycloneAuthority(){return support.cycloneAuthority(playerRef);}
+        @Override public void cyclonePublished(SkillExecutionContext context,UUID generation){
+            support.cyclonePublished(playerRef,context,generation);
+        }
         @Override public java.util.concurrent.CompletionStage<Void> prepareDurable(SkillExecutionContext context){
             java.util.concurrent.CompletionStage<Void> existing;
             if(context.profile().summon()!=null&&context.profile().summon().ironSentinel())
@@ -1640,7 +1645,9 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             return SkillExecutionResult.committed("CONNECTION_STARTED",0,0);
         }
         @Override public SkillExecutionResult executeSupport(SkillExecutionContext context){
-            var result=support.execute(store,actor,context,buffer);
+            var result=durableCycloneEnabled()&&context.profile().skillId().equals("spirit_shield")
+                    ?support.executeDurableCyclone(store,actor,context)
+                    :support.execute(store,actor,context,buffer);
             if(context.profile().skillId().equals("mantle_of_thunder")){
                 if(result.code().equals("AURA_ACTIVE"))lightning.activateMantle(playerRef.getUuid(),System.nanoTime()/1e9);
                 else if(result.code().equals("AURA_OFF"))lightning.forget(playerRef.getUuid());

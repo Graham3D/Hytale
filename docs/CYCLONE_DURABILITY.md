@@ -1,9 +1,12 @@
-# R261-A Cyclone Armor durability contract
+# Cyclone Armor durable barrier contract
 
-R261-A installs a durable `spirit_shield` authority behind an explicit `false`
-gate in `Phase00Plugin`. R260's finite, ten-second shield remains the only live
-Cyclone Armor implementation in the owner's RPG save. This document records
-the protocol to be used when R261-B connects the new cast and presentation path.
+R261-B connects the R261-A/A.1 durable `spirit_shield` authority to live casts
+and post-mitigation damage behind an opt-in gate. The gate defaults to false;
+the owner's active RPG save still uses the deployed R260 JAR and ten-second
+finite Cyclone. The R261-B JAR is a protected-test candidate, not accepted
+gameplay. Set JVM property `-Dhywind.cyclone.durable=true` on an isolated
+test launch to enable it; remove the property and restart to restore R260
+behavior. The gate is read once at plugin startup, not toggled during a cast.
 
 ## Storage and damage order
 
@@ -18,9 +21,9 @@ line is truncated; a complete malformed line, conflicting equal revisions,
 or an invalid transition fails closed. A missing sidecar is an empty R260
 character, never an invented barrier.
 
-The native damage bridge runs after native mitigation and existing finite
-shields, before Managuard and native Health application. For an active,
-reconciled generation it computes `min(post-finite damage, remaining HP)`,
+The native damage bridge runs after native mitigation and before existing
+finite shields, Managuard, and native Health application. For an active,
+reconciled generation it computes `min(post-mitigation damage, remaining HP)`,
 appends the debit receipt, calls `FileChannel.force(true)`, then returns the
 confirmed absorption and overflow. Only then may the native `Damage` amount
 be reduced. A duplicate receipt returns zero new absorption. Per-player
@@ -44,7 +47,7 @@ bounds, not normal gameplay limits.
 
 The Cyclone-specific coordinator admits one pending generation after
 eligibility, active-barrier, spendable-Mana and cooldown checks. R261-B's cast
-owner must reserve the actual native Mana cost and obtain a durable cooldown
+owner reserves the actual native Mana cost and obtains a durable cooldown
 spend from the existing services. It commits native Mana, verifies native
 readback, forces the Mana receipt and amount, accepts the persisted cooldown
 spend, forces its receipt, and finally forces the ACTIVE barrier. Only after
@@ -74,19 +77,42 @@ saved payment. The existing cooldown spend is left with its owner and is
 not automatically refunded. A failed invalidation force leaves the session
 uncertain and denies protection and ready completion. A later replay may
 retry; it never infers a payment from the current Mana balance. This policy
-may forfeit paid protection after reconnect, and R261-B must resolve that
-gameplay tradeoff before enabling the gate.
+may forfeit paid protection after reconnect; it remains a known R261-B
+gameplay limitation during protected testing.
 Death durably depletes the barrier through a native death hook, with support
 tick as a fallback. An old connection's lease cannot detach a newer session.
 
 ## Integration boundary
 
-R261-B must attach the coordinator to `SkillExecutionService`'s owned cast
-instance, replace only Cyclone's finite effect with the durable pool, and
-carry any required Reflective Ward and mastery snapshot into the durable
-absorption path. Existing temporary shields, Managuard, encounter shields,
-and other skills remain on their current paths. R261-A does not change the
-Cyclone formula, cost, duration, HUD, or Mana Before Life behavior.
+The coordinator is called by `SkillExecutionService`'s owned cast instance.
+At the final commit it requotes spendable native Mana, requires at least 100,
+then spends the whole unreserved amount. Cost reduction and Health conversion
+cannot reduce this Mana payment. A forced Mana receipt and persisted cooldown
+receipt precede the forced ACTIVE journal state. Successful durable casts do
+not call the finite support shield path. The old finite implementation is
+available only while the gate is disabled.
+
+Base durable capacity is 100 plus one HP per effective WIS and INT above the
+canonical starting effective value. The level curve is
+`1 + 0.60 * (level - 1) / 19` for levels 1 through 20; the result is rounded
+down to whole HP. Existing barrier-strength modifiers, including Reflective
+Ward's 20% capacity reduction, are then applied and rounded down once more.
+Capacity is frozen in the journal for that generation. No duration, passive
+regeneration, or native Health/Mana coupling exists. The native infinite
+`RPG_Cyclone_Armor_Durable` effect displays the existing Cyclone particle
+and skill icon without a countdown and is removed after depletion, death,
+disconnect, or failed reconnect recovery.
+
+The confirmed durable absorption uses the frozen cast's Reflective Ward
+selection and returns 20% of actual absorbed damage through the existing
+secondary native damage path. Duplicate receipts return zero absorption and
+cannot reflect twice. Reflection uses the established 16 secondary-hit
+budget and REFLECTED metadata to prevent recursion. Existing finite effects,
+monster shields, and Managuard remain in their respective downstream paths.
+Shared Aegis's derived ally shield is not created by the durable Cyclone path;
+casts with that linked passive reject before payment. It remains available
+on R260's finite path and needs a separate durable multi-recipient design
+before use with this opt-in candidate.
 
 The forced debit runs synchronously on the native damage-processing call
 stack. `debit` locks only its player's holder, then appends and calls
@@ -97,7 +123,11 @@ wall-clock debit latency for repeated hits and concurrent same-player and
 multi-player hits. These local measurements are not connected-game latency
 guarantees. Moving the force to an asynchronous queue would violate the
 current no-acknowledgment-before-durability rule; R261-B should evaluate
-the measured pause budget before wiring the coordinator into live damage.
+the measured pause budget before production acceptance. R261-B's offline
+`CycloneDamageStageTest` profiles the exact journal debit and native float
+bridge invoked by the handler. It excludes ECS traversal and connected-game
+storage contention; the disabled-by-default gate and owner-only protected
+test are essential. See [R261-B QA notes](QA-R261B-CYCLONE.md).
 
 ## R261-A invariant coverage
 
@@ -112,6 +142,5 @@ the measured pause budget before wiring the coordinator into live damage.
 | Receipt and activation ceilings, session and preload budgets fail closed without dropping damage or evicting state | `receiptCeilingForfeitsPoolWithoutUnreceiptedAbsorptionAndActivationCeilingRejects`, `sessionAndPreloadBudgetsRejectExcessWithoutEviction` (small package-private record bound exercises the production ceiling path) |
 | Forced-write latency and same-player versus unrelated-player contention remain visible | `multiPlayerForcedDebitLatencyProfile`, `repeatedHitBenchmarkRecordsBoundedPerPlayerSyncCost`, `simultaneousHitBenchmarkRecordsLockContention` |
 
-The activation compensation callback's production implementation, native
-player-save flush timing, and connected-client damage latency remain R261-B
-integration gates. The gate stays disabled in R261-A.1.
+Native player-save flush timing and connected-client damage latency remain
+unverified. The gate remains disabled by default in R261-B.

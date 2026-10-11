@@ -84,6 +84,10 @@ public final class CycloneActivationTransaction {
     public CycloneBarrierLedger.State publish(CycloneBarrierLedger.Lease lease,UUID activation){
         return ledger.activate(lease,activation);
     }
+    /** Forfeit a pending activation after an ambiguous native payment or forced write. */
+    public CycloneBarrierLedger.State quarantine(CycloneBarrierLedger.Lease lease,UUID activation){
+        return ledger.abort(lease,activation,true);
+    }
     public Result abort(CycloneBarrierLedger.Lease lease,UUID activation,
                         boolean manaCommitted,boolean cooldownCommitted,boolean activationWriteAttempted,
                         Compensation compensation){

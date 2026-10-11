@@ -152,7 +152,11 @@ public final class Phase00Plugin extends JavaPlugin {
                 combatTrace, reactions, vfx, bosses);
         var supportSystem=skillExecutionSystem.configureSupport(loadouts);
         // R261-A foundation is installed but inactive; R260 Cyclone gameplay remains authoritative.
-        supportSystem.configureDurableCyclone(getDataDirectory().resolve("cyclone-barriers"),false);
+        // Opt in only on a protected test launch. Restart to change the gate.
+        boolean durableCyclone=Boolean.getBoolean("hywind.cyclone.durable");
+        supportSystem.configureDurableCyclone(getDataDirectory().resolve("cyclone-barriers"),durableCyclone);
+        com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo()
+                .log("RPG_CYCLONE_DURABLE_GATE enabled=%s",durableCyclone);
         getEntityStoreRegistry().registerSystem(new HytaleSupportSystem.CycloneDeath(supportSystem));
         var nativeWeaponFire=new com.inigmasgames.hytalerpg.combat.hytale.NativeWeaponFireProducer(
                 supportSystem::routeManagedWeaponFire,supportSystem::nativeWeaponOffensiveFactor);

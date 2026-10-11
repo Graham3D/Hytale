@@ -6,6 +6,11 @@ import com.inigmasgames.hytalerpg.domain.CompiledSkillPlan;
 
 /** Hytale-facing capabilities. Pure orchestration never reaches into client state. */
 public interface SkillExecutionPort {
+    record CycloneAuthority(com.inigmasgames.hytalerpg.execution.support.CycloneActivationTransaction transaction,
+            com.inigmasgames.hytalerpg.execution.support.CycloneBarrierLedger.Lease lease){}
+    default boolean durableCycloneEnabled(){return false;}
+    default CycloneAuthority cycloneAuthority(){throw new IllegalStateException("CYCLONE_AUTHORITY_UNAVAILABLE");}
+    default void cyclonePublished(SkillExecutionContext context,java.util.UUID generation){}
     boolean actorAliveAndUsable();
     /** Manual skill requests only; ordinary native Primary/Secondary attacks bypass this port. */
     default boolean manualSkillsSilenced(){return false;}

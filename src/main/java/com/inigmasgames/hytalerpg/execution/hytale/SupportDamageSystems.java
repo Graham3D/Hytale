@@ -82,6 +82,34 @@ public final class SupportDamageSystems {
         support.traceFinite(effect,RpgTraceEventType.DAMAGE_REFLECTED,Map.of("actuallyAbsorbed",absorption.amount(),"requestedReflection",amount,
                 "originalChannel",cause.getId(),"healthBefore",result.healthBefore(),"healthAfter",result.healthAfter(),"cancelled",result.cancelled(),"noProc",true,"noCrit",true));
     }
+    private static void reflectDurableCyclone(HytaleSupportSystem support,
+            com.hypixel.hytale.server.core.universe.PlayerRef player,
+            com.inigmasgames.hytalerpg.execution.support.CycloneBarrierLedger.Debit debit,
+            Damage damage,Ref<EntityStore> recipient,Store<EntityStore> store){
+        if(secondaryCannotReflect(HytaleDamageAdapter.metadata(damage))
+                ||!(damage.getSource() instanceof Damage.EntitySource attacker))return;
+        var context=support.durableCycloneContext(player,debit.generation());
+        if(context==null||!context.compiledPlan().supportModifiers().reflectiveWard())return;
+        var source=attacker.getRef();
+        if(source.equals(recipient)||!HytaleSupportSystem.alive(store,source)
+                ||!HytaleAreaQueries.hostile(store,source,recipient)
+                ||SupportNativeEffects.control(store,source,support.bosses()).protectedEntity())return;
+        var cause=damage.getCause();
+        if(cause==null||!support.claimDurableReflection(player,debit.generation()))return;
+        double amount=com.inigmasgames.hytalerpg.execution.support.SupportMagnitude.wardReflection(context,debit.absorbed());
+        if(amount<=0)return;
+        var stats=store.getComponent(source,EntityStatMap.getComponentType());
+        var hp=stats==null?null:stats.get(DefaultEntityStatTypes.getHealth());
+        var attempt=SecondaryDamageAttempt.once(()->hp==null?Double.NaN:hp.get(),
+                ()->new HytaleDamageAdapter().applyResolved(source,store,null,cause,
+                        new HytaleDamageMetadata(player.getUuid(),context.rootCastId(),context.skillInstanceId(),
+                                context.request().correlationId(),amount,Double.NaN,
+                                context.skillInstanceId()+"/REFLECTED/"+debit.receipt(),false,
+                                HytaleDamageMetadata.Origin.REFLECTED),amount,null));
+        var result=attempt.completed();
+        if(result!=null)try{support.traceDurableReflection(player,debit,amount,result,cause.getId());}
+        catch(RuntimeException cosmetic){/* Trace cannot reverse a confirmed reflection. */}
+    }
     private static boolean claimSecondary(HytaleSupportSystem support,FiniteSupportEffects.Effect effect,double now){
         int result=support.runtime().claimSupportSecondary(effect,now);
         if(result==-1)support.traceFinite(effect,RpgTraceEventType.NATIVE_SUPPORT_REJECTED,Map.of("boundary","SUPPORT_SECONDARY_BUDGET","oncePerBudgetWindow",true));
@@ -156,6 +184,26 @@ public final class SupportDamageSystems {
                 var owner=store.getExternalData().getRefFromUUID(effect.key().owner());
                 if(!HytaleSupportSystem.alive(store,owner)||!HytaleSupportSystem.eligibleAlly(store,owner,ref))support.runtime().finite().remove(effect.key());
             }
+            // The durable player barrier takes the already-filtered hit before finite shields.
+            var player=store.getComponent(ref,com.hypixel.hytale.server.core.universe.PlayerRef.getComponentType());
+            com.inigmasgames.hytalerpg.execution.support.CycloneDamageStage.Resolution durable=null;
+            if(player!=null&&damage.getAmount()>0&&support.durableCycloneEnabled()){
+                String receipt=damage.getIfPresentMetaObject(CYCLONE_RECEIPT);
+                if(receipt==null||receipt.isEmpty()){
+                    receipt=UUID.randomUUID().toString();damage.putMetaObject(CYCLONE_RECEIPT,receipt);
+                }
+                durable=support.durableCycloneDebit(player,receipt,damage.getAmount());
+                if(durable!=null&&durable.debit().absorbed()>0){
+                    var debit=durable.debit();
+                    float remainder=durable.nativeRemainder();
+                    HytaleDamageLifecycleSystems.combatStage(damage,"Hywind durable Cyclone barrier","BARRIER_ABSORB",
+                            damage.getAmount(),remainder,Map.of("absorbed",debit.absorbed(),"remaining",debit.remaining(),
+                                    "generation",String.valueOf(debit.generation()),"receipt",receipt));
+                    damage.setAmount(remainder);
+                    try{support.traceDurableCyclone(player,debit);}
+                    catch(RuntimeException cosmetic){/* Confirmed native damage remains authoritative. */}
+                }
+            }
             double shieldBefore=damage.getAmount();
             var hit=support.runtime().finite().shieldHit(world,id,damage.getAmount(),!secondaryCannotReflect(metadata),now,(shield,amount)->{
                 var caster=store.getExternalData().getRefFromUUID(shield.key().owner());
@@ -170,27 +218,7 @@ public final class SupportDamageSystems {
                         "noProc",true,"noLeech",true,"noCredit",true));
                 return !result.cancelled();
             });
-            double afterFinite=hit.remainder();
-            boolean durableAbsorbed=false;
-            var player=store.getComponent(ref,com.hypixel.hytale.server.core.universe.PlayerRef.getComponentType());
-            if(player!=null&&afterFinite>0&&support.durableCycloneEnabled()){
-                String receipt=damage.getIfPresentMetaObject(CYCLONE_RECEIPT);
-                if(receipt==null||receipt.isEmpty()){
-                    receipt=UUID.randomUUID().toString();damage.putMetaObject(CYCLONE_RECEIPT,receipt);
-                }
-                var durable=support.durableCycloneDebit(player,receipt,afterFinite);
-                if(durable!=null&&durable.absorbed()>0){
-                    durableAbsorbed=true;
-                    afterFinite=durable.damageRemaining();
-                    HytaleDamageLifecycleSystems.combatStage(damage,"Hywind durable Cyclone barrier","BARRIER_ABSORB",
-                            hit.remainder(),afterFinite,Map.of("absorbed",durable.absorbed(),"remaining",durable.remaining(),
-                                    "generation",String.valueOf(durable.generation()),"receipt",receipt));
-                }
-            }
-            float nativeRemaining=durableAbsorbed
-                    ?com.inigmasgames.hytalerpg.execution.support.CycloneBarrierLedger.nativeRemainder(afterFinite)
-                    :(float)afterFinite;
-            damage.setAmount(nativeRemaining);
+            damage.setAmount((float)hit.remainder());
             double shieldCursor=shieldBefore;
             for(var absorption:hit.intrinsicAllocations()){
                 double next=Math.max(0,shieldCursor-absorption.amount());
@@ -213,6 +241,10 @@ public final class SupportDamageSystems {
                             "redirected",hit.redirected(),"authority",absorption.effect().kind().name()+"_POST_FILTER"));
             }
             for(var absorption:hit.allocations())reflectAbsorbed(support,absorption,damage,ref,store,now);
+            if(player!=null&&durable!=null&&durable.debit().absorbed()>0)
+                try{reflectDurableCyclone(support,player,durable.debit(),damage,ref,store);}
+                catch(RuntimeException reflectionFailure){support.reportDurableReflectionFailure(
+                        player,durable.debit().generation(),durable.debit().receipt(),reflectionFailure);}
             for(var offered:support.runtime().sharedGuards(world,id,now)){
                 var owner=store.getExternalData().getRefFromUUID(offered.key().owner());
                 if(!HytaleSupportSystem.alive(store,owner)||!HytaleSupportSystem.eligibleAlly(store,owner,ref)||!HytaleSupportSystem.inRange(store,owner,ref,8))continue;

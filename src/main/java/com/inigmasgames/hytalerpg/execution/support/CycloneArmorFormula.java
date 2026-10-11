@@ -32,4 +32,17 @@ public final class CycloneArmorFormula {
         return new Breakdown(STARTING_EFFECTIVE, baseBarrier, wisdomContribution,
                 intelligenceContribution, effectiveLevel, skillLevelFactor, capacity);
     }
+
+    /** R261-B capacity, frozen at activation. Whole barrier HP rounds down once, after level scaling. */
+    public static double durableCapacity(double effectiveWisdom,double effectiveIntelligence,int effectiveLevel){
+        if(!Double.isFinite(effectiveWisdom)||!Double.isFinite(effectiveIntelligence)
+                ||effectiveWisdom<0||effectiveIntelligence<0||effectiveLevel<1||effectiveLevel>20)
+            throw new IllegalArgumentException("INVALID_DURABLE_CYCLONE_ATTRIBUTES");
+        double intrinsic=100+Math.max(0,effectiveWisdom-STARTING_EFFECTIVE)
+                +Math.max(0,effectiveIntelligence-STARTING_EFFECTIVE);
+        double capacity=Math.floor(intrinsic*(1+0.60*(effectiveLevel-1)/19));
+        if(!Double.isFinite(capacity)||capacity<=0||capacity>Float.MAX_VALUE)
+            throw new IllegalArgumentException("INVALID_DURABLE_CYCLONE_CAPACITY");
+        return capacity;
+    }
 }

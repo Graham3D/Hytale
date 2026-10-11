@@ -64,6 +64,15 @@ public final class RpgResourceService {
         if(type!=ResourceType.MANA&&type!=ResourceType.STAMINA)throw new IllegalArgumentException("No leechable resource");
         return type==ResourceType.MANA?reservations.spendableMaximum(actor,resources.maximum(type)):resources.maximum(type);
     }
+    /** Current native Mana available after maximum reservations and other pending upfront holds. */
+    public synchronized double spendableCurrentMana(UUID actor,NativeResourcePort resources){
+        if(!resources.hasResource(ResourceType.MANA))return 0;
+        double current=resources.current(ResourceType.MANA);
+        if(!Double.isFinite(current))return 0;
+        double held=pending.values().stream().filter(p->p.actor.equals(actor)
+                &&p.cost.type()==ResourceType.MANA&&!p.committed).mapToDouble(p->p.cost.amount()).sum();
+        return Math.max(0,Math.min(current,spendableMaximum(actor,ResourceType.MANA,resources))-held);
+    }
     public RootLeechBudget.Recovery recoverLeech(RootLeechBudget budget,RootLeechBudget.HitReceipt receipt,NativeResourcePort resources){
         try{
             double maximum=budget.resource()==ResourceType.NONE?0:spendableMaximum(budget.actor(),budget.resource(),resources);

@@ -1,0 +1,10 @@
+{
+  "Infinite": true,
+  "OverlapBehavior": "Overwrite",
+  "Debuff": false,
+  "StatusEffectIcon": "UI/Custom/Icons/RPG/SkillSpiritshield.png",
+  "ApplicationEffects": {
+    "Particles": [{"SystemId":"RPG_Cyclone_Armor","TargetEntityPart":"Self","Scale":0.8,"ClearParticlesOnRemove":true}],
+    "FirstPersonParticles": [{"SystemId":"RPG_Cyclone_Armor","TargetEntityPart":"Self","Scale":0.55,"ClearParticlesOnRemove":true}]
+  }
+}
