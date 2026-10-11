@@ -1,5 +1,43 @@
 # HyARPG/Hywind development baseline
 
+## R261-B live Cyclone Armor candidate (2026-10-11)
+
+Branch `codex/r261b-live-cyclone` starts from published R261-A.1
+`90ed801a53b7be45498a5a5f07cd931ac87e6104`; both R261-A and A.1
+are ancestors. Its reviewed gameplay implementation commit is
+`dc67e78265316a3ad5a359a7de8548e855b403e6`. Build revision/version
+are R261B-U7P5B / `0.2.0-R261B-U7P5B`. The immutable JVM property
+`hywind.cyclone.durable=true` enables the new path only in a protected
+test launch; omission retains R260 gameplay. The deployed active RPG save
+and its R260 `Hywind.jar` remain untouched.
+
+The live cast now uses the R261-A.1 coordinator and a single durable
+generation. It requires at least 100 spendable native Mana and spends the
+whole unreserved amount at final commit. Capacity starts at 100, gains
+effective WIS/INT above the canonical baseline, scales to exactly +60%
+at skill level 20, and is frozen for the generation. The native damage
+bridge forces a debit before reducing post-mitigation damage; confirmed
+absorption precedes finite shields, Managuard, and Health. Reflective Ward
+uses the actual confirmed absorbed amount. An infinite native effect
+provides the active icon and particles; reconnect forfeits surviving
+protection without a second Mana debit. Shared Aegis-linked durable
+casts reject before payment until a durable ally design exists.
+
+Fourteen focused live-cast cases, the focused native debit-bridge cases,
+and the existing Cyclone durability tests passed during implementation.
+Strict SpotBugs passed before the implementation commit. Offline bridge
+profiling on this host measured sequential one-player p50/p95/p99/max
+2.250/2.497/3.196/6.381 ms; eight contending threads on one player
+2.284/69.919/154.070/160.398 ms; eight independent players
+3.592/4.792/5.108/5.122 ms. Those timings exclude full ECS work and do
+not establish connected-game frame safety. The gate stays disabled by
+default and connected acceptance belongs to the owner. The exact
+documentation HEAD, full offline `check`, coverage, package validator,
+strict static analysis, JAR SHA-256, and remote publication are established
+by the final Guardian verification receipt and completion check, rather
+than inferred from this implementation commit. See the
+[contract](CYCLONE_DURABILITY.md) and [protected QA notes](QA-R261B-CYCLONE.md).
+
 ## R261-A.1 Cyclone durability hardening (2026-10-11)
 
 Branch `codex/r261a1-cyclone-hardening` starts from published R261-A
