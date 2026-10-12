@@ -1,5 +1,38 @@
 # HyARPG/Hywind development baseline
 
+## Chapter I skill bar owner admission preload correction (2026-10-12)
+
+State: **QA_PENDING** on `codex/chapter1-skill-bar`, stacked on the unaccepted
+Chapter I startup, R262 bulk-attributes, and R261QA2 branches. GitHub `main`
+remains at `6d3ef15ff0145532ef193c42e3b648307ee6e915`; the primary
+checkout and both world saves were not changed. The deployed candidate remains
+BAR2 until the owner authorizes replacing its JAR. The BAR3 gameplay source is
+`4afd67d3a193c0d70eca4dbd6bef77dc77c094d3`.
+
+The owner's BAR2 launch loaded schema-13 player state and joined the world,
+including a later direct join to `default`, but emitted no native skill
+projection or `HUD_LAYOUT_READY`. The screenshot shows a vanilla-only HUD
+without the RPG revision label, while CanvasUI still shows Cyclone Armor and
+Blizzard in skill01/skill02. This rules out missing skill assignments and
+demonstrates that BAR2's instance-world guard was not the sole cause. The
+active HyARPG entrypoint enables durable Cyclone by default, but omitted the
+pre-connect preload hooks that the older Phase00 entrypoint already registered.
+`HytaleSupportSystem.connectionReady` requires prepared Cyclone and shared
+leases; without those hooks its `attachPrepared` calls reject admission, so
+the owner installer cannot reach native abilities, stats, or the custom HUD.
+This gate is established by source and the absent runtime projection; the
+corrected path still requires connected confirmation.
+The same wiring defect was present before the Chapter I migration.
+
+`R262C1BAR3-CANDIDATE` / `0.2.0-R262C1BAR3-CANDIDATE` restores the two
+existing preload hooks in the production entrypoint. A focused production
+entrypoint regression failed before the fix and passed after it, alongside
+Chapter I admission and durable-ledger tests. Full offline validation and
+exact package verification are pending at this checkpoint. Connected HUD,
+E/R casting, and world-transfer behavior require owner QA; no native server or
+client was launched by Codex. The BAR2 log also contains a later native
+inventory-window error, which is separate from the absent HUD at join.
+
 ## Chapter I skill bar instance admission correction (2026-10-12)
 
 State: **QA_PENDING** on `codex/chapter1-skill-bar`. The correction source is
