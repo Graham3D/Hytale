@@ -13,7 +13,7 @@ import java.util.Map;
 /** Fixed R016 presentation topology; it supplies no gameplay compatibility rules. */
 public final class StaticSkillTreeLayout {
     public static final List<LinkNodeId> CONTENT_NODES = List.of(
-            LinkNodeId.SKILL01, LinkNodeId.SKILL02, LinkNodeId.SKILL03,
+            LinkNodeId.SKILL01, LinkNodeId.SKILL02, LinkNodeId.SKILL03, LinkNodeId.SKILL04,
             LinkNodeId.PASSIVE01, LinkNodeId.PASSIVE02, LinkNodeId.PASSIVE03,
             LinkNodeId.PASSIVE04, LinkNodeId.PASSIVE05, LinkNodeId.PASSIVE06);
     public static final List<LinkNodeId> JOINTS = List.of(LinkNodeId.JOINT01, LinkNodeId.JOINT02);
@@ -25,7 +25,8 @@ public final class StaticSkillTreeLayout {
             new Adjacency(LinkNodeId.PASSIVE04, LinkNodeId.JOINT02),
             new Adjacency(LinkNodeId.PASSIVE05, LinkNodeId.JOINT02),
             new Adjacency(LinkNodeId.JOINT02, LinkNodeId.SKILL02),
-            new Adjacency(LinkNodeId.PASSIVE06, LinkNodeId.SKILL03));
+            new Adjacency(LinkNodeId.PASSIVE06, LinkNodeId.SKILL03),
+            new Adjacency(LinkNodeId.PASSIVE06, LinkNodeId.SKILL04));
     private static final Map<PassiveSlot, SkillSlot> PARENTS = Map.of(
             PassiveSlot.PASSIVE01, SkillSlot.SKILL01,
             PassiveSlot.PASSIVE02, SkillSlot.SKILL01,
@@ -35,6 +36,10 @@ public final class StaticSkillTreeLayout {
             PassiveSlot.PASSIVE06, SkillSlot.SKILL03);
 
     public SkillSlot parentSkill(PassiveSlot slot) { return PARENTS.get(slot); }
+    public SkillSlot parentSkill(PassiveSlot slot,RpgPlayerState state) {
+        return slot==PassiveSlot.PASSIVE06 && state.skill(SkillSlot.SKILL03).isEmpty()
+                && state.skill(SkillSlot.SKILL04).isPresent()?SkillSlot.SKILL04:parentSkill(slot);
+    }
 
     /** Materializes only complete occupied routes so every persisted candidate remains valid. */
     public List<LinkEdge> authoritativeEdges(RpgPlayerState state) {
@@ -43,8 +48,11 @@ public final class StaticSkillTreeLayout {
                 List.of(PassiveSlot.PASSIVE01, PassiveSlot.PASSIVE02, PassiveSlot.PASSIVE03));
         appendJointBranch(result, state, SkillSlot.SKILL02, LinkNodeId.JOINT02,
                 List.of(PassiveSlot.PASSIVE04, PassiveSlot.PASSIVE05));
-        if (state.skill(SkillSlot.SKILL03).isPresent() && state.passive(PassiveSlot.PASSIVE06).isPresent())
-            result.add(LinkEdge.create(LinkNodeId.PASSIVE06, LinkNodeId.SKILL03));
+        if (state.passive(PassiveSlot.PASSIVE06).isPresent()) {
+            SkillSlot parent=parentSkill(PassiveSlot.PASSIVE06,state);
+            if(state.skill(parent).isPresent())
+                result.add(LinkEdge.create(LinkNodeId.PASSIVE06,LinkNodeId.valueOf(parent.name())));
+        }
         return List.copyOf(result);
     }
 

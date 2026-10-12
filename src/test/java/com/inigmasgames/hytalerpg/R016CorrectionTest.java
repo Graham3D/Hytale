@@ -26,10 +26,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class R016CorrectionTest {
     @TempDir Path temporary;
 
-    @Test void staticTopologyIsExactlyTheOwnerSuppliedThreeBranchAdjacency() {
+    @Test void staticTopologyRetainsOriginalBranchesAndOffersFourthSkillRoute() {
         assertEquals(List.of(
                 "passive01->joint01", "passive02->joint01", "passive03->joint01", "joint01->skill01",
-                "passive04->joint02", "passive05->joint02", "joint02->skill02", "passive06->skill03"),
+                "passive04->joint02", "passive05->joint02", "joint02->skill02", "passive06->skill03",
+                "passive06->skill04"),
                 StaticSkillTreeLayout.ADJACENCY.stream()
                         .map(edge -> edge.source().externalId() + "->" + edge.target().externalId()).toList());
     }

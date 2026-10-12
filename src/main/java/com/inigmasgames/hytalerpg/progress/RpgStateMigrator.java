@@ -23,6 +23,7 @@ public final class RpgStateMigrator {
                 case 9 -> migrateV9ToV10(state);
                 case 10 -> migrateV10ToV11(state);
                 case 11 -> migrateV11ToV12(state);
+                case 12 -> migrateV12ToV13(state);
                 default -> throw new IllegalStateException("No migration from RPG schema v" + version);
             };
             version = state.get("schemaVersion").getAsInt();
@@ -97,6 +98,18 @@ public final class RpgStateMigrator {
     }
 
     public record MigrationResult(JsonObject state, int sourceVersion, int targetVersion, boolean migrated) {}
+    private static JsonObject migrateV12ToV13(JsonObject state) {
+        if (!state.has("equippedSkills") || !state.get("equippedSkills").isJsonArray())
+            throw new IllegalStateException("Missing schema-12 equipped skills");
+        JsonArray skills = state.getAsJsonArray("equippedSkills");
+        if (skills.size() != 3 && skills.size() != 4)
+            throw new IllegalStateException("Unexpected schema-12 equipped skill count: " + skills.size());
+        // Some legacy/imported files may already carry the fourth position.
+        // Preserve it rather than replacing an existing assignment.
+        if (skills.size() == 3) skills.add((String) null);
+        state.addProperty("schemaVersion", 13);
+        return state;
+    }
     private static JsonObject migrateV11ToV12(JsonObject state){
         // Hand-authored legacy fixtures may carry the current empty default; a nonempty
         // pre-schema balance is never inferred or discarded.

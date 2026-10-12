@@ -132,6 +132,14 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
         return out.toString();
     }
 
+    /** Read-only UI boundary; no reconciliation or container mutation occurs here. */
+    public String projectionResult(UUID player, SkillSlot slot) {
+        Session session=sessions.get(player);
+        if(session==null)return "NO_ACTIVE_WORLD_SESSION";
+        SlotStatus status=session.status.get(slot);
+        return status==null?"UNKNOWN":status.result();
+    }
+
     public void detach(UUID player, String reason) {
         if (runeControl != null) runeControl.onDetach(player);
         Session session = sessions.remove(player);
@@ -153,7 +161,9 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
             updateStatus(player, session, SkillSlot.SKILL01, new SlotStatus("", "", "NATIVE_CONTAINER_TOO_SMALL"), reason);
             updateStatus(player, session, SkillSlot.SKILL02, new SlotStatus("", "", "NATIVE_CONTAINER_TOO_SMALL"), reason);
             SkillId skill03 = loadouts.getPresentationView(player).state().skill(SkillSlot.SKILL03).orElse(null);
-            updateAbility4(player, session, skill03, reason);
+            updateUnbound(player, session, SkillSlot.SKILL03, skill03, reason);
+            updateUnbound(player, session, SkillSlot.SKILL04,
+                    loadouts.getPresentationView(player).state().skill(SkillSlot.SKILL04).orElse(null), reason);
             return;
         }
         var state = loadouts.getPresentationView(player).state();
@@ -161,7 +171,8 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
                 state.skill(SkillSlot.SKILL01).orElse(null), reason);
         project(player, session, container, SkillSlot.SKILL02, ABILITY3_PRIMARY_INDEX,
                 state.skill(SkillSlot.SKILL02).orElse(null), reason);
-        updateAbility4(player, session, state.skill(SkillSlot.SKILL03).orElse(null), reason);
+        updateUnbound(player, session, SkillSlot.SKILL03, state.skill(SkillSlot.SKILL03).orElse(null), reason);
+        updateUnbound(player, session, SkillSlot.SKILL04, state.skill(SkillSlot.SKILL04).orElse(null), reason);
     }
 
     private void project(UUID player, Session session, ItemContainer container, SkillSlot logicalSlot,
@@ -216,10 +227,11 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
                         succeeded ? "PROJECTED" : "NATIVE_CONTAINER_WRITE_REJECTED"), reason);
     }
 
-    private void updateAbility4(UUID player, Session session, SkillId skill, String reason) {
+    private void updateUnbound(UUID player, Session session, SkillSlot slot, SkillId skill, String reason) {
         String skillId = skill == null ? "" : skill.value();
-        updateStatus(player, session, SkillSlot.SKILL03,
-                new SlotStatus(skillId, "", skillId.isBlank() ? "EMPTY" : ABILITY4_UNAVAILABLE), reason);
+        updateStatus(player, session, slot,
+                new SlotStatus(skillId, "", skillId.isBlank() ? "EMPTY"
+                        : slot == SkillSlot.SKILL03 ? ABILITY4_UNAVAILABLE : "NO_SUPPORTED_INPUT_BINDING"), reason);
     }
 
     private void updateStatus(UUID player, Session session, SkillSlot slot, SlotStatus next, String reason) {
@@ -229,6 +241,7 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
             case "PROJECTED" -> RpgTraceEventType.NATIVE_ABILITY_SLOT_PROJECTED;
             case "CLEARED", "EMPTY", "NATIVE_SLOT_PRESERVED" -> RpgTraceEventType.NATIVE_ABILITY_SLOT_CLEARED;
             case ABILITY4_UNAVAILABLE -> RpgTraceEventType.NATIVE_ABILITY4_UNAVAILABLE;
+            case "NO_SUPPORTED_INPUT_BINDING" -> RpgTraceEventType.NATIVE_ABILITY_INPUT_UNAVAILABLE;
             default -> RpgTraceEventType.NATIVE_ABILITY_SLOT_CONFLICT;
         };
         Map<String, Object> details = new LinkedHashMap<>();
@@ -301,7 +314,7 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
         return switch (slot) {
             case SKILL01 -> ABILITY2_PRIMARY_INDEX;
             case SKILL02 -> ABILITY3_PRIMARY_INDEX;
-            case SKILL03 -> -1;
+            case SKILL03, SKILL04 -> -1;
         };
     }
 
@@ -309,7 +322,7 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
         return switch (slot) {
             case SKILL01 -> "Ability2";
             case SKILL02 -> "Ability3";
-            case SKILL03 -> "UNAVAILABLE";
+            case SKILL03, SKILL04 -> "UNAVAILABLE";
         };
     }
 

@@ -156,7 +156,7 @@ public final class RpgHudCoordinator {
                 "xpLayerOrder", "ExperienceBackground|ExperienceBar|ExperienceFrame",
                 "xpAnchor", "Centered Bottom:138 Width:702", "xpUsableWidth", RpgHud.XP_FILL_WIDTH,
                 "nativeAbilitiesVisible", true, "nativeSignature", "PRESERVED",
-                "rpgAbilityControls", 2, "abilityPresentation", "NATIVE_WITH_READ_ONLY_COOLDOWN_SWEEPS"));
+                "rpgAbilityControls", 4, "abilityPresentation", "NATIVE_TWO_WITH_UNBOUND_MIRRORS"));
         traceXp(id, model, true);
         if (model.showLevelUpNotice()) trace.trace(id, "LEVEL_UP_INDICATOR_SHOWN", ref(),
                 Map.of("pendingLevelUpPoints", model.pendingLevelUpPoints(), "initial", true));
@@ -184,16 +184,18 @@ public final class RpgHudCoordinator {
             next=next.withBarrier(selectBarrier(previous.barrier(),next.barrier(),session.barrierHighWater));
             session.barrierHighWater=Math.max(session.barrierHighWater,next.barrier().revision());
             session.hud.refreshSkillFailure(session.skillFailure.view(now), !nativeWeaponReady
-                    && next.skills().stream().anyMatch(slot -> slot.skillId() != null && !slot.skillId().isBlank()));
+                    && next.skills().stream().anyMatch(slot -> slot.slot().index()<2
+                            && slot.skillId() != null && !slot.skillId().isBlank()));
             session.combo.refresh(next,finisherPips.applyAsInt(playerRef.getUuid()));
             if(session.sentinelAffixesOn)session.hud.refreshSentinelAffixes(sentinelLines(playerRef.getUuid()));
             ownerPublished.accept(playerRef.getUuid());
-            if (next.equals(previous) && session.emptyHand == emptyHand) return;
+            boolean showMirrors=!nativeWeaponReady;
+            if (next.equals(previous) && session.emptyHand == showMirrors) return;
             boolean xpChanged = !next.xp().equals(previous.xp());
             boolean noticeChanged = next.showLevelUpNotice() != previous.showLevelUpNotice();
-            session.hud.refresh(next,emptyHand);
+            session.hud.refresh(next,showMirrors);
             session.model = next;
-            session.emptyHand = emptyHand;
+            session.emptyHand = showMirrors;
             traceCooldownTransitions(playerRef.getUuid(),previous,next);
             if (xpChanged) traceXp(playerRef.getUuid(), next, false);
             if (noticeChanged) trace.trace(playerRef.getUuid(), next.showLevelUpNotice()

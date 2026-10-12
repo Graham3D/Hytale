@@ -21,9 +21,11 @@ class R021NativeAbilityCorrectionTest {
         assertEquals(0, NativeAbilityProjectionService.primaryIndex(SkillSlot.SKILL01));
         assertEquals(3, NativeAbilityProjectionService.primaryIndex(SkillSlot.SKILL02));
         assertEquals(-1, NativeAbilityProjectionService.primaryIndex(SkillSlot.SKILL03));
+        assertEquals(-1, NativeAbilityProjectionService.primaryIndex(SkillSlot.SKILL04));
         assertEquals("Ability2", NativeAbilityProjectionService.nativeAction(SkillSlot.SKILL01));
         assertEquals("Ability3", NativeAbilityProjectionService.nativeAction(SkillSlot.SKILL02));
         assertEquals("UNAVAILABLE", NativeAbilityProjectionService.nativeAction(SkillSlot.SKILL03));
+        assertEquals("UNAVAILABLE", NativeAbilityProjectionService.nativeAction(SkillSlot.SKILL04));
     }
 
     @Test void executableCohortHasTriggerOnlyNativeItemAssets() throws Exception {
@@ -52,6 +54,19 @@ class R021NativeAbilityCorrectionTest {
         assertFalse(root.contains("ChangeStat"));
         assertFalse(root.contains("TriggerCooldown"));
         assertFalse(root.contains("Launch"));
+    }
+
+    @Test void releaseAbility4IsItemOwnedAndCrossbowReloadMustRemainIntact() throws Exception {
+        var actions=java.util.Arrays.stream(com.hypixel.hytale.protocol.InteractionType.values())
+                .map(Enum::name).filter(name->name.startsWith("Ability")).toList();
+        assertEquals(List.of("Ability1","Ability2","Ability3","Ability4"),actions);
+        var crossbow=com.google.gson.JsonParser.parseString(Files.readString(Path.of(
+                "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_h.json")))
+                .getAsJsonObject().getAsJsonObject("Interactions");
+        assertEquals("RPG_GearRoute_R_Root_Common_StatAmmoReload_Entry",
+                crossbow.get("Ability4").getAsString());
+        assertEquals("RPG_GearRoute_R_Root_Weapon_Crossbow_Signature_BigArrow",
+                crossbow.get("Ability1").getAsString());
     }
 
     @Test void itemIdsAreDeterministicAndOwnershipIsPrefixBounded() {

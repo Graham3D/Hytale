@@ -273,7 +273,7 @@ public final class Phase00Plugin extends JavaPlugin {
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjectionSystem(combatKernel.statuses()));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.AreaNpcControlSystem(combatKernel.statuses()));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.StatusRemovalSystem(combatKernel.statuses()));
-        LOGGER.atInfo().log("RPG_STAGE05_READY revision=%s skills=%d passives=%d pilots=%d projectiles=%d schema=%d balance=%s skillTrace=%s uiTrace=%s abilityInput=Ability2->skill01,Ability3->skill02 nativeAbility4=NATIVE_ABILITY4_UNAVAILABLE nativeAbility1=SIGNATURE_UNTOUCHED abilityHud=NATIVE_HYTALE_ONLY skillTreeHotkey=BLOCKED_PUBLIC_API uiOpen=%s entitlementMode=%s",
+        LOGGER.atInfo().log("RPG_STAGE05_READY revision=%s skills=%d passives=%d pilots=%d projectiles=%d schema=%d balance=%s skillTrace=%s uiTrace=%s abilityInput=Ability2->skill01,Ability3->skill02 skill03=UNBOUND_ABILITY4_ITEM_OWNED skill04=UNBOUND_NO_PUBLIC_INPUT nativeAbility1=SIGNATURE_UNTOUCHED abilityHud=NATIVE_TWO_WITH_UNBOUND_MIRRORS skillTreeHotkey=BLOCKED_PUBLIC_API uiOpen=%s entitlementMode=%s",
                 BuildIdentity.REVISION, catalog.skills().size(), catalog.passives().size(),
                 runtimeProfiles.all().size(), Stage04SkillProfiles.EXPECTED_STAGE05_PILOTS,
                 com.inigmasgames.hytalerpg.progress.RpgPlayerState.CURRENT_SCHEMA,

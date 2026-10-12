@@ -16,6 +16,40 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class R045CanvasSkillTreeEditorTest {
     @TempDir Path temporary;
+    @Test void fourthSquareSkillNodeAssignsAndReopensWithoutMovingExistingNodes() {
+        var bundle=Stage01BTestSupport.bundle();
+        var layout=new StaticSkillTreeLayout();
+        UUID player=UUID.randomUUID();
+        var mutations=new RpgSkillTreeMutationService(bundle.service(),layout);
+        var projection=new RpgSkillTreeProjectionService(bundle.catalog(),bundle.service(),layout,true);
+        var bindings=new SkillTreePortBindingStore(temporary.resolve("fourth-slot-ports"));
+        var editor=new RpgCanvasSkillTreeEditor(player,projection,mutations,bindings);
+        assertEquals(com.inigmasgames.canvasui.api.CanvasPoint.of(940,275),editor.canvas().node("skill03").position());
+        assertEquals(com.inigmasgames.canvasui.api.CanvasPoint.of(1230,275),editor.canvas().node("skill04").position());
+        assertEquals("skill",editor.canvas().node("skill04").type());
+        var assigned=editor.assign("fire_bolt","skill04",editor.canvas().snapshot());
+        assertTrue(assigned.accepted(),assigned.message());
+        editor.canvas().restore(assigned.authoritativeSnapshot());
+        assertEquals("Fire Bolt [UNBOUND]",editor.canvas().node("skill04").metadata().get("label"));
+        assertEquals("fire_bolt",bundle.service().getPresentationView(player).state()
+                .skill(com.inigmasgames.hytalerpg.domain.SkillSlot.SKILL04).orElseThrow().value());
+        var reopened=new RpgCanvasSkillTreeEditor(player,projection,mutations,bindings);
+        assertEquals("Fire Bolt [UNBOUND]",reopened.canvas().node("skill04").metadata().get("label"));
+    }
+    @Test void staticFallbackRoutesPassiveSixToFourthOnlyWhenThirdIsEmpty() {
+        var layout=new StaticSkillTreeLayout();
+        var state=com.inigmasgames.hytalerpg.progress.RpgPlayerState.create(UUID.randomUUID());
+        state.skill(com.inigmasgames.hytalerpg.domain.SkillSlot.SKILL04,
+                new com.inigmasgames.hytalerpg.domain.SkillId("fire_bolt"));
+        state.passive(com.inigmasgames.hytalerpg.domain.PassiveSlot.PASSIVE06,
+                new com.inigmasgames.hytalerpg.domain.PassiveId("fork"));
+        assertEquals(com.inigmasgames.hytalerpg.domain.LinkNodeId.SKILL04,
+                layout.authoritativeEdges(state).getFirst().targetNodeId());
+        state.skill(com.inigmasgames.hytalerpg.domain.SkillSlot.SKILL03,
+                new com.inigmasgames.hytalerpg.domain.SkillId("quick_slash"));
+        assertEquals(com.inigmasgames.hytalerpg.domain.LinkNodeId.SKILL03,
+                layout.authoritativeEdges(state).getFirst().targetNodeId());
+    }
     @Test void filteredTraceRecordsAuthoritativeAssignmentAndRejection() throws Exception {
         var bundle=Stage01BTestSupport.bundle();
         var layout=new StaticSkillTreeLayout();
@@ -53,7 +87,7 @@ class R045CanvasSkillTreeEditorTest {
         var skill = editor.assign("fire_bolt", "skill01", editor.canvas().snapshot());
         assertTrue(skill.accepted(), skill.message());
         editor.canvas().restore(skill.authoritativeSnapshot());
-        assertEquals("Fire Bolt [E]", editor.canvas().node("skill01").metadata().get("label"));
+        assertEquals("Fire Bolt [Ability 2]", editor.canvas().node("skill01").metadata().get("label"));
         assertEquals("fire_bolt", bundle.service().getPresentationView(player).state().skill(
                 com.inigmasgames.hytalerpg.domain.SkillSlot.SKILL01).orElseThrow().value());
     }
@@ -143,9 +177,9 @@ class R045CanvasSkillTreeEditorTest {
         assign(editor,"fire_bolt","skill01");
         var replacement=editor.assign("quick_slash","skill01",editor.canvas().snapshot());
         assertTrue(replacement.accepted(),replacement.message());editor.canvas().restore(replacement.authoritativeSnapshot());
-        assertEquals("Quick Slash [E]",editor.canvas().node("skill01").metadata().get("label"));
+        assertEquals("Quick Slash [Ability 2]",editor.canvas().node("skill01").metadata().get("label"));
         var unbound=editor.assign("fire_bolt","skill03",editor.canvas().snapshot());
-        assertTrue(unbound.accepted(),unbound.message());assertTrue(unbound.message().contains("stored unbound"));
+        assertTrue(unbound.accepted(),unbound.message());assertTrue(unbound.message().contains("no supported independent input binding"));
         editor.canvas().restore(unbound.authoritativeSnapshot());
         var unboundReplacement=editor.assign("quick_slash","skill03",editor.canvas().snapshot());
         assertTrue(unboundReplacement.accepted(),unboundReplacement.message());
@@ -160,7 +194,7 @@ class R045CanvasSkillTreeEditorTest {
         var broken=editor.breakLink(first,editor.canvas().snapshot());assertTrue(broken.accepted(),broken.message());
         editor.canvas().restore(broken.authoritativeSnapshot());
         assertNull(editor.canvas().edge(first));assertNotNull(editor.canvas().edge(other));
-        assertEquals("Quick Slash [E]",editor.canvas().node("skill01").metadata().get("label"));
+        assertEquals("Quick Slash [Ability 2]",editor.canvas().node("skill01").metadata().get("label"));
         assertEquals("Potency",editor.canvas().node("passive01").metadata().get("label"));
     }
 

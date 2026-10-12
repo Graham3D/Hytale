@@ -130,7 +130,7 @@ public final class RpgCommand extends AbstractCommandCollection {
         EquipCommand(RpgCatalog catalog, RpgLoadoutOperations loadouts) {
             super("equip", "Equip a Skill or Passive definition into a permanent slot.", loadouts);
             this.catalog = catalog;
-            slot = withRequiredArg("slot", "skill01..skill03 or passive01..passive06", ArgTypes.STRING);
+            slot = withRequiredArg("slot", "skill01..skill04 or passive01..passive06", ArgTypes.STRING);
             definition = withRequiredArg("definition", "canonical name or ID", ArgTypes.GREEDY_STRING);
         }
         @Override protected void execute(CommandContext context, Store<EntityStore> store, Ref<EntityStore> ref,
@@ -150,7 +150,7 @@ public final class RpgCommand extends AbstractCommandCollection {
                         context.sendMessage(Message.raw(resolved.message())); return;
                     }
                     send(context, loadouts.equipPassive(playerRef.getUuid(), PassiveSlot.parse(slotValue), resolved.value().id()));
-                } else throw new IllegalArgumentException("Equip slot must be skill01..skill03 or passive01..passive06.");
+                } else throw new IllegalArgumentException("Equip slot must be skill01..skill04 or passive01..passive06.");
             } catch (RuntimeException error) { error(context, error); }
         }
     }
@@ -159,7 +159,7 @@ public final class RpgCommand extends AbstractCommandCollection {
         private final RequiredArg<String> slot;
         UnequipCommand(RpgLoadoutOperations loadouts) {
             super("unequip", "Unequip a Skill or Passive and safely remove affected links.", loadouts);
-            slot = withRequiredArg("slot", "skill01..skill03 or passive01..passive06", ArgTypes.STRING);
+            slot = withRequiredArg("slot", "skill01..skill04 or passive01..passive06", ArgTypes.STRING);
         }
         @Override protected void execute(CommandContext context, Store<EntityStore> store, Ref<EntityStore> ref,
                                          PlayerRef playerRef, World world) {

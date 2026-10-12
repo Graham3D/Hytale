@@ -36,7 +36,19 @@ public final class HytalePlayerPersistenceReady extends EntityTickingSystem<Enti
         return preparation.prepare(player.getUuid(),world,com.inigmasgames.hytalerpg.content.RpgCatalog.prepared().revision())
                 .thenCompose(view->{additionalPreload.accept(player.getUuid());
                     return additionalAsyncPreload.apply(player.getUuid());}).whenComplete((ignored,error)->{
-                    if(error!=null&&connections.remove(player.getUuid(),player))preparation.detach(player.getUuid());
+                    if(error!=null){
+                        if(connections.remove(player.getUuid(),player))preparation.detach(player.getUuid());
+                    }else{
+                        // Chapter I can enter the world without a subsequent PlayerReadyEvent.
+                        // Preparation has finished before the player is admitted, so arm the
+                        // existing owner-thread installer here as well. A later ready event may
+                        // re-arm it, while the generation and connection guard reject stale work.
+                        try { begin(player,world); }
+                        catch(RuntimeException failure){
+                            if(connections.remove(player.getUuid(),player))preparation.detach(player.getUuid());
+                            throw failure;
+                        }
+                    }
                 });
     }
     public synchronized void begin(PlayerRef connection,UUID world){
@@ -55,7 +67,11 @@ public final class HytalePlayerPersistenceReady extends EntityTickingSystem<Enti
         connections.remove(player.getUuid(),player);pending.remove(player.getUuid());preparation.detach(player.getUuid());
         com.inigmasgames.hywind.readypath.ReadyPathProbe.disconnect(player.getUuid());
     }
-    public Map<String,Object> preparationStatus(){return preparation.inspect();}
+    public Map<String,Object> preparationStatus(){
+        var status=new LinkedHashMap<String,Object>(preparation.inspect());
+        status.put("ownerInstallPending",pending.size());
+        return Map.copyOf(status);
+    }
     public void drain(PlayerRef player){
         var current=connections.get(player.getUuid());if(current!=null&&current!=player)return;
         pending.remove(player.getUuid());preparation.detach(player.getUuid());

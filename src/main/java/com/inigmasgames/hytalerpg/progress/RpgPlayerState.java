@@ -19,7 +19,7 @@ import java.util.UUID;
 
 /** Versioned server-owned RPG player state. Live Hytale resources are intentionally not duplicated here. */
 public final class RpgPlayerState {
-    public static final int CURRENT_SCHEMA = 12;
+    public static final int CURRENT_SCHEMA = 13;
 
     public int schemaVersion = CURRENT_SCHEMA;
     public String playerUuid;
@@ -30,7 +30,7 @@ public final class RpgPlayerState {
     public int unspentAttributePoints;
     public Set<String> learnedSkills = new LinkedHashSet<>();
     public Map<String, Integer> ownedPassives = new LinkedHashMap<>();
-    public String[] equippedSkills = new String[3];
+    public String[] equippedSkills = new String[4];
     public String[] equippedPassives = new String[6];
     /** Saved topology is retained; only these unsupported passive nodes are omitted from execution. */
     public Map<String,String> inactivePassives = new LinkedHashMap<>();
@@ -81,9 +81,9 @@ public final class RpgPlayerState {
     }
 
     public void normalizeShape() {
-        if (equippedSkills == null) equippedSkills = new String[3];
+        if (equippedSkills == null) throw new IllegalStateException("Missing equipped skills; refusing a loadout reset");
         if (equippedPassives == null) equippedPassives = new String[6];
-        if (equippedSkills.length != 3) equippedSkills = Arrays.copyOf(equippedSkills, 3);
+        if (equippedSkills.length != 4) throw new IllegalStateException("Invalid equipped skill count: " + equippedSkills.length);
         if (equippedPassives.length != 6) equippedPassives = Arrays.copyOf(equippedPassives, 6);
         if (joints == null || joints.length != 2) joints = new String[]{"joint01", "joint02"};
         if (attributes == null) attributes = defaultAttributes();

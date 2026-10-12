@@ -74,14 +74,62 @@ class PersistenceAndMigrationTest {
         Files.writeString(repository.path(player), v2);
         var loaded = repository.load(player);
         assertTrue(loaded.migrated());
-        assertEquals(3, loaded.state().equippedSkills.length);
-        assertArrayEquals(new String[]{"quick_slash", "fire_bolt", null}, loaded.state().equippedSkills);
+        assertEquals(4, loaded.state().equippedSkills.length);
+        assertArrayEquals(new String[]{"quick_slash", "fire_bolt", null, null}, loaded.state().equippedSkills);
         assertTrue(loaded.state().learnedSkills.contains("frost_bolt"));
         assertEquals(77L, loaded.state().skillMastery.get("frost_bolt"));
         assertTrue(loaded.state().graphEdges.isEmpty());
         assertTrue(loaded.state().degradedReasons.stream().anyMatch(reason -> reason.contains("MIGRATION_V2_TO_V3")
                 && reason.contains("frost_bolt") && reason.contains("removedEdges=1")));
         assertFalse(repository.load(player).migrated(), "migration is persisted immediately and runs once");
+    }
+
+    @Test void schema12MigrationRetainsThreeSlotsAndProgressWhileAddingEmptyFourth() throws Exception {
+        UUID player=UUID.randomUUID();
+        var repository=new FileRpgPlayerStateRepository(temp.resolve("schema13"));
+        var state=RpgPlayerState.create(player);
+        state.skill(SkillSlot.SKILL01,new SkillId("spirit_shield"));
+        state.skill(SkillSlot.SKILL02,new SkillId("blizzard"));
+        state.skill(SkillSlot.SKILL03,new SkillId("fire_bolt"));
+        state.learnedSkills.addAll(List.of("spirit_shield","blizzard","fire_bolt"));
+        state.skillMastery.put("blizzard",77L);
+        state.level=12; state.currentXp=3456; state.revision=2223;
+        var raw=new com.google.gson.Gson().toJsonTree(state).getAsJsonObject();
+        raw.addProperty("schemaVersion",12);
+        var oldSkills=raw.getAsJsonArray("equippedSkills");
+        oldSkills.remove(3);
+        Files.createDirectories(repository.path(player).getParent());
+        Files.writeString(repository.path(player),raw.toString());
+        var loaded=repository.load(player);
+        assertTrue(loaded.migrated());
+        assertEquals(12,loaded.sourceSchema());
+        assertArrayEquals(new String[]{"spirit_shield","blizzard","fire_bolt",null},loaded.state().equippedSkills);
+        assertEquals(2223,loaded.state().revision);
+        assertEquals(12,loaded.state().level);
+        assertEquals(3456,loaded.state().currentXp);
+        assertEquals(77L,loaded.state().skillMastery.get("blizzard"));
+        assertEquals(state.learnedSkills,loaded.state().learnedSkills);
+        assertTrue(Files.isRegularFile(repository.path(player).resolveSibling(player+".json.schema-v12.bak")));
+        assertFalse(repository.load(player).migrated());
+    }
+
+    @Test void malformedSchema12SkillArrayCannotSilentlyDropAssignments() throws Exception {
+        var state=RpgPlayerState.create(UUID.randomUUID());
+        var raw=new com.google.gson.Gson().toJsonTree(state).getAsJsonObject();
+        raw.addProperty("schemaVersion",12);
+        raw.getAsJsonArray("equippedSkills").add("extra_skill");
+        assertThrows(IllegalStateException.class,()->new com.inigmasgames.hytalerpg.progress.RpgStateMigrator().migrate(raw));
+    }
+
+    @Test void schema12MigrationPreservesAnAlreadyPopulatedFourthPosition() {
+        var state=RpgPlayerState.create(UUID.randomUUID());
+        state.skill(SkillSlot.SKILL04,new SkillId("fire_bolt"));
+        var raw=new com.google.gson.Gson().toJsonTree(state).getAsJsonObject();
+        raw.addProperty("schemaVersion",12);
+        var migrated=new com.inigmasgames.hytalerpg.progress.RpgStateMigrator().migrate(raw);
+        var restored=new com.google.gson.Gson().fromJson(migrated.state(),RpgPlayerState.class);
+        restored.normalizeShape();
+        assertEquals("fire_bolt",restored.equippedSkills[3]);
     }
 
     @Test void restartReloadPreservesRequiredCommandSequence() {

@@ -11,7 +11,7 @@ public record BuildTransfer(int schemaVersion,String layout,Map<String,String> s
     private static final Gson JSON=new Gson();
     public BuildTransfer {
         if(schemaVersion!=1||!"STATIC_SKILL_TREE_V1".equals(layout)||skills==null||passives==null||edges==null
-                ||skills.size()>3||passives.size()>6||edges.size()>8)throw new IllegalArgumentException("INVALID_BUILD_TRANSFER");
+                ||skills.size()>4||passives.size()>6||edges.size()>8)throw new IllegalArgumentException("INVALID_BUILD_TRANSFER");
         skills=Collections.unmodifiableMap(new TreeMap<>(skills));passives=Collections.unmodifiableMap(new TreeMap<>(passives));edges=List.copyOf(edges);
         skills.forEach((slot,id)->{if(!SkillSlot.parse(slot).externalId().equals(slot))throw new IllegalArgumentException("INVALID_SKILL_SLOT");AcquisitionProgress.id(id);});
         passives.forEach((slot,id)->{if(!PassiveSlot.parse(slot).externalId().equals(slot))throw new IllegalArgumentException("INVALID_PASSIVE_SLOT");AcquisitionProgress.id(id);});
@@ -29,7 +29,7 @@ public record BuildTransfer(int schemaVersion,String layout,Map<String,String> s
         if(!JSON.toJsonTree(result).equals(raw))throw new IllegalArgumentException("BUILD_TRANSFER_SHAPE");return result;
     }
     public void applyTo(RpgPlayerState state){
-        state.equippedSkills=new String[3];state.equippedPassives=new String[6];state.inactivePassives.clear();
+        state.equippedSkills=new String[4];state.equippedPassives=new String[6];state.inactivePassives.clear();
         skills.forEach((slot,id)->state.skill(SkillSlot.parse(slot),new SkillId(id)));
         passives.forEach((slot,id)->state.passive(PassiveSlot.parse(slot),new PassiveId(id)));state.linkEdges(edges);
     }

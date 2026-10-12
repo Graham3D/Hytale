@@ -40,8 +40,8 @@ R212-U7P5 resolves each of those nine anchors with Hytale's native walking-NPC c
 | `/rpg progress buy <passiveId> <revision> <requestUuid>` | Buy an eligible passive. Reuse the UUID when retrying the same purchase. | Adventure; changes progression |
 | `/rpg progress respec <revision>` | Respec allocated attributes. | Adventure; changes progression |
 | `/rpg progress export` / `/rpg progress import <base64urlBuild> <revision>` | Export or import a build. | Adventure; import changes progression |
-| `/rpg equip <skill01..skill03\|passive01..passive06> <skillOrPassiveName>` | Put an owned skill or passive in a permanent slot. Example: `/rpg equip skill01 Iron Sentinel`. | Adventure; changes loadout |
-| `/rpg unequip <slot>` | Remove a skill/passive and affected links. | Adventure; changes loadout |
+| `/rpg equip <skill01..skill04\|passive01..passive06> <skillOrPassiveName>` | Put an owned skill or passive in a permanent slot. Example: `/rpg equip skill01 Iron Sentinel`. Chapter I `skill03` and `skill04` are saved and shown as unbound; only `skill01`/`skill02` have supported native execution input. | Adventure; changes loadout; schema 13 migration saves a backup of the prior player state on first load |
+| `/rpg unequip <skill01..skill04\|passive01..passive06>` | Remove the selected skill/passive and affected links. | Adventure; changes loadout; schema 13 build |
 | `/rpg link <sourceNode> <targetNode>` / `/rpg unlink <sourceNode>` | Edit a validated Link Tree edge. | Adventure; changes loadout |
 | `/rpg loadout` / `/rpg compile` | Inspect the equipped graph or validate its compiled plan. | Adventure; read-only |
 | `/rpg managuard <1..50>` | Set the percentage of Mana reserved for Managuard; does not refill Mana or shield. | Adventure; changes allocation |

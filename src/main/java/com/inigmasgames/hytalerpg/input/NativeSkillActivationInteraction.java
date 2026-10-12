@@ -36,6 +36,10 @@ public final class NativeSkillActivationInteraction extends SimpleInstantInterac
                     "reason", "PROXY_OR_FORK", "action", type.name(), "chainId", chain.getChainId()));
             return;
         }
+        // Chapter I builds Ability2/3 contexts from the AbilitySlots container
+        // (section -11, primary cells 0/3). A manually held rune cannot cast.
+        if (context.getHeldItemSectionId()!=com.hypixel.hytale.server.core.inventory.InventoryComponent.ABILITIES_SECTION_ID)
+            return;
         var original = context.getOriginalItemType();
         var ability = original != null && original.getAbility() instanceof com.hypixel.hytale.server.core.asset.type.item.config.CoreItemAbility a ? a : null;
         if (ability == null || !NativeAbilityBridgeAudit.rootForItem(original.getId()).equals(ability.getCastRootId())) {

@@ -77,7 +77,8 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
         if (!mutation.success()) return reject(mutation.code() + ": " + mutation.message(), presentationSnapshot);
         restoreDormant(node);
         return observed("ASSIGN",node.externalId(),new Result(true, entry.name() + " assigned to " + node.externalId()
-                + (node == LinkNodeId.SKILL03 ? " (stored unbound; this build has no native Ability4 input)" : ""),
+                + (node == LinkNodeId.SKILL03 || node == LinkNodeId.SKILL04
+                        ? " (equipped, no supported independent input binding)" : ""),
                 authoritativeSnapshot(presentationSnapshot)));
     }
 
@@ -246,6 +247,7 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
             case SKILL01 -> CanvasPoint.of(360,275);
             case SKILL02 -> CanvasPoint.of(650,275);
             case SKILL03 -> CanvasPoint.of(940,275);
+            case SKILL04 -> CanvasPoint.of(1230,275);
             case PASSIVE01 -> CanvasPoint.of(280,500);
             case PASSIVE02 -> CanvasPoint.of(470,500);
             case PASSIVE03 -> CanvasPoint.of(660,500);
@@ -300,7 +302,7 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
         }
     }
 
-    private static String nativeHotkey(LinkNodeId node){return switch(node){case SKILL01->"E";case SKILL02->"R";case SKILL03->"UNBOUND";default->"";};}
+    private static String nativeHotkey(LinkNodeId node){return switch(node){case SKILL01->"Ability 2";case SKILL02->"Ability 3";case SKILL03,SKILL04->"UNBOUND";default->"";};}
 
     private static Map<LinkNodeId, LinkNodeId> outgoing(List<LinkEdge> edges) {
         Map<LinkNodeId, LinkNodeId> result = new EnumMap<>(LinkNodeId.class);

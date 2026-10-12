@@ -153,8 +153,12 @@ public final class RpgSkillTreeProjectionService {
         for (var slot : com.inigmasgames.hytalerpg.domain.PassiveSlot.values()) {
             if (view.state().passive(slot).map(def.id()::equals).orElse(false)) {
                 assigned = slot.externalId();
-                var skill = view.state().skill(layout.parentSkill(slot)).flatMap(catalog::skill);
-                parent = skill.map(SkillDefinition::name).orElse("Empty " + layout.parentSkill(slot).externalId());
+                var parentSlot=layout.parentSkill(slot,view.state());
+                var route=view.routes().get(slot);
+                if(route!=null&&!route.isEmpty()&&route.getLast().kind()==LinkNodeId.NodeKind.SKILL)
+                    parentSlot=route.getLast().skillSlot();
+                var skill = view.state().skill(parentSlot).flatMap(catalog::skill);
+                parent = skill.map(SkillDefinition::name).orElse("Empty " + parentSlot.externalId());
                 break;
             }
         }

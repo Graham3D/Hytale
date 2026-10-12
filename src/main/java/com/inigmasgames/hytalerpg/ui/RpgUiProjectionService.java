@@ -27,6 +27,10 @@ public final class RpgUiProjectionService {
     private final RpgCooldownService cooldowns;
     private final CharacterXpProjectionService xp = new CharacterXpProjectionService();
     private final Stage04SkillProfiles stage04;
+    private java.util.function.BiFunction<UUID,SkillSlot,String> nativeProjection=(player,slot)->"PROJECTED";
+    public void configureNativeProjection(java.util.function.BiFunction<UUID,SkillSlot,String> reader){
+        nativeProjection=java.util.Objects.requireNonNull(reader);
+    }
     private java.util.function.Function<UUID,com.inigmasgames.hytalerpg.gear.GearAffixRuntime.Effects> gearEffects=actor->com.inigmasgames.hytalerpg.gear.GearAffixRuntime.Effects.NONE;
     public void configureGearEffects(java.util.function.Function<UUID,com.inigmasgames.hytalerpg.gear.GearAffixRuntime.Effects> provider){gearEffects=java.util.Objects.requireNonNull(provider);}
     private java.util.function.ToDoubleBiFunction<UUID,String> activeRemaining=(owner,skill)->0;
@@ -58,7 +62,7 @@ public final class RpgUiProjectionService {
         DerivedStats currentDerived=derive(player,view);
         cooldowns.setOwnerRecovery(player,currentDerived.cooldownRecovery());
         XpView projectedXp = xpOverride == null ? xp.project(view.state().currentXp) : xpOverride;
-        List<SkillSlotView> slots = new ArrayList<>(3);
+        List<SkillSlotView> slots = new ArrayList<>(SkillSlot.values().length);
         for (SkillSlot slot : SkillSlot.values()) {
             var id = view.state().skill(slot);
             if (id.isEmpty()) {
@@ -98,11 +102,15 @@ public final class RpgUiProjectionService {
             boolean ready = stage04.supports(id.get().value()) && plan != null && !plan.degraded()
                     && (stage04.require(id.get().value()).family().name().equals(plan.finalFamily())
                     || plan.finalTags().contains(stage04.require(id.get().value()).family().name()));
-            SkillSlotView.State state = remaining > 0.0 ? SkillSlotView.State.COOLDOWN
-                    : !ready ? SkillSlotView.State.UNAVAILABLE : !resourceFailure.isEmpty() ? SkillSlotView.State.INSUFFICIENT_RESOURCE : SkillSlotView.State.READY;
+            boolean unbound = slot.index() >= 2;
+            String nativeResult=unbound?"UNBOUND":nativeProjection.apply(player,slot);
+            boolean projected="PROJECTED".equals(nativeResult);
+            SkillSlotView.State state = unbound || !ready || !projected ? SkillSlotView.State.UNAVAILABLE
+                    : remaining > 0.0 ? SkillSlotView.State.COOLDOWN
+                    : !resourceFailure.isEmpty() ? SkillSlotView.State.INSUFFICIENT_RESOURCE : SkillSlotView.State.READY;
             slots.add(new SkillSlotView(slot, abilityAction(slot), id.get().value(), name,
                     "rpg.icon.skill.family." + family, remaining, state,
-                    state == SkillSlotView.State.UNAVAILABLE
+                    unbound ? "NO_SUPPORTED_INPUT_BINDING" : !projected ? nativeResult : state == SkillSlotView.State.UNAVAILABLE
                             ? stage04.supports(id.get().value()) ? "COMPILED_PLAN_UNSUPPORTED" : "EXECUTOR_NOT_IMPLEMENTED"
                             : resourceFailure,duration));
         }
@@ -156,5 +164,7 @@ public final class RpgUiProjectionService {
         return gearEffects.apply(player).derive(derivedStats,raw,view.state().level);
     }
 
-    private static String abilityAction(SkillSlot slot) { return "Ability" + (slot.index() + 2); }
+    private static String abilityAction(SkillSlot slot) {
+        return slot.index() < 2 ? "Ability" + (slot.index() + 2) : "UNBOUND";
+    }
 }

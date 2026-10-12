@@ -63,6 +63,12 @@ Group {
         $Common.@TextButton #Skill01 { Anchor: (Left: 78, Top: 58, Width: 140, Height: 78); Text: "Empty Skill"; }
         $Common.@TextButton #Skill02 { Anchor: (Left: 401, Top: 58, Width: 140, Height: 78); Text: "Empty Skill"; }
         $Common.@TextButton #Skill03 { Anchor: (Left: 725, Top: 58, Width: 140, Height: 78); Text: "Empty Skill"; }
+        Group #Skill04Icon { Visible: false; Anchor: (Left: 768, Top: 146, Width: 54, Height: 54);
+          Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/Background_Ability_Ready.png"); }
+          Group #Overlay { Anchor: (Full: 6); Background: (TexturePath: "Common/Icons/Abilities/Debug_Rune_Tornado.png"); }
+          Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/Frame_Ability_Ready.png"); }
+        }
+        $Common.@TextButton #Skill04 { Anchor: (Left: 725, Top: 204, Width: 140, Height: 78); Text: "Empty Skill (Unbound)"; }
 
         Group { Anchor: (Left: 103, Top: 278, Width: 92, Height: 92); Background: (TexturePath: "Common/CheckBoxFrame.png", Border: 22); }
         $Common.@TextButton #Joint01 { Anchor: (Left: 111, Top: 286, Width: 76, Height: 76); Text: "JOINT A 3/3"; Disabled: true; }

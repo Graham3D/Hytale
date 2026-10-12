@@ -348,6 +348,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
         var runtimeProfiles = Stage04SkillProfiles.loadCanonical(catalog);
         validatedRuntimeProfiles = runtimeProfiles;
         nativeAbilities = new NativeAbilityProjectionService(loadouts, runtimeProfiles, skillTrace, loadouts::ready);
+        uiProjection.configureNativeProjection(nativeAbilities::projectionResult);
         loadouts.addMutationListener(nativeAbilities::onLoadoutMutation);
         abilityInputs = new HytaleAbilitySkillInputAdapter(nativeAbilities::observeInput);
         abilityInputs.useNativeExecution();
@@ -1003,7 +1004,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.AreaStatusProjectionSystem(combatKernel.statuses()));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.AreaNpcControlSystem(combatKernel.statuses()));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.StatusRemovalSystem(combatKernel.statuses()));
-        LOGGER.atInfo().log("RPG_STAGE05_READY revision=%s skills=%d passives=%d pilots=%d projectiles=%d schema=%d balance=%s skillTrace=%s uiTrace=%s abilityInput=Ability2->skill01,Ability3->skill02 nativeAbility4=NATIVE_ABILITY4_UNAVAILABLE nativeAbility1=SIGNATURE_UNTOUCHED abilityHud=NATIVE_HYTALE_ONLY skillTreeHotkey=BLOCKED_PUBLIC_API uiOpen=%s entitlementMode=%s",
+        LOGGER.atInfo().log("RPG_STAGE05_READY revision=%s skills=%d passives=%d pilots=%d projectiles=%d schema=%d balance=%s skillTrace=%s uiTrace=%s abilityInput=Ability2->skill01,Ability3->skill02 skill03=UNBOUND_ABILITY4_ITEM_OWNED skill04=UNBOUND_NO_PUBLIC_INPUT nativeAbility1=SIGNATURE_UNTOUCHED abilityHud=NATIVE_TWO_WITH_UNBOUND_MIRRORS skillTreeHotkey=BLOCKED_PUBLIC_API uiOpen=%s entitlementMode=%s",
                 BuildIdentity.REVISION, catalog.skills().size(), catalog.passives().size(),
                 runtimeProfiles.all().size(), Stage04SkillProfiles.EXPECTED_STAGE05_PILOTS,
                 com.inigmasgames.hytalerpg.progress.RpgPlayerState.CURRENT_SCHEMA,
@@ -1030,7 +1031,8 @@ public final class HyArpgPlugin extends TavernsPlugin {
             if(!supportSystem.connectionReady(store,ref))return false;
             var view=loadouts.getPresentationView(playerRef.getUuid());
             var slots=store.getComponent(ref,com.hypixel.hytale.server.core.inventory.InventoryComponent.AbilitySlots.getComponentType());
-            if(slots!=null)nativeAbilities.install(playerRef.getUuid(),slots);
+            if(slots==null)return false;
+            nativeAbilities.install(playerRef.getUuid(),slots);
             EnumMap<RpgAttribute,Integer> raw=new EnumMap<>(RpgAttribute.class);
             for(var attribute:RpgAttribute.values())raw.put(attribute,view.state().attributes.getOrDefault(attribute.name(),10));
             new DerivedStatEntityAdapter().apply(statMap,combatKernel.derivedStats().derive(raw));

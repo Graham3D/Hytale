@@ -152,17 +152,30 @@ final class RpgHud extends CustomUIHud {
         writeEmptyHandSkills(commands,model,emptyHand);
     }
     private static void writeEmptyHandSkills(UICommandBuilder commands,RpgHudViewModel model,boolean emptyHand){
-        for(int i=0;i<2;i++){
+        for(int i=0;i<model.skills().size();i++){
             var skill=model.skills().get(i);String suffix="0"+(i+1);
-            commands.set("#RpgEmptyHandSkill"+suffix+".Visible",emptyHand&&!skill.skillId().isEmpty());
-            if(emptyHand&&!skill.skillId().isEmpty()){
-                String icon=skillIcon(skill.skillId());
+            boolean projectionUnavailable=skill.unavailableReason().startsWith("NATIVE_")
+                    ||"NO_ACTIVE_WORLD_SESSION".equals(skill.unavailableReason())
+                    ||"EXECUTOR_NOT_IMPLEMENTED".equals(skill.unavailableReason());
+            boolean visible=i>=2||emptyHand||projectionUnavailable;
+            commands.set("#RpgEmptyHandSkill"+suffix+".Visible",visible);
+            commands.set("#RpgEmptyHandState"+suffix+".Visible",visible);
+            if(visible){
+                boolean assigned=!skill.skillId().isEmpty();
+                String icon=assigned?skillIcon(skill.skillId()):null;
                 commands.set("#RpgEmptyHandIcon"+suffix+".Visible",icon!=null);
                 commands.set("#RpgEmptyHandName"+suffix+".Visible",icon==null);
                 if(icon!=null)commands.setObject("#RpgEmptyHandIcon"+suffix+".Background",
                         new PatchStyle().setTexturePath(Value.of(icon)));
-                else commands.set("#RpgEmptyHandName"+suffix+".Text",skill.name().length()>9
-                        ?skill.name().substring(0,9):skill.name());
+                else commands.set("#RpgEmptyHandName"+suffix+".Text",assigned
+                        ? skill.name().substring(0,Math.min(9,skill.name().length())) : "EMPTY");
+                commands.set("#RpgEmptyHandKey"+suffix+".Text",i<2?"A"+(i+2):"—");
+                commands.set("#RpgEmptyHandState"+suffix+".Text",!assigned?(i>=2?"S"+(i+1)+" EMPTY":"UNASSIGNED")
+                        :i>=2?"S"+(i+1)+" UNBOUND"
+                        :projectionUnavailable?"UNAVAILABLE"
+                        :skill.cooldownRemainingSeconds()>0?CooldownSweep.countdown(skill.cooldownRemainingSeconds())
+                        :skill.unavailableReason().startsWith("LOW_")?skill.unavailableReason().replace('_',' ')
+                        :"HOLD WEAPON");
             }
         }
     }

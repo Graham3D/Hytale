@@ -104,7 +104,7 @@ class Stage03PresentationTest {
         assertEquals(revision, bundle.service().getPresentationView(player).state().revision);
     }
 
-    @Test void projectionHasThreeLogicalSlotsAndReadsLiveResourcesInCanonicalOrder() {
+    @Test void projectionHasFourLogicalSlotsAndReadsLiveResourcesInCanonicalOrder() {
         var bundle = Stage01BTestSupport.bundle();
         RpgCombatKernel kernel = RpgCombatKernel.createProduction();
         var projection = new RpgUiProjectionService(bundle.catalog(), bundle.service(),
@@ -113,7 +113,7 @@ class Stage03PresentationTest {
         var nativeResources = new HytaleResourceViewAdapter.Snapshot(
                 new NativeResourceView(31, 100), new NativeResourceView(72, 120), new NativeResourceView(44, 90));
         var empty = projection.hud(player, nativeResources, null);
-        assertEquals(3, empty.skills().size());
+        assertEquals(4, empty.skills().size());
         assertEquals(31, empty.mana().current());
         assertEquals(72, empty.health().current());
         assertEquals(44, empty.stamina().current());
@@ -124,6 +124,17 @@ class Stage03PresentationTest {
         assertEquals("Fire Bolt", equipped.name());
         assertEquals(SkillSlotView.State.READY, equipped.state());
         assertEquals("", equipped.unavailableReason());
+        projection.configureNativeProjection((actor,slot)->slot==SkillSlot.SKILL02
+                ?"NATIVE_SLOT_OCCUPIED":"PROJECTED");
+        var conflict=projection.hud(player,nativeResources,null).skills().get(1);
+        assertEquals(SkillSlotView.State.UNAVAILABLE,conflict.state());
+        assertEquals("NATIVE_SLOT_OCCUPIED",conflict.unavailableReason());
+        projection.configureNativeProjection((actor,slot)->"PROJECTED");
+        bundle.service().equipSkill(player,SkillSlot.SKILL04,new SkillId("fire_bolt"));
+        var fourth=projection.hud(player,nativeResources,null).skills().get(3);
+        assertEquals("UNBOUND",fourth.action());
+        assertEquals(SkillSlotView.State.UNAVAILABLE,fourth.state());
+        assertEquals("NO_SUPPORTED_INPUT_BINDING",fourth.unavailableReason());
         bundle.service().equipSkill(player, SkillSlot.SKILL01, new SkillId("quick_slash"));
         assertEquals(SkillSlotView.State.READY,
                 projection.hud(player, nativeResources, null).skills().getFirst().state());

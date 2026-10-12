@@ -47,8 +47,14 @@ class Stage13NativeAbilityReadinessTest {
             try (var projection = new NativeAbilityProjectionService(loadouts, new Stage04SkillProfiles(List.of()), ignored -> {}, loadouts::ready)) {
                 projection.tick(player, slots);
                 assertTrue(projection.status(player, true).contains("NO_ACTIVE_WORLD_SESSION"));
+                assertEquals("NO_ACTIVE_WORLD_SESSION",projection.projectionResult(player,
+                        com.inigmasgames.hytalerpg.domain.SkillSlot.SKILL01));
                 projection.install(player, slots);
                 assertTrue(projection.status(player, true).contains("skill01 -> EMPTY"));
+                assertEquals("EMPTY",projection.projectionResult(player,
+                        com.inigmasgames.hytalerpg.domain.SkillSlot.SKILL01));
+                assertEquals("EMPTY",projection.projectionResult(player,
+                        com.inigmasgames.hytalerpg.domain.SkillSlot.SKILL04));
                 projection.detach(player, "TEST"); projection.tick(player, slots);
                 assertTrue(projection.status(player, true).contains("NO_ACTIVE_WORLD_SESSION"));
             }
