@@ -1,5 +1,36 @@
 # HyARPG/Hywind development baseline
 
+## Chapter I inactive weapon-slot transfer correction (2026-10-12)
+
+State: **QA_PENDING** on `codex/chapter1-inventory-recovery`, stacked on the
+unaccepted `codex/chapter1-skill-bar` branch and its Chapter I startup, R262
+bulk-attributes, and R261QA2 ancestors. The gameplay correction is commit
+`685bcee20ab2526036497ec66a4c637856d611ab`, based on the documented
+spatial bag recovery at `2f81120a987e6a1199cba664fe7e03da8aefebba`.
+GitHub `main` remains `6d3ef15ff0145532ef193c42e3b648307ee6e915`.
+The primary checkout and original RPG save remain untouched.
+
+The owner inventory trace `inventory-trace-20261012T221822524Z-ebd847da.jsonl`
+records four staff drops into `gear.weapon`. Each reached protected equipment
+transfer with `ownershipMode=SPATIAL` and then returned `Slot is less than zero!
+-1 < 0`. The same trace records successful legs and chest transfers. Chapter I
+reports an inactive hotbar/utility slot as `-1`; the transfer read that index
+directly. The installed release API's Hotbar decoder maps this sentinel to
+slot zero when capacity exists. The correction resolves the same valid index
+for hand/utility reads, selects it on a protected equip, and keeps an inactive
+slot unavailable for unequip selection. It does not alter receipt or bag
+custody. Both generated staffs remain in the owner's Hywind bag for QA.
+
+`R262C1INV1-CANDIDATE` / `0.2.0-R262C1INV1-CANDIDATE` targets the installed
+Chapter I `0.7.0` API. The focused inactive-slot regression failed before the
+fix and passed afterward; the 16 receipt/transaction tests also passed.
+The exact-head offline check, package validation, Guardian receipt, remote
+publication, and deployment result are recorded at the final documentation
+HEAD and in the external deployment receipt. Connected weapon, offhand,
+armor, and bag transfer behavior still requires owner QA; no standalone
+Hytale server or client is launched by Codex. Do not integrate this branch or
+its unaccepted ancestors into `main` until connected acceptance.
+
 ## Chapter I inventory owner-state recovery (2026-10-12)
 
 State: **QA_PENDING** on `codex/chapter1-inventory-recovery`, stacked on
