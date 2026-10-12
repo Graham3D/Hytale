@@ -157,7 +157,105 @@ class Stage12ProgressionClosureTest {
             assertEquals(16,repo().load(player).state().attributes.get("STR"));
             assertEquals(14,repo().load(player).state().unspentAttributePoints);
             assertFalse(allocation.allocateUpTo(player,com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.STR,5,1,"stale").mutation().success());
-            assertFalse(allocation.allocateUpTo(player,com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.STR,6,2,"invalid").mutation().success());
+            assertFalse(allocation.allocateUpTo(player,com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.STR,0,2,"invalid").mutation().success());
+        }
+    }
+    @Test void largeAttributePresetsAndMaxCommitOnceEachAndSurviveRestart(){
+        var state=RpgPlayerState.create(player);state.unspentAttributePoints=490;state.pendingLevelUpPoints=490;repo().save(state);
+        try(var s=service()){
+            var allocation=new AttributeAllocationService(s);
+            var twentyFive=allocation.allocateUpTo(player,com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.STR,25,0,"twenty-five");
+            assertTrue(twentyFive.mutation().success());assertEquals(25,twentyFive.applied());
+            assertEquals(1,twentyFive.mutation().revision());
+            assertEquals(35,repo().load(player).state().attributes.get("STR"));
+            assertEquals(465,repo().load(player).state().unspentAttributePoints);
+            assertEquals(465,repo().load(player).state().pendingLevelUpPoints);
+            var maximum=allocation.allocateUpTo(player,com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.INT,
+                    Integer.MAX_VALUE,1,"maximum");
+            assertTrue(maximum.mutation().success());assertEquals(465,maximum.applied());
+            assertEquals(2,maximum.mutation().revision());
+            assertEquals(475,repo().load(player).state().attributes.get("INT"));
+            assertEquals(0,repo().load(player).state().unspentAttributePoints);
+            assertEquals(0,repo().load(player).state().pendingLevelUpPoints);
+            assertFalse(allocation.allocateUpTo(player,com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.INT,
+                    Integer.MAX_VALUE,1,"maximum").mutation().success());
+        }
+        try(var restarted=service()){
+            var saved=restarted.getLoadout(player).state();
+            assertEquals(2,saved.revision);assertEquals(475,saved.attributes.get("INT"));
+            assertEquals(35,saved.attributes.get("STR"));assertEquals(0,saved.unspentAttributePoints);
+        }
+    }
+    @Test void bulkAllocationUsesOneSaveAndClampsAtRawBoundary(){
+        var memory=new Stage01BTestSupport.InMemoryRepository();
+        var bundle=Stage01BTestSupport.bundle(memory,new Stage01BTestSupport.RecordingTracer());
+        var state=RpgPlayerState.create(player);state.attributes.put("WIS",Integer.MAX_VALUE-7);
+        state.unspentAttributePoints=300;state.pendingLevelUpPoints=300;memory.save(state);
+        int before=memory.saves;
+        try(var s=bundle.service()){
+            var allocation=new AttributeAllocationService(s);
+            var result=allocation.allocateUpTo(player,com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.WIS,
+                    Integer.MAX_VALUE,0,"cap-max");
+            assertTrue(result.mutation().success());assertEquals(7,result.applied());
+            assertEquals(before+1,memory.saves);
+            assertEquals(293,memory.load(player).state().unspentAttributePoints);
+            assertEquals(293,memory.load(player).state().pendingLevelUpPoints);
+            assertEquals(Integer.MAX_VALUE,memory.load(player).state().attributes.get("WIS"));
+            var duplicate=allocation.allocateUpTo(player,com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.WIS,
+                    Integer.MAX_VALUE,0,"cap-max");
+            assertEquals(ValidationCode.STALE_REVISION,duplicate.mutation().code());
+            assertEquals(before+1,memory.saves);
+            assertFalse(allocation.allocateUpTo(player,com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.WIS,
+                    25,1,"cap-again").mutation().success());
+            assertEquals(before+1,memory.saves);
+        }
+    }
+    @Test void bulkAllocationSaveFailurePublishesNoPointsAndQuarantinesFurtherWrites(){
+        var memory=new Stage01BTestSupport.InMemoryRepository();
+        var state=RpgPlayerState.create(player);state.unspentAttributePoints=50;state.pendingLevelUpPoints=50;
+        memory.save(state);
+        try(var s=Stage01BTestSupport.bundle(memory,new Stage01BTestSupport.RecordingTracer()).service()){
+            var allocation=new AttributeAllocationService(s);
+            memory.failSave=true;
+            var failed=allocation.allocateUpTo(player,com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.STR,
+                    25,0,"failed-save");
+            assertEquals(ValidationCode.PERSISTENCE_FAILURE,failed.mutation().code());
+            assertEquals(0,failed.applied());
+            assertEquals(50,memory.load(player).state().unspentAttributePoints);
+            assertEquals(10,memory.load(player).state().attributes.get("STR"));
+            memory.failSave=false;
+            assertThrows(IllegalStateException.class,()->allocation.allocateUpTo(player,
+                    com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.STR,25,0,"after-failure"));
+        }
+    }
+    @Test void bulkAllocationConsumesOnlyPendingPointsPresentAndPreservesOtherState(){
+        var original=seed();original.unspentAttributePoints=30;original.pendingLevelUpPoints=4;repo().save(original);
+        try(var s=service()){
+            var result=new AttributeAllocationService(s).allocateUpTo(player,
+                    com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.STR,25,0,"mixed-pending");
+            assertTrue(result.mutation().success());assertEquals(25,result.applied());
+            var saved=repo().load(player).state();
+            assertEquals(5,saved.unspentAttributePoints);assertEquals(0,saved.pendingLevelUpPoints);
+            assertArrayEquals(original.equippedSkills,saved.equippedSkills);
+            assertEquals(original.learnedSkills,saved.learnedSkills);
+            assertEquals(original.cooldowns,saved.cooldowns);
+            assertEquals(original.support,saved.support);
+            assertEquals(original.gearEconomy,saved.gearEconomy);
+            assertEquals(original.rewards,saved.rewards);
+        }
+    }
+    @Test void migratedPriorSaveCanSpendBulkPointsWithoutChangingSchema(){
+        var state=RpgPlayerState.create(player);state.unspentAttributePoints=30;state.pendingLevelUpPoints=30;
+        var json=new Gson().toJsonTree(state).getAsJsonObject();json.addProperty("schemaVersion",11);json.remove("goldBalance");
+        var migrated=new RpgStateMigrator().migrate(json);
+        assertEquals(RpgPlayerState.CURRENT_SCHEMA,migrated.targetVersion());
+        repo().save(new Gson().fromJson(migrated.state(),RpgPlayerState.class));
+        try(var s=service()){
+            var result=new AttributeAllocationService(s).allocateUpTo(player,
+                    com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.DEX,Integer.MAX_VALUE,0,"old-save-max");
+            assertTrue(result.mutation().success());assertEquals(30,result.applied());
+            assertEquals(40,repo().load(player).state().attributes.get("DEX"));
+            assertEquals(0,repo().load(player).state().unspentAttributePoints);
         }
     }
     @Test void boundedAttributeAllocationHandlesPartialZeroCapAndRepeatedRequests(){

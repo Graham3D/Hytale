@@ -172,6 +172,31 @@ class Stage03PresentationTest {
         assertFalse(projection.hud(player, nativeResources, null).showLevelUpNotice());
     }
 
+    @Test void bulkAllocationRefreshesDerivedHealthAndManaWithoutChangingLiveAmounts() {
+        var bundle = Stage01BTestSupport.bundle();
+        var allocation = new AttributeAllocationService(bundle.service());
+        var kernel = RpgCombatKernel.createProduction();
+        var projection = new RpgUiProjectionService(bundle.catalog(), bundle.service(),
+                kernel.derivedStats(), kernel.cooldowns());
+        UUID player = UUID.randomUUID();
+        var nativeResources = new HytaleResourceViewAdapter.Snapshot(
+                new NativeResourceView(40, 100), new NativeResourceView(30, 100), new NativeResourceView(50, 100));
+        assertTrue(allocation.grantDevelopmentPoints(player, 50, "grant-bulk").success());
+        var before = projection.character(player, "Tester", nativeResources);
+        assertTrue(allocation.allocateUpTo(player, RpgAttribute.STR, 25, before.revision(), "health-bulk")
+                .mutation().success());
+        var afterStrength = projection.character(player, "Tester", nativeResources);
+        assertTrue(afterStrength.derivedStats().maxHealth() > before.derivedStats().maxHealth());
+        assertTrue(allocation.allocateUpTo(player, RpgAttribute.INT, 25, afterStrength.revision(), "mana-bulk")
+                .mutation().success());
+        var afterIntelligence = projection.character(player, "Tester", nativeResources);
+        assertTrue(afterIntelligence.derivedStats().maxMana() > before.derivedStats().maxMana());
+        assertEquals(30, afterIntelligence.health().current());
+        assertEquals(40, afterIntelligence.mana().current());
+        assertEquals(0, afterIntelligence.unspentAttributePoints());
+        assertEquals(0, afterIntelligence.pendingLevelUpPoints());
+    }
+
     @Test void abilityActivationStopsTypedBeforeResourceOrCooldownMutation() {
         var bundle = Stage01BTestSupport.bundle();
         RpgCombatKernel kernel = RpgCombatKernel.createProduction();

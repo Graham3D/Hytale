@@ -30,6 +30,7 @@ import com.inigmasgames.hytalerpg.ui.HytaleResourceViewAdapter;
 import com.inigmasgames.hytalerpg.ui.RpgUiProjectionService;
 import com.inigmasgames.hytalerpg.ui.trace.UiInteractionTrace;
 import java.util.*;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -66,6 +67,7 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
     private boolean advanced;
     private boolean dismissed;
     private boolean openSkillTreeOnDismiss;
+    private int selectedAttributeAmount = 1;
     private boolean savePending, saveFailed;
     private UiInteractionTrace.Action traceAction;
     private String traceOutcome;
@@ -153,6 +155,9 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
         commands.append("#ManagedTooltipHost", "RpgGearTooltip.ui");
         commands.append("#ComparisonTooltipHost", "RpgGearTooltip.ui");
         for (var name : ROUTES) events.addEventBinding(CustomUIEventBindingType.Activating, "#Route" + name, event("route", name), false);
+        if (allocation != null) for (String amount : List.of("1", "5", "25", "Max"))
+            events.addEventBinding(CustomUIEventBindingType.Activating, "#AttributeAmount" + amount,
+                    event("attributeamount", amount), false);
         for (var name : List.of("Close", "Refresh", "Cancel", "Advanced", "Back"))
             events.addEventBinding(CustomUIEventBindingType.Activating, "#" + name, event(name.toLowerCase(Locale.ROOT), ""), false);
         for (var name : List.of("Sort", "Consolidate", "QuickEquip", "DropSelected"))
@@ -291,6 +296,13 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
             commands.set("#AttributePlus" + i + ".Disabled", !available);
         }
     }
+    static void renderAttributeAmount(UICommandBuilder commands, int selectedAmount, boolean allocationAvailable) {
+        for (String option : List.of("1", "5", "25", "Max")) {
+            int amount = option.equals("Max") ? Integer.MAX_VALUE : Integer.parseInt(option);
+            commands.set("#AttributeAmount" + option + ".Disabled", !allocationAvailable);
+            commands.set("#AttributeAmountSelected" + option + ".Visible", allocationAvailable && selectedAmount == amount);
+        }
+    }
 
     private void renderCharacter(Ref<EntityStore> ref, Store<EntityStore> store,
                                  UICommandBuilder commands, UIEventBuilder events) {
@@ -322,6 +334,9 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
                     event("allocate", attributes[i].name()).append("Revision", Long.toString(model.revision())), false);
         }
         renderAttributeAvailability(commands, model.unspentAttributePoints(), allocation != null);
+        for (int i = 0; i < attributes.length; i++) if (model.derivedStats().rawAttributes().get(attributes[i]) == Integer.MAX_VALUE)
+            commands.set("#AttributePlus" + i + ".Disabled", true);
+        renderAttributeAmount(commands, selectedAttributeAmount, allocation != null);
         double usableMana = projection.usableMana(player.getUuid(), resourceSnapshot);
         commands.set("#ResourceHealth.Text", resource(model.health()));
         commands.set("#ResourceMana.Text", clean(model.mana().current()) + " / " + clean(usableMana)
@@ -935,13 +950,37 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
                     commands.set("#Status.Text", "Ring transfer could not be completed.");
                 }
             }
+            case "attributeamount" -> {
+                if (allocation == null) break;
+                int amount = switch (data.value) {
+                    case "1" -> 1;
+                    case "5" -> 5;
+                    case "25" -> 25;
+                    case "Max" -> Integer.MAX_VALUE;
+                    default -> 0;
+                };
+                if (amount == 0) {
+                    commands.set("#Status.Text", "Choose +1, +5, +25, or Max.");
+                    break;
+                }
+                selectedAttributeAmount = amount;
+                renderAttributeAmount(commands, selectedAttributeAmount, true);
+                commands.set("#Status.Text", "Allocating " + data.value + " per click.");
+            }
             case "allocate" -> {
                 if (allocation == null) return;
                 long revision;
                 RpgAttribute attribute;
                 try { revision = Long.parseLong(data.revision); attribute = RpgAttribute.parse(data.value); }
-                catch (RuntimeException error) { return; }
-                var result = allocation.allocate(player.getUuid(), attribute, revision, UUID.randomUUID().toString());
+                catch (RuntimeException error) {
+                    commands.set("#Status.Text", "Allocation request was invalid; try reopening Inventory.");
+                    break;
+                }
+                String identity = UUID.nameUUIDFromBytes((session + ':' + revision + ':' + attribute.name()
+                        + ':' + selectedAttributeAmount).getBytes(StandardCharsets.UTF_8)).toString();
+                var allocationResult = allocation.allocateUpTo(player.getUuid(), attribute,
+                        selectedAttributeAmount, revision, identity);
+                var result = allocationResult.mutation();
                 if (result.success()) {
                     var stats = store.getComponent(ref, EntityStatMap.getComponentType());
                     if (stats != null) {
@@ -950,7 +989,9 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
                     }
                 }
                 renderCharacter(ref, store, commands, events);
-                commands.set("#Status.Text", result.success() ? "" : "Could not add that attribute point.");
+                commands.set("#Status.Text", result.success()
+                        ? "+" + allocationResult.applied() + " " + attribute.name() + " allocated."
+                        : "Allocation rejected (" + result.code() + "): " + result.message().split("\\R", 2)[0]);
             }
             case "route" -> {
                 if (!ROUTES.contains(data.value)) return;

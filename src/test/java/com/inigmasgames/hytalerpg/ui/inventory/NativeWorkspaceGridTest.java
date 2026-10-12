@@ -48,6 +48,26 @@ final class NativeWorkspaceGridTest {
         }
     }
 
+    @Test void amountSelectorShowsOneSelectedPresetWithoutChangingPanelHeight() throws Exception {
+        for (int selected : new int[]{1, 5, 25, Integer.MAX_VALUE}) {
+            var commands = new UICommandBuilder();
+            InventoryProbePage.renderAttributeAmount(commands, selected, true);
+            var values = new java.util.HashMap<String, org.bson.BsonValue>();
+            for (var command : commands.getCommands())
+                values.put(command.selector, BsonDocument.parse(command.data).get("0"));
+            for (String option : new String[]{"1", "5", "25", "Max"}) {
+                int amount = option.equals("Max") ? Integer.MAX_VALUE : Integer.parseInt(option);
+                assertEquals(selected == amount, values.get("#AttributeAmountSelected" + option + ".Visible")
+                        .asBoolean().getValue());
+                assertFalse(values.get("#AttributeAmount" + option + ".Disabled").asBoolean().getValue());
+            }
+        }
+        var source = java.nio.file.Files.readString(java.nio.file.Path.of(
+                "src/main/resources/Common/UI/Custom/RpgInventoryProbe.ui"));
+        assertTrue(source.contains("Group #AttributesPanel { Anchor: (Height: 173)"));
+        assertTrue(source.contains("Group #AttributeAmountSelector { Anchor: (Height: 28)"));
+    }
+
     @Test void tooltipHostsOverlayOneCenteredWorkspaceInsteadOfTakingTwoLayoutCells() throws Exception {
         var source = java.nio.file.Files.readString(java.nio.file.Path.of(
                 "src/main/resources/Common/UI/Custom/RpgInventoryProbe.ui"));

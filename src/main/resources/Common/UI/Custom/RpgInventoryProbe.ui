@@ -13,6 +13,12 @@ $C = "Common.ui";
   Pressed: (Background: #1d3448, LabelStyle: (FontName: "Secondary", FontSize: 15, TextColor: #ffffff, HorizontalAlignment: Center, VerticalAlignment: Center)),
   Disabled: (Background: #1b2b39, LabelStyle: (FontName: "Secondary", FontSize: 15, TextColor: #778898, HorizontalAlignment: Center, VerticalAlignment: Center))
 );
+@Amount = TextButtonStyle(
+  Default: (Background: #00000000, LabelStyle: (FontName: "Secondary", FontSize: 13, TextColor: #eef6ff, HorizontalAlignment: Center, VerticalAlignment: Center)),
+  Hovered: (Background: #3d607a, LabelStyle: (FontName: "Secondary", FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center, VerticalAlignment: Center)),
+  Pressed: (Background: #1d3448, LabelStyle: (FontName: "Secondary", FontSize: 13, TextColor: #ffffff, HorizontalAlignment: Center, VerticalAlignment: Center)),
+  Disabled: (Background: #00000000, LabelStyle: (FontName: "Secondary", FontSize: 13, TextColor: #778898, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
 
 SceneBlur {}
 Group #DropBackdrop { Background: #000000(0.55); Group #OutsideDropHost { Anchor: (Full: 0); } }
@@ -54,7 +60,13 @@ Group {
             Group #XpFill { Anchor: (Left: 0, Top: 0, Width: 1, Height: 8); Background: #d8ad55; }
           }
           Group #AttributesPanel { Anchor: (Height: 173); LayoutMode: Top; Background: #14283d;
-          Label { Text: "ATTRIBUTES"; Anchor: (Height: 28); Background: #29455c; Style: (FontName: "Secondary", FontSize: 15, TextColor: #ffffff, RenderBold: true, Alignment: Center); }
+          Group #AttributeAmountSelector { Anchor: (Height: 28); LayoutMode: Left; Padding: (Left: 8); Background: #29455c;
+            Label { Text: "ATTRIBUTES"; Anchor: (Width: 108, Height: 28); Style: (FontName: "Secondary", FontSize: 13, TextColor: #ffffff, RenderBold: true); }
+            Group { Anchor: (Width: 47, Height: 26); Group #AttributeAmountSelected1 { Anchor: (Full: 0); HitTestVisible: false; Background: #54758a; } TextButton #AttributeAmount1 { Text: "+1"; Anchor: (Full: 0); Style: @Amount; } }
+            Group { Anchor: (Width: 47, Height: 26); Group #AttributeAmountSelected5 { Visible: false; Anchor: (Full: 0); HitTestVisible: false; Background: #54758a; } TextButton #AttributeAmount5 { Text: "+5"; Anchor: (Full: 0); Style: @Amount; } }
+            Group { Anchor: (Width: 47, Height: 26); Group #AttributeAmountSelected25 { Visible: false; Anchor: (Full: 0); HitTestVisible: false; Background: #54758a; } TextButton #AttributeAmount25 { Text: "+25"; Anchor: (Full: 0); Style: @Amount; } }
+            Group { Anchor: (Width: 47, Height: 26); Group #AttributeAmountSelectedMax { Visible: false; Anchor: (Full: 0); HitTestVisible: false; Background: #54758a; } TextButton #AttributeAmountMax { Text: "Max"; Anchor: (Full: 0); Style: @Amount; } }
+          }
           Group { Anchor: (Height: 29); LayoutMode: Left; Padding: (Left: 8); Label #Attribute0 { Anchor: (Width: 198, Height: 28); Style: (FontName: "Secondary", FontSize: 15, TextColor: #a9c7df); } Label #AttributeValue0 { Anchor: (Width: 70, Height: 28); Style: (FontName: "Secondary", FontSize: 15, TextColor: #ffffff, Alignment: End); } TextButton #AttributePlus0 { Text: "+"; Anchor: (Width: 30, Height: 28); Style: @Action; } }
           Group { Anchor: (Height: 29); LayoutMode: Left; Padding: (Left: 8); Label #Attribute1 { Anchor: (Width: 198, Height: 28); Style: (FontName: "Secondary", FontSize: 15, TextColor: #a9c7df); } Label #AttributeValue1 { Anchor: (Width: 70, Height: 28); Style: (FontName: "Secondary", FontSize: 15, TextColor: #ffffff, Alignment: End); } TextButton #AttributePlus1 { Text: "+"; Anchor: (Width: 30, Height: 28); Style: @Action; } }
           Group { Anchor: (Height: 29); LayoutMode: Left; Padding: (Left: 8); Label #Attribute2 { Anchor: (Width: 198, Height: 28); Style: (FontName: "Secondary", FontSize: 15, TextColor: #a9c7df); } Label #AttributeValue2 { Anchor: (Width: 70, Height: 28); Style: (FontName: "Secondary", FontSize: 15, TextColor: #ffffff, Alignment: End); } TextButton #AttributePlus2 { Text: "+"; Anchor: (Width: 30, Height: 28); Style: @Action; } }

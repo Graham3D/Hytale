@@ -19,13 +19,13 @@ public final class AttributeAllocationService {
         return allocateUpTo(player, attribute, 1, expectedRevision, correlationId).mutation();
     }
 
-    /** One saved mutation for a bounded allocation request, clamped to balance and raw-stat capacity. */
+    /** One saved mutation for any positive allocation request, clamped to balance and raw-stat capacity. */
     public AllocationResult allocateUpTo(UUID player, RpgAttribute attribute, int requested,
                                          long expectedRevision, String correlationId) {
         RpgLoadoutView before = loadouts.getLoadout(player);
-        if (requested < 1 || requested > 5) {
+        if (requested < 1 || attribute == null) {
             return new AllocationResult(MutationResult.failure(ValidationCode.INVALID_REQUEST,
-                    "Attribute allocation request must be 1..5.", correlationId,
+                    "Choose an attribute and a positive allocation amount.", correlationId,
                     before.state().revision), requested, 0);
         }
         if (before.state().revision != expectedRevision) {

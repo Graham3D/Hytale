@@ -1,5 +1,23 @@
 # HyARPG/Hywind development baseline
 
+## R262QA1 bulk attribute allocation candidate (2026-10-11)
+
+Branch `codex/bulk-attributes` starts from GitHub `main` at
+`6d3ef15ff0145532ef193c42e3b648307ee6e915`, including the deployed
+R261QA2 gameplay source `b15aa49d1a3c61a0f88ec168494d4f15c4154880`.
+R261QA2 connected acceptance remains owner QA, so this is a dependent
+development candidate and must not be integrated into `main` before its own
+connected acceptance and dependency review. The candidate revision is
+R262QA1-U7P5B / `0.2.0-R262QA1-U7P5B`.
+
+The Inventory workspace gains +1, +5, +25, and Max controls in the existing
+attribute header. Server-side allocation clamps one requested transaction to
+unspent points and raw capacity, then persists one revised state. The current
+native CustomUI event surface has no reliable button-press state or modifier
+snapshot for this control; hold and Ctrl shortcuts are therefore omitted.
+Exact-commit verification, publication, deployment, and connected QA status
+will be recorded when those steps complete.
+
 ## R261QA2 startup registration hotfix (2026-10-11)
 
 The first connected R261QA1 launch failed at native system registration:
