@@ -147,6 +147,7 @@ tasks.test {
     exclude '**/CombatDamageTraceServiceTest*'
     exclude '**/R244NamesTest*'
     exclude '**/R245FlockRollbackTest*'
+    exclude '**/R261Qa2StartupRegistrationTest*'
     exclude '**/R244PopulationProjectionTest*'
     ['NativeAffix*Test', 'ManagedCarrierProductionTest', 'GearCombatProductionTest',
      'GearSignatureProcRuntimeTest', 'NativeGearActionProfilesTest', 'NativeTwinAssaultTest',
@@ -203,6 +204,7 @@ tasks.register('nativeControlTest', Test) {
     include '**/SkillCaptureSessionsTest.class'
     include '**/R244NamesTest.class'
     include '**/R245FlockRollbackTest.class'
+    include '**/R261Qa2StartupRegistrationTest.class'
     include '**/R244PopulationProjectionTest.class'
     // Include native test classes before forking, avoiding empty worker JVMs.
         ['NativeAffix*Test', 'ManagedCarrierProductionTest', 'GearCombatProductionTest',

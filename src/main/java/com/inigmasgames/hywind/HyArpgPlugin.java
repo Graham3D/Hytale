@@ -881,7 +881,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects.NativeOutgoing(supportSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects.DirectDamageBreak(supportSystem));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportNativeEffects.Removal(supportSystem));
-        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.BeforeApply());
+        RpgDamageRegistration.registerLateDamageSystems(getEntityStoreRegistry()::registerSystem,combatKernel.resources());
         var sharedReflection=new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.Reflect(supportSystem);
         getEntityStoreRegistry().registerSystem(sharedReflection);
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleRetaliationSystem(skillExecutionSystem));

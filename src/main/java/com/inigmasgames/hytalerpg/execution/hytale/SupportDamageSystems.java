@@ -302,7 +302,6 @@ public final class SupportDamageSystems {
         @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(
                 new SystemDependency<>(Order.AFTER,HytaleSupportSystem.Absorb.class),
                 new SystemDependency<>(Order.AFTER,Shield.class),
-                new SystemDependency<>(Order.BEFORE,BeforeApply.class),
                 new SystemDependency<>(Order.BEFORE,DamageSystems.ApplyDamage.class));}
         @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){
             if(!claimManaBeforeLife(damage))return;

@@ -35,8 +35,8 @@ class RpgSystemRegistrationOrderTest {
         before(source, "registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem.Absorb(supportSystem))", "registerSystem(new HytaleDamageLifecycleSystems.BeforeApplication())");
         before(source, "registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.Shield(supportSystem))", "registerSystem(new HytaleDamageLifecycleSystems.BeforeApplication())");
         before(source, "registerSystem(new com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageAdapter.ManagedGearGather())", "registerSystem(gearStatuses.nativeAcceptance())");
-        before(source, "registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.Shield(supportSystem))", "registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.BeforeApply())");
-        before(source, "registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem.Absorb(supportSystem))", "registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.BeforeApply())");
+        before(source, "registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems.Shield(supportSystem))", "RpgDamageRegistration.registerLateDamageSystems(getEntityStoreRegistry()::registerSystem,combatKernel.resources())");
+        before(source, "registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem.Absorb(supportSystem))", "RpgDamageRegistration.registerLateDamageSystems(getEntityStoreRegistry()::registerSystem,combatKernel.resources())");
         before(source, "registerSystem(sharedReflection)", "registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleRetaliationSystem(skillExecutionSystem))");
         before(source, "registerSystem(sharedReflection)", "registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.Tracking(encounterRewards))");
         before(source, "registerSystem(sharedReflection)", "registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.PlayerInjuries(encounterRewards))");

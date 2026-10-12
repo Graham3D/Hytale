@@ -1,12 +1,13 @@
 # Hywind / HyARPG development baseline
 
-The current first-QA candidate is **R261QA1-U7P5B**
-(`0.2.0-R261QA1-U7P5B`) on `codex/r261-qa-capture`. It carries the R261
+The current startup hotfix candidate is **R261QA2-U7P5B**
+(`0.2.0-R261QA2-U7P5B`) on `codex/r261-qa2-startup-registration`. It carries the R261
 durable Cyclone, persistent Reflective Ward, and Shared Aegis work. Durable
 Cyclone is enabled by default in the production entrypoint for normal Hytale
 launches. `-Dhywind.cyclone.durable=false` is an explicit rollback option.
-The earlier R261 JAR omitted production gate wiring and must not be used for
-QA. ReadyPath/JFR capture is optional. See
+The first R261QA1 connected launch failed because Mana Before Life was absent
+from native system registration; R261QA2 registers it before BeforeApply.
+ReadyPath/JFR capture is optional. See
 the [R261 requirement audit](docs/R261_FINAL_MATRIX.md),
 [durability contract](docs/CYCLONE_DURABILITY.md), and
 [baseline](docs/DEVELOPMENT_BASELINE.md) for verification status.

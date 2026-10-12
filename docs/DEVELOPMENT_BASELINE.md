@@ -1,5 +1,23 @@
 # HyARPG/Hywind development baseline
 
+## R261QA2 startup registration hotfix (2026-10-11)
+
+The first connected R261QA1 launch failed at native system registration:
+`SupportDamageSystems.BeforeApply` declared an `AFTER ManaBeforeLife` dependency,
+but the production entrypoint did not register `ManaBeforeLife`. Hytale validates
+all dependency targets when each system is registered. Registering Mana first
+also required removing its redundant forward `BEFORE BeforeApply` edge; the
+`BeforeApply` `AFTER ManaBeforeLife` edge retains the intended order. The QA2
+entrypoint now registers Mana Before Life with the existing combat kernel's
+resource service before BeforeApply. A native `ComponentRegistry` regression
+reproduced both missing-target failures and verifies Mana precedes BeforeApply
+and native Health application. Later production system registrations were
+audited for missing targets. The durable Cyclone gate remains enabled by
+default, with an explicit false opt-out. Revision R261QA2-U7P5B /
+`0.2.0-R261QA2-U7P5B` is pending exact-commit verification and deployment;
+the final commit, package checksum, and deployment status must be recorded
+after those gates complete. Connected startup remains owner QA.
+
 ## R261 first connected QA candidate (2026-10-11)
 
 The approved R261QA1-U7P5B deployment correction makes durable Cyclone Armor the
