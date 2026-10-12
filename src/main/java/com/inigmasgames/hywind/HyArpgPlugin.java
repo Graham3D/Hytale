@@ -1041,6 +1041,8 @@ public final class HyArpgPlugin extends TavernsPlugin {
             rpgHud.install(playerRef,entity,statMap);
             return true;
         });
+        persistenceReady.configureAdditionalPreload(supportSystem::preloadDurableCyclone);
+        persistenceReady.configureAdditionalAsyncPreload(supportSystem::preloadSharedAegis);
         getEntityStoreRegistry().registerSystem(persistenceReady);
         getEventRegistry().registerAsync(com.hypixel.hytale.server.core.event.events.player.PlayerConnectEvent.class,
                 incoming->incoming.thenCompose(event->{

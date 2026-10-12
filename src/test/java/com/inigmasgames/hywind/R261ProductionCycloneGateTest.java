@@ -18,6 +18,8 @@ class R261ProductionCycloneGateTest {
             for (String required : new String[] {
                     "hywind.cyclone.durable", "RPG_CYCLONE_DURABLE_GATE enabled=%s",
                     "CycloneGateConfiguration", "configureDurableCyclone", "configureTrustedPlayerAllies",
+                    "configureAdditionalPreload", "preloadDurableCyclone",
+                    "configureAdditionalAsyncPreload", "preloadSharedAegis",
                     "RpgTrustedAllyCommand", "CycloneDeath", "NpcSharedBindings",
                     "NpcSharedRemoval", "NpcSharedDeath" }) {
                 assertTrue(compiled.contains(required), "production entrypoint omits " + required);

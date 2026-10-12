@@ -1,7 +1,7 @@
 # Hywind / HyARPG development baseline
 
-The current Chapter I skill bar engineering candidate is **R262C1BAR2-CANDIDATE**
-(`0.2.0-R262C1BAR2-CANDIDATE`) on `codex/chapter1-skill-bar`, targeting Hytale
+The current Chapter I skill bar engineering candidate is **R262C1BAR3-CANDIDATE**
+(`0.2.0-R262C1BAR3-CANDIDATE`) on `codex/chapter1-skill-bar`, targeting Hytale
 `0.7.0`. It builds on the unmerged R262QA1 bulk attribute candidate and carries the R261
 durable Cyclone, persistent Reflective Ward, and Shared Aegis work. Durable
 Cyclone is enabled by default in the production entrypoint for normal Hytale
@@ -9,9 +9,9 @@ launches. `-Dhywind.cyclone.durable=false` is an explicit rollback option.
 Inventory now offers +1, +5, +25, and Max allocation choices through one
 server-authoritative progression mutation per click. R261QA2 also registers
 Mana Before Life before native Health application.
-The Chapter I skill bar candidate adds four saved CanvasUI skill nodes. BAR2
-corrects initial HUD/rune installation when the player enters a new world
-instance after pre-connect; connected verification is pending. Native
+The Chapter I skill bar candidate adds four saved CanvasUI skill nodes. BAR3
+restores the missing durable Cyclone and shared-aegis player preloads that
+blocked initial HUD/rune installation; connected verification is pending. Native
 Ability2/3 remain the only supported independent Hywind inputs; the third
 and fourth nodes are visibly unbound because Ability4 belongs to held-item
 interactions and there is no public Ability5 input.
