@@ -1,6 +1,6 @@
 # HyARPG/Hywind development baseline
 
-## R262QA1 bulk attribute allocation candidate (2026-10-11)
+## R262QA1 bulk attribute allocation QA candidate (2026-10-11)
 
 Branch `codex/bulk-attributes` starts from GitHub `main` at
 `6d3ef15ff0145532ef193c42e3b648307ee6e915`, including the deployed
@@ -15,8 +15,25 @@ attribute header. Server-side allocation clamps one requested transaction to
 unspent points and raw capacity, then persists one revised state. The current
 native CustomUI event surface has no reliable button-press state or modifier
 snapshot for this control; hold and Ctrl shortcuts are therefore omitted.
-Exact-commit verification, publication, deployment, and connected QA status
-will be recorded when those steps complete.
+The gameplay source commit is `4f33de61e22101b1b9303618109871f83cc76a07`.
+Focused regression tests passed (59 tests), followed by the exact-commit
+offline gate: 4,156 JUnit tests in 466 reports, JaCoCo, strict SpotBugs,
+native package and asset validation, and Guardian verification. The verified
+JAR SHA-256 is
+`6873F21FD266E1AA1D6B3EB634CA2254E85C97B111EA23BA98A4B7F00A80A314`.
+Guardian published `codex/bulk-attributes` at the gameplay commit; GitHub
+`main` remains at `6d3ef15ff0145532ef193c42e3b648307ee6e915` pending
+connected QA and dependency review.
+
+The prior R261QA2 JAR was backed up outside `Saves` at
+`data/pre-release/HywindJarBackups/Hywind-R261QA2-before-R262QA1-20261012T030311Z.jar`.
+Its SHA-256 matches the prior installed artifact:
+`56BB3F27DFE5BB25F2915A59E6EC9C55C08D7C03D1AB77892A24FDEFA045BA2A`.
+Only `Saves/RPG/mods/Hywind.jar` was replaced. The installed JAR matches the
+verified R262QA1 checksum, manifest revision, production entrypoint, and
+embedded gameplay source commit; offline package validation passed on the
+installed file. Player-save data was untouched and Hytale was not launched.
+Connected startup and gameplay acceptance remain owner QA.
 
 ## R261QA2 startup registration hotfix (2026-10-11)
 
