@@ -26,6 +26,23 @@ Assert (-not (Select-ReadyPathServer @($client) @($server) $now 'C:\other-java.e
 $matched = Select-ReadyPathServer @($client) @($server) $now $java $jar
 Assert ($matched.Server.ProcessId -eq 5678 -and $matched.Client.ProcessId -eq 1234) 'current launch was not matched'
 
+$options = New-ReadyPathJavaOptions 'test-run' (Join-Path $testRoot 'integrated-server.jfr') 150 $true
+Assert ($options.Contains('-Dhywind.readypath.enabled=true -Dhywind.readypath.run=test-run ')) 'ReadyPath launch options changed'
+Assert ($options.Contains('-Dhywind.cyclone.durable=true ')) 'durable Cyclone gate was not armed'
+Assert ($options.Contains('-XX:StartFlightRecording=name=HywindStartup,')) 'JFR launch option was removed'
+Assert (-not (New-ReadyPathJavaOptions 'test-run' 'recording.jfr' 150 $false).Contains('hywind.cyclone.durable')) 'default capture unexpectedly armed Cyclone'
+
+$gateLog = Join-Path $testRoot 'server.log'
+Assert (-not (Test-ReadyPathCycloneGate $gateLog).Confirmed) 'missing server log confirmed the gate'
+Set-Content -LiteralPath $gateLog -Value 'RPG_CYCLONE_DURABLE_GATE enabled=false'
+Assert (-not (Test-ReadyPathCycloneGate $gateLog).Confirmed) 'disabled gate was accepted'
+Set-Content -LiteralPath $gateLog -Value 'RPG_CYCLONE_DURABLE_GATE enabled=true'
+Assert ((Test-ReadyPathCycloneGate $gateLog).Confirmed) 'enabled gate marker was rejected'
+Add-Content -LiteralPath $gateLog -Value 'RPG_CYCLONE_DURABLE_GATE enabled=false'
+Assert (-not (Test-ReadyPathCycloneGate $gateLog).Confirmed) 'ambiguous gate markers were accepted'
+Set-Content -LiteralPath $gateLog -Value 'unrelated startup output'
+Assert (-not (Test-ReadyPathCycloneGate $gateLog).Confirmed) 'missing gate marker was accepted'
+
 $missing = Join-Path $testRoot 'missing.jfr'
 Assert (-not (Test-ReadyPathRecording $missing $jfr -1 0 $true).Ready) 'missing JFR was accepted'
 $empty = Join-Path $testRoot 'empty.jfr'
@@ -58,5 +75,5 @@ $lock = [IO.File]::Open($valid, [IO.FileMode]::Open, [IO.FileAccess]::ReadWrite,
 try { Assert (-not (Test-ReadyPathRecording $valid $jfr $bytes 2 $true).Ready) 'temporarily locked JFR was accepted' }
 finally { $lock.Dispose() }
 Assert ((Test-ReadyPathRecording $valid $jfr $bytes 2 $true).Ready) 'valid finalized JFR was rejected'
-Write-Output "OFFLINE TEST PASSED: PID identity, missing/empty/incomplete/locked JFR retry, finalization gate, valid JFR ($bytes bytes)."
+Write-Output "OFFLINE TEST PASSED: PID identity, dual launch options, Cyclone log gate, missing/empty/incomplete/locked JFR retry, finalization gate, valid JFR ($bytes bytes)."
 Write-Output "Test artifacts: $testRoot"

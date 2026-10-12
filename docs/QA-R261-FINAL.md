@@ -6,6 +6,42 @@ offline release candidate does not replace the active R260 `Hywind.jar` and
 does not establish connected-game acceptance. The durable path requires the
 documented `-Dhywind.cyclone.durable=true` startup property.
 
+## First connected launch with startup capture
+
+The verified R261 mainline artifact is
+`C:\Users\Zemio\.codex\worktrees\combat-damage-trace\Hytale-main-clean\build\release\Hywind.jar`,
+built from source commit `e42b903291409bde99fde985e8e07174cbb92401` at
+revision `R261-U7P5B`. Its SHA-256 is
+`766E38665C3DAC4133B8F8606A7A4E8BC17894B91D56DD9D859E4D222499CF6A`.
+The active RPG save still carries the R260 JAR. Deployment requires approval:
+with Hytale closed, back up that JAR outside `Saves`, replace only
+`Saves/RPG/mods/Hywind.jar` with this artifact, and verify the destination
+checksum and embedded source commit before the first launch. Do not edit
+player-save data or launch Hytale as part of deployment.
+
+After the separately approved R261 `Hywind.jar` deployment, close Hytale and
+its launcher, then run this in PowerShell:
+
+```powershell
+$capture = 'C:\Users\Zemio\.codex\worktrees\combat-damage-trace\Hytale-main-clean\tools\Capture-ReadyPathStartup.ps1'
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File $capture -CheckOnly -EnableDurableCyclone
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File $capture -EnableDurableCyclone
+```
+
+When the second command prints `ARMED`, launch Hytale normally and enter the
+existing RPG save. Leave PowerShell open until capture completes. The script
+sets `JAVA_TOOL_OPTIONS` temporarily with both the ReadyPath JFR options and
+`-Dhywind.cyclone.durable=true`; it removes the user-level setting after it
+matches the integrated server, or on failure. It does not launch the game.
+The captured `server.log` must contain exactly one
+`RPG_CYCLONE_DURABLE_GATE enabled=true` line. The script prints
+`CYCLONE GATE CONFIRMED` and records `cycloneGateConfirmed: true` in
+`manifest.json`; a missing, false, or ambiguous marker fails the QA capture.
+The recording and log snapshots are under
+`Hytale/data/pre-release/StartupCaptures`, outside `Saves`. If PowerShell
+closes unexpectedly before cleanup, rerun the script with `-Restore`.
+Connected gameplay acceptance still requires the checks below.
+
 1. Use `/rpg skilllevel spirit_shield 1` on a learned Cyclone Armor. Cast
    with at least 100 spendable Mana. Confirm the entire unreserved Mana amount
    is spent once, the cooldown starts once, and the Barrier HUD begins at the

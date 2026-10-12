@@ -2,6 +2,7 @@
 param(
     [switch]$CheckOnly,
     [switch]$Restore,
+    [switch]$EnableDurableCyclone,
     [ValidateRange(30, 600)][int]$RecordingSeconds = 150,
     [ValidateRange(1, 20)][int]$WaitMinutes = 10
 )
@@ -82,6 +83,7 @@ $client = @(Get-CimInstance Win32_Process | Where-Object {
 if ($client.Count) { throw 'Close Hytale and its launcher before arming, so the new JVM inherits the capture option.' }
 if ($CheckOnly) {
     Write-Output "CHECK PASSED: Hytale is closed; Java and JFR are available. Capture root: $captureRoot"
+    if ($EnableDurableCyclone) { Write-Output 'R261 Cyclone gate will be armed and checked against the integrated-server log.' }
     Write-Output 'No environment variable, game process, JAR, or save was changed.'
     return
 }
@@ -91,9 +93,7 @@ $armedAt = [DateTime]::UtcNow
 $folder = Join-Path $captureRoot ($armedAt.ToString('yyyyMMddTHHmmssZ') + '-' + $run.Substring(0, 8))
 New-Item -ItemType Directory -Path $folder -ErrorAction Stop | Out-Null
 $recording = Join-Path $folder 'integrated-server.jfr'
-$options = "-Dhywind.readypath.enabled=true -Dhywind.readypath.run=$run " +
-    "-XX:StartFlightRecording=name=HywindStartup,settings=profile,filename=$recording," +
-    "duration=${RecordingSeconds}s,maxsize=256m,dumponexit=true"
+$options = New-ReadyPathJavaOptions $run $recording $RecordingSeconds ([bool]$EnableDurableCyclone)
 $installed = $false
 $server = $null
 $captureStatus = 'NO_SERVER_OBSERVED'
@@ -103,6 +103,7 @@ $matchedClient = $null
 $lastJfrReason = $null
 $clientLog = $null
 $serverLog = $null
+$cycloneGate = $null
 $clients = @{}
 try {
     [Environment]::SetEnvironmentVariable($optionName, $options, 'User')
@@ -169,13 +170,25 @@ try {
             $serverLog = Copy-LaunchLog (Join-Path $data 'Saves\RPG\logs') '*_server.log' $serverStart.AddSeconds(-10) $serverStart.AddSeconds(60) (Join-Path $folder 'server.log')
         }
     } catch { $captureStatus = 'FAILED'; $failureReason = "Log snapshot failed: $($_.Exception.Message)" }
+    if ($EnableDurableCyclone) {
+        $cycloneGate = Test-ReadyPathCycloneGate $(if ($serverLog) { $serverLog.copy } else { $null })
+        if ($cycloneGate.Confirmed) {
+            Write-Output 'CYCLONE GATE CONFIRMED: RPG_CYCLONE_DURABLE_GATE enabled=true'
+        } elseif ($captureStatus -eq 'JFR_VALID') {
+            $captureStatus = 'CYCLONE_GATE_UNVERIFIED'
+            $failureReason = $cycloneGate.Reason
+        }
+    }
     try {
         $jarFiles = @(Get-ChildItem -LiteralPath $mods -File -Filter '*.jar' | ForEach-Object {
             [ordered]@{name=$_.Name;bytes=$_.Length;sha256=(Sha256 $_.FullName)}
         })
         $assetFile = Get-Item -LiteralPath (Join-Path $env:APPDATA 'Hytale\install\pre-release\package\game\latest\Assets.zip')
         [ordered]@{
-            schemaVersion=2;run=$run;status=$captureStatus;failureReason=$failureReason;armedAtUtc=$armedAt.ToString('o')
+            schemaVersion=3;run=$run;status=$captureStatus;failureReason=$failureReason;armedAtUtc=$armedAt.ToString('o')
+            cycloneDurableRequested=[bool]$EnableDurableCyclone
+            cycloneGateConfirmed=if($cycloneGate){$cycloneGate.Confirmed}else{$null}
+            cycloneGateReason=if($cycloneGate){$cycloneGate.Reason}else{$null}
             serverObservedAtUtc=if($observedAt){$observedAt.ToString('o')}else{$null}
             serverPid=if($server){$server.ProcessId}else{$null}
             clientPid=if($matchedClient){$matchedClient.ProcessId}else{$null}

@@ -1,4 +1,30 @@
 # Pure capture decisions and the native JFR reader, shared with offline tests.
+function New-ReadyPathJavaOptions([string]$run, [string]$recording, [int]$recordingSeconds, [bool]$durableCyclone) {
+    $cyclone = if ($durableCyclone) { '-Dhywind.cyclone.durable=true ' } else { '' }
+    return "-Dhywind.readypath.enabled=true -Dhywind.readypath.run=$run $cyclone" +
+        "-XX:StartFlightRecording=name=HywindStartup,settings=profile,filename=$recording," +
+        "duration=${recordingSeconds}s,maxsize=256m,dumponexit=true"
+}
+
+function Test-ReadyPathCycloneGate([string]$serverLog) {
+    if (-not $serverLog -or -not (Test-Path -LiteralPath $serverLog -PathType Leaf)) {
+        return [pscustomobject]@{Confirmed=$false;Reason='server log snapshot unavailable'}
+    }
+    try {
+        $values = @(Get-Content -LiteralPath $serverLog -ErrorAction Stop |
+            ForEach-Object { if ($_ -match 'RPG_CYCLONE_DURABLE_GATE enabled=(true|false)(?:\s|$)') { $Matches[1] } })
+        if ($values.Count -eq 1 -and $values[0] -ceq 'true') {
+            return [pscustomobject]@{Confirmed=$true;Reason=$null}
+        }
+        $reason = if ($values.Count -eq 0) { 'gate marker missing from server log snapshot' }
+            elseif ($values.Count -eq 1) { 'server reported enabled=false' }
+            else { 'multiple gate markers in server log snapshot' }
+        return [pscustomobject]@{Confirmed=$false;Reason=$reason}
+    } catch {
+        return [pscustomobject]@{Confirmed=$false;Reason="server log unreadable: $($_.Exception.Message)"}
+    }
+}
+
 function Select-ReadyPathServer($clients, $servers, [datetime]$armedAt, [string]$javaPath, [string]$serverJar) {
     foreach ($server in @($servers)) {
         if (-not $server.CommandLine -or $server.CreationDate.ToUniversalTime() -lt $armedAt.AddSeconds(-2)) { continue }
