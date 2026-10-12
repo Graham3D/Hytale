@@ -6,6 +6,31 @@ function New-ReadyPathJavaOptions([string]$run, [string]$recording, [int]$record
         "duration=${recordingSeconds}s,maxsize=256m,dumponexit=true"
 }
 
+function Test-ReadyPathDurableJar([string]$jarPath) {
+    try {
+        Add-Type -AssemblyName System.IO.Compression.FileSystem
+        $archive = [IO.Compression.ZipFile]::OpenRead($jarPath)
+        try {
+            $entry = $archive.GetEntry('com/inigmasgames/hywind/HyArpgPlugin.class')
+            if (-not $entry) { return $false }
+            $stream = $entry.Open()
+            try {
+                $bytes = New-Object byte[] $entry.Length
+                $read = 0
+                while ($read -lt $bytes.Length) {
+                    $count = $stream.Read($bytes, $read, $bytes.Length - $read)
+                    if ($count -eq 0) { return $false }
+                    $read += $count
+                }
+                $compiled = [Text.Encoding]::UTF8.GetString($bytes)
+                return $compiled.Contains('hywind.cyclone.durable') -and
+                    $compiled.Contains('RPG_CYCLONE_DURABLE_GATE enabled=%s') -and
+                    $compiled.Contains('configureDurableCyclone')
+            } finally { $stream.Dispose() }
+        } finally { $archive.Dispose() }
+    } catch { return $false }
+}
+
 function Test-ReadyPathCycloneGate([string]$serverLog) {
     if (-not $serverLog -or -not (Test-Path -LiteralPath $serverLog -PathType Leaf)) {
         return [pscustomobject]@{Confirmed=$false;Reason='server log snapshot unavailable'}

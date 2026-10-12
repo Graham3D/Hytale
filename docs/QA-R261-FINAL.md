@@ -8,16 +8,23 @@ documented `-Dhywind.cyclone.durable=true` startup property.
 
 ## First connected launch with startup capture
 
-The verified R261 mainline artifact is
+The corrected R261 QA artifact is
 `C:\Users\Zemio\.codex\worktrees\combat-damage-trace\Hytale-main-clean\build\release\Hywind.jar`,
-built from source commit `e42b903291409bde99fde985e8e07174cbb92401` at
-revision `R261-U7P5B`. Its SHA-256 is
-`766E38665C3DAC4133B8F8606A7A4E8BC17894B91D56DD9D859E4D222499CF6A`.
+built from source commit `d6252d7e08eec9deb6697a21721d46c3bc062137` at
+revision `R261QA1-U7P5B`. Its SHA-256 is
+`F1299CEFF598DD4EE67B85D95C52FD2708567FE8BA19E3483906BC70FD9D2359`.
+The earlier R261 artifact from `e42b903291409bde99fde985e8e07174cbb92401`
+omitted durable gate wiring from the packaged production entrypoint and must
+not be used for QA.
 The active RPG save still carries the R260 JAR. Deployment requires approval:
 with Hytale closed, back up that JAR outside `Saves`, replace only
 `Saves/RPG/mods/Hywind.jar` with this artifact, and verify the destination
 checksum and embedded source commit before the first launch. Do not edit
 player-save data or launch Hytale as part of deployment.
+The current R260 JAR has SHA-256
+`487C9B89274496C329A24D65C13F232ED9E01E5A4A5430E0DD5D0F808BFB23FD`.
+Its matching backup is already at
+`C:\Users\Zemio\AppData\Roaming\Hytale\data\pre-release\HywindJarBackups\Hywind-R260-before-R261-20261012T004415Z.jar`.
 
 After the separately approved R261 `Hywind.jar` deployment, close Hytale and
 its launcher, then run this in PowerShell:
@@ -30,6 +37,9 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File $capture -EnableDurableC
 
 When the second command prints `ARMED`, launch Hytale normally and enter the
 existing RPG save. Leave PowerShell open until capture completes. The script
+refuses a JAR without the production durable gate before arming, so its
+`-CheckOnly` command will reject the currently installed R260 JAR until the
+approved deployment is complete. The script
 sets `JAVA_TOOL_OPTIONS` temporarily with both the ReadyPath JFR options and
 `-Dhywind.cyclone.durable=true`; it removes the user-level setting after it
 matches the integrated server, or on failure. It does not launch the game.
@@ -40,6 +50,8 @@ The captured `server.log` must contain exactly one
 The recording and log snapshots are under
 `Hytale/data/pre-release/StartupCaptures`, outside `Saves`. If PowerShell
 closes unexpectedly before cleanup, rerun the script with `-Restore`.
+Repeat the arming command for each separate QA launch because cleanup removes
+the temporary JVM property after the integrated server has inherited it.
 Connected gameplay acceptance still requires the checks below.
 
 1. Use `/rpg skilllevel spirit_shield 1` on a learned Cyclone Armor. Cast

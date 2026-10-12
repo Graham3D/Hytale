@@ -1,25 +1,38 @@
 # HyARPG/Hywind development baseline
 
-## R261 first connected QA capture preparation (2026-10-11)
+## R261 first connected QA candidate (2026-10-11)
 
-Branch `codex/r261-qa-capture` starts from verified, GitHub-integrated R261
-mainline `e42b903291409bde99fde985e8e07174cbb92401`. Its capture-tooling
-implementation commit is `1889c0d0999c01a6c0616b1a8b8b685e8e350180`.
-The gameplay revision remains R261-U7P5B / `0.2.0-R261-U7P5B` because this
-pass changes only startup capture tooling, its offline test, and QA procedure.
-The verified mainline deployment candidate remains `build/release/Hywind.jar`
-from `e42b903291409bde99fde985e8e07174cbb92401`, SHA-256
-`766E38665C3DAC4133B8F8606A7A4E8BC17894B91D56DD9D859E4D222499CF6A`.
-The capture option `-EnableDurableCyclone` temporarily arms both ReadyPath JFR
-and `hywind.cyclone.durable=true`; after the owner's launch it requires one
-`RPG_CYCLONE_DURABLE_GATE enabled=true` marker in the matched server log.
-The offline capture test passed process matching, JFR readiness and recovery,
-combined launch options, and true/false/missing/ambiguous gate markers.
-`-CheckOnly` passed with Hytale closed. The active RPG save still has its R260
-JAR; deployment awaits explicit approval, and connected acceptance awaits QA.
-The final tooling commit, full verification, and GitHub publication status are
-established by Guardian's completion receipt rather than by this preparatory
-record.
+Branch `codex/r261-qa-capture` starts from GitHub-integrated R261 mainline
+`e42b903291409bde99fde985e8e07174cbb92401`. Capture-tooling commit
+`1889c0d0999c01a6c0616b1a8b8b685e8e350180` added the combined ReadyPath
+JFR and durable Cyclone launch option. Package inspection then found that the
+durable gate and trusted-player command existed only in excluded legacy
+`Phase00Plugin.java`; the production `HyArpgPlugin` omitted their wiring.
+The R261 package from `e42b903291409bde99fde985e8e07174cbb92401` must
+not be used for connected QA. A focused compiled-entrypoint regression failed
+before the correction and passed afterward.
+
+Production wiring was corrected at implementation commit
+`d6252d7e08eec9deb6697a21721d46c3bc062137`; the candidate revision is
+R261QA1-U7P5B / `0.2.0-R261QA1-U7P5B`. The verified artifact is
+`build/release/Hywind.jar`, SHA-256
+`F1299CEFF598DD4EE67B85D95C52FD2708567FE8BA19E3483906BC70FD9D2359`.
+The exact-implementation-commit offline `check` passed 4,147 JUnit tests in
+465 reports, with zero failures, errors, or skips; strict Guardian SpotBugs
+and the native package/asset validator passed. The offline startup-capture
+test passed process matching, actual Java inheritance of both properties and
+JFR startup, recording readiness/recovery, legacy JAR rejection, and
+true/false/missing/ambiguous gate markers. Unflagged `-CheckOnly` passed;
+flagged `-CheckOnly` correctly rejects the still-installed R260 JAR.
+
+The active RPG save still contains R260 `Hywind.jar`, SHA-256
+`487C9B89274496C329A24D65C13F232ED9E01E5A4A5430E0DD5D0F808BFB23FD`.
+An identical backup was made outside `Saves`; player-save data was untouched.
+Deployment awaits the owner's explicit approval. The capture will require
+`RPG_CYCLONE_DURABLE_GATE enabled=true` in the matched integrated-server log;
+that live observation and connected gameplay acceptance remain owner QA.
+Final tooling commit and GitHub publication are established by Guardian's
+completion receipt rather than inferred from this record.
 
 ## R261 Final engineering candidate (2026-10-11)
 

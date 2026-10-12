@@ -32,6 +32,46 @@ Assert ($options.Contains('-Dhywind.cyclone.durable=true ')) 'durable Cyclone ga
 Assert ($options.Contains('-XX:StartFlightRecording=name=HywindStartup,')) 'JFR launch option was removed'
 Assert (-not (New-ReadyPathJavaOptions 'test-run' 'recording.jfr' 150 $false).Contains('hywind.cyclone.durable')) 'default capture unexpectedly armed Cyclone'
 
+$optionProbe = New-Object System.Diagnostics.ProcessStartInfo
+$optionProbe.FileName = $java
+$optionProbe.Arguments = '-XshowSettings:properties -version'
+$optionProbe.UseShellExecute = $false
+$optionProbe.RedirectStandardOutput = $false
+$optionProbe.RedirectStandardError = $true
+$optionProbe.CreateNoWindow = $true
+$optionProbe.EnvironmentVariables['JAVA_TOOL_OPTIONS'] = $options
+$optionProcess = New-Object System.Diagnostics.Process
+$optionProcess.StartInfo = $optionProbe
+try {
+    [void]$optionProcess.Start()
+    $optionError = $optionProcess.StandardError.ReadToEnd()
+    Assert ($optionProcess.WaitForExit(30000) -and $optionProcess.ExitCode -eq 0) 'offline Java dual-option launch failed'
+    Assert ($optionError -match 'hywind\.cyclone\.durable\s*=\s*true') 'installed Java did not receive durable gate property'
+    Assert ($optionError -match 'hywind\.readypath\.run\s*=\s*test-run') 'installed Java did not receive ReadyPath run property'
+} finally { $optionProcess.Dispose() }
+Assert (Test-Path -LiteralPath (Join-Path $testRoot 'integrated-server.jfr') -PathType Leaf) 'dual-option launch did not create a JFR'
+
+Add-Type -AssemblyName System.IO.Compression
+$jarFixture = Join-Path $testRoot 'durable-fixture.jar'
+$jarStream = [IO.File]::Open($jarFixture, [IO.FileMode]::CreateNew)
+$archive = New-Object IO.Compression.ZipArchive($jarStream, [IO.Compression.ZipArchiveMode]::Create)
+try {
+    $entry = $archive.CreateEntry('com/inigmasgames/hywind/HyArpgPlugin.class')
+    $writer = New-Object IO.StreamWriter($entry.Open())
+    try { $writer.Write('hywind.cyclone.durable RPG_CYCLONE_DURABLE_GATE enabled=%s configureDurableCyclone') }
+    finally { $writer.Dispose() }
+} finally { $archive.Dispose(); $jarStream.Dispose() }
+Assert (Test-ReadyPathDurableJar $jarFixture) 'production durable gate was not found in a valid JAR fixture'
+$legacyJar = Join-Path $testRoot 'legacy-fixture.jar'
+$legacyStream = [IO.File]::Open($legacyJar, [IO.FileMode]::CreateNew)
+$legacyArchive = New-Object IO.Compression.ZipArchive($legacyStream, [IO.Compression.ZipArchiveMode]::Create)
+try {
+    $entry = $legacyArchive.CreateEntry('com/inigmasgames/hywind/HyArpgPlugin.class')
+    $writer = New-Object IO.StreamWriter($entry.Open())
+    try { $writer.Write('R260 finite Cyclone') } finally { $writer.Dispose() }
+} finally { $legacyArchive.Dispose(); $legacyStream.Dispose() }
+Assert (-not (Test-ReadyPathDurableJar $legacyJar)) 'legacy JAR was accepted as durable'
+
 $gateLog = Join-Path $testRoot 'server.log'
 Assert (-not (Test-ReadyPathCycloneGate $gateLog).Confirmed) 'missing server log confirmed the gate'
 Set-Content -LiteralPath $gateLog -Value 'RPG_CYCLONE_DURABLE_GATE enabled=false'

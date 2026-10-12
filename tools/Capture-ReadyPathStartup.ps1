@@ -70,8 +70,12 @@ if (-not (Test-Path -LiteralPath $java -PathType Leaf) -or
     -not (Test-Path -LiteralPath $jfr -PathType Leaf)) {
     throw 'The installed Hytale Java runtime and jfr.exe are required.'
 }
-if (-not (Test-Path -LiteralPath (Join-Path $mods 'Hywind.jar') -PathType Leaf)) {
+$deployedJar = Join-Path $mods 'Hywind.jar'
+if (-not (Test-Path -LiteralPath $deployedJar -PathType Leaf)) {
     throw 'The active RPG save has no Hywind.jar.'
+}
+if ($EnableDurableCyclone -and -not (Test-ReadyPathDurableJar $deployedJar)) {
+    throw 'The active Hywind.jar lacks the production durable Cyclone gate. Deploy a verified R261 QA JAR before arming.'
 }
 if ($userOption -or [Environment]::GetEnvironmentVariable($optionName, 'Process')) {
     throw 'JAVA_TOOL_OPTIONS is already set. Preserve its existing value; this capture will not replace it.'
