@@ -1,7 +1,7 @@
 # Hywind / HyARPG development baseline
 
-The current Chapter I skill bar engineering candidate is **R262C1BAR3-CANDIDATE**
-(`0.2.0-R262C1BAR3-CANDIDATE`) on `codex/chapter1-skill-bar`, targeting Hytale
+The current Chapter I inventory engineering candidate is **R262C1INV1-CANDIDATE**
+(`0.2.0-R262C1INV1-CANDIDATE`) on `codex/chapter1-inventory-recovery`, targeting Hytale
 `0.7.0`. It builds on the unmerged R262QA1 bulk attribute candidate and carries the R261
 durable Cyclone, persistent Reflective Ward, and Shared Aegis work. Durable
 Cyclone is enabled by default in the production entrypoint for normal Hytale
@@ -11,8 +11,11 @@ server-authoritative progression mutation per click. R261QA2 also registers
 Mana Before Life before native Health application.
 The Chapter I skill bar candidate adds four saved CanvasUI skill nodes. BAR3
 restores the missing durable Cyclone and shared-aegis player preloads that
-blocked initial HUD/rune installation; connected verification is pending. Native
-Ability2/3 remain the only supported independent Hywind inputs; the third
+blocked initial HUD/rune installation; connected verification is pending.
+The inventory candidate resolves inactive native hand slots so staff drops
+from the spatial bag can reach the protected weapon transfer. Connected
+verification is pending. Native Ability2/3 remain the only supported
+independent Hywind inputs; the third
 and fourth nodes are visibly unbound because Ability4 belongs to held-item
 interactions and there is no public Ability5 input.
 ReadyPath/JFR capture is optional. See
@@ -51,7 +54,7 @@ Run validation from an isolated worktree based on the latest verified source:
 
 ```powershell
 .\gradlew.bat --offline --no-daemon check --console=plain
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/Test-HyArpgPackage.ps1 -JarPath build/libs/HyARPG.jar -ExpectedVersion 0.2.0-R261FDEV-U7P5B -ExpectedRevision R261FDEV-U7P5B
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/Test-HyArpgPackage.ps1 -JarPath build/libs/HyARPG.jar -ExpectedVersion 0.2.0-R262C1INV1-CANDIDATE -ExpectedRevision R262C1INV1-CANDIDATE -ExpectedServerVersion '=0.7.0'
 ```
 
 The full `check` compiles source and runs RPG, native-control, CanvasUI, and
