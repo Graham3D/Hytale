@@ -381,7 +381,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
         skillExecutionSystem = new HytaleSkillExecutionSystem(abilityInputs, executions, combatKernel,
                 combatTrace, reactions, vfx, bosses);
         var supportSystem=skillExecutionSystem.configureSupport(loadouts);
-        boolean durableCyclone=Boolean.getBoolean("hywind.cyclone.durable");
+        boolean durableCyclone=CycloneGateConfiguration.enabled("hywind.cyclone.durable");
         supportSystem.configureDurableCyclone(rpgDataDirectory().resolve("cyclone-barriers"),durableCyclone);
         com.inigmasgames.hytalerpg.execution.support.TrustedPlayerAllies trustedAllies=null;
         if(durableCyclone){
