@@ -13,10 +13,23 @@ resource service before BeforeApply. A native `ComponentRegistry` regression
 reproduced both missing-target failures and verifies Mana precedes BeforeApply
 and native Health application. Later production system registrations were
 audited for missing targets. The durable Cyclone gate remains enabled by
-default, with an explicit false opt-out. Revision R261QA2-U7P5B /
-`0.2.0-R261QA2-U7P5B` is pending exact-commit verification and deployment;
-the final commit, package checksum, and deployment status must be recorded
-after those gates complete. Connected startup remains owner QA.
+default, with an explicit false opt-out. The gameplay source branch
+`codex/r261-qa2-startup-registration` and GitHub `main` reached commit
+`b15aa49d1a3c61a0f88ec168494d4f15c4154880`, revision R261QA2-U7P5B /
+`0.2.0-R261QA2-U7P5B`. Focused tests and the exact-commit offline Gradle
+gate passed 4,149 JUnit tests in 466 reports, JaCoCo, strict SpotBugs,
+native package and asset validation, and Guardian completion. The verified
+JAR SHA-256 is
+`56BB3F27DFE5BB25F2915A59E6EC9C55C08D7C03D1AB77892A24FDEFA045BA2A`.
+The prior R261QA1 JAR was backed up outside `Saves` at
+`data/pre-release/HywindJarBackups/Hywind-R261QA1-before-R261QA2-20261012T021123Z.jar`;
+the backup matches its SHA-256
+`4F610DD10371C4FFB8312A71952EE63A1DFA06C7A7458BC34E5FCB953667B635`.
+Only `Saves/RPG/mods/Hywind.jar` was replaced. The installed JAR matches the
+verified QA2 checksum, manifest revision, production entrypoint, and embedded
+gameplay source commit; package validation passed on the installed file.
+Player-save data was untouched and Hytale was not launched. Connected startup
+and gameplay acceptance remain owner QA.
 
 ## R261 first connected QA candidate (2026-10-11)
 
