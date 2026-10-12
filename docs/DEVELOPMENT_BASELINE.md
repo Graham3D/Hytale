@@ -29,6 +29,9 @@ Packbound, damage receipts, and projectile receipts are not active on the
 stock release server; their dependent promotion gates remain closed and need
 separate gameplay migration and connected QA. No gameplay acceptance is
 claimed.
+The U7P5 frozen pre-release asset comparison remains a pre-release-only
+`check` gate; Chapter I release checks retain the current asset, package,
+CustomUI, native metadata, campaign biome, and spatial grant validators.
 
 The release asset audit found the new stock
 `Dungeon_Klops_Scrap_Trader` native barter route. Its packaged role is the

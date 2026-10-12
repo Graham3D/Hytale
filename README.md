@@ -1,7 +1,8 @@
 # Hywind / HyARPG development baseline
 
-The current bulk attribute QA candidate is **R262QA1-U7P5B**
-(`0.2.0-R262QA1-U7P5B`) on `codex/bulk-attributes`. It carries the R261
+The current Chapter I startup candidate is **R262C1S1-CANDIDATE**
+(`0.2.0-R262C1S1-CANDIDATE`) on `codex/chapter1-startup`, targeting Hytale
+`0.7.0`. It builds on the unmerged R262QA1 bulk attribute candidate and carries the R261
 durable Cyclone, persistent Reflective Ward, and Shared Aegis work. Durable
 Cyclone is enabled by default in the production entrypoint for normal Hytale
 launches. `-Dhywind.cyclone.durable=false` is an explicit rollback option.
@@ -34,8 +35,9 @@ change that ownership boundary.
 The internal plugin identity remains `InigmasGames:HyARPG`, with entrypoint
 `com.inigmasgames.hywind.HyArpgPlugin`. The build artifact is
 `build/libs/HyARPG.jar`; the active RPG save uses the filename `Hywind.jar`.
-The source targets Hytale `0.7.0-pre.5.1`. No plugin identity or save migration
-is part of this recovery.
+The Stage 1 source targets Hytale `0.7.0` and the release-candidate
+`UserData/Saves/Hywind` save. The pre-release `RPG` save remains untouched.
+No plugin identity or save-schema migration is part of Stage 1.
 
 ## Offline verification
 

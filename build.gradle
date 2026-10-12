@@ -285,7 +285,9 @@ tasks.register('auditU7P5AssetCompatibility', Exec) {
         '--package', tasks.named('jar').get().archiveFile.get().asFile,
         '--assets-zip', assetsZip, '--report', file('build/reports/u7p5-asset-compatibility.json')
 }
-tasks.named('check') { dependsOn tasks.named('auditU7P5AssetCompatibility') }
+if (patchline == 'pre-release') {
+    tasks.named('check') { dependsOn tasks.named('auditU7P5AssetCompatibility') }
+}
 
 tasks.processResources {
     def liveProbe = providers.gradleProperty('healingProbeLiveTest').map { it == 'true' }.getOrElse(false)
