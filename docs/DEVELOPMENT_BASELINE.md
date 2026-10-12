@@ -1,5 +1,45 @@
 # HyARPG/Hywind development baseline
 
+## Chapter I skill bar instance admission correction (2026-10-12)
+
+State: **QA_PENDING** on `codex/chapter1-skill-bar`. The correction source is
+`12b729afe8db35c9b4dc69edca0dc186d07fdcab`, continuing the previous
+skill-bar candidate `86488834de7b5ca5245c7ae0a1f88ea6b1be66dd` and its
+unaccepted `codex/chapter1-startup`, R262 bulk-attributes, and R261QA2
+ancestry. GitHub `main` remains at `6d3ef15ff0145532ef193c42e3b648307ee6e915`.
+The primary checkout's unrelated changes and the pre-release RPG save remain
+untouched. The exact packaging commit is verified after this record is committed.
+
+The owner launched deployed `R262C1BAR1-CANDIDATE` in the existing `Hywind`
+save. The 2026-10-12 12:34 server log shows the player joining a newly created
+CreativeHub instance after the pre-connect preparation, while the plugin's
+initial owner installer required the pre-connect world UUID to equal the
+player's actual world UUID. The plugin recorded a successful schema-12 to
+schema-13 migration and load, but no native ability projection or
+`HUD_LAYOUT_READY` event. The saved schema-13 state still contains
+`spirit_shield` and `blizzard` in skill01/skill02. The exact runtime guard
+failure is inferred from this sequence and the source; it requires connected
+confirmation. A native `Window id 0 is invalid` exception occurred later
+during inventory handling, after the player had joined, and is not the first
+cause of the missing skill HUD.
+
+The `R262C1BAR2-CANDIDATE` / `0.2.0-R262C1BAR2-CANDIDATE` correction lets
+only the initial prepared admission install in the world actually entered.
+A later `PlayerReadyEvent` still binds to an exact world, and the current
+connection and generation guards still reject stale sessions. Focused
+instance-admission and pre-connect tests passed. Full offline `check` and
+JaCoCo passed 4,162 JUnit tests in 467 reports with zero failures or skips;
+instruction/line/branch coverage is 51.1%/48.6%/40.4%. Strict SpotBugs,
+CustomUI, release asset, and package validation passed. The existing six
+reviewed dormant native-patch findings remain in the SpotBugs baseline.
+
+The installed `Hywind.jar` is still the BAR1 candidate pending authorization
+for a BAR2 deployment. No server or client was launched by Codex. Connected
+E/R projection, skill activation, and HUD presentation remain unverified.
+Next: verify and publish the exact BAR2 package commit, then request owner
+authorization before replacing the installed candidate. No integration into
+`main` is appropriate while this feature and its dependencies await QA.
+
 ## Chapter I skill bar and four-slot QA candidate (2026-10-12)
 
 State: **QA_PENDING**. `codex/chapter1-skill-bar` is stacked on the published
