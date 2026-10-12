@@ -56,7 +56,8 @@ Group {
   }
   Label #RpgEmptyHandState02 { Anchor: (Right: 76, Bottom: 54, Width: 70, Height: 16); Text: ""; Visible: false; Style: (FontSize: 9, RenderBold: true, TextColor: #f2d488, Alignment: Center); }
   // The release exposes only two independently slotted core runes. These two
-  // additional RPG assignments remain visible and explicitly unbound.
+  // additional RPG assignments remain visible and explicitly unbound to the
+  // left of the native Signature cell.
   Group #RpgEmptyHandSkill03 { Anchor: (Right: 364, Bottom: 72, Width: 58, Height: 58); Visible: false;
     Background: (TexturePath: "Icons/RPG/Background_Ability_Ready.png");
     Group #RpgEmptyHandIcon03 { Anchor: (Full: 6); Background: (TexturePath: "Icons/RPG/SkillSummonskeletonarchers.png"); }
@@ -65,12 +66,12 @@ Group {
     Label #RpgEmptyHandKey03 { Anchor: (Right: 2, Bottom: 0, Width: 17, Height: 17); Text: "—"; Style: (FontSize: 12, RenderBold: true, Alignment: Center, TextColor: #ffffe6); }
   }
   Label #RpgEmptyHandState03 { Anchor: (Right: 358, Bottom: 54, Width: 70, Height: 16); Text: ""; Visible: false; Style: (FontSize: 9, RenderBold: true, TextColor: #f2d488, Alignment: Center); }
-  Group #RpgEmptyHandSkill04 { Anchor: (Right: 270, Bottom: 72, Width: 58, Height: 58); Visible: false;
+  Group #RpgEmptyHandSkill04 { Anchor: (Right: 458, Bottom: 72, Width: 58, Height: 58); Visible: false;
     Background: (TexturePath: "Icons/RPG/Background_Ability_Ready.png");
     Group #RpgEmptyHandIcon04 { Anchor: (Full: 6); Background: (TexturePath: "Icons/RPG/SkillSummonskeletonarchers.png"); }
     Label #RpgEmptyHandName04 { Anchor: (Left: 4, Top: 18, Width: 50, Height: 24); Text: ""; Style: (FontSize: 10, RenderBold: true, Alignment: Center, TextColor: #ffffe6); Visible: false; }
     Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/Frame_Ability_Ready.png"); }
     Label #RpgEmptyHandKey04 { Anchor: (Right: 2, Bottom: 0, Width: 17, Height: 17); Text: "—"; Style: (FontSize: 12, RenderBold: true, Alignment: Center, TextColor: #ffffe6); }
   }
-  Label #RpgEmptyHandState04 { Anchor: (Right: 264, Bottom: 54, Width: 70, Height: 16); Text: ""; Visible: false; Style: (FontSize: 9, RenderBold: true, TextColor: #f2d488, Alignment: Center); }
+  Label #RpgEmptyHandState04 { Anchor: (Right: 452, Bottom: 54, Width: 70, Height: 16); Text: ""; Visible: false; Style: (FontSize: 9, RenderBold: true, TextColor: #f2d488, Alignment: Center); }
 }

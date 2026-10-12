@@ -73,13 +73,15 @@ class Stage13PresentationABTest {
         assertEquals(.8,first.scale,1e-6);assertEquals(-6,first.position.x);assertEquals(-6,first.position.z);
         assertTrue(first.maxDuration+NativeBlizzardVisuals.SNOW_HEAVY_MAX_PARTICLE_SECONDS<=3+1e-6);
     }
-    @Test void nativeRadialDocumentHasOnlyTwoReadOnlyOverlaysAndNoResourceControls() throws Exception {
+    @Test void nativeRadialDocumentHasFourReadOnlyOverlaysAndKeepsSignatureClear() throws Exception {
         try(var input=getClass().getResourceAsStream("/Common/UI/Custom/RpgCooldownSweep.ui")){
             assertNotNull(input);var text=new String(input.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8);
-            assertEquals(2,text.split("CircularProgressBar #",-1).length-1);
+            assertEquals(4,text.split("CircularProgressBar #",-1).length-1);
             assertFalse(text.contains("Button"));assertFalse(text.contains("#Mana"));assertFalse(text.contains("#Health"));assertFalse(text.contains("#Stamina"));
             assertTrue(text.contains("Right: 176"));assertTrue(text.contains("Right: 82"));
-            assertEquals(2,text.split("Color: #ff0000\\(0.50\\)",-1).length-1);
+            assertTrue(text.contains("Right: 364"));assertTrue(text.contains("Right: 458"));
+            assertFalse(text.contains("Right: 270"));
+            assertEquals(4,text.split("Color: #ff0000\\(0.50\\)",-1).length-1);
         }
     }
 }
