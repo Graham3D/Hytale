@@ -381,6 +381,20 @@ public final class HyArpgPlugin extends TavernsPlugin {
         skillExecutionSystem = new HytaleSkillExecutionSystem(abilityInputs, executions, combatKernel,
                 combatTrace, reactions, vfx, bosses);
         var supportSystem=skillExecutionSystem.configureSupport(loadouts);
+        boolean durableCyclone=Boolean.getBoolean("hywind.cyclone.durable");
+        supportSystem.configureDurableCyclone(rpgDataDirectory().resolve("cyclone-barriers"),durableCyclone);
+        com.inigmasgames.hytalerpg.execution.support.TrustedPlayerAllies trustedAllies=null;
+        if(durableCyclone){
+            trustedAllies=new com.inigmasgames.hytalerpg.execution.support.TrustedPlayerAllies(rpgDataDirectory());
+            supportSystem.configureTrustedPlayerAllies(trustedAllies);
+        }
+        LOGGER.atInfo().log("RPG_CYCLONE_DURABLE_GATE enabled=%s",durableCyclone);
+        if(durableCyclone){
+            getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem.CycloneDeath(supportSystem));
+            getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem.NpcSharedBindings(supportSystem));
+            getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem.NpcSharedRemoval(supportSystem));
+            getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem.NpcSharedDeath(supportSystem));
+        }
         var nativeWeaponFire=new com.inigmasgames.hytalerpg.combat.hytale.NativeWeaponFireProducer(
                 supportSystem::routeManagedWeaponFire,supportSystem::nativeWeaponOffensiveFactor);
         getCodecRegistry(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.CODEC)
@@ -634,6 +648,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgWorldConfigCommand(
                 worldConfiguration,worldSpawnDensity,populationBalance,enemyWorldAdmission));
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgManaguardCommand(supportSystem));
+        if(durableCyclone)rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgTrustedAllyCommand(trustedAllies));
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgDifficultyCommand(difficultyRuntime,loadouts,difficultyWorlds,difficultyTravel,portalRegistry,difficultyIo,travelPort,difficultyCombat));
         var gearEquipment=new com.inigmasgames.hytalerpg.gear.HytaleGearEquipment(loadouts);
         gearEquipment.configureDefense((actor,accessor)->{
