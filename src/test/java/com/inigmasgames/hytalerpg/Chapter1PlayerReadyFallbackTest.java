@@ -20,10 +20,17 @@ class Chapter1PlayerReadyFallbackTest {
             var first=new PlayerRef(null,id,"first","en-US",null,null);
             ready.preConnect(first,world).get(5,TimeUnit.SECONDS);
             assertEquals(1,ready.preparationStatus().get("ownerInstallPending"));
+            assertEquals(1L,ready.preparationStatus().get("initialAdmissionPending"),
+                    "the connect world may be replaced by an instance before owner installation");
             var replacement=new PlayerRef(null,id,"second","en-US",null,null);
             ready.preConnect(replacement,world).get(5,TimeUnit.SECONDS);
             ready.detach(first);
             assertEquals(1,ready.preparationStatus().get("ownerInstallPending"));
+            assertEquals(1L,ready.preparationStatus().get("initialAdmissionPending"));
+            UUID instance=UUID.randomUUID();
+            ready.begin(replacement,instance);
+            assertEquals(0L,ready.preparationStatus().get("initialAdmissionPending"),
+                    "a real ready event narrows admission to its exact world");
             ready.detach(replacement);
             assertEquals(0,ready.preparationStatus().get("ownerInstallPending"));
         }

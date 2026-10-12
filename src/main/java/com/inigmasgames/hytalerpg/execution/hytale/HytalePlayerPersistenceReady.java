@@ -13,7 +13,14 @@ import java.util.*;
 
 /** Ready events enqueue IDs only. The existing native entity tick resolves the current generation. */
 public final class HytalePlayerPersistenceReady extends EntityTickingSystem<EntityStore> implements AutoCloseable {
-    private record Ready(UUID world,long generation){}
+    // The connect event can name the parent world before Hytale creates the player's instance.
+    // Only a later ready event knows the exact owner world; null is limited to initial admission.
+    private record Ready(UUID world,long generation){
+        boolean accepts(UUID currentWorld){return acceptsReadyWorld(world,currentWorld);}
+    }
+    static boolean acceptsReadyWorld(UUID expectedWorld,UUID currentWorld){
+        return currentWorld!=null&&(expectedWorld==null||expectedWorld.equals(currentWorld));
+    }
     private final Map<UUID,Ready> pending=new java.util.concurrent.ConcurrentHashMap<>();
     private final java.util.concurrent.atomic.AtomicLong generations=new java.util.concurrent.atomic.AtomicLong();
     private final RpgLoadoutService loadouts;
@@ -43,7 +50,7 @@ public final class HytalePlayerPersistenceReady extends EntityTickingSystem<Enti
                         // Preparation has finished before the player is admitted, so arm the
                         // existing owner-thread installer here as well. A later ready event may
                         // re-arm it, while the generation and connection guard reject stale work.
-                        try { begin(player,world); }
+                        try { armInitialAdmission(player); }
                         catch(RuntimeException failure){
                             if(connections.remove(player.getUuid(),player))preparation.detach(player.getUuid());
                             throw failure;
@@ -52,6 +59,12 @@ public final class HytalePlayerPersistenceReady extends EntityTickingSystem<Enti
                 });
     }
     public synchronized void begin(PlayerRef connection,UUID world){
+        queueReady(connection,Objects.requireNonNull(world,"world"));
+    }
+    private synchronized void armInitialAdmission(PlayerRef connection){
+        queueReady(connection,null);
+    }
+    private void queueReady(PlayerRef connection,UUID world){
         UUID player=connection.getUuid();
         var current=connections.get(player);if(current!=null&&current!=connection)return;
         try(var readyPathSpan=com.inigmasgames.hywind.readypath.ReadyPathProbe.span("RPG_PRELOAD_SUBMIT",player)) {
@@ -70,6 +83,7 @@ public final class HytalePlayerPersistenceReady extends EntityTickingSystem<Enti
     public Map<String,Object> preparationStatus(){
         var status=new LinkedHashMap<String,Object>(preparation.inspect());
         status.put("ownerInstallPending",pending.size());
+        status.put("initialAdmissionPending",pending.values().stream().filter(ready->ready.world()==null).count());
         return Map.copyOf(status);
     }
     public void drain(PlayerRef player){
@@ -85,7 +99,7 @@ public final class HytalePlayerPersistenceReady extends EntityTickingSystem<Enti
         var connection=connections.get(player.getUuid());if(connection!=null&&connection!=player)return;
         if(com.inigmasgames.hywind.readypath.ReadyPathProbe.ENABLED)
             com.inigmasgames.hywind.readypath.ReadyPathProbe.observeTick(player.getUuid(),store.getExternalData().getWorld().getBufferedTickLengthMetricSet().getLastValue());
-        if(ready==null||!ready.world().equals(player.getWorldUuid())||!loadouts.ready(player.getUuid()))return;
+        if(ready==null||!ready.accepts(player.getWorldUuid())||!loadouts.ready(player.getUuid()))return;
         try(var span=com.inigmasgames.hywind.readypath.ReadyPathProbe.span("RPG_READY_INSTALL_ATTEMPT_NOT_J4",player.getUuid())){
             if(install.install(store,chunk.getReferenceTo(index),player,chunk.getComponent(index,Player.getComponentType()),chunk.getComponent(index,EntityStatMap.getComponentType()))){
                 pending.remove(player.getUuid(),ready);
