@@ -1064,17 +1064,26 @@ public final class HytaleGearLoot implements AutoCloseable {
     private record EquipmentSlot(String section,short index,ItemContainer container) {
         ItemStack read(){return container.getItemStack(index);}
     }
+    /** Chapter I may report no selected hand slot while CustomUI is open. The native
+     * Hotbar decoder selects slot zero for a nonempty section in that state. */
+    static short equipmentIndex(byte active,short capacity){
+        if(capacity<=0)return -1;
+        if(active==InventoryComponent.INACTIVE_SLOT_INDEX)return 0;
+        return active>=0&&active<capacity?(short)active:-1;
+    }
     private static EquipmentSlot equipmentSlot(String name,Store<EntityStore> store,Ref<EntityStore> actor){
         String key=name.toLowerCase(Locale.ROOT);
         if(key.equals("held")){
             var hotbar=store.getComponent(actor,InventoryComponent.Hotbar.getComponentType());
             if(hotbar==null)return null;
-            return new EquipmentSlot("HOTBAR",hotbar.getActiveSlot(),hotbar.getInventory());
+            short index=equipmentIndex(hotbar.getActiveSlot(),hotbar.getInventory().getCapacity());
+            return index<0?null:new EquipmentSlot("HOTBAR",index,hotbar.getInventory());
         }
         if(key.equals("offhand")){
             var utility=store.getComponent(actor,InventoryComponent.Utility.getComponentType());
             if(utility==null)return null;
-            return new EquipmentSlot("UTILITY",utility.getActiveSlot(),utility.getInventory());
+            short index=equipmentIndex(utility.getActiveSlot(),utility.getInventory().getCapacity());
+            return index<0?null:new EquipmentSlot("UTILITY",index,utility.getInventory());
         }
         com.hypixel.hytale.protocol.ItemArmorSlot armorSlot=switch(key){
             case "head"->com.hypixel.hytale.protocol.ItemArmorSlot.Head;
@@ -1084,6 +1093,14 @@ public final class HytaleGearLoot implements AutoCloseable {
             default->null;};
         var armor=store.getComponent(actor,InventoryComponent.Armor.getComponentType());
         return armorSlot==null||armor==null?null:new EquipmentSlot("ARMOR",(short)armorSlot.getValue(),armor.getInventory());
+    }
+    private static ActiveSlotInventoryComponent activeEquipmentSection(String slot,
+                                                                       Store<EntityStore> store,Ref<EntityStore> actor){
+        return switch(slot){
+            case "held"->store.getComponent(actor,InventoryComponent.Hotbar.getComponentType());
+            case "offhand"->store.getComponent(actor,InventoryComponent.Utility.getComponentType());
+            default->null;
+        };
     }
     private static String frozen(ItemStack stack){return ItemStack.isEmpty(stack)?null:
             ItemStack.CODEC.encode(stack,new ExtraInfo()).asDocument().toJson();}
@@ -1140,6 +1157,8 @@ public final class HytaleGearLoot implements AutoCloseable {
     }
     /** Read the exact equipped payload for a UI selection without changing native custody. */
     public ItemStack equipmentForUi(Store<EntityStore> store,Ref<EntityStore> actor,String slot){
+        var active=activeEquipmentSection(slot,store,actor);
+        if(active!=null&&active.getActiveSlot()==InventoryComponent.INACTIVE_SLOT_INDEX)return null;
         var target=equipmentSlot(slot,store,actor);
         return target==null?null:target.read();
     }
@@ -1181,6 +1200,10 @@ public final class HytaleGearLoot implements AutoCloseable {
             var component=store.getComponent(actor,SpatialBagComponent.getComponentType());
             if(component==null||component.mode(owner)==SpatialBagComponent.OwnershipMode.NATIVE)
                 throw new IllegalStateException("Attach the QA spatial bag first");
+            var activeSection=activeEquipmentSection(slot,store,actor);
+            if(!equip&&activeSection!=null
+                    &&activeSection.getActiveSlot()==InventoryComponent.INACTIVE_SLOT_INDEX)
+                throw new IllegalArgumentException("Select a native equipment slot before unequipping");
             var before=component.state(owner);var target=equipmentSlot(slot,store,actor);
             if(target==null)throw new IllegalArgumentException("Equipment slot unavailable: "+slot);
             var old=target.read();ItemStack incoming;
@@ -1222,6 +1245,8 @@ public final class HytaleGearLoot implements AutoCloseable {
                 if (requirement != null) throw new IllegalArgumentException(requirement);
                 var planned=before.exchange(operation,before.revision(),sourceId,entry.payloadJson(),displaced,FootprintCatalog.loadDefault());
                 if(!planned.accepted())throw new IllegalStateException("Equipment exchange rejected: "+planned.receipt().outcome());
+                if(activeSection!=null&&activeSection.getActiveSlot()==InventoryComponent.INACTIVE_SLOT_INDEX)
+                    activeSection.setActiveSlot((byte)target.index(),actor,store);
                 commitEquipment(store,actor,player,world,component,before,planned.bag(),changes,operation,reply);
             }else{
                 if(ItemStack.isEmpty(old))throw new IllegalArgumentException("Equipment slot empty");
