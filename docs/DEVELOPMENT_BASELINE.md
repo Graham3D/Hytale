@@ -2,6 +2,27 @@
 
 ## R261 first connected QA candidate (2026-10-11)
 
+The approved R261QA1 deployment correction makes durable Cyclone Armor the
+normal production path in `HyArpgPlugin` without launch flags. Only an explicit
+`-Dhywind.cyclone.durable=false` selects the R260 compatibility path. The
+earlier SHA-256 `F1299CEFF598DD4EE67B85D95C52FD2708567FE8BA19E3483906BC70FD9D2359`
+candidate had its production gate wired but defaulted off and is superseded.
+The final corrected JAR must be rebuilt, fully verified, and recorded by
+Guardian before deployment. ReadyPath/JFR remains optional.
+
+Before the correction, GitHub `main` was fast-forwarded non-forcibly to
+`0183f2acae08c79d30a0d477c71bdd5544f95bf6`. The R260 JAR backup at
+`data/pre-release/HywindJarBackups/Hywind-R260-before-R261-20261012T004415Z.jar`
+matches the installed R260 SHA-256
+`487C9B89274496C329A24D65C13F232ED9E01E5A4A5430E0DD5D0F808BFB23FD`.
+The separate save backup at
+`data/pre-release/RpgSaveBackups/RPG-before-R261QA1-20261012T011447Z`
+contains 23,266 files and 2,830,076,488 bytes, each verified byte-for-byte
+against the RPG source. Its sole excluded reparse point is a junction to the
+separate `ImmersiveNPCs` save's voice environment. Player-save data was not
+modified. Final source commit, build hash, and deployment status will be
+recorded after the authorized release gate.
+
 Branch `codex/r261-qa-capture` starts from GitHub-integrated R261 mainline
 `e42b903291409bde99fde985e8e07174cbb92401`. Capture-tooling commit
 `1889c0d0999c01a6c0616b1a8b8b685e8e350180` added the combined ReadyPath
@@ -14,7 +35,7 @@ before the correction and passed afterward.
 
 Production wiring was corrected at implementation commit
 `d6252d7e08eec9deb6697a21721d46c3bc062137`; the candidate revision is
-R261QA1-U7P5B / `0.2.0-R261QA1-U7P5B`. The verified artifact is
+R261QA1-U7P5B / `0.2.0-R261QA1-U7P5B`. The previously verified artifact was
 `build/release/Hywind.jar`, SHA-256
 `F1299CEFF598DD4EE67B85D95C52FD2708567FE8BA19E3483906BC70FD9D2359`.
 The exact-implementation-commit offline `check` passed 4,147 JUnit tests in
@@ -28,7 +49,7 @@ flagged `-CheckOnly` correctly rejects the still-installed R260 JAR.
 The active RPG save still contains R260 `Hywind.jar`, SHA-256
 `487C9B89274496C329A24D65C13F232ED9E01E5A4A5430E0DD5D0F808BFB23FD`.
 An identical backup was made outside `Saves`; player-save data was untouched.
-Deployment awaits the owner's explicit approval. The capture will require
+That artifact was not deployed. The optional capture will require
 `RPG_CYCLONE_DURABLE_GATE enabled=true` in the matched integrated-server log;
 that live observation and connected gameplay acceptance remain owner QA.
 Final tooling commit and GitHub publication are established by Guardian's

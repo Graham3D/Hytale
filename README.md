@@ -2,11 +2,11 @@
 
 The current first-QA candidate is **R261QA1-U7P5B**
 (`0.2.0-R261QA1-U7P5B`) on `codex/r261-qa-capture`. It carries the R261
-durable Cyclone, persistent Reflective Ward, and Shared Aegis work from
-GitHub `main` plus the corrected production gate wiring. The older R261
-mainline JAR omitted that wiring and must not be deployed for QA. The corrected
-candidate passed offline gameplay and package checks. The gate defaults off;
-the active RPG save still has R260 while deployment awaits owner approval. See
+durable Cyclone, persistent Reflective Ward, and Shared Aegis work. Durable
+Cyclone is enabled by default in the production entrypoint for normal Hytale
+launches. `-Dhywind.cyclone.durable=false` is an explicit rollback option.
+The earlier R261 JAR omitted production gate wiring and must not be used for
+QA. ReadyPath/JFR capture is optional. See
 the [R261 requirement audit](docs/R261_FINAL_MATRIX.md),
 [durability contract](docs/CYCLONE_DURABILITY.md), and
 [baseline](docs/DEVELOPMENT_BASELINE.md) for verification status.

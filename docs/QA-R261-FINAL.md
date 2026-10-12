@@ -1,48 +1,29 @@
 # R261 connected-game acceptance checklist
 
-This checklist is for the owner's later test after a separately authorized
-deployment to the established `Hytale/data/pre-release/Saves/RPG` save. The
-offline release candidate does not replace the active R260 `Hywind.jar` and
-does not establish connected-game acceptance. The durable path requires the
-documented `-Dhywind.cyclone.durable=true` startup property.
+This checklist is for the owner's test in the established
+`Hytale/data/pre-release/Saves/RPG` save. With the verified R261QA1 JAR
+installed, launch Hytale normally and enter that world. Durable Cyclone Armor
+is enabled by default in the production entrypoint. No JVM property or startup
+capture is required. Connected-game acceptance remains with the owner.
 
-## First connected launch with startup capture
+## Optional ReadyPath startup capture
 
-The corrected R261 QA artifact is
-`C:\Users\Zemio\.codex\worktrees\combat-damage-trace\Hytale-main-clean\build\release\Hywind.jar`,
-built from source commit `d6252d7e08eec9deb6697a21721d46c3bc062137` at
-revision `R261QA1-U7P5B`. Its SHA-256 is
-`F1299CEFF598DD4EE67B85D95C52FD2708567FE8BA19E3483906BC70FD9D2359`.
-The earlier R261 artifact from `e42b903291409bde99fde985e8e07174cbb92401`
-omitted durable gate wiring from the packaged production entrypoint and must
-not be used for QA.
-The active RPG save still carries the R260 JAR. Deployment requires approval:
-with Hytale closed, back up that JAR outside `Saves`, replace only
-`Saves/RPG/mods/Hywind.jar` with this artifact, and verify the destination
-checksum and embedded source commit before the first launch. Do not edit
-player-save data or launch Hytale as part of deployment.
-The current R260 JAR has SHA-256
-`487C9B89274496C329A24D65C13F232ED9E01E5A4A5430E0DD5D0F808BFB23FD`.
-Its matching backup is already at
-`C:\Users\Zemio\AppData\Roaming\Hytale\data\pre-release\HywindJarBackups\Hywind-R260-before-R261-20261012T004415Z.jar`.
-
-After the separately approved R261 `Hywind.jar` deployment, close Hytale and
-its launcher, then run this in PowerShell:
+ReadyPath/JFR is available only if startup profiling is useful. With Hytale
+and its launcher closed, the optional capture command is:
 
 ```powershell
 $capture = 'C:\Users\Zemio\.codex\worktrees\combat-damage-trace\Hytale-main-clean\tools\Capture-ReadyPathStartup.ps1'
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File $capture -CheckOnly -EnableDurableCyclone
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File $capture -EnableDurableCyclone
 ```
 
-When the second command prints `ARMED`, launch Hytale normally and enter the
-existing RPG save. Leave PowerShell open until capture completes. The script
-refuses a JAR without the production durable gate before arming, so its
-`-CheckOnly` command will reject the currently installed R260 JAR until the
-approved deployment is complete. The script
-sets `JAVA_TOOL_OPTIONS` temporarily with both the ReadyPath JFR options and
-`-Dhywind.cyclone.durable=true`; it removes the user-level setting after it
-matches the integrated server, or on failure. It does not launch the game.
+When it prints `ARMED`, launch Hytale normally and enter the existing RPG
+save. Leave PowerShell open until capture completes. The flag requests a gate
+confirmation in the matched integrated-server log; the normal build already
+enables the gate without that flag. The script temporarily sets
+`JAVA_TOOL_OPTIONS` for ReadyPath/JFR and explicitly requests
+`-Dhywind.cyclone.durable=true` during this optional capture. It removes the
+user-level setting after matching the integrated server or on failure. It
+does not launch the game.
 The captured `server.log` must contain exactly one
 `RPG_CYCLONE_DURABLE_GATE enabled=true` line. The script prints
 `CYCLONE GATE CONFIRMED` and records `cycloneGateConfirmed: true` in
@@ -50,9 +31,8 @@ The captured `server.log` must contain exactly one
 The recording and log snapshots are under
 `Hytale/data/pre-release/StartupCaptures`, outside `Saves`. If PowerShell
 closes unexpectedly before cleanup, rerun the script with `-Restore`.
-Repeat the arming command for each separate QA launch because cleanup removes
-the temporary JVM property after the integrated server has inherited it.
-Connected gameplay acceptance still requires the checks below.
+Repeat the arming command for each separate profiling launch. Ordinary play
+needs no arming. Connected gameplay acceptance still requires the checks below.
 
 1. Use `/rpg skilllevel spirit_shield 1` on a learned Cyclone Armor. Cast
    with at least 100 spendable Mana. Confirm the entire unreserved Mana amount
