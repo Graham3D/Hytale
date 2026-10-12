@@ -1,5 +1,37 @@
 # HyARPG/Hywind development baseline
 
+## Chapter I inventory owner-state recovery (2026-10-12)
+
+State: **QA_PENDING** on `codex/chapter1-inventory-recovery`, stacked on
+`codex/chapter1-skill-bar` at `d4b2a333b9b601253c25dd41fdd44b1907681370`.
+GitHub `main` remains at `6d3ef15ff0145532ef193c42e3b648307ee6e915`.
+The owner reported that generated gear entered the native hotbar and equipped
+gear could not be dragged into Hywind's empty inventory. The Chapter I Hywind
+player save lacked `RpgSpatialBag`; the protected pre-release RPG save for the
+same player had a `MIGRATION_PROOF` bag with two entries. Existing gear delivery
+and inventory UI code select the native fallback when this component is absent.
+This is a copied-save state omission, not a missing BAR3 class or new gameplay
+implementation requirement.
+
+With the game stopped and the owner's selection to restore the RPG bag contents,
+the Hywind player file was backed up outside `Saves` and atomically replaced
+with a version adding only the original `RpgSpatialBag` component. Its other
+fields, including two current hotbar items, are semantically unchanged. The
+original RPG file is unchanged. The restored Hywind player SHA-256 is
+`67C4B300F30A0A53296F5E79E1C1C97CD3291724C54B0153BF66CDF6FA95F250`;
+the pre-repair backup SHA-256 is
+`153B3004EF887F170845E6D2738C4D35F4F58C6222610A30FB33B51CB1FE8264`.
+Recovery files are under `AppData/Roaming/Hytale/HywindJarBackups/Hywind-spatial-repair-20261012T180043`.
+The deployed BAR3 `Hywind.jar` remains the exact previously verified candidate,
+SHA-256 `4E1E5ED201D6B6A49CE0672B53FC55C1837446EC82BE747782ECD7738B4736BA`,
+version `0.2.0-R262C1BAR3-CANDIDATE`, revision `R262C1BAR3-CANDIDATE`,
+with exact `=0.7.0` metadata and packaged spatial inventory classes. There
+is no new binary revision or source code change. No standalone server or client
+was launched. Owner QA must confirm the restored bag contents, generated gear
+delivery, and equipment drag-and-drop. Prior native `Window id ... is invalid`
+warnings and BAR3 skill casting remain unverified in connected play. Do not
+promote this branch or its unaccepted ancestors to `main` yet.
+
 ## Chapter I skill bar owner admission preload correction (2026-10-12)
 
 State: **QA_PENDING** on `codex/chapter1-skill-bar`, stacked on the unaccepted
