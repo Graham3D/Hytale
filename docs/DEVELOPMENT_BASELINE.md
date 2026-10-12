@@ -27,11 +27,17 @@ The same wiring defect was present before the Chapter I migration.
 `R262C1BAR3-CANDIDATE` / `0.2.0-R262C1BAR3-CANDIDATE` restores the two
 existing preload hooks in the production entrypoint. A focused production
 entrypoint regression failed before the fix and passed after it, alongside
-Chapter I admission and durable-ledger tests. Full offline validation and
-exact package verification are pending at this checkpoint. Connected HUD,
-E/R casting, and world-transfer behavior require owner QA; no native server or
-client was launched by Codex. The BAR2 log also contains a later native
-inventory-window error, which is separate from the absent HUD at join.
+Chapter I admission and durable-ledger tests. The full offline `check` and
+JaCoCo run passed 4,162 JUnit tests in 467 reports with zero failures or skips.
+Strict SpotBugs, CustomUI, release asset, and JAR package validation passed;
+the package contains 19,544 entries and 2,255 classes with exact `=0.7.0`
+server metadata. Guardian verified and published the BAR3 branch. The final
+documentation HEAD still requires its exact package verification and branch
+publication. Connected HUD, E/R casting, and world-transfer behavior require
+owner QA; no native server or client was launched by Codex. The BAR2 log also
+contains a later native inventory-window error, separate from the absent HUD
+at join. Existing asset-key format warnings and dormant patch-version warnings
+remain outside this skill-bar correction.
 
 ## Chapter I skill bar instance admission correction (2026-10-12)
 
