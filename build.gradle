@@ -148,6 +148,8 @@ tasks.withType(JavaCompile).configureEach {
 
 tasks.test {
     useJUnitPlatform()
+    // This fixture pins the pre-release server patch and asset hashes.
+    if (patchline == 'release') exclude '**/LarvaNativeBindingAssetTest*'
     exclude '**/CombatDamageTraceServiceTest*'
     exclude '**/R244NamesTest*'
     exclude '**/R245FlockRollbackTest*'

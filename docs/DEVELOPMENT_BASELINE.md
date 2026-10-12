@@ -32,6 +32,9 @@ claimed.
 The U7P5 frozen pre-release asset comparison remains a pre-release-only
 `check` gate; Chapter I release checks retain the current asset, package,
 CustomUI, native metadata, campaign biome, and spatial grant validators.
+The pre-release Larva binding fixture, which requires the old patched server
+JAR and exact pre-release asset hashes, is excluded from release `test` only;
+its runtime role and saved binding schema are unchanged.
 
 The release asset audit found the new stock
 `Dungeon_Klops_Scrap_Trader` native barter route. Its packaged role is the
