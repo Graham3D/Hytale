@@ -645,6 +645,8 @@ public final class HyArpgPlugin extends TavernsPlugin {
         populationBalance=new com.inigmasgames.hytalerpg.spawning.NativePopulationBalance(
                 ()->worldConfiguration.snapshot().population());
         worldSpawnDensity.configureFinalProjection(populationBalance::applySafely);
+        getChunkStoreRegistry().registerSystem(populationBalance.new Tick());
+        LOGGER.atWarning().log("RPG_POPULATION_PROJECTION release=0.7.0 mode=ORDERED_TICK nativeFinalSeam=false unspawnableChunkRefreshMayResetWeights=true");
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgWorldConfigCommand(
                 worldConfiguration,worldSpawnDensity,populationBalance,enemyWorldAdmission));
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgManaguardCommand(supportSystem));

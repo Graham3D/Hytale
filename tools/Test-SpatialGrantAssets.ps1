@@ -14,6 +14,7 @@ $merchant = @(
     'Server/NPC/Roles/Intelligent/Faction/Kweebec/Kweebec_Merchant.json',
     'Server/NPC/Roles/Intelligent/Other/Klops/Klops_Merchant.json',
     'Server/NPC/Roles/Intelligent/Other/Klops/Klops_Merchant_Wandering.json'
+    'Server/NPC/Roles/Intelligent/Faction/Goblin/Dungeon/Dungeon_Klops_Scrap_Trader.json'
 )
 $testObjectives = @(
     'Objective_Craft', 'Objective_Gather', 'Objective_Kill',

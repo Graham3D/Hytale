@@ -2,7 +2,8 @@
 param(
     [Parameter(Mandatory=$true)][string]$JarPath,
     [Parameter(Mandatory=$true)][string]$ExpectedVersion,
-    [Parameter(Mandatory=$true)][string]$ExpectedRevision
+    [Parameter(Mandatory=$true)][string]$ExpectedRevision,
+    [string]$ExpectedServerVersion
 )
 
 $ErrorActionPreference = 'Stop'
@@ -29,6 +30,9 @@ try {
         $manifest.Metadata.RpgRevision -ne $ExpectedRevision -or $manifest.Metadata.Product -ne 'HyARPG' -or
         $manifest.Metadata.SeparationCheckpoint -ne 'C') {
         throw 'HyARPG manifest identity/version/bootstrap/revision mismatch.'
+    }
+    if ($ExpectedServerVersion -and $manifest.ServerVersion -ne $ExpectedServerVersion) {
+        throw "HyARPG manifest server version mismatch: $($manifest.ServerVersion)"
     }
     if ($manifest.Dependencies.PSObject.Properties.Name -contains 'InigmasGames:ImmersiveNPCs') {
         throw 'Manifest contains a hard ImmersiveNPCs dependency.'

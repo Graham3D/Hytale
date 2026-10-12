@@ -60,9 +60,8 @@ tasks.named('jar') { archiveFileName = 'HyARPG.jar' }
 def hytaleHome = file("${System.getProperty('user.home')}/AppData/Roaming/Hytale")
 def gamePackage = file("${hytaleHome}/install/${patchline}/package/game/latest")
 def serverJar = file("${gamePackage}/Server/HytaleServer.jar")
-def packboundServerJar = file("${projectDir}/build/native-patch/HytaleServer-packbound.jar")
 def assetsZip = file("${gamePackage}/Assets.zip")
-def htDevLibJar = file("${hytaleHome}/data/${patchline}/Saves/RPG/mods/HYTALEDEVLIB-0.5.0.jar")
+def htDevLibJar = file("${hytaleHome}/UserData/Saves/Hywind/mods/HYTALEDEVLIB-0.5.0.jar")
 
 if (!serverJar.exists()) {
     throw new GradleException("Hytale server jar not found: ${serverJar}")
@@ -75,7 +74,12 @@ tasks.register('buildPackboundNative', Exec) {
         file('tools/native-patch/Build-PackboundNative.ps1'), '-ServerJar', serverJar,
         '-OutputDirectory', file('build/native-patch')
 }
-tasks.named('compileJava') { dependsOn tasks.named('buildPackboundNative') }
+// The release server is unpatched. Compile against its installed API while
+// retaining the existing neutral hook types used by dormant native bridges.
+sourceSets.main.java {
+    srcDir 'tools/native-patch/src'
+    exclude '**/PatchNativeMutations.java', '**/NativePopulationProjectionHook.java'
+}
 
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(java_version)
@@ -88,9 +92,9 @@ dependencies {
     implementation project(':hytale-taverns')
     compileOnly project(':immersive-compat-api')
     compileOnly 'com.github.spotbugs:spotbugs-annotations:4.10.2'
-    compileOnly files(packboundServerJar)
+    compileOnly files(serverJar)
     compileOnly files(htDevLibJar)
-    testImplementation files(packboundServerJar)
+    testImplementation files(serverJar)
     testImplementation project(':canvas-ui')
     testImplementation project(':hytale-taverns')
     testImplementation project(':immersive-compat-api')
@@ -263,7 +267,8 @@ tasks.register('verifyHyArpgJar', Exec) {
     dependsOn tasks.named('auditSpatialGrantAssets')
     commandLine 'powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
         file('tools/Test-HyArpgPackage.ps1'), '-JarPath', tasks.named('jar').get().archiveFile.get().asFile,
-        '-ExpectedVersion', project.version, '-ExpectedRevision', rpg_revision
+        '-ExpectedVersion', project.version, '-ExpectedRevision', rpg_revision,
+        '-ExpectedServerVersion', "=${hytale_version}"
 }
 
 tasks.check {
@@ -373,7 +378,7 @@ tasks.register('printAuditClasspath') {
 
 tasks.register('generateEliteRoleMatrix', JavaExec) {
     dependsOn 'classes'
-    classpath = sourceSets.main.runtimeClasspath + files(packboundServerJar, htDevLibJar)
+    classpath = sourceSets.main.runtimeClasspath + files(serverJar, htDevLibJar)
     mainClass = 'com.inigmasgames.hytalerpg.enemies.EnemyEliteRoleMatrix'
     args file('docs/enemies/ELITE_ROLE_MATRIX.md').absolutePath
 }

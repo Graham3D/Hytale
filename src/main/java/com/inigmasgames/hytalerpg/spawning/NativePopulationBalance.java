@@ -33,10 +33,8 @@ public final class NativePopulationBalance implements AutoCloseable {
     private final Map<World,Set<Integer>> modified=Collections.synchronizedMap(new WeakHashMap<>());
     private final Map<UUID,Map<Integer,EnvironmentSnapshot>> snapshots=new java.util.concurrent.ConcurrentHashMap<>();
     private volatile boolean closed;
-    private final AutoCloseable nativeProjection;
     public NativePopulationBalance(Supplier<Policy> policy){
         this.policy=Objects.requireNonNull(policy);
-        nativeProjection=com.inigmasgames.hytale.patch.NativePopulationProjectionHook.install(store->applySafely(store.getExternalData().getWorld()));
     }
     public Map<Integer,EnvironmentSnapshot> snapshot(UUID world){return snapshots.getOrDefault(world,Map.of());}
     public NativePopulationRoles roles(){return roles;}
@@ -134,7 +132,7 @@ public final class NativePopulationBalance implements AutoCloseable {
             if(Math.abs(stat.getExpected()-target)>1e-8)throw new IllegalStateException("NATIVE_POPULATION_PROJECTION_MISMATCH");
         }
     }
-    @Override public void close(){closed=true;try{nativeProjection.close();}catch(Exception e){throw new IllegalStateException(e);}lastRun.clear();lastRoleTrace.clear();modified.clear();snapshots.clear();}
+    @Override public void close(){closed=true;lastRun.clear();lastRoleTrace.clear();modified.clear();snapshots.clear();}
     public final class Tick extends TickingSystem<ChunkStore> {
         @Override public Set<Dependency<ChunkStore>> getDependencies(){return Set.of(
                 new SystemDependency<>(Order.AFTER,NativeWorldSpawnDensity.Tick.class),

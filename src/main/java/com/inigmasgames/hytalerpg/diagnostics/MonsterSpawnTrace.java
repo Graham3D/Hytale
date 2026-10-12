@@ -33,7 +33,7 @@ public final class MonsterSpawnTrace implements AutoCloseable {
             properties.forEach((k,v)->result.put(k.toString(),v));
         }catch(java.io.IOException e){result.put("buildManifest","UNAVAILABLE");}
         result.put("biomeManifest",com.inigmasgames.hytalerpg.difficulty.CampaignBiomes.current().revision());
-        result.put("nativeProjection","population-projection-0.7.0-pre.5.1-r244");
+        result.put("nativeProjection","ordered-tick-0.7.0-c1s1");
         return Map.copyOf(result);
     }
     private static final class Session {

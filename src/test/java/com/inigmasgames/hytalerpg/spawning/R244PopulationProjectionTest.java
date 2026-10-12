@@ -19,7 +19,7 @@ class R244PopulationProjectionTest {
         var rows=List.of(new PopulationWeightPlan.Row(1,HOSTILE,1,5,1,true),new PopulationWeightPlan.Row(2,WILDLIFE,1,7,1,true),new PopulationWeightPlan.Row(3,OTHER,1,3,1,true));
         hostile.adjustActual(5);wildlife.adjustActual(7);fish.adjustActual(3);fish.setUnspawnable(true);
         for(boolean enabled:List.of(true,false,true)){
-            // Hytale rebuilt native targets inside its tick; the selection seam must overwrite these before selection.
+            // Exercise restoration and projection on the release server's stat type.
             stats.forEach(s->s.setExpected(40));
             NativePopulationBalance.publish(stats,PopulationWeightPlan.calculate(120,rows,.65,.35,enabled));
             assertEquals(enabled?52:40,hostile.getExpected(),1e-9);assertEquals(enabled?28:40,wildlife.getExpected(),1e-9);
@@ -27,11 +27,9 @@ class R244PopulationProjectionTest {
             assertTrue(fish.isUnspawnable());
         }
     }
-    @Test void nativeHookUnusedAndTeardownAreNoOps() throws Exception {
-        com.inigmasgames.hytale.patch.NativePopulationProjectionHook.beforeSelection(null);
-        var calls=new java.util.concurrent.atomic.AtomicInteger();
-        var hook=com.inigmasgames.hytale.patch.NativePopulationProjectionHook.install(s->calls.incrementAndGet());
-        com.inigmasgames.hytale.patch.NativePopulationProjectionHook.beforeSelection(null);assertEquals(1,calls.get());
-        hook.close();com.inigmasgames.hytale.patch.NativePopulationProjectionHook.beforeSelection(null);assertEquals(1,calls.get());
+    @Test void releaseProjectionConstructsWithoutPatchedServerHook() {
+        var balance=new NativePopulationBalance(()->new NativePopulationBalance.Policy(true,.65,.35));
+        try{assertEquals(2,balance.new Tick().getDependencies().size());}
+        finally{balance.close();}
     }
 }

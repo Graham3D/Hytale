@@ -71,7 +71,7 @@ public final class HealingPresentationProbe implements AutoCloseable {
         var world=store.getExternalData().getWorld();
         if(closed)throw new IllegalStateException("HEAL_PROBE_CLOSED");
         if(!liveTest){
-        var live=Path.of(System.getenv("APPDATA"),"Hytale/data/pre-release/Saves/RPG").toRealPath();
+        var live=Path.of(System.getenv("APPDATA"),"Hytale/UserData/Saves/Hywind").toRealPath();
         if(!HealingProbePolicy.allows(allowedRoot.toRealPath(),world.getSavePath().toRealPath(),live))
             throw new IllegalStateException("HEAL_PROBE_DISPOSABLE_WORLD_REQUIRED");
         }

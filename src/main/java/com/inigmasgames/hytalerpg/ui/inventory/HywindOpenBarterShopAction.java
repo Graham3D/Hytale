@@ -12,7 +12,7 @@ import com.hypixel.hytale.server.npc.instructions.Action;
 import com.hypixel.hytale.server.npc.instructions.ExecutionSupport;
 import com.hypixel.hytale.server.npc.sensorinfo.InfoProvider;
 
-/** The three stock barter NPC roles use this producer gate instead of OpenBarterShop. */
+/** Stock barter NPC roles use this producer gate instead of OpenBarterShop. */
 public final class HywindOpenBarterShopAction extends ActionOpenBarterShop {
     public HywindOpenBarterShopAction(BuilderActionOpenBarterShop builder, BuilderSupport support) {
         super(builder, support);
