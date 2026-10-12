@@ -1,9 +1,11 @@
 # R261 Final requirement audit
 
 Source: `codex/r261-final`, based on the verified R261FDEV checkpoint
-`60e718532b463cbb0ffc8503f0ae0049d55c56e6`. The focused evidence below
-precedes exact-commit release verification. The active R260 JAR and RPG save
-are unchanged.
+`60e718532b463cbb0ffc8503f0ae0049d55c56e6`. The reviewed implementation
+source `da4f49cca5eb6cc88a7b7d13cd31e15ce8841a49` passed exact-commit
+offline release verification and was fast-forwarded to GitHub `main`. The
+active R260 JAR and RPG save are unchanged. Connected-game acceptance is
+pending the owner's separate deployment decision.
 
 | Requirement | Implementation | Automated evidence | Status |
 | --- | --- | --- | --- |
@@ -23,7 +25,7 @@ are unchanged.
 | Damage order Barrier → Mana Before Life → Health, Managuard/reservations | Native damage bridge and `ManaBeforeLifeStage` | `ManaBeforeLifeStageTest`, `R261CManaDamageReceiptTest`, `R261CCombatLatencyTest` | Offline covered; native timing awaits connected QA |
 | Authoritative Health, Mana, Barrier HUD | Native stat read and `BarrierView` | `R261CResourceHudTest` | Offline covered; visual layout awaits connected QA |
 | Sequential, contended, independent-player latency | Per-player forced journal monitors; resource coordinator still has a global native mutation lock | `CycloneDamageStageTest`, `CycloneBarrierLedgerTest`, `R261CCombatLatencyTest`, `R261FinalCombatLatencyTest` | Focused profile; no connected frame guarantee; forced storage remains synchronous |
-| R260 compatibility and protective gate | `hywind.cyclone.durable` defaults false; R260 JAR remains installed | Full offline `check`, package validator, Guardian receipt required at exact development commit | Pending final verification |
+| R260 compatibility and protective gate | `hywind.cyclone.durable` defaults false; R260 JAR remains installed | Full offline `check`, package validator, Guardian receipt at the published implementation commit | Offline verified; connected acceptance pending |
 
 ## Native persistence boundary
 
@@ -62,13 +64,14 @@ The resource coordinator still serializes native mutation across players, but
 the forced journal I/O dominates these offline samples. No connected frame or
 native client timing is established.
 
-## Remaining release gate
+## Release gate and remaining acceptance
 
-Run full Gradle `check`, JaCoCo, strict SpotBugs, package validation and
-Guardian on the exact reviewed commit. Review the latest remote `main` and
-integrate only after those checks pass. The final JAR must be built from the
-merged mainline commit and kept out of the active RPG save pending separate
-deployment authorization.
+The full Gradle `check` passed 4,146 JUnit tests across 464 reports without a
+failure, error, or skip. JaCoCo completed, strict SpotBugs passed, and package
+and asset checks passed. Guardian verified the published branch, and GitHub
+`main` contains the exact implementation commit after a non-force fast-forward.
+The post-merge offline `check` passed on that same commit. The final packaged
+JAR remains outside the active RPG save pending separate deployment.
 
 ## Owner connected-game checklist after a future completed release
 
@@ -78,4 +81,5 @@ cooldown; take damage with and without Mana Before Life; deplete and recast;
 reconnect and restart with remaining Barrier HP; repeat with Reflective Ward
 and Shared Aegis and inspect the ally's 8 m/LOS behavior; change gear and
 world, then verify Health/Mana values and that older skills still function.
-The current development branch is **not** ready for these owner QA steps.
+The candidate is ready for a separate deployment decision; the owner's
+connected-game acceptance remains outstanding.

@@ -14,9 +14,20 @@ The [R261 Final matrix](R261_FINAL_MATRIX.md) maps implementation and
 regression evidence; [the acceptance checklist](QA-R261-FINAL.md) is reserved
 for the owner's later connected-game QA. This candidate has not been deployed.
 The active RPG save and R260 `Hywind.jar` are unchanged. The exact source
-commit, final build SHA-256, and GitHub integration status must be verified
-after publication and mainline integration; this entry does not predeclare
-their outcome.
+commit, final build SHA-256, and GitHub integration status are checked at the
+release gate rather than inferred from the revision label.
+
+At the published implementation source `da4f49cca5eb6cc88a7b7d13cd31e15ce8841a49`,
+the complete offline Gradle `check` passed 4,146 JUnit tests across 464 reports,
+with zero failures, errors, or skips. JaCoCo completed; line coverage was
+90.1% for `CycloneReflectionJournal`, 87.3% for `CycloneSharedAegisLedger`,
+and 83.3% for `TrustedPlayerAllies`. JaCoCo and strict SpotBugs ran on the
+code-identical source before the README-only commit; native package and asset
+validation and Guardian's exact-commit receipt passed at the published HEAD.
+Guardian confirmed
+task-branch publication, and a normal non-force fast-forward placed that
+source on GitHub `main`; a second offline `check` passed after the push. The
+native ECS presentation and connected combat behavior remain for owner QA.
 
 ## R261 Final development checkpoint (2026-10-11)
 

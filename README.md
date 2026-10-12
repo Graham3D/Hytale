@@ -3,10 +3,10 @@
 The current engineering candidate is **R261-U7P5B**
 (`0.2.0-R261-U7P5B`) on `codex/r261-final`. It completes conditional native
 payment recovery, persistent Reflective Ward, and durable Shared Aegis with
-mutually consented trusted player allies. Offline release gates passed at the
-reviewed implementation; publication and mainline integration are verified
-separately. The Cyclone gate defaults off; R260 remains the active RPG-save
-build. See
+mutually consented trusted player allies. The reviewed implementation is on
+GitHub `main` after a non-force fast-forward, and its offline release gates
+passed. The Cyclone gate defaults off; R260 remains the active RPG-save build.
+See
 the [R261 requirement audit](docs/R261_FINAL_MATRIX.md),
 [durability contract](docs/CYCLONE_DURABILITY.md), and
 [baseline](docs/DEVELOPMENT_BASELINE.md) for verification status.
