@@ -7,8 +7,15 @@ normal production path in `HyArpgPlugin` without launch flags. Only an explicit
 `-Dhywind.cyclone.durable=false` selects the R260 compatibility path. The
 earlier SHA-256 `F1299CEFF598DD4EE67B85D95C52FD2708567FE8BA19E3483906BC70FD9D2359`
 candidate had its production gate wired but defaulted off and is superseded.
-The final corrected JAR must be rebuilt, fully verified, and recorded by
-Guardian before deployment. ReadyPath/JFR remains optional.
+The corrected JAR was built from implementation commit
+`26b0946206852f9a9ab80bd03aecf73b0230a55d` at revision
+R261QA1-U7P5B / `0.2.0-R261QA1-U7P5B`, SHA-256
+`4F610DD10371C4FFB8312A71952EE63A1DFA06C7A7458BC34E5FCB953667B635`.
+The exact-commit offline gate passed 4,148 JUnit tests in 465 reports with
+zero failures, errors, or skips, plus JaCoCo, strict SpotBugs, native package
+and asset validation, offline ReadyPath tests, and Guardian verification.
+The task branch and GitHub `main` both reached that implementation commit by
+non-force publication. ReadyPath/JFR remains optional.
 
 Before the correction, GitHub `main` was fast-forwarded non-forcibly to
 `0183f2acae08c79d30a0d477c71bdd5544f95bf6`. The R260 JAR backup at
@@ -20,8 +27,11 @@ The separate save backup at
 contains 23,266 files and 2,830,076,488 bytes, each verified byte-for-byte
 against the RPG source. Its sole excluded reparse point is a junction to the
 separate `ImmersiveNPCs` save's voice environment. Player-save data was not
-modified. Final source commit, build hash, and deployment status will be
-recorded after the authorized release gate.
+modified. The approved deployment replaced only `Saves/RPG/mods/Hywind.jar`;
+its installed SHA-256, production entrypoint, and embedded source commit match
+the verified implementation artifact above. The R260 JAR and RPG save backups
+remain outside `Saves`. No Hytale process was launched for deployment.
+Connected gameplay acceptance remains owner QA.
 
 Branch `codex/r261-qa-capture` starts from GitHub-integrated R261 mainline
 `e42b903291409bde99fde985e8e07174cbb92401`. Capture-tooling commit
@@ -46,7 +56,7 @@ JFR startup, recording readiness/recovery, legacy JAR rejection, and
 true/false/missing/ambiguous gate markers. Unflagged `-CheckOnly` passed;
 flagged `-CheckOnly` correctly rejects the still-installed R260 JAR.
 
-The active RPG save still contains R260 `Hywind.jar`, SHA-256
+Before the authorized deployment, the active RPG save contained R260 `Hywind.jar`, SHA-256
 `487C9B89274496C329A24D65C13F232ED9E01E5A4A5430E0DD5D0F808BFB23FD`.
 An identical backup was made outside `Saves`; player-save data was untouched.
 That artifact was not deployed. The optional capture will require
