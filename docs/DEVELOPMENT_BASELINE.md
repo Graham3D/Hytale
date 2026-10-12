@@ -1,5 +1,56 @@
 # HyARPG/Hywind development baseline
 
+## Chapter I skill bar and four-slot QA candidate (2026-10-12)
+
+State: **QA_PENDING**. `codex/chapter1-skill-bar` is stacked on the published
+Chapter I startup checkpoint `133dba62e2da20195515feade652d902ad2ce3b6`
+(`codex/chapter1-startup`). Its gameplay source ends at
+`2fb8b5c340d32b9864245bc2dc9f78e2a436ec68`, including source changes
+`41e327c2578eec183ccac2d5937a53b3bb81f5ed` and
+`495ad4ebf6d96d94b8380361f9282b222ff398a7`. This branch still depends
+on the unaccepted R262 bulk-attributes and R261QA2 ancestry. GitHub `main`
+was `6d3ef15ff0145532ef193c42e3b648307ee6e915` when work began; neither
+this branch nor its ancestors are accepted for integration. The primary
+checkout's unrelated changes were preserved.
+
+The provisional build identity is `R262C1BAR1-CANDIDATE` /
+`0.2.0-R262C1BAR1-CANDIDATE`, targeting the installed Chapter I `0.7.0`
+release server and assets with exact manifest requirement `=0.7.0`.
+The observed Stage 1 owner launch joined the existing `Hywind` world and
+loaded schema-12 skill01/skill02 assignments but emitted no native ability
+projection or RPG HUD-ready event. The production pre-connect completion now
+arms owner-thread installation; installation waits for `AbilitySlots` instead
+of succeeding without that component. The native Ability2/3 dispatch also
+requires the release ability-container section. Offline native-container
+tests cover assignment, projection, dispatch deduplication, reassignment,
+and clearing. The exact connected cause and restored E/R behavior still
+require owner QA.
+
+Chapter I retains two independent core Runestone cells, used by Hywind
+skill01/skill02. Ability4 is a held-item interaction, including Hywind's
+crossbow reload, and the public release API supplies no independent fourth
+Hywind skill input. Skill03 and the new skill04 are therefore assignable,
+saved, and visibly **UNBOUND**, with no false activation route. CanvasUI,
+link validation, build transfer, authoritative HUD view models, cooldown
+overlays, and commands now cover all four logical slots. The custom 3/4 HUD
+cells sit clear of native Signature and the two native ability cells.
+Schema 13 expands a valid three-entry loadout with an empty fourth entry,
+preserves an already populated fourth entry, rejects malformed array sizes,
+and keeps the repository's pre-migration checkpoint safeguard. No player
+save was modified during engineering.
+
+The source check before the final HUD placement passed 4,161 JUnit tests
+across 466 reports with zero failures or skips. Focused tests and CustomUI
+validation passed after the final source change. Strict SpotBugs passed after
+six exact findings in dormant pre-release native-patch hooks were added to
+the reviewed SpotBugs baseline; those hooks were not changed in this task.
+The exact documentation-HEAD full check, JaCoCo report, package validation,
+and Guardian completion receipt are required before publication or deployment.
+The installed Stage 1 JAR and both RPG saves remain unchanged. No server or
+client was launched by Codex; connected HUD, binding, layout, and cast QA is
+pending. Next: publish the verified branch, then deploy only with task
+authorization and have the owner test in the normal `Hywind` world.
+
 ## Chapter I Stage 1 startup candidate (2026-10-12)
 
 State: **QA_PENDING**. Branch `codex/chapter1-startup` starts from the

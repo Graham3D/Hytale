@@ -16473,4 +16473,143 @@ to instruct SpotBugs that ignoring the return value of this method is acceptable
   </FindBugsSummary>
   <ClassFeatures></ClassFeatures>
   <History></History>
+  <BugInstance type="NP_NONNULL_PARAM_VIOLATION" priority="1" rank="6" abbrev="NP" category="CORRECTNESS" instanceHash="a21800c150c4a6a8966121c1afe1da46" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="476">
+    <ShortMessage>Method call passes null to a non-null parameter</ShortMessage>
+    <LongMessage>Null passed for non-null parameter of com.hypixel.hytale.server.core.meta.MetaRegistry.registerMetaObject(Function, boolean, String, Codec) in com.inigmasgames.hytale.patch.NativeDamageReceiptHook.install(NativeDamageReceiptHook$Provider)</LongMessage>
+    <Class classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook" primary="true">
+      <SourceLine classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook" start="26" end="72" sourcefile="NativeDamageReceiptHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeDamageReceiptHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeDamageReceiptHook.java">
+        <Message>At NativeDamageReceiptHook.java:[lines 26-72]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.hytale.patch.NativeDamageReceiptHook</Message>
+    </Class>
+    <Method classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook" name="install" signature="(Lcom/inigmasgames/hytale/patch/NativeDamageReceiptHook$Provider;)Ljava/lang/AutoCloseable;" isStatic="true" primary="true">
+      <SourceLine classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook" start="30" end="35" startBytecode="0" endBytecode="144" sourcefile="NativeDamageReceiptHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeDamageReceiptHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeDamageReceiptHook.java"/>
+      <Message>In method com.inigmasgames.hytale.patch.NativeDamageReceiptHook.install(NativeDamageReceiptHook$Provider)</Message>
+    </Method>
+    <Method classname="com.hypixel.hytale.server.core.meta.MetaRegistry" name="registerMetaObject" signature="(Ljava/util/function/Function;ZLjava/lang/String;Lcom/hypixel/hytale/codec/Codec;)Lcom/hypixel/hytale/server/core/meta/MetaKey;" isStatic="false" role="METHOD_CALLED">
+      <SourceLine classname="com.hypixel.hytale.server.core.meta.MetaRegistry" start="27" end="52" startBytecode="0" endBytecode="494" sourcefile="MetaRegistry.java" sourcepath="com/hypixel/hytale/server/core/meta/MetaRegistry.java"/>
+      <Message>Called method com.hypixel.hytale.server.core.meta.MetaRegistry.registerMetaObject(Function, boolean, String, Codec)</Message>
+    </Method>
+    <Int value="4" role="INT_NULL_ARG">
+      <Message>Argument 4 is definitely null but must not be null</Message>
+    </Int>
+    <SourceLine classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook" primary="true" start="32" end="32" startBytecode="42" endBytecode="42" sourcefile="NativeDamageReceiptHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeDamageReceiptHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeDamageReceiptHook.java">
+      <Message>At NativeDamageReceiptHook.java:[line 32]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="USO_UNSAFE_STATIC_METHOD_SYNCHRONIZATION" priority="2" rank="7" abbrev="USO" category="SECURITY" instanceHash="84a2c2cd0650a829d85d22db15299a3b" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="412">
+    <ShortMessage>Instead of static synchronized methods, use private final lock objects with block synchronization</ShortMessage>
+    <LongMessage>Static synchronized method com.inigmasgames.hytale.patch.NativeDamageReceiptHook.install(NativeDamageReceiptHook$Provider) uses intrinsic lock of class com.inigmasgames.hytale.patch.NativeDamageReceiptHook for synchronization, exposing the class to untrusted code.</LongMessage>
+    <Class classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook" primary="true">
+      <SourceLine classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook" start="26" end="72" sourcefile="NativeDamageReceiptHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeDamageReceiptHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeDamageReceiptHook.java">
+        <Message>At NativeDamageReceiptHook.java:[lines 26-72]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.hytale.patch.NativeDamageReceiptHook</Message>
+    </Class>
+    <Method classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook" name="install" signature="(Lcom/inigmasgames/hytale/patch/NativeDamageReceiptHook$Provider;)Ljava/lang/AutoCloseable;" isStatic="true" primary="true">
+      <SourceLine classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook" start="30" end="35" startBytecode="0" endBytecode="144" sourcefile="NativeDamageReceiptHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeDamageReceiptHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeDamageReceiptHook.java" synthetic="true"/>
+      <Message>In method com.inigmasgames.hytale.patch.NativeDamageReceiptHook.install(NativeDamageReceiptHook$Provider)</Message>
+    </Method>
+    <SourceLine classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook" start="30" end="35" startBytecode="0" endBytecode="144" sourcefile="NativeDamageReceiptHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeDamageReceiptHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeDamageReceiptHook.java" synthetic="true">
+      <Message>At NativeDamageReceiptHook.java:[lines 30-35]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP" priority="2" rank="18" abbrev="EI" category="MALICIOUS_CODE" instanceHash="f58b44fe5b2ae6f063061b62f2a2a801" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by returning reference to mutable object</ShortMessage>
+    <LongMessage>com.inigmasgames.hytale.patch.NativeMutationHook$Mutation.source() may expose internal representation by returning NativeMutationHook$Mutation.source</LongMessage>
+    <Class classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" primary="true">
+      <SourceLine classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" start="16" end="20" sourcefile="NativeMutationHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeMutationHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeMutationHook.java">
+        <Message>At NativeMutationHook.java:[lines 16-20]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.hytale.patch.NativeMutationHook$Mutation</Message>
+    </Class>
+    <Method classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" name="source" signature="()Lcom/hypixel/hytale/component/Ref;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" start="16" end="16" startBytecode="0" endBytecode="46" sourcefile="NativeMutationHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeMutationHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeMutationHook.java"/>
+      <Message>In method com.inigmasgames.hytale.patch.NativeMutationHook$Mutation.source()</Message>
+    </Method>
+    <Field classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" name="source" signature="Lcom/hypixel/hytale/component/Ref;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" sourcefile="NativeMutationHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeMutationHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeMutationHook.java">
+        <Message>In NativeMutationHook.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.hytale.patch.NativeMutationHook$Mutation.source</Message>
+    </Field>
+    <SourceLine classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" primary="true" start="16" end="16" startBytecode="4" endBytecode="4" sourcefile="NativeMutationHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeMutationHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeMutationHook.java">
+      <Message>At NativeMutationHook.java:[line 16]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP" priority="2" rank="18" abbrev="EI" category="MALICIOUS_CODE" instanceHash="a5a308ee30de667fe026ff4828035773" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by returning reference to mutable object</ShortMessage>
+    <LongMessage>com.inigmasgames.hytale.patch.NativeMutationHook$Mutation.target() may expose internal representation by returning NativeMutationHook$Mutation.target</LongMessage>
+    <Class classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" primary="true">
+      <SourceLine classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" start="16" end="20" sourcefile="NativeMutationHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeMutationHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeMutationHook.java">
+        <Message>At NativeMutationHook.java:[lines 16-20]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.hytale.patch.NativeMutationHook$Mutation</Message>
+    </Class>
+    <Method classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" name="target" signature="()Lcom/hypixel/hytale/component/Ref;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" start="16" end="16" startBytecode="0" endBytecode="46" sourcefile="NativeMutationHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeMutationHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeMutationHook.java"/>
+      <Message>In method com.inigmasgames.hytale.patch.NativeMutationHook$Mutation.target()</Message>
+    </Method>
+    <Field classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" name="target" signature="Lcom/hypixel/hytale/component/Ref;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" sourcefile="NativeMutationHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeMutationHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeMutationHook.java">
+        <Message>In NativeMutationHook.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.hytale.patch.NativeMutationHook$Mutation.target</Message>
+    </Field>
+    <SourceLine classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" primary="true" start="16" end="16" startBytecode="4" endBytecode="4" sourcefile="NativeMutationHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeMutationHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeMutationHook.java">
+      <Message>At NativeMutationHook.java:[line 16]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="9db039bf109aa650fbc9558cfaa04a96" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.hytale.patch.NativeMutationHook$Mutation(NativeMutationHook$Kind, Ref, Ref, String, Map, ValueType, ChangeStatBehaviour) may expose internal representation by storing an externally mutable object into NativeMutationHook$Mutation.source</LongMessage>
+    <Class classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" primary="true">
+      <SourceLine classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" start="16" end="20" sourcefile="NativeMutationHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeMutationHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeMutationHook.java">
+        <Message>At NativeMutationHook.java:[lines 16-20]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.hytale.patch.NativeMutationHook$Mutation</Message>
+    </Class>
+    <Method classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" name="&lt;init&gt;" signature="(Lcom/inigmasgames/hytale/patch/NativeMutationHook$Kind;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/Ref;Ljava/lang/String;Ljava/util/Map;Lcom/hypixel/hytale/protocol/ValueType;Lcom/hypixel/hytale/protocol/ChangeStatBehaviour;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" start="19" end="20" startBytecode="0" endBytecode="222" sourcefile="NativeMutationHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeMutationHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeMutationHook.java"/>
+      <Message>In method new com.inigmasgames.hytale.patch.NativeMutationHook$Mutation(NativeMutationHook$Kind, Ref, Ref, String, Map, ValueType, ChangeStatBehaviour)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" name="source" signature="Lcom/hypixel/hytale/component/Ref;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" sourcefile="NativeMutationHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeMutationHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeMutationHook.java">
+        <Message>In NativeMutationHook.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.hytale.patch.NativeMutationHook$Mutation.source</Message>
+    </Field>
+    <LocalVariable name="source" register="2" pc="28" role="LOCAL_VARIABLE_NAMED">
+      <Message>Local variable named source</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" primary="true" start="19" end="19" startBytecode="28" endBytecode="28" sourcefile="NativeMutationHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeMutationHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeMutationHook.java">
+      <Message>At NativeMutationHook.java:[line 19]</Message>
+    </SourceLine>
+  </BugInstance>
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="f853872ceba14baf77d2198d7d05086d" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.hytale.patch.NativeMutationHook$Mutation(NativeMutationHook$Kind, Ref, Ref, String, Map, ValueType, ChangeStatBehaviour) may expose internal representation by storing an externally mutable object into NativeMutationHook$Mutation.target</LongMessage>
+    <Class classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" primary="true">
+      <SourceLine classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" start="16" end="20" sourcefile="NativeMutationHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeMutationHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeMutationHook.java">
+        <Message>At NativeMutationHook.java:[lines 16-20]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.hytale.patch.NativeMutationHook$Mutation</Message>
+    </Class>
+    <Method classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" name="&lt;init&gt;" signature="(Lcom/inigmasgames/hytale/patch/NativeMutationHook$Kind;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/Ref;Ljava/lang/String;Ljava/util/Map;Lcom/hypixel/hytale/protocol/ValueType;Lcom/hypixel/hytale/protocol/ChangeStatBehaviour;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" start="19" end="20" startBytecode="0" endBytecode="222" sourcefile="NativeMutationHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeMutationHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeMutationHook.java"/>
+      <Message>In method new com.inigmasgames.hytale.patch.NativeMutationHook$Mutation(NativeMutationHook$Kind, Ref, Ref, String, Map, ValueType, ChangeStatBehaviour)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" name="target" signature="Lcom/hypixel/hytale/component/Ref;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" sourcefile="NativeMutationHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeMutationHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeMutationHook.java">
+        <Message>In NativeMutationHook.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.hytale.patch.NativeMutationHook$Mutation.target</Message>
+    </Field>
+    <LocalVariable name="target" register="3" pc="33" role="LOCAL_VARIABLE_NAMED">
+      <Message>Local variable named target</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.hytale.patch.NativeMutationHook$Mutation" primary="true" start="19" end="19" startBytecode="33" endBytecode="33" sourcefile="NativeMutationHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeMutationHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeMutationHook.java">
+      <Message>At NativeMutationHook.java:[line 19]</Message>
+    </SourceLine>
+  </BugInstance>
 </BugCollection>
