@@ -186,7 +186,7 @@ final class RpgHud extends CustomUIHud {
         return RpgHud.class.getClassLoader().getResource("Common/UI/Custom/"+path)==null?null:path;
     }
     private static void writeCooldowns(UICommandBuilder commands,RpgHudViewModel model){
-        for(int i=0;i<2;i++){
+        for(int i=0;i<model.skills().size();i++){
             var slot=model.skills().get(i);String selector="#RpgCooldownSkill0"+(i+1);
             commands.set(selector+".Visible",slot.cooldownRemainingSeconds()>0&&!slot.skillId().isEmpty());
             commands.set(selector+".Value",CooldownSweep.progress(slot.cooldownRemainingSeconds(),slot.cooldownDurationSeconds()));

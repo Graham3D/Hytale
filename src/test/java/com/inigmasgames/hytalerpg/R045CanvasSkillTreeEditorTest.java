@@ -49,6 +49,11 @@ class R045CanvasSkillTreeEditorTest {
                 new com.inigmasgames.hytalerpg.domain.SkillId("quick_slash"));
         assertEquals(com.inigmasgames.hytalerpg.domain.LinkNodeId.SKILL03,
                 layout.authoritativeEdges(state).getFirst().targetNodeId());
+        state.linkEdges(java.util.List.of(com.inigmasgames.hytalerpg.domain.LinkEdge.create(
+                com.inigmasgames.hytalerpg.domain.LinkNodeId.PASSIVE06,
+                com.inigmasgames.hytalerpg.domain.LinkNodeId.SKILL04)));
+        assertEquals(com.inigmasgames.hytalerpg.domain.LinkNodeId.SKILL04,
+                layout.authoritativeEdges(state).getFirst().targetNodeId());
     }
     @Test void filteredTraceRecordsAuthoritativeAssignmentAndRejection() throws Exception {
         var bundle=Stage01BTestSupport.bundle();

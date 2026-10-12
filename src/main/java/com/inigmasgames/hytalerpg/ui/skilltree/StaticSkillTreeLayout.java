@@ -37,8 +37,12 @@ public final class StaticSkillTreeLayout {
 
     public SkillSlot parentSkill(PassiveSlot slot) { return PARENTS.get(slot); }
     public SkillSlot parentSkill(PassiveSlot slot,RpgPlayerState state) {
-        return slot==PassiveSlot.PASSIVE06 && state.skill(SkillSlot.SKILL03).isEmpty()
-                && state.skill(SkillSlot.SKILL04).isPresent()?SkillSlot.SKILL04:parentSkill(slot);
+        if (slot != PassiveSlot.PASSIVE06) return parentSkill(slot);
+        boolean savedFourthRoute=state.linkEdges().stream().anyMatch(edge ->
+                edge.sourceNodeId()==LinkNodeId.PASSIVE06 && edge.targetNodeId()==LinkNodeId.SKILL04);
+        return state.skill(SkillSlot.SKILL04).isPresent()
+                && (savedFourthRoute || state.skill(SkillSlot.SKILL03).isEmpty())
+                ? SkillSlot.SKILL04 : SkillSlot.SKILL03;
     }
 
     /** Materializes only complete occupied routes so every persisted candidate remains valid. */
