@@ -1,5 +1,64 @@
 # HyARPG/Hywind development baseline
 
+## Chapter I Stage 1 startup candidate (2026-10-12)
+
+State: **QA_PENDING**. Branch `codex/chapter1-startup` starts from the
+R262QA1 candidate `codex/bulk-attributes` at
+`69483c6b8071822656bed092636797ae8281fe46`; it depends on that unmerged
+feature and its R261QA2 ancestor. At task start, GitHub `main` was
+`6d3ef15ff0145532ef193c42e3b648307ee6e915` and the primary Windows
+checkout was 76 commits behind it with unrelated artwork and `AGENTS.md`
+changes. Those checkouts were preserved. No Stage 1 merge is authorized by
+deployment; connected acceptance of this feature and its dependencies remains
+pending.
+
+The Stage 1 source commit is `220b84f847687244b341d93990788ec2a336f4ed`.
+The provisional build identity is `R262C1S1-CANDIDATE` /
+`0.2.0-R262C1S1-CANDIDATE`, compiled against the installed Chapter I
+`0.7.0` release server (SHA-256
+`C3B5985B9E72727BF3BCF220923D7E61E78FE0F37CD1CD9C2A73F51E4F408FF8`)
+and release `Assets.zip`. The manifest requires exactly `=0.7.0`. The
+pre-release server patch was compile-only and absent from the copied JAR, so
+`NativePopulationProjectionHook` caused the initial setup failure. The
+release build uses the existing population projection through an ordered
+ChunkStore tick and no longer requires that patched-server class at setup.
+The old native final-selection seam is unavailable on the stock release
+server; native unspawnable-chunk recalculation can reset weights for that tick.
+The candidate logs this limitation. Other pre-release native patch seams for
+Packbound, damage receipts, and projectile receipts are not active on the
+stock release server; their dependent promotion gates remain closed and need
+separate gameplay migration and connected QA. No gameplay acceptance is
+claimed.
+
+The release asset audit found the new stock
+`Dungeon_Klops_Scrap_Trader` native barter route. Its packaged role is the
+stock release role with only `OpenBarterShop` replaced by the existing
+`HywindOpenBarterShop` spatial owner gate. The asset comparison and spatial
+grant audit pass. One healing probe live-save guard now targets the release
+`UserData/Saves/Hywind` folder; the original pre-release `RPG` save and player
+data were not modified.
+
+Offline verification: release-API `compileJava`, native proc metadata audit,
+CustomUI validation (88 documents), campaign biome coverage, spatial grant
+asset audit, exact server-version package validator (19,544 entries, 2,255
+classes, zero ImmersiveNPCs payload entries), and focused JUnit tests passed.
+The focused test reports include five population plan, two release population
+projection, and one R261QA2 startup registration test, all with zero failures.
+No standalone server or connected client was launched. No newer server log is
+available, so startup, world loading, and player join remain unverified.
+
+The exact-commit JAR SHA-256 is
+`797AA45221AF9ADF9004508843C3F9AD5B84AE6F1BA15A961F9FA2D42129A72E`.
+The prior R262QA1 JAR (SHA-256
+`6873F21FD266E1AA1D6B3EB634CA2254E85C97B111EA23BA98A4B7F00A80A314`)
+was backed up outside `Saves` at
+`C:/Users/Zemio/AppData/Roaming/Hytale/HywindJarBackups/Hywind-R262QA1-before-Chapter1-20261012T110639.jar`.
+Only `UserData/Saves/Hywind/mods/Hywind.jar` was replaced. Its checksum,
+manifest, and embedded source commit were verified after deployment. Next:
+owner launches Chapter I, enters the `Hywind` world, and supplies the new log
+or startup findings. Do not integrate this dependent branch until connected
+acceptance and dependency review.
+
 ## R262QA1 bulk attribute allocation QA candidate (2026-10-11)
 
 Branch `codex/bulk-attributes` starts from GitHub `main` at
