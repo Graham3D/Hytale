@@ -1,16 +1,17 @@
 # Hywind / HyARPG development baseline
 
-The current development checkpoint is **R261FDEV-U7P5B**
-(`0.2.0-R261FDEV-U7P5B`) on `codex/r261-final`. It adds conditional native
-payment recovery for plain Cyclone barriers to R261-C. Reflective Ward
-reconnect behavior and durable Shared Aegis remain release blockers, so this
-branch is not a completed R261 release and must not be merged or deployed.
-The Cyclone gate defaults off; R260 remains the active RPG-save build. See
+The current engineering candidate is **R261-U7P5B**
+(`0.2.0-R261-U7P5B`) on `codex/r261-final`. It completes conditional native
+payment recovery, persistent Reflective Ward, and durable Shared Aegis with
+mutually consented trusted player allies. Offline release gates passed at the
+reviewed implementation; publication and mainline integration are verified
+separately. The Cyclone gate defaults off; R260 remains the active RPG-save
+build. See
 the [R261 requirement audit](docs/R261_FINAL_MATRIX.md),
 [durability contract](docs/CYCLONE_DURABILITY.md), and
 [baseline](docs/DEVELOPMENT_BASELINE.md) for verification status.
 
-The current GitHub `main` gameplay baseline is **R250-U7P5B**
+The GitHub `main` gameplay baseline before R261 integration is **R250-U7P5B**
 (`0.2.0-R250-U7P5B`). [PR #1](https://github.com/Graham3D/Hytale/pull/1)
 merged when the recovery branch fast-forwarded `main` to
 `e4927d06e9a3071bc2023aafec68b8fa68d76268`. Later documentation commits
