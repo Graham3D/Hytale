@@ -29,7 +29,7 @@ Neither stage has yet been connected-QA accepted or deployed.
 
 The installed stock release server is Hytale 0.7.0, revision
 `648ebf375a034beabf119d7d790cd11d4f665ff4`, SHA-256
-`c3b5985b9e72727bf3f220923d7e61e78fe0f37cd1cd9c2a73f51e4f408ff8`.
+`c3b5985b9e72727bf3bcf220923d7e61e78fe0f37cd1cd9c2a73f51e4f408ff8`.
 The exact `WorldSpawnJobSystems.Ticking`, `WorldSpawnJobSystems`,
 `FlockPlugin`, `NPCPlugin`, `SpawnJobData`, `NPCEntity`, and `WorldSupport`
 class bytes were compared with the installed, historically functioning
@@ -107,15 +107,49 @@ capabilities, immunity rules, caps, inheritance, and frozen birth descriptors;
 no coefficients, weights, spawn density, reward ownership, or QA economic
 exclusion changed.
 
+### Continuation verification (V2)
+
+The repeated Stage 3 attachment has the same SHA-256 as the original brief.
+This continuation uses the existing published Stage 3 source
+`3e359b8e036ad023c9c8bd93064bcb0f78068f83`; it does not switch to primary
+`main` or import the concurrent HRO diagnostics branch.
+
+- `EnemyNativeStagingTest` now exercises `EnemyStaging.releaseGroup` on real
+  release ECS refs created through the existing capture fixture. An incomplete
+  roster leaves every actor staged. A complete release removes staging-owned
+  Frozen/Invulnerable/Intangible flags, preserves independently owned native
+  protection, leaves the exact NPC refs alive, rejects duplicate release, and
+  stops the incoming-damage staging gate from blocking the unprotected actor.
+  The fixture supplies native asset registries and inert World/WorldConfig
+  identity objects without constructing, starting, or ticking a world/server.
+- `ChapterIEliteLoadTest` runs 480 admission attempts in four waves, with
+  12 overlapping durable births per wave, across four horizontal cells. It
+  holds write acknowledgments, delivers them out of order through the real
+  `NativeBirthContinuation`, and mixes pending and published leases. Under
+  unchanged production limits, 48 births publish, 36 attempts receive the cell
+  limit, and 396 receive the world limit. Duplicate acknowledgments cannot
+  republish. All 96 distinct fixture actors unload through the existing
+  suspension/capacity owners; restart preserves all 48 roots, affixes, and
+  suspended records without occupying fresh native capacity.
+
+The new checks pass against the existing production implementation. No further
+release-specific gameplay fix was demonstrated. This is targeted strengthening
+of offline verification, not a claim that synthetic fixture births are real
+native spawn-job or connected-client evidence. Real NPC allocation/AI, full
+native birth-owner scheduling, visible presentation, and connected weapon/skill
+combat remain the owner's post-deployment acceptance checks. The prior Stage 1
+and Stage 2 repairs remain the actual corrections for the demonstrated release
+blockers.
+
 ## Verification and artifact boundary
 
-Source metadata: revision `R262C1S3-CANDIDATE`, version
-`0.2.0-R262C1S3-CANDIDATE`, exact `ServerVersion =0.7.0`. The final source
+Source metadata: revision `R262C1S3V2-CANDIDATE`, version
+`0.2.0-R262C1S3V2-CANDIDATE`, exact `ServerVersion =0.7.0`. The final source
 commit, full JUnit count, package SHA-256, and Guardian state are recorded in
 the generated `build/guardian/verification.json` after committed verification;
 a HEAD-bound artifact hash cannot be placed in this tracked report without
-changing HEAD. The candidate plugin is `build/stage3/Hywind.jar`; its matching
-native binary is `build/stage3/HytaleServer-packbound.jar`. The latter must
+changing HEAD. The candidate plugin is `build/stage3-v2/Hywind.jar`; its matching
+native binary is `build/stage3-v2/HytaleServer-packbound.jar`. The latter must
 retain the Stage 2 reviewed hash
 `e0bcd36c7a981949d2c15b1b48f1cdd7f9623373269ef03b58f2d9b9da7f6edf`.
 The exact release compile, full test lanes, patch regression, package/asset
