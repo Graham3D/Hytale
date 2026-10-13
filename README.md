@@ -1,8 +1,10 @@
 # Hywind / HyARPG development baseline
 
-The current Chapter I inventory engineering candidate is **R262C1INV1-CANDIDATE**
-(`0.2.0-R262C1INV1-CANDIDATE`) on `codex/chapter1-inventory-recovery`, targeting Hytale
-`0.7.0`. It builds on the unmerged R262QA1 bulk attribute candidate and carries the R261
+The current Chapter I Stage 1 engineering candidate is **R262C1S1-CANDIDATE**
+(`0.2.0-R262C1S1-CANDIDATE`) on `codex/chapter1-stage1-world-encounter-recovery`, targeting Hytale
+`0.7.0`. It restores the two verified release-world identities and bounds encounter-context
+admission while preserving the prior inventory candidate and historical encounter records.
+It builds on the unmerged R262QA1 bulk attribute candidate and carries the R261
 durable Cyclone, persistent Reflective Ward, and Shared Aegis work. Durable
 Cyclone is enabled by default in the production entrypoint for normal Hytale
 launches. `-Dhywind.cyclone.durable=false` is an explicit rollback option.

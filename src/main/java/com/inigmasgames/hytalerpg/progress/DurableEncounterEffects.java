@@ -51,7 +51,7 @@ public final class DurableEncounterEffects implements AutoCloseable {
     }
     public synchronized Reservation reserve(){
         if(closed||failure!=null)throw new IllegalStateException("ENCOUNTER_EFFECTS_UNAVAILABLE",failure);
-        if(pending>=MAX_PENDING){rejections++;throw new FileEncounterStore.CapacityRejected();}
+        if(pending>=MAX_PENDING){rejections++;throw new FileEncounterStore.CapacityRejected("PENDING_DURABLE_EFFECTS",pending,MAX_PENDING);}
         pending++;var lease=new Reservation();reservations.add(lease);return lease;
     }
     /** Finite predecessor snapshot. Capture BEFORE submitting dependent work on this executor. */

@@ -30,7 +30,11 @@ public final class PersistentEncounterRuntime implements AutoCloseable {
     private static final class Attachment {
         CompletableFuture<Void> tail=new CompletableFuture<>();
         final Set<UUID> contributors=new LinkedHashSet<>();
+        final String role;
+        final Optional<EnemyRewardRegistry.Spawn> candidate;
+        final CompletableFuture<Boolean> receipt=new CompletableFuture<>();
         boolean detached,closing;
+        Attachment(String role,Optional<EnemyRewardRegistry.Spawn> candidate){this.role=role;this.candidate=candidate;}
     }
     /** Immutable birth values only; native publication must return to the owning world thread. */
     public synchronized CompletionStage<EnemyBirthPlan> reserveEnemyBirth(EnemyBirthPlan plan){
@@ -128,12 +132,25 @@ public final class PersistentEncounterRuntime implements AutoCloseable {
     public synchronized CompletionStage<Boolean> attachNative(UUID world,UUID enemy,String role,Optional<EnemyRewardRegistry.Spawn> candidate){
         if(stopping)throw new IllegalStateException("ENCOUNTER_SHUTDOWN_ADMISSION_CLOSED");
         if(exclusionFrontiers.containsKey(new Key(world,enemy)))throw new IllegalStateException("ENCOUNTER_PERMANENTLY_DISQUALIFIED");
-        var key=new Key(world,enemy);if(attachments.containsKey(key)||finalizing.containsKey(key))throw new IllegalStateException("ENCOUNTER_CONTEXT_GENERATION_BUSY");
-        if(attachments.size()>=EncounterContributions.MAX_ENCOUNTERS)throw new FileEncounterStore.CapacityRejected();
+        var key=new Key(world,enemy);
+        var existing=attachments.get(key);
+        if(existing!=null){
+            if(!existing.closing&&existing.role.equals(role)&&sameCandidate(existing.candidate,candidate))
+                return existing.receipt.minimalCompletionStage();
+            throw new IllegalStateException("ENCOUNTER_CONTEXT_GENERATION_BUSY");
+        }
+        if(finalizing.containsKey(key))throw new IllegalStateException("ENCOUNTER_CONTEXT_GENERATION_BUSY");
+        if(attachments.size()>=EncounterContributions.MAX_ENCOUNTERS)
+            throw new FileEncounterStore.CapacityRejected("LIVE_ATTACHMENTS",attachments.size(),EncounterContributions.MAX_ENCOUNTERS);
         try(var lease=contextLoads.reserve()){
             var predecessor=store.loadFrontier();
-            var attachment=new Attachment();var receipt=new CompletableFuture<Boolean>();attachments.put(key,attachment);
-            attachment.tail=receipt.thenApply(ignored->null);
+            var attachment=new Attachment(role,candidate);var receipt=attachment.receipt;attachments.put(key,attachment);
+            CompletableFuture<Void> initialTail=receipt.thenApply(ignored->null);attachment.tail=initialTail;
+            receipt.whenComplete((accepted,error)->{
+                if(Boolean.FALSE.equals(accepted))synchronized(this){
+                    if(attachments.get(key)==attachment&&attachment.tail==initialTail)attachments.remove(key);
+                }
+            });
             var task=lease.submit(CompletableFuture.completedStage(null),ignored->{
                 try{receipt.complete(attachPrepared(world,enemy,role,candidate,predecessor));}
                 catch(Throwable error){unavailable=true;receipt.completeExceptionally(error);throw error;}
@@ -141,6 +158,15 @@ public final class PersistentEncounterRuntime implements AutoCloseable {
             task.whenComplete((ignored,error)->{if(error!=null){unavailable=true;receipt.completeExceptionally(error);}});
             return receipt.minimalCompletionStage();
         }
+    }
+    private static boolean sameCandidate(Optional<EnemyRewardRegistry.Spawn> left,Optional<EnemyRewardRegistry.Spawn> right){
+        if(left.isEmpty()||right.isEmpty())return left.isEmpty()&&right.isEmpty();
+        var a=left.orElseThrow();var b=right.orElseThrow();
+        return a.world().equals(b.world())&&a.enemy().equals(b.enemy())&&a.roleId().equals(b.roleId())
+                &&a.combatIdentity().equals(b.combatIdentity())&&a.biomeKey().equals(b.biomeKey())
+                &&a.level()==b.level()&&a.rank()==b.rank()&&a.rarity()==b.rarity()
+                &&a.registryProfile().equals(b.registryProfile())&&Objects.equals(a.milestone(),b.milestone())
+                &&Objects.equals(a.combat(),b.combat())&&Objects.equals(a.enemyRewards(),b.enemyRewards());
     }
     public synchronized boolean observing(UUID world,UUID enemy){
         var key=new Key(world,enemy);var a=attachments.get(key);

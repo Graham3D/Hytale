@@ -27,7 +27,12 @@ public final class FileEncounterStore implements AutoCloseable {
     public enum JournalBoundary { AFTER_APPEND, AFTER_FORCE, AFTER_CHECKPOINT_FILE, AFTER_CHECKPOINT_POINTER, AFTER_CHECKPOINTS, AFTER_ROTATION, AFTER_FLOOR }
     public enum GroupBoundary { BEFORE_DEQUEUE, AFTER_FIRST_FRAME, AFTER_GROUP_APPEND, BEFORE_FORCE, AFTER_GROUP_FORCE, BEFORE_ACKNOWLEDGEMENTS, MID_ACKNOWLEDGEMENTS, ANOTHER_GROUP_QUEUED, CHECKPOINT_WORKER_STARTED }
     public enum DurabilityBoundary { PREPARE_CREATED, PREPARE_HEADER_WRITTEN, PREPARE_FORCED, ACTIVATION_WRITTEN, ACTIVATION_FORCED, BEFORE_ACTIVE_SWITCH, AFTER_ACTIVE_SWITCH, BUNDLE_SERIALIZATION, BUNDLE_PARTIAL_WRITE, BUNDLE_BEFORE_FORCE, BUNDLE_AFTER_FORCE, BUNDLES_DURABLE, MANIFEST_PARTIAL_WRITE, MANIFEST_BEFORE_FORCE, MANIFEST_AFTER_FORCE, MANIFEST_PUBLISHED, BEFORE_WAL_RETIRE, DURING_WAL_RETIRE }
-    public static final class CapacityRejected extends IllegalStateException { public CapacityRejected(){super("ENCOUNTER_PERSISTENCE_CAPACITY");} }
+    public static final class CapacityRejected extends IllegalStateException {
+        public CapacityRejected(){super("ENCOUNTER_PERSISTENCE_CAPACITY");}
+        public CapacityRejected(String boundary,int occupied,int limit){
+            super("ENCOUNTER_PERSISTENCE_CAPACITY:"+boundary+":"+occupied+"/"+limit);
+        }
+    }
     private record ActionRootHighWater(UUID world,UUID encounter,UUID logicalActor,long generation,long lastReserved){
         ActionRootHighWater{
             Objects.requireNonNull(world);Objects.requireNonNull(encounter);Objects.requireNonNull(logicalActor);

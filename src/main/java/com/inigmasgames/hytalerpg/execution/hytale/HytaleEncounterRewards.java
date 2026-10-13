@@ -941,13 +941,32 @@ public final class HytaleEncounterRewards implements AutoCloseable {
     private void presentNativeHostileName(Store<EntityStore> store,Ref<EntityStore> ref){
         if(difficultyCombat!=null)difficultyCombat.presentNativeHostileName(store,ref);
     }
+    static boolean needsEncounterContextLoad(AddReason reason,Optional<EnemyRewardRegistry.Spawn> candidate){
+        // LOAD can restore an existing durable context. A new ineligible SPAWN cannot.
+        return reason!=AddReason.SPAWN||candidate.isPresent();
+    }
     private void attachNativeCombat(Store<EntityStore> store,UUID world,UUID enemy,String role,Optional<EnemyRewardRegistry.Spawn> spawn,AddReason reason,Object ticket){
         var nativeWorld=store.getExternalData().getWorld();
+        // A fresh actor without an authored spawn has no historical context to restore.
+        // Keep the native projection ticket lifecycle, but do not consume a durable load slot.
+        if(!needsEncounterContextLoad(reason,spawn)){
+            if(difficultyCombat!=null)nativeWorld.execute(()->safely("DIFFICULTY_NATIVE_PROJECTION",()->
+                    difficultyCombat.ready(nativeWorld.getEntityStore().getStore(),enemy,ticket,Optional.empty(),true)));
+            return;
+        }
         attachObserved(world,enemy,role,spawn).whenComplete((attached,error)->{
             // The asynchronous closure carries immutable snapshots/IDs only; native work is reacquired on its world queue.
-            if(error!=null)HytaleDamageLifecycleSystems.combatNpcEvent(world,enemy,"NOT_APPLIED",
-                    Map.of("runtimeRole",role,"reason","ENCOUNTER_ATTACHMENT_FAILED",
-                            "errorType",error.getClass().getSimpleName()));
+            if(error!=null){
+                var cause=error instanceof java.util.concurrent.CompletionException&&error.getCause()!=null?error.getCause():error;
+                synchronized(this){if(!failureLogged){failureLogged=true;
+                    com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(
+                            "RPG_ENCOUNTER_FAILURE boundary=NATIVE_CONTEXT_LOAD_ASYNC error=%s detail=%s awardsUnavailable=%s failClosed=true handoff=%s",
+                            cause.getClass().getName(),String.valueOf(cause.getMessage()),runtime.unavailable(),runtime.handoffMetrics());
+                }}
+                HytaleDamageLifecycleSystems.combatNpcEvent(world,enemy,"NOT_APPLIED",
+                        Map.of("runtimeRole",role,"reason","ENCOUNTER_ATTACHMENT_FAILED",
+                                "errorType",cause.getClass().getSimpleName()));
+            }
             var saved=error==null&&attached?runtime.spawn(world,enemy):Optional.<EnemyRewardRegistry.Spawn>empty();
             if(error==null&&attached)emit(null,RpgTraceEventType.ENCOUNTER_STARTED,enemy.toString(),Map.of("world",world,"enemy",enemy,"runtimeRole",role,
                     "canonicalRole",saved.map(EnemyRewardRegistry.Spawn::combatIdentity).orElse("UNKNOWN"),"nativeAddReason",reason.name(),"eventId",saved.map(EnemyRewardRegistry.Spawn::eventId).orElse("")));
@@ -1149,7 +1168,7 @@ public final class HytaleEncounterRewards implements AutoCloseable {
             // explicit incomplete evidence, not permission to reward from a partial ledger.
             runtime.rejectIncompleteNativeObservation();
             synchronized(this){if(failureLogged)return;failureLogged=true;}
-            com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log("RPG_ENCOUNTER_FAILURE boundary=%s error=%s detail=%s awardsUnavailable=%s failClosed=true",boundary,error.getClass().getName(),String.valueOf(error.getMessage()),runtime.unavailable());
+            com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log("RPG_ENCOUNTER_FAILURE boundary=%s error=%s detail=%s awardsUnavailable=%s failClosed=true handoff=%s",boundary,error.getClass().getName(),String.valueOf(error.getMessage()),runtime.unavailable(),runtime.handoffMetrics());
             emit(null,RpgTraceEventType.ENCOUNTER_REWARD_REJECTED,"",Map.of("boundary",boundary,"error",String.valueOf(error.getMessage()),"awardsUnavailable",runtime.unavailable()));
         }
     }

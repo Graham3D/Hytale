@@ -1,5 +1,25 @@
 # HyARPG/Hywind development baseline
 
+## Chapter I Stage 1 world and encounter recovery (2026-10-12)
+
+State: **ENGINEERING_READY / QA_PENDING** on dependent
+`codex/chapter1-stage1-world-encounter-recovery`, based on Stage 0 commit
+`0ed8d6c80a84696a2d923771cfd100a661812daa` and the deployed INV1
+source commit `afdf9bfbce9d5fb395bd68848833480a849f0e0b`. Build revision
+`R262C1S1-CANDIDATE`, version `0.2.0-R262C1S1-CANDIDATE`, exact server
+requirement `=0.7.0`. The Stage 1 report at
+[world and encounter recovery](release-migration/STAGE_1_WORLD_IDENTITY_AND_ENCOUNTER_RECOVERY.md)
+records the scoped code, evidence, tests, and owner QA gate. Exact final source
+commit, package hash, and offline check log are independently bound in
+`build/guardian/verification.json` after the final committed verification;
+Git history identifies this report commit. No active `Hywind` or historical
+`RPG` save, installed JAR, native server binary, combat formula, Elite rule,
+or gear economy was changed. The INV1 JAR remains the active release candidate;
+S1 is prepared offline for separately authorized deployment. Connected owner
+QA remains pending; this dependent branch and its unaccepted ancestors must
+not be merged to `main` yet. The older `AGENTS.md` save-target wording remains
+untouched; the owner's explicit `Hywind` selection governs this work.
+
 ## Chapter I Stage 0 regression inventory (2026-10-12)
 
 State: **ENGINEERING_READY, investigation only** on dependent
