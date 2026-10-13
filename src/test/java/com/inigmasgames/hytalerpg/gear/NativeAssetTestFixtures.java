@@ -336,6 +336,11 @@ public final class NativeAssetTestFixtures implements AutoCloseable {
     public void loadInstalledAnimation(String id) throws IOException {
         var zipPath = Path.of(System.getProperty("user.home"), "AppData", "Roaming", "Hytale",
                 "install", "pre-release", "package", "game", "latest", "Assets.zip");
+        loadInstalledAnimation(id, zipPath);
+    }
+
+    /** Select the actual installed release assets without changing historical qualification fixtures. */
+    public void loadInstalledAnimation(String id, Path zipPath) throws IOException {
         try (var zip = new ZipFile(zipPath.toFile())) {
             var entry = zip.stream().filter(e -> e.getName().startsWith("Server/Item/Animations/")
                     && e.getName().endsWith("/"+id+".json")).findFirst().orElseThrow(() -> new IOException("Installed animation "+id));
@@ -344,7 +349,7 @@ public final class NativeAssetTestFixtures implements AutoCloseable {
                 json = new String(input.readAllBytes(), StandardCharsets.UTF_8);
             }
             var document = BsonDocument.parse(json);
-            if (document.containsKey("Parent")) loadInstalledAnimation(document.getString("Parent").getValue());
+            if (document.containsKey("Parent")) loadInstalledAnimation(document.getString("Parent").getValue(), zipPath);
             registerCommonAssets(document);
             // decode reads Parent from the source document. Dynamic RawAsset buffers
             // used by action publication are already flattened and deliberately have no parent key.

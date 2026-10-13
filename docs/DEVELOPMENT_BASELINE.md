@@ -43,13 +43,55 @@ and Stage 4 overlaps. HRO Stage 2 requires a separate assignment. The primary
 Windows `main` checkout remains dirty and behind remote `main`; publishing
 this feature branch does not synchronize it.
 
+## Chapter I Stage 4 natural equipment and reward recovery (2026-10-12)
+
+Candidate: **ENGINEERING_READY / QA_PENDING** after the committed completion
+gates in the [Stage 4 report](release-migration/STAGE_4_NATURAL_GEAR_AND_REWARD_DELIVERY_RECOVERY.md).
+Branch `codex/chapter1-stage4-gear-loot-recovery`, worktree `C:\hystage4`,
+parent Stage 3 `d28d92f49e7639a6c75da71a810088918456b79b`.
+Version `0.2.0-R262C1S4-CANDIDATE`, revision `R262C1S4-CANDIDATE`, release API
+`0.7.0`, exact requirement `=0.7.0`. Death-share XP now uses the existing
+frozen reward-context helper, and automatic pickup waits for a live native
+item position. Existing generation, drop probabilities, claims, receipts,
+spatial/native inventory owners and Stage 1–3 behavior are preserved.
+
+New stateful tests compose natural birth/death, interrupted delivery, frozen
+MF/gear and pickup custody across restarts, plus native ECS world-item
+projection/deferral/cleanup. Full committed offline check results, exact
+source commit and artifact SHA-256 are bound in
+`build/guardian/verification.json` and `build/stage4/deployment-manifest.json`.
+The matching native patch remains
+`e0bcd36c7a981949d2c15b1b48f1cdd7f9623373269ef03b58f2d9b9da7f6edf`.
+Publication and integration identities are recorded in
+`build/stage4/integration.json` and the corresponding GitHub history.
+
+The owner's explicit Stage 4 instruction authorizes safe integration of this
+reviewed cumulative migration candidate into GitHub `main` after engineering
+completion. This supersedes the historical unmerged instructions in earlier
+stage entries below. It does **not** mark any connected gameplay accepted.
+At task start `origin/main` was
+`6d3ef15ff0145532ef193c42e3b648307ee6e915`, 26 commits behind Stage 3.
+The cumulative integration includes startup, four-slot/readiness/inventory
+recovery and Stage 0–4, with their existing bulk-attribute ancestor. It excludes
+the separate unfinished `codex/hro-stage1` task, which must reconcile the new
+main baseline before integration. Do not retire dependency worktrees yet.
+
+No artifact is installed. The authoritative release `UserData/Saves/Hywind`
+still has INV1; the installed server is stock. Both saves, the primary
+checkout's artwork/uncommitted work and protected AGENTS.md are preserved.
+The older AGENTS.md RPG-target wording is not applied to release deployment.
+The primary local `main` remains behind and dirty; a GitHub integration does
+not synchronize it. Next action is separately authorized paired deployment
+and owner-connected QA, then repair any reported failure without discarding
+the existing architecture. Source integration is not gameplay acceptance.
+
 ## Chapter I Stage 3 natural Elite and affix recovery (2026-10-12)
 
 State: **ENGINEERING_READY / QA_PENDING** on dependent branch
 `codex/chapter1-stage3-elite-restoration`, parent Stage 2 commit
 `b5bd3585fb69bcd5f615555cebfea2a2d9d7c88f`. Stage 1, Stage 2, and the
 earlier cumulative ancestors remain unaccepted and unmerged. Build revision
-`R262C1S3-CANDIDATE`, version `0.2.0-R262C1S3-CANDIDATE`, exact server
+`R262C1S3V2-CANDIDATE`, version `0.2.0-R262C1S3V2-CANDIDATE`, exact server
 requirement `=0.7.0`. The [Stage 3 engineering report](release-migration/STAGE_3_NATURAL_ELITE_AND_AFFIX_RECOVERY.md)
 records the release native class audit, actual pre-release/release evidence,
 existing owners and regression coverage. The natural spawn and flock classes
@@ -64,6 +106,19 @@ server and INV1 JAR, both saves, and the dirty primary checkout are untouched.
 Deployment requires separate authorization and matching-artifact installation.
 Owner-operated connected natural spawn, combat, presentation, and persistence
 QA remains pending. Do not merge the dependent work into `main` yet.
+
+The Stage 3 continuation starts from published commit
+`3e359b8e036ad023c9c8bd93064bcb0f78068f83`. It adds native ECS whole-roster
+staging release checks and a 480-attempt workload with 48 durable publications,
+overlapping pending/active leases, duplicate acknowledgments, suspension, and
+restart. The production limits, spawn probabilities, and gameplay owners are
+unchanged. The matching artifacts and exact final source/checksums are in
+`build/stage3-v2/deployment-manifest.json`; the committed offline completion
+receipt is `build/guardian/verification.json`. The separate, unfinished
+`codex/hro-stage1` diagnostics branch was observed based on `3e359b8e`; its
+changes are not included here and must reconcile this follow-up before its
+own integration. Publication is to the existing Stage 3 remote branch;
+`origin/main` remains `6d3ef15ff0145532ef193c42e3b648307ee6e915`.
 
 ## Chapter I Stage 2 native compatibility and combat recovery (2026-10-12)
 

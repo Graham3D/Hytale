@@ -186,7 +186,7 @@ public final class EncounterContributions {
         for(var group:groups.values()){
             // Explicit conservative engineering policy for the unspecified mixed-level common party pot.
             int commonLevel=group.stream().mapToInt(Participant::level).max().orElseThrow();
-            long pot=e.spawn.level()>0?ProgressionMath.enemyReward(e.spawn.level(),e.spawn.rank(),e.spawn.rarity(),commonLevel):0;
+            long pot=e.spawn.level()>0?e.spawn.rewardXp(commonLevel):0;
             long xp=e.spawn.level()>0?ProgressionMath.equalShare(pot,group.size()):0;
             group.stream().sorted(Comparator.comparing(p->p.player().toString())).forEach(p->shares.add(new Share(p.player(),xp,e.spawn.level()>0?e.spawn.rank().insight:0,commonLevel,group.size(),p.learning())));
         }

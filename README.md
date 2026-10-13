@@ -11,14 +11,27 @@ HRO Stages 2 and 3 are separate assignments.
 
 The parent Chapter I Stage 3 engineering candidate is **R262C1S3-CANDIDATE**
 (`0.2.0-R262C1S3-CANDIDATE`) on `codex/chapter1-stage3-elite-restoration`,
+
+The current Chapter I Stage 4 engineering candidate is **R262C1S4-CANDIDATE**
+(`0.2.0-R262C1S4-CANDIDATE`) on `codex/chapter1-stage4-gear-loot-recovery`,
+targeting Hytale `0.7.0`. Stage 4 restores frozen natural-death reward sharing
+and requires a live native world item before automatic pickup. Existing loot
+profiles, drop rates, generation and inventory custody are preserved. The
+owner authorized safe integration into GitHub `main` after engineering
+verification; deployment and connected gameplay acceptance remain pending.
+See the [Stage 4 report](docs/release-migration/STAGE_4_NATURAL_GEAR_AND_REWARD_DELIVERY_RECOVERY.md)
+and generated `build/stage4/integration.json` for the final integration receipt.
+
+The inherited Stage 3 candidate is **R262C1S3V2-CANDIDATE**,
 targeting Hytale `0.7.0`. It retains the Stage 1 release-world identity and
 encounter recovery and the Stage 2 version-pinned native patch and combat
 receipts. Stage 3 verifies the existing natural Elite birth and affix pipeline
 against the release world and pins the native spawn/flock binary seam. No new
 spawn or affix framework was needed: the reviewed release classes are byte-for-byte
-identical to their functioning pre-release counterparts. The paired artifacts
+identical to their functioning pre-release counterparts. V2 adds native ECS
+staging-release assertions and overlapping durable-birth load coverage. The paired artifacts
 remain offline; connected QA is pending. See the [Stage 3 report](docs/release-migration/STAGE_3_NATURAL_ELITE_AND_AFFIX_RECOVERY.md).
-It builds on the unmerged R262QA1 bulk attribute candidate and carries the R261
+It builds on the R262QA1 bulk attribute candidate and carries the R261
 durable Cyclone, persistent Reflective Ward, and Shared Aegis work. Durable
 Cyclone is enabled by default in the production entrypoint for normal Hytale
 launches. `-Dhywind.cyclone.durable=false` is an explicit rollback option.
@@ -70,7 +83,7 @@ Run validation from an isolated worktree based on the latest verified source:
 
 ```powershell
 .\gradlew.bat --offline --no-daemon check --console=plain
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/Test-HyArpgPackage.ps1 -JarPath build/libs/HyARPG.jar -ExpectedVersion 0.2.0-R262C1INV1-CANDIDATE -ExpectedRevision R262C1INV1-CANDIDATE -ExpectedServerVersion '=0.7.0'
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tools/Test-HyArpgPackage.ps1 -JarPath build/libs/HyARPG.jar -ExpectedVersion 0.2.0-R262C1S4-CANDIDATE -ExpectedRevision R262C1S4-CANDIDATE -ExpectedServerVersion '=0.7.0'
 ```
 
 The full `check` compiles source and runs RPG, native-control, CanvasUI, and

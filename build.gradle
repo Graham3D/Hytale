@@ -232,6 +232,7 @@ tasks.test {
     exclude '**/NativeWorkspaceGridTest*'
     exclude '**/NativeGearTargetGridTest*'
     exclude '**/NativeHookLifecycleTest*'
+    exclude '**/NativeGearWorldProjectionTest*'
     exclude '**/NativePatchGateTest*'
     exclude '**/GearStatusBindingsTest*'
     exclude '**/GearStatusAcceptanceIntegrationTest*'
@@ -265,6 +266,7 @@ tasks.register('nativeControlTest', Test) {
     include '**/R261Qa2StartupRegistrationTest.class'
     include '**/R244PopulationProjectionTest.class'
     include '**/NativeHookLifecycleTest.class'
+    include '**/NativeGearWorldProjectionTest.class'
     include '**/NativePatchGateTest.class'
     // Include native test classes before forking, avoiding empty worker JVMs.
         ['NativeAffix*Test', 'ManagedCarrierProductionTest', 'GearCombatProductionTest',

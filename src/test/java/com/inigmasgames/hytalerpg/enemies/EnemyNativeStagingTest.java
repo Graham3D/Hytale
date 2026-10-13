@@ -19,6 +19,7 @@ class EnemyNativeStagingTest {
         var registry=new ComponentRegistry<EntityStore>();
         var instance=EntityModule.class.getDeclaredField("instance");instance.setAccessible(true);var previous=instance.get(null);
         try{
+            EnemyNativeOutgoingTest.assets();
             var unsafeType=Class.forName("sun.misc.Unsafe");var field=unsafeType.getDeclaredField("theUnsafe");field.setAccessible(true);
             var module=unsafeType.getMethod("allocateInstance",Class.class).invoke(field.get(null),EntityModule.class);
             var frozen=registry.registerComponent(Frozen.class,Frozen::get);
@@ -51,7 +52,21 @@ class EnemyNativeStagingTest {
             }
             var npcType=registry.registerComponent(NPCEntity.class,()->{throw new AssertionError("Fixture supplies native NPC explicitly");});
             var nativeTypes=EntityModule.class.getDeclaredField("classToComponentType");nativeTypes.setAccessible(true);nativeTypes.set(module,Map.of(NPCEntity.class,npcType));
-            var store=registry.addStore(null,new EnemyNativeOutgoingTest.Resources());
+            // Native ECS only: no World constructor, server, scheduler or saved world is started.
+            var nativeWorld=(com.hypixel.hytale.server.core.universe.world.World)unsafeType
+                    .getMethod("allocateInstance",Class.class).invoke(field.get(null),
+                            com.hypixel.hytale.server.core.universe.world.World.class);
+            var config=(com.hypixel.hytale.server.core.universe.world.WorldConfig)unsafeType
+                    .getMethod("allocateInstance",Class.class).invoke(field.get(null),
+                            com.hypixel.hytale.server.core.universe.world.WorldConfig.class);
+            config.setUuid(world);
+            var configField=nativeWorld.getClass().getDeclaredField("worldConfig");configField.setAccessible(true);
+            configField.set(nativeWorld,config);
+            var external=new EntityStore(nativeWorld);
+            var store=registry.addStore(external,new EnemyNativeOutgoingTest.Resources());
+            var indexField=EntityStore.class.getDeclaredField("entitiesByUuid");indexField.setAccessible(true);
+            @SuppressWarnings("unchecked")
+            var nativeIndex=(Map<UUID,Ref<EntityStore>>)indexField.get(external);
             java.util.function.IntFunction<Holder<EntityStore>> member=configuration->{
                 try{
                     // Only native identity/provenance accessors are needed, not an initialized NPC role/server.
@@ -74,6 +89,7 @@ class EnemyNativeStagingTest {
             };
             var capture=new NativeEnemySpawnGroups.Capture();var job=new NativeEnemySpawnGroups.Job(world,42,4,"Trork_Warrior",3,5,2);
             var first=member.apply(5);var second=member.apply(5);var unrelated=member.apply(Integer.MIN_VALUE);
+            second.addComponent(immune,Invulnerable.INSTANCE); // Protection owned by the native NPC, not staging.
             // Native FlockSpawnTypes may select another concrete role while
             // retaining the same world-job spawnRoleIndex and configuration.
             second.getComponent(npcType).setRoleName("Trork_Fighter");
@@ -128,7 +144,28 @@ class EnemyNativeStagingTest {
             });
             assertEquals(1,observed.get());
             assertTrue(packet.isCancelled());assertEquals(999999,packet.getAmount());
-        }finally{registry.shutdown();instance.set(null,previous);}
+            var secondRef=store.addEntity(second,AddReason.SPAWN);
+            var captured=groups.getFirst().members().stream().map(NativeEnemySpawnGroups.Member::staging).toList();
+            nativeIndex.put(captured.get(0).entity(),stagedRef);
+            nativeIndex.put(captured.get(1).entity(),secondRef);
+            var missing=new ArrayList<>(captured);missing.add(additional.getFirst().members().getFirst().staging());
+            assertThrows(IllegalStateException.class,()->EnemyStaging.releaseGroup(store,missing));
+            assertNotNull(store.getComponent(stagedRef,marker),"Incomplete roster must not release its first member");
+            assertNotNull(store.getComponent(secondRef,marker));
+            assertTrue(projection.blocksIncoming(store,stagedRef));
+            EnemyStaging.releaseGroup(store,captured);
+            for(var released:List.of(stagedRef,secondRef)){
+                assertNull(store.getComponent(released,marker));
+                assertNull(store.getComponent(released,frozen));
+                assertNull(store.getComponent(released,intangible));
+                assertTrue(released.isValid(),"Publication must not replace or remove native actors");
+            }
+            assertNull(store.getComponent(stagedRef,immune),"Staging must not leave an ordinary Elite invulnerable");
+            assertNotNull(store.getComponent(secondRef,immune),"Publication must preserve independently owned protection");
+            assertFalse(projection.blocksIncoming(store,stagedRef));
+            assertThrows(IllegalStateException.class,()->EnemyStaging.releaseGroup(store,captured));
+            assertEquals(Set.copyOf(captured.stream().map(EnemyStaging.State::entity).toList()),nativeIndex.keySet());
+        }finally{registry.shutdown();instance.set(null,previous);EnemyNativeOutgoingTest.cleanup();}
     }
     @Test void invalidPersistedStagingCannotMintAGroup(){
         assertThrows(NullPointerException.class,()->new EnemyStaging.State(null,UUID.randomUUID(),UUID.randomUUID(),0,0));
