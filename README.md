@@ -8,8 +8,10 @@ performance evidence and worker-side automatic reports. The 17 Stage 1–3
 contracts remain intact. See [commands](docs/COMMANDS.md),
 [finalization handoff](docs/HRO_FINALIZATION.md) and
 [source/integration status](docs/DEVELOPMENT_BASELINE.md).
-Offline qualification does not establish connected gameplay or client
-smoothness; the active save and primary checkout are tracked separately.
+The verified implementation source `4372e178f4ed550de370aacdbba06767905d84f7`
+is integrated into GitHub `main` and deployed to the active Hywind save with
+a checksum-verified rollback copy. Connected gameplay and client smoothness
+remain unverified. The primary checkout retains its owner-owned changes.
 
 ### Earlier engineering checkpoints
 

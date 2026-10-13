@@ -2,7 +2,7 @@
 
 ## HRO finalization and connected QA readiness (2026-10-13)
 
-State: **ENGINEERING_READY — final integration and connected QA pending**. The
+State: **MERGED, DEPLOYED, QA_PENDING — connected acceptance unverified**. The
 focused completion branch is `codex/hro-finalization` in `C:/hyhrofinal`, based
 exactly on integrated remote `main`
 `5287bb7ceecaeb7c6bcdfbfd748503886c6b1eb4`. It depends on the already
@@ -30,11 +30,37 @@ package validation and Guardian's exact-source receipt. HRO line coverage
 was 1,312 covered / 137 missed; the conservative heap bound was
 41,305,320 bytes under 64 MiB. Its JAR SHA-256 was
 `9C88AD547F4CB79B90805DF50AD892EC4CF1DC3E7298687E59071F365F08A6AA`.
-The documentation handoff commit must repeat the exact-HEAD gate before
-publication; no connected gameplay or client FPS result is inferred.
-Build, publication, deployment and connected QA states remain separate.
-The current primary checkout and deployed JAR have not been changed by
-this engineering pass.
+Uninstrumented qualification measured producer p99 14,400 ns, synthetic
+16-observation tick p99 101,800 ns, and zero median warmed disabled-path
+allocation across five 50,000-call samples. The instrumented coverage run
+measured 57,300 ns producer p99; JaCoCo timing is retained as diagnostic
+context, not substituted for the uninstrumented performance qualification.
+Native matched trace-off/on world timing and client FPS are UNVERIFIED.
+
+The reviewed 22-file task history was published to
+`origin/codex/hro-finalization`, then remote `main` was non-force
+fast-forwarded from `5287bb7ceecaeb7c6bcdfbfd748503886c6b1eb4` to
+`4372e178f4ed550de370aacdbba06767905d84f7`. Guardian confirmed
+`local=VERIFIED GitHub=PUBLISHED main=INTEGRATED`; the primary Windows
+checkout remains unsynchronized with its user-owned changes preserved.
+
+At 2026-10-13T16:45:41Z, the verified implementation JAR was deployed only
+to `UserData/Saves/Hywind/mods/Hywind.jar`. Its SHA-256 is
+`E95467B26A4DFB89F8FF2D6DF7E7A24A2F084F9D1771B1BE7FDDB91862C9D26A`,
+embedded source `4372e178f4ed550de370aacdbba06767905d84f7`, revision
+`R262C1HROF-CANDIDATE`, version `0.2.0-R262C1HROF-CANDIDATE`.
+The previous installed SHA-256
+`3B80550CCA85E59061C40B393A574FA42F7009180E5B711F91930BE1AF719B47`
+was copied and verified outside Saves at
+`UserData/Diagnostics/Hywind/Rollback/HROF-20261013/Hywind-before.jar`;
+the atomic replacement also saved `Hywind-replace-native.jar` there.
+The deployment receipt is `deployment.json` in the same rollback folder.
+No game/server launch or authentication was performed. This does not
+establish connected acceptance. Owner QA: start, play, stop, then status
+using [COMMANDS.md](COMMANDS.md) and [HRO_FINALIZATION.md](HRO_FINALIZATION.md).
+The follow-up documentation commit will undergo its own exact-HEAD Guardian
+gate; its Git SHA may differ from the deployed JAR's embedded source without
+changing the deployed code or revision.
 
 ## HRO Stage 3 final engineering candidate (2026-10-13)
 

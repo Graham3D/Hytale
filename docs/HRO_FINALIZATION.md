@@ -96,3 +96,11 @@ accepted. Report whether the game felt unchanged while HRO was active.
 Offline verification, source integration, deployment and connected acceptance
 are separate states in `DEVELOPMENT_BASELINE.md`. The owner need not launch a
 standalone server, configure a profiler, or run an analyzer.
+
+Engineering verification: 4,300 offline tests passed with strict SpotBugs,
+package validation and Guardian. The uninstrumented synthetic producer p99
+was 14.4 microseconds; its 16-observation tick p99 was 101.8 microseconds,
+and the warmed disabled-path median allocation was zero. The bounded HRO
+heap qualification was 41,305,320 bytes, below 64 MiB. The deployed build
+and rollback hashes are recorded in `DEVELOPMENT_BASELINE.md`; connected
+Hytale behavior and owner-perceived smoothness remain pending QA.
