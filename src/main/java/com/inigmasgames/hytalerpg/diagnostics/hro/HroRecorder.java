@@ -27,6 +27,7 @@ public final class HroRecorder implements AutoCloseable {
             "durableSubject","fingerprint","phase","activation","manaReceipt","cooldownReceipt","label","critical","coefficient",
             "manaSpent","intended","uncertain","proof");
     private record Request(UUID owner,UUID world,boolean armed) { }
+    private record ScopeState(UUID world,long connection,int worldSegment,long disconnectAt) { }
     private final Path root;
     private final AtomicReference<Request> request=new AtomicReference<>();
     private final Set<String> providers=java.util.concurrent.ConcurrentHashMap.newKeySet();
@@ -46,8 +47,7 @@ public final class HroRecorder implements AutoCloseable {
         final AtomicLong drops=new AtomicLong(),sequence=new AtomicLong(),admitted=new AtomicLong(),nanos=new AtomicLong(),timingSamples=new AtomicLong();
         final AtomicLongArray timing=new AtomicLongArray(32);
         volatile String stop; long maximumQueue,writerNanos;final AtomicLong contention=new AtomicLong();
-        volatile UUID world;volatile long connection=Long.MIN_VALUE,disconnectAt=-1;
-        int worldSegment=1;
+        final AtomicReference<ScopeState> scope;
         final AtomicLongArray tickTiming=new AtomicLongArray(32);
         final AtomicReference<TickWindow> tickWindow=new AtomicReference<>();
         long firstCaptureNanos;
@@ -56,7 +56,8 @@ public final class HroRecorder implements AutoCloseable {
         final AtomicReference<String> equipmentRevision=new AtomicReference<>();
         final AtomicLong packets=new AtomicLong();
         final AtomicLong disconnections=new AtomicLong(),reconnections=new AtomicLong(),tickMetricGaps=new AtomicLong(),observationsWithoutTick=new AtomicLong();
-        Session(UUID owner,String id,Path directory,long now){this.owner=owner;this.id=id;this.salt=UUID.randomUUID();this.directory=directory;start=now;
+        Session(UUID owner,UUID world,String id,Path directory,long now){this.owner=owner;this.id=id;this.salt=UUID.randomUUID();this.directory=directory;start=now;
+            scope=new AtomicReference<>(new ScopeState(world,Long.MIN_VALUE,1,-1));
             initialGcCount=gcCount();initialGcMillis=gcMillis();initialUsedBytes=ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed();}
     }
     private static final class TickWindow {
@@ -73,14 +74,15 @@ public final class HroRecorder implements AutoCloseable {
         worker=Thread.ofPlatform().daemon().name("hywind-hro").unstarted(this::run);worker.start();
     }
     public void registered(String contract){if(HroContracts.IDS.contains(contract))providers.add(contract);}
-    public boolean active(UUID owner){Session current=session;return current!=null&&current.stop==null&&current.disconnectAt<0&&current.owner.equals(owner);}
+    public boolean active(UUID owner){Session current=session;return current!=null&&current.stop==null&&current.scope.get().disconnectAt()<0&&current.owner.equals(owner);}
     public boolean recording(){Session s=session;return s!=null&&s.stop==null;}
     public void loss(UUID owner){Session s=session;if(s!=null&&s.owner.equals(owner))s.drops.incrementAndGet();}
-    public UUID ownerInWorld(UUID world){Session s=session;return s!=null&&s.stop==null&&s.disconnectAt<0&&Objects.equals(s.world,world)?s.owner:null;}
-    public String token(UUID owner){Session s=session;return s!=null&&s.stop==null&&s.owner.equals(owner)?s.id:null;}
-    public String packet(UUID owner){Session s=session;if(s==null||s.stop!=null||!s.owner.equals(owner))return null;
+    public UUID ownerInWorld(UUID world){Session s=session;if(s==null||s.stop!=null)return null;
+        ScopeState scope=s.scope.get();return scope.disconnectAt()<0&&Objects.equals(scope.world(),world)?s.owner:null;}
+    public String token(UUID owner){Session s=session;return s!=null&&s.stop==null&&s.scope.get().disconnectAt()<0&&s.owner.equals(owner)?s.id:null;}
+    public String packet(UUID owner){Session s=session;if(s==null||s.stop!=null||s.scope.get().disconnectAt()>=0||!s.owner.equals(owner))return null;
         long n=s.packets.incrementAndGet();if(n>2048){s.drops.incrementAndGet();s.stop="PACKET_OBSERVER_BUDGET";return null;}return s.id+":"+n;}
-    public boolean firstEquipment(UUID owner,String revision){Session s=session;if(s==null||s.stop!=null||!s.owner.equals(owner))return false;
+    public boolean firstEquipment(UUID owner,String revision){Session s=session;if(s==null||s.stop!=null||s.scope.get().disconnectAt()>=0||!s.owner.equals(owner))return false;
         String prior=s.equipmentRevision.get();return !Objects.equals(prior,revision)&&s.equipmentRevision.compareAndSet(prior,revision);}
     public String start(UUID owner,UUID world) {
         if(closing)return "HRO unavailable: shutting down";
@@ -95,48 +97,52 @@ public final class HroRecorder implements AutoCloseable {
     public String cancelArm(){armAction.set(new HroArm.Action(null,null,true));last="HRO CANCELLING_ARM";LockSupport.unpark(worker);return last;}
     public String stop(){Session current=session;if(current!=null)current.stop="STOPPED";
         else if(request.getAndSet(null)!=null)last="HRO CANCELLED_START";return status();}
-    public String status(){Session current=session;return current==null?last:"HRO "+(current.stop!=null?"FINALIZING":current.disconnectAt>=0?"WAITING_RECONNECT":"RECORDING")+
+    public String status(){Session current=session;return current==null?last:"HRO "+(current.stop!=null?"FINALIZING":current.scope.get().disconnectAt()>=0?"WAITING_RECONNECT":"RECORDING")+
             "; run="+current.id+"; events="+current.admitted.get()+"; dropped="+current.drops.get()+"; folder="+current.directory;}
     public void disconnect(UUID owner,long generation){Session current=session;
-        if(current!=null&&current.owner.equals(owner)&&current.stop==null&&generation==current.connection){
-            if(current.disconnectAt<0){current.disconnections.incrementAndGet();current.disconnectAt=clock.getAsLong();}
-            LockSupport.unpark(worker);
-        }
+        if(current==null||!current.owner.equals(owner)||current.stop!=null)return;
+        while(true){ScopeState old=current.scope.get();if(generation!=old.connection()||old.disconnectAt()>=0)return;
+            ScopeState next=new ScopeState(old.world(),old.connection(),old.worldSegment(),clock.getAsLong());
+            if(current.scope.compareAndSet(old,next)){current.disconnections.incrementAndGet();LockSupport.unpark(worker);return;}}
     }
     /** Only the native owner connection lifecycle may advance a generation or world segment. */
     public void lifecycle(UUID owner,UUID world,long generation,String boundary){
         Session current=session;if(current==null||current.stop!=null||!current.owner.equals(owner)||generation<0)return;
-        if(!current.lock.tryLock()){current.drops.incrementAndGet();return;}
-        boolean reconnected=false;
-        try {
-            if(current.disconnectAt>=0&&clock.getAsLong()-current.disconnectAt>RECONNECT_GRACE_NANOS)return;
-            if(generation<current.connection)return;
-            if(generation>current.connection){reconnected=current.disconnectAt>=0;if(reconnected)current.reconnections.incrementAndGet();
-                current.connection=generation;current.disconnectAt=-1;current.loadoutRevision.set(Long.MIN_VALUE);
-                current.equipmentRevision.set(null);}
-            if(world!=null&&!Objects.equals(current.world,world)){current.world=world;current.worldSegment++;}
-        }finally{current.lock.unlock();}
+        boolean reconnected=false,resetRevision=false;
+        while(true){ScopeState old=current.scope.get();
+            if(old.disconnectAt()>=0&&(generation<=old.connection()||clock.getAsLong()-old.disconnectAt()>RECONNECT_GRACE_NANOS))return;
+            if(generation<old.connection())return;
+            reconnected=old.disconnectAt()>=0&&generation>old.connection();
+            UUID nextWorld=world==null?old.world():world;
+            int nextSegment=old.world()!=null&&world!=null&&!old.world().equals(world)?old.worldSegment()+1:old.worldSegment();
+            ScopeState next=new ScopeState(nextWorld,generation,nextSegment,generation>old.connection()?-1:old.disconnectAt());
+            if(current.scope.compareAndSet(old,next)){resetRevision=generation>old.connection()||nextSegment>old.worldSegment();break;}
+        }
+        if(reconnected)current.reconnections.incrementAndGet();
+        if(resetRevision){current.loadoutRevision.set(Long.MIN_VALUE);current.equipmentRevision.set(null);}
         observe(owner,"PLAYER.ADMISSION","HytalePlayerPersistenceReady",boundary,"admission-"+generation,world,generation,null,null,
                 reconnected?Map.of("reason","RECONNECTED_AFTER_DISCONNECT"):Map.of());
     }
     public String mark(UUID owner,UUID world,String label){Session current=session;
         if(current==null||!active(owner))return "HRO is not recording this player";
-        if(world!=null&&!Objects.equals(current.world,world))return "HRO marker world has no lifecycle handoff";
+        ScopeState scope=current.scope.get();
+        if(world!=null&&!Objects.equals(scope.world(),world))return "HRO marker world has no lifecycle handoff";
         String safe=label==null||label.isBlank()?"USER_CHECKPOINT":label.replaceAll("[^A-Za-z0-9_.-]","_");
         if(safe.length()>64)safe=safe.substring(0,64);
         observe(owner,"MARK","RpgTraceCommand","MARK","mark-"+UUID.randomUUID(),world,
-                current.connection==Long.MIN_VALUE?null:current.connection,null,null,Map.of("label",safe));
-        return "HRO checkpoint recorded: "+safe;
+                scope.connection()==Long.MIN_VALUE?null:scope.connection(),null,null,Map.of("label",safe));
+        return "HRO checkpoint requested: "+safe+"; check dropped evidence in status";
     }
     public boolean firstLoadout(UUID owner,long revision) {
-        Session current=session;if(current==null||current.stop!=null||!current.owner.equals(owner))return false;
+        Session current=session;if(current==null||current.stop!=null||current.scope.get().disconnectAt()>=0||!current.owner.equals(owner))return false;
         long previous=current.loadoutRevision.get();
         return previous!=revision&&current.loadoutRevision.compareAndSet(previous,revision);
     }
     public void worldSample(Map<String,?> facts) {
-        Session current=session;if(current==null||current.stop!=null||!Objects.equals(current.world,facts.get("world")))return;
+        Session current=session;if(current==null||current.stop!=null)return;
+        ScopeState scope=current.scope.get();if(scope.disconnectAt()>=0||!Objects.equals(scope.world(),facts.get("world")))return;
         Object tick=facts.get("nativeTick");
-        observe(current.owner,"PERFORMANCE","NativeRpgTickMetrics","WORLD_TICK",null,current.world,null,
+        observe(current.owner,"PERFORMANCE","NativeRpgTickMetrics","WORLD_TICK",null,scope.world(),null,
                 tick instanceof Number n?n.longValue():null,null,facts);
     }
     /** Called after the enabled check. Copies at most 20 allowlisted bounded scalar facts. */
@@ -151,10 +157,11 @@ public final class HroRecorder implements AutoCloseable {
             if(!current.lock.tryLock()){current.drops.incrementAndGet();current.contention.incrementAndGet();return;}
             try {
                 if(current.stop!=null)return;
-                if(current.disconnectAt>=0)return;
-                if(connection!=null&&current.connection!=Long.MIN_VALUE&&connection<current.connection){current.drops.incrementAndGet();return;}
-                if(connection!=null&&current.connection!=Long.MIN_VALUE&&connection>current.connection){current.drops.incrementAndGet();return;}
-                if(world!=null&&current.world!=null&&!current.world.equals(world)){current.drops.incrementAndGet();return;}
+                ScopeState scope=current.scope.get();
+                if(scope.disconnectAt()>=0)return;
+                if(connection!=null&&scope.connection()!=Long.MIN_VALUE&&connection.longValue()!=scope.connection()){
+                    current.drops.incrementAndGet();return;}
+                if(world!=null&&scope.world()!=null&&!scope.world().equals(world)){current.drops.incrementAndGet();return;}
                 if(current.queue.size()>=CAPACITY){current.drops.incrementAndGet();current.stop="QUEUE_BUDGET";return;}
                 // Thirty-two slots remain available for final outcomes/control receipts under routine pressure.
                 if(current.queue.size()>=CAPACITY-32&&!critical(boundary)){current.drops.incrementAndGet();return;}
@@ -167,6 +174,7 @@ public final class HroRecorder implements AutoCloseable {
                     else if(value instanceof Number || value instanceof Boolean || value instanceof Enum<?>)facts.put(entry.getKey(),clip(value.toString()));
                     else if(value instanceof UUID id)facts.put(entry.getKey(),alias(current,id));
                 }
+                if(current.scope.get()!=scope){current.drops.incrementAndGet();return;}
                 long sequence=current.sequence.incrementAndGet();
                 if(connection==null)facts.put("connectionEvidenceGap","PROVIDER_HAS_NO_CONNECTION_GENERATION");
                 if(world==null)facts.put("worldEvidenceGap","PROVIDER_HAS_NO_WORLD_ID");
@@ -174,7 +182,7 @@ public final class HroRecorder implements AutoCloseable {
                 if(operation!=null&&operation.length()>192)current.drops.incrementAndGet();
                 current.queue.addLast(new HroEvent(1,current.id,sequence,System.currentTimeMillis(),began-current.start,
                         clip(contract),clip(provider),clip(boundary),operation==null||operation.isBlank()?"unjoined-"+sequence:clip(operation),
-                        world==null?null:alias(current,world)+":segment-"+current.worldSegment,connection,tick,revision,facts));
+                        world==null?null:alias(current,world)+":segment-"+scope.worldSegment(),connection,tick,revision,facts));
                 retained=true;current.admitted.incrementAndGet();current.maximumQueue=Math.max(current.maximumQueue,current.queue.size());
             }finally{current.lock.unlock();}
         }catch(RuntimeException diagnosticFailure){current.drops.incrementAndGet();}
@@ -211,8 +219,7 @@ public final class HroRecorder implements AutoCloseable {
             Request next=request.get();
             if(session==null&&next!=null) {
                 // Keep request occupied during initialization so repeated starts cannot enqueue another run.
-                String id=UUID.randomUUID().toString();Session current=new Session(next.owner,id,root.resolve(id),clock.getAsLong());
-                current.world=next.world;
+                String id=UUID.randomUUID().toString();Session current=new Session(next.owner,next.world,id,root.resolve(id),clock.getAsLong());
                 session=current;
                 if(request.get()!=next)current.stop="CANCELLED_START";
                 try {validateRoot();capture(current,next.world,next.armed);}catch(Exception failure){last="HRO PARTIAL; folder="+current.directory+
@@ -257,7 +264,9 @@ public final class HroRecorder implements AutoCloseable {
             while(true) {
                 if(closing&&current.stop==null)current.stop="SHUTDOWN";
                 if(clock.getAsLong()-current.start>=DURATION_NANOS&&current.stop==null)current.stop="EXPIRED";
-                if(current.disconnectAt>=0&&clock.getAsLong()-current.disconnectAt>=RECONNECT_GRACE_NANOS&&current.stop==null)current.stop="RECONNECT_GRACE_EXPIRED";
+                ScopeState observedScope=current.scope.get();
+                if(observedScope.disconnectAt()>=0&&clock.getAsLong()-observedScope.disconnectAt()>=RECONNECT_GRACE_NANOS&&current.stop==null)
+                    current.stop="RECONNECT_GRACE_EXPIRED";
                 HroEvent event;
                 current.lock.lock();try{event=current.queue.pollFirst();}finally{current.lock.unlock();}
                 if(event!=null) {

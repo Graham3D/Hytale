@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import java.nio.file.*;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.atomic.AtomicLong;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -77,6 +80,27 @@ class HroFinalizationTest {
             clock.set(HroRecorder.RECONNECT_GRACE_NANOS+2);
             HroRecorderTest.await(()->HroRecorderTest.finalized(recorder.status()));
             assertTrue(recorder.status().contains("RECONNECT_GRACE_EXPIRED"));
+            HroTool.verifyChecksums(bundle());
+        }
+    }
+    @Test void nativeLifecycleAdvancesWithoutWaitingForBusyEvidenceQueue()throws Exception {
+        try(var recorder=recorder()){
+            recorder.start(owner,world);HroRecorderTest.await(()->recorder.active(owner));
+            recorder.lifecycle(owner,world,1,"READY_QUEUED");recorder.disconnect(owner,1);
+            var sessionField=HroRecorder.class.getDeclaredField("session");sessionField.setAccessible(true);
+            Object session=sessionField.get(recorder);
+            var lockField=session.getClass().getDeclaredField("lock");lockField.setAccessible(true);
+            var queueLock=(ReentrantLock)lockField.get(session);
+            var entered=new CountDownLatch(1);var release=new CountDownLatch(1);
+            Thread holder=Thread.ofPlatform().start(()->{queueLock.lock();try{entered.countDown();release.await();}
+                catch(InterruptedException interrupted){Thread.currentThread().interrupt();}finally{queueLock.unlock();}});
+            try {
+                assertTrue(entered.await(5,TimeUnit.SECONDS));
+                UUID later=UUID.randomUUID();
+                assertTimeoutPreemptively(java.time.Duration.ofSeconds(1),()->recorder.lifecycle(owner,later,2,"READY_QUEUED"));
+                assertTrue(recorder.active(owner),"reconnect cannot be discarded by queue contention");
+            }finally{release.countDown();holder.join(5000);}
+            recorder.stop();HroRecorderTest.await(()->HroRecorderTest.finalized(recorder.status()));
             HroTool.verifyChecksums(bundle());
         }
     }
