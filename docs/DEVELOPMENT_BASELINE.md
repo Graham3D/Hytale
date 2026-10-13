@@ -2,7 +2,7 @@
 
 ## HRO Stage 2 mechanical evidence (2026-10-13)
 
-State: **IN_PROGRESS — final verification checkpoint**. Branch
+State: **ENGINEERING_READY — connected acceptance/performance UNVERIFIED**. Branch
 `codex/hro-stage2`, worktree `C:/hyhro2`, candidate `R262C1HRO2-CANDIDATE`,
 version `0.2.0-R262C1HRO2-CANDIDATE`, exact Hytale requirement `=0.7.0`.
 Verified Stage 1 parent: `92ac44fb23c515acd59f2470403dd9feca292b30` on
@@ -20,19 +20,37 @@ R261 defensive receipts, natural spawn decisions/publication, real durable
 save/load checksums and explicit cross-session receipt joins. The bounded
 affix/receipts report, priority reserve, loss handling, synthetic examples and
 capability-blocked outcomes are documented in [HRO_STAGE_2.md](HRO_STAGE_2.md).
-Focused JUnit/native bridge, noninterference, JaCoCo and heap/producer checks
-have run; complete offline check, strict analysis and exact committed-source
-Guardian publication gates remain required before this entry is finalized.
-This is not a completed or accepted revision merely because a candidate is
-packaged. No installed JAR, server, asset archive or save is modified.
+Exact implementation source: `c5e5ae9b35cd181184c3ab19233b7d42d619d1d4`.
+The subsequent handoff commit updates this record/report and strengthens only
+the test-agent heap census; it does not change production behavior. Complete
+offline check passed **4,265 JUnit tests**: 3,722 root, 489 native, 49 CanvasUI,
+5 Taverns; zero failures, errors or skips. Strict SpotBugs passed with zero
+root findings. JaCoCo measured 734/832 HRO lines; unobserved native outcomes
+remain explicit gaps, not inferred passes. Current release assets, CustomUI,
+spatial grant audit and package checks passed. The package has 19,576 entries,
+2,285 classes, 90 Tavern classes and zero ImmersiveNPCs payload entries.
+
+Offline producer p99 was 0.0097 ms, synthetic 16-observation batch mean
+0.0215 ms / p99 0.0629 ms, warmed disabled allocation zero, overload p99
+0.0023 ms with critical outcome retention and visible routine losses. The
+expanded test-only census measures 4,351,216 queue/session bytes plus
+19,500,080 saturated analyzer/report bytes and a 16 MiB allowance: 40,628,512
+bytes (38.75 MiB), below 64 MiB. The shared queue remains capped at 16 MiB.
+The exact final handoff HEAD, packaged source identity, JAR checksum and
+mandatory post-commit check/package results are bound by
+`build/guardian/verification.json`; publication requires that receipt and
+Guardian completion. No artifact is accepted from its R-label alone.
+No installed JAR, server, asset archive or save is modified.
 
 Active deployed build remains INV1, source
 `afdf9bfbce9d5fb395bd68848833480a849f0e0b`; deployment status **NOT_DEPLOYED**
-for HRO2. Connected QA/world-tick/client-frame qualification **UNVERIFIED**,
+for HRO2. Its unchanged installed SHA-256 is
+`3B80550CCA85E59061C40B393A574FA42F7009180E5B711F91930BE1AF719B47`.
+Connected QA/world-tick/client-frame qualification **UNVERIFIED**,
 reserved for Stage 3. Primary Windows main at `1dfa2cea` remains dirty and
 behind remote main, with AGENTS.md/artwork changes preserved. Existing
-worktrees were inspected and left intact. Next action: finish the engineering
-gates, publish the reviewed matching `codex/hro-stage2` branch, and retain it
+worktrees were inspected and left intact. Next action: finish exact-HEAD
+publication gates, publish the reviewed matching `codex/hro-stage2` branch, and retain it
 for Stage 3/acceptance and serialized integration review. No main merge or
 owner in-game QA is requested by this offline assignment.
 

@@ -27,16 +27,29 @@ public final class HroHeapQualification {
                 for(String key:List.of("result","reason","skillSlot","logicalSlot","skillId","nativeItemId","nativeAction",
                         "nativePrimaryIndex","operation","ownershipMode","componentPresent","expectedSpatial","bagRevisionBefore",
                         "bagRevisionAfter","RPG revision","revision","rawNativeSlot","resolvedNativeSlot","quantityBefore","quantityAfter"))
-                    facts.put(key,(n+"-"+key+"-").repeat(100));
+                    facts.put(key,(n+"-"+key+"-\u03bb").repeat(100));
                 recorder.observe(owner,"SKILL.PROJECTION","heap","SNAPSHOT","op-"+n,owner,1L,1L,1L,facts);
             }
             Field field=HroRecorder.class.getDeclaredField("session");field.setAccessible(true);
             long measured=retained(field.get(recorder));
-            // Worker: <=2048 operation structs + <=128 findings; two 4 MiB raw/gzip segments are disk,
-            // not heap. Reserve 16 MiB for all non-queue objects, Gson transient trees and one worker stack.
-            long qualified=measured+16L*1024*1024;
+            // Saturate the new worker state too: 2048 distinct selected-proc lifecycles with the largest
+            // scalar payload. Non-Latin strings deliberately exercise two-byte String storage.
+            var contracts=new HroContracts(Set.copyOf(HroContracts.IDS));var mechanical=new HroMechanicalReport();
+            for(int n=0;n<2048;n++){
+                Map<String,String> facts=new LinkedHashMap<>();
+                for(String key:List.of("affixId","itemId","rootId","equipmentRevision","units","bucket","value","applied",
+                        "reason","cause","origin","targetId","before","after","generation","receiptId","phase","activation","proof"))
+                    facts.put(key,(n+"\u03bb").repeat(192).substring(0,192));
+                facts.put("selected","true");
+                var event=new HroEvent(1,"heap",n+1,1,1,"AFFIX.PROC","heap","ROLL","op"+n,"world",1L,1L,1L,facts);
+                contracts.accept(event,"events/segment-0001.jsonl.gz:"+n);mechanical.accept(event,"events/segment-0001.jsonl.gz:"+n);
+            }
+            long workerBytes=retained(contracts)+retained(mechanical);
+            // Additional allowance covers transient serialization/catalog loading, packet-local observers and worker stack.
+            long qualified=measured+workerBytes+16L*1024*1024;
             Files.writeString(output.resolve("heap.json"),HroBundle.JSON.toJson(Map.of("method","Instrumentation.getObjectSize identity graph",
                     "slowDiskQueueSessionBytes",measured,"nonQueueConservativeReserveBytes",16L*1024*1024,
+                    "saturatedWorkerStateBytes",workerBytes,
                     "qualifiedBoundBytes",qualified,"limitBytes",64L*1024*1024,"withinBudget",qualified<=64L*1024*1024)));
             if(qualified>64L*1024*1024)throw new IllegalStateException("HRO_HEAP_TARGET_EXCEEDED");
             release.countDown();recorder.stop();

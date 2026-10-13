@@ -117,8 +117,9 @@ explicitly synthetic; `stage2-example-path.txt` points to the latest one.
 Qualification artifacts are `build/reports/hro/qualification.json`,
 `overload.json` and `heap.json`. Timings are offline synthetic producer/owner
 batches, with matched disabled/enabled workloads and a blocked-writer overload.
-The test-only Instrumentation agent measures retained session heap and adds a
-conservative non-queue allowance. The agent is not packaged in Hywind.
+The test-only Instrumentation agent measures a full queue with two-byte strings
+and 2,048 saturated mechanical analyzer operations, then adds a conservative
+16 MiB allowance for other/transient objects. The agent is not packaged in Hywind.
 Actual whole-world tick p95/p99 and client-frame degradation thresholds remain
 UNVERIFIED because no matched connected measurements were taken. Stage 3 owns
 connected acceptance and final release qualification; no gameplay acceptance
@@ -127,3 +128,26 @@ is inferred from these tests.
 Final verification results and exact commit/artifact identity are recorded in
 the development baseline and ignored exact-HEAD Guardian receipt. No installed
 server, Assets.zip, save, artwork or AGENTS.md is modified by this assignment.
+
+## Engineering result
+
+Production implementation commit: `c5e5ae9b35cd181184c3ab19233b7d42d619d1d4`.
+The handoff commit changes documentation and the test-only heap census. The
+full offline checkpoint passed 4,265 JUnit tests (3,722 root / 489 native /
+49 CanvasUI / 5 Taverns), zero failures/errors/skips; strict SpotBugs and
+package/asset/CustomUI checks passed. Focused JaCoCo covered 734/832 HRO lines.
+Coverage is evidence of execution, not native outcome acceptance.
+
+| Offline measurement | Result | Target |
+| --- | --- | --- |
+| Warmed disabled allocation | 0 bytes | No allocation |
+| Active producer p99 | 0.0097 ms | <0.05 ms |
+| Synthetic 16-observation owner batch mean / p99 | 0.0215 / 0.0629 ms | <=0.10 / <=0.50 ms |
+| Blocked-writer overload producer p99 | 0.0023 ms | <0.05 ms; critical lane retained |
+| Saturated queue + analyzer + allowance | 40,628,512 bytes / 38.75 MiB | <=64 MiB |
+| Whole-world tick / connected client frame | UNVERIFIED | Requires matched native measurements |
+
+The implementation is engineering-ready for Stage 3. Guardian's final
+exact-commit repetition is a mandatory publication gate; its ignored receipt
+contains the final JAR hash/source commit. No branch merge, deployment or
+connected acceptance is part of this result.
