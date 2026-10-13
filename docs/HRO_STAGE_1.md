@@ -1,11 +1,15 @@
 # HRO Stage 1 — diagnostic foundation
 
-State: engineering candidate, `R262C1HRO1-CANDIDATE` /
+State: **ENGINEERING_READY**, with native performance/connected acceptance
+**UNVERIFIED**. Candidate `R262C1HRO1-CANDIDATE` /
 `0.2.0-R262C1HRO1-CANDIDATE`. Branch `codex/hro-stage1`, worktree `C:/hyhro`,
 parent `3e359b8e036ad023c9c8bd93064bcb0f78068f83` on
 `codex/chapter1-stage3-elite-restoration`. All Chapter I ancestors remain
 unaccepted/unmerged. This assignment does not implement HRO Stages 2 or 3,
 deploy either mod/native JAR, launch Hytale, or modify player saves.
+Implementation commit: `486db1d2af40c8884bd0dc9387772a5b0777c568`.
+The following handoff commit changes documentation only; its exact HEAD and
+packaged identity are recorded in the completion receipt.
 
 The architecture DOCX supplied on October 12, 2026 was read in full. Its
 three-stage execution charter is background; the explicit Stage 1 assignment
@@ -157,8 +161,8 @@ The production bridge fixture runs in the existing native-codec test JVM;
 it initializes no Hytale server or world.
 
 Initial warmed offline runs measured zero disabled per-call allocations,
-active observer p99 0.0083–0.0135 ms, and synthetic batches of 16 observations
-p99 0.0538–0.0762 ms. These pass the 0.05 ms / 0.50 ms producer targets for
+active observer p99 0.0076–0.0135 ms, and synthetic batches of 16 observations
+p99 0.0304–0.0762 ms. These pass the 0.05 ms / 0.50 ms producer targets for
 that workload. A test-only Instrumentation agent measured a saturated slow-disk
 session graph of 1,691,896 bytes; adding a conservative 16 MiB non-queue reserve
 gives 18,469,112 bytes, below 64 MiB. This agent is not in the game mod.
@@ -170,11 +174,16 @@ fixtures. It is labeled synthetic and contains no player-save data.
 Whole-world tick p95/p99 regression <=2%, client smoothness and end-to-end
 connected behavior are **UNVERIFIED**. Synthetic timing does not substitute
 for those measurements. No claim of perceptible-lag acceptance is made.
-Early JaCoCo review covered 306/428 HRO lines; later added bridge/reader cases
-are included in the final combined report. Coverage measures exercised code,
-not gameplay correctness. Final exact-commit Gradle check, strict SpotBugs,
-package/asset checks and Guardian results are bound by the generated receipt
-at `build/guardian/verification.json`; uncommitted builds are not accepted revisions.
+Full offline Gradle check passed 4,210 JUnit tests (3,672 root, 484 native,
+49 CanvasUI, 5 Taverns), zero failures/errors/skips, plus retained module
+checks and package/asset validation. Strict SpotBugs reported zero findings
+without an HRO baseline suppression. Combined JaCoCo covered 466/528 HRO
+lines and 383/632 branches. Uncovered areas include environment identity
+fallbacks, safety/path limits and some combined contract states; these counts
+do not prove gameplay correctness. The final committed source is checked
+again because Guardian requires exact-HEAD evidence. Its JAR hash, version,
+source HEAD, check and package results are bound by the generated receipt
+at `build/guardian/verification.json`; an offline candidate is not QA accepted.
 
 Next integration action: retain/publish the reviewed `codex/hro-stage1`
 candidate. Do not merge unaccepted Chapter I ancestors or deploy without

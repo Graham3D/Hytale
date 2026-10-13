@@ -2,7 +2,7 @@
 
 ## HRO Stage 1 diagnostic foundation (2026-10-12)
 
-State: **IN_PROGRESS — final engineering gates pending**. Scoped candidate
+State: **ENGINEERING_READY — native performance/connected acceptance UNVERIFIED**. Scoped candidate
 `R262C1HRO1-CANDIDATE`, version `0.2.0-R262C1HRO1-CANDIDATE`, exact server
 requirement `=0.7.0`. Branch `codex/hro-stage1`, isolated worktree `C:/hyhro`,
 parent `3e359b8e036ad023c9c8bd93064bcb0f78068f83` on
@@ -23,15 +23,25 @@ or active deployed artifact was replaced.
 The [Stage 1 report](HRO_STAGE_1.md) records the nine contract families,
 asynchronous capture/stop, bounded streaming bundle, loss-aware evaluation,
 offline recovery, provider/registration evidence, installed server/assets
-hashes, focused fixtures and measured producer/heap qualification. Source
-branch/commit, final version, JAR hash, exact-head full check, package audit
-and Guardian status will be bound by `build/guardian/verification.json` after
-reviewed publication. No build is deployed. Whole-world tick/client-frame
+hashes, focused fixtures and measured producer/heap qualification. Exact
+implementation source is `codex/hro-stage1` at
+`486db1d2af40c8884bd0dc9387772a5b0777c568`; the subsequent handoff commit only
+updates this record and the report. Full offline check passed 4,210 JUnit
+tests (3,672 root, 484 native, 49 CanvasUI, 5 Taverns), with zero failures,
+errors or skips. Package/asset checks, strict SpotBugs (zero reported findings),
+JaCoCo review (466/528 HRO lines), slow/full disk, recovery, producer timing
+and heap qualification passed. Final committed source HEAD, candidate version,
+JAR hash, repeated exact-head check and package audit are bound by
+`build/guardian/verification.json`; the matching remote branch is the only
+publication target. No build is deployed. Whole-world tick/client-frame
 qualification and connected acceptance remain unmeasured; no owner QA is
 requested as a prerequisite for another assignment. HRO Stages 2 and 3 have
 not begun. The primary checkout's policy/artwork, all saves, and the installed
-stock server/INV1 JAR remain preserved. Next action is final offline gates,
-review and publication of this task branch, not integration or deployment.
+stock server/INV1 JAR remain preserved. Integration remains gated by acceptance
+of the cumulative ancestors and intentional reconciliation of the Stage 3 V2
+and Stage 4 overlaps. HRO Stage 2 requires a separate assignment. The primary
+Windows `main` checkout remains dirty and behind remote `main`; publishing
+this feature branch does not synchronize it.
 
 ## Chapter I Stage 3 natural Elite and affix recovery (2026-10-12)
 
