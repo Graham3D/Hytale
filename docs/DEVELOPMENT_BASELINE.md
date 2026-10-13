@@ -1,5 +1,69 @@
 # HyARPG/Hywind development baseline
 
+## White-limbo join recovery — R262C1ELITE3-CANDIDATE (2026-10-13)
+
+State: **ENGINEERING_READY, DEPLOYED, QA_PENDING**. The continuing
+`codex/elite-natural-hookup` branch at
+`C:/Users/Zemio/.codex/worktrees/elite-natural-hookup/Hytale-main-clean`
+has exact implementation source `f52d25fe69e640208a5dc55c82c1e746c1062a60`,
+on the prior deployed ELITE2 candidate `e562decb72466acc1d36e325e79b1883f482aa69`.
+It remains dependent on QA-pending HRO correction
+`f7d414e6348c84653d03a51117bdfe2fc427dded`. Remote `main` was
+`c69e44f16302e68ebd625d65039a457ad92ead06` at review and does not
+contain this branch. The primary Windows checkout and its owner-owned changes
+remain untouched.
+
+The owner's new client log shows Zemious joined `default` at 23:34:35 UTC,
+followed by repeated five-second packet gaps. The server received three
+`crossroads` and two `kill` commands but could not advance the world. On
+shutdown, Hytale reported its default world tick stuck for over 30 seconds;
+the stack ends in `NativePrimaryActionAssets.publish` ->
+`NativeSwordActionAssets.load` -> `AssetStore.loadAssets0`. A read-only JVM
+thread dump confirmed that this world tick was waiting for the same global
+read/write lock held across world ticking, while another world tick waited to
+enter. The resulting lack of chunks explains the white limbo and makes the
+vanilla inventory a downstream observation, not proof of a separate inventory
+failure in this capture. The native asset publication path predated ELITE2;
+the prior Tab handoff change did not cause this lock inversion.
+
+The equipment tick now queues exact sword, other primary, and twin Utility
+action publications on a single daemon worker. Until a complete variant is
+available, it keeps the safe base carrier and retries projection on subsequent
+ticks. The worker deduplicates requests and logs a failed publication once;
+it never makes the world tick wait for the asset-store write lock. No save
+format, command, inventory custody, natural Elite odds, or native server patch
+changed. Offline tests prove a blocked publisher does not block the caller,
+one identity is queued once, and failure does not spin retry. Connected asset
+broadcast and gameplay still require owner QA.
+
+Revision `R262C1ELITE3-CANDIDATE`, version
+`0.2.0-R262C1ELITE3-CANDIDATE`, Hytale `=0.7.0`. The exact implementation
+commit passed a full offline `check` with 4,311 JUnit tests and zero
+failures/errors/skips, CustomUI/asset audits, strict SpotBugs, package
+validation, and Guardian's source/package receipt. An initial full-suite run
+had one timing-sensitive HRO recorder assertion (an extra dropped fixture
+observation); that test passed alone and the serialized full rerun passed.
+The exact implementation JAR SHA-256 is
+`20CE529766F0F2AE0E04DAF4992CA38A329BA75A2261E04C3AE7B5979C96C07B`.
+
+The stalled single-player server persisted after the client exited and had
+already begun shutdown. Before stopping that orphan, all 90 universe files
+(206,277,963 bytes) were copied and SHA-256 verified outside `Saves` at
+`C:/Users/Zemio/AppData/Roaming/Hytale/UserData/Diagnostics/Hywind/Rollback/ELITE3-20261013-limbo/`.
+The prior `Hywind.jar` there was also backed up and hash verified as
+`A1241D637A5F995C511E0B29BF6712C8BE6E503A436EFCF3F27F294E279F7A65`.
+After verifying the active save, no game/server process, candidate checksum,
+and unchanged native server patch SHA-256
+`E0BCD36C7A981949D2C15B1B48F1CDD7F9623373269EF03B58F2D9B9DA7F6EDF`,
+the candidate JAR was installed at
+`C:/Users/Zemio/AppData/Roaming/Hytale/UserData/Saves/Hywind/mods/Hywind.jar`
+and rehashed to the candidate value. No game or standalone server was
+launched. This documentation commit is later than the deployed source and
+does not change gameplay. Next: owner connected QA of world/chunk loading,
+`/crossroads`, `/kill`, Tab/Hywind inventory, and natural Elite encounters.
+Merge into `main` awaits affirmative acceptance of this branch and its HRO
+dependency.
+
 ## Inventory Tab handoff and spawn-trace QA correction — R262C1ELITE2-CANDIDATE (2026-10-13)
 
 State: **ENGINEERING_READY, DEPLOYED, QA_PENDING**. The continuing
