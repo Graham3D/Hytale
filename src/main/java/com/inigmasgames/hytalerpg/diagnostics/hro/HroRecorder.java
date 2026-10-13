@@ -211,7 +211,8 @@ public final class HroRecorder implements AutoCloseable {
                 if(operation!=null&&operation.length()>192)drop(current,contract,operation,"OPERATION_ID_TRUNCATED");
                 current.queue.addLast(new HroEvent(1,current.id,sequence,System.currentTimeMillis(),began-current.start,
                         clip(contract),clip(provider),clip(boundary),operation==null||operation.isBlank()?"unjoined-"+sequence:clip(operation),
-                        world==null?null:scope.worldAlias()+":segment-"+scope.worldSegment(),connection,tick,revision,facts));
+                        world==null?null:(scope.worldAlias()==null?alias(current,world):scope.worldAlias())+
+                                ":segment-"+scope.worldSegment(),connection,tick,revision,facts));
                 retained=true;current.admitted.incrementAndGet();current.maximumQueue=Math.max(current.maximumQueue,current.queue.size());
             }finally{current.lock.unlock();}
         }catch(RuntimeException diagnosticFailure){drop(current,contract,operation,"PRODUCER_EXCEPTION");}

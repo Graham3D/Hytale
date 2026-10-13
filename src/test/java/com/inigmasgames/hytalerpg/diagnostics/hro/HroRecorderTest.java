@@ -123,6 +123,21 @@ class HroRecorderTest {
             recorder.stop();await(()->recorder.status().startsWith("HRO COMPLETE"));
         }
     }
+    @Test void eventWorldHasAliasWhenCaptureStartedWithoutWorld()throws Exception {
+        try(var recorder=recorder(()->{})) {
+            HroContracts.IDS.forEach(recorder::registered);
+            assertTrue(recorder.start(owner,null).contains("STARTING"));
+            await(()->recorder.active(owner));
+            recorder.observe(owner,"HUD.PUBLICATION","fixture","HUD_LAYOUT_READY","hud",world,1L,1L,1L,Map.of());
+            recorder.stop();await(()->finalized(recorder.status()));
+            try(var in=new GZIPInputStream(Files.newInputStream(bundle().resolve("events/segment-0001.jsonl.gz")))) {
+                String event=new String(in.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8);
+                assertFalse(event.contains("\"worldSegmentId\":\"null:segment-1\""));
+                assertTrue(event.contains("\"worldSegmentId\":\""));
+                assertTrue(event.contains(":segment-1"));
+            }
+        }
+    }
     @Test void saveDirectoryIsRejected(){assertThrows(IllegalArgumentException.class,()->new HroRecorder(root.resolve("Saves/Hywind/diagnostics")));}
     @Test void originalOriginRequiredForRecovery(){assertThrows(java.io.IOException.class,()->HroBundle.recover(root));}
     @Test void sharedQueueBudgetRejectsInsteadOfBorrowingUnboundedMemory() {
