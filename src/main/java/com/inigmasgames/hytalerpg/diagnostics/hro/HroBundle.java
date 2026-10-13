@@ -125,7 +125,7 @@ final class HroBundle implements AutoCloseable {
                 "comparison","NO_BASELINE","scope","OBSERVED_OPERATIONS_ONLY"));
         writeJson("performance.json",performance);
         writeJson("implementation-map.json",Map.of("schemaVersion",1,"components",HroMaps.implementation()));
-        writeJson("compatibility-diff.json",Map.of("comparison","NO_BASELINE","reason","Select an explicitly approved per-contract baseline offline"));
+        writeJson("compatibility-diff.json",Map.of("comparison","AUTO_ANALYSIS_SIDECAR","reason","See auto-analysis.json for approved-baseline comparisons when finalization completes"));
         writeJson("cascades.json",cascades);
         writeJson("report.json",Map.of("schemaVersion",1,"findings",HroMaps.details(findings),"checkpoints",checkpoints));
         writeJson("checkpoints.json",Map.of("checkpoints",checkpoints,"omitted",Math.max(0,markerCount-checkpoints.size())));

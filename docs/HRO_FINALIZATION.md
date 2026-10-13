@@ -57,11 +57,13 @@ It verifies the completed capture before publishing status. If an engineer has
 placed explicitly approved, immutable contract baselines in
 `%APPDATA%/Hytale/UserData/Diagnostics/Hywind/HRO/approved-baselines/`, the worker
 compares at most 17 JSON files using their embedded recipes and writes
-`comparisons/*.json` plus `auto-analysis.json`. This is a reuse of Stage 3's
+`comparisons/*.json`, `auto-analysis.json` and a separate
+`analysis-checksums.sha256`. This is a reuse of Stage 3's
 compatibility and semantic matching rules. A missing, invalid or incomparable
 baseline is reported, never silently accepted. A 30-second analysis budget
-marks remaining comparison work pending; completed capture evidence remains
-intact. No baseline is created or approved by a recording.
+marks remaining comparison work pending. Comparison reports are sidecars: a
+write failure cannot invalidate the completed capture's original checksum
+index. No baseline is created or approved by a recording.
 
 `performance.json` includes producer p95/p99 histogram upper bounds, per-tick
 observation histogram, queue peak, drops, writer cost/throughput, first-capture

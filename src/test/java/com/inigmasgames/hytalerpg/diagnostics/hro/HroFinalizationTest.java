@@ -86,10 +86,16 @@ class HroFinalizationTest {
         Path recipe=root.resolve("recipe.json");Files.writeString(recipe,HroComparisonTest.recipe("PASS").toString());
         HroComparison.baseline(old,recipe,approved.resolve("accepted.json"));
         Path candidate=HroComparisonTest.bundle(root,"candidate",false,0,1,true);
+        String coreIndex=HroBundle.sha256(candidate.resolve("checksums.sha256"));
         HroAutoAnalysis.finish(root,candidate,System::nanoTime);
         assertEquals("REGRESSION",HroOffline.value(HroOffline.object(candidate.resolve("comparisons/accepted.json")),"comparison"));
         assertTrue(Files.readString(candidate.resolve("auto-analysis.json")).contains("CHECKSUMS_VERIFIED"));
         assertFalse(Files.exists(approved.resolve("candidate.json")));
+        assertEquals(coreIndex,HroBundle.sha256(candidate.resolve("checksums.sha256")));
+        HroAutoAnalysis.verifySidecarChecksums(candidate);
+        HroTool.verifyChecksums(candidate);
+        Files.writeString(candidate.resolve("auto-analysis.json"),"tampered");
+        assertThrows(java.io.IOException.class,()->HroAutoAnalysis.verifySidecarChecksums(candidate));
         HroTool.verifyChecksums(candidate);
     }
     @Test void automaticAnalysisBudgetAndBadBaselinePreserveCompletedCapture()throws Exception {
@@ -101,11 +107,26 @@ class HroFinalizationTest {
         AtomicLong clock=new AtomicLong();
         HroAutoAnalysis.finish(root,pending,()->clock.addAndGet(HroAutoAnalysis.BUDGET_NANOS/2+1));
         assertTrue(Files.readString(pending.resolve("auto-analysis.json")).contains("PENDING_ANALYSIS_BUDGET"));
+        HroAutoAnalysis.verifySidecarChecksums(pending);
         HroTool.verifyChecksums(pending);
         Files.writeString(approved.resolve("broken.json"),"{\"kind\":\"UNAPPROVED\"}");
         Path incomplete=HroComparisonTest.bundle(root,"incomplete",false,0,1,true);
         HroAutoAnalysis.finish(root,incomplete,System::nanoTime);
         assertTrue(Files.readString(incomplete.resolve("auto-analysis.json")).contains("INCOMPLETE_COMPARISON"));
+        HroAutoAnalysis.verifySidecarChecksums(incomplete);
         HroTool.verifyChecksums(incomplete);
+    }
+    @Test void analysisOutputFailureCannotInvalidateCompletedCapture()throws Exception {
+        Path old=HroComparisonTest.bundle(root,"old",true,0,1,true);
+        Path approved=Files.createDirectory(root.resolve("approved-baselines"));
+        Path recipe=root.resolve("recipe.json");Files.writeString(recipe,HroComparisonTest.recipe("PASS").toString());
+        HroComparison.baseline(old,recipe,approved.resolve("accepted.json"));
+        Path candidate=HroComparisonTest.bundle(root,"candidate",false,0,1,true);
+        String coreIndex=HroBundle.sha256(candidate.resolve("checksums.sha256"));
+        Files.writeString(candidate.resolve("comparisons"),"blocked output directory");
+        assertEquals("INCOMPLETE_COMPARISON",HroAutoAnalysis.finish(root,candidate,System::nanoTime));
+        assertEquals(coreIndex,HroBundle.sha256(candidate.resolve("checksums.sha256")));
+        HroTool.verifyChecksums(candidate);
+        HroAutoAnalysis.verifySidecarChecksums(candidate);
     }
 }
