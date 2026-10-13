@@ -49,7 +49,9 @@ class HroQualificationTest {
                 for(int i=0;i<50_000;i++)recorder.observe(owner,"SKILL.PROJECTION","fixture","PROJECTION","op",world,1L,1L,1L,facts);
                 disabledNanos=System.nanoTime()-disabledStart;disabledSamples[sample]=allocation.getThreadAllocatedBytes(thread)-bytesBefore;
             }
-            long disabledBytes=disabledSamples[disabledSamples.length-1];
+            long[] orderedDisabledSamples=disabledSamples.clone();
+            Arrays.sort(orderedDisabledSamples);
+            long disabledBytes=orderedDisabledSamples[orderedDisabledSamples.length/2];
             HroContracts.IDS.forEach(recorder::registered);recorder.start(owner,world);HroRecorderTest.await(()->recorder.active(owner));
             for(int i=0;i<1000;i++){recorder.observe(owner,"SKILL.PROJECTION","fixture","PROJECTION","op",world,1L,1L,1L,facts);if(i%8==0)Thread.sleep(2);}
             assertTrue(recorder.active(owner),recorder.status());
@@ -72,6 +74,7 @@ class HroQualificationTest {
             Map<String,Object> report=new LinkedHashMap<>();report.put("scope","OFFLINE_SYNTHETIC_PRODUCER_ONLY");
             report.put("disabledNanosPerCall",disabledNanos/50_000.0);report.put("disabledAllocatedBytes",disabledBytes);
             report.put("disabledAllocationSamples",disabledSamples);
+            report.put("disabledAllocationStatistic","median of five warmed 50,000-call samples");
             report.put("activeP99Nanos",p99);report.put("synthetic16ObservationTickP99Nanos",tickP99);
             report.put("activeP95Nanos",active[(int)(active.length*.95)]);
             report.put("synthetic16ObservationTickMeanNanos",Arrays.stream(ticks).average().orElseThrow());
@@ -80,7 +83,7 @@ class HroQualificationTest {
             report.put("syntheticTickTargetPassed",tickP99<=500_000&&Arrays.stream(ticks).average().orElseThrow()<=100_000);report.put("retainedHeap","STRUCTURALLY_BOUNDED; NOT_A_LIVE_HEAP_CENSUS");
             Path output=Path.of("build/reports/hro");Files.createDirectories(output);
             Files.writeString(output.resolve("qualification.json"),HroBundle.JSON.toJson(report));
-            assertEquals(0,disabledBytes,"Warmed disabled path allocation");
+            assertEquals(0,disabledBytes,"Median warmed disabled path allocation");
             // Timing results remain evidence, not flaky machine-wide assertions masquerading as correctness tests.
         }
     }
