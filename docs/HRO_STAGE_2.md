@@ -38,7 +38,7 @@ findings. Missing successors are never converted into timeout failures.
 | --- | --- | --- |
 | GEAR.EQUIPPED | Existing requirement-validated equipment snapshot, candidate item identity, category and revision | Membership accepted/rejected; category does not claim an exact native slot readback. Rejected candidate changes are observed too. |
 | AFFIX.MODIFIER | Actual `GearEffectSnapshot.percent` return inside managed attack/skill calculation scope | Single-source percentage points → fraction boundary with item, affix, revision, root and operator. Rolled values alone are insufficient. Multi-source aggregate attribution and uninstrumented consumers remain capability gaps; no complete damage-effect claim. |
-| AFFIX.PROC | Existing WA-135/137/138/140/143 signature rolls, sample, probability and selection | Miss is legal; selection awaits native outcome. The current signature owner does not expose a correlated native effect acknowledgement. Selected live signature procs therefore remain INCONCLUSIVE, not PASS. Native outcome/immune/settled-missing semantics have matched fixtures. No extra RNG calls. |
+| AFFIX.PROC | Existing WA-135/137/138/140/143 signature rolls, sample, probability, selection, target and frozen equipment revision | Miss is legal; selection awaits native outcome. The current signature owner does not expose a correlated native effect acknowledgement. Selected live signature procs therefore remain INCONCLUSIVE, not PASS. Native outcome/immune/settled-missing semantics have matched fixtures, including cross-target rejection. No extra RNG calls. |
 | COMBAT.RECONCILE | Existing Gather, stage, accepted, immediately-before-Apply and applied callbacks | Uses the same MATCH/MISMATCH/UNOBSERVABLE implementation as Combat Damage Trace, including overkill and 0.02 tolerance. Existing retained offense results supply scaling/coefficient/modifier/crit stages. Hidden filters, absent pre-snapshot inputs and critical RNG samples are not reconstructed. |
 | CYCLONE.ACCOUNTING | R261 forced payment/state receipts, generation/debit, barrier before/after, overflow, actual reflection request/factor, confirmed Mana Before Life readback | Detects duplicate payment/debit and inconsistent barrier/overflow/reflection/confirmed mana accounting. Shared player debit is captured but child-generation attribution is unavailable and INCONCLUSIVE. NPC shared recipients, full capacity-construction provenance and recovery policy transformations are capability-blocked. Reflection-request correctness does not claim target visual or effect acceptance. |
 | SPAWN.ADMISSION | Actual natural job rarity decision, fallback, closed world admission gate | Normal rarity is legal. Eligible decision opportunities are counted by encounter. Expected rejection/closed gate is BLOCKED. No polling or new rolls. |
@@ -131,20 +131,24 @@ server, Assets.zip, save, artwork or AGENTS.md is modified by this assignment.
 
 ## Engineering result
 
-Production implementation commit: `c5e5ae9b35cd181184c3ab19233b7d42d619d1d4`.
-The handoff commit changes documentation and the test-only heap census. The
-full offline checkpoint passed 4,265 JUnit tests (3,722 root / 489 native /
+Production implementation commit: `24968cab388ceefee463edc21566c27417ca6c17`,
+including foundation `c5e5ae9b35cd181184c3ab19233b7d42d619d1d4`. The final
+handoff is documentation-only. The full checkpoint before the final proc
+identity refinement passed 4,265 JUnit tests (3,722 root / 489 native /
 49 CanvasUI / 5 Taverns), zero failures/errors/skips; strict SpotBugs and
-package/asset/CustomUI checks passed. Focused JaCoCo covered 734/832 HRO lines.
+package/asset/CustomUI checks passed. The refinement adds one passing target
+mismatch fixture and passed focused native bridge/strict static analysis.
+Focused JaCoCo covered 735/832 HRO lines. The final exact-HEAD receipt records
+the complete repeated suite for the corrected source.
 Coverage is evidence of execution, not native outcome acceptance.
 
 | Offline measurement | Result | Target |
 | --- | --- | --- |
 | Warmed disabled allocation | 0 bytes | No allocation |
-| Active producer p99 | 0.0097 ms | <0.05 ms |
-| Synthetic 16-observation owner batch mean / p99 | 0.0215 / 0.0629 ms | <=0.10 / <=0.50 ms |
-| Blocked-writer overload producer p99 | 0.0023 ms | <0.05 ms; critical lane retained |
-| Saturated queue + analyzer + allowance | 40,628,512 bytes / 38.75 MiB | <=64 MiB |
+| Active producer p99 | 0.0102 ms | <0.05 ms |
+| Synthetic 16-observation owner batch mean / p99 | 0.0234 / 0.1016 ms | <=0.10 / <=0.50 ms |
+| Blocked-writer overload producer p99 | 0.0025 ms | <0.05 ms; critical lane retained |
+| Saturated queue + analyzer + allowance | 41,300,248 bytes / 39.4 MiB | <=64 MiB |
 | Whole-world tick / connected client frame | UNVERIFIED | Requires matched native measurements |
 
 The implementation is engineering-ready for Stage 3. Guardian's final

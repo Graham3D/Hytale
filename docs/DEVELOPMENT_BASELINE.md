@@ -20,22 +20,26 @@ R261 defensive receipts, natural spawn decisions/publication, real durable
 save/load checksums and explicit cross-session receipt joins. The bounded
 affix/receipts report, priority reserve, loss handling, synthetic examples and
 capability-blocked outcomes are documented in [HRO_STAGE_2.md](HRO_STAGE_2.md).
-Exact implementation source: `c5e5ae9b35cd181184c3ab19233b7d42d619d1d4`.
-The subsequent handoff commit updates this record/report and strengthens only
-the test-agent heap census; it does not change production behavior. Complete
-offline check passed **4,265 JUnit tests**: 3,722 root, 489 native, 49 CanvasUI,
+Exact implementation source: `24968cab388ceefee463edc21566c27417ca6c17`,
+including foundation `c5e5ae9b35cd181184c3ab19233b7d42d619d1d4` and the
+test-only saturated heap census. The final correlation correction records the
+proc target/frozen equipment revision and rejects cross-target joins; it does
+not change RNG or gameplay formulas. The subsequent handoff is documentation-only.
+The preceding complete offline checkpoint passed **4,265 JUnit tests**: 3,722 root, 489 native, 49 CanvasUI,
 5 Taverns; zero failures, errors or skips. Strict SpotBugs passed with zero
-root findings. JaCoCo measured 734/832 HRO lines; unobserved native outcomes
+root findings. The correlation follow-up adds one passing regression test;
+its focused production bridge, strict SpotBugs and JaCoCo checks passed.
+JaCoCo measured 735/832 HRO lines; unobserved native outcomes
 remain explicit gaps, not inferred passes. Current release assets, CustomUI,
 spatial grant audit and package checks passed. The package has 19,576 entries,
 2,285 classes, 90 Tavern classes and zero ImmersiveNPCs payload entries.
 
-Offline producer p99 was 0.0097 ms, synthetic 16-observation batch mean
-0.0215 ms / p99 0.0629 ms, warmed disabled allocation zero, overload p99
-0.0023 ms with critical outcome retention and visible routine losses. The
-expanded test-only census measures 4,351,216 queue/session bytes plus
-19,500,080 saturated analyzer/report bytes and a 16 MiB allowance: 40,628,512
-bytes (38.75 MiB), below 64 MiB. The shared queue remains capped at 16 MiB.
+Offline producer p99 was 0.0102 ms, synthetic 16-observation batch mean
+0.0234 ms / p99 0.1016 ms, warmed disabled allocation zero, overload p99
+0.0025 ms with critical outcome retention and visible routine losses. The
+expanded test-only census measures 4,351,208 queue/session bytes plus
+20,171,824 saturated analyzer/report bytes and a 16 MiB allowance: 41,300,248
+bytes (39.4 MiB), below 64 MiB. The shared queue remains capped at 16 MiB.
 The exact final handoff HEAD, packaged source identity, JAR checksum and
 mandatory post-commit check/package results are bound by
 `build/guardian/verification.json`; publication requires that receipt and
