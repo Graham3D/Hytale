@@ -171,7 +171,7 @@ Production changes are limited to `EncounterContributions.java` (use the
 existing frozen XP helper) and `HytaleGearLoot.java` (require a projected
 position for automatic pickup). Two regression classes are added;
 `build.gradle` assigns the native fixture to the existing isolated native
-test lane. `gradle.properties`, this report and `DEVELOPMENT_BASELINE.md`
+test lane. `gradle.properties`, `README.md`, this report and `DEVELOPMENT_BASELINE.md`
 record the completed candidate. No player command changed; existing syntax,
 permission and save/build gates remain in `docs/COMMANDS.md`.
 
