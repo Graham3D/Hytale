@@ -1,5 +1,27 @@
 # HyARPG/Hywind development baseline
 
+## Chapter I Stage 0 regression inventory (2026-10-12)
+
+State: **ENGINEERING_READY, investigation only** on dependent
+`codex/chapter1-stage0-regression-inventory`, based on the clean, published
+`codex/chapter1-inventory-recovery` commit
+`afdf9bfbce9d5fb395bd68848833480a849f0e0b`. The authoritative release
+save is `UserData/Saves/Hywind`; the pre-release `RPG` save is historical
+comparison only, per the owner's explicit clarification. The older `AGENTS.md`
+save-target wording was preserved and its discrepancy is recorded in the
+[Stage 0 inventory](release-migration/STAGE_0_BASELINE_AND_REGRESSION_INVENTORY.md).
+The report identifies copied difficulty-registry/world-UUID drift, the missing
+release native hook instrumentation, and a separate encounter context-capacity
+rejection whose exact instantaneous condition remains unverified. It also
+records two actual release Blizzard Health-loss receipts; a blanket skill
+damage failure is not supported by this capture. No gameplay source, save,
+native patch, JAR, version/revision input, or deployment was changed. No new
+build or standalone/connected test was run. The INV1 candidate remains
+deployed and QA pending; `origin/main` remains `6d3ef15f`, and neither this
+report's dependent branch nor its unaccepted ancestors should be integrated
+until their acceptance/dependency gates are resolved. The exact report commit
+and remote publication are recorded in Git history after review.
+
 ## Chapter I inactive weapon-slot transfer correction (2026-10-12)
 
 State: **QA_PENDING** on `codex/chapter1-inventory-recovery`, stacked on the
