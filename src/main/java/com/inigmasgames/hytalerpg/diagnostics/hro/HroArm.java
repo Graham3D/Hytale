@@ -54,8 +54,8 @@ final class HroArm {
         if(expires-created!=TTL_MILLIS||created>now+60_000)throw new IOException("INVALID_ARM_EXPIRY");
         if(now>=expires){Files.delete(target);return null;}
         if(!installation.equals(HroOffline.value(data,"installation")))return null;
-        // Move before starting a capture: a crash or interrupted boot cannot replay the authorization.
-        Files.move(target,root.resolve("arm-consumed-"+UUID.randomUUID()+".json"),StandardCopyOption.ATOMIC_MOVE);
+        // Remove before starting a capture: an interrupted boot cannot replay the authorization.
+        Files.delete(target);
         return new Armed(owner,world);
     }
 }
