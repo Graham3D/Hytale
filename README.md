@@ -10,6 +10,10 @@ See [commands](docs/COMMANDS.md), [Stage 3 release/owner handoff](docs/HRO_STAGE
 and [source/integration status](docs/DEVELOPMENT_BASELINE.md).
 Offline qualification does not establish connected gameplay or client smoothness.
 This pass does not deploy a JAR or launch the game/server.
+The complete HRO source was integrated into GitHub `main` by a verified
+non-force fast-forward to `64a3ba4e051c9b39a453a0c9ea98335eac6d72de`.
+The full offline gate passed 4,292 tests plus strict static/package checks.
+The primary Windows checkout remains preserved with its existing local changes.
 
 ### Earlier engineering checkpoints
 

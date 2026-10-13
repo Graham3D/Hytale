@@ -2,8 +2,8 @@
 
 ## HRO Stage 3 final engineering candidate (2026-10-13)
 
-State: **IN_PROGRESS — implementation complete; committed-source release gate
-and owner-authorized main integration pending**. Branch `codex/hro-stage3`,
+State: **MERGED — engineering-ready; deployment and connected acceptance
+UNVERIFIED**. Branch `codex/hro-stage3`,
 worktree `C:/hyhro3`, revision **R262C1HRO3-CANDIDATE**, version
 `0.2.0-R262C1HRO3-CANDIDATE`, Hytale `=0.7.0`.
 Exact parent: `985c9c06f3d370d2afc882299a16682aa0cd66c3` (`codex/hro-stage2`),
@@ -12,6 +12,17 @@ The latest user request explicitly authorizes safe integration of completed HRO
 engineering into main. No additional gameplay ancestor is being introduced.
 Source integration is not connected gameplay acceptance.
 
+Exact implementation and tested integration commit:
+`64a3ba4e051c9b39a453a0c9ea98335eac6d72de`. Remote main was safely
+fast-forwarded from `ce3865dd5f81bee95003cb5dde8dc2f959bdac2b` to this commit
+after the full gate, clean inventory review, fresh remote checks and publication
+of the same SHA to the tracked feature branch. Guardian then confirmed
+`local=VERIFIED GitHub=PUBLISHED main=INTEGRATED`. The GitHub connector refused
+PR creation with 403 (integration permissions); the authorized auditable,
+non-force Git integration succeeded without bypassing branch protection.
+No extra ancestor gameplay scope was introduced. The follow-up commit updates
+only README, commands, this integration record and the Stage 3 handoff.
+
 Stage 3 delivers immutable per-contract approved baselines, semantic comparison,
 versioned legacy imports with preserved provenance gaps, selected native/asset
 fingerprints, source/reuse maps, explicit correlation cascade groups, bounded
@@ -19,15 +30,28 @@ extraction, fifteen backend-neutral UI fixtures and an offline parity seam.
 The analyzer also propagates sequence/count gaps into mechanical evidence
 completeness. See [HRO_STAGE_3.md](HRO_STAGE_3.md) and [COMMANDS.md](COMMANDS.md).
 
-Focused checkpoint: 97 HRO root tests plus six native production bridge tests
-passed; strict SpotBugs passed after importer null handling corrections.
-JaCoCo: 1,045/1,168 HRO lines at that checkpoint. One subsequent sequence-gap
-regression fixture and small offline hardening changes await the final gate.
+Full committed-source gate: **4,292 tests** (3,749 root / 489 native / 49 CanvasUI /
+5 Taverns), zero failures/errors/skips. Strict SpotBugs, native proc assets,
+88 CustomUI documents, campaign/spatial asset checks, package validation and
+Guardian passed. The final sequence-gap regression fixture passed. Focused
+JaCoCo review measured 1,045/1,168 HRO lines at its checkpoint.
+The integrated implementation's JAR SHA-256 was
+`B55ADE2BA0F75F74D045765AE25EDBF85E4D69B784752C262EB8FD45B18F4B7B`, with
+embedded source `64a3ba4e051c9b39a453a0c9ea98335eac6d72de`. The subsequent
+documentation-only publication repeats the exact-HEAD Guardian gate and embeds
+its own source commit; its final hash/receipt is under ignored `build/guardian/`.
+No new gameplay revision or acceptance is implied by that rebuilt metadata.
+
 Heap bound: 41,300,256 bytes (39.4 MiB), below 64 MiB. Warm disabled allocation
-zero; producer p99 0.0085 ms; synthetic sixteen-observation batch mean/p99
-0.0215/0.0562 ms. Whole diagnostic process trials include concurrent manual
-recording, initialization, worker drain and GC; native world/client measurements
-remain UNVERIFIED. Final exact-HEAD evidence is under ignored `build/guardian/`.
+zero; producer p99 0.0142 ms; synthetic sixteen-observation batch mean/p99
+0.02835/0.0641 ms. Four matched process workloads retained identical seeded
+results with concurrent legacy recording. Enabled producer p99 ranged
+0.0093–0.0245 ms; worker-first-write initialization was 6.97–8.22 ms off the
+owner thread. Whole-process CPU, elapsed/drain and GC results remain raw samples
+in `release-workloads.json`, not native world/client performance claims.
+The selected five native bindings were successfully fingerprinted from the
+actual installed stock JAR, without loading classes. Native/client measurements
+and cold production identity hashing remain UNVERIFIED.
 
 Deployment: **unchanged**, active Hywind save JAR remains
 `R262C1INV1-CANDIDATE`, source `afdf9bfbce9d5fb395bd68848833480a849f0e0b`,
@@ -39,8 +63,14 @@ no newer cumulative QA-accepted build is established by these records.
 The primary checkout remains `main` at `1dfa2cea3085196c7fd4492518c65a03d5e3b49d`
 with user-owned AGENTS/artwork/icon/script changes preserved. Its inherited
 committed AGENTS policy still names a legacy save; the newer user-supplied policy
-governs this task. AGENTS.md is not changed in any worktree. Final integration
-must preserve this dirty checkout and use the isolated task branch.
+governs this task. AGENTS.md is not changed in any worktree. Remote main is
+integrated; the primary checkout remains unsynchronized and must not be reset
+or switched over its valuable changes. Dependencies `codex/hro-stage1` and
+`codex/hro-stage2` are now reachable from remote main and are retained.
+Next action: ordinary owner QA after a separately authorized deployment; no
+further HRO engineering stage is planned. Recheck live refs and the final
+exact-HEAD receipt rather than treating this historical integration SHA as the
+latest documentation tip.
 
 ## HRO Stage 2 mechanical evidence (2026-10-13)
 

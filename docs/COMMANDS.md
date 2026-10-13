@@ -27,7 +27,10 @@ defensive receipts and recovery evidence. See [HRO Stage 2](HRO_STAGE_2.md).
 
 The completed engineering architecture is `R262C1HRO3-CANDIDATE`
 (`0.2.0-R262C1HRO3-CANDIDATE`, Hytale `=0.7.0`). It retains the exact four
-commands above. Start once, perform ordinary skill, inventory, combat,
+commands above and was integrated into GitHub `main` at
+`64a3ba4e051c9b39a453a0c9ea98335eac6d72de`. This is a source availability gate;
+the currently installed inventory candidate does not thereby gain these commands.
+After an authorized HRO deployment, start once, perform ordinary skill, inventory, combat,
 travel and UI QA, then stop and use status to locate the folder. A reconnect
 is optional and is needed before claiming recovery coverage. No reset, test
 population, individual subsystem trace activation, or save migration is required.

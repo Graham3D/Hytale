@@ -8,6 +8,16 @@ Hytale `=0.7.0`. Stage 3 continues Stage 2 commit
 safe integration of the completed HRO architecture into main. That permission
 does not establish connected QA acceptance or authorize deployment.
 
+Engineering is complete and integrated into remote `main` at
+`64a3ba4e051c9b39a453a0c9ea98335eac6d72de`. The full gate passed **4,292 tests**
+(3,749 root, 489 native, 49 CanvasUI, 5 Taverns), zero failures/errors/skips,
+strict SpotBugs, asset/CustomUI/package checks and Guardian. GitHub PR creation
+was unavailable to the connector; the reviewed exact SHA was integrated with
+an authorized non-force fast-forward after a fresh main check. This handoff
+update is documentation-only and repeats Guardian's exact-commit gate.
+Source, hashes, deployment and remaining acceptance are recorded in the
+[development baseline](DEVELOPMENT_BASELINE.md).
+
 ## Delivered workflow
 
 The same operator-only recorder and seventeen contracts remain the runtime
