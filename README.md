@@ -1,5 +1,15 @@
 # Hywind / HyARPG development baseline
 
+Inventory Tab handoff QA candidate: **R262C1ELITE2-CANDIDATE**
+(`0.2.0-R262C1ELITE2-CANDIDATE`), Hytale `=0.7.0`, on
+`codex/elite-natural-hookup`. The Hywind inventory bridge now leaves Hytale's
+PocketCrafting window open until the client closes it, preventing the observed
+invalid-window exception after Tab. The mod JAR is deployed to the existing
+Hywind save. See the [baseline status](docs/DEVELOPMENT_BASELINE.md).
+Connected inventory and natural-Elite acceptance remain pending.
+
+### Earlier natural-Elite hook candidate
+
 Natural Elite connected-QA candidate: **R262C1ELITE1-CANDIDATE**
 (`0.2.0-R262C1ELITE1-CANDIDATE`), Hytale `=0.7.0`, on
 `codex/elite-natural-hookup`. The pinned native server patch and matching

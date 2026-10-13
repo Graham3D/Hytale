@@ -1,5 +1,68 @@
 # HyARPG/Hywind development baseline
 
+## Inventory Tab handoff and spawn-trace QA correction — R262C1ELITE2-CANDIDATE (2026-10-13)
+
+State: **ENGINEERING_READY, DEPLOYED, QA_PENDING**. The continuing
+`codex/elite-natural-hookup` branch in
+`C:/Users/Zemio/.codex/worktrees/elite-natural-hookup/Hytale-main-clean`
+descends from its prior deployed candidate `2f0cc6dd561fedc30a1bdb78259875f83d117bf5`;
+the exact implementation source is
+`53e9bf0807db4e9ecb00768394b897b8faf0b38d`. It remains dependent on
+the QA-pending HRO correction branch at
+`f7d414e6348c84653d03a51117bdfe2fc427dded`. Remote `main` was
+`c69e44f16302e68ebd625d65039a457ad92ead06` at this review, six commits
+behind the prior candidate; neither branch is QA-accepted for integration.
+The primary Windows checkout at `1dfa2cea3085196c7fd4492518c65a03d5e3b49d`
+and its owner-owned changes were preserved. This later documentation commit
+does not change the deployed implementation source.
+
+The owner's 2026-10-13 spawn trace
+`monster-spawn-1791932110928.jsonl` captured 18 durable, published natural
+Elite packs in 120 seconds across the world. It also recorded legal normal
+rarity decisions and eight selected promotions that fell back under
+extension/headroom or world-pack limits. The HRO run
+`00f262f7-6f53-4cd5-a80f-1c3eb7a24fc2` recorded natural admission and
+promotion, with 26 observed promotion passes and zero losses in those two
+contracts. Its five losses were scoped to skill projection (four) and
+performance (one); the run terminated on shutdown, leaving the all-contract
+summary inconclusive rather than proving every operation failed. Player-local
+samples show rapid movement across biomes and 6–58 hostiles within 64 m;
+world-wide publication does not establish client-visible encounters. No
+evidence justifies changing the configured Normal-era Champion/Unique odds
+or bypassing the pack and population gates in this pass.
+
+The same HRO run recorded a spatial inventory owner, a page-open event and a
+finalized equipment transfer. At 22:57:17 UTC the main-game server log first
+recorded `INVENTORY_POST_OPEN_BRIDGED`, then Hytale rejected a client
+`CloseWindow(0)` with `Window id 0 is invalid!`. Source inspection showed the
+post-open bridge had closed the observed PocketCrafting window 0 immediately
+after opening Hywind's custom page. The native packet handler then attempted
+to close that same ID when the client changed pages. The bridge now leaves
+window 0 for the client's close and records `nativeWindowClose=CLIENT_OWNED`.
+No spatial custody, save format, command, Elite rarity, or native patch was
+changed. The transient pickup message was not captured with enough detail to
+establish a separate loot failure; there is no evidence of saved-item loss.
+The exact client page transition still requires connected QA.
+
+Revision `R262C1ELITE2-CANDIDATE`, version
+`0.2.0-R262C1ELITE2-CANDIDATE`, Hytale `=0.7.0`. The exact implementation
+commit passed 4,309 JUnit tests with zero failures/errors/skips, package
+validation, strict SpotBugs and coverage gates, HRO heap qualification and
+the pinned native-patch regression. The verified implementation JAR SHA-256
+is `A1241D637A5F995C511E0B29BF6712C8BE6E503A436EFCF3F27F294E279F7A65`.
+It was deployed and rehashed at
+`C:/Users/Zemio/AppData/Roaming/Hytale/UserData/Saves/Hywind/mods/Hywind.jar`
+after verifying the active world config, prior JAR checksum, patched Hytale
+server checksum, and absence of a running game/server process. The prior mod
+JAR has verified rollback copies outside `Saves` at
+`C:/Users/Zemio/AppData/Roaming/Hytale/UserData/Diagnostics/Hywind/Rollback/ELITE2-20261013-231355/`.
+The server patch remains at SHA-256
+`E0BCD36C7A981949D2C15B1B48F1CDD7F9623373269EF03B58F2D9B9DA7F6EDF`.
+No save data was changed and no game or standalone server was launched.
+Next: owner connected QA of Tab, Hywind inventory access, and pickup, with
+normal-spawn observations if desired. Integration into `main` awaits
+affirmative acceptance of this branch and its HRO dependency.
+
 ## Natural Elite native-hook connected-QA candidate (2026-10-13)
 
 State: **ENGINEERING_READY, DEPLOYED, QA_PENDING**. Branch
