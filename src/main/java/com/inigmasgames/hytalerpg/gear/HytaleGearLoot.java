@@ -424,15 +424,18 @@ public final class HytaleGearLoot implements AutoCloseable {
         // A player drop is projected only after the inventory save and durable
         // custody acknowledgement. The SOLO allocation already excludes other
         // players; an extra time fence needlessly delays its owner picking it up.
-        if(projection!=null && projection.isValid() && !nativeDropReady(store,projection))return;
-        var drop=projection!=null&&projection.isValid()?store.getComponent(projection,TransformComponent.getComponentType()):null;
-        var q=drop!=null?drop.getPosition():null;
+        // A durable WORLD receipt is not a native world item. Unloaded sections
+        // and rejected projections must retry projection before pickup admission.
+        if(projection==null||!projection.isValid()||!nativeDropReady(store,projection))return;
+        var drop=store.getComponent(projection,TransformComponent.getComponentType());
+        if(drop==null)return;
+        var q=drop.getPosition();
         for(var player:world.getPlayerRefs()){
             UUID owner=player.getUuid();if(busy.contains(owner)||!row.allocation().denial(owner,now).isEmpty())continue;
             var actor=world.getEntityRef(owner);if(actor==null||!actor.isValid())continue;
             var transform=store.getComponent(actor,TransformComponent.getComponentType());if(transform==null)continue;
             var p=transform.getPosition();
-            if(q!=null?p.distanceSquared(q)>6.25:p.distanceSquared(row.position().x(),row.position().y(),row.position().z())>6.25)continue;
+            if(p.distanceSquared(q)>6.25)continue;
             try{pickup(message->notice(player,message),store,actor,player,world,row);}
             catch(RuntimeException error){
                 if(now-pickupNoticeAt.getOrDefault(owner,0L)>=10_000){pickupNoticeAt.put(owner,now);

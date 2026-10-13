@@ -1,5 +1,47 @@
 # HyARPG/Hywind development baseline
 
+## Chapter I Stage 4 natural equipment and reward recovery (2026-10-12)
+
+Candidate: **ENGINEERING_READY / QA_PENDING** after the committed completion
+gates in the [Stage 4 report](release-migration/STAGE_4_NATURAL_GEAR_AND_REWARD_DELIVERY_RECOVERY.md).
+Branch `codex/chapter1-stage4-gear-loot-recovery`, worktree `C:\hystage4`,
+parent Stage 3 `d28d92f49e7639a6c75da71a810088918456b79b`.
+Version `0.2.0-R262C1S4-CANDIDATE`, revision `R262C1S4-CANDIDATE`, release API
+`0.7.0`, exact requirement `=0.7.0`. Death-share XP now uses the existing
+frozen reward-context helper, and automatic pickup waits for a live native
+item position. Existing generation, drop probabilities, claims, receipts,
+spatial/native inventory owners and Stage 1–3 behavior are preserved.
+
+New stateful tests compose natural birth/death, interrupted delivery, frozen
+MF/gear and pickup custody across restarts, plus native ECS world-item
+projection/deferral/cleanup. Full committed offline check results, exact
+source commit and artifact SHA-256 are bound in
+`build/guardian/verification.json` and `build/stage4/deployment-manifest.json`.
+The matching native patch remains
+`e0bcd36c7a981949d2c15b1b48f1cdd7f9623373269ef03b58f2d9b9da7f6edf`.
+Publication and integration identities are recorded in
+`build/stage4/integration.json` and the corresponding GitHub history.
+
+The owner's explicit Stage 4 instruction authorizes safe integration of this
+reviewed cumulative migration candidate into GitHub `main` after engineering
+completion. This supersedes the historical unmerged instructions in earlier
+stage entries below. It does **not** mark any connected gameplay accepted.
+At task start `origin/main` was
+`6d3ef15ff0145532ef193c42e3b648307ee6e915`, 26 commits behind Stage 3.
+The cumulative integration includes startup, four-slot/readiness/inventory
+recovery and Stage 0–4, with their existing bulk-attribute ancestor. It excludes
+the separate unfinished `codex/hro-stage1` task, which must reconcile the new
+main baseline before integration. Do not retire dependency worktrees yet.
+
+No artifact is installed. The authoritative release `UserData/Saves/Hywind`
+still has INV1; the installed server is stock. Both saves, the primary
+checkout's artwork/uncommitted work and protected AGENTS.md are preserved.
+The older AGENTS.md RPG-target wording is not applied to release deployment.
+The primary local `main` remains behind and dirty; a GitHub integration does
+not synchronize it. Next action is separately authorized paired deployment
+and owner-connected QA, then repair any reported failure without discarding
+the existing architecture. Source integration is not gameplay acceptance.
+
 ## Chapter I Stage 3 natural Elite and affix recovery (2026-10-12)
 
 State: **ENGINEERING_READY / QA_PENDING** on dependent branch
