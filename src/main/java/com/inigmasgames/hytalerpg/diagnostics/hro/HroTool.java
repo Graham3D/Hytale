@@ -14,6 +14,14 @@ public final class HroTool {
         if(args.length<2)throw new IllegalArgumentException("analyze|recover|extract|recovery-join <bundle> [operationId|later-bundle]");
         Path directory=Path.of(args[1]).toAbsolutePath().normalize();
         switch(args[0]) {
+            case "baseline" -> { count(args,4);HroComparison.baseline(directory,Path.of(args[2]),Path.of(args[3])); }
+            case "compare" -> { count(args,5);HroComparison.compare(directory,Path.of(args[2]),Path.of(args[3]),Path.of(args[4])); }
+            case "import" -> { if(args.length!=5)throw new IllegalArgumentException("import <source> <format-v1> <output> <manifest-or-dash>");
+                HroLegacy.importFile(directory,args[2],Path.of(args[3]),args[4].equals("-")?null:Path.of(args[4])); }
+            case "fingerprint" -> { count(args,4);HroFingerprint.capture(directory,Path.of(args[2]),Path.of(args[3])); }
+            case "compatibility" -> { count(args,4);HroFingerprint.compare(directory,Path.of(args[2]),Path.of(args[3])); }
+            case "ui-fixtures" -> { count(args,2);HroOffline.create(directory,Map.of("schemaVersion",1,"fixtures",HroUiParity.fixtures(),
+                    "scope","SEMANTIC_SPECIFICATION_FIXTURES; production/backend/rendering parity requires adapter evidence","reuse",HroMaps.implementation())); }
             case "recover" -> HroBundle.recover(directory);
             case "analyze" -> analyze(directory);
             case "recovery-join" -> {
@@ -22,12 +30,17 @@ public final class HroTool {
             }
             case "extract" -> {
                 if(args.length!=3)throw new IllegalArgumentException("extract requires operationId");
-                verifyChecksums(directory);int[] emitted={0};
-                read(directory,(event,locator)->{if(event.operationId().equals(args[2])&&emitted[0]++<200)System.out.println(locator+" "+HroBundle.JSON.toJson(event));});
+                verifyChecksums(directory);int[] emitted={0},omitted={0},characters={0};
+                read(directory,(event,locator)->{if(event.operationId().equals(args[2])) {
+                    String row=locator+" "+HroBundle.JSON.toJson(event);
+                    if(emitted[0]<64&&characters[0]+row.length()<=24*1024){System.out.println(row);emitted[0]++;characters[0]+=row.length();}else omitted[0]++;
+                }});
+                System.out.println(HroBundle.JSON.toJson(Map.of("emitted",emitted[0],"omitted",omitted[0],"complete",omitted[0]==0)));
             }
             default -> throw new IllegalArgumentException("Unknown HRO operation");
         }
     }
+    private static void count(String[] args,int expected) { if(args.length!=expected)throw new IllegalArgumentException("Invalid argument count for "+args[0]); }
     static void analyze(Path directory)throws IOException {
         verifyChecksums(directory);
         JsonObject manifest=json(directory.resolve("manifest.json"));
@@ -41,16 +54,17 @@ public final class HroTool {
                 && integrity.has("evidenceComplete") && integrity.get("evidenceComplete").getAsBoolean();
         long dropped=integrity.has("dropped")?integrity.get("dropped").getAsLong():1;
         contracts.lost(dropped);
-        long[] count={0};String run=manifest.get("runId").getAsString();
+        long[] count={0};boolean[] gap={false};String run=manifest.get("runId").getAsString();
         read(directory,(event,locator)->{
             if(!run.equals(event.runId()) || event.schemaVersion()!=1)throw new IllegalArgumentException("EVENT_ORIGIN_OR_SCHEMA_MISMATCH");
-            if(event.sequence()!=++count[0])contracts.lost(1);
+            if(event.sequence()!=++count[0]){contracts.lost(1);gap[0]=true;}
             contracts.accept(event,locator);
             mechanical.accept(event,locator);
         });
-        if(manifest.has("eventCount")&&count[0]!=manifest.get("eventCount").getAsLong())contracts.lost(1);
-        Files.writeString(directory.resolve("analysis.json"),HroBundle.JSON.toJson(Map.of("captureBuild",manifest.get("captureBuild"),
-                "coverage",contracts.coverage(!complete),"findings",contracts.findings(!complete),"mechanical",mechanical.snapshot(!complete||dropped>0))));
+        if(!manifest.has("eventCount")||count[0]!=manifest.get("eventCount").getAsLong()){contracts.lost(1);gap[0]=true;}
+        HroOffline.derived(directory.resolve("analysis.json"),Map.of("captureBuild",manifest.get("captureBuild"),
+                "coverage",contracts.coverage(!complete),"findings",contracts.findings(!complete),"mechanical",mechanical.snapshot(!complete||dropped>0||gap[0]),
+                "cascades",HroMaps.cascades(contracts.findings(!complete)),"implementationMap",HroMaps.implementation()));
     }
     static void verifyChecksums(Path directory)throws IOException {
         Path base=directory.toAbsolutePath().normalize();Path checksum=base.resolve("checksums.sha256");
@@ -59,10 +73,12 @@ public final class HroTool {
         try(var lines=Files.lines(checksum,StandardCharsets.UTF_8)) {
             List<String> entries = lines.limit(257).toList();
             if (entries.size() > 256) throw new IOException("CHECKSUM_INDEX_LIMIT");
+            long physicalBytes=0;
             for(String line:entries) {
                 String[] pair=line.split("  ",2);if(pair.length!=2)throw new IOException("INVALID_CHECKSUM");
                 Path file=base.resolve(pair[1]).normalize();
                 if(!file.startsWith(base)||Files.isSymbolicLink(file)||!file.toRealPath().startsWith(base.toRealPath()))throw new IOException("CHECKSUM_PATH_ESCAPE");
+                if((physicalBytes+=Files.size(file))>512L*1024*1024)throw new IOException("PHYSICAL_BUNDLE_LIMIT");
                 if(!pair[0].equals(HroBundle.sha256(file)))throw new IOException("CHECKSUM_MISMATCH");
                 if (!verified.add(file)) throw new IOException("DUPLICATE_CHECKSUM_ENTRY");
             }
@@ -110,8 +126,8 @@ public final class HroTool {
         if(omitted[0]>0||!valid[0]||!first.has("eventCount")||!second.has("eventCount")
                 ||first.get("eventCount").getAsLong()!=firstCount[0]||second.get("eventCount").getAsLong()!=secondCount[0])
             results.replaceAll(row->{var gap=new HashMap<>(row);gap.put("outcome",HroContracts.Outcome.INCONCLUSIVE);gap.put("reason","RECOVERY_EVIDENCE_INCOMPLETE_OR_INVALID");return gap;});
-        Files.writeString(later.resolve("recovery-analysis.json"),HroBundle.JSON.toJson(Map.of("earlierRun",first.get("runId"),
-                "laterRun",second.get("runId"),"comparison","DURABLE_RECEIPT_JOIN_ONLY","findings",results,"omitted",omitted[0])));
+        HroOffline.derived(later.resolve("recovery-analysis.json"),Map.of("earlierRun",first.get("runId"),
+                "laterRun",second.get("runId"),"comparison","DURABLE_RECEIPT_JOIN_ONLY","findings",results,"omitted",omitted[0]));
     }
     private static boolean validRecoveryEvent(HroEvent e,JsonObject manifest,long sequence){return e.schemaVersion()==1
             &&e.sequence()==sequence&&manifest.get("runId").getAsString().equals(e.runId());}
@@ -133,7 +149,7 @@ public final class HroTool {
                     for(int value;(value=input.read())!=-1;) {
                         if(++bytes>HroBundle.SEGMENT_BYTES || ++total>HroBundle.MAX_EVENTS_BYTES)throw new IOException("DECOMPRESSED_BYTE_LIMIT");
                         if(value=='\n') {
-                            if(line.size()>0)visitor.accept(HroBundle.JSON.fromJson(line.toString(StandardCharsets.UTF_8),HroEvent.class),
+                            if(line.size()>0)visitor.accept(HroBundle.JSON.fromJson(HroOffline.parse(line.toString(StandardCharsets.UTF_8)),HroEvent.class),
                                     "events/"+path.getFileName()+":"+(++lineNumber));
                             line.reset();
                         }else {

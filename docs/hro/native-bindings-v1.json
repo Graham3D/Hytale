@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "bindings": [
+    {"entry":"com/hypixel/hytale/server/core/universe/PlayerRef.class","contract":"PLAYER.ADMISSION","owner":"Hywind admission adapter"},
+    {"entry":"com/hypixel/hytale/server/core/inventory/InventoryComponent$AbilitySlots.class","contract":"SKILL.PROJECTION","owner":"Hywind native ability projection"},
+    {"entry":"com/hypixel/hytale/server/core/event/events/player/PlayerConnectEvent.class","contract":"PLAYER.ADMISSION","owner":"Hywind preload/admission"},
+    {"entry":"com/hypixel/hytale/server/core/entity/entities/player/hud/HudManager.class","contract":"HUD.PUBLICATION","owner":"Hywind HUD adapter"},
+    {"entry":"com/hypixel/hytale/server/core/modules/entity/damage/Damage.class","contract":"COMBAT.RECONCILE","owner":"Hywind native damage lifecycle"}
+  ]
+}

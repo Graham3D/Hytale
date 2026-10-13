@@ -84,6 +84,10 @@ tasks.register('hroAnalyze', JavaExec) {
         if(project.findProperty('hroAction') == 'recovery-join') {
             if(!project.hasProperty('hroLaterBundle')) throw new GradleException('Supply -PhroLaterBundle=<later bundle folder>')
             args project.property('hroLaterBundle')
+        } else if(project.hasProperty('hroArgsFile')) {
+            def extra = new groovy.json.JsonSlurper().parse(file(project.property('hroArgsFile')))
+            if (!(extra instanceof List) || extra.size()>4 || extra.any { !(it instanceof String) }) throw new GradleException('hroArgsFile must contain up to four JSON strings')
+            args extra
         } else if(project.hasProperty('hroOperation')) args project.property('hroOperation')
     }
 }

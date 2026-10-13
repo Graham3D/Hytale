@@ -80,13 +80,17 @@ final class HroBundle implements AutoCloseable {
         writeJson("findings.json",Map.of("findings",contracts.findings(incomplete),"omitted",contracts.omittedFindings(),
                 "comparison","NO_BASELINE","scope","OBSERVED_OPERATIONS_ONLY"));
         writeJson("performance.json",performance);
+        writeJson("implementation-map.json",Map.of("schemaVersion",1,"components",HroMaps.implementation()));
+        writeJson("compatibility-diff.json",Map.of("comparison","NO_BASELINE","reason","Select an explicitly approved per-contract baseline offline"));
+        writeJson("cascades.json",HroMaps.cascades(contracts.findings(incomplete)));
+        writeJson("report.json",Map.of("schemaVersion",1,"findings",HroMaps.details(contracts.findings(incomplete))));
         writeJson("integrity.json",Map.of("dropped",drops,"termination",reason,"evidenceComplete",drops==0&&!incomplete,
                 "uncompressedEventBytes",total,"pendingOperationsAreInconclusive",true));
-        StringBuilder summary=new StringBuilder("# HRO Stage 2\n\nRun: "+manifest.get("runId")+"\n\nTermination: "+reason+
+        StringBuilder summary=new StringBuilder("# Hywind Regression Observatory\n\nRun: "+manifest.get("runId")+"\n\nTermination: "+reason+
                 "; dropped observations: "+drops+". Scope: invoking subject only.\n\n");
         coverage.forEach((id,value)->summary.append("- ").append(id).append(": ").append(((Map<?,?>)value).get("outcome")).append('\n'));
         summary.append("\nStart with findings.json, then indexes/operations.jsonl for segment and line locators. "
-                +"Read one gzip segment at a time. No accepted baseline exists. Server publication does not prove client rendering. "
+                +"Read one gzip segment at a time. No approved baseline was selected for this capture. Use the offline compare action for historical comparison. Server publication does not prove client rendering. "
                 +"Pre-start boot/admission events are not reconstructed. Missing expected custody mode and native outcome boundaries remain gaps.\n");
         Files.writeString(directory.resolve("summary.md"),summary,StandardCharsets.UTF_8);
         manifest.put("state","COMPLETE");manifest.put("termination",reason);manifest.put("finishedUtcMillis",System.currentTimeMillis());

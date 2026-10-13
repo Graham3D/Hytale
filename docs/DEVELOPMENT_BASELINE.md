@@ -1,5 +1,47 @@
 # HyARPG/Hywind development baseline
 
+## HRO Stage 3 final engineering candidate (2026-10-13)
+
+State: **IN_PROGRESS — implementation complete; committed-source release gate
+and owner-authorized main integration pending**. Branch `codex/hro-stage3`,
+worktree `C:/hyhro3`, revision **R262C1HRO3-CANDIDATE**, version
+`0.2.0-R262C1HRO3-CANDIDATE`, Hytale `=0.7.0`.
+Exact parent: `985c9c06f3d370d2afc882299a16682aa0cd66c3` (`codex/hro-stage2`),
+including Stage 1 and remote main `ce3865dd5f81bee95003cb5dde8dc2f959bdac2b`.
+The latest user request explicitly authorizes safe integration of completed HRO
+engineering into main. No additional gameplay ancestor is being introduced.
+Source integration is not connected gameplay acceptance.
+
+Stage 3 delivers immutable per-contract approved baselines, semantic comparison,
+versioned legacy imports with preserved provenance gaps, selected native/asset
+fingerprints, source/reuse maps, explicit correlation cascade groups, bounded
+extraction, fifteen backend-neutral UI fixtures and an offline parity seam.
+The analyzer also propagates sequence/count gaps into mechanical evidence
+completeness. See [HRO_STAGE_3.md](HRO_STAGE_3.md) and [COMMANDS.md](COMMANDS.md).
+
+Focused checkpoint: 97 HRO root tests plus six native production bridge tests
+passed; strict SpotBugs passed after importer null handling corrections.
+JaCoCo: 1,045/1,168 HRO lines at that checkpoint. One subsequent sequence-gap
+regression fixture and small offline hardening changes await the final gate.
+Heap bound: 41,300,256 bytes (39.4 MiB), below 64 MiB. Warm disabled allocation
+zero; producer p99 0.0085 ms; synthetic sixteen-observation batch mean/p99
+0.0215/0.0562 ms. Whole diagnostic process trials include concurrent manual
+recording, initialization, worker drain and GC; native world/client measurements
+remain UNVERIFIED. Final exact-HEAD evidence is under ignored `build/guardian/`.
+
+Deployment: **unchanged**, active Hywind save JAR remains
+`R262C1INV1-CANDIDATE`, source `afdf9bfbce9d5fb395bd68848833480a849f0e0b`,
+SHA-256 `3B80550CCA85E59061C40B393A574FA42F7009180E5B711F91930BE1AF719B47`.
+No deployment, game/server launch, authentication, save mutation or connected QA
+was performed. Main's latest integrated candidate and the deployed build differ;
+no newer cumulative QA-accepted build is established by these records.
+
+The primary checkout remains `main` at `1dfa2cea3085196c7fd4492518c65a03d5e3b49d`
+with user-owned AGENTS/artwork/icon/script changes preserved. Its inherited
+committed AGENTS policy still names a legacy save; the newer user-supplied policy
+governs this task. AGENTS.md is not changed in any worktree. Final integration
+must preserve this dirty checkout and use the isolated task branch.
+
 ## HRO Stage 2 mechanical evidence (2026-10-13)
 
 State: **ENGINEERING_READY — connected acceptance/performance UNVERIFIED**. Branch

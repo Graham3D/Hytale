@@ -1,5 +1,18 @@
 # Hywind / HyARPG development baseline
 
+HRO engineering release: **R262C1HRO3-CANDIDATE**
+(`0.2.0-R262C1HRO3-CANDIDATE`), Hytale `=0.7.0`, branch `codex/hro-stage3`.
+The three-stage observatory includes the bounded cross-system recorder,
+seventeen evidence contracts, immutable approved scenario baselines,
+historical comparison/import, native fingerprints and offline UI parity seam.
+Use `/rpg-trace patch start`, ordinary QA, then `/rpg-trace patch stop`.
+See [commands](docs/COMMANDS.md), [Stage 3 release/owner handoff](docs/HRO_STAGE_3.md)
+and [source/integration status](docs/DEVELOPMENT_BASELINE.md).
+Offline qualification does not establish connected gameplay or client smoothness.
+This pass does not deploy a JAR or launch the game/server.
+
+### Earlier engineering checkpoints
+
 HRO Stage 2 diagnostic candidate: **R262C1HRO2-CANDIDATE**
 (`0.2.0-R262C1HRO2-CANDIDATE`) on `codex/hro-stage2`, descended from
 HRO Stage 1 `92ac44fb23c515acd59f2470403dd9feca292b30` and reconciled with
