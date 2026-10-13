@@ -144,19 +144,38 @@ public final class GearNativeItems {
          return actionVariant(stack,validSnapshot,null);
      }
      public static ItemStack actionVariant(ItemStack stack,GearEffectSnapshot validSnapshot,UUID actualMainhand){
+          return actionVariant(stack,validSnapshot,actualMainhand,false);
+     }
+     static ItemStack actionVariantDeferred(ItemStack stack,GearEffectSnapshot validSnapshot,UUID actualMainhand){
+          return actionVariant(stack,validSnapshot,actualMainhand,true);
+     }
+     private static ItemStack actionVariant(ItemStack stack,GearEffectSnapshot validSnapshot,UUID actualMainhand,
+                                            boolean deferPublication){
           var gear=read(stack);if(gear==null)return stack;
           String carrier=BINDINGS.require(gear.baseId()).carrier(gear.rarity());
           var local=validSnapshot.forItem(gear.identity());
          if(NativeTwinUtilityAssets.eligible(validSnapshot,actualMainhand,gear))
-             return withCarrierId(stack,NativeTwinUtilityAssets.publish(carrier));
+             return withCarrierId(stack,deferPublication
+                     ? readyOrCarrier(carrier,NativeTwinUtilityAssets.variantId(carrier),
+                             ()->NativeTwinUtilityAssets.publish(carrier))
+                     : NativeTwinUtilityAssets.publish(carrier));
          if(local.empty() || local.value("WA-008")==0 && local.value("WA-014")==0
                  && local.value("WA-141")==0)
              return withCarrierId(stack,carrier);
          var profile=NativeGearActionProfiles.primary(validSnapshot,gear.identity());
-         String variant=gear.baseId().startsWith("gm.sword_")
-                 ? NativeSwordActionAssets.publish(carrier,profile)
-                 : NativePrimaryActionAssets.publish(carrier,profile);
+         boolean sword=gear.baseId().startsWith("gm.sword_");
+         String variant=deferPublication
+                 ? readyOrCarrier(carrier,sword ? NativeSwordActionAssets.variantId(carrier,profile)
+                         : NativePrimaryActionAssets.variantId(carrier,profile),
+                         ()->sword ? NativeSwordActionAssets.publish(carrier,profile)
+                                 : NativePrimaryActionAssets.publish(carrier,profile))
+                 : sword ? NativeSwordActionAssets.publish(carrier,profile)
+                         : NativePrimaryActionAssets.publish(carrier,profile);
         return withCarrierId(stack,variant);
+    }
+    private static String readyOrCarrier(String carrier,String id,java.util.function.Supplier<String> publish){
+        String ready=NativeActionPublication.ready(id,publish);
+        return ready==null?carrier:ready;
     }
     private static ItemStack withCarrierId(ItemStack stack,String variant){
         if(stack.getItemId().equals(variant))return stack;

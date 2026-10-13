@@ -222,7 +222,7 @@ public final class HytaleGearEquipment {
             var stack=inventory.getItemStack(slot);if(!GearNativeItems.managed(stack)) continue;
             try {
                 var gear=GearNativeItems.read(stack);
-                var action=GearNativeItems.actionVariant(stack,snapshot,activeMainhand);
+                var action=GearNativeItems.actionVariantDeferred(stack,snapshot,activeMainhand);
                 var presented=GearNativeItems.present(action,gear,view.level(),requirementAttributes(view,gear.identity()));
                 if(!stack.equals(presented) && !inventory.replaceItemStackInSlot(slot,stack,presented).succeeded())
                     System.err.println("GEAR_ACTION_CAS_RETRY slot="+slot+" carrier="+stack.getItemId());
