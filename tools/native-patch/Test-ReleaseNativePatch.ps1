@@ -3,6 +3,13 @@ param(
     [string]$OutputDirectory = "$PSScriptRoot\..\..\build\native-patch"
 )
 $ErrorActionPreference='Stop'
+function Get-Sha256([string]$path){
+    $digest=[Security.Cryptography.SHA256]::Create()
+    try{$stream=[IO.File]::OpenRead($path)
+        try{return [BitConverter]::ToString($digest.ComputeHash($stream)).Replace('-','').ToLowerInvariant()}
+        finally{$stream.Dispose()}}
+    finally{$digest.Dispose()}
+}
 $root=(Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 $output=[IO.Path]::GetFullPath($OutputDirectory)
 & (Join-Path $PSScriptRoot 'Build-PackboundNative.ps1') -ServerJar $ServerJar -OutputDirectory $output
@@ -10,8 +17,8 @@ if($LASTEXITCODE -ne 0){throw 'Native patch build failed'}
 $record=Get-Content -LiteralPath (Join-Path $output 'verification.json') -Raw | ConvertFrom-Json
 $patched=Join-Path $output 'HytaleServer-packbound.jar'
 $original=Join-Path $output 'original\HytaleServer.jar'
-if((Get-FileHash -LiteralPath $original -Algorithm SHA256).Hash -ne $record.originalServerSha256){throw 'Original server record mismatch'}
-if((Get-FileHash -LiteralPath $patched -Algorithm SHA256).Hash -ne $record.patchedServerSha256){throw 'Patched server record mismatch'}
+if((Get-Sha256 $original) -ne $record.originalServerSha256){throw 'Original server record mismatch'}
+if((Get-Sha256 $patched) -ne $record.patchedServerSha256){throw 'Patched server record mismatch'}
 if(@($record.originalClassHashes).Count -ne 6 -or @($record.patchedClassHashes).Count -ne 6 -or
    @($record.addedHookClasses).Count -ne 11){throw 'Incomplete native verification record'}
 $libRoot=Join-Path $env:USERPROFILE '.gradle\wrapper\dists\gradle-9.2.0-bin'
