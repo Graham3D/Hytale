@@ -1,5 +1,54 @@
 # HyARPG/Hywind development baseline
 
+## Natural Elite native-hook connected-QA candidate (2026-10-13)
+
+State: **ENGINEERING_READY, DEPLOYED, QA_PENDING**. Branch
+`codex/elite-natural-hookup` in
+`C:/Users/Zemio/.codex/worktrees/elite-natural-hookup/Hytale-main-clean`
+was stacked on the HRO correction branch at
+`f7d414e6348c84653d03a51117bdfe2fc427dded`. Its implementation source
+is `8e9f1ab2632773ccd5b74ac914432181f43563ba`. That HRO branch is a
+dependency and remains QA-pending; remote `main` was
+`c69e44f16302e68ebd625d65039a457ad92ead06` at publication review and
+does not contain either candidate. The primary Windows checkout remains at
+`1dfa2cea3085196c7fd4492518c65a03d5e3b49d` with its owner-owned changes
+preserved. This later baseline/documentation commit does not change the
+deployed implementation source.
+
+The 2026-10-13 HRO capture had zero dropped observations but no natural
+`SPAWN.ADMISSION` or `SPAWN.PROMOTION` events. The corresponding main-game
+server log identified `PACKBOUND_NATIVE_PATCH_VERSION_MISMATCH:NativeMutationHook`.
+The installed Hytale `0.7.0` server JAR was the pinned original SHA-256
+`C3B5985B9E72727BF3BCF220923D7E61E78FE0F37CD1CD9C2A73F51E4F408FF8`;
+natural Elite admission requires the already-authored patched server hook.
+The fix is a paired deployment of that exact patch and a matching mod, plus
+explicit boot logging of the four required hook-readiness bits. The natural
+spawn admission gate and rarity rules were not weakened or changed.
+
+Revision `R262C1ELITE1-CANDIDATE`, version
+`0.2.0-R262C1ELITE1-CANDIDATE`, Hytale `=0.7.0`. The exact implementation
+commit passed 4,309 JUnit tests with zero failures/errors/skips, offline
+`check`, strict SpotBugs and coverage gates, package validation, HRO heap
+qualification, and the pinned native-patch regression. The built Hywind JAR
+SHA-256 is `B38D8326703613E79EB26F5A0DCF2385D2ACEF69AF68342B0B7DAF51ED32294C`;
+the verified native server JAR SHA-256 is
+`E0BCD36C7A981949D2C15B1B48F1CDD7F9623373269EF03B58F2D9B9DA7F6EDF`.
+Both installed files match these hashes. Before replacement, the active
+`UserData/Saves/Hywind` world config, installed Hytale version, prior JAR
+hashes, and absence of a game process were checked. Original JARs and atomic
+replacement backups are outside `Saves` at
+`C:/Users/Zemio/AppData/Roaming/Hytale/UserData/Diagnostics/Hywind/Rollback/ELITE1-20261013-223659/`.
+No save data was changed and no game or standalone server was launched.
+
+Connected QA must confirm the boot log reports
+`RPG_NATURAL_ELITE_HOOKS_READY`, then ordinary natural hostile spawns produce
+HRO admission and promotion evidence and eventually Champions/Uniques. A
+short run without a random special spawn is incomplete coverage, not failure.
+Other issues in the HRO review, including the Teleport commit failure, remain
+separate and uncorrected here. Integration into `main` waits for affirmative
+connected acceptance of this branch and its HRO dependency, followed by
+current-main checks; deployment alone is not acceptance.
+
 ## HRO connected-QA evidence correction (2026-10-13)
 
 State: **ENGINEERING_READY, DEPLOYED, QA_PENDING — connected acceptance

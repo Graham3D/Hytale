@@ -1,5 +1,15 @@
 # Hywind / HyARPG development baseline
 
+Natural Elite connected-QA candidate: **R262C1ELITE1-CANDIDATE**
+(`0.2.0-R262C1ELITE1-CANDIDATE`), Hytale `=0.7.0`, on
+`codex/elite-natural-hookup`. The pinned native server patch and matching
+Hywind JAR are deployed for Champion/Unique natural-spawn QA; source now logs
+whether all four native hooks are ready. This branch depends on the still
+QA-pending HRO correction. See the [baseline status](docs/DEVELOPMENT_BASELINE.md).
+Connected Elite and HRO acceptance remain pending.
+
+### Earlier HRO correction
+
 HRO connected-QA correction candidate: **R262C1HROF1-CANDIDATE**
 (`0.2.0-R262C1HROF1-CANDIDATE`), Hytale `=0.7.0`, on
 `codex/hro-finalization`. It scopes dropped diagnostic evidence to the
