@@ -1,5 +1,18 @@
 # Hywind / HyARPG development baseline
 
+HRO finalization engineering candidate: **R262C1HROF-CANDIDATE**
+(`0.2.0-R262C1HROF-CANDIDATE`), Hytale `=0.7.0`, branch
+`codex/hro-finalization`. It adds one-shot next-boot capture, bounded
+owner reconnect/world continuity, labeled checkpoints, integrated
+performance evidence and worker-side automatic reports. The 17 Stage 1–3
+contracts remain intact. See [commands](docs/COMMANDS.md),
+[finalization handoff](docs/HRO_FINALIZATION.md) and
+[source/integration status](docs/DEVELOPMENT_BASELINE.md).
+Offline qualification does not establish connected gameplay or client
+smoothness; the active save and primary checkout are tracked separately.
+
+### Earlier engineering checkpoints
+
 HRO engineering release: **R262C1HRO3-CANDIDATE**
 (`0.2.0-R262C1HRO3-CANDIDATE`), Hytale `=0.7.0`, branch `codex/hro-stage3`.
 The three-stage observatory includes the bounded cross-system recorder,
@@ -14,8 +27,6 @@ The complete HRO source was integrated into GitHub `main` by a verified
 non-force fast-forward to `64a3ba4e051c9b39a453a0c9ea98335eac6d72de`.
 The full offline gate passed 4,292 tests plus strict static/package checks.
 The primary Windows checkout remains preserved with its existing local changes.
-
-### Earlier engineering checkpoints
 
 HRO Stage 2 diagnostic candidate: **R262C1HRO2-CANDIDATE**
 (`0.2.0-R262C1HRO2-CANDIDATE`) on `codex/hro-stage2`, descended from

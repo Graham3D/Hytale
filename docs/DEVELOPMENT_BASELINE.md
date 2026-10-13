@@ -2,7 +2,7 @@
 
 ## HRO finalization and connected QA readiness (2026-10-13)
 
-State: **IN_PROGRESS — finalization engineering under verification**. The
+State: **ENGINEERING_READY — final integration and connected QA pending**. The
 focused completion branch is `codex/hro-finalization` in `C:/hyhrofinal`, based
 exactly on integrated remote `main`
 `5287bb7ceecaeb7c6bcdfbfd748503886c6b1eb4`. It depends on the already
@@ -23,9 +23,18 @@ Candidate revision `R262C1HROF-CANDIDATE`, version
 capture, owner-bound reconnect/world continuity, labeled checkpoints,
 integrated performance evidence and worker-side automatic comparison/reporting.
 See [HRO_FINALIZATION.md](HRO_FINALIZATION.md) and [COMMANDS.md](COMMANDS.md).
-Build, Guardian, publication, deployment and connected QA states will be
-recorded independently after exact-commit verification. The current primary
-checkout and deployed JAR are not changed by creating this branch.
+Implementation commit `e1ef73dce1771006ad972f79978226be1f64df79`
+passed the full offline gate: 4,300 tests (3,757 root, 489 native, 49
+CanvasUI, 5 Taverns), zero failures/errors/skips, strict SpotBugs,
+package validation and Guardian's exact-source receipt. HRO line coverage
+was 1,312 covered / 137 missed; the conservative heap bound was
+41,305,320 bytes under 64 MiB. Its JAR SHA-256 was
+`9C88AD547F4CB79B90805DF50AD892EC4CF1DC3E7298687E59071F365F08A6AA`.
+The documentation handoff commit must repeat the exact-HEAD gate before
+publication; no connected gameplay or client FPS result is inferred.
+Build, publication, deployment and connected QA states remain separate.
+The current primary checkout and deployed JAR have not been changed by
+this engineering pass.
 
 ## HRO Stage 3 final engineering candidate (2026-10-13)
 
