@@ -2,24 +2,45 @@
 
 ## HRO connected-QA evidence correction (2026-10-13)
 
-State: **IN_PROGRESS — offline verification and owner QA pending**. The
-existing `codex/hro-finalization` worktree at `C:/hyhrofinal` resumes from
-integrated remote `main` and feature HEAD
+State: **ENGINEERING_READY, DEPLOYED, QA_PENDING — connected acceptance
+unverified**. The existing `codex/hro-finalization` worktree at
+`C:/hyhrofinal` was continued from integrated remote `main`
 `c69e44f16302e68ebd625d65039a457ad92ead06`; HRO Stages 1–3 and
-finalization are already in that ancestry. This is a fix for the open HRO
-feature, not an unrelated gameplay branch. The primary Windows checkout
-remains at `1dfa2cea3085196c7fd4492518c65a03d5e3b49d` with its
-user-owned AGENTS/artwork/icon/script changes preserved.
+finalization are already in that ancestry. The verified implementation source
+is `9a2c1dcaf3caacf3c03fab7b121c8c7d52ac0050`, published by Guardian to
+`origin/codex/hro-finalization`. Remote `main` remains at the parent commit,
+behind this candidate; no unmerged gameplay branch is a dependency. The
+primary Windows checkout remains at
+`1dfa2cea3085196c7fd4492518c65a03d5e3b49d` with its user-owned
+AGENTS/artwork/icon/script changes preserved. This baseline update documents
+the implementation; its later documentation-only commit does not change the
+deployed source.
 
 Candidate revision `R262C1HROF1-CANDIDATE`, version
 `0.2.0-R262C1HROF1-CANDIDATE`, Hytale `=0.7.0`. Source diagnosis and scope
-are in [HRO_QA_CORRECTION.md](HRO_QA_CORRECTION.md). The current deployed
-JAR remains `R262C1HROF-CANDIDATE`, embedded source
-`4372e178f4ed550de370aacdbba06767905d84f7`, SHA-256
-`E95467B26A4DFB89F8FF2D6DF7E7A24A2F084F9D1771B1BE7FDDB91862C9D26A`.
-Do not infer acceptance or a new deployment from this development candidate.
-Record the exact committed source, full verification, publication, build JAR,
-deployment and connected-QA status after the gate.
+are in [HRO_QA_CORRECTION.md](HRO_QA_CORRECTION.md). The final exact-source
+offline gate passed 4,309 JUnit tests with zero failures/errors/skips, strict
+SpotBugs, coverage, package validation, and Guardian completion. The
+conservative heap bound was 41,310,672 bytes, below 64 MiB. A separate
+uninstrumented offline workload on the same producer path measured 13,900 ns
+p99, 115,300 ns synthetic 16-observation tick p99, and zero median warmed
+disabled-path allocation. The subsequent stop-boundary correction only
+changed drop accounting; native world-tick and client-FPS effects remain
+unverified. The verified implementation JAR SHA-256 is
+`52732AE59B22BBD42256B89278D134294CB0767D1E6E0F77CC28487AB2AF08D6`.
+
+That JAR was deployed and hash-verified at
+`C:/Users/Zemio/AppData/Roaming/Hytale/UserData/Saves/Hywind/mods/Hywind.jar`
+after confirming the active save, installed Hytale package, previous JAR
+identity, and absence of a game process. The pre-fix JAR has a verified
+rollback copy outside `Saves` at
+`C:/Users/Zemio/AppData/Roaming/Hytale/UserData/Diagnostics/Hywind/Rollback/HROF1-20261013-203211/Hywind-before.jar`;
+the immediately preceding interim candidate has another at
+`C:/Users/Zemio/AppData/Roaming/Hytale/UserData/Diagnostics/Hywind/Rollback/HROF1-final-20261013-204425/Hywind-before.jar`.
+No game or standalone server was launched. The original connected trace is
+preserved; its unattributed drop cannot be retroactively scoped. The next
+action is the owner's connected QA pass, followed by serialized integration
+into `main` only after affirmative acceptance and current-main checks.
 
 ## HRO finalization and connected QA readiness (2026-10-13)
 
