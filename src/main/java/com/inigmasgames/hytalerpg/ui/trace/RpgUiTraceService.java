@@ -25,6 +25,7 @@ public final class RpgUiTraceService implements AutoCloseable {
         writer=new BoundedTraceWriter(path,configuration.maxFileMb()*1024L*1024L,configuration.retainedFiles(),this::logFailureOnce,
                 TraceArchiveManager.Compression.valueOf(configuration.archiveCompression()),configuration.archiveVerify());}
     public void trace(UUID player,String event,String correlationId,Map<String,?> details){
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.ui(player,event,correlationId,details);
         if (event.startsWith("SKILLTREE")) {
             var interaction = UiInteractionTrace.current();
             if (interaction != null) interaction.event(player, event, correlationId, details);

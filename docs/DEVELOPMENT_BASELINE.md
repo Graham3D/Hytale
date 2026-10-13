@@ -1,5 +1,38 @@
 # HyARPG/Hywind development baseline
 
+## HRO Stage 1 diagnostic foundation (2026-10-12)
+
+State: **IN_PROGRESS — final engineering gates pending**. Scoped candidate
+`R262C1HRO1-CANDIDATE`, version `0.2.0-R262C1HRO1-CANDIDATE`, exact server
+requirement `=0.7.0`. Branch `codex/hro-stage1`, isolated worktree `C:/hyhro`,
+parent `3e359b8e036ad023c9c8bd93064bcb0f78068f83` on
+`codex/chapter1-stage3-elite-restoration`. The candidate preserves the cumulative
+unaccepted Chapter I startup, skill bar, inventory, world, native combat and
+Elite recovery ancestry; it must not carry those changes into `main` before
+their acceptance gates. Remote `main` remains
+`6d3ef15ff0145532ef193c42e3b648307ee6e915`, while installed INV1 embeds
+`afdf9bfbce9d5fb395bd68848833480a849f0e0b`. Neither has newly inferred QA acceptance.
+
+While this task ran, Stage 3 published test/documentation-only follow-up
+`d28d92f49e7639a6c75da71a810088918456b79b` (`R262C1S3V2-CANDIDATE`), and
+`codex/chapter1-stage4-gear-loot-recovery` began isolated, uncommitted work
+including gear ownership code. HRO remains on its original verified parent;
+reconcile these separate branches before integration. No newer accepted build
+or active deployed artifact was replaced.
+
+The [Stage 1 report](HRO_STAGE_1.md) records the nine contract families,
+asynchronous capture/stop, bounded streaming bundle, loss-aware evaluation,
+offline recovery, provider/registration evidence, installed server/assets
+hashes, focused fixtures and measured producer/heap qualification. Source
+branch/commit, final version, JAR hash, exact-head full check, package audit
+and Guardian status will be bound by `build/guardian/verification.json` after
+reviewed publication. No build is deployed. Whole-world tick/client-frame
+qualification and connected acceptance remain unmeasured; no owner QA is
+requested as a prerequisite for another assignment. HRO Stages 2 and 3 have
+not begun. The primary checkout's policy/artwork, all saves, and the installed
+stock server/INV1 JAR remain preserved. Next action is final offline gates,
+review and publication of this task branch, not integration or deployment.
+
 ## Chapter I Stage 3 natural Elite and affix recovery (2026-10-12)
 
 State: **ENGINEERING_READY / QA_PENDING** on dependent branch

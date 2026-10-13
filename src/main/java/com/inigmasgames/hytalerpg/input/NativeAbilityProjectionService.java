@@ -167,6 +167,7 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
             return;
         }
         var state = loadouts.getPresentationView(player).state();
+        if(com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.active(player))session.hroRevision=state.revision;
         project(player, session, container, SkillSlot.SKILL01, ABILITY2_PRIMARY_INDEX,
                 state.skill(SkillSlot.SKILL01).orElse(null), reason);
         project(player, session, container, SkillSlot.SKILL02, ABILITY3_PRIMARY_INDEX,
@@ -236,6 +237,10 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
 
     private void updateStatus(UUID player, Session session, SkillSlot slot, SlotStatus next, String reason) {
         SlotStatus previous = session.status.put(slot, next);
+        if(com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.active(player))
+            com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.observe(player,"SKILL.PROJECTION","NativeAbilityProjectionService",
+                    "PROJECTION_READBACK",slot.externalId(),null,null,null,session.hroRevision,Map.of("logicalSlot",slot.externalId(),
+                            "skillId",next.skillId(),"nativeItemId",next.nativeItemId(),"result",next.result(),"reason",reason));
         if (next.equals(previous)) return;
         RpgTraceEventType event = switch (next.result()) {
             case "PROJECTED" -> RpgTraceEventType.NATIVE_ABILITY_SLOT_PROJECTED;
@@ -332,6 +337,7 @@ public final class NativeAbilityProjectionService implements AutoCloseable {
         private final InventoryComponent.AbilitySlots slots;
         private final Map<SkillSlot, SlotStatus> status = new EnumMap<>(SkillSlot.class);
         private volatile long lastReconcileNanos;
+        private Long hroRevision;
         private Session(InventoryComponent.AbilitySlots slots) { this.slots = slots; }
     }
 }

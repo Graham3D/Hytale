@@ -1,5 +1,26 @@
 # HyARPG gameplay and QA commands
 
+## HRO Stage 1 cross-system diagnostics
+
+Available in `R262C1HRO1-CANDIDATE` and descendants targeting Hytale `=0.7.0`.
+These commands require the administrative permission `inigmasgames.rpg.trace.patch`;
+they are not assigned the Adventurer group or the ordinary UI/gear permissions.
+They require an in-game player and never modify save state.
+
+| Command | Effect | Gate |
+| --- | --- | --- |
+| `/rpg-trace patch start` | Request one cross-system session for the invoking player; returns STARTING, then RECORDING. Maximum ten minutes. A second start reports the existing session. Does not enable manual legacy recorders. | Operator; HRO build; one process-wide session |
+| `/rpg-trace patch stop` | Stop new admission immediately; in-flight observations finalize asynchronously. Status remains FINALIZING until complete. | Operator; any current HRO session |
+| `/rpg-trace patch status` | Show state, run ID, admitted/dropped counts and absolute output path; no file scan. COMPLETE and PARTIAL are distinct. | Operator |
+
+Output: `%APPDATA%/Hytale/UserData/Diagnostics/Hywind/HRO/<runId>/` on this
+Windows installation, outside `Saves`. Disconnect/shutdown stops admission;
+expiry and resource pressure also stop capture. At eight retained run folders,
+new captures refuse to start; existing evidence is never automatically deleted.
+Use status after stop to obtain the completed folder. Pre-start boot/admission,
+physical key presses and client rendering cannot be reconstructed.
+See [HRO Stage 1](HRO_STAGE_1.md) for offline analysis/recovery and proof limits.
+
 This is the maintained command reference for the current HyARPG source. Update it in the **same change** as an essential command's implementation. Syntax and availability come from command registration, not from old QA reports. Commands omitted here are internal experiments or narrow one-off probes. `Adventure` means available to an ordinary player in Adventure mode; `operator` means the named server permission is required. Examples that grant items or alter progress are intended for QA unless the row says otherwise.
 
 Hywind retains the internal `HyARPG` plugin identity and `HyArpgPlugin` entrypoint even when the active mod file is named `Hywind.jar`. The maintained command reference now uses the R258 `/rpg-trace` family. Use the [development baseline record](DEVELOPMENT_BASELINE.md) to distinguish source, build, deployment, and connected QA status.

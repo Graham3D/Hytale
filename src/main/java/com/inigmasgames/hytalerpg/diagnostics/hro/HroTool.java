@@ -1,0 +1,104 @@
+package com.inigmasgames.hytalerpg.diagnostics.hro;
+
+import com.google.gson.*;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
+import java.util.*;
+import java.util.zip.GZIPInputStream;
+
+/** Offline bounded reader. Does not load Hytale, native saves, or any recorded class by name. */
+public final class HroTool {
+    private HroTool() { }
+    public static void main(String[] args)throws IOException {
+        if(args.length<2)throw new IllegalArgumentException("analyze|recover|extract <bundle> [operationId]");
+        Path directory=Path.of(args[1]).toAbsolutePath().normalize();
+        switch(args[0]) {
+            case "recover" -> HroBundle.recover(directory);
+            case "analyze" -> analyze(directory);
+            case "extract" -> {
+                if(args.length!=3)throw new IllegalArgumentException("extract requires operationId");
+                verifyChecksums(directory);int[] emitted={0};
+                read(directory,(event,locator)->{if(event.operationId().equals(args[2])&&emitted[0]++<200)System.out.println(locator+" "+HroBundle.JSON.toJson(event));});
+            }
+            default -> throw new IllegalArgumentException("Unknown HRO operation");
+        }
+    }
+    static void analyze(Path directory)throws IOException {
+        verifyChecksums(directory);
+        JsonObject manifest=json(directory.resolve("manifest.json"));
+        JsonObject capabilities=json(directory.resolve("capabilities.json"));
+        Set<String> registered=new HashSet<>();
+        capabilities.getAsJsonArray("registeredContracts").forEach(value->registered.add(value.getAsString()));
+        HroContracts contracts=new HroContracts(registered);
+        JsonObject integrity=json(directory.resolve("integrity.json"));
+        boolean complete="COMPLETE".equals(manifest.get("state").getAsString())
+                && integrity.has("evidenceComplete") && integrity.get("evidenceComplete").getAsBoolean();
+        long dropped=integrity.has("dropped")?integrity.get("dropped").getAsLong():1;
+        contracts.lost(dropped);
+        long[] count={0};String run=manifest.get("runId").getAsString();
+        read(directory,(event,locator)->{
+            if(!run.equals(event.runId()) || event.schemaVersion()!=1)throw new IllegalArgumentException("EVENT_ORIGIN_OR_SCHEMA_MISMATCH");
+            if(event.sequence()!=++count[0])contracts.lost(1);
+            contracts.accept(event,locator);
+        });
+        if(manifest.has("eventCount")&&count[0]!=manifest.get("eventCount").getAsLong())contracts.lost(1);
+        Files.writeString(directory.resolve("analysis.json"),HroBundle.JSON.toJson(Map.of("captureBuild",manifest.get("captureBuild"),
+                "coverage",contracts.coverage(!complete),"findings",contracts.findings(!complete))));
+    }
+    static void verifyChecksums(Path directory)throws IOException {
+        Path base=directory.toAbsolutePath().normalize();Path checksum=base.resolve("checksums.sha256");
+        if(Files.size(checksum)>64*1024)throw new IOException("CHECKSUM_INDEX_LIMIT");
+        Set<Path> verified = new HashSet<>();
+        try(var lines=Files.lines(checksum,StandardCharsets.UTF_8)) {
+            List<String> entries = lines.limit(257).toList();
+            if (entries.size() > 256) throw new IOException("CHECKSUM_INDEX_LIMIT");
+            for(String line:entries) {
+                String[] pair=line.split("  ",2);if(pair.length!=2)throw new IOException("INVALID_CHECKSUM");
+                Path file=base.resolve(pair[1]).normalize();
+                if(!file.startsWith(base)||Files.isSymbolicLink(file)||!file.toRealPath().startsWith(base.toRealPath()))throw new IOException("CHECKSUM_PATH_ESCAPE");
+                if(!pair[0].equals(HroBundle.sha256(file)))throw new IOException("CHECKSUM_MISMATCH");
+                if (!verified.add(file)) throw new IOException("DUPLICATE_CHECKSUM_ENTRY");
+            }
+        }
+        for (String required : List.of("manifest.json", "capabilities.json", "integrity.json", "coverage.json",
+                "findings.json", "summary.md", "performance.json", "indexes/operations.jsonl")) {
+            if (!verified.contains(base.resolve(required))) throw new IOException("UNCHECKED_METADATA");
+        }
+        try (var events = Files.list(base.resolve("events"))) {
+            if (events.filter(path -> path.getFileName().toString().endsWith(".gz"))
+                    .anyMatch(path -> !verified.contains(path))) throw new IOException("UNCHECKED_EVENT_SEGMENT");
+        }
+    }
+    private static JsonObject json(Path path)throws IOException {
+        if(Files.size(path)>1024*1024)throw new IOException("METADATA_LIMIT");
+        try(var reader=Files.newBufferedReader(path)){return JsonParser.parseReader(reader).getAsJsonObject();}
+    }
+    @FunctionalInterface interface Visitor {void accept(HroEvent event,String locator);}
+    static void read(Path directory,Visitor visitor)throws IOException {
+        long total=0;
+        try(var paths=Files.list(directory.resolve("events"))) {
+            List<Path> segments=paths.filter(p->p.getFileName().toString().matches("segment-[0-9]{4}\\.jsonl\\.gz")).sorted().limit(66).toList();
+            if(segments.size()>65)throw new IOException("SEGMENT_COUNT_LIMIT");
+            for(Path path:segments) {
+                if(Files.isSymbolicLink(path)||!path.toRealPath().startsWith(directory.toRealPath()))throw new IOException("EVENT_PATH_ESCAPE");
+                long bytes=0,lineNumber=0;
+                try(var input=new BufferedInputStream(new GZIPInputStream(Files.newInputStream(path),32*1024))) {
+                    var line=new ByteArrayOutputStream(4096);
+                    for(int value;(value=input.read())!=-1;) {
+                        if(++bytes>HroBundle.SEGMENT_BYTES || ++total>HroBundle.MAX_EVENTS_BYTES)throw new IOException("DECOMPRESSED_BYTE_LIMIT");
+                        if(value=='\n') {
+                            if(line.size()>0)visitor.accept(HroBundle.JSON.fromJson(line.toString(StandardCharsets.UTF_8),HroEvent.class),
+                                    "events/"+path.getFileName()+":"+(++lineNumber));
+                            line.reset();
+                        }else {
+                            if(line.size()>=HroRecorder.RESERVATION)throw new IOException("EVENT_LINE_LIMIT");
+                            line.write(value);
+                        }
+                    }
+                    if(line.size()>0)throw new IOException("PARTIAL_LINE");
+                }
+            }
+        }
+    }
+}

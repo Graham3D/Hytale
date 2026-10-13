@@ -61,6 +61,46 @@ def hytaleHome = file("${System.getProperty('user.home')}/AppData/Roaming/Hytale
 def gamePackage = file("${hytaleHome}/install/${patchline}/package/game/latest")
 def serverJar = file("${gamePackage}/Server/HytaleServer.jar")
 def assetsZip = file("${gamePackage}/Assets.zip")
+tasks.register('prepareHroNativeIdentity', Exec) {
+    inputs.files(serverJar, assetsZip, file('tools/hro/Audit-HroNative.ps1'))
+    outputs.file(layout.buildDirectory.file('generated/hro/hro-native-identity.properties'))
+    commandLine 'powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
+            file('tools/hro/Audit-HroNative.ps1'), '-ServerJar', serverJar, '-AssetsZip', assetsZip,
+            '-Output', layout.buildDirectory.file('generated/hro/hro-native-identity.properties').get().asFile
+}
+tasks.named('processResources') {
+    dependsOn tasks.named('prepareHroNativeIdentity')
+    from(layout.buildDirectory.dir('generated/hro'))
+}
+tasks.register('hroAnalyze', JavaExec) {
+    group = 'verification'
+    description = 'Offline bounded HRO analyze/recover/extract; never starts a Hytale server.'
+    dependsOn tasks.named('classes')
+    classpath = sourceSets.main.runtimeClasspath + files(serverJar)
+    mainClass = 'com.inigmasgames.hytalerpg.diagnostics.hro.HroTool'
+    doFirst {
+        if (!project.hasProperty('hroBundle')) throw new GradleException('Supply -PhroBundle=<absolute bundle folder>')
+        args project.findProperty('hroAction') ?: 'analyze', project.property('hroBundle')
+        if(project.hasProperty('hroOperation')) args project.property('hroOperation')
+    }
+}
+tasks.register('hroHeapAgent', Jar) {
+    dependsOn tasks.named('testClasses')
+    from(sourceSets.test.output) { include '**/HroHeapQualification.class' }
+    archiveClassifier = 'hro-test-agent'
+    manifest { attributes 'Premain-Class': 'com.inigmasgames.hytalerpg.diagnostics.hro.HroHeapQualification' }
+}
+tasks.register('hroHeapQualification', JavaExec) {
+    dependsOn tasks.named('hroHeapAgent')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.inigmasgames.hytalerpg.diagnostics.hro.HroHeapQualification'
+    doFirst {
+        jvmArgs "-javaagent:${tasks.named('hroHeapAgent').get().archiveFile.get().asFile}"
+        ['java.lang','java.util','java.util.concurrent.atomic','java.util.concurrent.locks','sun.nio.fs'].each {
+            jvmArgs '--add-opens', "java.base/${it}=ALL-UNNAMED"
+        }
+    }
+}
 def htDevLibJar = file("${hytaleHome}/UserData/Saves/Hywind/mods/HYTALEDEVLIB-0.5.0.jar")
 
 if (!serverJar.exists()) {
@@ -155,6 +195,7 @@ tasks.withType(JavaCompile).configureEach {
 
 tasks.test {
     useJUnitPlatform()
+    exclude '**/HroProductionBridgeTest*'
     // This fixture pins the pre-release server patch and asset hashes.
     if (patchline == 'release') exclude '**/LarvaNativeBindingAssetTest*'
     exclude '**/CombatDamageTraceServiceTest*'
@@ -210,6 +251,7 @@ tasks.test {
 }
 
 tasks.register('nativeControlTest', Test) {
+    include '**/HroProductionBridgeTest.class'
     // Native asset classes cache their stores statically; isolate fixture owners.
     forkEvery = 1
     testClassesDirs = sourceSets.test.output.classesDirs

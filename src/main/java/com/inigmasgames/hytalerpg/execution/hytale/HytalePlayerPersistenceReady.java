@@ -44,6 +44,7 @@ public final class HytalePlayerPersistenceReady extends EntityTickingSystem<Enti
                 .thenCompose(view->{additionalPreload.accept(player.getUuid());
                     return additionalAsyncPreload.apply(player.getUuid());}).whenComplete((ignored,error)->{
                     if(error!=null){
+                        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.admission(player.getUuid(),world,"PREPARATION_FAILED");
                         if(connections.remove(player.getUuid(),player))preparation.detach(player.getUuid());
                     }else{
                         // Chapter I can enter the world without a subsequent PlayerReadyEvent.
@@ -66,11 +67,16 @@ public final class HytalePlayerPersistenceReady extends EntityTickingSystem<Enti
     }
     private void queueReady(PlayerRef connection,UUID world){
         UUID player=connection.getUuid();
-        var current=connections.get(player);if(current!=null&&current!=connection)return;
+        var current=connections.get(player);if(current!=null&&current!=connection){
+            com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.admission(player,world,"STALE_CONNECTION");return;}
         try(var readyPathSpan=com.inigmasgames.hywind.readypath.ReadyPathProbe.span("RPG_PRELOAD_SUBMIT",player)) {
         com.inigmasgames.hywind.readypath.ReadyPathProbe.ready(player);
         if(pending.size()>=256&&!pending.containsKey(player))throw new IllegalStateException("PLAYER_READINESS_CAPACITY");
-        loadouts.preload(player);pending.put(player,new Ready(world,generations.incrementAndGet()));
+        loadouts.preload(player);
+        long generation=generations.incrementAndGet();pending.put(player,new Ready(world,generation));
+        if(com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.active(player))
+            com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.observe(player,"PLAYER.ADMISSION","HytalePlayerPersistenceReady",
+                    "READY_QUEUED","admission-"+generation,world,generation,null,null,Map.of());
 
         }
     }
@@ -78,6 +84,7 @@ public final class HytalePlayerPersistenceReady extends EntityTickingSystem<Enti
         var current=connections.get(player.getUuid());
         if(current!=null&&current!=player)return; // A delayed old disconnect cannot cancel a newer session.
         connections.remove(player.getUuid(),player);pending.remove(player.getUuid());preparation.detach(player.getUuid());
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.disconnect(player.getUuid());
         com.inigmasgames.hywind.readypath.ReadyPathProbe.disconnect(player.getUuid());
     }
     public Map<String,Object> preparationStatus(){
@@ -96,17 +103,38 @@ public final class HytalePlayerPersistenceReady extends EntityTickingSystem<Enti
     @Override public void tick(float dt,int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
         try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.LIFECYCLE)){
         var player=chunk.getComponent(index,PlayerRef.getComponentType());var ready=pending.get(player.getUuid());
-        var connection=connections.get(player.getUuid());if(connection!=null&&connection!=player)return;
+        var connection=connections.get(player.getUuid());if(connection!=null&&connection!=player){
+            com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.admission(player.getUuid(),player.getWorldUuid(),"STALE_CONNECTION");return;}
         if(com.inigmasgames.hywind.readypath.ReadyPathProbe.ENABLED)
             com.inigmasgames.hywind.readypath.ReadyPathProbe.observeTick(player.getUuid(),store.getExternalData().getWorld().getBufferedTickLengthMetricSet().getLastValue());
-        if(ready==null||!ready.accepts(player.getWorldUuid())||!loadouts.ready(player.getUuid()))return;
+        if(ready==null)return;
+        if(!ready.accepts(player.getWorldUuid())){
+            observeReady(player,ready,store,"STALE_WORLD");return;
+        }
+        if(!loadouts.ready(player.getUuid())){
+            if(com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.active(player.getUuid()))
+                com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.observe(player.getUuid(),"PLAYER.ADMISSION",
+                        "HytalePlayerPersistenceReady","WAIT","admission-"+ready.generation(),player.getWorldUuid(),
+                        ready.generation(),store.getExternalData().getWorld().getTick(),null,Map.of("reason","LOADOUT_NOT_READY"));
+            return;
+        }
         try(var span=com.inigmasgames.hywind.readypath.ReadyPathProbe.span("RPG_READY_INSTALL_ATTEMPT_NOT_J4",player.getUuid())){
+          try(var observation=com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.owner(player.getUuid(),player.getWorldUuid(),
+                  ready.generation(),store.getExternalData().getWorld().getTick())){
             if(install.install(store,chunk.getReferenceTo(index),player,chunk.getComponent(index,Player.getComponentType()),chunk.getComponent(index,EntityStatMap.getComponentType()))){
                 pending.remove(player.getUuid(),ready);
+                observeReady(player,ready,store,"OWNER_INSTALLED");
                 com.inigmasgames.hywind.readypath.ReadyPathProbe.mark("RPG_READY_INSTALL_COMPLETE_EQUIPMENT_UNCONFIRMED",player.getUuid());
             }
+          }
         }
 
         }
+    }
+    private static void observeReady(PlayerRef player,Ready ready,Store<EntityStore> store,String boundary){
+        if(com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.active(player.getUuid()))
+            com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.observe(player.getUuid(),"PLAYER.ADMISSION",
+                    "HytalePlayerPersistenceReady",boundary,"admission-"+ready.generation(),player.getWorldUuid(),
+                    ready.generation(),store.getExternalData().getWorld().getTick(),null,Map.of());
     }
 }

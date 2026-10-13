@@ -55,14 +55,15 @@ public final class BoundedTraceWriter implements AutoCloseable {
         long prior;
         do{prior=bytes.get();if(prior+line.length>QUEUE_BYTES){drop(new IllegalStateException("TRACE_QUEUE_BYTE_LIMIT"));return false;}}
         while(!bytes.compareAndSet(prior,prior+line.length));
+        if(!SharedTraceBudget.acquire(line.length)){bytes.addAndGet(-line.length);dropped.incrementAndGet();return false;}
         try{
             worker.execute(()->{
                 try{writeGap();sink.write(line);written.incrementAndGet();}
                 catch(Exception error){failed.incrementAndGet();notifyFailure(error);}
-                finally{bytes.addAndGet(-line.length);}
+                finally{bytes.addAndGet(-line.length);SharedTraceBudget.release(line.length);}
             });
             accepted.incrementAndGet();return true;
-        }catch(RejectedExecutionException full){bytes.addAndGet(-line.length);if(!closed)drop(full);return false;}
+        }catch(RejectedExecutionException full){bytes.addAndGet(-line.length);SharedTraceBudget.release(line.length);if(!closed)drop(full);return false;}
     }
     /** Queue an already immutable, size-bounded diagnostic snapshot; serialize off the combat thread. */
     public boolean submitDeferred(Object record,int reservationBytes){
@@ -71,6 +72,7 @@ public final class BoundedTraceWriter implements AutoCloseable {
         long prior;
         do{prior=bytes.get();if(prior+reservationBytes>QUEUE_BYTES){drop(new IllegalStateException("TRACE_QUEUE_BYTE_LIMIT"));return false;}}
         while(!bytes.compareAndSet(prior,prior+reservationBytes));
+        if(!SharedTraceBudget.acquire(reservationBytes)){bytes.addAndGet(-reservationBytes);dropped.incrementAndGet();return false;}
         try{
             worker.execute(()->{
                 try{
@@ -79,10 +81,10 @@ public final class BoundedTraceWriter implements AutoCloseable {
                     if(line.length>reservationBytes){dropped.incrementAndGet();notifyFailure(new IllegalArgumentException("TRACE_DEFERRED_RECORD_LIMIT"));return;}
                     writeGap();sink.write(line);written.incrementAndGet();
                 }catch(Exception error){failed.incrementAndGet();notifyFailure(error);}
-                finally{bytes.addAndGet(-reservationBytes);}
+                finally{bytes.addAndGet(-reservationBytes);SharedTraceBudget.release(reservationBytes);}
             });
             accepted.incrementAndGet();return true;
-        }catch(RejectedExecutionException full){bytes.addAndGet(-reservationBytes);if(!closed)drop(full);return false;}
+        }catch(RejectedExecutionException full){bytes.addAndGet(-reservationBytes);SharedTraceBudget.release(reservationBytes);if(!closed)drop(full);return false;}
     }
     private void drop(Throwable error){dropped.incrementAndGet();notifyFailure(error);}
     private void notifyFailure(Throwable error){try{failure.accept(error);}catch(RuntimeException ignored){}}

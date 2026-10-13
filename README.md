@@ -1,6 +1,15 @@
 # Hywind / HyARPG development baseline
 
-The current Chapter I Stage 3 engineering candidate is **R262C1S3-CANDIDATE**
+HRO Stage 1 diagnostic candidate: **R262C1HRO1-CANDIDATE**
+(`0.2.0-R262C1HRO1-CANDIDATE`) on `codex/hro-stage1`, based on
+Chapter I Stage 3 commit `3e359b8e036ad023c9c8bd93064bcb0f78068f83`.
+The operator-only `/rpg-trace patch start|stop|status` records bounded
+cross-system evidence outside saves. See [HRO Stage 1](docs/HRO_STAGE_1.md)
+for contracts, output, offline qualification and native observability limits.
+This dependent candidate is not deployed, connected-QA accepted, or integrated.
+HRO Stages 2 and 3 are separate assignments.
+
+The parent Chapter I Stage 3 engineering candidate is **R262C1S3-CANDIDATE**
 (`0.2.0-R262C1S3-CANDIDATE`) on `codex/chapter1-stage3-elite-restoration`,
 targeting Hytale `0.7.0`. It retains the Stage 1 release-world identity and
 encounter recovery and the Stage 2 version-pinned native patch and combat

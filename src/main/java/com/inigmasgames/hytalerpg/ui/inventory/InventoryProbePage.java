@@ -188,7 +188,9 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
         var spatial = store.getComponent(ref, SpatialBagComponent.getComponentType());
         boolean spatialOwner = spatial != null && spatial.mode(player.getUuid()) != SpatialBagComponent.OwnershipMode.NATIVE;
         if (spatialOwner) {
-            for (var entry : spatial.state(player.getUuid()).entries()) {
+            var observedBag=spatial.state(player.getUuid());
+            com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.custody(player.getUuid(),player.getWorldUuid(),true,"SPATIAL",observedBag.revision());
+            for (var entry : observedBag.entries()) {
                 var stack = entry.payload();
                 String id = entry.id().toString();
                 if (!layout.add(id, entry.size(), entry.position())) throw new IllegalStateException("Invalid committed bag placement");
@@ -196,6 +198,7 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
                         stack.getQuantity(), stack));
             }
         } else {
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.custody(player.getUuid(),player.getWorldUuid(),spatial!=null,"NATIVE",-1);
         var storage = store.getComponent(ref, InventoryComponent.Storage.getComponentType());
         if (storage != null) {
             var nativeBag = storage.getInventory();
@@ -1140,9 +1143,9 @@ public final class InventoryProbePage extends InteractiveCustomUIPage<InventoryP
         } finally {
             if (actionTrace.active()) {
                 try {
-                    if (traceCommands != null) tracePatch(actionTrace, traceCommands);
+                    if (actionTrace.legacyActive() && traceCommands != null) tracePatch(actionTrace, traceCommands);
                     actionTrace.complete(traceOutcome == null ? "HANDLED" : traceOutcome,
-                            traceAfter(store, ref));
+                            actionTrace.legacyActive()?traceAfter(store, ref):Map.of());
                 } catch (RuntimeException diagnosticFailure) {
                     actionTrace.complete("TRACE_INCOMPLETE", Map.of("diagnosticFailure",
                             diagnosticFailure.getClass().getSimpleName()));

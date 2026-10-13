@@ -31,9 +31,9 @@ class UnifiedTraceCommandTest {
     @Test void categoriesHaveNativeSubcommandsAndNoLegacyModes(){
         var root=command();
         assertEquals(Set.of("status","list","help","skill","combat","skilltree","inventory","ui",
-                "gear","sentinel","spawn","inventory-tab","inventory-drop"),root.getSubCommands().keySet());
+                "gear","sentinel","spawn","inventory-tab","inventory-drop","patch"),root.getSubCommands().keySet());
         for(String category: new String[]{"skill","combat","skilltree","inventory","ui","gear","sentinel","spawn",
-                "inventory-tab","inventory-drop"}){
+                "inventory-tab","inventory-drop","patch"}){
             assertNotNull(leaf(root,category,"start"));
             assertNotNull(leaf(root,category,"stop"));
             assertNotNull(leaf(root,category,"status"));
@@ -76,6 +76,13 @@ class UnifiedTraceCommandTest {
         assertTrue(tab.hasPermission(adventurer));
         assertTrue(drop.hasPermission(adventurer));
         assertFalse(leaf(root,"combat","start").hasPermission(adventurer));
+        for(String action:new String[]{"start","stop","status"}) {
+            assertFalse(leaf(root,"patch",action).hasPermission(adventurer));
+            assertFalse(leaf(root,"patch",action).hasPermission(ui));
+            assertTrue(leaf(root,"patch",action).hasPermission(sender(ignored->true)));
+            assertTrue(leaf(root,"patch",action).hasPermission(sender(RpgTraceCommand.PATCH_PERMISSION::equals)));
+            assertEquals(RpgTraceCommand.PATCH_PERMISSION,leaf(root,"patch",action).getPermission());
+        }
 
         var lightQa=new RpgLightQaCommand();
         lightQa.setOwner(new com.hypixel.hytale.server.core.command.system.CommandManager());

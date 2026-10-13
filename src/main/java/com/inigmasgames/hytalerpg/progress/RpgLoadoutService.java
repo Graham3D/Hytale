@@ -538,6 +538,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
             GraphValidationResult graph = holder.presentationGraph;
             List<String> warnings = new ArrayList<>(state.degradedReasons);
             if (!compiled.success()) warnings.add(compiled.code() + ": " + compiled.message());
+            com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.loadout(player,state.revision,state.equippedSkills);
             return new RpgLoadoutView(state, compiled.plans(),
                     graph.valid() ? graph.routes() : Map.of(), warnings);
         }

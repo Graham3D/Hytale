@@ -52,6 +52,10 @@ public final class UiInteractionTrace implements AutoCloseable {
     public static void install(UiInteractionTrace trace) { installed = trace; }
     public static UiInteractionTrace current() { return installed; }
     public static boolean active(UUID player) {
+        if (com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.active(player)) return true;
+        return legacyActive(player);
+    }
+    public static boolean legacyActive(UUID player) {
         var trace = installed;
         if (trace == null) return false;
         for (Scope scope : Scope.values()) if (trace.sessions.containsKey(new Key(player, scope))) return true;
@@ -61,7 +65,9 @@ public final class UiInteractionTrace implements AutoCloseable {
                                        String action, Supplier<Map<String, ?>> details) {
         var trace = installed;
         if (!active(player)) return Action.OFF;
-        try { return trace.begin(player, component, elementId, action, details.get()); }
+        boolean legacy=legacyActive(player);
+        if(!legacy&&action!=null&&(action.contains("Hover")||action.contains("hover")||action.equals("pointer")))return Action.OFF;
+        try { return trace.begin(player, component, elementId, action, legacy?details.get():Map.of()); }
         catch (RuntimeException diagnosticFailure) {
             LOGGER.log(Level.WARNING, "UI interaction trace could not observe an action", diagnosticFailure);
             return Action.OFF;
@@ -129,7 +135,8 @@ public final class UiInteractionTrace implements AutoCloseable {
 
     public Action begin(UUID player, String component, String elementId, String action, Map<String, ?> details) {
         var matching = matching(player, component, elementId, action, details);
-        if (matching.isEmpty()) return Action.OFF;
+        boolean hro = com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.active(player);
+        if (matching.isEmpty() && !hro) return Action.OFF;
         String correlation = UUID.randomUUID().toString().substring(0, 8);
         var base = new LinkedHashMap<String, Object>();
         base.put("component", limited(component, 64));
@@ -141,10 +148,11 @@ public final class UiInteractionTrace implements AutoCloseable {
             session.write("TARGET_RESOLVED", correlation, Map.of("elementId", base.get("elementId")));
             session.write("HANDLER_ENTER", correlation, Map.of("handler", base.get("component")));
         }
-        return new Action(matching, correlation, component, elementId, action);
+        return new Action(matching, correlation, component, elementId, action, hro ? player : null);
     }
 
     public void event(UUID player, String event, String correlation, Map<String, ?> details) {
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.ui(player,event,correlation,details);
         for (Session session : matching(player, event, "", event, details))
             try { session.write(event, correlation == null ? "" : correlation, details); }
             catch (RuntimeException error) { LOGGER.log(Level.WARNING, "UI trace observation lost", error); }
@@ -170,17 +178,20 @@ public final class UiInteractionTrace implements AutoCloseable {
     }
 
     public static final class Action {
-        private static final Action OFF = new Action(java.util.List.of(), "", "", "", "");
+        private static final Action OFF = new Action(java.util.List.of(), "", "", "", "", null);
         private final java.util.List<Session> recipients;
         private final String correlation, component, element, action;
+        private final UUID hroPlayer;
         private final AtomicBoolean completed = new AtomicBoolean();
-        private Action(java.util.List<Session> recipients, String correlation, String component, String element, String action) {
+        private Action(java.util.List<Session> recipients, String correlation, String component, String element, String action, UUID hroPlayer) {
             this.recipients = recipients; this.correlation = correlation; this.component = component;
-            this.element = element; this.action = action;
+            this.element = element; this.action = action;this.hroPlayer=hroPlayer;
         }
-        public boolean active() { return !recipients.isEmpty(); }
+        public boolean active() { return hroPlayer!=null || !recipients.isEmpty(); }
+        public boolean legacyActive() { return !recipients.isEmpty(); }
         public String correlation() { return correlation; }
         public void stage(String stage, Map<String, ?> details) {
+            if(hroPlayer!=null)com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.ui(hroPlayer,stage,correlation,details);
             for (Session session : recipients) try { session.write(stage, correlation, details); }
             catch (RuntimeException error) { LOGGER.log(Level.WARNING, "UI trace stage lost", error); }
         }

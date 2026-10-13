@@ -34,6 +34,7 @@ public final class RpgSkillTraceService implements RpgSkillTracer {
         if(enabled)router.setLevel(router.level());
     }
     @Override public void trace(RpgTraceRecord record){
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.skill(record);
         com.inigmasgames.hytalerpg.gear.GearQaTrace.runtime(record);
         if(!enabled)return;
         router.trace(record); // Existing bounded global telemetry remains independent of personal QA captures.

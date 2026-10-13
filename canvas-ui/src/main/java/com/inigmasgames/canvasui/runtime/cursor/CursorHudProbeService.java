@@ -1524,6 +1524,12 @@ public final class CursorHudProbeService implements AutoCloseable {
             try { restoreCamera(this); }
             catch (RuntimeException error) { cleanupFailures.add("CAMERA:" + error.getClass().getSimpleName()); }
 
+            var lifecycleObserver=CanvasUI.interactionObserver();
+            if(context==Context.GRAPH_EDITOR && lifecycleObserver.lifecycleEnabled(playerId))try {
+                lifecycleObserver.lifecycle(playerId,token,"DOCUMENT_CLOSED",cleanupFailures.isEmpty(),
+                        !modalHudLease && cleanupFailures.stream().noneMatch(value->value.startsWith("MODAL_HUD_RESTORE:")));
+            }catch(RuntimeException ignored){/* Observation cannot interfere with cleanup. */}
+
             for (CursorProbeSample sample : input.drain(QUEUE_CAPACITY)) record(sample);
             CanvasInputGuard.Observation observation;
             while ((observation = guardQueue.poll()) != null) { guardQueueSize.decrementAndGet(); traceGuard(observation); }

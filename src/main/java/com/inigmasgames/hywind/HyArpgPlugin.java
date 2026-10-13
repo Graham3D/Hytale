@@ -163,6 +163,8 @@ public final class HyArpgPlugin extends TavernsPlugin {
 
     @Override
     protected void setup() {
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.install(java.nio.file.Path.of(
+                System.getProperty("user.home"),"AppData","Roaming","Hytale","UserData","Diagnostics","Hywind","HRO"));
         try (var readyPathSpan = com.inigmasgames.hywind.readypath.ReadyPathProbe.span("BOOT_HYARPG_SETUP", null)) {
         if (com.inigmasgames.hywind.readypath.ReadyPathProbe.ENABLED) {
             getEventRegistry().registerGlobal(com.hypixel.hytale.server.core.event.events.player.PlayerSetupConnectEvent.class,
@@ -594,8 +596,16 @@ public final class HyArpgPlugin extends TavernsPlugin {
         getEventRegistry().registerGlobal(PlayerDisconnectEvent.class,
                 event -> interactionTrace.disconnect(event.getPlayerRef().getUuid()));
         CanvasUI.setInteractionObserver(new com.inigmasgames.canvasui.api.CanvasInteractionObserver() {
+            @Override public void lifecycle(java.util.UUID player,String document,String boundary,boolean closedOnce,boolean hudRestored) {
+                if(com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.active(player))
+                    com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.observe(player,"UI.LIFECYCLE","CanvasUI",boundary,
+                            document,null,null,null,null,java.util.Map.of("session",document,"closedOnce",closedOnce,"hudRestored",hudRestored));
+            }
             @Override public boolean enabled(java.util.UUID player) {
-                return com.inigmasgames.hytalerpg.ui.trace.UiInteractionTrace.active(player);
+                return com.inigmasgames.hytalerpg.ui.trace.UiInteractionTrace.legacyActive(player);
+            }
+            @Override public boolean lifecycleEnabled(java.util.UUID player) {
+                return com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.active(player);
             }
             @Override public Action begin(java.util.UUID player, String canvasId, String elementId,
                                           String controlType, String event, double x, double y) {
@@ -1039,12 +1049,12 @@ public final class HyArpgPlugin extends TavernsPlugin {
             if(context.profile().conversion()!=null)conversionSystem.abandonDurable(context);
         });
         persistenceReady=new com.inigmasgames.hytalerpg.execution.hytale.HytalePlayerPersistenceReady(loadouts,(store,ref,playerRef,entity,statMap)->{
-            if(gearLootRuntime!=null&&!gearLootRuntime.prepareInitialView().isDone())return false;
-            if(gearLootRuntime!=null&&gearLootRuntime.prepareInitialView().isCompletedExceptionally())return false;
+            if(gearLootRuntime!=null&&!gearLootRuntime.prepareInitialView().isDone())return com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.waiting(playerRef.getUuid(),"GEAR_PREPARATION_PENDING");
+            if(gearLootRuntime!=null&&gearLootRuntime.prepareInitialView().isCompletedExceptionally())return com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.waiting(playerRef.getUuid(),"GEAR_PREPARATION_FAILED");
             if(!supportSystem.connectionReady(store,ref))return false;
             var view=loadouts.getPresentationView(playerRef.getUuid());
             var slots=store.getComponent(ref,com.hypixel.hytale.server.core.inventory.InventoryComponent.AbilitySlots.getComponentType());
-            if(slots==null)return false;
+            if(slots==null)return com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.waiting(playerRef.getUuid(),"ABILITY_SLOTS_MISSING");
             nativeAbilities.install(playerRef.getUuid(),slots);
             EnumMap<RpgAttribute,Integer> raw=new EnumMap<>(RpgAttribute.class);
             for(var attribute:RpgAttribute.values())raw.put(attribute,view.state().attributes.getOrDefault(attribute.name(),10));
@@ -1055,8 +1065,19 @@ public final class HyArpgPlugin extends TavernsPlugin {
             return true;
         });
         persistenceReady.configureAdditionalPreload(supportSystem::preloadDurableCyclone);
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.witness("CyclonePreload");
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.registered("BOOT.ARTIFACT");
         persistenceReady.configureAdditionalAsyncPreload(supportSystem::preloadSharedAegis);
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.witness("SharedAegisPreload");
         getEntityStoreRegistry().registerSystem(persistenceReady);
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.registered("PLAYER.ADMISSION");
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.registered("SKILL.ASSIGN");
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.registered("SKILL.PROJECTION");
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.registered("SKILL.EXECUTION");
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.registered("HUD.PUBLICATION");
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.registered("UI.LIFECYCLE");
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.registered("INVENTORY.OWNER");
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.registered("INVENTORY.TRANSFER");
         getEventRegistry().registerAsync(com.hypixel.hytale.server.core.event.events.player.PlayerConnectEvent.class,
                 incoming->incoming.thenCompose(event->{
                     if(event.getWorld()==null)return java.util.concurrent.CompletableFuture.completedFuture(event);
@@ -1071,6 +1092,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
                                 playerHitRoots.detach(event.getPlayerRef().getUuid(),event.getPlayerRef());}})
                             .thenApply(ignored->event);
                 }));
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.witness("AsyncPlayerConnect");
         if(rpgCommand.getSubCommand("readypath") instanceof com.inigmasgames.hytalerpg.commands.RpgReadyPathCommand diagnostic)
             diagnostic.configurePreparation(persistenceReady::preparationStatus);
         getEventRegistry().registerGlobal(PlayerReadyEvent.class, event -> {
@@ -1205,6 +1227,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
     }
 
     private void shutdownRpg() {
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.shutdown();
         if(hostileNames!=null){hostileNames.close();hostileNames=null;}
         if(aquaticHabitat!=null){aquaticHabitat.close();aquaticHabitat=null;}
         RuntimeException enemyTeardown=null;

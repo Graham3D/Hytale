@@ -1206,6 +1206,11 @@ public final class HytaleGearLoot implements AutoCloseable {
                 throw new IllegalArgumentException("Select a native equipment slot before unequipping");
             var before=component.state(owner);var target=equipmentSlot(slot,store,actor);
             if(target==null)throw new IllegalArgumentException("Equipment slot unavailable: "+slot);
+            if(com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.active(owner))
+                com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.observe(owner,"INVENTORY.TRANSFER","HytaleGearLoot",
+                        "NATIVE_SLOT_RESOLVED",sourceId==null?null:sourceId.toString(),player.getWorldUuid(),null,
+                        world.getTick(),before.revision(),Map.of("rawNativeSlot",activeSection==null?target.index():activeSection.getActiveSlot(),
+                                "resolvedNativeSlot",target.index(),"equipmentSlot",slot));
             var old=target.read();ItemStack incoming;
             UUID operation=UUID.randomUUID();var changes=new ArrayList<GearLootService.EquipmentSlotChange>();
             var displaced=new ArrayList<SpatialBagAggregate.OfferedItem>();
@@ -1330,6 +1335,10 @@ public final class HytaleGearLoot implements AutoCloseable {
                         }
                         io.execute(()->{try{loot.finishSpatialEquipment(operation,"FINALIZED");
                             equipmentOperationSession.remove(owner,actor);busy.remove(owner);
+                            if(com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.active(owner))
+                                com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.observe(owner,"INVENTORY.TRANSFER","HytaleGearLoot",
+                                        "OWNER_FINALIZED",operation.toString(),null,null,null,after.revision(),
+                                        Map.of("result","FINALIZED","receiptId",operation,"settled",true));
                             reply.accept("Equipment transfer saved and finalized.");}
                         catch(RuntimeException uncertain){reply.accept("Equipment saved; receipt uncertain. Reconnect for recovery.");}});
                     });

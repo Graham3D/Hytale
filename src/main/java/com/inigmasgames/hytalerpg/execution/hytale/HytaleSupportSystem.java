@@ -422,12 +422,12 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
     public boolean sessionReady(UUID actor){return initialized.contains(actor)&&loadouts.ready(actor);}
     public boolean connectionReady(Store<EntityStore> store,Ref<EntityStore> actor){
         var id=store.getComponent(actor,PlayerRef.getComponentType()).getUuid();
-        if(!loadouts.ready(id))return false;
+        if(!loadouts.ready(id))return com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.waiting(id,"LOADOUT_NOT_READY");
         if(initialized.contains(id))return true;
         if(durableCycloneEnabled)try{CycloneArmorPresentation.remove(store,actor);}
         catch(RuntimeException ignored){/* A stale cosmetic effect cannot authorize protection. */}
         if(initializing.add(id))runtime.detach(id,"PLAYER_READY_RESET",port(store,actor));
-        if(!runtime.settled(id)||!kernel.cooldowns().persistenceReady(id))return false;
+        if(!runtime.settled(id)||!kernel.cooldowns().persistenceReady(id))return com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.waiting(id,"SUPPORT_OR_COOLDOWN_NOT_SETTLED");
         kernel.cooldowns().restore(id);
         kernel.reservations().removeAll(id,new EntityStatResourcePort(store.getComponent(actor,EntityStatMap.getComponentType())));
         if(durableCycloneEnabled){
@@ -435,7 +435,7 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
             var existing=cycloneConnections.get(id);
             if(existing==null||existing.player()!=player){
                 try{cycloneConnections.put(id,new CycloneConnection(player,durableCyclone.attachPrepared(id)));}
-                catch(IllegalStateException pending){return false;}
+                catch(IllegalStateException pending){return com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.waiting(id,"CYCLONE_PREPARED_LEASE_UNAVAILABLE");}
             }
             try{
                 var binding=cycloneConnections.get(id);
@@ -460,12 +460,12 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
             }catch(RuntimeException recoveryFailure){
                 com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(recoveryFailure)
                         .log("RPG_CYCLONE_PAYMENT_RECOVERY_FAILED player=%s",id);
-                return false;
+                return com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.waiting(id,"CYCLONE_RECOVERY_FAILED");
             }
             var existingShared=sharedConnections.get(id);
             if(existingShared==null||existingShared.player()!=player)try{
                 sharedConnections.put(id,new SharedConnection(player,cycloneShared.attachPrepared(id)));
-            }catch(RuntimeException unavailable){return false;}
+            }catch(RuntimeException unavailable){return com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.waiting(id,"SHARED_PREPARED_LEASE_UNAVAILABLE");}
         }
         initialized.add(id);return true;
     }

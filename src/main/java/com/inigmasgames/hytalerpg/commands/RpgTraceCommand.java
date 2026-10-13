@@ -34,6 +34,7 @@ import java.util.function.Consumer;
 
 /** The single diagnostic command surface. Recorders retain their own bounded evidence and lifecycle. */
 public final class RpgTraceCommand extends AbstractCommandCollection {
+    public static final String PATCH_PERMISSION="inigmasgames.rpg.trace.patch";
     private static final String UI_PERMISSION="inigmasgames.rpg.uitrace";
     private static final String SPAWN_PERMISSION="inigmasgames.rpg.spawntrace";
     private static final String GEAR_PERMISSION=RpgGearCommand.AUTHOR_PERMISSION;
@@ -72,6 +73,14 @@ public final class RpgTraceCommand extends AbstractCommandCollection {
                            MonsterSpawnTrace spawn,NativeWorldSpawnDensity density,
                            TabTraceProbe tab,NativeInventoryDropTraceProbe drop){
         super("rpg-trace","Bounded Hywind diagnostic capture and inspection.");
+        var patch = new Group("patch","Cross-system HRO capture for the invoking player.",PATCH_PERMISSION,false);
+        patch.addSubCommand(player("start","Start HRO for at most ten minutes.",PATCH_PERMISSION,false,(c,s,r,p,w)->
+                say(c,com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.start(p.getUuid(),p.getWorldUuid()))));
+        patch.addSubCommand(player("stop","Stop admission; finalize evidence asynchronously.",PATCH_PERMISSION,false,(c,s,r,p,w)->
+                say(c,com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.stop())));
+        patch.addSubCommand(player("status","Show recorder state, losses and output folder.",PATCH_PERMISSION,false,(c,s,r,p,w)->
+                say(c,com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.status())));
+        addSubCommand(patch);
         addSubCommand(player("status","Summarize every diagnostic category.",null,false,(c,s,r,p,w)->{
             UUID owner=p.getUuid();
             say(c,"Skill: "+skill.status(owner));say(c,"Combat: "+combat.status(owner)+"; file="+combat.path());
@@ -88,7 +97,7 @@ public final class RpgTraceCommand extends AbstractCommandCollection {
                         +"spawn=OPERATIONAL_GLOBAL [inigmasgames.rpg.spawntrace]; "
                         +"inventory-tab, inventory-drop=OPERATIONAL_ADAPTER_LIMITED [Adventure].")));
         addSubCommand(player("help","Show diagnostic syntax.",null,true,(c,s,r,p,w)->
-                say(c,"/rpg-trace <skill|combat|skilltree|inventory|ui|gear|sentinel|spawn|inventory-tab|inventory-drop> "
+                say(c,"/rpg-trace <patch|skill|combat|skilltree|inventory|ui|gear|sentinel|spawn|inventory-tab|inventory-drop> "
                         +"<start|stop|status> [arguments]; /rpg-trace status|list|help. "
                         +"Skill start supports detailed/performance; ui/gear support mark; sentinel supports snapshot; "
                         +"combat supports last [count] and inspect.")));
