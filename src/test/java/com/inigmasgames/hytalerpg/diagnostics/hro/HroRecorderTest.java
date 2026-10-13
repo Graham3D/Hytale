@@ -96,6 +96,17 @@ class HroRecorderTest {
             assertEquals("INCONCLUSIVE",coverage.getAsJsonObject("GEAR.EQUIPPED").get("outcome").getAsString());
         }
     }
+    @Test void lossReportedAfterStopDoesNotAlterFinalizedEvidence()throws Exception {
+        try(var recorder=recorder(()->{})) {
+            begin(recorder);observe(recorder);
+            recorder.stop();
+            recorder.loss(owner,"GEAR.EQUIPPED","late-item","LATE_CALLBACK");
+            await(()->finalized(recorder.status()));
+            JsonObject integrity=JsonParser.parseString(Files.readString(bundle().resolve("integrity.json"))).getAsJsonObject();
+            assertEquals(0,integrity.get("dropped").getAsLong());
+            assertEquals(0,integrity.getAsJsonArray("lossScopes").size());
+        }
+    }
     @Test void diskFailureDoesNotEscapeCallbackAndRecoveryRetainsCaptureBuild()throws Exception {
         try(var recorder=recorder(()->{throw new java.io.IOException("disk full");})) {
             recorder.start(owner,world);assertDoesNotThrow(()->observe(recorder));await(()->recorder.status().contains("PARTIAL"));

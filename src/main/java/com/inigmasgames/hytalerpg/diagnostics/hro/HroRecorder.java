@@ -84,14 +84,15 @@ public final class HroRecorder implements AutoCloseable {
     public boolean recording(){Session s=session;return s!=null&&s.stop==null;}
     public void loss(UUID owner){loss(owner,null,null,"UNATTRIBUTED_PRODUCER_GAP");}
     public void loss(UUID owner,String contract,String operation,String reason){Session s=session;
-        if(s!=null&&s.owner.equals(owner))drop(s,contract,operation,reason);}
+        if(s!=null&&s.stop==null&&s.owner.equals(owner))drop(s,contract,operation,reason);}
     private static void drop(Session s,String contract,String operation,String reason){
+        // Count first: an in-flight loss without published detail remains conservatively unscoped.
+        s.drops.incrementAndGet();
         int slot=(int)Math.min(Integer.MAX_VALUE,s.lossDetailSlots.getAndIncrement());
         if(slot<LOSS_DETAIL_LIMIT)s.lossDetails.set(slot,new HroContracts.Loss(contract==null?"UNATTRIBUTED":contract,
                 operation==null?"":clip(operation),reason,1));
         else {int contractIndex=HroContracts.IDS.indexOf(contract);s.lossOverflowByContract.incrementAndGet(contractIndex<0?
                 HroContracts.IDS.size():contractIndex);}
-        s.drops.incrementAndGet();
     }
     private static List<HroContracts.Loss> lossSites(Session s){
         var sites=new ArrayList<HroContracts.Loss>();
@@ -352,7 +353,9 @@ public final class HroRecorder implements AutoCloseable {
                     Map.of("state","STOPPED_OR_SUSPENDED","reason",current.stop,"monotonicNanos",Math.max(0,clock.getAsLong()-current.start))));
             performance.put("diskUsableBytesAtFinish",diskUsable());
             performance.put("observedDisconnects",current.disconnections.get());performance.put("correlatedReconnects",current.reconnections.get());
-            bundle.finish(current.drops.get(),current.stop,performance,lossSites(current));
+            // Read details before the count so a concurrently published scope cannot outrun it.
+            List<HroContracts.Loss> sites=lossSites(current);
+            bundle.finish(current.drops.get(),current.stop,performance,sites);
             String analysis=HroAutoAnalysis.finish(root,current.directory,clock);
             last="HRO "+(current.drops.get()==0&&("STOPPED".equals(current.stop)||"EXPIRED".equals(current.stop))&&analysis.equals("COMPLETE")?"COMPLETE":"PARTIAL")+
                     "; run="+current.id+"; dropped="+current.drops.get()+"; folder="+current.directory+"; termination="+current.stop+"; analysis="+analysis;
