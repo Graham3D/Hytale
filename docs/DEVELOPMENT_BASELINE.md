@@ -1,5 +1,27 @@
 # HyARPG/Hywind development baseline
 
+## Chapter I Stage 3 natural Elite and affix recovery (2026-10-12)
+
+State: **ENGINEERING_READY / QA_PENDING** on dependent branch
+`codex/chapter1-stage3-elite-restoration`, parent Stage 2 commit
+`b5bd3585fb69bcd5f615555cebfea2a2d9d7c88f`. Stage 1, Stage 2, and the
+earlier cumulative ancestors remain unaccepted and unmerged. Build revision
+`R262C1S3-CANDIDATE`, version `0.2.0-R262C1S3-CANDIDATE`, exact server
+requirement `=0.7.0`. The [Stage 3 engineering report](release-migration/STAGE_3_NATURAL_ELITE_AND_AFFIX_RECOVERY.md)
+records the release native class audit, actual pre-release/release evidence,
+existing owners and regression coverage. The natural spawn and flock classes
+needed no replacement: their release bytes match the functioning pre-release
+server; the Stage 1 world and Stage 2 hook corrections are retained. A new
+release-world fixture exercises Normal fallback, Champion and Unique planning,
+affix freeze, durable birth, and restart recovery. The exact Stage 3 source
+HEAD, package SHA-256, full offline test result, and Guardian status are bound
+in `build/guardian/verification.json` after committed verification. The
+matching native patch and Hywind JAR remain offline; the installed stock
+server and INV1 JAR, both saves, and the dirty primary checkout are untouched.
+Deployment requires separate authorization and matching-artifact installation.
+Owner-operated connected natural spawn, combat, presentation, and persistence
+QA remains pending. Do not merge the dependent work into `main` yet.
+
 ## Chapter I Stage 2 native compatibility and combat recovery (2026-10-12)
 
 State: **ENGINEERING_READY / QA_PENDING** on dependent branch
