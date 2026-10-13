@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 
 /** Neutral seam after native target reconstruction and before native random selection. */
 public final class NativePopulationProjectionHook {
-    public static final String PATCH_ID="population-projection-0.7.0-pre.5.1-r244";
+    public static final String PATCH_ID="population-projection-0.7.0-r262c1s2";
     private static final AtomicReference<Consumer<Store<ChunkStore>>> PROVIDER=new AtomicReference<>();
     private NativePopulationProjectionHook(){}
     public static AutoCloseable install(Consumer<Store<ChunkStore>> provider){

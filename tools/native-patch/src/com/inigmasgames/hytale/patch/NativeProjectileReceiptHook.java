@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /** Neutral holder seam before native addEntity. Hywind owns accepted-root matching and metadata. */
 public final class NativeProjectileReceiptHook {
-    public static final String PATCH_ID="me-projectile-receipt-0.7.0-pre.5.1-1";
+    public static final String PATCH_ID="me-projectile-receipt-0.7.0-r262c1s2";
     public record Context(UUID world,UUID executor,UUID owner,UUID projectile,
             int chainId,List<Integer> forkPath,String initialRoot,String operationRoot,
             int operationIndex,int operationCounter){

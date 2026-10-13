@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /** Neutral causal-identity seam. Hywind owns acceptance and durable receipt allocation. */
 public final class NativeDamageReceiptHook {
-    public static final String PATCH_ID="me-damage-receipt-0.7.0-pre.5.1-1";
+    public static final String PATCH_ID="me-damage-receipt-0.7.0-r262c1s2";
     private static volatile MetaKey<String> receiptKey;
     public record Context(UUID world,UUID executor,UUID owner,UUID source,UUID target,
             int chainId,List<Integer> forkPath,String initialRoot,String operationRoot,

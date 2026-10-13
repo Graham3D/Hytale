@@ -74,11 +74,18 @@ tasks.register('buildPackboundNative', Exec) {
         file('tools/native-patch/Build-PackboundNative.ps1'), '-ServerJar', serverJar,
         '-OutputDirectory', file('build/native-patch')
 }
-// The release server is unpatched. Compile against its installed API while
-// retaining the existing neutral hook types used by dormant native bridges.
+tasks.register('testReleaseNativePatch', Exec) {
+    group = 'verification'
+    description = 'Build and regression-test the exact Chapter I native patch without installing it.'
+    commandLine 'powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
+        file('tools/native-patch/Test-ReleaseNativePatch.ps1'), '-ServerJar', serverJar,
+        '-OutputDirectory', file('build/native-patch')
+}
+// Compile against the installed release API and include the neutral hook types.
+// Runtime providers still require the separately verified patched server JAR.
 sourceSets.main.java {
     srcDir 'tools/native-patch/src'
-    exclude '**/PatchNativeMutations.java', '**/NativePopulationProjectionHook.java'
+    exclude '**/PatchNativeMutations.java'
 }
 
 java {
@@ -183,6 +190,8 @@ tasks.test {
     exclude '**/GearQaSpatialDeliveryTest*'
     exclude '**/NativeWorkspaceGridTest*'
     exclude '**/NativeGearTargetGridTest*'
+    exclude '**/NativeHookLifecycleTest*'
+    exclude '**/NativePatchGateTest*'
     exclude '**/GearStatusBindingsTest*'
     exclude '**/GearStatusAcceptanceIntegrationTest*'
     exclude '**/UnifiedTraceCommandTest*'
@@ -213,6 +222,8 @@ tasks.register('nativeControlTest', Test) {
     include '**/R245FlockRollbackTest.class'
     include '**/R261Qa2StartupRegistrationTest.class'
     include '**/R244PopulationProjectionTest.class'
+    include '**/NativeHookLifecycleTest.class'
+    include '**/NativePatchGateTest.class'
     // Include native test classes before forking, avoiding empty worker JVMs.
         ['NativeAffix*Test', 'ManagedCarrierProductionTest', 'GearCombatProductionTest',
          'GearSignatureProcRuntimeTest', 'NativeGearActionProfilesTest', 'NativeTwinAssaultTest',

@@ -8,9 +8,9 @@ import java.security.MessageDigest;
 import java.util.*;
 import java.util.zip.*;
 
-/** Exact-bytecode Packbound, damage-receipt and projectile-holder patcher for 0.7.0-pre.5.1. */
+/** Exact-bytecode Packbound, damage-receipt and projectile-holder patcher for Chapter I 0.7.0. */
 public final class PatchNativeMutations {
-    private static final String ORIGINAL="35a34a32175cd92ce5e2a51310953db3a4a64cac89d995cbd4830c52a9b1b904";
+    private static final String ORIGINAL="c3b5985b9e72727bf3bcf220923d7e61e78fe0f37cd1cd9c2a73f51e4f408ff8";
     private static final String BASE="com/hypixel/hytale/server/core/modules/interaction/interaction/config/server/";
     private static final String HOOK="com/inigmasgames/hytale/patch/NativeMutationHook";
     private static final String DAMAGE_HOOK="com/inigmasgames/hytale/patch/NativeDamageReceiptHook";
@@ -19,7 +19,7 @@ public final class PatchNativeMutations {
     private static final String POPULATION_SYSTEM="com/hypixel/hytale/server/spawning/world/system/WorldSpawningSystem.class";
     private static final String DAMAGE_LEAF=BASE+"DamageEntityInteraction.class";
     private static final String PROJECTILE_LEAF=BASE+"LaunchProjectileInteraction.class";
-    private static final String DAMAGE_LEAF_PIN="6be3b2c00e3364373cb22b622e07677e14e31dcfa2cf1df9b5e7185340836e73";
+    private static final String DAMAGE_LEAF_PIN="842fe1dccc7c49feaffc8fb961f346767b66315711e91477710922d6e0f7f9f6";
     private static final String PROJECTILE_LEAF_PIN="973c5e280b171f59c575b9e3cd4b4d0741e538eb40c8699867d16360eb13938e";
     private static final String CONTEXT="Lcom/hypixel/hytale/server/core/entity/InteractionContext;";
     private static final String REF="Lcom/hypixel/hytale/component/Ref;";
@@ -170,13 +170,23 @@ public final class PatchNativeMutations {
     }
     private static List<String> instructionShape(MethodNode method,String injectedHook,List<String> prefix){
         var result=new ArrayList<String>();
+        AbstractInsnNode skipThrough=null;
         for(var instruction:method.instructions.toArray()){
+            if(skipThrough!=null){
+                if(instruction==skipThrough)skipThrough=null;
+                continue;
+            }
             if(instruction.getOpcode()<0)continue;
             if(injectedHook!=null&&instruction instanceof MethodInsnNode call&&call.owner.equals(injectedHook)){
                 require(result.size()>=prefix.size(),"NATIVE_RECEIPT_PATCH_PREFIX_MISSING");
                 require(result.subList(result.size()-prefix.size(),result.size()).equals(prefix),
                         "NATIVE_RECEIPT_PATCH_PREFIX_CHANGED");
                 result.subList(result.size()-prefix.size(),result.size()).clear();
+                if(injectedHook.equals(HOOK)){
+                    require(next(call) instanceof JumpInsnNode jump&&jump.getOpcode()==Opcodes.IFNE,
+                            "NATIVE_PATCH_MUTATION_GUARD_SHAPE");
+                    skipThrough=((JumpInsnNode)next(call)).label;
+                }
                 continue;
             }
             String operand=switch(instruction){
@@ -261,6 +271,17 @@ public final class PatchNativeMutations {
                     for(var instruction:method.instructions.toArray())if(instruction instanceof MethodInsnNode call
                             &&call.owner.equals(HOOK))calls.add(call);
                     require(calls.size()==1,"NATIVE_PATCH_HOOK_COUNT:"+path);
+                    var originalTree=new ClassNode();new ClassReader(before).accept(originalTree,0);
+                    var originalMethod=originalTree.methods.stream().filter(m->m.name.equals("firstRun")).findFirst().orElseThrow();
+                    var prefix=path.endsWith("ClearEntityEffectInteraction.class")
+                            ?List.of(Opcodes.ALOAD+":var:2",Opcodes.ALOAD+":var:5",
+                                    Opcodes.ALOAD+":var:0",Opcodes.GETFIELD+":field:"+BASE+"ClearEntityEffectInteraction:entityEffectId:Ljava/lang/String;")
+                            :List.of(Opcodes.ALOAD+":var:2",Opcodes.ALOAD+":var:"+
+                                    (path.endsWith("ChangeStatInteraction.class")?5:4),Opcodes.ALOAD+":var:7",
+                                    Opcodes.ALOAD+":var:0",Opcodes.GETFIELD+":field:"+BASE+"ChangeStatBaseInteraction:valueType:"+VALUE,
+                                    Opcodes.ALOAD+":var:0",Opcodes.GETFIELD+":field:"+BASE+"ChangeStatBaseInteraction:changeStatBehaviour:"+BEHAVIOR);
+                    require(instructionShape(originalMethod,null,List.of()).equals(instructionShape(method,HOOK,prefix)),
+                            "NATIVE_PATCH_MUTATION_ORIGINAL_INSTRUCTIONS_CHANGED:"+path);
                     var branch=calls.getFirst().getNext();
                     require(branch instanceof JumpInsnNode jump&&branch.getOpcode()==Opcodes.IFNE
                             &&branch.getNext() instanceof TypeInsnNode create

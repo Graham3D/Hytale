@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /** Neutral, version-pinned native leaf hook. The mod owns all admission policy. */
 public final class NativeMutationHook {
-    public static final String PATCH_ID="me-packbound-0.7.0-pre.5.1-1";
+    public static final String PATCH_ID="me-packbound-0.7.0-r262c1s2";
     public enum Kind { CLEAR_ENTITY_EFFECT, CHANGE_STAT, CHANGE_STAT_WITH_MODIFIER }
     public record Mutation(Kind kind,Ref<EntityStore> source,Ref<EntityStore> target,
                            String effectId,Map<Integer,Float> statValues,

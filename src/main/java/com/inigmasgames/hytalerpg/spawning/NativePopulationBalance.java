@@ -33,11 +33,13 @@ public final class NativePopulationBalance implements AutoCloseable {
     private final Map<World,Set<Integer>> modified=Collections.synchronizedMap(new WeakHashMap<>());
     private final Map<UUID,Map<Integer,EnvironmentSnapshot>> snapshots=new java.util.concurrent.ConcurrentHashMap<>();
     private volatile boolean closed;
+    private volatile boolean nativeFinalSeam;
     public NativePopulationBalance(Supplier<Policy> policy){
         this.policy=Objects.requireNonNull(policy);
     }
     public Map<Integer,EnvironmentSnapshot> snapshot(UUID world){return snapshots.getOrDefault(world,Map.of());}
     public NativePopulationRoles roles(){return roles;}
+    public void useNativeFinalSeam(boolean enabled){nativeFinalSeam=enabled;}
 
     public void applySafely(World world){
         try{apply(world);}catch(RuntimeException failure){
@@ -138,6 +140,7 @@ public final class NativePopulationBalance implements AutoCloseable {
                 new SystemDependency<>(Order.AFTER,NativeWorldSpawnDensity.Tick.class),
                 new SystemDependency<>(Order.BEFORE,WorldSpawningSystem.class));}
         @Override public void tick(float dt,int index,Store<ChunkStore> store){
+            if(nativeFinalSeam)return;
             try{apply(store.getExternalData().getWorld());}
             catch(RuntimeException failure){
                 // Population tuning must never take down the native spawning tick.

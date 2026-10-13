@@ -1,4 +1,22 @@
-# Packbound mutation, damage receipt and projectile holder patch, 0.7.0-pre.5.1
+# Packbound mutation, damage receipt and projectile holder patch
+
+## Chapter I release 0.7.0
+
+`Build-PackboundNative.ps1` now targets the exact stock release server SHA-256
+`c3b5985b9e72727bf3bcf220923d7e61e78fe0f37cd1cd9c2a73f51e4f408ff8`.
+The reviewed, reproducible patched server SHA-256 is
+`e0bcd36c7a981949d2c15b1b48f1cdd7f9623373269ef03b58f2d9b9da7f6edf`.
+It is built only in an isolated output directory, with an original recovery
+copy and `verification.json` record outside saves. The executable patcher checks
+the whole server identity, all six target class hashes, the exact insertion
+patterns, preserved native instruction shapes, and the complete archive change
+surface. `Test-ReleaseNativePatch.ps1` adds negative bytecode-layout fixtures,
+unknown-server rejection, and JVM class verification. The corresponding Hywind
+JAR and this native server artifact must be deployed as a matching pair only
+after separate authorization. See the Stage 2 engineering report for exact
+class identities, runtime gate, and rollback steps.
+
+## Historical pre-release 0.7.0-pre.5.1 design
 
 `PatchNativeMutations.java` is the executable bytecode diff. `Build-PackboundNative.ps1` compiles and applies it only to the exact installed server SHA-256 `35a34a32175cd92ce5e2a51310953db3a4a64cac89d995cbd4830c52a9b1b904`. The pre-R244 output SHA-256 was `6f4233203e804d6b0071a6416d26dd867f5cfb0c60d3e78b69a6a91415c1a59e`. See the R244 extension below for the current pin.
 

@@ -1,9 +1,13 @@
 # Hywind / HyARPG development baseline
 
-The current Chapter I Stage 1 engineering candidate is **R262C1S1-CANDIDATE**
-(`0.2.0-R262C1S1-CANDIDATE`) on `codex/chapter1-stage1-world-encounter-recovery`, targeting Hytale
-`0.7.0`. It restores the two verified release-world identities and bounds encounter-context
-admission while preserving the prior inventory candidate and historical encounter records.
+The current Chapter I Stage 2 engineering candidate is **R262C1S2-CANDIDATE**
+(`0.2.0-R262C1S2-CANDIDATE`) on `codex/chapter1-stage2-native-combat-recovery`,
+targeting Hytale `0.7.0`. It prepares a version-pinned native patch and matching
+Hywind JAR to restore Packbound protection, native damage/projectile receipts,
+and final population projection. Neither artifact is installed; connected QA
+is pending. Its Stage 1 parent restores the two verified release-world identities
+and bounds encounter-context admission while preserving the prior inventory
+candidate and historical encounter records.
 It builds on the unmerged R262QA1 bulk attribute candidate and carries the R261
 durable Cyclone, persistent Reflective Ward, and Shared Aegis work. Durable
 Cyclone is enabled by default in the production entrypoint for normal Hytale

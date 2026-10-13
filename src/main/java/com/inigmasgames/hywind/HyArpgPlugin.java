@@ -107,6 +107,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
     private com.inigmasgames.hytalerpg.execution.hytale.PackboundNativeMutationBridge packboundNativeHook;
     private AutoCloseable enemyProjectileHook;
     private AutoCloseable enemyDamageReceiptHook;
+    private AutoCloseable nativePopulationProjectionHook;
     private com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyActions enemyActions;
     private com.inigmasgames.hytalerpg.enemies.EnemyReflectiveEffects enemyReflectiveEffects;
     private com.inigmasgames.hytalerpg.enemies.EnemyWorldAdmission enemyWorldAdmission;
@@ -645,9 +646,10 @@ public final class HyArpgPlugin extends TavernsPlugin {
                 "nativeAssetsSha256",enemyBindings.assetsSha256(),"nativeBindingsRevision",enemyBindings.revision()));
         populationBalance=new com.inigmasgames.hytalerpg.spawning.NativePopulationBalance(
                 ()->worldConfiguration.snapshot().population());
-        worldSpawnDensity.configureFinalProjection(populationBalance::applySafely);
+        worldSpawnDensity.configureFinalProjection(world->{
+            if(nativePopulationProjectionHook==null)populationBalance.applySafely(world);
+        });
         getChunkStoreRegistry().registerSystem(populationBalance.new Tick());
-        LOGGER.atWarning().log("RPG_POPULATION_PROJECTION release=0.7.0 mode=ORDERED_TICK nativeFinalSeam=false unspawnableChunkRefreshMayResetWeights=true");
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgWorldConfigCommand(
                 worldConfiguration,worldSpawnDensity,populationBalance,enemyWorldAdmission));
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgManaguardCommand(supportSystem));
@@ -756,7 +758,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
         getEntityStoreRegistry().registerSystem(gearEquipment.new BeforeArmor());
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgEnemiesCommand(
                 difficultyRuntime,com.inigmasgames.hytalerpg.enemies.EnemyAffixRegistry.canonical(),
-                enemyBindings,enemyWorldAdmission,()->packboundNativeHook!=null&&enemyProjectileHook!=null&&enemyDamageReceiptHook!=null,difficultyCombat,
+                enemyBindings,enemyWorldAdmission,()->packboundNativeHook!=null&&enemyProjectileHook!=null&&enemyDamageReceiptHook!=null&&nativePopulationProjectionHook!=null,difficultyCombat,
                 supportSystem.runtime().finite()));
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgSpawnCommand(()->enemyBirthOwner));
         getCommandRegistry().registerCommand(rpgCommand);
@@ -933,6 +935,17 @@ public final class HyArpgPlugin extends TavernsPlugin {
                     .log("RPG_PACKBOUND_NATIVE_PATCH_LINKAGE_FAILED promotion=false");
         }
         if(packboundNativeHook!=null)try{
+            nativePopulationProjectionHook=com.inigmasgames.hytale.patch.NativePopulationProjectionHook.install(
+                    store->populationBalance.applySafely(store.getExternalData().getWorld()));
+            populationBalance.useNativeFinalSeam(true);
+            LOGGER.atInfo().log("RPG_POPULATION_PROJECTION release=0.7.0 mode=NATIVE_FINAL nativeFinalSeam=true connectedBehaviorUnverified=true");
+        }catch(LinkageError|RuntimeException unavailable){
+            nativePopulationProjectionHook=null;
+            LOGGER.atWarning().withCause(unavailable).log("RPG_POPULATION_PROJECTION_NATIVE_HOOK_UNAVAILABLE nativeFinalSeam=false");
+        }
+        if(nativePopulationProjectionHook==null)
+            LOGGER.atWarning().log("RPG_POPULATION_PROJECTION release=0.7.0 mode=ORDERED_TICK nativeFinalSeam=false unspawnableChunkRefreshMayResetWeights=true");
+        if(packboundNativeHook!=null)try{
             enemyProjectileHook=com.inigmasgames.hytale.patch.NativeProjectileReceiptHook.install(enemyActions::attachProjectile);
         }catch(LinkageError|RuntimeException missingHook){
             enemyProjectileHook=null;
@@ -964,7 +977,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
                 com.inigmasgames.hytalerpg.enemies.EnemyVisualVariants.canonical(),enemyBindings,enemyWeaponVisuals);
         var enemyBirthOwner=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyBirthOwner(
                 enemyBindings,enemyWorldAdmission,encounterRewards,difficultyCombat,enemyActions,
-                enemyReservation,enemyDecision,enemyAttachment,enemyPublication,packboundNativeHook!=null&&enemyProjectileHook!=null&&enemyDamageReceiptHook!=null);
+                enemyReservation,enemyDecision,enemyAttachment,enemyPublication,packboundNativeHook!=null&&enemyProjectileHook!=null&&enemyDamageReceiptHook!=null&&nativePopulationProjectionHook!=null);
         this.enemyBirthOwner=enemyBirthOwner;
         encounterRewards.configureQaEncounters(enemyBirthOwner.qaEncounters());
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyBirthOwner.Removal(enemyBirthOwner));
@@ -1215,6 +1228,10 @@ public final class HyArpgPlugin extends TavernsPlugin {
         try{if(packboundNativeHook!=null)packboundNativeHook.close();}
         catch(RuntimeException failure){enemyTeardown=enemyTeardownFailure(enemyTeardown,"ENEMY_PACKBOUND_HOOK_TEARDOWN",failure);}
         finally{packboundNativeHook=null;}
+        if(populationBalance!=null)populationBalance.useNativeFinalSeam(false);
+        try{if(nativePopulationProjectionHook!=null)nativePopulationProjectionHook.close();}
+        catch(Exception failure){enemyTeardown=enemyTeardownFailure(enemyTeardown,"NATIVE_POPULATION_HOOK_TEARDOWN",failure);}
+        finally{nativePopulationProjectionHook=null;}
         try{com.inigmasgames.hytalerpg.execution.hytale.NativeNpcTiming.configure(
                 new com.inigmasgames.hytalerpg.execution.hytale.NativeNpcTiming.Provider(){});}
         catch(RuntimeException failure){enemyTeardown=enemyTeardownFailure(enemyTeardown,"ENEMY_TIMING_TEARDOWN",failure);}

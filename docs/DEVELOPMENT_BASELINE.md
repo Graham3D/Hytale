@@ -1,5 +1,26 @@
 # HyARPG/Hywind development baseline
 
+## Chapter I Stage 2 native compatibility and combat recovery (2026-10-12)
+
+State: **ENGINEERING_READY / QA_PENDING** on dependent branch
+`codex/chapter1-stage2-native-combat-recovery`, based on Stage 1 commit
+`63bf6a616e9031e33fb722a1e30f515abe6bb7c5`. Stage 1 and its INV1/Stage 0
+ancestors are not connected-QA accepted or integrated. Build revision
+`R262C1S2-CANDIDATE`, version `0.2.0-R262C1S2-CANDIDATE`, exact server
+requirement `=0.7.0`. The [Stage 2 engineering report](release-migration/STAGE_2_NATIVE_COMPATIBILITY_AND_COMBAT_RECOVERY.md)
+records the exact 0.7.0 native class pins, call-site restoration, artifact
+SHA-256, tests, rollback, and connected-QA procedure. The matching patched
+server and Hywind JAR are isolated in `build/` and have **not** been installed.
+The source implementation commit is recorded in this branch's Git history;
+the final exact branch HEAD, JAR hash, full offline check log, and Guardian
+status are bound in the generated `build/guardian/verification.json` after
+committed verification. The original Hywind release save, historical RPG save,
+installed stock server, deployed INV1 JAR, and dirty primary checkout were
+preserved. Owner-connected combat, protection, projectile, population, and
+Stage 1 world QA remain pending. Do not merge dependent unaccepted work to
+`main`; deployment requires separate authorization and a game-stopped,
+hash-verified paired installation.
+
 ## Chapter I Stage 1 world and encounter recovery (2026-10-12)
 
 State: **ENGINEERING_READY / QA_PENDING** on dependent
