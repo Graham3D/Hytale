@@ -1,5 +1,8 @@
 # HRO Stage 2 — mechanical evidence
 
+The integrated completion workflow and current command syntax are in
+[HRO_FINALIZATION.md](HRO_FINALIZATION.md); this report remains the Stage 2 record.
+
 Candidate `R262C1HRO2-CANDIDATE`, version `0.2.0-R262C1HRO2-CANDIDATE`, Hytale
 `=0.7.0`. The implementation extends Stage 1's recorder, queue budget, events,
 contracts, bundle and offline tool. It does not start legacy skill/gear/combat

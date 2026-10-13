@@ -5,10 +5,12 @@ import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.atomic.*;
 import java.util.concurrent.locks.*;
+import java.lang.management.*;
 
 /** One process session, one worker, fixed queue; callers never wait for disk, locks or finalization. */
 public final class HroRecorder implements AutoCloseable {
     public static final long DURATION_NANOS=600_000_000_000L;
+    public static final long RECONNECT_GRACE_NANOS=30_000_000_000L;
     static final int CAPACITY=512, RESERVATION=16*1024;
     private static final Set<String> CRITICAL=Set.of("IDENTITY","MARK","PAYMENT","DEBIT","NATIVE_RESULT","OUTCOME",
             "SAVED","LOADED","PLAN_ACCEPTED","ELITE_PUBLISHED","BIRTH_COMPENSATED","BIRTH_DECLINED");
@@ -17,14 +19,14 @@ public final class HroRecorder implements AutoCloseable {
             "expectedSpatial","bagRevisionBefore","bagRevisionAfter","RPG revision","revision","loadoutRevision","rawNativeSlot",
             "resolvedNativeSlot","quantityBefore","quantityAfter","singleCustodian","settled","identityVerified","closedOnce",
             "hudRestored","duplicateClose","page","session","schema","itemId","entryId","receiptId","quantity","equipmentSlot","preloadRegistration",
-            "wholeWorldTickMs","wholeWorldTickPaired","rpgWallMs","nativeTick",
+            "wholeWorldTickMs","wholeWorldTickPaired","rpgWallMs","nativeTick","nonRpgRemainderMs","rejectedWorlds",
             "equipmentRevision","accepted","affixId","value","applied","units","bucket","rootId","selected","roll","chance",
             "healthBefore","healthAfter","postAbsorption","reconciliation","attempted","origin","cause","targetId",
             "before","after","absorbed","remaining","requested","damageRemaining","generation","durable","duplicate",
             "requestedReflection","reflectionFactor","manaPaid","capacity","provenance","encounter","rarity","published",
             "durableSubject","fingerprint","phase","activation","manaReceipt","cooldownReceipt","label","critical","coefficient",
             "manaSpent","intended","uncertain","proof");
-    private record Request(UUID owner,UUID world) { }
+    private record Request(UUID owner,UUID world,boolean armed) { }
     private final Path root;
     private final AtomicReference<Request> request=new AtomicReference<>();
     private final Set<String> providers=java.util.concurrent.ConcurrentHashMap.newKeySet();
@@ -32,6 +34,8 @@ public final class HroRecorder implements AutoCloseable {
     private volatile boolean closing;
     private volatile Session session;
     private volatile String last="OFF";
+    private final String installation;
+    private final AtomicReference<HroArm.Action> armAction=new AtomicReference<>();
     private final java.util.function.LongSupplier clock;
     private final java.util.function.Supplier<Map<String,Object>> identity;
     @FunctionalInterface interface Fault { void beforeWrite() throws java.io.IOException; }
@@ -39,26 +43,40 @@ public final class HroRecorder implements AutoCloseable {
     private static final class Session {
         final UUID owner,salt;final String id;final Path directory;final long start;
         final ReentrantLock lock=new ReentrantLock();final ArrayDeque<HroEvent> queue=new ArrayDeque<>(CAPACITY);
-        final AtomicLong drops=new AtomicLong(),sequence=new AtomicLong(),admitted=new AtomicLong(),nanos=new AtomicLong();
+        final AtomicLong drops=new AtomicLong(),sequence=new AtomicLong(),admitted=new AtomicLong(),nanos=new AtomicLong(),timingSamples=new AtomicLong();
         final AtomicLongArray timing=new AtomicLongArray(32);
-        volatile String stop; long maximumQueue;
-        volatile UUID world;
+        volatile String stop; long maximumQueue,writerNanos;final AtomicLong contention=new AtomicLong();
+        volatile UUID world;volatile long connection=Long.MIN_VALUE,disconnectAt=-1;
+        int worldSegment=1;
+        final AtomicLongArray tickTiming=new AtomicLongArray(32);
+        final AtomicReference<TickWindow> tickWindow=new AtomicReference<>();
+        long firstCaptureNanos;
+        final long initialGcCount,initialGcMillis,initialUsedBytes;
         final AtomicLong loadoutRevision=new AtomicLong(Long.MIN_VALUE);
         final AtomicReference<String> equipmentRevision=new AtomicReference<>();
         final AtomicLong packets=new AtomicLong();
-        Session(UUID owner,String id,Path directory,long now){this.owner=owner;this.id=id;this.salt=UUID.randomUUID();this.directory=directory;start=now;}
+        final AtomicLong disconnections=new AtomicLong(),reconnections=new AtomicLong(),tickMetricGaps=new AtomicLong(),observationsWithoutTick=new AtomicLong();
+        Session(UUID owner,String id,Path directory,long now){this.owner=owner;this.id=id;this.salt=UUID.randomUUID();this.directory=directory;start=now;
+            initialGcCount=gcCount();initialGcMillis=gcMillis();initialUsedBytes=ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed();}
     }
-    public HroRecorder(Path root) { this(root,System::nanoTime,HroIdentity::capture,()->{}); }
+    private static final class TickWindow {
+        final UUID world;final long tick;final AtomicLong nanos=new AtomicLong();
+        TickWindow(UUID world,long tick){this.world=world;this.tick=tick;}
+    }
+    public HroRecorder(Path root) { this(root,System::nanoTime,HroIdentity::capture,()->{},root.toString()); }
     HroRecorder(Path root,java.util.function.LongSupplier clock,java.util.function.Supplier<Map<String,Object>> identity,Fault fault) {
-        this.root=root.toAbsolutePath().normalize();this.clock=clock;this.identity=identity;this.fault=fault;
+        this(root,clock,identity,fault,root.toString());
+    }
+    HroRecorder(Path root,java.util.function.LongSupplier clock,java.util.function.Supplier<Map<String,Object>> identity,Fault fault,String installation) {
+        this.root=root.toAbsolutePath().normalize();this.clock=clock;this.identity=identity;this.fault=fault;this.installation=HroArm.installation(installation);
         for(Path part:this.root)if(part.toString().equalsIgnoreCase("Saves"))throw new IllegalArgumentException("HRO_REQUIRES_PATH_OUTSIDE_SAVES");
         worker=Thread.ofPlatform().daemon().name("hywind-hro").unstarted(this::run);worker.start();
     }
     public void registered(String contract){if(HroContracts.IDS.contains(contract))providers.add(contract);}
-    public boolean active(UUID owner){Session current=session;return current!=null&&current.stop==null&&current.owner.equals(owner);}
+    public boolean active(UUID owner){Session current=session;return current!=null&&current.stop==null&&current.disconnectAt<0&&current.owner.equals(owner);}
     public boolean recording(){Session s=session;return s!=null&&s.stop==null;}
     public void loss(UUID owner){Session s=session;if(s!=null&&s.owner.equals(owner))s.drops.incrementAndGet();}
-    public UUID ownerInWorld(UUID world){Session s=session;return s!=null&&s.stop==null&&Objects.equals(s.world,world)?s.owner:null;}
+    public UUID ownerInWorld(UUID world){Session s=session;return s!=null&&s.stop==null&&s.disconnectAt<0&&Objects.equals(s.world,world)?s.owner:null;}
     public String token(UUID owner){Session s=session;return s!=null&&s.stop==null&&s.owner.equals(owner)?s.id:null;}
     public String packet(UUID owner){Session s=session;if(s==null||s.stop!=null||!s.owner.equals(owner))return null;
         long n=s.packets.incrementAndGet();if(n>2048){s.drops.incrementAndGet();s.stop="PACKET_OBSERVER_BUDGET";return null;}return s.id+":"+n;}
@@ -66,14 +84,50 @@ public final class HroRecorder implements AutoCloseable {
         String prior=s.equipmentRevision.get();return !Objects.equals(prior,revision)&&s.equipmentRevision.compareAndSet(prior,revision);}
     public String start(UUID owner,UUID world) {
         if(closing)return "HRO unavailable: shutting down";
-        if(session!=null || !request.compareAndSet(null,new Request(Objects.requireNonNull(owner),world)))return status();
+        if(session!=null || !request.compareAndSet(null,new Request(Objects.requireNonNull(owner),world,false)))return status();
         last="STARTING";LockSupport.unpark(worker);return "HRO STARTING; scope=invoking player; maximum=10 minutes";
     }
+    public String armNext(UUID owner,UUID world){
+        if(closing||recording()||request.get()!=null)return status();
+        armAction.set(new HroArm.Action(Objects.requireNonNull(owner),world,false));
+        last="HRO ARMING_NEXT_BOOT";LockSupport.unpark(worker);return last;
+    }
+    public String cancelArm(){armAction.set(new HroArm.Action(null,null,true));last="HRO CANCELLING_ARM";LockSupport.unpark(worker);return last;}
     public String stop(){Session current=session;if(current!=null)current.stop="STOPPED";
         else if(request.getAndSet(null)!=null)last="HRO CANCELLED_START";return status();}
-    public String status(){Session current=session;return current==null?last:"HRO "+(current.stop==null?"RECORDING":"FINALIZING")+
+    public String status(){Session current=session;return current==null?last:"HRO "+(current.stop!=null?"FINALIZING":current.disconnectAt>=0?"WAITING_RECONNECT":"RECORDING")+
             "; run="+current.id+"; events="+current.admitted.get()+"; dropped="+current.drops.get()+"; folder="+current.directory;}
-    public void disconnect(UUID owner){Session current=session;if(current!=null&&current.owner.equals(owner))current.stop="DISCONNECTED";}
+    public void disconnect(UUID owner,long generation){Session current=session;
+        if(current!=null&&current.owner.equals(owner)&&current.stop==null&&generation==current.connection){
+            if(current.disconnectAt<0){current.disconnections.incrementAndGet();current.disconnectAt=clock.getAsLong();}
+            LockSupport.unpark(worker);
+        }
+    }
+    /** Only the native owner connection lifecycle may advance a generation or world segment. */
+    public void lifecycle(UUID owner,UUID world,long generation,String boundary){
+        Session current=session;if(current==null||current.stop!=null||!current.owner.equals(owner)||generation<0)return;
+        if(!current.lock.tryLock()){current.drops.incrementAndGet();return;}
+        boolean reconnected=false;
+        try {
+            if(current.disconnectAt>=0&&clock.getAsLong()-current.disconnectAt>RECONNECT_GRACE_NANOS)return;
+            if(generation<current.connection)return;
+            if(generation>current.connection){reconnected=current.disconnectAt>=0;if(reconnected)current.reconnections.incrementAndGet();
+                current.connection=generation;current.disconnectAt=-1;current.loadoutRevision.set(Long.MIN_VALUE);
+                current.equipmentRevision.set(null);}
+            if(world!=null&&!Objects.equals(current.world,world)){current.world=world;current.worldSegment++;}
+        }finally{current.lock.unlock();}
+        observe(owner,"PLAYER.ADMISSION","HytalePlayerPersistenceReady",boundary,"admission-"+generation,world,generation,null,null,
+                reconnected?Map.of("reason","RECONNECTED_AFTER_DISCONNECT"):Map.of());
+    }
+    public String mark(UUID owner,UUID world,String label){Session current=session;
+        if(current==null||!active(owner))return "HRO is not recording this player";
+        if(world!=null&&!Objects.equals(current.world,world))return "HRO marker world has no lifecycle handoff";
+        String safe=label==null||label.isBlank()?"USER_CHECKPOINT":label.replaceAll("[^A-Za-z0-9_.-]","_");
+        if(safe.length()>64)safe=safe.substring(0,64);
+        observe(owner,"MARK","RpgTraceCommand","MARK","mark-"+UUID.randomUUID(),world,
+                current.connection==Long.MIN_VALUE?null:current.connection,null,null,Map.of("label",safe));
+        return "HRO checkpoint recorded: "+safe;
+    }
     public boolean firstLoadout(UUID owner,long revision) {
         Session current=session;if(current==null||current.stop!=null||!current.owner.equals(owner))return false;
         long previous=current.loadoutRevision.get();
@@ -94,10 +148,13 @@ public final class HroRecorder implements AutoCloseable {
         if(!SharedTraceBudget.acquire(RESERVATION)){current.drops.incrementAndGet();current.stop="SHARED_QUEUE_BUDGET";return;}
         boolean retained=false;
         try {
-            if(!current.lock.tryLock()){current.drops.incrementAndGet();return;}
+            if(!current.lock.tryLock()){current.drops.incrementAndGet();current.contention.incrementAndGet();return;}
             try {
                 if(current.stop!=null)return;
-                if(world!=null)current.world=world;
+                if(current.disconnectAt>=0)return;
+                if(connection!=null&&current.connection!=Long.MIN_VALUE&&connection<current.connection){current.drops.incrementAndGet();return;}
+                if(connection!=null&&current.connection!=Long.MIN_VALUE&&connection>current.connection){current.drops.incrementAndGet();return;}
+                if(world!=null&&current.world!=null&&!current.world.equals(world)){current.drops.incrementAndGet();return;}
                 if(current.queue.size()>=CAPACITY){current.drops.incrementAndGet();current.stop="QUEUE_BUDGET";return;}
                 // Thirty-two slots remain available for final outcomes/control receipts under routine pressure.
                 if(current.queue.size()>=CAPACITY-32&&!critical(boundary)){current.drops.incrementAndGet();return;}
@@ -117,22 +174,40 @@ public final class HroRecorder implements AutoCloseable {
                 if(operation!=null&&operation.length()>192)current.drops.incrementAndGet();
                 current.queue.addLast(new HroEvent(1,current.id,sequence,System.currentTimeMillis(),began-current.start,
                         clip(contract),clip(provider),clip(boundary),operation==null||operation.isBlank()?"unjoined-"+sequence:clip(operation),
-                        world==null?null:alias(current,world),connection,tick,revision,facts));
+                        world==null?null:alias(current,world)+":segment-"+current.worldSegment,connection,tick,revision,facts));
                 retained=true;current.admitted.incrementAndGet();current.maximumQueue=Math.max(current.maximumQueue,current.queue.size());
             }finally{current.lock.unlock();}
         }catch(RuntimeException diagnosticFailure){current.drops.incrementAndGet();}
         finally {
             if(!retained)SharedTraceBudget.release(RESERVATION);
+            long tickCost=Math.max(0,clock.getAsLong()-began);
+            if(tick!=null)recordTick(current,world,tick,tickCost);else current.observationsWithoutTick.incrementAndGet();
             long elapsed=Math.max(0,clock.getAsLong()-began);current.nanos.addAndGet(elapsed);
             current.timing.incrementAndGet(Math.min(31,64-Long.numberOfLeadingZeros(elapsed)));
+            current.timingSamples.incrementAndGet();
         }
     }
     private static boolean critical(String boundary){return CRITICAL.contains(boundary);}
+    private static void recordTick(Session session,UUID world,long tick,long elapsed){
+        TickWindow window=session.tickWindow.get();
+        if(window!=null&&window.tick==tick&&Objects.equals(window.world,world)){window.nanos.addAndGet(elapsed);return;}
+        var next=new TickWindow(world,tick);next.nanos.set(elapsed);
+        if(session.tickWindow.compareAndSet(window,next)){
+            if(window!=null){long finished=window.nanos.get();session.tickTiming.incrementAndGet(Math.min(31,64-Long.numberOfLeadingZeros(finished)));}
+        }else session.tickMetricGaps.incrementAndGet();
+    }
     private static String clip(String value){return value.substring(0,Math.min(192,value.length()));}
     private static String alias(Session current,UUID value){return new UUID(value.getMostSignificantBits()^current.salt.getMostSignificantBits(),
             value.getLeastSignificantBits()^current.salt.getLeastSignificantBits()).toString();}
     private void run() {
+        try {HroArm.Armed armed=HroArm.consume(root,installation,System.currentTimeMillis());
+            if(armed!=null){request.compareAndSet(null,new Request(armed.owner(),armed.world(),true));last="HRO BOOT_CAPTURE_STARTING";}}
+        catch(Exception failure){last="HRO ARM_PARTIAL; reason="+failure.getClass().getSimpleName();}
         while(!closing || session!=null) {
+            HroArm.Action action=armAction.getAndSet(null);
+            if(action!=null)try {if(action.cancel()){HroArm.cancel(root);last="HRO ARM_CANCELLED";}
+                else {HroArm.write(root,installation,action.owner(),action.world(),System.currentTimeMillis());last="HRO ARMED_NEXT_BOOT";}}
+                catch(Exception failure){last="HRO ARM_PARTIAL; reason="+failure.getClass().getSimpleName();}
             Request next=request.get();
             if(session==null&&next!=null) {
                 // Keep request occupied during initialization so repeated starts cannot enqueue another run.
@@ -140,14 +215,14 @@ public final class HroRecorder implements AutoCloseable {
                 current.world=next.world;
                 session=current;
                 if(request.get()!=next)current.stop="CANCELLED_START";
-                try {validateRoot();capture(current,next.world);}catch(Exception failure){last="HRO PARTIAL; folder="+current.directory+
+                try {validateRoot();capture(current,next.world,next.armed);}catch(Exception failure){last="HRO PARTIAL; folder="+current.directory+
                         "; reason="+failure.getClass().getSimpleName()+":"+clip(String.valueOf(failure.getMessage()));}
                 finally {
                     current.stop="FINALIZED";
                     current.lock.lock();try{int queued=current.queue.size();current.queue.clear();SharedTraceBudget.release((long)queued*RESERVATION);}finally{current.lock.unlock();}
                     request.set(null);session=null;
                 }
-            }else LockSupport.park(this);
+            }else LockSupport.parkNanos(this,2_000_000_000L);
         }
     }
     private void validateRoot()throws java.io.IOException {
@@ -157,21 +232,24 @@ public final class HroRecorder implements AutoCloseable {
         for(Path part:ancestor.toRealPath())if(part.toString().equalsIgnoreCase("Saves"))throw new java.io.IOException("OUTPUT_RESOLVES_INTO_SAVES");
         Files.createDirectories(root);
         try(var children=Files.list(root)) {
-            if(children.filter(Files::isDirectory).limit(9).count()>=8)throw new java.io.IOException("RETENTION_FULL_PRESERVE_EXISTING_RUNS");
+            if(children.filter(Files::isDirectory).filter(path->{try{UUID.fromString(path.getFileName().toString());return true;}
+                catch(IllegalArgumentException ignored){return false;}}).limit(9).count()>=8)
+                throw new java.io.IOException("RETENTION_FULL_PRESERVE_EXISTING_RUNS");
         }
     }
-    private void capture(Session current,UUID world)throws java.io.IOException {
+    private void capture(Session current,UUID world,boolean armed)throws java.io.IOException {
         Map<String,Object> origin=identity.get();Map<String,Object> manifest=new LinkedHashMap<>();
         manifest.put("schemaVersion",1);manifest.put("runId",current.id);manifest.put("state","RECORDING");
         manifest.put("captureBuild",origin);manifest.put("processId",ProcessHandle.current().pid());
         manifest.put("bootId",HroRuntime.BOOT_ID);manifest.put("startedUtcMillis",System.currentTimeMillis());
-        manifest.put("scope","invoking-player");manifest.put("preStartEvidence","NOT_OBSERVED");
+        manifest.put("scope","invoking-player");manifest.put("preStartEvidence",armed?"BOOTSTRAP_UNOBSERVED_BEFORE_PLUGIN_SETUP":"NOT_OBSERVED");
         manifest.put("sampling","ALL_OPERATIONS_DETERMINISTIC_1_OF_1; no partial-lifecycle sampling");
         manifest.put("criticalReservedSlots",32);manifest.put("maxPacketObserversPerRun",2048);
         manifest.put("monotonicClockOrigin","CAPTURE_START_SYSTEM_NANOTIME");
         manifest.put("maxRetainedHeapBytes",64L*1024*1024);manifest.put("maxQueuedBytes",SharedTraceBudget.LIMIT);
         manifest.put("maxUncompressedBytes",HroBundle.MAX_EVENTS_BYTES);manifest.put("maxPhysicalBytes",512L*1024*1024);
-        try(HroBundle bundle=new HroBundle(current.directory,manifest,Set.copyOf(providers))) {
+        try(HroBundle bundle=new HroBundle(current.directory,manifest,providers)) {
+            current.firstCaptureNanos=Math.max(0,clock.getAsLong()-current.start);
             observe(current.owner,"BOOT.ARTIFACT","HroIdentity","IDENTITY", "boot",world,null,null,null,
                     Map.of("identityVerified",false,"reason","RUNTIME_ASSET_ARCHIVE_IDENTITY_UNOBSERVABLE",
                             "preloadRegistration",Boolean.TRUE.equals(origin.get("preloadRegistration"))));
@@ -179,10 +257,11 @@ public final class HroRecorder implements AutoCloseable {
             while(true) {
                 if(closing&&current.stop==null)current.stop="SHUTDOWN";
                 if(clock.getAsLong()-current.start>=DURATION_NANOS&&current.stop==null)current.stop="EXPIRED";
+                if(current.disconnectAt>=0&&clock.getAsLong()-current.disconnectAt>=RECONNECT_GRACE_NANOS&&current.stop==null)current.stop="RECONNECT_GRACE_EXPIRED";
                 HroEvent event;
                 current.lock.lock();try{event=current.queue.pollFirst();}finally{current.lock.unlock();}
                 if(event!=null) {
-                    try {fault.beforeWrite();bundle.event(event);}
+                    try {long writing=clock.getAsLong();fault.beforeWrite();bundle.event(event);current.writerNanos+=Math.max(0,clock.getAsLong()-writing);}
                     catch(java.io.IOException failure){current.drops.incrementAndGet();current.stop="WRITE_FAILED";throw failure;}
                     finally{SharedTraceBudget.release(RESERVATION);}
                 }else if(current.stop!=null)break;
@@ -194,10 +273,43 @@ public final class HroRecorder implements AutoCloseable {
             performance.put("producerNanos",current.nanos.get());performance.put("maxQueuedReservationsBytes",current.maximumQueue*RESERVATION);
             List<Long> histogram=new ArrayList<>(32);for(int i=0;i<32;i++)histogram.add(current.timing.get(i));
             performance.put("producerNanosLog2Histogram",histogram);performance.put("worldTickQualification","UNVERIFIED_NO_MATCHED_NATIVE_RUN");
-            performance.put("clientFrameQualification","UNOBSERVABLE");
+            performance.put("producerTimingSamples",current.timingSamples.get());
+            performance.put("producerP95NanosUpperBound",percentile(current.timing,current.timingSamples.get(),95));
+            long producerP99=percentile(current.timing,current.timingSamples.get(),99);
+            performance.put("producerP99NanosUpperBound",producerP99);
+            performance.put("producerBudgetNanos",50_000);
+            performance.put("producerQualification",producerP99<0?"UNVERIFIED_NO_SAMPLES":producerP99<50_000?"OBSERVED_WITHIN_BUDGET":"OBSERVED_BUDGET_EXCEEDED");
+            TickWindow finalTick=current.tickWindow.getAndSet(null);
+            if(finalTick!=null)current.tickTiming.incrementAndGet(Math.min(31,64-Long.numberOfLeadingZeros(finalTick.nanos.get())));
+            List<Long> ticks=new ArrayList<>(32);long tickCount=0;for(int i=0;i<32;i++){long n=current.tickTiming.get(i);ticks.add(n);tickCount+=n;}
+            performance.put("ownerTickNanosLog2Histogram",ticks);performance.put("ownerTickSamples",tickCount);
+            performance.put("observationsWithoutNativeTick",current.observationsWithoutTick.get());
+            long tickP99=percentile(current.tickTiming,tickCount,99);
+            performance.put("ownerTickP99NanosUpperBound",tickP99);performance.put("ownerTickBudgetNanos",500_000);
+            performance.put("ownerTickQualification",tickP99<0?"UNVERIFIED_NO_TICK_CONTEXT":
+                    current.tickMetricGaps.get()>0?"INCOMPLETE_TICK_METRICS":tickP99<=500_000?"OBSERVED_WITHIN_BUDGET":"OBSERVED_BUDGET_EXCEEDED");
+            performance.put("ownerTickMetricGaps",current.tickMetricGaps.get());
+            performance.put("writerNanos",current.writerNanos);performance.put("writerBytes",bundle.eventBytes());
+            performance.put("writerBytesPerSecond",current.writerNanos==0?0:(double)bundle.eventBytes()*1_000_000_000d/current.writerNanos);
+            performance.put("firstCaptureInitializationNanos",current.firstCaptureNanos);performance.put("contentionDrops",current.contention.get());
+            performance.put("heapUsedStartBytes",current.initialUsedBytes);performance.put("heapUsedEndBytes",ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed());
+            performance.put("gcCountDelta",Math.max(0,gcCount()-current.initialGcCount));performance.put("gcMillisDelta",Math.max(0,gcMillis()-current.initialGcMillis));
+            performance.put("nativeWorldTiming",bundle.nativeTiming());
+            performance.put("governor",current.stop);performance.put("clientFrameQualification","CLIENT_PERFORMANCE_UNVERIFIED");
+            performance.put("governorTransitions",List.of(Map.of("state","RECORDING","monotonicNanos",0),
+                    Map.of("state","STOPPED_OR_SUSPENDED","reason",current.stop,"monotonicNanos",Math.max(0,clock.getAsLong()-current.start))));
+            performance.put("diskUsableBytesAtFinish",diskUsable());
+            performance.put("observedDisconnects",current.disconnections.get());performance.put("correlatedReconnects",current.reconnections.get());
             bundle.finish(current.drops.get(),current.stop,performance);
-            last="HRO COMPLETE; run="+current.id+"; folder="+current.directory+"; termination="+current.stop;
+            String analysis=HroAutoAnalysis.finish(root,current.directory,clock);
+            last="HRO "+(current.drops.get()==0&&("STOPPED".equals(current.stop)||"EXPIRED".equals(current.stop))&&analysis.equals("COMPLETE")?"COMPLETE":"PARTIAL")+
+                    "; run="+current.id+"; dropped="+current.drops.get()+"; folder="+current.directory+"; termination="+current.stop+"; analysis="+analysis;
         }
     }
+    private static long percentile(AtomicLongArray histogram,long count,int percent){if(count<=0)return -1;long target=(count*percent+99)/100,sum=0;
+        for(int i=0;i<histogram.length();i++){sum+=histogram.get(i);if(sum>=target)return 1L<<Math.min(30,i);}return -1;}
+    private static long gcCount(){long n=0;for(var bean:ManagementFactory.getGarbageCollectorMXBeans())if(bean.getCollectionCount()>0)n+=bean.getCollectionCount();return n;}
+    private static long gcMillis(){long n=0;for(var bean:ManagementFactory.getGarbageCollectorMXBeans())if(bean.getCollectionTime()>0)n+=bean.getCollectionTime();return n;}
+    private long diskUsable(){try{return Files.getFileStore(root).getUsableSpace();}catch(java.io.IOException|SecurityException unavailable){return -1;}}
     @Override public void close(){closing=true;Session current=session;if(current!=null)current.stop="SHUTDOWN";LockSupport.unpark(worker);}
 }

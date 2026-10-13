@@ -29,13 +29,21 @@ final class HroComparison {
         content.put("baselineId",HroOffline.hash(content));HroOffline.create(output,content);
     }
     static void compare(Path bundle,Path baselinePath,Path recipePath,Path output) throws IOException {
+        compare(bundle,baselinePath,HroOffline.object(recipePath),output);
+    }
+    static void compare(Path bundle,Path baselinePath,JsonObject recipe,Path output) throws IOException {
+        compare(bundle,baselinePath,recipe,output,()->0,Long.MAX_VALUE);
+    }
+    static final class AnalysisBudgetExceeded extends RuntimeException { }
+    static void compare(Path bundle,Path baselinePath,JsonObject recipe,Path output,
+                        java.util.function.LongSupplier clock,long deadline) throws IOException {
         JsonObject baseline=HroOffline.object(baselinePath);String identity=HroOffline.required(baseline,"baselineId");
         JsonObject signed=baseline.deepCopy();signed.remove("baselineId");
         if(!identity.equals(HroOffline.hash(signed))||!HroOffline.value(baseline,"kind").equals("HRO_CONTRACT_BASELINE")
                 ||!HroOffline.value(baseline,"schemaVersion").equals("1"))throw new IOException("INVALID_BASELINE");
-        JsonObject recipe=HroOffline.object(recipePath);validate(recipe);
+        validate(recipe);
         JsonObject previous=baseline.getAsJsonObject("recipe"),prior=baseline.getAsJsonObject("observation");
-        Observation current=observe(bundle,recipe);var confounders=new ArrayList<String>();
+        Observation current=observe(bundle,recipe,clock,deadline);var confounders=new ArrayList<String>();
         for(String key:List.of("contract","scenario","match"))if(!Objects.equals(previous.get(key),recipe.get(key)))confounders.add(key+" differs");
         for(String key:CONTEXT)if(!Objects.equals(previous.getAsJsonObject("context").get(key),recipe.getAsJsonObject("context").get(key)))confounders.add(key+" differs");
         if(!current.quality().equals("COMPLETE"))confounders.add(current.quality());
@@ -80,12 +88,17 @@ final class HroComparison {
         for(String key:CONTEXT)HroOffline.required(recipe.getAsJsonObject("context"),key);
     }
     static Observation observe(Path bundle,JsonObject recipe)throws IOException {
+        return observe(bundle,recipe,()->0,Long.MAX_VALUE);
+    }
+    private static Observation observe(Path bundle,JsonObject recipe,java.util.function.LongSupplier clock,long deadline)throws IOException {
         HroTool.verifyChecksums(bundle);JsonObject manifest=HroOffline.object(bundle.resolve("manifest.json"));
+        if(clock.getAsLong()>=deadline)throw new AnalysisBudgetExceeded();
         JsonObject integrity=HroOffline.object(bundle.resolve("integrity.json"));
         String contract=HroOffline.required(recipe,"contract"),run=HroOffline.required(manifest,"runId");
         var operations=new LinkedHashMap<String,Map<String,String>>();long[] count={0};boolean[] valid={true};
         HroTool.read(bundle,(event,locator)->{
             if(!run.equals(event.runId())||event.schemaVersion()!=1||event.sequence()!=++count[0])valid[0]=false;
+            if((count[0]&255)==0&&clock.getAsLong()>=deadline)throw new AnalysisBudgetExceeded();
             if(!event.contract().equals(contract))return;
             if(operations.size()>=2048&&!operations.containsKey(event.operationId())){valid[0]=false;return;}
             var facts=operations.computeIfAbsent(event.operationId(),ignored->new HashMap<>());
@@ -104,7 +117,7 @@ final class HroComparison {
         var evaluator=new HroContracts(registered);var evidence=new ArrayList<String>();String operation=matches.getFirst();
         HroTool.read(bundle,(event,locator)->{if(event.contract().equals(contract)&&event.operationId().equals(operation)) {
             evaluator.accept(event,locator);if(evidence.size()<32)evidence.add(locator);
-        }});
+        }if((evidence.size()&255)==0&&clock.getAsLong()>=deadline)throw new AnalysisBudgetExceeded();});
         var findings=evaluator.findings(!quality.equals("COMPLETE"));
         var finding=findings.stream().filter(f->f.contract().equals(contract)&&f.operationId().equals(operation)).reduce((a,b)->b);
         String outcome=finding.map(f->f.outcome().name()).orElse("INCONCLUSIVE"),reason=finding.map(HroContracts.Finding::firstDivergence).orElse("NO_TERMINAL_EVIDENCE");

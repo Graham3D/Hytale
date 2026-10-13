@@ -37,9 +37,10 @@ public final class HroContracts {
     private final Set<String> registered;
     private long losses, omittedFindings;
     public HroContracts(Set<String> registered) {
-        this.registered = Set.copyOf(registered);
+        this.registered = new HashSet<>(registered);
         for (String id : IDS) counts.put(id, new EnumMap<>(Outcome.class));
     }
+    void registered(String contract){if(IDS.contains(contract))registered.add(contract);}
     public void lost(long count) { losses += count; }
     public void accept(HroEvent event, String locator) {
         if (!counts.containsKey(event.contract())) return;

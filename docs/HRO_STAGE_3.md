@@ -1,5 +1,8 @@
 # HRO Stage 3 — comparison, reuse and release qualification
 
+The focused completion pass after Stage 3 is documented in
+[HRO_FINALIZATION.md](HRO_FINALIZATION.md); this report remains the Stage 3 record.
+
 Candidate: **R262C1HRO3-CANDIDATE**, version `0.2.0-R262C1HRO3-CANDIDATE`,
 Hytale `=0.7.0`. Stage 3 continues Stage 2 commit
 `985c9c06f3d370d2afc882299a16682aa0cd66c3` in `C:/hyhro3`, branch

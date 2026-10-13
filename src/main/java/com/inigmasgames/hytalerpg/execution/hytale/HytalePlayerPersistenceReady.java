@@ -26,6 +26,8 @@ public final class HytalePlayerPersistenceReady extends EntityTickingSystem<Enti
     private final RpgLoadoutService loadouts;
     private final com.inigmasgames.hytalerpg.readypath.PlayerEntryPreparation preparation;
     private final Map<UUID,PlayerRef> connections=new java.util.concurrent.ConcurrentHashMap<>();
+    private final Map<UUID,Long> observedGenerations=new java.util.concurrent.ConcurrentHashMap<>();
+    private final Map<UUID,Long> observedWorldGenerations=new java.util.concurrent.ConcurrentHashMap<>();
     @FunctionalInterface public interface OwnerInstall {boolean install(Store<EntityStore> store,Ref<EntityStore> ref,PlayerRef player,Player entity,EntityStatMap stats);}
     private final OwnerInstall install;
     private java.util.function.Consumer<UUID> additionalPreload=ignored->{};
@@ -74,9 +76,9 @@ public final class HytalePlayerPersistenceReady extends EntityTickingSystem<Enti
         if(pending.size()>=256&&!pending.containsKey(player))throw new IllegalStateException("PLAYER_READINESS_CAPACITY");
         loadouts.preload(player);
         long generation=generations.incrementAndGet();pending.put(player,new Ready(world,generation));
-        if(com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.active(player))
-            com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.observe(player,"PLAYER.ADMISSION","HytalePlayerPersistenceReady",
-                    "READY_QUEUED","admission-"+generation,world,generation,null,null,Map.of());
+        observedGenerations.put(player,generation);
+        observedWorldGenerations.remove(player);
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.lifecycle(player,world,generation,"READY_QUEUED");
 
         }
     }
@@ -84,7 +86,8 @@ public final class HytalePlayerPersistenceReady extends EntityTickingSystem<Enti
         var current=connections.get(player.getUuid());
         if(current!=null&&current!=player)return; // A delayed old disconnect cannot cancel a newer session.
         connections.remove(player.getUuid(),player);pending.remove(player.getUuid());preparation.detach(player.getUuid());
-        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.disconnect(player.getUuid());
+        Long generation=observedGenerations.remove(player.getUuid());observedWorldGenerations.remove(player.getUuid());
+        if(generation!=null)com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.disconnect(player.getUuid(),generation);
         com.inigmasgames.hywind.readypath.ReadyPathProbe.disconnect(player.getUuid());
     }
     public Map<String,Object> preparationStatus(){
@@ -97,7 +100,7 @@ public final class HytalePlayerPersistenceReady extends EntityTickingSystem<Enti
         var current=connections.get(player.getUuid());if(current!=null&&current!=player)return;
         pending.remove(player.getUuid());preparation.detach(player.getUuid());
     }
-    @Override public void close(){pending.clear();connections.clear();preparation.close();}
+    @Override public void close(){pending.clear();connections.clear();observedGenerations.clear();observedWorldGenerations.clear();preparation.close();}
     @Override public Query<EntityStore> getQuery(){return Query.and(PlayerRef.getComponentType(),Player.getComponentType(),EntityStatMap.getComponentType());}
     @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(new SystemDependency<>(Order.BEFORE,HytaleSupportSystem.class),new SystemDependency<>(Order.BEFORE,HytaleSkillExecutionSystem.class));}
     @Override public void tick(float dt,int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer){
@@ -111,6 +114,12 @@ public final class HytalePlayerPersistenceReady extends EntityTickingSystem<Enti
         if(!ready.accepts(player.getWorldUuid())){
             observeReady(player,ready,store,"STALE_WORLD");return;
         }
+        Long previouslyObserved=observedWorldGenerations.putIfAbsent(player.getUuid(),ready.generation());
+        boolean firstWorldObservation=previouslyObserved==null||previouslyObserved!=ready.generation();
+        if(previouslyObserved!=null&&previouslyObserved!=ready.generation())observedWorldGenerations.put(player.getUuid(),ready.generation());
+        // The native player entity supplies the actual instance world after pre-connect's parent-world hint.
+        if(firstWorldObservation&&(ready.world()==null||!ready.world().equals(player.getWorldUuid())))
+            com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.lifecycle(player.getUuid(),player.getWorldUuid(),ready.generation(),"WORLD_ADMITTED");
         if(!loadouts.ready(player.getUuid())){
             if(com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.active(player.getUuid()))
                 com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.observe(player.getUuid(),"PLAYER.ADMISSION",

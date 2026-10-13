@@ -15,13 +15,18 @@ final class HroBundle implements AutoCloseable {
     private final Path directory;
     private final Map<String,Object> manifest;
     private final HroContracts contracts;
+    private final Set<String> providers;
     private final HroMechanicalReport mechanical=new HroMechanicalReport();
     private BufferedWriter events,index;
     private long total,segmentBytes,line,indexBytes,eventCount;
+    private final List<Double> nativeWorldMillis=new ArrayList<>(1024),rpgWallMillis=new ArrayList<>(1024);
+    private final List<Map<String,Object>> checkpoints=new ArrayList<>(32);
+    private long markerCount;
+    private long nativeSamples,unpairedNativeSamples;
     private int segment;
     private boolean finished;
     HroBundle(Path directory,Map<String,Object> identity,Set<String> providers)throws IOException {
-        this.directory=directory; this.manifest=new LinkedHashMap<>(identity); contracts=new HroContracts(providers);
+        this.directory=directory; this.manifest=new LinkedHashMap<>(identity); this.providers=providers;contracts=new HroContracts(providers);
         Files.createDirectories(directory.resolve("events")); Files.createDirectories(directory.resolve("indexes"));
         writeJson("manifest.json",manifest);
         writeJson("coverage.json",contracts.coverage(true));
@@ -53,10 +58,42 @@ final class HroBundle implements AutoCloseable {
         if(indexBytes>96L*1024*1024)throw new IOException("INDEX_BYTE_BUDGET");
         index.write(indexLine);
         index.write('\n');
+        if(providers.contains(event.contract()))contracts.registered(event.contract());
         contracts.accept(event,locator);
         mechanical.accept(event,locator);
+        if(event.boundary().equals("MARK"))markerCount++;
+        if(event.boundary().equals("MARK")&&checkpoints.size()<32){
+            var marker=new LinkedHashMap<String,Object>();marker.put("label",event.facts().getOrDefault("label","USER_CHECKPOINT"));
+            marker.put("runId",event.runId());marker.put("connectionId",event.connectionId());
+            marker.put("worldSegmentId",event.worldSegmentId());marker.put("utcMillis",event.utcMillis());
+            marker.put("operationId",event.operationId());marker.put("locator",locator);checkpoints.add(marker);
+        }
+        if(event.contract().equals("PERFORMANCE")&&event.boundary().equals("WORLD_TICK")){
+            if("true".equals(event.facts().get("wholeWorldTickPaired"))){
+                nativeSamples++;
+                String whole=event.facts().get("wholeWorldTickMs"),rpg=event.facts().get("rpgWallMs");
+                if(nativeWorldMillis.size()<1024&&whole!=null&&rpg!=null)try{
+                    double nativeValue=Double.parseDouble(whole),rpgValue=Double.parseDouble(rpg);
+                    if(Double.isFinite(nativeValue)&&Double.isFinite(rpgValue)&&nativeValue>=0&&rpgValue>=0){
+                        nativeWorldMillis.add(nativeValue);rpgWallMillis.add(rpgValue);
+                    }else unpairedNativeSamples++;
+                }catch(NumberFormatException badSample){unpairedNativeSamples++;}
+                else if(whole==null||rpg==null)unpairedNativeSamples++;
+            }else unpairedNativeSamples++;
+        }
     }
     void flush()throws IOException {events.flush();index.flush();}
+    long eventBytes(){return total;}
+    Map<String,Object> nativeTiming(){
+        var result=new LinkedHashMap<String,Object>();result.put("source","NativeRpgTickMetrics owner-thread prior-tick pairing");
+        result.put("pairedSamples",nativeSamples);result.put("unpairedSamples",unpairedNativeSamples);
+        result.put("timingSamplesAnalyzed",nativeWorldMillis.size());result.put("samplePolicy","FIRST_1024_PAIRED_SAMPLES; not a full-session distribution when capped");
+        result.put("wholeWorldTickP95Ms",percentile(nativeWorldMillis,.95));result.put("wholeWorldTickP99Ms",percentile(nativeWorldMillis,.99));
+        result.put("rpgWallP95Ms",percentile(rpgWallMillis,.95));result.put("rpgWallP99Ms",percentile(rpgWallMillis,.99));
+        result.put("traceOffOnComparison","UNVERIFIED_NO_MATCHED_RUNS");return result;
+    }
+    private static Object percentile(List<Double> values,double fraction){if(values.isEmpty())return "UNVERIFIED";
+        var ordered=new ArrayList<>(values);ordered.sort(Double::compare);return ordered.get(Math.min(ordered.size()-1,(int)Math.ceil(ordered.size()*fraction)-1));}
     private void rotate()throws IOException {
         if(events!=null){events.close();compress(directory.resolve(segmentName()+".pending"),directory.resolve(segmentName()+".gz"));}
         segment++;segmentBytes=0;line=0;
@@ -72,31 +109,52 @@ final class HroBundle implements AutoCloseable {
     void finish(long drops,String reason,Map<String,Object> performance)throws IOException {
         if(finished)return;finished=true;
         events.close();index.close();compress(directory.resolve(segmentName()+".pending"),directory.resolve(segmentName()+".gz"));
+        providers.forEach(contracts::registered);
+        writeJson("capabilities.json",Map.of("registeredContracts",Set.copyOf(providers),"clientVersion","UNOBSERVABLE",
+                "physicalInput","UNOBSERVABLE","renderAcknowledgement","UNOBSERVABLE",
+                "nativeTick","NULL_WHEN_NOT_AT_OWNER_TICK","slots",Map.of("skill01","Ability2","skill02","Ability3",
+                        "skill03","UNBOUND","skill04","UNBOUND"),"legacyRecorders","INDEPENDENT_NOT_ENABLED_BY_HRO"));
         contracts.lost(drops);
         boolean incomplete=!reason.equals("STOPPED") && !reason.equals("EXPIRED");
         var coverage=contracts.coverage(incomplete);
+        var findings=contracts.findings(incomplete);
+        var cascades=HroMaps.cascades(findings);
         writeJson("coverage.json",coverage);
         writeJson("mechanical.json",mechanical.snapshot(incomplete||drops>0));
-        writeJson("findings.json",Map.of("findings",contracts.findings(incomplete),"omitted",contracts.omittedFindings(),
+        writeJson("findings.json",Map.of("findings",findings,"omitted",contracts.omittedFindings(),
                 "comparison","NO_BASELINE","scope","OBSERVED_OPERATIONS_ONLY"));
         writeJson("performance.json",performance);
         writeJson("implementation-map.json",Map.of("schemaVersion",1,"components",HroMaps.implementation()));
         writeJson("compatibility-diff.json",Map.of("comparison","NO_BASELINE","reason","Select an explicitly approved per-contract baseline offline"));
-        writeJson("cascades.json",HroMaps.cascades(contracts.findings(incomplete)));
-        writeJson("report.json",Map.of("schemaVersion",1,"findings",HroMaps.details(contracts.findings(incomplete))));
+        writeJson("cascades.json",cascades);
+        writeJson("report.json",Map.of("schemaVersion",1,"findings",HroMaps.details(findings),"checkpoints",checkpoints));
+        writeJson("checkpoints.json",Map.of("checkpoints",checkpoints,"omitted",Math.max(0,markerCount-checkpoints.size())));
         writeJson("integrity.json",Map.of("dropped",drops,"termination",reason,"evidenceComplete",drops==0&&!incomplete,
-                "uncompressedEventBytes",total,"pendingOperationsAreInconclusive",true));
+                "uncompressedEventBytes",total,"pendingOperationsAreInconclusive",true,
+                "observedDisconnects",performance.getOrDefault("observedDisconnects",0),
+                "correlatedReconnects",performance.getOrDefault("correlatedReconnects",0)));
         StringBuilder summary=new StringBuilder("# Hywind Regression Observatory\n\nRun: "+manifest.get("runId")+"\n\nTermination: "+reason+
                 "; dropped observations: "+drops+". Scope: invoking subject only.\n\n");
         coverage.forEach((id,value)->summary.append("- ").append(id).append(": ").append(((Map<?,?>)value).get("outcome")).append('\n'));
+        summary.append("\nSupported failures: ").append(findings.stream().filter(f->f.outcome()==HroContracts.Outcome.FAIL).count())
+                .append("; downstream blockers: ").append(findings.stream().filter(f->f.outcome()==HroContracts.Outcome.BLOCKED).count())
+                .append("; evidence gaps: ").append(findings.stream().filter(f->f.outcome()==HroContracts.Outcome.INCONCLUSIVE).count())
+                .append("; correlation groups: ").append(cascades.size()).append(".\n");
+        findings.stream().filter(f->f.outcome()==HroContracts.Outcome.FAIL||f.outcome()==HroContracts.Outcome.BLOCKED)
+                .limit(5).forEach(f->summary.append("- ").append(f.outcome()).append(' ').append(f.contract()).append(" / ")
+                        .append(safeSummary(f.operationId())).append(": ").append(safeSummary(f.firstDivergence())).append('\n'));
+        long uncovered=coverage.values().stream().filter(value->"NOT_EXERCISED".equals(String.valueOf(((Map<?,?>)value).get("outcome")))).count();
+        summary.append("Unexercised contract families: ").append(uncovered).append("; see coverage.json. Unattempted scenarios are not assumed healthy.\n");
+        if(!checkpoints.isEmpty())summary.append("\nCheckpoints: ").append(checkpoints.size()).append("; see checkpoints.json and report.json.\n");
         summary.append("\nStart with findings.json, then indexes/operations.jsonl for segment and line locators. "
-                +"Read one gzip segment at a time. No approved baseline was selected for this capture. Use the offline compare action for historical comparison. Server publication does not prove client rendering. "
+                +"Read one gzip segment at a time. Automatic approved-baseline comparison status is in auto-analysis.json. Server publication does not prove client rendering. "
                 +"Pre-start boot/admission events are not reconstructed. Missing expected custody mode and native outcome boundaries remain gaps.\n");
         Files.writeString(directory.resolve("summary.md"),summary,StandardCharsets.UTF_8);
         manifest.put("state","COMPLETE");manifest.put("termination",reason);manifest.put("finishedUtcMillis",System.currentTimeMillis());
         manifest.put("eventCount",eventCount);manifest.put("segmentCount",segment);
         writeJson("manifest.json",manifest); checksums(directory);
     }
+    private static String safeSummary(String value){return value==null?"UNKNOWN":value.replaceAll("[\\r\\n]"," ").substring(0,Math.min(120,value.length()));}
     private void writeJson(String name,Object data)throws IOException {
         Files.writeString(directory.resolve(name),JSON.toJson(data)+"\n",StandardCharsets.UTF_8);
     }
@@ -107,7 +165,7 @@ final class HroBundle implements AutoCloseable {
             return HexFormat.of().formatHex(digest.digest());
         }catch(NoSuchAlgorithmException impossible){throw new IllegalStateException(impossible);}
     }
-    private static void checksums(Path directory)throws IOException {
+    static void checksums(Path directory)throws IOException {
         try(var files=Files.walk(directory);var out=Files.newBufferedWriter(directory.resolve("checksums.sha256"),StandardCharsets.UTF_8)) {
             for(Path path:files.filter(Files::isRegularFile).filter(p->!p.getFileName().toString().equals("checksums.sha256")).sorted().toList()) {
                 out.write(sha256(path)+"  "+directory.relativize(path).toString().replace('\\','/')+"\n");

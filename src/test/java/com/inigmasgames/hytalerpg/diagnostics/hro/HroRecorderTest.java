@@ -26,6 +26,7 @@ class HroRecorderTest {
         while(!condition.getAsBoolean()&&System.nanoTime()<deadline)Thread.sleep(5);
         assertTrue(condition.getAsBoolean(),"diagnostic worker did not finish");
     }
+    static boolean finalized(String status){return status.startsWith("HRO COMPLETE")||status.startsWith("HRO PARTIAL");}
     private Path bundle()throws Exception {try(var files=Files.list(root)){return files.filter(Files::isDirectory).findFirst().orElseThrow();}}
     @Test void producesNavigablePackageAndPreservesImmutableScalarSnapshot()throws Exception {
         try(var recorder=recorder(()->{})) {
@@ -53,7 +54,7 @@ class HroRecorderTest {
             begin(recorder);observe(recorder);assertTrue(entered.await(5,TimeUnit.SECONDS));
             assertTimeoutPreemptively(java.time.Duration.ofSeconds(1),()->{for(int i=0;i<2000;i++)observe(recorder);recorder.stop();});
             assertTrue(recorder.status().contains("FINALIZING"));assertTrue(SharedTraceBudget.used()<=SharedTraceBudget.LIMIT);
-            release.countDown();await(()->recorder.status().startsWith("HRO COMPLETE"));
+            release.countDown();await(()->finalized(recorder.status()));
             assertTrue(JsonParser.parseString(Files.readString(bundle().resolve("integrity.json"))).getAsJsonObject().get("dropped").getAsLong()>0);
         }finally{release.countDown();}
         await(()->SharedTraceBudget.used()==0);

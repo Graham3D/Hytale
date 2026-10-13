@@ -23,8 +23,11 @@ public final class HroRuntime {
     }
     private HroRuntime() { }
     public static void install(Path root) {
+        install(root,root.toString());
+    }
+    public static void install(Path root,String installation) {
         WITNESSES.clear();
-        try{recorder=new HroRecorder(root);}catch(RuntimeException unavailable){recorder=null;}
+        try{recorder=new HroRecorder(root,System::nanoTime,HroIdentity::capture,()->{},installation);}catch(RuntimeException unavailable){recorder=null;}
     }
     public static void witness(String registration){WITNESSES.add(registration);}
     static Set<String> witnesses(){return Set.copyOf(WITNESSES);}
@@ -35,8 +38,7 @@ public final class HroRuntime {
     public static UUID ownerInWorld(UUID world){var r=recorder;return r==null?null:r.ownerInWorld(world);}
     public static String token(UUID player){var r=recorder;return r==null?null:r.token(player);}
     public static String packet(UUID player){var r=recorder;return r==null?null:r.packet(player);}
-    public static String mark(UUID player){if(!active(player))return "HRO is not recording this player";
-        observe(player,"MARK","RpgTraceCommand","MARK",null,null,null,null,null,Map.of("label","USER_CHECKPOINT"));return "HRO checkpoint recorded";}
+    public static String mark(UUID player,UUID world,String label){var r=recorder;return r==null?"HRO unavailable":r.mark(player,world,label);}
     public static void equipment(UUID player,com.inigmasgames.hytalerpg.gear.GearEffectSnapshot snapshot,
             List<com.inigmasgames.hytalerpg.gear.GearInstance> candidates,Set<UUID> accepted) {
         var r=recorder;if(r==null||!r.active(player))return;
@@ -60,9 +62,12 @@ public final class HroRuntime {
         observe(player,contract,"EnemyBirthOwner",boundary,encounter.toString(),world,null,null,null,facts);
     }
     public static String start(UUID player,UUID world){var r=recorder;return r==null?"HRO unavailable":r.start(player,world);}
+    public static String armNext(UUID player,UUID world){var r=recorder;return r==null?"HRO unavailable":r.armNext(player,world);}
+    public static String cancelArm(){var r=recorder;return r==null?"HRO unavailable":r.cancelArm();}
     public static String stop(){var r=recorder;return r==null?"HRO unavailable":r.stop();}
     public static String status(){var r=recorder;return r==null?"HRO unavailable":r.status();}
-    public static void disconnect(UUID player){var r=recorder;if(r!=null)r.disconnect(player);}
+    public static void disconnect(UUID player,long generation){var r=recorder;if(r!=null)r.disconnect(player,generation);}
+    public static void lifecycle(UUID player,UUID world,long generation,String boundary){var r=recorder;if(r!=null)r.lifecycle(player,world,generation,boundary);}
     public static void shutdown(){var r=recorder;if(r!=null)r.close();recorder=null;}
     public static void observe(UUID player,String contract,String provider,String boundary,String operation,UUID world,
                                Long connection,Long tick,Long revision,Map<String,?> facts) {

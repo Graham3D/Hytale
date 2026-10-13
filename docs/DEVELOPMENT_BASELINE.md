@@ -1,5 +1,32 @@
 # HyARPG/Hywind development baseline
 
+## HRO finalization and connected QA readiness (2026-10-13)
+
+State: **IN_PROGRESS — finalization engineering under verification**. The
+focused completion branch is `codex/hro-finalization` in `C:/hyhrofinal`, based
+exactly on integrated remote `main`
+`5287bb7ceecaeb7c6bcdfbfd748503886c6b1eb4`. It depends on the already
+integrated HRO Stages 1–3; no newer unaccepted gameplay branch is imported.
+The earlier Stage 3 source is already in `main`, while the primary Windows
+`main` checkout remains at `1dfa2cea3085196c7fd4492518c65a03d5e3b49d`
+with user-owned AGENTS/artwork/icon/script changes. The active deployed
+candidate at task start was `R262C1INV1-CANDIDATE`, source
+`afdf9bfbce9d5fb395bd68848833480a849f0e0b`, SHA-256
+`3B80550CCA85E59061C40B393A574FA42F7009180E5B711F91930BE1AF719B47`.
+No connected HRO acceptance has yet been reported. The inherited committed
+AGENTS.md contains a legacy save path; the user-supplied current policy names
+the active `UserData/Saves/Hywind` save and governs deployment. AGENTS.md is
+not being edited.
+
+Candidate revision `R262C1HROF-CANDIDATE`, version
+`0.2.0-R262C1HROF-CANDIDATE`, Hytale `=0.7.0`. Scope: optional one-shot boot
+capture, owner-bound reconnect/world continuity, labeled checkpoints,
+integrated performance evidence and worker-side automatic comparison/reporting.
+See [HRO_FINALIZATION.md](HRO_FINALIZATION.md) and [COMMANDS.md](COMMANDS.md).
+Build, Guardian, publication, deployment and connected QA states will be
+recorded independently after exact-commit verification. The current primary
+checkout and deployed JAR are not changed by creating this branch.
+
 ## HRO Stage 3 final engineering candidate (2026-10-13)
 
 State: **MERGED — engineering-ready; deployment and connected acceptance

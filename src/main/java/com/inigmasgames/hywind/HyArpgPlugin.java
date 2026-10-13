@@ -164,7 +164,8 @@ public final class HyArpgPlugin extends TavernsPlugin {
     @Override
     protected void setup() {
         com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.install(java.nio.file.Path.of(
-                System.getProperty("user.home"),"AppData","Roaming","Hytale","UserData","Diagnostics","Hywind","HRO"));
+                System.getProperty("user.home"),"AppData","Roaming","Hytale","UserData","Diagnostics","Hywind","HRO"),
+                getDataDirectory().toAbsolutePath().normalize().toString());
         try (var readyPathSpan = com.inigmasgames.hywind.readypath.ReadyPathProbe.span("BOOT_HYARPG_SETUP", null)) {
         if (com.inigmasgames.hywind.readypath.ReadyPathProbe.ENABLED) {
             getEventRegistry().registerGlobal(com.hypixel.hytale.server.core.event.events.player.PlayerSetupConnectEvent.class,

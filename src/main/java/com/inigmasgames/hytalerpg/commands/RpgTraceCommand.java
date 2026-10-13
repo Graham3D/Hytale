@@ -80,8 +80,18 @@ public final class RpgTraceCommand extends AbstractCommandCollection {
                 say(c,com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.stop())));
         patch.addSubCommand(player("status","Show recorder state, losses and output folder.",PATCH_PERMISSION,false,(c,s,r,p,w)->
                 say(c,com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.status())));
-        patch.addSubCommand(player("mark","Record a checkpoint in the active HRO capture.",PATCH_PERMISSION,false,(c,s,r,p,w)->
-                say(c,com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.mark(p.getUuid()))));
+        patch.addSubCommand(player("arm-next","Arm one bounded capture for the next ordinary boot.",PATCH_PERMISSION,false,(c,s,r,p,w)->
+                say(c,com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.armNext(p.getUuid(),p.getWorldUuid()))));
+        patch.addSubCommand(player("cancel-arm","Cancel the pending next-boot capture.",PATCH_PERMISSION,false,(c,s,r,p,w)->
+                say(c,com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.cancelArm())));
+        patch.addSubCommand(new AbstractPlayerCommand("mark","Record an optional labeled checkpoint in the active HRO capture."){
+            final OptionalArg<String> label=withOptionalArg("label","One short checkpoint label",ArgTypes.STRING);
+            {requirePermission(PATCH_PERMISSION);setPermissionGroups();}
+            @Override protected void execute(CommandContext c,Store<EntityStore> s,Ref<EntityStore> r,PlayerRef p,World w){
+                say(c,com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.mark(p.getUuid(),p.getWorldUuid(),
+                        c.provided(label)?c.get(label):null));
+            }
+        });
         addSubCommand(patch);
         addSubCommand(player("status","Summarize every diagnostic category.",null,false,(c,s,r,p,w)->{
             UUID owner=p.getUuid();
@@ -99,8 +109,9 @@ public final class RpgTraceCommand extends AbstractCommandCollection {
                         +"spawn=OPERATIONAL_GLOBAL [inigmasgames.rpg.spawntrace]; "
                         +"inventory-tab, inventory-drop=OPERATIONAL_ADAPTER_LIMITED [Adventure].")));
         addSubCommand(player("help","Show diagnostic syntax.",null,true,(c,s,r,p,w)->
-                say(c,"/rpg-trace <patch|skill|combat|skilltree|inventory|ui|gear|sentinel|spawn|inventory-tab|inventory-drop> "
-                        +"<start|stop|status> [arguments]; /rpg-trace status|list|help. "
+                say(c,"/rpg-trace patch <start|stop|status|mark [label]|arm-next|cancel-arm>; "
+                        +"/rpg-trace <skill|combat|skilltree|inventory|ui|gear|sentinel|spawn|inventory-tab|inventory-drop> <start|stop|status> [arguments]; "
+                        +"/rpg-trace status|list|help. "
                         +"Skill start supports detailed/performance; ui/gear support mark; sentinel supports snapshot; "
                         +"combat supports last [count] and inspect.")));
         addSkill(skill);addCombat(combat);

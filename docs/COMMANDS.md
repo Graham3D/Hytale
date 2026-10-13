@@ -2,7 +2,7 @@
 
 ## Hywind Regression Observatory (HRO)
 
-Available in `R262C1HRO1-CANDIDATE` and descendants targeting Hytale `=0.7.0`.
+Available in `R262C1HROF-CANDIDATE` and descendants targeting Hytale `=0.7.0`.
 These commands require the administrative permission `inigmasgames.rpg.trace.patch`;
 they are not assigned the Adventurer group or the ordinary UI/gear permissions.
 They require an in-game player and never modify save state.
@@ -10,33 +10,40 @@ They require an in-game player and never modify save state.
 | Command | Effect | Gate |
 | --- | --- | --- |
 | `/rpg-trace patch start` | Request one cross-system session for the invoking player; returns STARTING, then RECORDING. Maximum ten minutes. A second start reports the existing session. Does not enable manual legacy recorders. | Operator; HRO build; one process-wide session |
-| `/rpg-trace patch stop` | Stop new admission immediately; in-flight observations finalize asynchronously. Status remains FINALIZING until complete. | Operator; any current HRO session |
-| `/rpg-trace patch status` | Show state, run ID, admitted/dropped counts and absolute output path; no file scan. COMPLETE and PARTIAL are distinct. | Operator |
-| `/rpg-trace patch mark` | Append a timestamped `USER_CHECKPOINT` to the invoking player's active capture. No arguments or gameplay mutation. | `inigmasgames.rpg.trace.patch`; invoking player must own the capture; R262C1HRO2-CANDIDATE or descendant, Hytale `=0.7.0`; no save migration |
+| `/rpg-trace patch stop` | Stop new admission immediately; finalize evidence and approved-baseline comparison on the HRO worker. | Operator; any current HRO session |
+| `/rpg-trace patch status` | Show STARTING, RECORDING, WAITING_RECONNECT, FINALIZING, COMPLETE or PARTIAL; run ID, admitted/dropped counts and absolute output path. No file scan. | Operator |
+| `/rpg-trace patch mark [label]` | Append a timestamped optional checkpoint for the invoking player's capture. The single-word label is sanitized to `[A-Za-z0-9_.-]` and capped at 64 characters; omission records `USER_CHECKPOINT`. The checkpoint includes the observed run, connection and world segment. No gameplay mutation. | `inigmasgames.rpg.trace.patch`; invoking player must own the capture; HROF build; Hytale `=0.7.0` |
+| `/rpg-trace patch arm-next` | Arm one owner-scoped capture for the next ordinary plugin boot; starts when HRO is installed in plugin setup and expires after 24 hours if unused. An existing live recording is not rearmed. No launcher setting or save edit. | `inigmasgames.rpg.trace.patch`; invoking player; HROF build; Hytale `=0.7.0` |
+| `/rpg-trace patch cancel-arm` | Cancel the pending next-boot arm record outside Saves. Does not stop a live recording. | `inigmasgames.rpg.trace.patch`; invoking player; HROF build; Hytale `=0.7.0` |
 
 Output: `%APPDATA%/Hytale/UserData/Diagnostics/Hywind/HRO/<runId>/` on this
-Windows installation, outside `Saves`. Disconnect/shutdown stops admission;
+Windows installation, outside `Saves`. On owner disconnect HRO waits up to 30 seconds
+for a native-correlated reconnection, then finalizes PARTIAL if the owner does not return.
+Shutdown stops admission;
 expiry and resource pressure also stop capture. At eight retained run folders,
 new captures refuse to start; existing evidence is never automatically deleted.
-Use status after stop to obtain the completed folder. Pre-start boot/admission,
-physical key presses and client rendering cannot be reconstructed.
+Use status after stop to obtain the completed folder. Ordinary start cannot reconstruct
+pre-start boot/admission; `arm-next` observes from plugin setup onward. Code before
+plugin setup, physical key presses and client rendering cannot be reconstructed.
 See [HRO Stage 1](HRO_STAGE_1.md) for offline analysis/recovery and proof limits.
 Stage 2 adds eight mechanical contract families and `mechanical.json`, including
 the authored affix matrix, natural opportunity counts, native damage stages,
 defensive receipts and recovery evidence. See [HRO Stage 2](HRO_STAGE_2.md).
 
-The completed engineering architecture is `R262C1HRO3-CANDIDATE`
-(`0.2.0-R262C1HRO3-CANDIDATE`, Hytale `=0.7.0`). It retains the exact four
-commands above and was integrated into GitHub `main` at
-`64a3ba4e051c9b39a453a0c9ea98335eac6d72de`. This is a source availability gate;
-the currently installed inventory candidate does not thereby gain these commands.
-After an authorized HRO deployment, start once, perform ordinary skill, inventory, combat,
+Stage 3 was integrated into GitHub `main` at `5287bb7ceecaeb7c6bcdfbfd748503886c6b1eb4`.
+The HRO finalization candidate is `R262C1HROF-CANDIDATE`
+(`0.2.0-R262C1HROF-CANDIDATE`, Hytale `=0.7.0`). Source integration and deployed
+JAR identity are recorded separately in the [development baseline](DEVELOPMENT_BASELINE.md).
+After a verified HRO deployment, start once, perform ordinary skill, inventory, combat,
 travel and UI QA, then stop and use status to locate the folder. A reconnect
 is optional and is needed before claiming recovery coverage. No reset, test
 population, individual subsystem trace activation, or save migration is required.
 
 Stage 3 adds `report.json`, `cascades.json`, `implementation-map.json` and
-`compatibility-diff.json` to finalized captures. The offline `hroAnalyze`
+`compatibility-diff.json` to finalized captures. Finalization adds `checkpoints.json`,
+`auto-analysis.json`, optional `comparisons/*.json` from explicitly approved compatible
+baselines in the engineer-managed diagnostics registry, and integrated server-side
+performance evidence. No candidate is automatically approved as a baseline. The offline `hroAnalyze`
 Gradle task supports `analyze`, `extract`, `recover`, `recovery-join`,
 `baseline`, `compare`, `import`, `fingerprint`, `compatibility`, and
 `ui-fixtures`. These are engineering tools, not in-game commands or permission

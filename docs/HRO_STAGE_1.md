@@ -1,5 +1,8 @@
 # HRO Stage 1 — diagnostic foundation
 
+The integrated completion workflow and current command syntax are in
+[HRO_FINALIZATION.md](HRO_FINALIZATION.md); this report remains the Stage 1 record.
+
 State: **ENGINEERING_READY**, with native performance/connected acceptance
 **UNVERIFIED**. Candidate `R262C1HRO1-CANDIDATE` /
 `0.2.0-R262C1HRO1-CANDIDATE`. Branch `codex/hro-stage1`, worktree `C:/hyhro`,

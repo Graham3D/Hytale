@@ -36,7 +36,7 @@ class HroReleaseQualificationTest {
                         manual.submit(Map.of("event","qualification","role","role-"+batch,"value",results[mode]));
                         assertTrue(SharedTraceBudget.used()<=SharedTraceBudget.LIMIT);Thread.sleep(3);
                     }
-                    if(enabled){assertTrue(recorder.active(owner));recorder.stop();HroRecorderTest.await(()->recorder.status().startsWith("HRO COMPLETE"));}
+                    if(enabled){assertTrue(recorder.active(owner));recorder.stop();HroRecorderTest.await(()->HroRecorderTest.finalized(recorder.status()));}
                 }
                 long elapsed=System.nanoTime()-beforeWall,cpu=process.getProcessCpuTime()-beforeCpu;Arrays.sort(callbacks);
                 long gc=ManagementFactory.getGarbageCollectorMXBeans().stream().mapToLong(bean->Math.max(0,bean.getCollectionTime())).sum()-beforeGc;

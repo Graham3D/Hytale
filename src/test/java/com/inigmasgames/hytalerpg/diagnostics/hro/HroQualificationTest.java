@@ -23,7 +23,7 @@ class HroQualificationTest {
             recorder.observe(player,"COMBAT.RECONCILE","fixture","NATIVE_RESULT","op",player,1L,null,null,
                     Map.of("healthBefore",100,"healthAfter",75,"accepted",25,"postAbsorption",25,"reconciliation","MATCH"));
             assertTrue(com.inigmasgames.hytalerpg.diagnostics.SharedTraceBudget.used()<=16L*1024*1024);
-            recorder.stop();release.countDown();HroRecorderTest.await(()->recorder.status().startsWith("HRO COMPLETE"));
+            recorder.stop();release.countDown();HroRecorderTest.await(()->HroRecorderTest.finalized(recorder.status()));
             Path bundle;try(var files=Files.list(temporary)){bundle=files.findFirst().orElseThrow();}
             var events=new ArrayList<HroEvent>();HroTool.read(bundle,(event,locator)->events.add(event));
             assertEquals(1,events.stream().filter(e->e.boundary().equals("NATIVE_RESULT")).count());
@@ -67,7 +67,7 @@ class HroQualificationTest {
             }
             long allocated=allocation.getThreadAllocatedBytes(thread)-activeBytesBefore;
             assertEquals(offResult,onResult);assertEquals(off.nextLong(),on.nextLong());
-            assertTrue(recorder.active(owner),recorder.status());recorder.stop();HroRecorderTest.await(()->recorder.status().startsWith("HRO COMPLETE"));
+            assertTrue(recorder.active(owner),recorder.status());recorder.stop();HroRecorderTest.await(()->HroRecorderTest.finalized(recorder.status()));
             Arrays.sort(active);Arrays.sort(ticks);long p99=active[(int)(active.length*.99)],tickP99=ticks[(int)(ticks.length*.99)];
             Map<String,Object> report=new LinkedHashMap<>();report.put("scope","OFFLINE_SYNTHETIC_PRODUCER_ONLY");
             report.put("disabledNanosPerCall",disabledNanos/50_000.0);report.put("disabledAllocatedBytes",disabledBytes);
