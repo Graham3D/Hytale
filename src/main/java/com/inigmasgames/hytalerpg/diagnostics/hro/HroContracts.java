@@ -62,7 +62,7 @@ public final class HroContracts {
         if (event.worldSegmentId() != null) op.world = event.worldSegmentId();
         if (event.stateRevision() != null) op.revision = event.stateRevision();
         if(HroMechanicalContracts.ANCHORS.containsKey(event.contract())) {
-            for(String identity:List.of("itemId","affixId","rootId","generation","provenance","encounter")) {
+            for(String identity:List.of("itemId","targetId","equipmentRevision","affixId","rootId","generation","provenance","encounter")) {
                 String value=f.get(identity),prior=op.mechanical.get("identity:"+identity);
                 if(value!=null&&prior!=null&&!prior.equals(value)){
                     emit(event,op,Outcome.INCONCLUSIVE,"MECHANICAL_IDENTITY_MISMATCH:"+identity,locator);return;

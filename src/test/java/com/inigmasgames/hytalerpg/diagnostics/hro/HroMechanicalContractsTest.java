@@ -14,7 +14,8 @@ class HroMechanicalContractsTest {
     private HroContracts.Outcome outcome(String id){return (HroContracts.Outcome)((Map<?,?>)contracts.coverage(false).get(id)).get("outcome");}
     private void modifier(String applied){event("AFFIX.MODIFIER","CONTRIBUTION","affixId","WA-001","itemId","item","equipmentRevision","r1",
             "units","PERCENT_POINTS_TO_FRACTION","bucket","INCREASED","value","25","applied",applied);}
-    private void proc(boolean selected){event("AFFIX.PROC","ROLL","affixId","WA-135","itemId","item","rootId","root","selected",String.valueOf(selected));}
+    private void proc(boolean selected){event("AFFIX.PROC","ROLL","affixId","WA-135","itemId","item","targetId","target","equipmentRevision","r1","rootId","root","selected",String.valueOf(selected));}
+    @Test void outcomeFromDifferentTargetCannotPass(){proc(true);event("AFFIX.PROC","OUTCOME","targetId","other","result","APPLIED","proof","NATIVE_READBACK");assertEquals(INCONCLUSIVE,outcome("AFFIX.PROC"));}
     private void debit(String before,String absorbed,String remaining,String requested,String overflow,boolean duplicate){
         event("CYCLONE.ACCOUNTING","DEBIT","generation","g1","receiptId","hit1","before",before,"absorbed",absorbed,"remaining",remaining,
                 "requested",requested,"damageRemaining",overflow,"duplicate",String.valueOf(duplicate),"durable","true");}

@@ -35,8 +35,8 @@ public final class HroGear {
                 Map.of("itemId",source.itemId(),"affixId",source.affixId(),"equipmentRevision",snapshot.revision(),
                         "rootId",c.root,"bucket",bucket,"value",value,"applied",applied,"units","PERCENT_POINTS_TO_FRACTION"));
     }
-    public static void roll(UUID player,UUID world,UUID item,String root,String contact,String affix,double sample,double chance,boolean selected){
+    public static void roll(UUID player,UUID world,UUID item,UUID target,String revision,String root,String contact,String affix,double sample,double chance,boolean selected){
         if(HroRuntime.active(player))HroRuntime.observe(player,"AFFIX.PROC","GearSignatureProcRuntime","ROLL",contact+":"+affix,world,null,null,null,
-                Map.of("itemId",item,"affixId",affix,"rootId",root,"roll",sample,"chance",chance,"selected",selected));
+                Map.of("itemId",item,"targetId",target,"equipmentRevision",revision,"affixId",affix,"rootId",root,"roll",sample,"chance",chance,"selected",selected));
     }
 }

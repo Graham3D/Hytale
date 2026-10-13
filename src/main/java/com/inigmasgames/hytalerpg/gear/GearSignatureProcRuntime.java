@@ -70,7 +70,8 @@ public final class GearSignatureProcRuntime {
         double value=roll.sample(key);
         if(!Double.isFinite(value)||value<0||value>=1)throw new IllegalArgumentException("INVALID_PROC_ROLL");
         double probability=Math.min(1,percent*coefficient/100);boolean selected=value<probability;
-        com.inigmasgames.hytalerpg.diagnostics.hro.HroGear.roll(contact.owner(),contact.world(),contact.item(),contact.root(),contact.contact(),affix,value,probability,selected);
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroGear.roll(contact.owner(),contact.world(),contact.item(),contact.target(),contact.snapshot().revision(),
+                contact.root(),contact.contact(),affix,value,probability,selected);
         return selected;
     }
     /** Called after ordinary critical selection and before native mitigation; returns the Physical amount. */

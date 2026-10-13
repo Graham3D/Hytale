@@ -92,6 +92,8 @@ class HroProductionBridgeTest {
             var events=new ArrayList<HroEvent>();HroTool.read(bundle,(e,l)->events.add(e));
             assertTrue(events.stream().anyMatch(e->e.boundary().equals("CONTRIBUTION")));
             assertEquals(1,events.stream().filter(e->e.boundary().equals("ROLL")).count());
+            var roll=events.stream().filter(e->e.boundary().equals("ROLL")).findFirst().orElseThrow();
+            assertNotNull(roll.facts().get("targetId"));assertEquals(snapshot.revision(),roll.facts().get("equipmentRevision"));
         }finally{HroRuntime.shutdown();}
     }
     @Test void disabledLegacySkillRecorderStillFeedsHroAndManualUiSurvivesHroStop()throws Exception {

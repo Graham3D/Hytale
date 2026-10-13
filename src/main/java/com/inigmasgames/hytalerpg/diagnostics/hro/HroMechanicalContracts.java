@@ -32,7 +32,7 @@ final class HroMechanicalContracts {
                 return verdict(close(n(f,"value")/100,n(f,"applied"))?PASS:FAIL,"PERCENT_UNIT_BOUNDARY");
             case "AFFIX.PROC":
                 if(b.equals("ROLL")) {
-                    if(!has(f,"affixId","itemId","rootId","selected"))return verdict(INCONCLUSIVE,"PROC_IDENTITY_GAP");
+                    if(!has(f,"affixId","itemId","targetId","equipmentRevision","rootId","selected"))return verdict(INCONCLUSIVE,"PROC_IDENTITY_GAP");
                     state.putAll(f);
                     return "false".equals(f.get("selected"))?verdict(NOT_APPLICABLE,"EXISTING_ROLL_NOT_SELECTED"):null;
                 }
