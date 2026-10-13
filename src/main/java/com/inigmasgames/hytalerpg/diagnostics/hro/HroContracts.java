@@ -24,6 +24,8 @@ public final class HroContracts {
     public record Finding(String contract, int version, Outcome outcome, String comparison, String proof,
                           String operationId, String lastSuccessfulBoundary, String firstDivergence,
                           String evidence, String sourceAnchor, String recommendation) { }
+    /** Bounded, capture-local provenance for an observation that was not retained. */
+    public record Loss(String contract, String operationId, String reason, long count) { }
     private static final int MAX_OPERATIONS = 2048, MAX_FINDINGS = 128;
     private static final class Operation {
         String last, locator; Long connection, revision; String world;
@@ -35,19 +37,43 @@ public final class HroContracts {
     private final Map<String, EnumMap<Outcome, Long>> counts = new LinkedHashMap<>();
     private final List<Finding> findings = new ArrayList<>();
     private final Set<String> registered;
-    private long losses, omittedFindings;
+    private long losses, unscopedLosses, omittedFindings;
+    private final Map<String,Long> contractLosses=new HashMap<>();
+    private final Map<String,Long> contractWideLosses=new HashMap<>();
+    private final Map<String,Long> operationLosses=new HashMap<>();
     public HroContracts(Set<String> registered) {
         this.registered = new HashSet<>(registered);
         for (String id : IDS) counts.put(id, new EnumMap<>(Outcome.class));
     }
     void registered(String contract){if(IDS.contains(contract))registered.add(contract);}
-    public void lost(long count) { losses += count; }
+    public void lost(long count) { lost(count,List.of()); }
+    public void lost(long count,List<Loss> sites) {
+        if(count<0)throw new IllegalArgumentException("NEGATIVE_EVIDENCE_LOSS");
+        long attributed=0;
+        for(Loss site:sites) {
+            if(site.count()<=0||attributed>count-site.count())throw new IllegalArgumentException("INVALID_LOSS_SCOPE_COUNT");
+            attributed+=site.count();
+            if("PERFORMANCE".equals(site.contract())||"MARK".equals(site.contract()))continue;
+            if(!counts.containsKey(site.contract())){unscopedLosses+=site.count();continue;}
+            contractLosses.merge(site.contract(),site.count(),Long::sum);
+            if(site.operationId()!=null&&!site.operationId().isBlank())
+                operationLosses.merge(site.contract()+":"+site.operationId(),site.count(),Long::sum);
+            else contractWideLosses.merge(site.contract(),site.count(),Long::sum);
+        }
+        unscopedLosses+=count-attributed;losses+=count;
+    }
+    private boolean affected(String contract,String operation) {
+        return unscopedLosses>0 || contractWideLosses.getOrDefault(contract,0L)>0
+                || operationLosses.containsKey(contract+":"+operation);
+    }
     public void accept(HroEvent event, String locator) {
         if (!counts.containsKey(event.contract())) return;
         String key = event.contract() + ":" + event.operationId();
         Operation op = operations.get(key);
         if (op == null) {
-            if (operations.size() >= MAX_OPERATIONS) { losses++; return; }
+            if (operations.size() >= MAX_OPERATIONS) {
+                lost(1,List.of(new Loss(event.contract(),"","OPERATION_EVALUATOR_LIMIT",1)));return;
+            }
             op = new Operation(); operations.put(key, op);
         }
         var f = event.facts(); String b = event.boundary();
@@ -169,7 +195,7 @@ public final class HroContracts {
     private void emit(HroEvent e, Operation op, Outcome result, String reason, String locator) {
         // A later successful dispatch cannot erase an already observed duplicate/debit violation.
         if (op.outcome == Outcome.FAIL) return;
-        if(!registered.contains(e.contract()) || losses > 0) result=Outcome.INCONCLUSIVE;
+        if(!registered.contains(e.contract()) || affected(e.contract(),e.operationId())) result=Outcome.INCONCLUSIVE;
         if(op.outcome!=null)counts.get(e.contract()).computeIfPresent(op.outcome,(k,v)->v<=1?null:v-1);
         counts.get(e.contract()).merge(result,1L,Long::sum);
         op.outcome=result;
@@ -191,14 +217,17 @@ public final class HroContracts {
         for(String id:IDS) {
             var outcomes=counts.get(id);
             boolean pending=operations.entrySet().stream().anyMatch(e->e.getKey().startsWith(id+":")&&e.getValue().outcome==null);
-            Outcome overall = !registered.contains(id) || losses>0 || interrupted ? Outcome.INCONCLUSIVE
+            long relevantLosses=unscopedLosses+contractLosses.getOrDefault(id,0L);
+            Outcome overall = !registered.contains(id) || relevantLosses>0 || interrupted ? Outcome.INCONCLUSIVE
                     : outcomes.containsKey(Outcome.FAIL) ? Outcome.FAIL : outcomes.containsKey(Outcome.BLOCKED) ? Outcome.BLOCKED
                     : pending || outcomes.containsKey(Outcome.INCONCLUSIVE) ? Outcome.INCONCLUSIVE
                     : outcomes.containsKey(Outcome.PASS) ? Outcome.PASS : outcomes.containsKey(Outcome.NOT_APPLICABLE)
                     ? Outcome.NOT_APPLICABLE : Outcome.NOT_EXERCISED;
             result.put(id,Map.of("outcome",overall,"registered",registered.contains(id),"counts",Map.copyOf(outcomes),
-                    "pending",pending,"losses",losses,"reason",!registered.contains(id)?"OBSERVER_NOT_REGISTERED":
-                            losses>0?"EVIDENCE_DROPPED":pending?"SUCCESSOR_NOT_OBSERVED_CAPTURE_BOUNDARY":"OBSERVED_BOUNDARIES_ONLY"));
+                    "countsScope","OBSERVED_OUTCOMES_BEFORE_FINAL_LOSS_ADJUSTMENT",
+                    "pending",pending,"losses",relevantLosses,"reason",!registered.contains(id)?"OBSERVER_NOT_REGISTERED":
+                            unscopedLosses>0?"UNATTRIBUTED_EVIDENCE_DROPPED":contractLosses.getOrDefault(id,0L)>0?
+                            "SCOPED_EVIDENCE_DROPPED":pending?"SUCCESSOR_NOT_OBSERVED_CAPTURE_BOUNDARY":"OBSERVED_BOUNDARIES_ONLY"));
         }
         return result;
     }
@@ -221,8 +250,11 @@ public final class HroContracts {
                     }
                 });
         if(!incomplete && losses==0)return List.copyOf(result);
-        return result.stream().map(f->new Finding(f.contract(),f.version(),Outcome.INCONCLUSIVE,f.comparison(),f.proof(),
-                f.operationId(),f.lastSuccessfulBoundary(),"CAPTURE_INCOMPLETE: "+f.firstDivergence(),f.evidence(),f.sourceAnchor(),f.recommendation())).toList();
+        return result.stream().map(f->incomplete||affected(f.contract(),f.operationId())?
+                new Finding(f.contract(),f.version(),Outcome.INCONCLUSIVE,f.comparison(),f.proof(),
+                f.operationId(),f.lastSuccessfulBoundary(),(incomplete?"CAPTURE_INCOMPLETE: ":unscopedLosses>0?
+                        "UNATTRIBUTED_EVIDENCE_DROPPED: ":"SCOPED_EVIDENCE_DROPPED: ")+f.firstDivergence(),
+                f.evidence(),f.sourceAnchor(),f.recommendation()):f).toList();
     }
     public long omittedFindings() { return omittedFindings; }
 }

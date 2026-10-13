@@ -1,5 +1,26 @@
 # HyARPG/Hywind development baseline
 
+## HRO connected-QA evidence correction (2026-10-13)
+
+State: **IN_PROGRESS — offline verification and owner QA pending**. The
+existing `codex/hro-finalization` worktree at `C:/hyhrofinal` resumes from
+integrated remote `main` and feature HEAD
+`c69e44f16302e68ebd625d65039a457ad92ead06`; HRO Stages 1–3 and
+finalization are already in that ancestry. This is a fix for the open HRO
+feature, not an unrelated gameplay branch. The primary Windows checkout
+remains at `1dfa2cea3085196c7fd4492518c65a03d5e3b49d` with its
+user-owned AGENTS/artwork/icon/script changes preserved.
+
+Candidate revision `R262C1HROF1-CANDIDATE`, version
+`0.2.0-R262C1HROF1-CANDIDATE`, Hytale `=0.7.0`. Source diagnosis and scope
+are in [HRO_QA_CORRECTION.md](HRO_QA_CORRECTION.md). The current deployed
+JAR remains `R262C1HROF-CANDIDATE`, embedded source
+`4372e178f4ed550de370aacdbba06767905d84f7`, SHA-256
+`E95467B26A4DFB89F8FF2D6DF7E7A24A2F084F9D1771B1BE7FDDB91862C9D26A`.
+Do not infer acceptance or a new deployment from this development candidate.
+Record the exact committed source, full verification, publication, build JAR,
+deployment and connected-QA status after the gate.
+
 ## HRO finalization and connected QA readiness (2026-10-13)
 
 State: **MERGED, DEPLOYED, QA_PENDING — connected acceptance unverified**. The

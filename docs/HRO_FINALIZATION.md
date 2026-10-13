@@ -104,3 +104,7 @@ and the warmed disabled-path median allocation was zero. The bounded HRO
 heap qualification was 41,305,320 bytes, below 64 MiB. The deployed build
 and rollback hashes are recorded in `DEVELOPMENT_BASELINE.md`; connected
 Hytale behavior and owner-perceived smoothness remain pending QA.
+
+The first connected capture exposed overly broad dropped-evidence verdicts
+and a coarse producer timing bucket. See [HRO QA correction](HRO_QA_CORRECTION.md)
+for the follow-up candidate and its evidence boundaries.

@@ -67,6 +67,30 @@ class HroContractsTest {
         assertTrue(evaluator.findings(false).stream().allMatch(f->f.outcome()==HroContracts.Outcome.INCONCLUSIVE));
         assertEquals(HroContracts.Outcome.INCONCLUSIVE,outcome("HUD.PUBLICATION"));
     }
+    @Test void scopedDropPreservesOtherContractsAndCompleteOperations() {
+        evaluator.accept(new HroEvent(1,"fixture",1,100,1,"HUD.PUBLICATION","fixture","HUD_LAYOUT_READY",
+                "lost-hud",null,null,null,null,Map.of()),"segment:1");
+        evaluator.accept(new HroEvent(1,"fixture",2,100,2,"HUD.PUBLICATION","fixture","HUD_LAYOUT_READY",
+                "complete-hud",null,null,null,null,Map.of()),"segment:2");
+        evaluator.accept(new HroEvent(1,"fixture",3,100,3,"GEAR.EQUIPPED","fixture","EQUIPMENT",
+                "complete-gear",null,null,null,null,Map.of("itemId","item","equipmentRevision","r1","accepted","true")),"segment:3");
+        evaluator.lost(1,List.of(new HroContracts.Loss("HUD.PUBLICATION","lost-hud","QUEUE_LOCK_CONTENTION",1)));
+        assertEquals(HroContracts.Outcome.INCONCLUSIVE,outcome("HUD.PUBLICATION"));
+        assertEquals(HroContracts.Outcome.PASS,outcome("GEAR.EQUIPPED"));
+        var results=evaluator.findings(false);
+        assertEquals(HroContracts.Outcome.INCONCLUSIVE,results.stream().filter(f->f.operationId().equals("lost-hud")).findFirst().orElseThrow().outcome());
+        assertEquals(HroContracts.Outcome.PASS,results.stream().filter(f->f.operationId().equals("complete-hud")).findFirst().orElseThrow().outcome());
+        assertEquals(HroContracts.Outcome.PASS,results.stream().filter(f->f.operationId().equals("complete-gear")).findFirst().orElseThrow().outcome());
+        assertEquals(HroContracts.Outcome.NOT_EXERCISED,outcome("SPAWN.PROMOTION"));
+    }
+    @Test void contractWideAndUnknownLossRemainConservative() {
+        event("HUD.PUBLICATION","HUD_LAYOUT_READY",Map.of());
+        evaluator.lost(1,List.of(new HroContracts.Loss("GEAR.EQUIPPED","","EQUIPMENT_CANDIDATE_LIMIT",1)));
+        assertEquals(HroContracts.Outcome.PASS,outcome("HUD.PUBLICATION"));
+        assertEquals(HroContracts.Outcome.INCONCLUSIVE,outcome("GEAR.EQUIPPED"));
+        evaluator.lost(1);
+        assertEquals(HroContracts.Outcome.INCONCLUSIVE,outcome("HUD.PUBLICATION"));
+    }
     @Test void legalUnsupportedSlotsAreBlockedNotRegression() {
         event("SKILL.PROJECTION","PROJECTION",Map.of("result","NATIVE_ABILITY4_UNAVAILABLE"));
         assertEquals(HroContracts.Outcome.BLOCKED,outcome("SKILL.PROJECTION"));

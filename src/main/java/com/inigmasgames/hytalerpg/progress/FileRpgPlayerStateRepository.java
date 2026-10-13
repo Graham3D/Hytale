@@ -43,7 +43,8 @@ public final class FileRpgPlayerStateRepository implements RpgPlayerStateReposit
                     com.inigmasgames.hytalerpg.diagnostics.hro.HroDurable.repository(playerUuid,"LOADED",
                             rawState.has("schemaVersion")?rawState.get("schemaVersion").getAsInt():0,
                             rawState.has("revision")?rawState.get("revision").getAsLong():0,actual);
-                }catch(RuntimeException diagnosticGap){com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.loss(playerUuid);}
+                }catch(RuntimeException diagnosticGap){com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.loss(
+                        playerUuid,"PERSISTENCE.RECOVERY","rpg-state","REPOSITORY_DIAGNOSTIC_GAP");}
             } else {
                 rawState = root;
                 warnings.add("Legacy unwrapped state migrated to checksum envelope");

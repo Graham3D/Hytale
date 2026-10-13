@@ -1,5 +1,15 @@
 # Hywind / HyARPG development baseline
 
+HRO connected-QA correction candidate: **R262C1HROF1-CANDIDATE**
+(`0.2.0-R262C1HROF1-CANDIDATE`), Hytale `=0.7.0`, on
+`codex/hro-finalization`. It scopes dropped diagnostic evidence to the
+affected contract or operation and measures producer budget crossings at the
+actual 50 microsecond threshold. See the [QA correction](docs/HRO_QA_CORRECTION.md)
+and [baseline status](docs/DEVELOPMENT_BASELINE.md). Connected acceptance
+remains pending.
+
+### Earlier HRO release
+
 HRO finalization engineering candidate: **R262C1HROF-CANDIDATE**
 (`0.2.0-R262C1HROF-CANDIDATE`), Hytale `=0.7.0`, branch
 `codex/hro-finalization`. It adds one-shot next-boot capture, bounded

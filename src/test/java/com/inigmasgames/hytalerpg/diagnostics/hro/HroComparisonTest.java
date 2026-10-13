@@ -28,6 +28,27 @@ class HroComparisonTest {
             bundle.finish(loss,"STOPPED",Map.of("scope","SYNTHETIC"));
         }return directory;
     }
+    private Path scopedBundle(String id,String contract,String operation)throws Exception {
+        Path directory=root.resolve(id);
+        try(var bundle=new HroBundle(directory,Map.of("schemaVersion",1,"runId",id,"state","RECORDING","captureBuild",
+                Map.of("jarSha256","a".repeat(64),"serverSha256","b".repeat(64),"rpg.sourceCommit",id)),Set.copyOf(HroContracts.IDS))) {
+            bundle.event(new HroEvent(1,id,1,1,1,"COMBAT.RECONCILE","fixture","NATIVE_RESULT","hit",null,null,null,null,
+                    Map.of("cause","Physical","healthBefore","100","healthAfter","75","accepted","25",
+                            "postAbsorption","25","reconciliation","MATCH")));
+            bundle.finish(1,"STOPPED",Map.of(),List.of(new HroContracts.Loss(contract,operation,"QUEUE_LOCK_CONTENTION",1)));
+        }
+        return directory;
+    }
+    @Test void unrelatedScopedDropPreservesApprovedOperationComparison()throws Exception {
+        Path accepted=bundle(root,"accepted",true,0,1,true),recipe=json("recipe.json",recipe("PASS"));
+        Path baseline=root.resolve("baseline.json");HroComparison.baseline(accepted,recipe,baseline);
+        HroComparison.compare(scopedBundle("other-contract","GEAR.EQUIPPED","gear"),baseline,recipe,root.resolve("other.json"));
+        assertEquals("UNCHANGED_PASS",HroOffline.value(HroOffline.object(root.resolve("other.json")),"comparison"));
+        HroComparison.compare(scopedBundle("other-hit","COMBAT.RECONCILE","different-hit"),baseline,recipe,root.resolve("other-hit.json"));
+        assertEquals("UNCHANGED_PASS",HroOffline.value(HroOffline.object(root.resolve("other-hit.json")),"comparison"));
+        HroComparison.compare(scopedBundle("same-hit","COMBAT.RECONCILE","hit"),baseline,recipe,root.resolve("same-hit.json"));
+        assertEquals("INCOMPARABLE",HroOffline.value(HroOffline.object(root.resolve("same-hit.json")),"comparison"));
+    }
     Path json(String name,JsonObject object)throws IOException { Path path=root.resolve(name);Files.writeString(path,object.toString());return path; }
     @ParameterizedTest @CsvSource({"true,false,REGRESSION","false,false,PERSISTING_FAILURE","false,true,RESOLVED_FAILURE","true,true,UNCHANGED_PASS"})
     void matchesSemanticScenarioAcrossDifferentIdsAndReversedWallClocks(boolean oldPass,boolean newPass,String expected)throws Exception {
