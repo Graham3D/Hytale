@@ -80,7 +80,11 @@ class NativeGearWorldProjectionTest {
                 var binding=new GearBindings().require(item.baseId());
                 var carrier=binding.carrier(item.rarity());
                 var definition=Path.of("src/main/resources/Server/Item/Items/RPG/Gear",carrier+".json");
-                assets.seedPackagedRootReferences(java.nio.file.Files.readString(definition));
+                var definitionJson=java.nio.file.Files.readString(definition);
+                assets.seedPackagedRootReferences(definitionJson);
+                var animation=org.bson.BsonDocument.parse(definitionJson).getString("PlayerAnimationsId");
+                assets.loadInstalledAnimation(animation.getValue(),Path.of(System.getProperty("user.home"),
+                        "AppData/Roaming/Hytale/install/release/package/game/latest/Assets.zip"));
                 assets.decodeItem(carrier,definition);
                 var projected=new ArrayList<GearLootService.Loot>();runtime.configureProjectionNotification(projected::add);
                 project(runtime,world);

@@ -78,6 +78,13 @@ The before-fix failure evidence is preserved outside source control as
 corresponding logs. Fixture setup failures encountered while building the
 native test are not presented as production defects.
 
+A final verification rerun exposed a fixture-only asset prerequisite: generated
+gear can select a Battleaxe animation absent from the minimal registry. The
+projection fixture now loads the selected animation and its parents from the
+installed release Assets.zip through the existing decoder. The shared helper
+accepts an explicit archive without changing historical callers. The failed
+run is retained as `build/stage4-fixture-animation-failure.log` and `.xml`.
+
 ## Existing owners retained
 
 | Boundary | Production owner and audit result |
@@ -169,7 +176,8 @@ This supports reusing the native adapters; it does not replace connected QA.
 
 Production changes are limited to `EncounterContributions.java` (use the
 existing frozen XP helper) and `HytaleGearLoot.java` (require a projected
-position for automatic pickup). Two regression classes are added;
+position for automatic pickup). Two regression classes are added, and the
+existing native asset fixture accepts the release animation archive;
 `build.gradle` assigns the native fixture to the existing isolated native
 test lane. `gradle.properties`, `README.md`, this report and `DEVELOPMENT_BASELINE.md`
 record the completed candidate. No player command changed; existing syntax,
