@@ -80,6 +80,8 @@ public final class RpgTraceCommand extends AbstractCommandCollection {
                 say(c,com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.stop())));
         patch.addSubCommand(player("status","Show recorder state, losses and output folder.",PATCH_PERMISSION,false,(c,s,r,p,w)->
                 say(c,com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.status())));
+        patch.addSubCommand(player("mark","Record a checkpoint in the active HRO capture.",PATCH_PERMISSION,false,(c,s,r,p,w)->
+                say(c,com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.mark(p.getUuid()))));
         addSubCommand(patch);
         addSubCommand(player("status","Summarize every diagnostic category.",null,false,(c,s,r,p,w)->{
             UUID owner=p.getUuid();

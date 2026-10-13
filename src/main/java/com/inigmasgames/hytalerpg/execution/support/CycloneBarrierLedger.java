@@ -333,7 +333,10 @@ public final class CycloneBarrierLedger {
                 var buffer=ByteBuffer.wrap(bytes);while(buffer.hasRemaining())channel.write(buffer);
                 channel.force(true);
             }
+            var previous=holder.state;
             holder.state=next;writes.increment();
+            com.inigmasgames.hytalerpg.diagnostics.hro.HroDurable.state(next,"SAVED");
+            com.inigmasgames.hytalerpg.diagnostics.hro.HroDurable.payment(previous,next);
             long elapsed=System.nanoTime()-started;totalNanos.add(elapsed);maximumNanos=Math.max(maximumNanos,elapsed);
         }catch(IOException|RuntimeException failure){failedWrites.increment();holder.uncertain=true;
             throw new IllegalStateException("CYCLONE_DURABLE_WRITE_FAILED",failure);}
@@ -348,7 +351,9 @@ public final class CycloneBarrierLedger {
             throw new IllegalStateException("CYCLONE_CHECKPOINT_REVISION_CONFLICT");
         slot[0]=second!=null&&(first==null||second.state.revision()>=first.state.revision())?1:0;
         Recovered chosen=slot[0]==1?second:first;
-        receipts.addAll(chosen.receipts);activations.addAll(chosen.activations);return chosen.state;
+        receipts.addAll(chosen.receipts);activations.addAll(chosen.activations);
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroDurable.state(chosen.state,"LOADED");
+        return chosen.state;
     }
     private Recovered replaySlot(UUID player,int slot){
         Path path=journal(player,slot);State state=State.initial(player);

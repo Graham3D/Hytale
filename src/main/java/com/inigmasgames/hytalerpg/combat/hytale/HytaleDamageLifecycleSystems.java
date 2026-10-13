@@ -185,7 +185,8 @@ public final class HytaleDamageLifecycleSystems {
             details.put("amount",damage.getAmount());details.put("cancelled",damage.isCancelled());
             emit(damage, RpgTraceEventType.DAMAGE_GATHERED, details);
             var detailed=combatDamageTrace;
-            if(detailed!=null&&detailed.active())diagnostic(()->{
+            if(detailed!=null&&(detailed.active()||com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.ownerInWorld(
+                    store.getExternalData().getWorld().getWorldConfig().getUuid())!=null))diagnostic(()->{
                 var targetId=chunk.getComponent(index,com.hypixel.hytale.server.core.entity.UUIDComponent.getComponentType());
                 var targetNpc=chunk.getComponent(index,com.hypixel.hytale.server.npc.entities.NPCEntity.getComponentType());
                 com.hypixel.hytale.component.Ref<EntityStore> sourceRef=null;

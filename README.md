@@ -1,16 +1,14 @@
 # Hywind / HyARPG development baseline
 
-HRO Stage 1 diagnostic candidate: **R262C1HRO1-CANDIDATE**
-(`0.2.0-R262C1HRO1-CANDIDATE`) on `codex/hro-stage1`, based on
-Chapter I Stage 3 commit `3e359b8e036ad023c9c8bd93064bcb0f78068f83`.
-The operator-only `/rpg-trace patch start|stop|status` records bounded
-cross-system evidence outside saves. See [HRO Stage 1](docs/HRO_STAGE_1.md)
-for contracts, output, offline qualification and native observability limits.
-This dependent candidate is not deployed, connected-QA accepted, or integrated.
-HRO Stages 2 and 3 are separate assignments.
-
-The parent Chapter I Stage 3 engineering candidate is **R262C1S3-CANDIDATE**
-(`0.2.0-R262C1S3-CANDIDATE`) on `codex/chapter1-stage3-elite-restoration`,
+HRO Stage 2 diagnostic candidate: **R262C1HRO2-CANDIDATE**
+(`0.2.0-R262C1HRO2-CANDIDATE`) on `codex/hro-stage2`, descended from
+HRO Stage 1 `92ac44fb23c515acd59f2470403dd9feca292b30` and reconciled with
+integrated Chapter I Stage 4 `ce3865dd5f81bee95003cb5dde8dc2f959bdac2b`.
+The operator-only `/rpg-trace patch start|mark|status|stop` captures seventeen
+contract families in bounded bundles outside saves. See [HRO Stage 2](docs/HRO_STAGE_2.md)
+for mechanical evidence, tested gaps and qualification, and
+[the baseline record](docs/DEVELOPMENT_BASELINE.md) for exact source/status.
+This candidate is not deployed or connected-QA accepted. Stage 3 remains separate.
 
 The current Chapter I Stage 4 engineering candidate is **R262C1S4-CANDIDATE**
 (`0.2.0-R262C1S4-CANDIDATE`) on `codex/chapter1-stage4-gear-loot-recovery`,

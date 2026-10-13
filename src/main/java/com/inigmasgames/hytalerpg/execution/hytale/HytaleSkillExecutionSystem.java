@@ -2680,10 +2680,13 @@ public final class HytaleSkillExecutionSystem extends EntityTickingSystem<Entity
             var transform=store.getComponent(actor,TransformComponent.getComponentType());
             Vec3 launch=transform==null?null:vec(transform.getPosition());
             var channel=com.inigmasgames.hytalerpg.gear.GearCombatEffects.nativeChannel(cause.getId());
-            var hit=com.inigmasgames.hytalerpg.gear.GearCombatEffects.skill(context.gearSnapshot(),itemId,
+            com.inigmasgames.hytalerpg.gear.GearCombatEffects.Hit hit;
+            try(var observation=com.inigmasgames.hytalerpg.diagnostics.hro.HroGear.calculation(playerRef.getUuid(),context.rootCastId())) {
+            hit=com.inigmasgames.hytalerpg.gear.GearCombatEffects.skill(context.gearSnapshot(),itemId,
                     context.rootCastId(),channel,result,buckets,coefficient,attack,spell,0,null,
                     context.snapshot().criticalMultiplier(),launch,
                     weaponHit==null||component==weaponHit.sampled().getFirst());
+            }
             if(statusBindings!=null&&canProc&&origin==HytaleDamageMetadata.Origin.DIRECT
                     &&GearStatusBindings.requires(hit)){
                 statusBindings.accept(NativeGearContactContext.basic(hit,playerRef.getUuid(),playerRef.getWorldUuid(),

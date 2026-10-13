@@ -11,11 +11,15 @@ import java.util.zip.GZIPInputStream;
 public final class HroTool {
     private HroTool() { }
     public static void main(String[] args)throws IOException {
-        if(args.length<2)throw new IllegalArgumentException("analyze|recover|extract <bundle> [operationId]");
+        if(args.length<2)throw new IllegalArgumentException("analyze|recover|extract|recovery-join <bundle> [operationId|later-bundle]");
         Path directory=Path.of(args[1]).toAbsolutePath().normalize();
         switch(args[0]) {
             case "recover" -> HroBundle.recover(directory);
             case "analyze" -> analyze(directory);
+            case "recovery-join" -> {
+                if(args.length!=3)throw new IllegalArgumentException("recovery-join <earlier-bundle> <later-bundle>");
+                recoveryJoin(directory,Path.of(args[2]).toAbsolutePath().normalize());
+            }
             case "extract" -> {
                 if(args.length!=3)throw new IllegalArgumentException("extract requires operationId");
                 verifyChecksums(directory);int[] emitted={0};
@@ -31,6 +35,7 @@ public final class HroTool {
         Set<String> registered=new HashSet<>();
         capabilities.getAsJsonArray("registeredContracts").forEach(value->registered.add(value.getAsString()));
         HroContracts contracts=new HroContracts(registered);
+        HroMechanicalReport mechanical=new HroMechanicalReport();
         JsonObject integrity=json(directory.resolve("integrity.json"));
         boolean complete="COMPLETE".equals(manifest.get("state").getAsString())
                 && integrity.has("evidenceComplete") && integrity.get("evidenceComplete").getAsBoolean();
@@ -41,10 +46,11 @@ public final class HroTool {
             if(!run.equals(event.runId()) || event.schemaVersion()!=1)throw new IllegalArgumentException("EVENT_ORIGIN_OR_SCHEMA_MISMATCH");
             if(event.sequence()!=++count[0])contracts.lost(1);
             contracts.accept(event,locator);
+            mechanical.accept(event,locator);
         });
         if(manifest.has("eventCount")&&count[0]!=manifest.get("eventCount").getAsLong())contracts.lost(1);
         Files.writeString(directory.resolve("analysis.json"),HroBundle.JSON.toJson(Map.of("captureBuild",manifest.get("captureBuild"),
-                "coverage",contracts.coverage(!complete),"findings",contracts.findings(!complete))));
+                "coverage",contracts.coverage(!complete),"findings",contracts.findings(!complete),"mechanical",mechanical.snapshot(!complete||dropped>0))));
     }
     static void verifyChecksums(Path directory)throws IOException {
         Path base=directory.toAbsolutePath().normalize();Path checksum=base.resolve("checksums.sha256");
@@ -70,6 +76,45 @@ public final class HroTool {
                     .anyMatch(path -> !verified.contains(path))) throw new IOException("UNCHECKED_EVENT_SEGMENT");
         }
     }
+    /** Explicit receipt join, not a gameplay baseline comparison or an implicit legacy-capture import. */
+    static void recoveryJoin(Path earlier,Path later)throws IOException {
+        verifyChecksums(earlier);verifyChecksums(later);
+        var first=json(earlier.resolve("manifest.json"));var second=json(later.resolve("manifest.json"));
+        boolean complete="COMPLETE".equals(first.get("state").getAsString())&&"COMPLETE".equals(second.get("state").getAsString())
+                &&json(earlier.resolve("integrity.json")).get("evidenceComplete").getAsBoolean()
+                &&json(later.resolve("integrity.json")).get("evidenceComplete").getAsBoolean();
+        boolean sameBuild=Objects.equals(first.get("captureBuild"),second.get("captureBuild"));
+        Map<String,HroEvent> saved=new HashMap<>();Map<String,String> locators=new HashMap<>();
+        long[] omitted={0},firstCount={0},secondCount={0};boolean[] valid={true};
+        read(earlier,(event,locator)->{
+            if(!validRecoveryEvent(event,first,++firstCount[0]))valid[0]=false;
+            if(event.contract().equals("PERSISTENCE.RECOVERY")&&event.boundary().equals("SAVED")){
+                String subject=event.facts().get("durableSubject");if(subject==null)return;
+                if(saved.size()>=2048&&!saved.containsKey(subject)){omitted[0]++;return;}
+                saved.put(subject,event);locators.put(subject,locator);
+            }
+        });
+        List<Map<String,Object>> results=new ArrayList<>();
+        read(later,(event,locator)->{
+            if(!validRecoveryEvent(event,second,++secondCount[0]))valid[0]=false;
+            if(!event.contract().equals("PERSISTENCE.RECOVERY")||!event.boundary().equals("LOADED"))return;
+            if(results.size()>=128){omitted[0]++;return;}
+            String subject=event.facts().get("durableSubject");HroEvent prior=saved.get(subject);
+            var state=new HashMap<String,String>();if(prior!=null)state.putAll(prior.facts());
+            var verdict=HroMechanicalContracts.accept(event,state);
+            boolean ordered=prior!=null&&prior.utcMillis()<=event.utcMillis()&&!prior.runId().equals(event.runId());
+            results.add(Map.of("outcome",complete&&sameBuild&&ordered&&omitted[0]==0?verdict.outcome():HroContracts.Outcome.INCONCLUSIVE,
+                    "reason",!complete?"CAPTURE_INCOMPLETE":!sameBuild?"BUILD_IDENTITY_DIFFERS":!ordered?"EARLIER_DURABLE_EVIDENCE_MISSING_OR_UNORDERED":verdict.reason(),
+                    "earlierEvidence",locators.getOrDefault(subject,"MISSING"),"laterEvidence",locator,"durableSubject",subject==null?"UNKNOWN":subject));
+        });
+        if(omitted[0]>0||!valid[0]||!first.has("eventCount")||!second.has("eventCount")
+                ||first.get("eventCount").getAsLong()!=firstCount[0]||second.get("eventCount").getAsLong()!=secondCount[0])
+            results.replaceAll(row->{var gap=new HashMap<>(row);gap.put("outcome",HroContracts.Outcome.INCONCLUSIVE);gap.put("reason","RECOVERY_EVIDENCE_INCOMPLETE_OR_INVALID");return gap;});
+        Files.writeString(later.resolve("recovery-analysis.json"),HroBundle.JSON.toJson(Map.of("earlierRun",first.get("runId"),
+                "laterRun",second.get("runId"),"comparison","DURABLE_RECEIPT_JOIN_ONLY","findings",results,"omitted",omitted[0])));
+    }
+    private static boolean validRecoveryEvent(HroEvent e,JsonObject manifest,long sequence){return e.schemaVersion()==1
+            &&e.sequence()==sequence&&manifest.get("runId").getAsString().equals(e.runId());}
     private static JsonObject json(Path path)throws IOException {
         if(Files.size(path)>1024*1024)throw new IOException("METADATA_LIMIT");
         try(var reader=Files.newBufferedReader(path)){return JsonParser.parseReader(reader).getAsJsonObject();}

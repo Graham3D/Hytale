@@ -1078,6 +1078,9 @@ public final class HyArpgPlugin extends TavernsPlugin {
         com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.registered("UI.LIFECYCLE");
         com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.registered("INVENTORY.OWNER");
         com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.registered("INVENTORY.TRANSFER");
+        for(String contract:java.util.List.of("GEAR.EQUIPPED","AFFIX.MODIFIER","AFFIX.PROC","COMBAT.RECONCILE",
+                "CYCLONE.ACCOUNTING","SPAWN.ADMISSION","SPAWN.PROMOTION","PERSISTENCE.RECOVERY"))
+            com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.registered(contract);
         getEventRegistry().registerAsync(com.hypixel.hytale.server.core.event.events.player.PlayerConnectEvent.class,
                 incoming->incoming.thenCompose(event->{
                     if(event.getWorld()==null)return java.util.concurrent.CompletableFuture.completedFuture(event);

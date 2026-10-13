@@ -106,6 +106,11 @@ public final class SupportDamageSystems {
         double amount=behavior.coefficient()*debit.absorbed();
         if(amount<=0)return;
         if(!support.claimDurableReflection(player,debit.generation(),debit.receipt()))return;
+        if(com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.active(player.getUuid()))
+            com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.observe(player.getUuid(),"CYCLONE.ACCOUNTING","SupportDamageSystems",
+                    "REFLECTION",debit.generation()+":"+debit.receipt()+":reflection",null,null,null,debit.revision(),
+                    Map.of("generation",debit.generation(),"receiptId",debit.receipt(),"absorbed",debit.absorbed(),
+                            "requestedReflection",amount,"reflectionFactor",behavior.coefficient()));
         var stats=store.getComponent(source,EntityStatMap.getComponentType());
         var hp=stats==null?null:stats.get(DefaultEntityStatTypes.getHealth());
         var attempt=SecondaryDamageAttempt.once(()->hp==null?Double.NaN:hp.get(),
@@ -316,6 +321,10 @@ public final class SupportDamageSystems {
                 var result=com.inigmasgames.hytalerpg.execution.support.ManaBeforeLifeStage.apply(before,fraction,
                         player.getUuid(),resources,new EntityStatResourcePort(stats));
                 if(result.manaSpent()>0)damage.setAmount(result.healthDamage());
+                if(com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.active(player.getUuid()))
+                    com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.observe(player.getUuid(),"CYCLONE.ACCOUNTING","ManaBeforeLifeStage",
+                            "MANA_BEFORE_LIFE",null,null,null,null,null,Map.of("before",before,"after",damage.getAmount(),
+                                    "manaSpent",result.manaSpent(),"intended",result.intended(),"uncertain",result.uncertain()));
                 HytaleDamageLifecycleSystems.combatStage(damage,"Hywind Mana Before Life","MANA_BEFORE_LIFE",
                         before,damage.getAmount(),Map.of("manaSpent",result.manaSpent(),"intended",result.intended(),"uncertain",result.uncertain()));
             }catch(RuntimeException failure){

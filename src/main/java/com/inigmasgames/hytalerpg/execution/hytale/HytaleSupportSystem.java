@@ -313,7 +313,16 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         try{
             var state=durableCyclone.state(lease);
             if(state.phase()!=CycloneBarrierLedger.Phase.ACTIVE)return null;
-            return CycloneDamageStage.absorb(durableCyclone,lease,state.generation(),receipt,damage);
+            var resolution=CycloneDamageStage.absorb(durableCyclone,lease,state.generation(),receipt,damage);
+            if(com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.active(player.getUuid())) {
+                var debit=resolution.debit();
+                com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.observe(player.getUuid(),"CYCLONE.ACCOUNTING",
+                        "CycloneDamageStage","DEBIT",state.generation()+":"+receipt,null,null,null,debit.revision(),
+                        Map.of("generation",state.generation(),"receiptId",receipt,"before",state.remaining(),
+                                "remaining",debit.remaining(),"absorbed",debit.absorbed(),"requested",debit.requested(),
+                                "damageRemaining",debit.damageRemaining(),"durable",debit.durable(),"duplicate",debit.duplicate()));
+            }
+            return resolution;
         }
         catch(RuntimeException failure){
             com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(failure)
@@ -325,7 +334,14 @@ public final class HytaleSupportSystem extends EntityTickingSystem<EntityStore> 
         if(!durableCycloneEnabled||damage<=0)return null;
         var binding=sharedConnections.get(player.getUuid());
         if(binding==null||binding.player()!=player)return null;
-        try{return cycloneShared.debit(binding.lease(),receipt,damage,this::sharedPlayerGrantEligible);}
+        try{
+            var debit=cycloneShared.debit(binding.lease(),receipt,damage,this::sharedPlayerGrantEligible);
+            if(com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.active(player.getUuid()))
+                com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.observe(player.getUuid(),"CYCLONE.ACCOUNTING","CycloneSharedAegisLedger",
+                        "SHARED_DEBIT",receipt,null,null,null,null,Map.of("receiptId",receipt,"before",damage,
+                                "after",debit.nativeRemainder(),"absorbed",debit.absorbed(),"duplicate",debit.duplicate()));
+            return debit;
+        }
         catch(RuntimeException failure){
             com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(failure)
                     .log("RPG_CYCLONE_SHARED_DEBIT_REJECTED recipient=%s",player.getUuid());

@@ -64,6 +64,15 @@ public final class GearSignatureProcRuntime {
         if(!Double.isFinite(value)||value<0||value>=1)throw new IllegalArgumentException("INVALID_PROC_ROLL");
         return value<Math.min(1,percent*coefficient/100);
     }
+    private boolean chance(Contact contact,String affix,String key){
+        double percent=contact.snapshot().forItem(contact.item()).value(affix),coefficient=contact.procCoefficient();
+        if(percent<=0||coefficient<=0)return false;
+        double value=roll.sample(key);
+        if(!Double.isFinite(value)||value<0||value>=1)throw new IllegalArgumentException("INVALID_PROC_ROLL");
+        double probability=Math.min(1,percent*coefficient/100);boolean selected=value<probability;
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroGear.roll(contact.owner(),contact.world(),contact.item(),contact.root(),contact.contact(),affix,value,probability,selected);
+        return selected;
+    }
     /** Called after ordinary critical selection and before native mitigation; returns the Physical amount. */
     public synchronized double deadly(GearEffectSnapshot snapshot,UUID item,String strike,double physical,boolean critical,
                          boolean itemAttack,boolean noProc,double coefficient){
@@ -146,23 +155,23 @@ public final class GearSignatureProcRuntime {
         }
         if(c.targetHealth()>0&&c.noncriticalPhysical()>0&&c.targetKind()!=Kind.PLAYER
                 &&c.targetKind()!=Kind.BOSS&&available(crushingLock,pair,now)
-                &&chance(local.value("WA-135"),c.procCoefficient(),key+"/WA-135")){
+                &&chance(c,"WA-135",key+"/WA-135")){
             double fraction=c.targetKind()==Kind.ELITE?.02:.04;
             double amount=Math.min(fraction*c.targetHealth(),2*c.noncriticalPhysical());
             if(amount>0){crushingLock.put(pair,now+1);port.enqueue(new Child(ChildKind.CRUSHING,c.world(),c.owner(),c.target(),c.root(),c.contact(),
                     Map.of(GearCombatEffects.Channel.PHYSICAL,amount)));}
         }
         if(c.targetHealth()>0&&local.value("WA-137")>0&&c.noncriticalPhysical()>0
-                &&chance(local.value("WA-137"),c.procCoefficient(),key+"/WA-137")){
+                &&chance(c,"WA-137",key+"/WA-137")){
             var queue=fragments.computeIfAbsent(pair,ignored->new ArrayDeque<>());
             if(queue.size()<3)queue.addLast(new Fragment(.08*c.noncriticalPhysical(),3,now+6));
         }
         if(c.targetHealth()>0&&c.targetKind()!=Kind.BOSS&&c.targetKind()!=Kind.PLAYER
-                &&available(armorLock,pair,now)&&chance(local.value("WA-138"),c.procCoefficient(),key+"/WA-138")){
+                &&available(armorLock,pair,now)&&chance(c,"WA-138",key+"/WA-138")){
             armorLock.put(pair,now+5);armorUntil.computeIfAbsent(c.target(),ignored->new HashMap<>()).put(c.owner(),now+3);
         }
         if(c.melee()&&fortifyLock.getOrDefault(c.owner(),0d)<=now&&fortifyUntil.getOrDefault(c.owner(),0d)<=now
-                &&chance(local.value("WA-140"),c.procCoefficient(),key+"/WA-140")){
+                &&chance(c,"WA-140",key+"/WA-140")){
             fortifyLock.put(c.owner(),now+5);fortifyUntil.put(c.owner(),now+3);
         }
         if(local.value("WA-139")>0&&c.targetHealth()>0&&!c.scriptedVeto()
@@ -183,9 +192,8 @@ public final class GearSignatureProcRuntime {
         if(c.snapshot().forItem(c.item()).value("WA-143")<=0)return;
         if(!claim(c.world()+"/kill/"+c.owner()+"/"+c.root()+"/"+c.target(),now))return;
         actorWorld.put(c.owner(),c.world());actorWorld.put(c.target(),c.world());
-        var local=c.snapshot().forItem(c.item());
         if(burstLock.getOrDefault(c.owner(),0d)<=now
-                &&chance(local.value("WA-143"),c.procCoefficient(),c.world()+"/"+c.owner()+"/"+c.root()+"/WA-143")){
+                &&chance(c,"WA-143",c.world()+"/"+c.owner()+"/"+c.root()+"/WA-143")){
             burstLock.put(c.owner(),now+1);
             var channels=new EnumMap<GearCombatEffects.Channel,Double>(GearCombatEffects.Channel.class);
             c.preMitigation().forEach((channel,amount)->{if(amount>0)channels.put(channel,.35*amount);});

@@ -177,10 +177,13 @@ public final class ManagedGearDamageInteraction extends com.inigmasgames.hytaler
                     com.hypixel.hytale.server.core.modules.entity.component.TransformComponent.getComponentType());
             var at=transform==null?null:transform.getPosition();
             var origin=launch==null?acceptance.origin():launch.origin();
-            var hit=call.leaf().offhand?offhandContact(twin,call.context().getChain().getChainId(),
+            GearCombatEffects.Hit hit;
+            try(var observation=com.inigmasgames.hytalerpg.diagnostics.hro.HroGear.calculation(acceptance.actor(),call.root())) {
+            hit=call.leaf().offhand?offhandContact(twin,call.context().getChain().getChainId(),
                     acceptance.actor(),heldMain,acceptance,call.root()):GearCombatEffects.attack(effects,gear.identity(),
                     launch==null?strike:launch.rootId(),power,
                     coefficient,true,false,0,null,acceptance.baselineCritChance(),acceptance.baselineCritMultiplier(),!call.leaf().offhand,origin);
+            }
             if(hit==null)return new Object2FloatOpenHashMap<>();
             if(!call.leaf().offhand){
                 var proc=call.leaf().procVariables(call.context().getInteractionVars());

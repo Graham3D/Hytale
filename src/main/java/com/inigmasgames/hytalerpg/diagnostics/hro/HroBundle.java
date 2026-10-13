@@ -15,6 +15,7 @@ final class HroBundle implements AutoCloseable {
     private final Path directory;
     private final Map<String,Object> manifest;
     private final HroContracts contracts;
+    private final HroMechanicalReport mechanical=new HroMechanicalReport();
     private BufferedWriter events,index;
     private long total,segmentBytes,line,indexBytes,eventCount;
     private int segment;
@@ -37,6 +38,7 @@ final class HroBundle implements AutoCloseable {
     }
     private String segmentName(){return String.format(Locale.ROOT,"events/segment-%04d.jsonl",segment);}
     void event(HroEvent event)throws IOException {
+        event=HroEvidence.normalize(event);
         JsonObject envelope=JSON.toJsonTree(event).getAsJsonObject();
         envelope.addProperty("eventId",event.runId()+":"+event.sequence());
         envelope.addProperty("producerId","HroRecorder.admission");envelope.addProperty("producerSequence",event.sequence());
@@ -52,6 +54,7 @@ final class HroBundle implements AutoCloseable {
         index.write(indexLine);
         index.write('\n');
         contracts.accept(event,locator);
+        mechanical.accept(event,locator);
     }
     void flush()throws IOException {events.flush();index.flush();}
     private void rotate()throws IOException {
@@ -73,12 +76,13 @@ final class HroBundle implements AutoCloseable {
         boolean incomplete=!reason.equals("STOPPED") && !reason.equals("EXPIRED");
         var coverage=contracts.coverage(incomplete);
         writeJson("coverage.json",coverage);
+        writeJson("mechanical.json",mechanical.snapshot(incomplete||drops>0));
         writeJson("findings.json",Map.of("findings",contracts.findings(incomplete),"omitted",contracts.omittedFindings(),
                 "comparison","NO_BASELINE","scope","OBSERVED_OPERATIONS_ONLY"));
         writeJson("performance.json",performance);
         writeJson("integrity.json",Map.of("dropped",drops,"termination",reason,"evidenceComplete",drops==0&&!incomplete,
                 "uncompressedEventBytes",total,"pendingOperationsAreInconclusive",true));
-        StringBuilder summary=new StringBuilder("# HRO Stage 1\n\nRun: "+manifest.get("runId")+"\n\nTermination: "+reason+
+        StringBuilder summary=new StringBuilder("# HRO Stage 2\n\nRun: "+manifest.get("runId")+"\n\nTermination: "+reason+
                 "; dropped observations: "+drops+". Scope: invoking subject only.\n\n");
         coverage.forEach((id,value)->summary.append("- ").append(id).append(": ").append(((Map<?,?>)value).get("outcome")).append('\n'));
         summary.append("\nStart with findings.json, then indexes/operations.jsonl for segment and line locators. "

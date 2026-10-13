@@ -7,8 +7,9 @@ public final class HroContracts {
     public enum Outcome { PASS, FAIL, BLOCKED, NOT_EXERCISED, INCONCLUSIVE, NOT_APPLICABLE }
     public static final List<String> IDS = List.of("BOOT.ARTIFACT", "PLAYER.ADMISSION", "SKILL.ASSIGN",
             "SKILL.PROJECTION", "SKILL.EXECUTION", "HUD.PUBLICATION", "UI.LIFECYCLE",
-            "INVENTORY.OWNER", "INVENTORY.TRANSFER");
-    public static final Map<String,String> ANCHORS = Map.of(
+            "INVENTORY.OWNER", "INVENTORY.TRANSFER", "GEAR.EQUIPPED", "AFFIX.MODIFIER", "AFFIX.PROC",
+            "COMBAT.RECONCILE", "CYCLONE.ACCOUNTING", "SPAWN.ADMISSION", "SPAWN.PROMOTION", "PERSISTENCE.RECOVERY");
+    private static final Map<String,String> STAGE_ONE_ANCHORS = Map.of(
             "BOOT.ARTIFACT", "HyArpgPlugin.setup / HroIdentity",
             "PLAYER.ADMISSION", "HytalePlayerPersistenceReady / HytaleSupportSystem.connectionReady",
             "SKILL.ASSIGN", "RpgLoadoutService.equipSkill / mutate",
@@ -18,6 +19,8 @@ public final class HroContracts {
             "UI.LIFECYCLE", "UiInteractionTrace / InventoryProbePage.onDismiss",
             "INVENTORY.OWNER", "SpatialBagComponent / InventoryProbePage.traceInput",
             "INVENTORY.TRANSFER", "SpatialInventoryTransferCoordinator / HytaleGearLoot");
+    public static final Map<String,String> ANCHORS;
+    static { var all=new HashMap<>(STAGE_ONE_ANCHORS);all.putAll(HroMechanicalContracts.ANCHORS);ANCHORS=Map.copyOf(all); }
     public record Finding(String contract, int version, Outcome outcome, String comparison, String proof,
                           String operationId, String lastSuccessfulBoundary, String firstDivergence,
                           String evidence, String sourceAnchor, String recommendation) { }
@@ -26,6 +29,7 @@ public final class HroContracts {
         String last, locator; Long connection, revision; String world;
         boolean committed, dispatched, paid, rejected, compiled, saved;
         Outcome outcome;
+        final Map<String,String> mechanical = new HashMap<>();
     }
     private final Map<String, Operation> operations = new HashMap<>();
     private final Map<String, EnumMap<Outcome, Long>> counts = new LinkedHashMap<>();
@@ -57,6 +61,15 @@ public final class HroContracts {
         if (event.connectionId() != null) op.connection = event.connectionId();
         if (event.worldSegmentId() != null) op.world = event.worldSegmentId();
         if (event.stateRevision() != null) op.revision = event.stateRevision();
+        if(HroMechanicalContracts.ANCHORS.containsKey(event.contract())) {
+            for(String identity:List.of("itemId","affixId","rootId","generation","provenance","encounter")) {
+                String value=f.get(identity),prior=op.mechanical.get("identity:"+identity);
+                if(value!=null&&prior!=null&&!prior.equals(value)){
+                    emit(event,op,Outcome.INCONCLUSIVE,"MECHANICAL_IDENTITY_MISMATCH:"+identity,locator);return;
+                }
+                if(value!=null)op.mechanical.put("identity:"+identity,value);
+            }
+        }
         switch (event.contract()) {
             case "BOOT.ARTIFACT" -> {
                 boolean missingPreload=f.containsKey("preloadRegistration")&&!truth(f,"preloadRegistration");
@@ -140,7 +153,10 @@ public final class HroContracts {
                 else if (b.equals("DOMAIN_OPERATION")) terminal(event,op,Outcome.INCONCLUSIVE,
                         "OWNER_RESULT_OBSERVED_ITEM_CONSERVATION_GAP",locator);
             }
-            default -> throw new IllegalStateException("Unknown contract");
+            default -> {
+                var verdict=HroMechanicalContracts.accept(event,op.mechanical);
+                if(verdict!=null)emit(event,op,verdict.outcome(),verdict.reason(),locator);
+            }
         }
         op.last = b; op.locator = locator;
     }
@@ -151,7 +167,7 @@ public final class HroContracts {
     }
     private void emit(HroEvent e, Operation op, Outcome result, String reason, String locator) {
         // A later successful dispatch cannot erase an already observed duplicate/debit violation.
-        if (op.outcome == Outcome.FAIL && result != Outcome.FAIL) return;
+        if (op.outcome == Outcome.FAIL) return;
         if(!registered.contains(e.contract()) || losses > 0) result=Outcome.INCONCLUSIVE;
         if(op.outcome!=null)counts.get(e.contract()).computeIfPresent(op.outcome,(k,v)->v<=1?null:v-1);
         counts.get(e.contract()).merge(result,1L,Long::sum);

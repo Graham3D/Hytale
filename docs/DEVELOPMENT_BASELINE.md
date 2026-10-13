@@ -1,5 +1,41 @@
 # HyARPG/Hywind development baseline
 
+## HRO Stage 2 mechanical evidence (2026-10-13)
+
+State: **IN_PROGRESS — final verification checkpoint**. Branch
+`codex/hro-stage2`, worktree `C:/hyhro2`, candidate `R262C1HRO2-CANDIDATE`,
+version `0.2.0-R262C1HRO2-CANDIDATE`, exact Hytale requirement `=0.7.0`.
+Verified Stage 1 parent: `92ac44fb23c515acd59f2470403dd9feca292b30` on
+`codex/hro-stage1`. Reconciliation commit
+`255a94c1138169b1ab492d813023643eed232616` includes integrated remote main
+`ce3865dd5f81bee95003cb5dde8dc2f959bdac2b` and preserves Stage 4 pickup/reward
+corrections. Main is ahead of the former Stage 1 parent on Chapter I recovery,
+but lacks HRO Stage 1/2. Stage 2 explicitly depends on Stage 1. Earlier migration
+integration was owner-authorized; connected acceptance is not inferred, and
+the available records do not establish a newer QA-accepted cumulative build.
+
+This pass adds eight mechanical contracts (seventeen total), native combat
+reconciliation using the existing trace rule, actual percentage/roll evidence,
+R261 defensive receipts, natural spawn decisions/publication, real durable
+save/load checksums and explicit cross-session receipt joins. The bounded
+affix/receipts report, priority reserve, loss handling, synthetic examples and
+capability-blocked outcomes are documented in [HRO_STAGE_2.md](HRO_STAGE_2.md).
+Focused JUnit/native bridge, noninterference, JaCoCo and heap/producer checks
+have run; complete offline check, strict analysis and exact committed-source
+Guardian publication gates remain required before this entry is finalized.
+This is not a completed or accepted revision merely because a candidate is
+packaged. No installed JAR, server, asset archive or save is modified.
+
+Active deployed build remains INV1, source
+`afdf9bfbce9d5fb395bd68848833480a849f0e0b`; deployment status **NOT_DEPLOYED**
+for HRO2. Connected QA/world-tick/client-frame qualification **UNVERIFIED**,
+reserved for Stage 3. Primary Windows main at `1dfa2cea` remains dirty and
+behind remote main, with AGENTS.md/artwork changes preserved. Existing
+worktrees were inspected and left intact. Next action: finish the engineering
+gates, publish the reviewed matching `codex/hro-stage2` branch, and retain it
+for Stage 3/acceptance and serialized integration review. No main merge or
+owner in-game QA is requested by this offline assignment.
+
 ## HRO Stage 1 diagnostic foundation (2026-10-12)
 
 State: **ENGINEERING_READY — native performance/connected acceptance UNVERIFIED**. Scoped candidate

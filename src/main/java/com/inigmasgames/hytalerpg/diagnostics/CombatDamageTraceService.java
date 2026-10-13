@@ -102,7 +102,7 @@ public final class CombatDamageTraceService implements AutoCloseable {
         synchronized(session){var copy=new ArrayList<>(session.recent);return copy.subList(Math.max(0,copy.size()-count),copy.size());}
     }
     public boolean active(){for(var session:sessions.values())if(session.active&&System.currentTimeMillis()<session.until)return true;return false;}
-    public boolean tracked(Damage damage){return damage.getIfPresentMetaObject(HIT)!=null;}
+    public boolean tracked(Damage damage){return damage.getIfPresentMetaObject(HIT)!=null||com.inigmasgames.hytalerpg.diagnostics.hro.HroNativeCombat.tracked(damage);}
     public Map<String,Object> profile(UUID world,UUID entity,String role){
         var info=new LinkedHashMap<String,Object>();info.put("entity",entity.toString());
         if(role==null){info.put("kind","PLAYER_OR_NON_NPC");return Map.copyOf(info);}
@@ -138,6 +138,7 @@ public final class CombatDamageTraceService implements AutoCloseable {
     }
     public void begin(Damage damage,UUID world,UUID source,UUID target,String sourceRole,String targetRole,
             Double targetHealth,Double targetMaximum){
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroNativeCombat.begin(damage,world,source,target);
         if(!active()||damage.getIfPresentMetaObject(HIT)!=null)return;
         var meta=HytaleDamageAdapter.metadata(damage);
         Session incoming=target==null?null:sessions.get(target),outgoing=source==null?null:sessions.get(source);
@@ -277,19 +278,21 @@ public final class CombatDamageTraceService implements AutoCloseable {
         hit.unobservable.add("Critical RNG sample is not exposed by CriticalRoller");
     }
     public void stage(Damage damage,String owner,String operation,double before,double after,Map<String,Object> details){
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroNativeCombat.stage(damage,operation,before,after);
         var hits=damage.getIfPresentMetaObject(HIT);if(hits!=null)for(var hit:hits)if(hit.stages.size()<64)
             hit.stages.add(new Stage(owner,operation,before,after,details));
     }
-    public void accepted(Damage damage){var hits=damage.getIfPresentMetaObject(HIT);if(hits!=null)for(var hit:hits){
+    public void accepted(Damage damage){com.inigmasgames.hytalerpg.diagnostics.hro.HroNativeCombat.accepted(damage);var hits=damage.getIfPresentMetaObject(HIT);if(hits!=null)for(var hit:hits){
         hit.accepted=damage.isCancelled()?0:Math.max(0,damage.getAmount());
         if(hit.stages.size()<64)hit.stages.add(new Stage("Hywind before absorption","ACCEPTED",damage.getAmount(),hit.accepted,Map.of()));
     }}
-    public void beforeApply(Damage damage,Double health){var hits=damage.getIfPresentMetaObject(HIT);if(hits!=null)for(var hit:hits){
+    public void beforeApply(Damage damage,Double health){com.inigmasgames.hytalerpg.diagnostics.hro.HroNativeCombat.before(damage,health);var hits=damage.getIfPresentMetaObject(HIT);if(hits!=null)for(var hit:hits){
         hit.healthBefore=health;
         if(hit.stages.size()<64)hit.stages.add(new Stage("Native before ApplyDamage","AFTER_ABSORPTION",hit.accepted,
                 damage.getAmount(),Map.of("cancelled",damage.isCancelled())));
     }}
     public void applied(Damage damage,Double healthAfter){var hits=damage.getIfPresentMetaObject(HIT);
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroNativeCombat.applied(damage,healthAfter);
         if(hits!=null)for(var hit:hits)finish(hit,damage,healthAfter);
     }
     private void finish(Hit hit,Damage damage,Double healthAfter){if(hit.finalized)return;
@@ -300,8 +303,7 @@ public final class CombatDamageTraceService implements AutoCloseable {
         double lost=Double.isFinite(before)&&Double.isFinite(after)?Math.max(0,Math.min(before,before-after)):Double.NaN;
         double overkill=Double.isFinite(before)?Math.max(0,finalAmount-Math.max(0,before)):Double.NaN;
         double prevented=Math.max(0,hit.attempted-hit.accepted),absorbed=Math.max(0,hit.accepted-finalAmount);
-        String reconciliation=!Double.isFinite(lost)?"UNOBSERVABLE":
-                Math.abs(lost-Math.min(Math.max(0,before),finalAmount))<=.02?"MATCH":"MISMATCH";
+        String reconciliation=reconcile(hit.healthBefore,healthAfter,finalAmount);
         boolean blocked=Boolean.TRUE.equals(damage.getIfPresentMetaObject(Damage.BLOCKED));
         var missing=new ArrayList<>(hit.unobservable);
         if(!Double.isFinite(lost))missing.add("Per-hit Health before/after unavailable at native ApplyDamage boundary");
@@ -337,6 +339,12 @@ public final class CombatDamageTraceService implements AutoCloseable {
         }
     }
     private static Double finite(double value){return Double.isFinite(value)?value:null;}
+    /** Shared by both diagnostic sinks; preserves the established native trace tolerance and overkill rule. */
+    public static String reconcile(Double before,Double after,double finalAmount){
+        if(before==null||after==null||!Double.isFinite(before)||!Double.isFinite(after)||!Double.isFinite(finalAmount))return "UNOBSERVABLE";
+        double lost=Math.max(0,Math.min(before,before-after));
+        return Math.abs(lost-Math.min(Math.max(0,before),finalAmount))<=.02?"MATCH":"MISMATCH";
+    }
     public void worldUnload(UUID world){sessions.entrySet().removeIf(entry->entry.getValue().world.equals(world));}
     @Override public void close(){for(var session:sessions.values())session.active=false;writer.close();sessions.clear();}
 }

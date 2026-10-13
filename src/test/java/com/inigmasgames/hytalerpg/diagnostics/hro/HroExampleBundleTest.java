@@ -7,6 +7,25 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /** Deliverable example: synthetic evidence only; never a capture of the owner's character. */
 class HroExampleBundleTest {
+    @Test void producesStageTwoFailureAndMatchedControlEvidence()throws Exception {
+        Path reports=Path.of("build/reports/hro").toAbsolutePath();
+        Path directory=Files.createTempDirectory(Files.createDirectories(reports),"stage2-example-");
+        String run="synthetic-stage2-example";
+        try(var bundle=new HroBundle(directory,Map.of("schemaVersion",1,"runId",run,"state","RECORDING",
+                "captureBuild",Map.of("source","SYNTHETIC_FIXTURE_NOT_LIVE_GAMEPLAY")),Set.copyOf(HroContracts.IDS))) {
+            bundle.event(event(run,1,"AFFIX.MODIFIER","CONTRIBUTION","wrong-units",HroMechanicalContractsTest.facts(
+                    "affixId","WA-001","itemId","item","equipmentRevision","r1","value","25","applied","25","units","PERCENT_POINTS_TO_FRACTION","bucket","INCREASED")));
+            bundle.event(event(run,2,"AFFIX.MODIFIER","CONTRIBUTION","correct-units",HroMechanicalContractsTest.facts(
+                    "affixId","WA-001","itemId","item","equipmentRevision","r1","value","25","applied",".25","units","PERCENT_POINTS_TO_FRACTION","bucket","INCREASED")));
+            bundle.event(event(run,3,"SPAWN.ADMISSION","RARITY_DECISION","natural",Map.of("provenance","NATURAL","encounter","e","rarity","NORMAL")));
+            bundle.event(event(run,4,"PERSISTENCE.RECOVERY","LOADED","missing-prior",Map.of("durableSubject","opaque","schema","2","revision","8","fingerprint","hash")));
+            bundle.finish(0,"STOPPED",Map.of("qualification","SYNTHETIC_EXAMPLE_NO_TIMING_CLAIM"));
+        }
+        HroTool.analyze(directory);String findings=Files.readString(directory.resolve("findings.json"));
+        assertTrue(findings.contains("PERCENT_UNIT_BOUNDARY"));assertTrue(findings.contains("EARLIER_DURABLE_EVIDENCE_MISSING"));
+        assertTrue(Files.readString(directory.resolve("mechanical.json")).contains("INDEPENDENT_TRIAL_MODEL_NOT_ESTABLISHED"));
+        Files.writeString(reports.resolve("stage2-example-path.txt"),directory.toString());
+    }
     @Test void producesReadableExampleWithFirstMissingBoundary() throws Exception {
         Path reports = Path.of("build/reports/hro").toAbsolutePath();
         Path directory = Files.createTempDirectory(Files.createDirectories(reports), "example-");

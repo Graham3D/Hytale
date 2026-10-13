@@ -99,12 +99,16 @@ public final class EnemyWorldAdmission {
         var pending=transactions.computeIfAbsent(birth.world(),k->new HashMap<>());
         if(pending.size()>=4096||pending.containsKey(birth.encounter()))throw new IllegalStateException("ENEMY_BIRTH_TRANSACTION_DUPLICATE_OR_LIMIT");
         pending.put(birth.encounter(),new Pending(birth,job,environment,role,System.nanoTime(),"SELECTED",0));
+        if(com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.ownerInWorld(birth.world())!=null)com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.spawn(birth.world(),birth.encounter(),birth.actors().getFirst().spawnOrigin().name(),
+                "SPAWN.PROMOTION","PLAN_ACCEPTED",Map.of("generation",birth.generation()));
         birthPhase(birth,"BIRTH_ROOT_SUBMITTED",null);
     }
     public synchronized void birthPhase(EnemyBirthPlan birth,String phase,Throwable error){
         var map=transactions.get(birth.world());var old=map==null?null:map.get(birth.encounter());
         if(old==null)return;
         if(!old.birth().equals(birth))throw new IllegalStateException("ENEMY_BIRTH_TRANSACTION_IDENTITY");
+        if(com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.ownerInWorld(birth.world())!=null)com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.spawn(birth.world(),birth.encounter(),birth.actors().getFirst().spawnOrigin().name(),
+                "SPAWN.PROMOTION",phase,Map.of("generation",birth.generation()));
         Throwable cause=error;while(cause!=null&&cause.getCause()!=null)cause=cause.getCause();
         String reason=cause==null?"none":cause.getClass().getSimpleName()+":"+String.valueOf(cause.getMessage()).replace(' ','_');
         MonsterSpawnTrace.event(phase,birth.world(),old.environment(),old.role(),
@@ -134,6 +138,10 @@ public final class EnemyWorldAdmission {
     public synchronized void failClosed(UUID world){failClosed(world,"UNSPECIFIED_BOUNDARY",null);}
     public synchronized void failClosed(UUID world,String phase,Throwable error){
         Objects.requireNonNull(world);boolean wasOpen=admits(world);failed.add(world);rebound.remove(world);
+        var hroOwner=com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.ownerInWorld(world);
+        if(hroOwner!=null)com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.observe(hroOwner,"SPAWN.ADMISSION","EnemyWorldAdmission",
+                "ADMISSION_CLOSED","world-admission",world,null,null,null,Map.of("provenance","NATURAL",
+                        "encounter","NOT_APPLICABLE_WORLD_GATE","reason",phase));
         var pending=List.copyOf(transactions.getOrDefault(world,Map.of()).values());
         for(var p:pending)birthPhase(p.birth(),"BIRTH_UNCERTAIN",error);
         MonsterSpawnTrace.event("WORLD_ELITE_ADMISSION_CLOSED",world,-1,"all",

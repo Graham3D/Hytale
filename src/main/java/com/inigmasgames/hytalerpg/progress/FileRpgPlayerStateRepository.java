@@ -39,6 +39,11 @@ public final class FileRpgPlayerStateRepository implements RpgPlayerStateReposit
                 String expected = root.get("checksum").getAsString();
                 String actual = checksum(gson.toJson(rawState));
                 if (!expected.equalsIgnoreCase(actual)) throw new IllegalStateException("RPG state checksum mismatch: " + path);
+                if(com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.active(playerUuid))try {
+                    com.inigmasgames.hytalerpg.diagnostics.hro.HroDurable.repository(playerUuid,"LOADED",
+                            rawState.has("schemaVersion")?rawState.get("schemaVersion").getAsInt():0,
+                            rawState.has("revision")?rawState.get("revision").getAsLong():0,actual);
+                }catch(RuntimeException diagnosticGap){com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.loss(playerUuid);}
             } else {
                 rawState = root;
                 warnings.add("Legacy unwrapped state migrated to checksum envelope");
@@ -126,6 +131,7 @@ public final class FileRpgPlayerStateRepository implements RpgPlayerStateReposit
             }
             if (Files.isRegularFile(path)) Files.copy(path, backup, StandardCopyOption.REPLACE_EXISTING);
             Files.move(temp, path, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+            if(com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.recording())com.inigmasgames.hytalerpg.diagnostics.hro.HroDurable.repository(state.playerUuid(),"SAVED",state.schemaVersion,state.revision,envelope.get("checksum").getAsString());
         } catch (Exception error) {
             try { Files.deleteIfExists(temp); } catch (Exception ignored) {}
             throw new IllegalStateException("Unable to save RPG player state " + path, error);

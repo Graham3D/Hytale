@@ -92,9 +92,11 @@ public final class GearEffectSnapshot {
     public String revision() { return revision; }
     public List<Source> sources(Operator operator) { return sources.getOrDefault(operator,List.of()); }
     public double total(Operator operator) { return operatorTotals.getOrDefault(operator,0.0); }
-    public double percent(Operator operator) { return total(operator)/100.0; }
+    public double percent(Operator operator) { double value=total(operator),result=value/100.0;
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroGear.percent(this,operator,value,result);return result; }
     public double value(String affixId) { return values.getOrDefault(affixId,0.0); }
-    public double percent(String affixId) { return value(affixId)/100.0; }
+    public double percent(String affixId) { double value=value(affixId),result=value/100.0;
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroGear.percent(this,affixId,value,result);return result; }
     /** Only admitted armor can provide this new defensive conversion; cap the combined total once. */
     public double manaBeforeLifeFraction(){
         return Math.min(.60,items.stream().filter(item->item.category()==GearCatalog.Category.ARMOR)

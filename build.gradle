@@ -74,14 +74,17 @@ tasks.named('processResources') {
 }
 tasks.register('hroAnalyze', JavaExec) {
     group = 'verification'
-    description = 'Offline bounded HRO analyze/recover/extract; never starts a Hytale server.'
+    description = 'Offline bounded HRO analyze/recover/extract/recovery-join; never starts a Hytale server.'
     dependsOn tasks.named('classes')
     classpath = sourceSets.main.runtimeClasspath + files(serverJar)
     mainClass = 'com.inigmasgames.hytalerpg.diagnostics.hro.HroTool'
     doFirst {
         if (!project.hasProperty('hroBundle')) throw new GradleException('Supply -PhroBundle=<absolute bundle folder>')
         args project.findProperty('hroAction') ?: 'analyze', project.property('hroBundle')
-        if(project.hasProperty('hroOperation')) args project.property('hroOperation')
+        if(project.findProperty('hroAction') == 'recovery-join') {
+            if(!project.hasProperty('hroLaterBundle')) throw new GradleException('Supply -PhroLaterBundle=<later bundle folder>')
+            args project.property('hroLaterBundle')
+        } else if(project.hasProperty('hroOperation')) args project.property('hroOperation')
     }
 }
 tasks.register('hroHeapAgent', Jar) {

@@ -83,6 +83,8 @@ public final class NativeEnemyBirthDecision {
                     new Vec3(position.x,position.y,position.z),balance,bindings.revision(),true).orElse(null);
             if(request==null)return rollback.fallback("NATIVE_PREPARATION");
             var rarity=planner.rarity(request.seed(),request.originals().getFirst().nativeBaseline().difficulty());
+            if(com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.ownerInWorld(original.job().world())!=null)com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.spawn(original.job().world(),original.reservation().encounter(),
+                    "NATURAL","SPAWN.ADMISSION","RARITY_DECISION",Map.of("rarity",rarity));
             MonsterSpawnTrace.event("RARITY_DECISION",original.job().world(),original.job().environment(),original.job().nativeRole(),
                     "job="+original.job().nativeJobId()+" encounter="+original.reservation().encounter()+" rarity="+rarity
                     +" originals="+original.members().size());
@@ -244,6 +246,8 @@ public final class NativeEnemyBirthDecision {
             return fallback(reason,null);
         }
         Optional<Selected> fallback(String reason,String subreason){
+            if(!reason.equals("RARITY_NORMAL")&&com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.ownerInWorld(original.job().world())!=null)com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.spawn(original.job().world(),original.reservation().encounter(),
+                    "NATURAL","SPAWN.ADMISSION","FALLBACK",Map.of("reason",reason));
             MonsterSpawnTrace.event("ELITE_FALLBACK",original.job().world(),original.job().environment(),original.job().nativeRole(),
                     "job="+original.job().nativeJobId()+" encounter="+original.reservation().encounter()+" reason="+reason
                     +(subreason==null?"":" subreason="+subreason));

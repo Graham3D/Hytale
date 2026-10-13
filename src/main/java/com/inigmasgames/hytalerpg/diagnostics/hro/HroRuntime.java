@@ -30,6 +30,35 @@ public final class HroRuntime {
     static Set<String> witnesses(){return Set.copyOf(WITNESSES);}
     public static void registered(String contract) { var r=recorder;if(r!=null)r.registered(contract); }
     public static boolean active(UUID player) { var r=recorder;return r!=null&&r.active(player); }
+    public static boolean recording(){var r=recorder;return r!=null&&r.recording();}
+    public static void loss(UUID owner){var r=recorder;if(r!=null)r.loss(owner);}
+    public static UUID ownerInWorld(UUID world){var r=recorder;return r==null?null:r.ownerInWorld(world);}
+    public static String token(UUID player){var r=recorder;return r==null?null:r.token(player);}
+    public static String packet(UUID player){var r=recorder;return r==null?null:r.packet(player);}
+    public static String mark(UUID player){if(!active(player))return "HRO is not recording this player";
+        observe(player,"MARK","RpgTraceCommand","MARK",null,null,null,null,null,Map.of("label","USER_CHECKPOINT"));return "HRO checkpoint recorded";}
+    public static void equipment(UUID player,com.inigmasgames.hytalerpg.gear.GearEffectSnapshot snapshot,
+            List<com.inigmasgames.hytalerpg.gear.GearInstance> candidates,Set<UUID> accepted) {
+        var r=recorder;if(r==null||!r.active(player))return;
+        int candidatesHash=1,scanned=0;for(var item:candidates){if(++scanned>16){r.loss(player);break;}candidatesHash=31*candidatesHash+item.identity().hashCode();}
+        if(!r.firstEquipment(player,snapshot.revision()+":"+candidatesHash))return;
+        if(snapshot.empty())observe(player,"GEAR.EQUIPPED","HytaleGearEquipment","EQUIPMENT_EMPTY","equipment-empty",null,null,null,null,
+                Map.of("equipmentRevision",snapshot.revision(),"quantity",0));
+        int count=0;
+        for(var item:candidates){if(++count>16)break;
+            observe(player,"GEAR.EQUIPPED","HytaleGearEquipment","EQUIPMENT",item.identity()+":"+snapshot.revision(),null,null,null,null,
+                    Map.of("itemId",item.identity(),"equipmentRevision",snapshot.revision(),"accepted",accepted.contains(item.identity()),"equipmentSlot",item.category()));
+            int rolls=0;for(var roll:item.affixes()){if(++rolls>8){r.loss(player);break;}
+                observe(player,"AFFIX.MODIFIER","HytaleGearEquipment","ROLLED_VALUE",item.identity()+":"+roll.familyId(),null,null,null,null,
+                        Map.of("itemId",item.identity(),"equipmentRevision",snapshot.revision(),"affixId",roll.familyId(),"value",roll.value(),"units","AUTHORED_ROLL"));
+            }
+        }
+    }
+    public static void spawn(UUID world,UUID encounter,String provenance,String contract,String boundary,Map<String,?> values){
+        UUID player=ownerInWorld(world);if(player==null)return;
+        var facts=new LinkedHashMap<String,Object>(values);facts.put("provenance",provenance);facts.put("encounter",encounter);
+        observe(player,contract,"EnemyBirthOwner",boundary,encounter.toString(),world,null,null,null,facts);
+    }
     public static String start(UUID player,UUID world){var r=recorder;return r==null?"HRO unavailable":r.start(player,world);}
     public static String stop(){var r=recorder;return r==null?"HRO unavailable":r.stop();}
     public static String status(){var r=recorder;return r==null?"HRO unavailable":r.status();}

@@ -68,6 +68,7 @@ public final class GearQaTrace implements AutoCloseable {
     }
     public static void equipment(UUID owner,GearEffectSnapshot snapshot,java.util.List<GearInstance> candidates,
                                  java.util.Set<UUID> accepted){
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.equipment(owner,snapshot,candidates,accepted);
         var trace=installed;if(!active(owner))return;
         var before=trace.equipmentSnapshots.put(owner,snapshot);
         if(snapshot.equals(before))return;
