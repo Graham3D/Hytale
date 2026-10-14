@@ -1,9 +1,11 @@
 # Master Enemies Stage 4 run sheet
 
 **Current candidate readiness: BLOCKED.** `R262ME12S3B-CANDIDATE` cannot be activated
-for natural v2 gameplay: modern projectile ownership, mixed-flock certification,
-the full native-provider integration fixture and a candidate-only QA activation
-authority remain offline engineering. `masterEnemiesV2=ENABLED` is rejected with
+for natural v2 gameplay. The modern projectile route has a Task 1 offline
+candidate; Task 2 still lacks complete mixed-flock owner certification,
+the full native-provider birth/publication/recovery fixture, Firesteel
+lifecycle proof, Turret/Seeker production certificates, and a candidate-only
+QA activation authority. `masterEnemiesV2=ENABLED` is rejected with
 `ME12_PRODUCTION_RELEASE_GATE_OPEN`. No command or undocumented config switch
 bypasses this. SHADOW only compiles plans and retains v1 gameplay.
 
