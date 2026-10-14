@@ -646,6 +646,11 @@ public final class HyArpgPlugin extends TavernsPlugin {
                 event -> nativeDropTraceProbe.detach(event.getPlayerRef().getUuid()));
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgUnsummonCommand(summonSystem,conversionSystem));
         worldSpawnDensity = new com.inigmasgames.hytalerpg.spawning.NativeWorldSpawnDensity(worldConfiguration);
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.configureEnemyIdentity(()->{
+            var snapshot=worldConfiguration.snapshot();return java.util.Map.of("configRevision",snapshot.configRevision(),
+                    "configSha256",com.inigmasgames.hytalerpg.progress.RewardIntent.digest(snapshot.source().toString()),
+                    "density",snapshot.density(),"featureMode",snapshot.me12FeatureState().name(),"nativeCertification","BLOCKED_STAGE1");
+        });
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgSpawnsCommand(worldSpawnDensity));
         monsterSpawnTrace=new com.inigmasgames.hytalerpg.diagnostics.MonsterSpawnTrace(
                 rpgDataDirectory().resolve("logs").resolve("rpg").resolve("monster-spawn-trace"),
@@ -858,6 +863,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
                     difficultyCombat.names().forgetWorld(worldId);
                     if(aquaticHabitat!=null)aquaticHabitat.forgetWorld(worldId);
                     enemyWorldAdmission.worldUnload(worldId);
+                    if(enemyBirthOwner!=null)enemyBirthOwner.worldUnload(worldId);
                 }});
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Application(combatTrace,
                 (receipt,target,source,buffer)->{
@@ -1238,6 +1244,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
 
     private void shutdownRpg() {
         com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.shutdown();
+        if(enemyBirthOwner!=null)enemyBirthOwner.close();
         if(hostileNames!=null){hostileNames.close();hostileNames=null;}
         if(aquaticHabitat!=null){aquaticHabitat.close();aquaticHabitat=null;}
         RuntimeException enemyTeardown=null;

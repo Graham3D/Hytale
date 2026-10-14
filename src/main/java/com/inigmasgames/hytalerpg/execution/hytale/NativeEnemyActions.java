@@ -212,6 +212,7 @@ public final class NativeEnemyActions {
             reactions.accept(new Delivery(actor.store,buffer,actor.ref,target,actor.descriptor,hit,
                     ()->actor.attached&&actor.ref.isValid()&&actor.store==buffer.getStore(),statusSource,actor.seed,nativeImpulse,forward));
             actor.accepted.accept(hit);
+            com.inigmasgames.hytalerpg.diagnostics.hro.HroMasterEnemies.hit(actor.descriptor,hit);
         },actor.rejected);
     }
     /** Called by the version-pinned native pre-queue seam with the original holder. */
@@ -324,6 +325,7 @@ public final class NativeEnemyActions {
                 strike.statusSource(),actor.seed,false,
                 new com.inigmasgames.hytalerpg.execution.math.Vec3(receipt.forwardX(),0,receipt.forwardZ())));
         actor.accepted.accept(hit);
+            com.inigmasgames.hytalerpg.diagnostics.hro.HroMasterEnemies.hit(actor.descriptor,hit);
     }
     private static void requireCurrent(Actor actor,Store<EntityStore> store){
         if(!actor.attached||actor.quarantined||actor.store!=store||!store.isInThread()||!actor.ref.isValid()

@@ -30,6 +30,14 @@ public record AcquisitionCheckpoint(AcquisitionProgress progress,Set<String> lea
                 if(!learned.add(delta.subject()))throw new IllegalStateException("KNOWN_SKILL_MUST_NOT_REROLL");
                 pity.remove(delta.source());
             }
+            case PASSIVE_LEARNING_FAILURE -> {
+                if(owned.containsKey(delta.subject()))throw new IllegalStateException("ACQUIRED_PASSIVE_MUST_NOT_REROLL");
+                pity.merge(delta.source(),1,Math::addExact);
+            }
+            case PASSIVE_LEARNING_SUCCESS -> {
+                if(owned.putIfAbsent(delta.subject(),1)!=null)throw new IllegalStateException("ACQUIRED_PASSIVE_MUST_NOT_REROLL");
+                pity.remove(delta.source());
+            }
             case PASSIVE_PURCHASE -> {
                 if(progress.availableInsight(earnedInsight)<delta.insightCost())throw new IllegalArgumentException("INSUFFICIENT_LINK_INSIGHT");
                 spent=Math.addExact(spent,delta.insightCost());owned.merge(delta.subject(),1,Math::addExact);

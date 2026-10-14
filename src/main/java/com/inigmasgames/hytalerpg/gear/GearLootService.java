@@ -10,10 +10,13 @@ public final class GearLootService {
     /** Maximum certified base equipment count for an ME native binding; R200 profiles remain authoritative. */
     public static final int MAX_BASE_EQUIPMENT_SLOTS_PER_DEFEAT=1;
     public record Loot(EnemyRewardRegistry.LootSource source,com.inigmasgames.hytalerpg.execution.math.Vec3 position,GearClaims.Allocation allocation,double magicFind,String seed,
-                       GearDropGenerator.Result result,String state,String reason,String generationRevision) {
+                       GearDropGenerator.Result result,String state,String reason,String generationRevision,Integer entitlementVersion) {
+        public Loot(EnemyRewardRegistry.LootSource source,com.inigmasgames.hytalerpg.execution.math.Vec3 position,GearClaims.Allocation allocation,double magicFind,String seed,
+                    GearDropGenerator.Result result,String state,String reason,String generationRevision){this(source,position,allocation,magicFind,seed,result,state,reason,generationRevision,null);}
         public Loot{Objects.requireNonNull(state);Objects.requireNonNull(reason);Objects.requireNonNull(generationRevision);if(!Double.isFinite(magicFind)||magicFind<0)throw new IllegalArgumentException("MF");}
-        public Loot generated(GearDropGenerator.Result value){return new Loot(source,position,allocation,magicFind,seed,value,value.item()==null?"NO_DROP":"WORLD",value.reason(),generationRevision);}
-        public Loot ownership(GearClaims.Allocation value,String status){return new Loot(source,position,value,magicFind,seed,result,status,reason,generationRevision);}
+        public Loot generated(GearDropGenerator.Result value){return new Loot(source,position,allocation,magicFind,seed,value,value.item()==null?"NO_DROP":"WORLD",value.reason(),generationRevision,entitlementVersion);}
+        public Loot ownership(GearClaims.Allocation value,String status){return new Loot(source,position,value,magicFind,seed,result,status,reason,generationRevision,entitlementVersion);}
+        public boolean guaranteedEntitlement(){return Integer.valueOf(2).equals(entitlementVersion);}
     }
     public record Cursor(long next,Loot pending){public Cursor{if(next<0)throw new IllegalArgumentException("Cursor");}}
     public record SalvageReservation(UUID player,UUID item,String sourceEventId,boolean credited){}
@@ -118,8 +121,16 @@ public final class GearLootService {
     }
     public record MagicFindSnapshot(Map<UUID,Double> players){public MagicFindSnapshot{players=Map.copyOf(players);if(players.size()>256||players.values().stream().anyMatch(v->!Double.isFinite(v)||v<0))throw new IllegalArgumentException("Invalid MF snapshot");}}
     /** One immutable quantity decision per enemy death, committed before any individual item receipt. */
-    public record DeathPicks(GearLootProfiles.Decision decision,Map<UUID,Double> magicFind) {
-        public DeathPicks {Objects.requireNonNull(decision);magicFind=Map.copyOf(magicFind);}
+    public record DeathPicks(GearLootProfiles.Decision decision,Map<UUID,Double> magicFind,FrozenQuantity quantity) {
+        public DeathPicks(GearLootProfiles.Decision decision,Map<UUID,Double> magicFind){this(decision,magicFind,null);}
+        public DeathPicks {Objects.requireNonNull(decision);magicFind=Map.copyOf(magicFind);
+            if(quantity!=null&&(quantity.total()<decision.succeeded()||decision.succeeded()==0&&quantity.total()!=0))throw new IllegalArgumentException("ME12_QUANTITY_BASE");}
+    }
+    /** Schema-2 extension of the existing picks receipt, sealed before any generator is called. */
+    public record FrozenQuantity(com.inigmasgames.hytalerpg.enemies.EnemyRewardContext context,int total,
+                                 GearClaims.Claim claim,Set<UUID> eligible,String generationRevision,long committedAt){
+        public FrozenQuantity{Objects.requireNonNull(context);Objects.requireNonNull(claim);Objects.requireNonNull(generationRevision);eligible=Set.copyOf(eligible);
+            if(context.v2()==null||total<0||total>16||eligible.isEmpty())throw new IllegalArgumentException("ME12_QUANTITY_PLAN");}
     }
     /** Frozen ME quantity decision over R200's finalized base pick receipts. */
     public record QuantityPlan(List<UUID> baseItems,com.inigmasgames.hytalerpg.enemies.EnemyRewardContext context,
@@ -133,8 +144,12 @@ public final class GearLootService {
     public Loot deliver(EncounterContributions.DeathPlan plan){return death(plan,store.gearRead("claims","mf/"+plan.spawn().eventId(),MagicFindSnapshot.class).orElse(new MagicFindSnapshot(Map.of())).players());}
     private final FileEncounterStore store;private final GearDropGenerator generator;
     private final java.util.function.LongSupplier clock;
+    private final java.util.function.Function<String,Optional<GearDropGenerator>> historicalGenerator;
+    private int recoveryCursor;
     public GearLootService(FileEncounterStore store,GearDropGenerator generator){this(store,generator,System::currentTimeMillis);}
-    public GearLootService(FileEncounterStore store,GearDropGenerator generator,java.util.function.LongSupplier clock){this.store=store;this.generator=generator;this.clock=clock;}
+    public GearLootService(FileEncounterStore store,GearDropGenerator generator,java.util.function.LongSupplier clock){this(store,generator,clock,revision->revision.equals(generator.revision())?Optional.of(generator):Optional.empty());}
+    public GearLootService(FileEncounterStore store,GearDropGenerator generator,java.util.function.LongSupplier clock,
+                           java.util.function.Function<String,Optional<GearDropGenerator>> historicalGenerator){this.store=store;this.generator=generator;this.clock=clock;this.historicalGenerator=Objects.requireNonNull(historicalGenerator);}
     private static String encounter(UUID world,UUID enemy){return "enemy-death/"+world+"/"+enemy;}
     public void contribute(UUID world,UUID enemy,UUID actor,GearClaims.Policy policy,long at){
         store.gearTransaction("claims",encounter(world,enemy),GearClaims.Ledger.class,old->old.orElse(GearClaims.Ledger.EMPTY).contribute(actor,policy,at));
@@ -143,27 +158,49 @@ public final class GearLootService {
     public List<Loot> deliverPicks(EncounterContributions.DeathPlan plan){
         String parent=plan.spawn().eventId();
         var manifest=store.gearRead("loot-picks",parent,DeathPicks.class);
-        if(manifest.isEmpty()&&store.gearRead("loot",parent,Loot.class).isPresent())
+        var prior=manifest.isEmpty()?store.gearRead("loot",parent,Loot.class):Optional.<Loot>empty();
+        if(prior.isPresent()){
+            if(plan.spawn().enemyRewards()!=null&&plan.spawn().enemyRewards().v2()!=null){
+                if(!prior.get().state().equals("NO_BENEFICIARY"))throw new IllegalStateException("ME12_UNEXPECTED_LEGACY_LOOT_RECEIPT");
+                return List.of(prior.get());
+            }
             return List.of(deliver(plan)); // A pre-profile death has already committed its one legacy outcome.
+        }
         if(manifest.isEmpty()){
             var eligible=new HashSet<UUID>();plan.shares().forEach(share->eligible.add(share.player()));
             if(plan.spawn().lootSource().isEmpty()||store.gearRead("claims",parent,GearClaims.Ledger.class)
                     .flatMap(ledger->ledger.select(eligible,plan.deathAtMillis())).isEmpty())
-                return List.of(deliver(plan)); // No item source or beneficiary: keep the original single denial receipt.
+                return List.of(deathOne(plan,Map.of(),parent,parent)); // Denial only: no quantity or generator evaluation.
         }
         var frozen=store.gearRead("claims","mf/"+parent,MagicFindSnapshot.class)
                 .orElse(new MagicFindSnapshot(Map.of()));
-        var saved=store.gearTransaction("loot-picks",parent,DeathPicks.class,old->old.orElseGet(()->
-                new DeathPicks(GearLootProfiles.CURRENT.decide(plan.spawn().roleId(),plan.spawn().rank(),parent),frozen.players())));
+        var saved=store.gearTransaction("loot-picks",parent,DeathPicks.class,old->old.orElseGet(()->{
+            var decision=GearLootProfiles.CURRENT.decide(plan.spawn().roleId(),plan.spawn().rank(),parent);
+            var context=plan.spawn().enemyRewards();FrozenQuantity quantity=null;
+            if(context!=null&&context.v2()!=null){
+                var eligible=new HashSet<UUID>();plan.shares().forEach(s->eligible.add(s.player()));
+                var claim=store.gearRead("claims",parent,GearClaims.Ledger.class).flatMap(c->c.select(eligible,plan.deathAtMillis())).orElseThrow();
+                int base=Math.toIntExact(decision.succeeded());
+                quantity=new FrozenQuantity(context,base+context.bonusEquipmentSlots(base,parent),claim,eligible,generator.revision(),clock.getAsLong());
+            }
+            return new DeathPicks(decision,frozen.players(),quantity);
+        }));
         var successes=saved.decision().rolls().stream().filter(GearLootProfiles.Pick::opportunity).toList();
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroMasterEnemies.quantity(plan,saved);
         var rows=new ArrayList<Loot>();
-        for(var pick:successes)rows.add(deathOne(plan,saved.magicFind(),pick.childEventId(),pick.seed()));
-        rows.addAll(appendQuantity(plan,rows,saved.magicFind()));
+        for(var pick:successes)rows.add(deathOne(plan,saved.magicFind(),pick.childEventId(),pick.seed(),saved.quantity()));
+        if(saved.quantity()==null)rows.addAll(appendQuantity(plan,rows,saved.magicFind()));
+        else for(int i=0;i<saved.quantity().total()-successes.size();i++){
+            String event=parent+"/me-equipment/"+i;
+            String seed="loot-profile/me-equipment/"+saved.quantity().context().balanceRevision()+"/"+parent+"/"+i;
+            rows.add(deathOne(plan,saved.magicFind(),event,seed,saved.quantity()));
+        }
         traceProfile(plan,saved.decision(),saved.magicFind(),rows,manifest.isPresent());
         return List.copyOf(rows);
     }
     /** Legacy single-outcome entry point remains for pre-profile receipts and operator tests. */
     public Loot death(EncounterContributions.DeathPlan plan,Map<UUID,Double> frozenMf){
+        if(plan.spawn().enemyRewards()!=null&&plan.spawn().enemyRewards().v2()!=null)throw new IllegalArgumentException("ME12_REQUIRES_FINALIZED_PROFILE_PICKS");
         if(plan.spawn().enemyRewards()!=null&&plan.spawn().enemyRewards().economic()){
             freezeMagicFind(plan.spawn().eventId(),frozenMf);
             frozenMf=store.gearRead("claims","mf/"+plan.spawn().eventId(),MagicFindSnapshot.class).orElseThrow().players();
@@ -215,13 +252,16 @@ public final class GearLootService {
     }
     /** Called after the existing XP delivery cursor. A loot failure cannot remove earned XP. */
     private Loot deathOne(EncounterContributions.DeathPlan plan,Map<UUID,Double> frozenMf,String event,String seed){
+        return deathOne(plan,frozenMf,event,seed,null);
+    }
+    private Loot deathOne(EncounterContributions.DeathPlan plan,Map<UUID,Double> frozenMf,String event,String seed,FrozenQuantity quantity){
         var existing=store.gearRead("loot",event,Loot.class);
         if(existing.isPresent())return finish(existing.get());
         var original=plan.spawn().lootSource();
         var source=original.map(s->new EnemyRewardRegistry.LootSource(event,s.world(),s.enemy(),s.difficulty(),
                 s.sourceCombatLevel(),s.role(),s.rank(),s.rarity(),s.profileRevision()));
-        Set<UUID> eligible=new HashSet<>();plan.shares().forEach(s->eligible.add(s.player()));
-        var claim=store.gearRead("claims",plan.spawn().eventId(),GearClaims.Ledger.class).flatMap(c->c.select(eligible,plan.deathAtMillis()));
+        Set<UUID> eligible=quantity==null?new HashSet<>():quantity.eligible();if(quantity==null)plan.shares().forEach(s->eligible.add(s.player()));
+        var claim=quantity==null?store.gearRead("claims",plan.spawn().eventId(),GearClaims.Ledger.class).flatMap(c->c.select(eligible,plan.deathAtMillis())):Optional.of(quantity.claim());
         if(source.isEmpty()||claim.isEmpty()){
             var denied=store.gearTransaction("loot",event,Loot.class,old->old.orElse(new Loot(source.orElse(null),plan.deathPosition(),null,0,event,null,"NO_BENEFICIARY","Frozen source or eligible claim unavailable",generator.revision())));
             for(var share:plan.shares())GearQaTrace.record(share.player(),"ENEMY_GEAR_DECISION",Map.of(
@@ -232,11 +272,11 @@ public final class GearLootService {
         var selected=claim.get();String group=selected.policy().group();
         var cursor=store.gearRead("cursors",group,Cursor.class).orElse(new Cursor(0,null));
         if(cursor.pending()!=null){var recovered=finish(cursor.pending());if(recovered.source().eventId().equals(event))return recovered;cursor=store.gearRead("cursors",group,Cursor.class).orElseThrow();}
-        var random=new GearRandom(seed);var allocation=GearClaims.allocate(selected,eligible,cursor.next(),plan.spawn().rank()==ProgressionMath.Rank.BOSS,clock.getAsLong(),random);
+        var random=new GearRandom(seed);var allocation=GearClaims.allocate(selected,eligible,cursor.next(),plan.spawn().rank()==ProgressionMath.Rank.BOSS,quantity==null?clock.getAsLong():quantity.committedAt(),random);
         // A credited player may disconnect between their last hit and death.
         // Missing equipment at the freeze point means zero bonus, not corrupt XP/loot state.
         double mf=frozenMf.getOrDefault(allocation.sponsor(),0d);
-        var prepared=new Loot(source.get(),plan.deathPosition(),allocation,mf,seed,null,"PREPARED","",generator.revision());long next=cursor.next();
+        var prepared=new Loot(source.get(),plan.deathPosition(),allocation,mf,seed,null,"PREPARED","",quantity==null?generator.revision():quantity.generationRevision(),quantity==null?null:2);long next=cursor.next();
         // Reservation contains the complete frozen input. A crash before publishing loot is replayable.
         store.gearTransaction("cursors",group,Cursor.class,old->{var current=old.orElse(new Cursor(0,null));if(current.pending()!=null||current.next()!=next)throw new IllegalStateException("Party cursor changed");return new Cursor(next,prepared);});
         var result=finish(prepared);
@@ -303,6 +343,7 @@ public final class GearLootService {
         for(var share:plan.shares())GearQaTrace.record(share.player(),"ENEMY_GEAR_PROFILE",details);
     }
     private Loot finish(Loot value){
+        if(value.guaranteedEntitlement())return finishEntitlement(value);
         if(!value.state().equals("PREPARED")){
             if(value.allocation()!=null)advance(value);return value;
         }
@@ -318,11 +359,36 @@ public final class GearLootService {
         });
         advance(stored);return stored;
     }
+    private Loot finishEntitlement(Loot value){
+        String event=value.source().eventId();
+        var stored=store.gearTransaction("loot",event,Loot.class,old->old.orElse(value));
+        if(Set.of("PREPARED","WAITING_FOR_GENERATOR_REVISION","WAITING_FOR_GENERATOR_CONTENT","WAITING_FOR_POLICY_ARCHIVE").contains(stored.state()))
+            stored=store.gearTransaction("loot",event,Loot.class,old->{
+                var current=old.orElseThrow();
+                if(current.result()!=null)return current;
+                String parent=event.replaceFirst("/(?:gear-pick|me-equipment)/[0-9]+$","");
+                try{
+                    var picks=store.gearRead("loot-picks",parent,DeathPicks.class).orElseThrow(()->new IllegalStateException("ME12_ENTITLEMENT_PLAN_MISSING"));
+                    if(picks.quantity()==null||!picks.quantity().generationRevision().equals(current.generationRevision()))throw new IllegalStateException("ME12_ENTITLEMENT_GENERATOR_MISMATCH");
+                }catch(FileEncounterStore.Me12PolicyHold held){return generationHold(current,"WAITING_FOR_POLICY_ARCHIVE","Restore the frozen policy archive");}
+                var historical=historicalGenerator.apply(current.generationRevision());
+                if(historical.isEmpty()||!historical.get().revision().equals(current.generationRevision()))
+                    return generationHold(current,"WAITING_FOR_GENERATOR_REVISION","Restore frozen generator "+current.generationRevision());
+                try{
+                    var result=historical.get().generateGuaranteed(current.source(),current.magicFind(),current.seed(),Set.of());
+                    if(result.item()==null)return generationHold(current,"WAITING_FOR_GENERATOR_CONTENT",result.reason());
+                    return current.generated(result);
+                }catch(IllegalArgumentException|IllegalStateException content){return generationHold(current,"WAITING_FOR_GENERATOR_CONTENT",content.getClass().getSimpleName());}
+            });
+        // Guaranteed entitlement owns its frozen recipient even while generation is held.
+        advance(stored);com.inigmasgames.hytalerpg.diagnostics.hro.HroMasterEnemies.gear(stored);return stored;
+    }
+    private static Loot generationHold(Loot current,String state,String reason){return new Loot(current.source(),current.position(),current.allocation(),current.magicFind(),current.seed(),null,state,reason,current.generationRevision(),2);}
     private void advance(Loot loot){
         store.gearTransaction("cursors",loot.allocation().group(),Cursor.class,old->{var c=old.orElseThrow();
             if(c.pending()==null||!c.pending().source().eventId().equals(loot.source().eventId()))return c;
             long next=c.next();
-            if(loot.result()!=null&&loot.result().item()!=null&&loot.allocation().mode()==GearClaims.Mode.ROUND_ROBIN){
+            if((loot.guaranteedEntitlement()||loot.result()!=null&&loot.result().item()!=null)&&loot.allocation().mode()==GearClaims.Mode.ROUND_ROBIN){
                 var parent=loot.source().eventId().replaceFirst("/(?:gear-pick|me-equipment)/[0-9]+$","");
                 var ledger=store.gearRead("claims",parent,GearClaims.Ledger.class).orElseThrow();
                 var policy=ledger.claims().stream().map(GearClaims.Claim::policy).filter(p->p.group().equals(loot.allocation().group())).findFirst().orElseThrow();
@@ -398,7 +464,14 @@ public final class GearLootService {
             return row.ownership(row.allocation(),row.reason().endsWith("_QA")?"DROP_ABORTED":
                     row.reason().startsWith("PLAYER_SPATIAL_DROP")?"SPATIAL_BAG":"INVENTORY");});
     }
-    public List<Loot> records(){return store.gearRecords("loot",Loot.class);}
+    public synchronized List<Loot> records(){
+        var rows=store.gearRecords("loot",Loot.class);var result=new ArrayList<>(rows);int retries=0,visited=0;
+        while(visited<rows.size()&&retries<16){
+            int index=Math.floorMod(recoveryCursor++,rows.size());visited++;var row=rows.get(index);
+            if(row.guaranteedEntitlement()&&row.result()==null){result.set(index,finish(row));retries++;}
+        }
+        return List.copyOf(result);
+    }
     public List<SpatialPickupReceipt> spatialPickupReceipts(){return store.gearRecords("spatial-pickups",SpatialPickupReceipt.class);}
     public Optional<SpatialPickupReceipt> spatialPickupReceipt(UUID operationId){return store.gearRead("spatial-pickups",operationId.toString(),SpatialPickupReceipt.class);}
     private static final String SPATIAL_OPERATION = "spatial-pickup-operation:";

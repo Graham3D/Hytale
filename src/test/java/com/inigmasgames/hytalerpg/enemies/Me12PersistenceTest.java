@@ -13,11 +13,11 @@ import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.*;
 import static com.inigmasgames.hytalerpg.enemies.EnemyAffixRegistry.*;
 
-class Me12PersistenceTest {
+public class Me12PersistenceTest {
     @TempDir Path directory;
     static final Gson JSON=new GsonBuilder().disableHtmlEscaping().create();
-    record Fixture(Me12Policies policies,Me12Planner.Compiled compiled,EnemyBirthRoot root) {}
-    static Fixture fixture(boolean eight) {
+    public record Fixture(Me12Policies policies,Me12Planner.Compiled compiled,EnemyBirthRoot root) {}
+    public static Fixture fixture(boolean eight) {
         var policy=Me12Policies.canonical();var balance=policy.balance();var helper=new EnemyBirthPlannerTest();
         var candidates=new ArrayList<EnemyBirthPlanner.Candidate>();
         for(int i=0;i<6;i++) {
@@ -42,7 +42,7 @@ class Me12PersistenceTest {
         var attachments=plan.actors().stream().map(a->spawn(a,true)).toList();
         return new Fixture(policy,compiled,new EnemyBirthRoot(plan,original,attachments));
     }
-    static EnemyRewardRegistry.Spawn spawn(EnemyDescriptor actor,boolean rewards) {
+    public static EnemyRewardRegistry.Spawn spawn(EnemyDescriptor actor,boolean rewards) {
         var combat=new EncounterProfileResolver.Resolved(actor.worldId(),actor.entityId(),actor.difficulty(),actor.sourceValidationId(),"fixture-world",actor.nativeRoleId(),"fixture/zone/biome",actor.combatLevel(),100,10,1,1,MonsterResistanceProfile.NONE,EncounterProfileResolver.Evidence.FIXTURE_ONLY);
         return new EnemyRewardRegistry.Spawn(actor.worldId(),actor.entityId(),actor.nativeRoleId(),"trork_warrior","fixture/zone/biome",actor.combatLevel(),ProgressionMath.Rank.COMMON,ProgressionMath.Rarity.ORDINARY,actor.sourceValidationId(),1000,null,combat,rewards?actor.immutableRewardContext():null);
     }
@@ -50,7 +50,8 @@ class Me12PersistenceTest {
         var f=fixture(true);var plan=f.root().plan();assertEquals(2,plan.schemaVersion());
         assertEquals(f.root(),JSON.fromJson(JSON.toJson(f.root()),EnemyBirthRoot.class));
         var leader=plan.actors().getFirst();assertEquals(8,leader.ownAffixes().size());
-        assertThrows(IllegalStateException.class,()->leader.immutableRewardContext().xpFactor());
+        assertEquals(Me12RewardMath.freeze(leader.v2().threatTotal(),2,1.5),leader.immutableRewardContext().v2Factors());
+        assertTrue(leader.immutableRewardContext().xpFactor()>2);
         for(var minion:plan.actors().subList(1,plan.actors().size())){
             assertEquals(0,minion.ownAffixes().size());assertNull(minion.immutableRewardContext().v2());assertEquals(f.policies().balance().rewards(EnemyRarity.NORMAL,EnemyRewardContext.Origin.INITIAL_PACK_MINION,true,0),minion.immutableRewardContext());
             assertEquals(leader.logicalActorId(),minion.v2().sourceLeader());

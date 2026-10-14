@@ -10,12 +10,13 @@ import java.util.Objects;
  * Rejection sampling masks unused high bits; no modulo bias and no shared/legacy RNG state. */
 public final class Me12Random {
     public static final String TIER="me12.tier-pair/v1", NAME="me12.name-pair/v1", SET="me12.affix-set/v1";
+    public static final String QUANTITY="me12.quantity/v1", LEARN="me12.learn/v1";
     private final byte[] prefix;
     private final MessageDigest digest;
     private long counter;
     public Me12Random(String domain,String seed) {
         Objects.requireNonNull(seed);
-        if(!java.util.Set.of(TIER,NAME,SET).contains(domain)||seed.isEmpty()||seed.length()>512)throw new IllegalArgumentException("ME12_RNG_DOMAIN_OR_SEED");
+        if(!java.util.Set.of(TIER,NAME,SET,QUANTITY,LEARN).contains(domain)||seed.isEmpty()||seed.length()>512)throw new IllegalArgumentException("ME12_RNG_DOMAIN_OR_SEED");
         byte[] a=domain.getBytes(StandardCharsets.UTF_8), b=seed.getBytes(StandardCharsets.UTF_8);
         prefix=ByteBuffer.allocate(8+a.length+b.length).putInt(a.length).put(a).putInt(b.length).put(b).array();
         try {digest=MessageDigest.getInstance("SHA-256");}catch(NoSuchAlgorithmException e){throw new AssertionError(e);}

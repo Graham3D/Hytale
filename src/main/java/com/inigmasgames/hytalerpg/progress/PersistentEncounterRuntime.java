@@ -45,6 +45,11 @@ public final class PersistentEncounterRuntime implements AutoCloseable {
         Objects.requireNonNull(root);
         return birthIo(()->store.reserveEnemyBirthRoot(root));
     }
+    public synchronized CompletionStage<EnemyBirthPlan> reserveEnemyBirthRoot(EnemyBirthRoot root,com.inigmasgames.hytalerpg.enemies.Me12Policies policies){
+        Objects.requireNonNull(root);Objects.requireNonNull(policies);
+        if(root.plan().schemaVersion()!=2||!root.plan().actors().getFirst().v2().policyDigest().equals(policies.digest()))throw new IllegalArgumentException("ME12_ROOT_POLICY_MISMATCH");
+        return birthIo(()->{store.archiveMe12Policies(policies);return store.reserveEnemyBirthRoot(root);});
+    }
     /** Archive on the existing bounded encounter IO owner before exposing a v2 policy reference. */
     public synchronized CompletionStage<com.inigmasgames.hytalerpg.enemies.Me12Policies> archiveMe12Policies(com.inigmasgames.hytalerpg.enemies.Me12Policies policies){
         Objects.requireNonNull(policies);return birthIo(()->store.archiveMe12Policies(policies));

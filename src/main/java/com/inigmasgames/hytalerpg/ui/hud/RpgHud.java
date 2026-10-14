@@ -23,10 +23,12 @@ final class RpgHud extends CustomUIHud {
     private int enemyHealthWidth;
     private EnemyBillboardProjection.Frame enemyFrame;
     private boolean enemyUsesNativeHealthbar;
+    private final java.util.UUID viewerId;
 
     RpgHud(PlayerRef playerRef, RpgHudViewModel model) {
         super(playerRef, KEY, 900);
         this.model = model;
+        this.viewerId=playerRef.getUuid();
     }
 
     @Override protected void build(@Nonnull UICommandBuilder commands) {
@@ -53,39 +55,37 @@ final class RpgHud extends CustomUIHud {
                 &&enemyUsesNativeHealthbar==nativeHealthbar)return;
         enemyTarget=next;enemyFrame=frame;enemyHealthWidth=width;enemyUsesNativeHealthbar=nativeHealthbar;
         var commands=new UICommandBuilder();writeEnemyTarget(commands,next,frame,width,nativeHealthbar);update(false,commands);
+        if(next!=null&&com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.active(viewerId)){
+            var layout=EnemyTargetLayout.of(next);
+            com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.observe(viewerId,"HUD.PUBLICATION","RpgHud","ME12_HUD",next.logicalActorId().toString(),next.worldId(),null,null,next.stateRevision(),
+                    java.util.Map.of("affixCount",next.ownAffixTags().size(),"rowCount",layout.lines().size(),"generation",next.generation(),"result","SERVER_UI_PUBLISHED","proof","NO_NATIVE_RENDER_ACK"));
+        }
     }
     private static void writeEnemyTarget(UICommandBuilder commands,com.inigmasgames.hytalerpg.enemies.EnemyDisplayDto target,
             EnemyBillboardProjection.Frame frame,int healthWidth,boolean nativeHealthbar){
         commands.set("#RpgEnemyTarget.Visible",target!=null&&frame!=null);
         if(target==null||frame==null)return;
-        boolean minion=target.packRoleLabel().equals("Minion");
-        var root=new Anchor();root.setHorizontal(Value.of(frame.horizontal()));root.setVertical(Value.of(frame.vertical()));
-        root.setWidth(Value.of(frame.panelWidth()));root.setHeight(Value.of(minion?frame.fontSize()+6:
-                frame.panelHeight()+frame.fontSize()+1));
+        var layout=EnemyTargetLayout.of(target);
+        var root=new Anchor();root.setRight(Value.of(16));root.setTop(Value.of(16));
+        root.setWidth(Value.of(EnemyTargetLayout.WIDTH));root.setHeight(Value.of(layout.height()));
         commands.setObject("#RpgEnemyTarget.Anchor",root);
-        int font=frame.fontSize(),barTop=font*2+5;
-        commands.set("#RpgEnemyHealth.Visible",!minion);
-        commands.set("#RpgEnemyIdentity.Visible",!minion);
-        commands.set("#RpgEnemyAffixes.Visible",!minion);
-        var bar=new Anchor();bar.setTop(Value.of(barTop));bar.setWidth(Value.of(frame.frameWidth()));bar.setHeight(Value.of(frame.frameHeight()));
-        commands.setObject("#RpgEnemyHealth.Anchor",bar);
-        int inset=Math.max(1,(int)Math.round(frame.frameWidth()*4.0/128.0));
-        int inside=frame.frameWidth()-inset*2;
-        commands.setObject("#RpgEnemyHealthBackground.Anchor",leftFill(inside,inset,0,frame.frameHeight()));
-        commands.setObject("#RpgEnemyHealthFill.Anchor",leftFill(Math.min(inside,(int)Math.round(inside*(healthWidth/(double)frame.frameWidth()))),inset,0,frame.frameHeight()));
-        commands.setObject("#RpgEnemyHealthFrame.Anchor",leftFill(frame.frameWidth(),0,0,frame.frameHeight()));
-        commands.setObject("#RpgEnemyName.Anchor",topLine(0,frame.panelWidth(),font+3));
-        commands.setObject("#RpgEnemyIdentity.Anchor",topLine(font+3,frame.panelWidth(),font+2));
-        commands.setObject("#RpgEnemyAffixes.Anchor",topLine(barTop+frame.frameHeight()+4,frame.panelWidth(),font*2+4));
-        commands.set("#RpgEnemyName.Style.FontSize",font+2);
-        commands.set("#RpgEnemyIdentity.Style.FontSize",Math.max(8,font-2));
-        commands.set("#RpgEnemyAffixes.Style.FontSize",Math.max(8,font-2));
-        commands.set("#RpgEnemyName.Text",target==null?"":target.name());
-        commands.set("#RpgEnemyIdentity.Text",target.rarityLabel()+" · Lv "+target.combatLevel());
-        var tags=target.orderedTags().stream();
-        commands.set("#RpgEnemyAffixes.Text",tags
-                .map(com.inigmasgames.hytalerpg.enemies.EnemyDisplayDto.EnemyTag::fallbackText)
-                .collect(java.util.stream.Collectors.joining("   ")));
+        commands.set("#RpgEnemyHealth.Visible",true);
+        commands.set("#RpgEnemyIdentity.Visible",true);
+        commands.set("#RpgEnemyAffixes.Visible",true);
+        int inside=EnemyTargetLayout.WIDTH-20;
+        commands.setObject("#RpgEnemyHealth.Anchor",topLine(44,inside,12));
+        commands.setObject("#RpgEnemyHealthBackground.Anchor",leftFill(inside,0,0,12));
+        commands.setObject("#RpgEnemyHealthFill.Anchor",leftFill((int)Math.round(inside*(healthWidth/(double)frame.frameWidth())),0,0,12));
+        commands.setObject("#RpgEnemyHealthFrame.Anchor",leftFill(inside,0,0,12));
+        commands.setObject("#RpgEnemyName.Anchor",topLine(0,EnemyTargetLayout.WIDTH,22));
+        commands.setObject("#RpgEnemyIdentity.Anchor",topLine(22,EnemyTargetLayout.WIDTH,20));
+        commands.setObject("#RpgEnemyAffixes.Anchor",topLine(64,EnemyTargetLayout.WIDTH,EnemyTargetLayout.LINE*layout.lines().size()+8));
+        commands.set("#RpgEnemyName.Style.FontSize",14);
+        commands.set("#RpgEnemyIdentity.Style.FontSize",EnemyTargetLayout.FONT);
+        commands.set("#RpgEnemyAffixes.Style.FontSize",EnemyTargetLayout.FONT);
+        commands.set("#RpgEnemyName.Text",layout.name());
+        commands.set("#RpgEnemyIdentity.Text",layout.identity());
+        commands.set("#RpgEnemyAffixes.Text",String.join("\n",layout.lines()));
         String rarityColor=switch(target.rarityLabel()){
             case "Champion"->"#1d4dff";case "Unique"->"#ffd24a";case "Super Unique"->"#ff9100";case "Boss"->"#ed3030";default->"#f2eee5";};
         commands.set("#RpgEnemyName.Style.TextColor",rarityColor);

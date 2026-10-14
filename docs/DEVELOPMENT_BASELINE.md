@@ -1,5 +1,40 @@
 # HyARPG/Hywind development baseline
 
+## ME12 Stage 3 isolated engineering checkpoint (2026-10-14)
+
+State: **OFFLINE_IMPLEMENTED_WITH_BLOCKERS; INTEGRATION_BLOCKED / QA_PENDING**.
+Branch `codex/me12-stage3`, worktree
+`C:/Users/Zemio/.codex/worktrees/me12-stage3/Hytale-main-clean`, exact parent
+`a030722af4f9e75db012f18eadfb332f50cbf191` (Guardian-published Stage 2, 4,357
+JUnit and 16 Python passes). This supersedes earlier statements that Stage 3
+is not authorized. Stage 1 parent is `b0844f8a013305cffa0b6a9c8912dad571027c3c`.
+Selective Elite `3327a5650cadf0173b336072f614a13c63cecc56` and HRO
+`f7d414e6348c84653d03a51117bdfe2fc427dded` dependencies remain QA_PENDING.
+
+Candidate identity: `R262ME12S3-CANDIDATE`, `0.2.0-R262ME12S3-CANDIDATE`, Hytale
+`=0.7.1`. Final source HEAD/build hash/test counts/publication status are recorded
+after commit in `build/reports/me12/stage3-final-manifest.json` and Guardian's
+`build/guardian/verification.json`. Final required run: `check jar
+testReleaseNativePatch guardianSpotBugs -PguardianSpotBugs=true --continue`, log
+`build/guardian/me12-stage3-final.log`. Focused reward, acquisition, HUD, cache,
+recovery and trace fixtures precede this cumulative exact-HEAD gate.
+
+Native v2 context certification remains fail-closed; public Skill/Passive source
+bindings remain empty. Production v2 births DISABLED; Monster Affix OPEN,
+ownerAccepted=false. All 309-role reconciliation inputs and native attack/immunity
+rules are preserved. Connected QA deferred to Stage 4; no intermediate QA request.
+
+Reviewed remote main `b839526e7106f780648c315692b04bb372b58d9e` is 11 commits
+behind the Stage 2 parent. The primary main checkout `1dfa2cea3085196c7fd4492518c65a03d5e3b49d`
+and its AGENTS/artwork/resource changes are untouched. Installed R262C1ELITE4 JAR
+SHA-256 remains `ee5a5d9ffc7200e2308798332ee1f7cb34c9068d82dc4cb75b32d07ca0c11639`;
+no deployment, save/config/native-artifact changes, server launch or main merge.
+Stage 1/2 and Elite/HRO branches remain retained. Next action after exact-HEAD
+verification and Guardian feature-branch publication: address explicit native/source
+dependencies and seek separate Stage 4 authorization, without claiming acceptance.
+See [Stage 3 handoff](enemies/ME12_STAGE3_HANDOFF.md) and
+[four-axis gates](enemies/ME12_STAGE3_GATES.json).
+
 ## ME12 Stage 2 offline engineering checkpoint (2026-10-14)
 
 State: **OFFLINE_IMPLEMENTED; final exact-HEAD verification required;

@@ -54,13 +54,10 @@ public final class RpgHudCoordinator {
     }
     public void tickEnemyTarget(PlayerRef player,com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> store,
             com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> viewer){
-        // The live monster presentation is Hytale's entity-attached Nameplate
-        // and viewer-local EntityStat UI. This tick only expires native bar
-        // admissions; the projected CustomUI stack below is retained for
-        // diagnostics and is deliberately not polled in connected play.
         var session=sessions.get(player.getUuid());if(session==null||!session.ownsActiveHuds())return;
-        long now=System.nanoTime();if(now-session.lastEnemyPollNanos<250_000_000L)return;session.lastEnemyPollNanos=now;
-        if(enemyHealthBars!=null)enemyHealthBars.tick(player,store,viewer);
+        long now=System.nanoTime();
+        if(now-session.lastEnemyHealthPollNanos>=250_000_000L){session.lastEnemyHealthPollNanos=now;if(enemyHealthBars!=null)enemyHealthBars.tick(player,store,viewer);}
+        tickProjectedEnemyTarget(player,store,viewer);
     }
     private void tickProjectedEnemyTarget(PlayerRef player,com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> store,
             com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> viewer){
@@ -102,13 +99,15 @@ public final class RpgHudCoordinator {
         if(display==null){session.hud.refreshEnemyTarget(null,null,0,0);return;}
         var stats=store.getComponent(target,EntityStatMap.getComponentType());
         var health=stats==null?null:stats.get(com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes.getHealth());
-        var frame=EnemyBillboardProjection.project(store,viewer,target);
+        var layout=EnemyTargetLayout.of(display);
+        var frame=new EnemyBillboardProjection.Frame(0,0,460,12,EnemyTargetLayout.WIDTH,layout.height(),EnemyTargetLayout.FONT);
         session.hud.refreshEnemyTarget(display,frame,health==null?0:health.get(),health==null?0:health.getMax());
     }
     private void enemyPresentationFailed(Session session,RuntimeException failure){
         session.enemyEntity=null;
         trace.trace(session.playerRef.getUuid(),"ENEMY_TARGET_REFRESH_FAILED",ref(),Map.of("reason",String.valueOf(failure.getMessage())));
-        try{teardown(session.playerRef.getUuid(),"ENEMY_TARGET_REFRESH_FAILURE");}catch(RuntimeException ignored){}
+        session.lastEnemyPollNanos=System.nanoTime()+5_000_000_000L;
+        try{session.hud.refreshEnemyTarget(null,null,0,0);}catch(RuntimeException ignored){/* Native overhead presentation remains independent. */}
     }
     private java.util.function.ToIntFunction<UUID> finisherPips=ignored->0;
     private java.util.function.Consumer<UUID> ownerPublished=ignored->{};
@@ -269,7 +268,7 @@ public final class RpgHudCoordinator {
         private final FinisherHud combo;
         private boolean sentinelAffixesOn;
         private UUID enemyWorld,enemyEntity,recentDamagedEntity;
-        private long lastEnemyPollNanos,recentDamagedUntil;
+        private long lastEnemyPollNanos,lastEnemyHealthPollNanos,recentDamagedUntil;
         private Session(PlayerRef playerRef, HudManager manager, RpgHud hud,FinisherHud combo,
                         RpgHudViewModel model, long now) {
             this.combo=combo;

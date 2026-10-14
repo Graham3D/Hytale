@@ -170,8 +170,8 @@ public final class EnemyBirthPlanner {
                 request.anchor(),membersRecord,leaderId,guards,Map.of(),false,false,request.nativePlanReceipt(),null);
         return new Result(birth(request,actors,pack,floors),rolled,null);
     }
-    /** Stage 2 offline composition only. This is deliberately absent from natural admission and QA commands.
-     * The selected graph and frozen native candidates must agree before the one legacy immunity draw. */
+    /** Versioned finalizer used by the Stage 3 integration seam and offline fixtures.
+     * Native activation/certification remain separate gates. No draw is repeated during attachment/recovery. */
     public EnemyBirthPlan planV2Offline(Request request,Me12Planner.Compiled compiled,Me12Planner.Plan selected){
         require(compiled.accepts(selected),"ME12_SELECTED_PLAN_NOT_IN_COMPILED_CONTEXT");
         var context=compiled.context();var policy=compiled.policies();
@@ -180,7 +180,10 @@ public final class EnemyBirthPlanner {
         require(balance.export().equals(policy.balance().export())&&registry.revision().equals(policy.registry().revision()),"ME12_ARCHIVED_EVALUATOR_IDENTITY");
         var offered=combined(request.originals(),request.additionalSlots());int base=context.minions().size();
         var expected=new ArrayList<Me12Planner.Member>();expected.add(context.leader());expected.addAll(context.minions());expected.addAll(context.hordeSlots());
-        require(offered.size()==expected.size(),"ME12_NATIVE_ROSTER_NOT_FROZEN");
+        boolean horde=selected.choices().stream().anyMatch(c->c.affixId().equals(Operator.HORDE.id()));
+        int count=1+base+(horde?2:0);
+        // Native integration materializes only selected additional slots. Offline fixtures may offer the full certified capacity.
+        require(offered.size()==expected.size()||offered.size()==count,"ME12_NATIVE_ROSTER_NOT_FROZEN");
         for(int i=0;i<offered.size();i++){
             var candidate=offered.get(i);var source=candidate.nativeBaseline();var member=expected.get(i);
             require(source.spawnOrigin()==EnemyRewardContext.Origin.NATURAL&&source.encounterGeneration()==context.generation()
@@ -188,8 +191,7 @@ public final class EnemyBirthPlanner {
                     &&source.sourceValidationId().equals(member.source())&&source.nativeImmunityChannels().equals(member.immunities())
                     &&withMinions(candidate.binding(),base).equals(member.binding()),"ME12_NATIVE_CONTEXT_CHANGED");
         }
-        var choices=selected.choices();boolean horde=choices.stream().anyMatch(c->c.affixId().equals(Operator.HORDE.id()));
-        int count=1+base+(horde?2:0);
+        var choices=selected.choices();
         require(count>=request.originals().size()&&count-request.originals().size()<=request.additionalNativeCapacity(),"ME12_NATIVE_CAPACITY_CHANGED");
         var roster=offered.subList(0,count);var leader=roster.getFirst().nativeBaseline();
         String rosterDigest=RewardIntent.digest(roster.stream().map(c->c.nativeBaseline().logicalActorId()+"/"+c.nativeBaseline().entityId()+"/"+c.nativeBaseline().nativeRoleId()+"/"+c.nativeBaseline().nativeBaselineFingerprint()).collect(java.util.stream.Collectors.joining("\n")));

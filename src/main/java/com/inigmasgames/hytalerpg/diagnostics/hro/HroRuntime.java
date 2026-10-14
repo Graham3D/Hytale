@@ -8,6 +8,9 @@ import java.util.*;
 public final class HroRuntime {
     static final String BOOT_ID=UUID.randomUUID().toString();
     private static volatile HroRecorder recorder;
+    private static volatile java.util.function.Supplier<Map<String,Object>> enemyIdentity=()->Map.of("worldConfiguration","UNAVAILABLE");
+    public static void configureEnemyIdentity(java.util.function.Supplier<Map<String,Object>> source){enemyIdentity=Objects.requireNonNull(source);}
+    static Map<String,Object> enemyIdentity(){return Map.copyOf(enemyIdentity.get());}
     private static final Set<String> WITNESSES=java.util.concurrent.ConcurrentHashMap.newKeySet();
     private static final ThreadLocal<Context> CONTEXT=new ThreadLocal<>();
     private record Context(UUID player,UUID world,long connection,long tick) { }
@@ -67,6 +70,7 @@ public final class HroRuntime {
     public static String armNext(UUID player,UUID world){var r=recorder;return r==null?"HRO unavailable":r.armNext(player,world);}
     public static String cancelArm(){var r=recorder;return r==null?"HRO unavailable":r.cancelArm();}
     public static String stop(){var r=recorder;return r==null?"HRO unavailable":r.stop();}
+    public static String stop(UUID player){var r=recorder;return r==null?"HRO unavailable":r.stop(player);}
     public static String status(){var r=recorder;return r==null?"HRO unavailable":r.status();}
     public static void disconnect(UUID player,long generation){var r=recorder;if(r!=null)r.disconnect(player,generation);}
     public static void lifecycle(UUID player,UUID world,long generation,String boundary){var r=recorder;if(r!=null)r.lifecycle(player,world,generation,boundary);}

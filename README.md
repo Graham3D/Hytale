@@ -1,14 +1,15 @@
 # Hywind / HyARPG development baseline
 
-Isolated ME12 Stage 2 engineering: **R262ME12S2-CANDIDATE**
-(`0.2.0-R262ME12S2-CANDIDATE`), Hytale `=0.7.1`, branch
-`codex/me12-stage2`, dependent on verified Stage 1 `b0844f8a013305cffa0b6a9c8912dad571027c3c`.
-Exact weighted planning and versioned persistence are implemented for offline work.
+Isolated ME12 Stage 3 engineering: **R262ME12S3-CANDIDATE**
+(`0.2.0-R262ME12S3-CANDIDATE`), Hytale `=0.7.1`, branch
+`codex/me12-stage3`, dependent on verified Stage 2 `a030722af4f9e75db012f18eadfb332f50cbf191`.
+Native integration seams, frozen rewards, typed acquisition, full target details
+and bounded HRO diagnostics are implemented for offline work.
 Production v2 births remain DISABLED; Stage 1 native certification and owner
 acceptance remain blocked. This is not a deployed or accepted cumulative release.
 Exact-HEAD validation/publication belongs to Guardian's receipt and the generated
-Stage 2 final manifest. Monster Affix remains OPEN, ownerAccepted=false.
-See the [Stage 2 engineering handoff](docs/enemies/ME12_STAGE2_HANDOFF.md),
+Stage 3 final manifest. Monster Affix remains OPEN, ownerAccepted=false.
+See the [Stage 3 engineering handoff](docs/enemies/ME12_STAGE3_HANDOFF.md),
 [Stage 1 findings](docs/enemies/ME12_STAGE1_COVERAGE_FINDINGS.md),
 [309-role reconciliation](docs/enemies/ME12_STAGE1_RECONCILIATION.md),
 [Stage 3 trace contract](docs/enemies/ME12_STAGE3_TRACE_CONTRACT.md), and

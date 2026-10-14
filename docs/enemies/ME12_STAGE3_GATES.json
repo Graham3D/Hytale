@@ -1,0 +1,381 @@
+{
+  "schemaVersion": 1,
+  "contract": "ME12-ARCH-AD1 / ME12-STAGES-4P-01",
+  "scope": "Stage 3A\u00e2\u20ac\u201c3F applicable isolated offline engineering",
+  "branch": "codex/me12-stage3",
+  "parentCommit": "a030722af4f9e75db012f18eadfb332f50cbf191",
+  "revision": "R262ME12S3-CANDIDATE",
+  "status": "OFFLINE_IMPLEMENTED_WITH_BLOCKERS_FINAL_RECEIPT_REQUIRED",
+  "productionV2Births": "DISABLED",
+  "stage1": "BLOCKED_OFFLINE_COVERAGE",
+  "monsterAffixRelease": "OPEN",
+  "ownerAccepted": false,
+  "connectedQA": "DEFERRED_TO_STAGE4",
+  "finalVerification": {
+    "required": true,
+    "manifest": "build/reports/me12/stage3-final-manifest.json",
+    "guardian": "build/guardian/verification.json",
+    "log": "build/guardian/me12-stage3-final.log",
+    "note": "Focused evidence is not a final cumulative pass. Publication requires the clean exact-HEAD receipt. Normative gates remain BLOCKED without connected evidence."
+  },
+  "gates": [
+    {
+      "id": "ME12-R01",
+      "scope": "All AD1 XP/quantity/learning fixtures",
+      "implemented": true,
+      "automatedPassed": true,
+      "automatedScope": "Applicable offline portions; exact-final-HEAD cumulative receipt additionally required",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED",
+      "evidence": "Me12RewardMathTest; Me12AcquisitionTest frozen XP death/player journals"
+    },
+    {
+      "id": "ME12-R02",
+      "scope": "Monotonic bounded XP/quantity/learning at fixed inputs",
+      "implemented": true,
+      "automatedPassed": true,
+      "automatedScope": "Applicable offline portions; exact-final-HEAD cumulative receipt additionally required",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED",
+      "evidence": "Me12RewardMathTest.R02R03"
+    },
+    {
+      "id": "ME12-R03",
+      "scope": "K0/N, no new no-drop, base picks preserved, cap 16",
+      "implemented": true,
+      "automatedPassed": true,
+      "automatedScope": "Applicable offline portions; exact-final-HEAD cumulative receipt additionally required",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED",
+      "evidence": "Me12RewardMathTest; Me12QuantityRecoveryTest"
+    },
+    {
+      "id": "ME12-R04",
+      "scope": "Per-item quality/MF and child seed invariance",
+      "implemented": true,
+      "automatedPassed": true,
+      "automatedScope": "Applicable offline portions; exact-final-HEAD cumulative receipt additionally required",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED",
+      "evidence": "Me12QuantityRecoveryTest.R03R04R11; existing gear profile tests"
+    },
+    {
+      "id": "ME12-R05",
+      "scope": "Separate +.03, .95 ordinary cap, guaranteed pity",
+      "implemented": true,
+      "automatedPassed": true,
+      "automatedScope": "Applicable offline portions; exact-final-HEAD cumulative receipt additionally required",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED",
+      "evidence": "Me12RewardMathTest; Me12AcquisitionTest.R05R07; EnemyRewardsTest"
+    },
+    {
+      "id": "ME12-R06",
+      "scope": "Eligibility/known/zero chance/aliases/difficulty preserved",
+      "implemented": true,
+      "automatedPassed": true,
+      "automatedScope": "Applicable offline portions; exact-final-HEAD cumulative receipt additionally required",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED",
+      "evidence": "Me12AcquisitionTest; existing Stage12 acquisition and EnemyRewardsTest"
+    },
+    {
+      "id": "ME12-R07",
+      "scope": "One atomic failure/reset/grant, concurrency/replay",
+      "implemented": true,
+      "automatedPassed": true,
+      "automatedScope": "Applicable offline portions; exact-final-HEAD cumulative receipt additionally required",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED",
+      "evidence": "Me12AcquisitionTest; existing FileEarnedRewardStore and acquisition tests"
+    },
+    {
+      "id": "ME12-R08",
+      "scope": "Real accepted Skill and first-copy Passive sources",
+      "implemented": false,
+      "automatedPassed": false,
+      "automatedScope": "Typed adapter tests only; real accepted source requirement unavailable",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED",
+      "evidence": "Typed adapter implemented/tested; shipped accepted bindings=0 for both kinds"
+    },
+    {
+      "id": "ME12-R09",
+      "scope": "Excluded origins and native parallel reward protection",
+      "implemented": true,
+      "automatedPassed": true,
+      "automatedScope": "Applicable offline portions; exact-final-HEAD cumulative receipt additionally required",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED",
+      "evidence": "EnemyRewardsTest; existing native provenance/drop/regression gates; actual collision remains unobserved"
+    },
+    {
+      "id": "ME12-R10",
+      "scope": "Minion baseline and separate Horde whole-pack economics",
+      "implemented": true,
+      "automatedPassed": true,
+      "automatedScope": "Applicable offline portions; exact-final-HEAD cumulative receipt additionally required",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED",
+      "evidence": "Me12Stage3LifecycleTest; existing EnemyBirthPlanner/EnemyRewardsTest; balance requires connected evidence"
+    },
+    {
+      "id": "ME12-R11",
+      "scope": "Entitlement recovery under full inventory/disconnect/restart/dependency holds",
+      "implemented": true,
+      "automatedPassed": true,
+      "automatedScope": "Applicable offline portions; exact-final-HEAD cumulative receipt additionally required",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED",
+      "evidence": "Me12QuantityRecoveryTest; actual native pickup/reconnect acceptance deferred"
+    },
+    {
+      "id": "ME12-R12",
+      "scope": "No added multiplier on rank/Insight/currency/mastery/milestones/quests",
+      "implemented": true,
+      "automatedPassed": true,
+      "automatedScope": "Applicable offline portions; exact-final-HEAD cumulative receipt additionally required",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED",
+      "evidence": "Me12AcquisitionTest frozen XP/Insight; unchanged progression/Gold/death regression owners"
+    },
+    {
+      "id": "ME12-P05",
+      "scope": "Durable birth/reward/effect fault boundaries",
+      "implemented": true,
+      "automatedPassed": true,
+      "automatedScope": "Applicable offline portions; exact-final-HEAD cumulative receipt additionally required",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED",
+      "evidence": "Me12PersistenceTest; Me12AcquisitionTest; Me12QuantityRecoveryTest; existing birth fault tests; native effects unverified"
+    },
+    {
+      "id": "ME12-P06",
+      "scope": "Health/shield/engagement/guard/immunity/accounting recovery",
+      "implemented": true,
+      "automatedPassed": true,
+      "automatedScope": "Applicable offline portions; exact-final-HEAD cumulative receipt additionally required",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED",
+      "evidence": "Existing EnemyBirthPersistence/EnemyAuthority/native control tests; no native reload execution certificate"
+    },
+    {
+      "id": "ME12-P07",
+      "scope": "New-birth-only policy reload and v2-capable DRAIN rollback",
+      "implemented": true,
+      "automatedPassed": true,
+      "automatedScope": "Applicable offline portions; exact-final-HEAD cumulative receipt additionally required",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED",
+      "evidence": "Me12PersistenceTest; Me12Stage3LifecycleTest; fail-closed ENABLED unchanged"
+    },
+    {
+      "id": "ME12-P08",
+      "scope": "Full eight-affix target HUD at supported resolution/scales",
+      "implemented": true,
+      "automatedPassed": true,
+      "automatedScope": "Applicable offline portions; exact-final-HEAD cumulative receipt additionally required",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED",
+      "evidence": "Me12TargetLayoutTest Java2D 5 renders; synthetic second immunity; native font/rendering BLOCKED"
+    },
+    {
+      "id": "ME12-P09",
+      "scope": "One overhead name and native fallback on errors/rebind",
+      "implemented": true,
+      "automatedPassed": true,
+      "automatedScope": "Applicable offline portions; exact-final-HEAD cumulative receipt additionally required",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED",
+      "evidence": "Existing nameplate/native HUD tests; panel error isolation; connected rendering BLOCKED"
+    },
+    {
+      "id": "ME12-P10",
+      "scope": "Ten cycles and bounded resource cleanup",
+      "implemented": true,
+      "automatedPassed": true,
+      "automatedScope": "Applicable offline portions; exact-final-HEAD cumulative receipt additionally required",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED",
+      "evidence": "Me12Stage3LifecycleTest; existing native lifetime tests; actual native carriers/tick cleanup BLOCKED"
+    },
+    {
+      "id": "ME12-S01",
+      "scope": "Inherited Stage 2 sampling/cache contract; selection algorithm and weights unchanged",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "OFFLINE_EVIDENCE_ONLY",
+      "evidence": "ME12_STAGE2_GATES.json; final cumulative planner/cache/heap/native compatibility regression; new compiled-graph lease coverage S08/S09"
+    },
+    {
+      "id": "ME12-S02",
+      "scope": "Inherited Stage 2 sampling/cache contract; selection algorithm and weights unchanged",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "OFFLINE_EVIDENCE_ONLY",
+      "evidence": "ME12_STAGE2_GATES.json; final cumulative planner/cache/heap/native compatibility regression; new compiled-graph lease coverage S08/S09"
+    },
+    {
+      "id": "ME12-S03",
+      "scope": "Inherited Stage 2 sampling/cache contract; selection algorithm and weights unchanged",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "OFFLINE_EVIDENCE_ONLY",
+      "evidence": "ME12_STAGE2_GATES.json; final cumulative planner/cache/heap/native compatibility regression; new compiled-graph lease coverage S08/S09"
+    },
+    {
+      "id": "ME12-S04",
+      "scope": "Inherited Stage 2 sampling/cache contract; selection algorithm and weights unchanged",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "OFFLINE_EVIDENCE_ONLY",
+      "evidence": "ME12_STAGE2_GATES.json; final cumulative planner/cache/heap/native compatibility regression; new compiled-graph lease coverage S08/S09"
+    },
+    {
+      "id": "ME12-S05",
+      "scope": "Inherited Stage 2 sampling/cache contract; selection algorithm and weights unchanged",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "OFFLINE_EVIDENCE_ONLY",
+      "evidence": "ME12_STAGE2_GATES.json; final cumulative planner/cache/heap/native compatibility regression; new compiled-graph lease coverage S08/S09"
+    },
+    {
+      "id": "ME12-S06",
+      "scope": "Inherited Stage 2 sampling/cache contract; selection algorithm and weights unchanged",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "OFFLINE_EVIDENCE_ONLY",
+      "evidence": "ME12_STAGE2_GATES.json; final cumulative planner/cache/heap/native compatibility regression; new compiled-graph lease coverage S08/S09"
+    },
+    {
+      "id": "ME12-S07",
+      "scope": "Inherited Stage 2 sampling/cache contract; selection algorithm and weights unchanged",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "OFFLINE_EVIDENCE_ONLY",
+      "evidence": "ME12_STAGE2_GATES.json; final cumulative planner/cache/heap/native compatibility regression; new compiled-graph lease coverage S08/S09"
+    },
+    {
+      "id": "ME12-S08",
+      "scope": "Inherited Stage 2 sampling/cache contract; selection algorithm and weights unchanged",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "OFFLINE_EVIDENCE_ONLY",
+      "evidence": "ME12_STAGE2_GATES.json; final cumulative planner/cache/heap/native compatibility regression; new compiled-graph lease coverage S08/S09"
+    },
+    {
+      "id": "ME12-S09",
+      "scope": "Inherited Stage 2 sampling/cache contract; selection algorithm and weights unchanged",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "OFFLINE_EVIDENCE_ONLY",
+      "evidence": "ME12_STAGE2_GATES.json; final cumulative planner/cache/heap/native compatibility regression; new compiled-graph lease coverage S08/S09"
+    },
+    {
+      "id": "ME12-S10",
+      "scope": "Inherited Stage 2 sampling/cache contract; selection algorithm and weights unchanged",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "OFFLINE_EVIDENCE_ONLY",
+      "evidence": "ME12_STAGE2_GATES.json; final cumulative planner/cache/heap/native compatibility regression; new compiled-graph lease coverage S08/S09"
+    },
+    {
+      "id": "ME12-B01",
+      "scope": "Source/installed/native agreement with accepted cumulative baseline",
+      "implemented": false,
+      "automatedPassed": false,
+      "offlineEvidence": "Exact source/native artifacts identified; installed mod remains older 0.7.0-target candidate; no accepted 0.7.1 cumulative installation",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED"
+    },
+    {
+      "id": "ME12-B02",
+      "scope": "Required native hooks actually present",
+      "implemented": false,
+      "automatedPassed": false,
+      "offlineEvidence": "Offline patched API and hook verification only; patch not installed and native execution unobserved",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED"
+    },
+    {
+      "id": "ME12-B03",
+      "scope": "Every intended role and alias fully covered",
+      "implemented": false,
+      "automatedPassed": false,
+      "offlineEvidence": "309-ID inventory unchanged; 179 uncertified and 41 catalog-only unresolved",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED"
+    },
+    {
+      "id": "ME12-B04",
+      "scope": "Every intended eligible role/era supports minimum v2 budget",
+      "implemented": false,
+      "automatedPassed": false,
+      "offlineEvidence": "68/84/84 configured static plans only; intended uncertified roles not excluded or certified",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED"
+    },
+    {
+      "id": "ME12-B05",
+      "scope": "Normal immunity exclusions preserved and original actors spawn",
+      "implemented": false,
+      "automatedPassed": false,
+      "offlineEvidence": "16 existing exclusions unchanged; actual native spawn preservation not observed in this candidate",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED"
+    },
+    {
+      "id": "ME12-B06",
+      "scope": "Complete reachable native action-path certificates",
+      "implemented": false,
+      "automatedPassed": false,
+      "offlineEvidence": "Turret/Seeker modern projectiles, Firesteel attachment and exact role/spawn certificates remain missing; no widened damage permission",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED"
+    }
+  ]
+}

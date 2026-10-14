@@ -111,6 +111,10 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
     }
     @Override public void close(){playerWork.close();}
     private java.util.function.Function<UUID,String> respecRejection=ignored->""; // Pure fixtures; production configures before any player load.
+    private LearningSources learningSources;
+    public synchronized void configureLearningSources(LearningSources sources){
+        if(!states.isEmpty())throw new IllegalStateException("LEARNING_SOURCES_MUST_BE_CONFIGURED_BEFORE_LOAD");learningSources=java.util.Objects.requireNonNull(sources);
+    }
     public synchronized void configureRespecGuard(java.util.function.Function<UUID,String> guard){
         if(!states.isEmpty())throw new IllegalStateException("RESPEC_GUARD_MUST_BE_CONFIGURED_BEFORE_LOAD");respecRejection=java.util.Objects.requireNonNull(guard);
     }
@@ -121,6 +125,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
         this.catalog = catalog; this.repository = repository; this.graphService = graphService;
         this.compiler = compiler; this.entitlements = entitlements; this.tracer = tracer;
         this.inactiveRecovery=new InactivePassiveRecovery(catalog,compiler,graphService);
+        this.learningSources=LearningSources.load(catalog);
     }
 
     /** Equipment owner calls this after every valid-set publication, including an empty set on detach. */
@@ -219,6 +224,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
                 var candidate=holder.state.copy();intent.after().applyTo(candidate);candidate.revision=Math.addExact(candidate.revision,1);
                 try{repository.save(candidate);}catch(RuntimeException error){holder.persistenceUncertain=true;throw error;}
                 holder.state=candidate;
+                com.inigmasgames.hytalerpg.diagnostics.hro.HroMasterEnemies.committed(player,intent);
                 var committed=new LinkedHashMap<String,Object>(rewardDetails(intent.reward(),candidate.rewards.sequence(),intent.hash()));
                 if(intent.reward().goldPot()!=null){
                     committed.put("goldBonus",intent.reward().goldPot().baseShare()
@@ -261,6 +267,8 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
             boolean unlocked=before.acquisition().progress().meaningfulSkills().stream().map(id->catalog.skill(new SkillId(id)).orElseThrow())
                     .anyMatch(skill->passive.requiredFamilies().isEmpty()||skill.tags().stream().anyMatch(passive.requiredFamilies()::contains));
             if(!unlocked)throw new IllegalArgumentException("PASSIVE_REQUIRED_ELIGIBLE_USE_NOT_OBSERVED");
+        }else if(delta.kind()==ProgressionDelta.Kind.PASSIVE_LEARNING_SUCCESS||delta.kind()==ProgressionDelta.Kind.PASSIVE_LEARNING_FAILURE){
+            if(!learningSources.accepts(LearningSources.AbilityKind.FIRST_COPY_PASSIVE,delta.subject(),delta.source()))throw new IllegalArgumentException("PASSIVE_SOURCE_NOT_ACCEPTED");
         }else{
             var skill=catalog.skill(new SkillId(delta.subject())).orElseThrow(()->new IllegalArgumentException("UNKNOWN_PROGRESSION_SKILL"));
             if(delta.kind()==ProgressionDelta.Kind.MEANINGFUL_USE){

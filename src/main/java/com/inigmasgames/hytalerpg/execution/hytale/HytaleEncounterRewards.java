@@ -116,7 +116,10 @@ public final class HytaleEncounterRewards implements AutoCloseable {
         this.runtime=new PersistentEncounterRuntime(store,(player,reward,opportunity)->{
             var priorUnlocks=reward.milestone()==null?Set.<com.inigmasgames.hytalerpg.difficulty.DifficultyId>of():loadouts.getPresentationView(player).state().difficulty.unlocks();
             if(opportunity==null)loadouts.awardEarned(player,reward);
-            else loadouts.awardGenerated(player,reward.eventId(),before->opportunity.decide(reward,before,Math::random));
+            else loadouts.awardGenerated(player,reward.eventId(),before->{
+                var decided=opportunity.decide(reward,before,player,Math::random);
+                com.inigmasgames.hytalerpg.diagnostics.hro.HroMasterEnemies.learning(player,opportunity,before,decided);return decided;
+            });
             if(reward.milestone()!=null)for(var mode:loadouts.getPresentationView(player).state().difficulty.unlocks())if(!priorUnlocks.contains(mode))
                 try{unlocked.accept(player,mode);}catch(RuntimeException notificationFailure){/* Earned persistence already succeeded; presentation cannot roll it back. */}
             progressionLatency.committed(player,reward.eventId(),deathOrigins.getOrDefault(reward.eventId(),-1L));
@@ -140,6 +143,7 @@ public final class HytaleEncounterRewards implements AutoCloseable {
     public java.util.concurrent.CompletionStage<Boolean> attachObserved(UUID world,UUID enemy,String role,Optional<EnemyRewardRegistry.Spawn> spawn){return runtime.attachNative(world,enemy,role,spawn);}
     public java.util.concurrent.CompletionStage<com.inigmasgames.hytalerpg.enemies.EnemyBirthPlan> reserveEnemyBirth(com.inigmasgames.hytalerpg.enemies.EnemyBirthPlan plan){return runtime.reserveEnemyBirth(plan);}
     public java.util.concurrent.CompletionStage<com.inigmasgames.hytalerpg.enemies.EnemyBirthPlan> reserveEnemyBirthRoot(com.inigmasgames.hytalerpg.enemies.EnemyBirthRoot root){return runtime.reserveEnemyBirthRoot(root);}
+    public java.util.concurrent.CompletionStage<com.inigmasgames.hytalerpg.enemies.EnemyBirthPlan> reserveEnemyBirthRoot(com.inigmasgames.hytalerpg.enemies.EnemyBirthRoot root,com.inigmasgames.hytalerpg.enemies.Me12Policies policies){return runtime.reserveEnemyBirthRoot(root,policies);}
     public java.util.concurrent.CompletionStage<Optional<com.inigmasgames.hytalerpg.enemies.EnemyBirthRoot>> enemyBirthRoot(UUID world,UUID encounter){return runtime.enemyBirthRoot(world,encounter);}
     public java.util.concurrent.CompletionStage<Optional<com.inigmasgames.hytalerpg.enemies.EnemyBirthCompensation>> enemyBirthCompensation(UUID world,UUID encounter){return runtime.enemyBirthCompensation(world,encounter);}
     public java.util.concurrent.CompletionStage<Optional<com.inigmasgames.hytalerpg.enemies.EnemyBirthPlan>> enemyBirth(UUID world,UUID encounter){return runtime.enemyBirth(world,encounter);}

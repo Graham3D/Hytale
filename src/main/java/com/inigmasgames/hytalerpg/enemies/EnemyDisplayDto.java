@@ -63,7 +63,18 @@ public record EnemyDisplayDto(UUID worldId,UUID logicalActorId,long generation,l
         boolean packbound=descriptor.own(EnemyAffixRegistry.Operator.PACKBOUND).isPresent();
         require(!packbound||pack!=null&&!pack.guardIds().isEmpty()&&descriptor.logicalActorId().equals(pack.leaderId()),"DISPLAY_PACKBOUND_ROSTER_REQUIRED");
         Integer remaining=packbound?pack.livingGuards():null;
-        for(var instance:descriptor.ownAffixes())own.add(affix(instance,definitions,stats,pack,own.size(),false));
+        for(var instance:descriptor.ownAffixes()){
+            var projected=affix(instance,definitions,stats,pack,own.size(),false);
+            if(descriptor.v2()!=null&&descriptor.v2().plan()!=null){
+                var plan=descriptor.v2().plan();var parameters=new TreeMap<>(projected.labelParameters());
+                if(instance.affixId().equals(plan.prefix().signature()))parameters.put("signature","Prefix signature");
+                if(instance.affixId().equals(plan.suffix().signature()))parameters.put("signature","Suffix signature");
+                var ownership=plan.affixes().stream().filter(a->a.choice().affixId().equals(instance.affixId())).findFirst().orElseThrow();
+                parameters.put("ownership",ownership.owner().name());
+                projected=new EnemyTag(projected.stableTagId(),projected.sourceKind(),projected.sourceId(),projected.labelKey(),parameters,projected.fallbackText(),projected.semanticStyle(),projected.sortPriority(),projected.mechanicDetailKey());
+            }
+            own.add(projected);
+        }
         for(var instance:descriptor.inheritedAffixes())inherited.add(affix(instance,definitions,stats,pack,100+inherited.size(),true));
         if(descriptor.packRole()==EnemyDescriptor.PackRole.MINION&&stats.auraMember())
             inherited.add(tag("inherited/ME-023",SourceKind.INHERITED_AFFIX,"ME-023",
@@ -92,6 +103,13 @@ public record EnemyDisplayDto(UUID worldId,UUID logicalActorId,long generation,l
     private static EnemyTag affix(EnemyDescriptor.AffixInstance instance,EnemyAffixRegistry definitions,EnemyAffixSnapshot stats,EnemyPackRecord pack,int priority,boolean inherited){
         var definition=definitions.require(instance.affixId());require(definition.revision().equals(instance.definitionRevision()),"DISPLAY_DEFINITION_REVISION_MISSING");
         var parameters=new TreeMap<String,String>();
+        parameters.put("description",EnemyModifierDescription.of(definition.operator()));
+        if(inherited)parameters.put("description",switch(definition.inheritance()){
+            case MOVEMENT_ONLY -> "Inherited movement increase only";
+            case PHYSICAL_INCREASE -> "Inherited physical damage increase";
+            case EXTRA_ELEMENTAL_POWER_ONLY -> "Inherited elemental damage only; no resistance grant";
+            default -> "Inherited initial-pack effect";
+        });
         if(instance.affixId().equals("ME-020"))parameters.put("stacks",Integer.toString(stats.avengerStacks()));
         if(instance.selector()!=null)parameters.put("selectorLabel",label(instance.selector().name()));
         if(instance.affixId().equals("ME-024"))parameters.put("guardLabel",pack.packboundReleased()?"Broken":Integer.toString(pack.livingGuards()));

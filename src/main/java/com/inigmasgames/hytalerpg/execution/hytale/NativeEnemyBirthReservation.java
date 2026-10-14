@@ -28,11 +28,10 @@ public final class NativeEnemyBirthReservation {
             SpawnJobData nativeJob){
         if(!store.isInThread()||!admission.admits(original.job().world()))
             throw new IllegalStateException("ENEMY_BIRTH_WORLD_NOT_ADMITTED");
-        Optional<NativeEnemyBirthDecision.Selected> selected;
-        try{selected=decisions.select(store,original,nativeJob);}
+        CompletionStage<Optional<NativeEnemyBirthDecision.Selected>> selected;
+        try{selected=decisions.selectAsync(store,original,nativeJob);}
         catch(RuntimeException|Error uncertain){admission.failClosed(original.job().world());throw uncertain;}
-        if(selected.isEmpty())return CompletableFuture.completedStage(Optional.empty());
-        return seal(store,selected.get(),false);
+        return selected.thenCompose(value->value.isEmpty()?CompletableFuture.completedStage(Optional.empty()):seal(store,value.get(),false));
     }
     public CompletionStage<Optional<Sealed>> beginQa(Store<EntityStore> store,NativeEnemySpawnGroups.Group group,
             EnemyQaSpawnRequest qa){
@@ -58,7 +57,7 @@ public final class NativeEnemyBirthReservation {
         }
         admission.birthSubmitted(birth,selected.original().job().nativeJobId(),selected.original().job().environment(),selected.original().job().nativeRole());
         CompletionStage<EnemyBirthPlan> write;
-        try{write=rewards.reserveEnemyBirthRoot(selected.root());}
+        try{write=selected.archivedPolicies()==null?rewards.reserveEnemyBirthRoot(selected.root()):rewards.reserveEnemyBirthRoot(selected.root(),selected.archivedPolicies());}
         catch(RuntimeException synchronousRejection){
             // No writer task was accepted, so the original native group is still recoverable in place.
             try{if(!qa)decisions.restore(store,selected);}
@@ -81,6 +80,7 @@ public final class NativeEnemyBirthReservation {
                 return;
             }
             admission.birthPhase(birth,"BIRTH_ROOT_DURABLE",null);
+            com.inigmasgames.hytalerpg.diagnostics.hro.HroMasterEnemies.identity(birth);
             try{nativeWorld.execute(()->{
                 if(!admission.current(birth.world(),lifetime))return;
                 try{

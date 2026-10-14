@@ -93,6 +93,14 @@ public final class RpgTraceCommand extends AbstractCommandCollection {
             }
         });
         addSubCommand(patch);
+        var enemies=new Group("enemies","Master Enemies report using the existing HRO capture.",PATCH_PERMISSION,false);
+        enemies.addSubCommand(player("start","Capture Master Enemies evidence for at most ten minutes.",PATCH_PERMISSION,false,(c,s,r,p,w)->
+                say(c,com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.start(p.getUuid(),p.getWorldUuid()))));
+        enemies.addSubCommand(player("stop","Finalize master-enemies.md and master-enemies.json asynchronously.",PATCH_PERMISSION,false,(c,s,r,p,w)->
+                say(c,com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.stop(p.getUuid()))));
+        enemies.addSubCommand(player("status","Show capture state and report folder.",PATCH_PERMISSION,false,(c,s,r,p,w)->
+                say(c,com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.status())));
+        addSubCommand(enemies);
         addSubCommand(player("status","Summarize every diagnostic category.",null,false,(c,s,r,p,w)->{
             UUID owner=p.getUuid();
             say(c,"Skill: "+skill.status(owner));say(c,"Combat: "+combat.status(owner)+"; file="+combat.path());
@@ -110,6 +118,7 @@ public final class RpgTraceCommand extends AbstractCommandCollection {
                         +"inventory-tab, inventory-drop=OPERATIONAL_ADAPTER_LIMITED [Adventure].")));
         addSubCommand(player("help","Show diagnostic syntax.",null,true,(c,s,r,p,w)->
                 say(c,"/rpg-trace patch <start|stop|status|mark [label]|arm-next|cancel-arm>; "
+                        +"/rpg-trace enemies <start|stop|status>; "
                         +"/rpg-trace <skill|combat|skilltree|inventory|ui|gear|sentinel|spawn|inventory-tab|inventory-drop> <start|stop|status> [arguments]; "
                         +"/rpg-trace status|list|help. "
                         +"Skill start supports detailed/performance; ui/gear support mark; sentinel supports snapshot; "

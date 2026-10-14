@@ -17,6 +17,7 @@ final class HroBundle implements AutoCloseable {
     private final HroContracts contracts;
     private final Set<String> providers;
     private final HroMechanicalReport mechanical=new HroMechanicalReport();
+    private final HroMasterEnemiesReport masterEnemies=new HroMasterEnemiesReport();
     private BufferedWriter events,index;
     private long total,segmentBytes,line,indexBytes,eventCount;
     private final List<Double> nativeWorldMillis=new ArrayList<>(1024),rpgWallMillis=new ArrayList<>(1024);
@@ -61,6 +62,7 @@ final class HroBundle implements AutoCloseable {
         if(providers.contains(event.contract()))contracts.registered(event.contract());
         contracts.accept(event,locator);
         mechanical.accept(event,locator);
+        masterEnemies.accept(event,locator);
         if(event.boundary().equals("MARK"))markerCount++;
         if(event.boundary().equals("MARK")&&checkpoints.size()<32){
             var marker=new LinkedHashMap<String,Object>();marker.put("label",event.facts().getOrDefault("label","USER_CHECKPOINT"));
@@ -120,6 +122,9 @@ final class HroBundle implements AutoCloseable {
         contracts.lost(drops,lossSites);
         boolean incomplete=!reason.equals("STOPPED") && !reason.equals("EXPIRED");
         var coverage=contracts.coverage(incomplete);
+        var me12=masterEnemies.snapshot(manifest,coverage,incomplete,drops);
+        writeJson("master-enemies.json",me12);
+        Files.writeString(directory.resolve("master-enemies.md"),HroMasterEnemiesReport.markdown(me12),StandardCharsets.UTF_8);
         var findings=contracts.findings(incomplete);
         var cascades=HroMaps.cascades(findings);
         writeJson("coverage.json",coverage);

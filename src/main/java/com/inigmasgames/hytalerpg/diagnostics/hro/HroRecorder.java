@@ -14,7 +14,7 @@ public final class HroRecorder implements AutoCloseable {
     static final int CAPACITY=512, RESERVATION=16*1024;
     private static final int LOSS_DETAIL_LIMIT=128;
     private static final Set<String> CRITICAL=Set.of("IDENTITY","MARK","PAYMENT","DEBIT","NATIVE_RESULT","OUTCOME",
-            "SAVED","LOADED","PLAN_ACCEPTED","ELITE_PUBLISHED","BIRTH_COMPENSATED","BIRTH_DECLINED");
+            "SAVED","LOADED","PLAN_ACCEPTED","ELITE_PUBLISHED","BIRTH_COMPENSATED","BIRTH_DECLINED","ME12_DEPENDENCY","ME12_GENERATOR_HOLD","ME12_REWARD_COMMITTED");
     private static final Set<String> FACTS=Set.of("result","reason","failureCode","validationResult","skillSlot","logicalSlot",
             "skillId","nativeItemId","nativeAction","nativePrimaryIndex","operation","ownershipMode","componentPresent",
             "expectedSpatial","bagRevisionBefore","bagRevisionAfter","RPG revision","revision","loadoutRevision","rawNativeSlot",
@@ -26,7 +26,12 @@ public final class HroRecorder implements AutoCloseable {
             "before","after","absorbed","remaining","requested","damageRemaining","generation","durable","duplicate",
             "requestedReflection","reflectionFactor","manaPaid","capacity","provenance","encounter","rarity","published",
             "durableSubject","fingerprint","phase","activation","manaReceipt","cooldownReceipt","label","critical","coefficient",
-            "manaSpent","intended","uncertain","proof");
+            "manaSpent","intended","uncertain","proof","baseCount","finalCount","quantityFactor","threatHundredths","xpFactor","policyDigest",
+            "generatorRevision","childId","seedIdentity","magicFind","quality","abilityKind","abilityId","sourceId","wisdom","pityBefore","pityAfter",
+            "prefix","suffix","prefixTier","suffixTier","signature","selector","slotOwner","affixCount","difficulty","nativeRole","sourceReceipt",
+            "cacheBytes","cacheOutstanding","compileNanos","guardCount","rowCount","health","maxHealth","configRevision","featureMode",
+            "cacheHits","cacheMisses","builderCount","memoStates","tierMasses","conditionedProbability","contextKey","difficultySlots",
+            "bonusThreat","expectedCount","quantityDomain","baseChance","rarityChance","affixDelta","elapsedNanos");
     private record Request(UUID owner,UUID world,boolean armed) { }
     private record ScopeState(UUID world,String worldAlias,long connection,int worldSegment,long disconnectAt) { }
     private final Path root;
@@ -126,6 +131,13 @@ public final class HroRecorder implements AutoCloseable {
     public String cancelArm(){armAction.set(new HroArm.Action(null,null,true));last="HRO CANCELLING_ARM";LockSupport.unpark(worker);return last;}
     public String stop(){Session current=session;if(current!=null)current.stop="STOPPED";
         else if(request.getAndSet(null)!=null)last="HRO CANCELLED_START";return status();}
+    public String stop(UUID owner){
+        Session current=session;
+        if(current!=null){if(!current.owner.equals(owner))return "HRO capture belongs to another player";current.stop="STOPPED";return status();}
+        var pending=request.get();if(pending!=null){if(!pending.owner().equals(owner))return "HRO capture belongs to another player";
+            if(request.compareAndSet(pending,null))last="HRO CANCELLED_START";}
+        return status();
+    }
     public String status(){Session current=session;return current==null?last:"HRO "+(current.stop!=null?"FINALIZING":current.scope.get().disconnectAt()>=0?"WAITING_RECONNECT":"RECORDING")+
             "; run="+current.id+"; events="+current.admitted.get()+"; dropped="+current.drops.get()+"; folder="+current.directory;}
     public void disconnect(UUID owner,long generation){Session current=session;
@@ -292,7 +304,7 @@ public final class HroRecorder implements AutoCloseable {
         try(HroBundle bundle=new HroBundle(current.directory,manifest,providers)) {
             current.firstCaptureNanos=Math.max(0,clock.getAsLong()-current.start);
             observe(current.owner,"BOOT.ARTIFACT","HroIdentity","IDENTITY", "boot",world,null,null,null,
-                    Map.of("identityVerified",false,"reason","RUNTIME_ASSET_ARCHIVE_IDENTITY_UNOBSERVABLE",
+                    Map.of("identityVerified",false,"reason","RUNTIME_HASH_OBSERVATION_IS_NOT_NATIVE_CERTIFICATION",
                             "preloadRegistration",Boolean.TRUE.equals(origin.get("preloadRegistration"))));
             long flushed=clock.getAsLong();
             while(true) {

@@ -9,9 +9,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class R208EnemyTargetHudTest {
     private static final Path UI=Path.of("src/main/resources/Common/UI/Custom/RpgEnemyTarget.ui");
     private static final Path ART=Path.of("src/main/resources/Common/UI/Custom/Assets/MonsterHealth");
-    @Test void authoredLayersKeepArtAndNoPinnedScreenPanel()throws Exception{
+    @Test void authoredLayersKeepArtAndUseStage3SelectedDetailSurface()throws Exception{
         var ui=Files.readString(UI);
-        assertTrue(ui.contains("Anchor: (Horizontal: 0, Vertical: 0, Width: 192, Height: 96)"));
+        assertTrue(ui.contains("Anchor: (Right: 16, Top: 16, Width: 480, Height: 96)"));
         assertFalse(ui.contains("Top: 128, Width: 720"));
         assertFalse(ui.contains("#RpgEnemyTags"));
         assertFalse(ui.contains("Background: (Color:"));

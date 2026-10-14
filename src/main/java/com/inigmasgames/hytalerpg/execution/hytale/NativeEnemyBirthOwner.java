@@ -603,6 +603,8 @@ public final class NativeEnemyBirthOwner implements NativeEnemySpawnGroups.Owner
     }
 
     /** Native removal/unload is a lifetime event, never a defeat or compensation decision. */
+    public void worldUnload(UUID world){decisions.worldUnload(world);}
+    public void close(){decisions.close();}
     public static final class Removal extends RefSystem<EntityStore> {
         private final NativeEnemyBirthOwner owner;
         public Removal(NativeEnemyBirthOwner owner){this.owner=Objects.requireNonNull(owner);}

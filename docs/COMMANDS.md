@@ -1,5 +1,24 @@
 # HyARPG gameplay and QA commands
 
+## Master Enemies capture (Stage 3 candidate; Stage 4 workflow)
+
+`R262ME12S3-CANDIDATE`, Hytale `=0.7.1`, registers `/rpg-trace enemies start`,
+`/rpg-trace enemies stop`, and `/rpg-trace enemies status`. All three require
+an in-game player with `inigmasgames.rpg.trace.patch`. Stop requires the capture owner.
+Start uses the same single HRO session as `patch start`; it cannot start a competing recorder.
+Play normally after start, stop when finished, then use status until finalization completes.
+The report is `master-enemies.md` plus `master-enemies.json` in
+`%APPDATA%/Hytale/UserData/Diagnostics/Hywind/HRO/<runId>/`, outside Saves.
+
+The existing ten-minute limit, 512-event queue, shared trace budget, reserved critical
+capacity, asynchronous worker and eight-retained-run limit apply. Stop or expiry
+restores ordinary capture-off behavior; no telemetry settings need changing.
+Capture never enables v2 births or changes monsters, rewards, configuration or saves.
+Production v2 births remain DISABLED; SHADOW is diagnostic only; DRAIN retains readers.
+Missing native/source certificates remain BLOCKED, absent opportunities NOT_OBSERVED,
+and server UI publication never proves client rendering. Connected acceptance is Stage 4.
+See [the Stage 4 run sheet](enemies/ME12_STAGE4_RUN_SHEET.md); no Stage 3 deployment is authorized.
+
 ## Hywind Regression Observatory (HRO)
 
 Available in `R262C1HROF-CANDIDATE` and descendants targeting Hytale `=0.7.0`.

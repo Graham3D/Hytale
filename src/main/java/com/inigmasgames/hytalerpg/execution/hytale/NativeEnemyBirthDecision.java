@@ -10,14 +10,108 @@ import com.inigmasgames.hytalerpg.execution.math.Vec3;
 import java.util.*;
 
 /** World-thread decision over the actual staged native roster; no IO or actor publication. */
-public final class NativeEnemyBirthDecision {
+public final class NativeEnemyBirthDecision implements AutoCloseable {
+    /** Supplied by the exact role/spawn certificate owner, never by a name or role-catalog guess. */
+    public record V2Capture(EnemyBirthPlanner.Request request,Me12Planner.Context context,Me12Policies policies,
+                            EnemyNativeBindings.Role role,List<EnemyNativeGroupPreparation.MemberSource> sources){
+        public V2Capture{Objects.requireNonNull(request);Objects.requireNonNull(context);Objects.requireNonNull(policies);Objects.requireNonNull(role);sources=List.copyOf(sources);
+            if(!request.nativePlanReceipt().equals(context.sourceReceipt())||request.originals().size()!=sources.size())throw new IllegalArgumentException("ME12_CAPTURE_SOURCE_MISMATCH");}
+    }
+    @FunctionalInterface public interface V2ContextSource {
+        V2Capture capture(Store<EntityStore> store,NativeEnemySpawnGroups.Group original,SpawnJobData job);
+    }
+    private final Me12PlannerCache v2Cache=new Me12PlannerCache();
+    private final Map<UUID,Object> v2Lifetimes=new HashMap<>();
+    private final Map<UUID,Long> v2Generations=new HashMap<>();
+    private long nextV2Generation;
+    private V2ContextSource v2ContextSource=(store,group,job)->{throw new IllegalStateException("ME12_DEPENDENCY_UNCERTIFIED_PRODUCTION_CONTEXT");};
+    /** No shipped provider is certified. Installation cannot bypass the feature or evidence gates. */
+    public synchronized void configureV2ContextSource(V2ContextSource source){
+        if(!v2Lifetimes.isEmpty())throw new IllegalStateException("ME12_CONTEXT_SOURCE_ALREADY_IN_USE");v2ContextSource=Objects.requireNonNull(source);
+    }
+    private synchronized long v2World(UUID world,Object lifetime){
+        if(lifetime==null)throw new IllegalStateException("ME12_WORLD_NOT_ADMITTED");
+        if(v2Lifetimes.get(world)!=lifetime){long generation=++nextV2Generation;v2Cache.replaceWorld(world,generation);v2Lifetimes.put(world,lifetime);v2Generations.put(world,generation);}
+        return v2Generations.get(world);
+    }
+    public synchronized void worldUnload(UUID world){v2Cache.forgetWorld(world);v2Lifetimes.remove(world);v2Generations.remove(world);}
+    @Override public synchronized void close(){v2Cache.close();v2Lifetimes.clear();v2Generations.clear();}
+    public Me12PlannerCache.Metrics v2Metrics(){return v2Cache.metrics();}
+    /** Nonblocking native entry point. Disabled/DRAIN retain v1; SHADOW cannot acquire a lease or write a root. */
+    public java.util.concurrent.CompletionStage<Optional<Selected>> selectAsync(Store<EntityStore> store,NativeEnemySpawnGroups.Group original,SpawnJobData nativeJob){
+        var state=settings==null?Me12FeatureState.DISABLED:settings.get().me12FeatureState();state.validateStage2();
+        if(!state.evaluatesShadow()&&!state.allowsNewV2Births())return java.util.concurrent.CompletableFuture.completedStage(select(store,original,nativeJob));
+        if(!store.isInThread()||admission==null||!admission.admits(original.job().world()))throw new IllegalStateException("ME12_CAPTURE_WORLD_THREAD");
+        V2Capture capture;
+        try{capture=v2ContextSource.capture(store,original,nativeJob);
+            // A successful static graph is explicitly not a native certificate.
+            if(capture.context().evidence()==Me12Planner.Evidence.CERTIFIED_STATIC_FIXTURE)throw new IllegalStateException("ME12_STATIC_FIXTURE_NOT_NATIVE_CERTIFICATE");
+        }catch(RuntimeException blocked){
+            com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.spawn(original.job().world(),original.reservation().encounter(),"NATURAL","SPAWN.ADMISSION","ME12_DEPENDENCY",Map.of("reason",String.valueOf(blocked.getMessage()),"nativeRole",original.job().nativeRole(),"featureMode",state));
+            if(state.evaluatesShadow())return java.util.concurrent.CompletableFuture.completedStage(select(store,original,nativeJob));
+            return java.util.concurrent.CompletableFuture.completedStage(new Rollback(store,original).fallback("ME12_DEPENDENCY_UNCERTIFIED_PRODUCTION_CONTEXT"));
+        }
+        UUID worldId=original.job().world();var lifetime=admission.lifetime(worldId);long generation=v2World(worldId,lifetime);
+        long requestedAt=System.nanoTime();
+        java.util.concurrent.CompletionStage<Me12PlannerCache.Resolved> requested;
+        try{requested=v2Cache.requestResolved(worldId,generation,capture.context(),capture.policies(),capture.request().seed());}
+        catch(Me12Planner.CompileFailure capacity){
+            com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.spawn(worldId,original.reservation().encounter(),"NATURAL","SPAWN.ADMISSION","ME12_DEPENDENCY",Map.of("reason",String.valueOf(capacity.getMessage())));
+            return java.util.concurrent.CompletableFuture.completedStage(state.evaluatesShadow()?select(store,original,nativeJob):new Rollback(store,original).fallback("ME12_COMPILER_ADMISSION"));
+        }
+        if(state.evaluatesShadow()){
+            requested.whenComplete((value,error)->{try{com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.spawn(worldId,original.reservation().encounter(),"NATURAL","SPAWN.ADMISSION","ME12_SHADOW",Map.of("result",error==null?"PLAN_ONLY":"BLOCKED","durable",false));}finally{if(value!=null)value.close();}});
+            return java.util.concurrent.CompletableFuture.completedStage(select(store,original,nativeJob));
+        }
+        var result=new java.util.concurrent.CompletableFuture<Optional<Selected>>();admission.watch(worldId,result);
+        var world=store.getExternalData().getWorld();
+        requested.whenComplete((resolved,error)->{
+            if(!admission.current(worldId,lifetime)){if(resolved!=null)resolved.close();return;}
+            try{world.execute(()->{
+                if(!admission.current(worldId,lifetime)){if(resolved!=null)resolved.close();return;}
+                try{var current=world.getEntityStore().getStore();
+                    if(error!=null){result.complete(new Rollback(current,original).fallback("ME12_COMPILER_DEPENDENCY"));return;}
+                    com.inigmasgames.hytalerpg.diagnostics.hro.HroMasterEnemies.planner(worldId,original.reservation().encounter(),resolved,v2Cache.metrics(),System.nanoTime()-requestedAt);
+                    result.complete(selectPreparedV2(current,original,nativeJob,capture,resolved));
+                }catch(RuntimeException failure){admission.failClosed(worldId);result.completeExceptionally(failure);}finally{if(resolved!=null)resolved.close();}
+            });}catch(RuntimeException unavailable){if(resolved!=null)resolved.close();admission.failClosed(worldId);result.completeExceptionally(unavailable);}
+        });
+        return result.minimalCompletionStage();
+    }
+    private Optional<Selected> selectPreparedV2(Store<EntityStore> store,NativeEnemySpawnGroups.Group original,SpawnJobData job,V2Capture capture,Me12PlannerCache.Resolved resolved){
+        var rollback=new Rollback(store,original);
+        try{
+            if(!store.isInThread()||!admission.admits(original.job().world()))return rollback.fallback("ME12_WORLD_CHANGED");
+            var sources=classify(store,original,capture.role()).orElseThrow(()->new IllegalStateException("ME12_NATIVE_ROSTER_CHANGED"));
+            if(!sources.equals(capture.sources()))return rollback.fallback("ME12_NATIVE_SOURCE_CHANGED");
+            var request=EnemyNativeGroupPreparation.prepare(original,sources,bindings::role,capture.request().anchor(),capture.policies().balance(),bindings.revision(),true).orElseThrow();
+            if(!request.equals(capture.request()))return rollback.fallback("ME12_NATIVE_HEADROOM_CHANGED");
+            int count=1+capture.context().minions().size()+(resolved.plan().choices().stream().anyMatch(c->c.affixId().equals(EnemyAffixRegistry.Operator.HORDE.id()))?2:0);
+            int extra=count-original.members().size();if(extra<0||extra>request.additionalNativeCapacity())return rollback.fallback("ME12_NATIVE_CAPACITY_CHANGED");
+            var lease=new EnemyPackCapacity.Reservation(original.job().world(),original.reservation().encounter(),request.packId(),original.reservation().generation(),request.anchor());
+            if(admission.reserve(lease).gate()!=EnemyPackCapacity.Gate.RESERVED)return rollback.fallback("ME12_PACK_CAPACITY_CHANGED");rollback.lease=lease;
+            var allSources=new ArrayList<>(sources);
+            if(extra>0){rollback.failClosed=true;var extension=NativeEnemyFlockExtension.attempt(store,original,job,extra);rollback.additional=extension.group();rollback.failClosed=false;
+                if(rollback.additional==null)return rollback.fallback("ME12_EXTENSION_UNAVAILABLE",extension.rejection());
+                var additions=classify(store,rollback.additional,capture.role()).orElseThrow();allSources.addAll(additions);
+                request=EnemyNativeGroupPreparation.completeAdditional(original,request,rollback.additional,additions,bindings::role,capture.policies().balance(),bindings.revision()).orElseThrow();
+            }
+            var finalizer=new EnemyBirthPlanner(capture.policies().balance(),capture.policies().registry(),capture.policies().affinities(),EnemyNamePools.canonical(),EnemyVisualVariants.canonical());
+            var birth=finalizer.planV2Offline(request,resolved.compiled(),resolved.plan());
+            for(var actor:birth.actors())bindings.requireActorRole(actor);
+            return Optional.of(new Selected(new EnemyBirthRoot(birth,sources.stream().map(EnemyNativeGroupPreparation.MemberSource::spawn).toList(),allSources.stream().map(EnemyNativeGroupPreparation.MemberSource::spawn).toList()),original,rollback.additional,capture.role(),allSources,lease,capture.policies()));
+        }catch(RuntimeException failure){if(!rollback.failClosed){rollback.restore();return Optional.empty();}throw failure;}
+    }
     public record Selected(EnemyBirthRoot root,NativeEnemySpawnGroups.Group original,
             NativeEnemySpawnGroups.Group additional,EnemyNativeBindings.Role role,
             List<EnemyNativeGroupPreparation.MemberSource> sources,
-            EnemyPackCapacity.Reservation preLease){
+            EnemyPackCapacity.Reservation preLease,Me12Policies archivedPolicies){
+        public Selected(EnemyBirthRoot root,NativeEnemySpawnGroups.Group original,NativeEnemySpawnGroups.Group additional,EnemyNativeBindings.Role role,
+                        List<EnemyNativeGroupPreparation.MemberSource> sources,EnemyPackCapacity.Reservation preLease){this(root,original,additional,role,sources,preLease,null);}
         public Selected{
             Objects.requireNonNull(root);Objects.requireNonNull(original);Objects.requireNonNull(role);
             sources=List.copyOf(sources);
+            if(root.plan().schemaVersion()==2&&(archivedPolicies==null||!root.plan().actors().getFirst().v2().policyDigest().equals(archivedPolicies.digest())))throw new IllegalArgumentException("ME12_SELECTED_ARCHIVE_REQUIRED");
             if(sources.size()!=root.plan().actors().size())throw new IllegalArgumentException("ENEMY_BIRTH_SOURCE_ROSTER");
             for(int i=0;i<sources.size();i++)if(!sources.get(i).spawn().enemy().equals(root.plan().actors().get(i).entityId()))
                 throw new IllegalArgumentException("ENEMY_BIRTH_SOURCE_ACTOR_ORDER");

@@ -32,6 +32,7 @@ public final class EnemyResourceEffects {
         double maximum=victim.maximum(ResourceType.MANA);
         double request=Math.min(maximum*affix.value("maxManaFraction"),hit.actualHealthLoss()*affix.value("damageFractionCap"));
         double actual=request>0?resources.drainSpendableMana(hit.victim(),request,victim,current):0;
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroMasterEnemies.effect(actor,hit,"ME-013",request,actual,actual>0?"APPLIED":"EMPTY");
         return new Result(actual>0?"APPLIED":"EMPTY",request,actual);
     }
     public synchronized Result vampiric(EnemyDescriptor actor,EnemyAppliedHit hit,NativeResourcePort source,long now,BooleanSupplier current){
@@ -39,6 +40,7 @@ public final class EnemyResourceEffects {
         if(affix==null||!source.hasResource(ResourceType.HEALTH)||source.current(ResourceType.HEALTH)<=0)return none("INELIGIBLE");
         double request=hit.actualHealthLoss()*affix.value("healthLeechFraction");
         double actual=request>0?resources.creditLivingHealth(request,source,current):0;
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroMasterEnemies.effect(actor,hit,"ME-016",request,actual,actual>0?"APPLIED":"EMPTY");
         return new Result(actual>0?"APPLIED":"EMPTY",request,actual);
     }
     private static EnemyDescriptor.AffixInstance eligible(EnemyDescriptor actor,EnemyAppliedHit hit,String affixId,BooleanSupplier current){

@@ -849,6 +849,7 @@ public final class FileEncounterStore implements AutoCloseable {
         return locked(()->{
             int attempts=0;
             for(Path path:pendingFiles()){
+                try {
                 var delivery=read(path,Delivery.class);var plan=delivery.plan();var spawn=plan.spawn();
                 if(!path.equals(pending(spawn.world(),spawn.enemy())))throw new IllegalStateException("DEATH_QUEUE_ID_MISMATCH");
                 Path complete=keyPath("deaths",spawn.world(),spawn.enemy());
@@ -866,6 +867,10 @@ public final class FileEncounterStore implements AutoCloseable {
                     write(complete,plan,false);fault.accept(Boundary.AFTER_COMPLETION);deleteCompleted(path);
                 }
                 if(attempts==awardBudget)break;
+                }catch(Me12PolicyHold hold){
+                    // Missing archived policy is a recoverable dependency, not an uncertain write.
+                    // Keep this delivery cursor and let unrelated pending encounters progress.
+                }
             }return attempts;
         });
     }
