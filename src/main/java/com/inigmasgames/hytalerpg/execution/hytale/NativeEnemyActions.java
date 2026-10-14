@@ -546,6 +546,8 @@ public final class NativeEnemyActions {
     /** Reject duplicate hit/miss roots before native Stone_Death, Poison or visual/audio leaves run. */
     public static final class ModernImpactStart extends EntityEventSystem<EntityStore,InteractionChainStartEvent>{
         private final NativeEnemyActions owner;
+        @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value="EI_EXPOSE_REP2",
+                justification="The native ECS event system must retain the registered action owner to route impact receipts.")
         public ModernImpactStart(NativeEnemyActions owner){super(InteractionChainStartEvent.class);this.owner=owner;}
         @Override public Query<EntityStore> getQuery(){return NPCEntity.getComponentType();}
         @Override public void handle(int i,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,

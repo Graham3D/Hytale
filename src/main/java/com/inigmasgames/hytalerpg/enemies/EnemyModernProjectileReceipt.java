@@ -41,6 +41,7 @@ public final class EnemyModernProjectileReceipt implements Component<EntityStore
     private transient boolean impactStarted,damageClaimed;
     private transient boolean live;
     private transient String startedRoot;
+    private final transient Object claimLock=new Object();
     public static final BuilderCodec<EnemyModernProjectileReceipt> CODEC=BuilderCodec.builder(
             EnemyModernProjectileReceipt.class,EnemyModernProjectileReceipt::new)
             .append(new KeyedCodec<>("Version",Codec.INTEGER),(p,v)->p.version=v,p->p.version).add()
@@ -82,27 +83,33 @@ public final class EnemyModernProjectileReceipt implements Component<EntityStore
                 decoded,forwardX,forwardZ);
     }
     /** Called at native impact root start, before any ApplyEffect or DamageEntity leaf. */
-    public synchronized boolean beginImpact(String root){
-        if(!live)throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_RESTART_ORPHAN");
-        if(!state().hitRoot().equals(root)&&!state().missRoot().equals(root))
-            throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_IMPACT_ROOT_CHANGED");
-        if(impactStarted)return false;
-        impactStarted=true;startedRoot=root;return true;
+    public boolean beginImpact(String root){
+        synchronized(claimLock){
+            if(!live)throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_RESTART_ORPHAN");
+            if(!state().hitRoot().equals(root)&&!state().missRoot().equals(root))
+                throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_IMPACT_ROOT_CHANGED");
+            if(impactStarted)return false;
+            impactStarted=true;startedRoot=root;return true;
+        }
     }
     /** Exactly one native damage packet may enter Health for the one started hit root. */
-    public synchronized boolean claimDamage(String root){
-        if(!live)throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_RESTART_ORPHAN");
-        if(!impactStarted||!Objects.equals(startedRoot,state().hitRoot()))
-            throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_HIT_NOT_STARTED");
-        if(!startedRoot.equals(root)||damageClaimed)return false;
-        damageClaimed=true;return true;
+    public boolean claimDamage(String root){
+        synchronized(claimLock){
+            if(!live)throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_RESTART_ORPHAN");
+            if(!impactStarted||!Objects.equals(startedRoot,state().hitRoot()))
+                throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_HIT_NOT_STARTED");
+            if(!startedRoot.equals(root)||damageClaimed)return false;
+            damageClaimed=true;return true;
+        }
     }
     public static void bind(ComponentType<EntityStore,EnemyModernProjectileReceipt> value){type=Objects.requireNonNull(value);}
     public static ComponentType<EntityStore,EnemyModernProjectileReceipt> getComponentType(){return type;}
     @Override public EnemyModernProjectileReceipt clone(){
-        var result=new EnemyModernProjectileReceipt(state());
-        result.impactStarted=impactStarted;result.damageClaimed=damageClaimed;result.startedRoot=startedRoot;
-        result.live=live;
-        return result;
+        synchronized(claimLock){
+            var result=new EnemyModernProjectileReceipt(state());
+            result.impactStarted=impactStarted;result.damageClaimed=damageClaimed;result.startedRoot=startedRoot;
+            result.live=live;
+            return result;
+        }
     }
 }

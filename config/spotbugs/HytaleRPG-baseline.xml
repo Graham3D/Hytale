@@ -16612,4 +16612,56 @@ to instruct SpotBugs that ignoring the return value of this method is acceptable
       <Message>At NativeMutationHook.java:[line 19]</Message>
     </SourceLine>
   </BugInstance>
+  <!-- Reviewed native Ref boundary: the borrowed projectile reference must retain ECS identity; the receipt validates its actor and world. -->
+  <BugInstance type="EI_EXPOSE_REP" priority="2" rank="18" abbrev="EI" category="MALICIOUS_CODE" instanceHash="e87e6b5d61cfdb59233c8beb641c2ea0" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by returning reference to mutable object</ShortMessage>
+    <LongMessage>com.inigmasgames.hytale.patch.NativeDamageReceiptHook$Context.projectileRef() may expose internal representation by returning NativeDamageReceiptHook$Context.projectileRef</LongMessage>
+    <Class classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook$Context" primary="true">
+      <SourceLine classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook$Context" start="18" end="29" sourcefile="NativeDamageReceiptHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeDamageReceiptHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeDamageReceiptHook.java">
+        <Message>At NativeDamageReceiptHook.java:[lines 18-29]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.hytale.patch.NativeDamageReceiptHook$Context</Message>
+    </Class>
+    <Method classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook$Context" name="projectileRef" signature="()Lcom/hypixel/hytale/component/Ref;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook$Context" start="18" end="18" startBytecode="0" endBytecode="46" sourcefile="NativeDamageReceiptHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeDamageReceiptHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeDamageReceiptHook.java" />
+      <Message>In method com.inigmasgames.hytale.patch.NativeDamageReceiptHook$Context.projectileRef()</Message>
+    </Method>
+    <Field classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook$Context" name="projectileRef" signature="Lcom/hypixel/hytale/component/Ref;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook$Context" sourcefile="NativeDamageReceiptHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeDamageReceiptHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeDamageReceiptHook.java">
+        <Message>In NativeDamageReceiptHook.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.hytale.patch.NativeDamageReceiptHook$Context.projectileRef</Message>
+    </Field>
+    <SourceLine classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook$Context" primary="true" start="18" end="18" startBytecode="4" endBytecode="4" sourcefile="NativeDamageReceiptHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeDamageReceiptHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeDamageReceiptHook.java">
+      <Message>At NativeDamageReceiptHook.java:[line 18]</Message>
+    </SourceLine>
+  </BugInstance>
+
+  <BugInstance type="EI_EXPOSE_REP2" priority="2" rank="18" abbrev="EI2" category="MALICIOUS_CODE" instanceHash="88d6669b5cfecab91ec1d81da12017d6" instanceOccurrenceNum="0" instanceOccurrenceMax="0" cweid="374">
+    <ShortMessage>May expose internal representation by incorporating reference to mutable object</ShortMessage>
+    <LongMessage>new com.inigmasgames.hytale.patch.NativeDamageReceiptHook$Context(UUID, UUID, UUID, UUID, UUID, int, List, String, String, int, int, int, String, Ref) may expose internal representation by storing an externally mutable object into NativeDamageReceiptHook$Context.projectileRef</LongMessage>
+    <Class classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook$Context" primary="true">
+      <SourceLine classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook$Context" start="18" end="29" sourcefile="NativeDamageReceiptHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeDamageReceiptHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeDamageReceiptHook.java">
+        <Message>At NativeDamageReceiptHook.java:[lines 18-29]</Message>
+      </SourceLine>
+      <Message>In class com.inigmasgames.hytale.patch.NativeDamageReceiptHook$Context</Message>
+    </Class>
+    <Method classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook$Context" name="&lt;init&gt;" signature="(Ljava/util/UUID;Ljava/util/UUID;Ljava/util/UUID;Ljava/util/UUID;Ljava/util/UUID;ILjava/util/List;Ljava/lang/String;Ljava/lang/String;IIILjava/lang/String;Lcom/hypixel/hytale/component/Ref;)V" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook$Context" start="21" end="23" startBytecode="0" endBytecode="347" sourcefile="NativeDamageReceiptHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeDamageReceiptHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeDamageReceiptHook.java" />
+      <Message>In method new com.inigmasgames.hytale.patch.NativeDamageReceiptHook$Context(UUID, UUID, UUID, UUID, UUID, int, List, String, String, int, int, int, String, Ref)</Message>
+    </Method>
+    <Field classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook$Context" name="projectileRef" signature="Lcom/hypixel/hytale/component/Ref;" isStatic="false" primary="true">
+      <SourceLine classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook$Context" sourcefile="NativeDamageReceiptHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeDamageReceiptHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeDamageReceiptHook.java">
+        <Message>In NativeDamageReceiptHook.java</Message>
+      </SourceLine>
+      <Message>Field com.inigmasgames.hytale.patch.NativeDamageReceiptHook$Context.projectileRef</Message>
+    </Field>
+    <LocalVariable name="projectileRef" register="14" pc="118" role="LOCAL_VARIABLE_NAMED">
+      <Message>Local variable named projectileRef</Message>
+    </LocalVariable>
+    <SourceLine classname="com.inigmasgames.hytale.patch.NativeDamageReceiptHook$Context" primary="true" start="21" end="21" startBytecode="118" endBytecode="118" sourcefile="NativeDamageReceiptHook.java" sourcepath="com/inigmasgames/hytale/patch/NativeDamageReceiptHook.java" relSourcepath="tools\native-patch\src\com\inigmasgames\hytale\patch\NativeDamageReceiptHook.java">
+      <Message>At NativeDamageReceiptHook.java:[line 21]</Message>
+    </SourceLine>
+  </BugInstance>
+
 </BugCollection>

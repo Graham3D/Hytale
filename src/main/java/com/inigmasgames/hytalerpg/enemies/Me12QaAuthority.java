@@ -18,9 +18,14 @@ public final class Me12QaAuthority {
             Objects.requireNonNull(serverSha256);Objects.requireNonNull(assetsSha256);}
         public static Identity installed(){
             try{
-                var jar=Path.of(Me12QaAuthority.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-                var server=Path.of(com.hypixel.hytale.server.core.HytaleServer.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-                var assets=server.getParent().getParent().resolve("Assets.zip");
+                var jarSource=Objects.requireNonNull(Me12QaAuthority.class.getProtectionDomain().getCodeSource(),"ME12_QA_JAR_SOURCE_UNAVAILABLE");
+                var serverSource=Objects.requireNonNull(com.hypixel.hytale.server.core.HytaleServer.class.getProtectionDomain().getCodeSource(),"ME12_QA_SERVER_SOURCE_UNAVAILABLE");
+                var jar=Path.of(Objects.requireNonNull(jarSource.getLocation()).toURI());
+                var server=Path.of(Objects.requireNonNull(serverSource.getLocation()).toURI());
+                var serverDirectory=server.getParent();
+                var packageDirectory=serverDirectory==null?null:serverDirectory.getParent();
+                if(packageDirectory==null)throw new IllegalStateException("ME12_QA_SERVER_PACKAGE_UNAVAILABLE");
+                var assets=packageDirectory.resolve("Assets.zip");
                 if(!Files.isRegularFile(jar)||!Files.isRegularFile(server)||!Files.isRegularFile(assets))
                     throw new IllegalStateException("ME12_QA_RUNTIME_ARTIFACT_UNAVAILABLE");
                 return new Identity(BuildIdentity.SOURCE_COMMIT,BuildIdentity.REVISION,BuildIdentity.VERSION,
@@ -55,7 +60,7 @@ public final class Me12QaAuthority {
     private final Supplier<Identity> installed;
     private final LongSupplier clock;
     private volatile Lease lease;
-    private volatile long epoch;
+    private final java.util.concurrent.atomic.AtomicLong epoch=new java.util.concurrent.atomic.AtomicLong();
     private volatile UUID pendingWorld;
     public Me12QaAuthority(HywindWorldConfiguration config,EnemyWorldAdmission admission,
             EnemyNativeBindings bindings,BooleanSupplier ownersCertified){
@@ -81,7 +86,7 @@ public final class Me12QaAuthority {
     public synchronized void activate(Request request){beginVerification(request);activateVerified(verify(request));}
     public Verified verify(Request request){
         Objects.requireNonNull(request);
-        long token=epoch;
+        long token=epoch.get();
         var policy=config.snapshot();var lifetime=admission.lifetime(request.world());
         if(!request.candidateSha().matches("[0-9a-f]{40}")||request.seconds()<1||request.seconds()>600)
             throw new IllegalArgumentException("ME12_QA_REQUEST_BOUNDS");
@@ -95,7 +100,7 @@ public final class Me12QaAuthority {
     }
     public synchronized void activateVerified(Verified verified){
         Objects.requireNonNull(verified);
-        if(verified.owner!=this||verified.epoch!=epoch)
+        if(verified.owner!=this||verified.epoch!=epoch.get())
             throw new IllegalStateException("ME12_QA_FOREIGN_OR_REVOKED_VERIFICATION");
         lease=null;
         long age=clock.getAsLong()-verified.verifiedAtNanos;
@@ -107,12 +112,14 @@ public final class Me12QaAuthority {
             throw new IllegalStateException("ME12_QA_WORLD_OR_POLICY_CHANGED");
         if(snapshot.me12FeatureState()!=Me12FeatureState.DRAIN)
             throw new IllegalStateException("ME12_QA_DRAIN_REQUIRED");
-        if(!config.path().getParent().getFileName().toString().equals(request.saveName())
+        var saveDirectory=config.path().getParent();
+        var saveName=saveDirectory==null?null:saveDirectory.getFileName();
+        if(saveName==null||!saveName.toString().equals(request.saveName())
                 ||!admission.admits(request.world()))throw new IllegalStateException("ME12_QA_SAVE_OR_WORLD_MISMATCH");
         if(!ownersCertified.getAsBoolean()||!mandatoryCertified.getAsBoolean())
             throw new IllegalStateException("ME12_QA_NATIVE_CERTIFICATION_BLOCKED");
         long now=clock.getAsLong();long duration=Math.multiplyExact(request.seconds(),1_000_000_000L);
-        epoch++;
+        epoch.incrementAndGet();
         lease=new Lease(request.world(),snapshot,request.candidateSha(),Math.addExact(now,duration));
         pendingWorld=null;
     }
@@ -128,7 +135,7 @@ public final class Me12QaAuthority {
                 &&bindings.role(nativeRole).filter(EnemyNativeBindings.Role::productionPromotionEnabled)
                     .filter(role->!EnemyIncomingOnlyAttachment.certified(role)).isPresent();
     }
-    public synchronized void revoke(){epoch++;lease=null;pendingWorld=null;}
+    public synchronized void revoke(){epoch.incrementAndGet();lease=null;pendingWorld=null;}
     public synchronized void worldUnload(UUID world){if(lease!=null&&lease.world().equals(world)
             ||world.equals(pendingWorld))revoke();}
     public String status(UUID world){var active=lease;return allows(world)?"ACTIVE candidate="+active.candidate()+
@@ -138,11 +145,15 @@ public final class Me12QaAuthority {
             if(!Files.isRegularFile(path)||Files.size(path)>4*1024*1024)
                 throw new IllegalStateException("ME12_QA_GUARDIAN_RECEIPT_UNAVAILABLE");
             var real=path.toRealPath();
-            if(!real.getFileName().toString().equals("verification.json")
-                    ||!real.getParent().getFileName().toString().equals("guardian")
-                    ||!real.getParent().getParent().getFileName().toString().equals("build"))
+            var guardian=real.getParent();var build=guardian==null?null:guardian.getParent();
+            var repository=build==null?null:build.getParent();
+            var receiptName=real.getFileName();var guardianName=guardian==null?null:guardian.getFileName();
+            var buildName=build==null?null:build.getFileName();
+            if(receiptName==null||!receiptName.toString().equals("verification.json")
+                    ||guardianName==null||!guardianName.toString().equals("guardian")
+                    ||buildName==null||!buildName.toString().equals("build")
+                    ||repository==null)
                 throw new IllegalStateException("ME12_QA_GUARDIAN_RECEIPT_LOCATION");
-            var repository=real.getParent().getParent().getParent();
             var root=JsonParser.parseString(Files.readString(path)).getAsJsonObject();
             if(!text(root,"sourceCommit").equals(identity.sourceCommit())
                     ||!text(root,"revision").equals(identity.revision())

@@ -312,6 +312,7 @@ tasks.test {
      'NativePackboundMutationHookTest'].each { exclude "**/${it}*" }
     exclude '**/NativeEnemyProductionBirthOwnerTest*'
     exclude '**/NativeEnemyBirthPublicationIntegrationTest*'
+    exclude '**/EnemyModernProjectileReceiptTest*'
 }
 
 tasks.register('nativeControlTest', Test) {

@@ -20,6 +20,18 @@ tests pass with a pooled native job mutated after synchronous capture.
 Existing focused persistence, transaction, mixed-flock, lease, HRO, and
 native patch tests remain part of the cumulative gate.
 
+The first cumulative run exposed two pre-existing test-routing/provenance
+failures and strict SpotBugs findings in the Stage 3 candidate. The modern
+projectile receipt test now runs only in the native logger JVM; the Stage 2
+snapshot keeps its historical owner-source hashes while the static coverage
+test still checks all current 84 configured roles and plan totals. QA lease
+path checks fail closed on missing parents, its epoch uses an atomic counter,
+and modern impact claims use a private lock. The two pinned native patch
+`Ref` exposures are explicitly reviewed in the SpotBugs baseline because
+copying the borrowed ECS identity would break impact correlation. Corrected
+targeted tests and strict SpotBugs pass; the final cumulative exact-HEAD
+rerun and Guardian receipt remain required.
+
 This prepared native opportunity fixture does not run Hytale terrain search,
 collision, connected presentation, or gameplay. Turret and Seeker retain
 their role-specific certificate blockers; Firesteel remains unadmitted
