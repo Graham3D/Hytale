@@ -162,13 +162,16 @@ public final class PersistentEncounterRuntime implements AutoCloseable {
             var predecessor=store.loadFrontier();
             var attachment=new Attachment(role,candidate);var receipt=attachment.receipt;attachments.put(key,attachment);
             CompletableFuture<Void> initialTail=receipt.thenApply(ignored->null);attachment.tail=initialTail;
-            receipt.whenComplete((accepted,error)->{
-                if(Boolean.FALSE.equals(accepted))synchronized(this){
-                    if(attachments.get(key)==attachment&&attachment.tail==initialTail)attachments.remove(key);
-                }
-            });
             var task=lease.submit(CompletableFuture.completedStage(null),ignored->{
-                try{receipt.complete(attachPrepared(world,enemy,role,candidate,predecessor));}
+                try{
+                    boolean accepted=attachPrepared(world,enemy,role,candidate,predecessor);
+                    // The caller may wake as soon as receipt completes. Remove a rejected
+                    // provisional attachment before publishing that completed result.
+                    if(!accepted)synchronized(this){
+                        if(attachments.get(key)==attachment&&attachment.tail==initialTail)attachments.remove(key);
+                    }
+                    receipt.complete(accepted);
+                }
                 catch(Throwable error){unavailable=true;receipt.completeExceptionally(error);throw error;}
             });
             task.whenComplete((ignored,error)->{if(error!=null){unavailable=true;receipt.completeExceptionally(error);}});

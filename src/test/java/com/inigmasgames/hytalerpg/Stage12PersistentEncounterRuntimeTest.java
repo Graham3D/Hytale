@@ -26,8 +26,11 @@ class Stage12PersistentEncounterRuntimeTest {
     @Test void completedUnclassifiedNativeAttachmentIsNotObserved(){
         var r=runtime();
         try{
-            assertFalse(r.attachNative(world,enemy,"Unknown",Optional.empty()).toCompletableFuture().join());
-            assertFalse(r.observing(world,enemy));assertTrue(r.spawn(world,enemy).isEmpty());
+            for(int attempt=0;attempt<32;attempt++){
+                var rejected=UUID.randomUUID();
+                assertFalse(r.attachNative(world,rejected,"Unknown",Optional.empty()).toCompletableFuture().join());
+                assertFalse(r.observing(world,rejected));assertTrue(r.spawn(world,rejected).isEmpty());
+            }
             assertFalse(r.unavailable());
         }finally{r.close();}
     }
