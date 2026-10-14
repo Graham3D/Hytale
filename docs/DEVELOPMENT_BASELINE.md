@@ -1,5 +1,43 @@
 # HyARPG/Hywind development baseline
 
+## ME12 Stage 1 remediation checkpoint (2026-10-14)
+
+State: **INTEGRATION_BLOCKED / QA_PENDING; Stage 1 BLOCKED by remaining offline coverage**.
+Branch `codex/me12-stage1`, worktree
+`C:/Users/Zemio/.codex/worktrees/me12-stage1/Hytale-main-clean`.
+Implementation checkpoint `a83e9ef548932ebbe47a9bdc10a4bf4d3f2e7471`;
+parent integrated main `b839526e7106f780648c315692b04bb372b58d9e`.
+Documentation/build-identity successor: provisional `R262ME12S1R1-CANDIDATE`,
+version `0.2.0-R262ME12S1R1-CANDIDATE`, Hytale `=0.7.1`.
+No new completed or accepted cumulative R-revision is assigned.
+
+The seven compatibility failures and all 26 enabled-role Hell minimum gaps
+have focused passing evidence. 68 Normal / 84 Nightmare / 84 Hell enabled-role
+plans pass static feasibility; 16 existing Normal exclusions remain.
+179 other non-excluded native attacker IDs still lack production certificates
+or catalog mappings. This is not STAGE1_OFFLINE_READY. Connected proof and
+owner acceptance are separately DEFERRED_TO_STAGE4, never inferred offline.
+Elite 3327a565 and HRO f7d414e6 selective ports remain QA_PENDING.
+Primary dirty main, other worktrees, installed mod/server and active save are
+preserved. Monster Affix stays OPEN with ownerAccepted=false.
+
+Before publication, run one cumulative `check jar testReleaseNativePatch
+ guardianSpotBugs -PguardianSpotBugs=true --continue` on the final clean HEAD.
+The unmodified log is `build/guardian/me12-remediation-final.log`;
+`build/reports/me12/remediation-final-manifest.json` records exact tested HEAD,
+JUnit totals, native/mod/policy hashes, four-axis gates and Git synchronization.
+Guardian's exact-HEAD receipt is `build/guardian/verification.json`.
+This record is written before that mandatory run and does not predeclare it.
+Only verified commits may be published to the matching codex branch; main
+integration and deployment remain unauthorized while acceptance is pending.
+
+See [current Stage 1 report](enemies/ME12_STAGE1_REPORT.md),
+[coverage](enemies/ME12_STAGE1_COVERAGE.md),
+[gates](enemies/ME12_STAGE1_GATES.json), and
+[Stage 3 trace contract](enemies/ME12_STAGE3_TRACE_CONTRACT.md).
+Stage 2 pure offline work may be separately authorized with explicit remaining
+dependencies; it has not started. No intermediate connected QA is requested.
+
 ## ME12 Stage 1 isolated engineering checkpoint (2026-10-14)
 
 State: **INTEGRATION_BLOCKED / QA_PENDING; Stage 1 BLOCKED**.
