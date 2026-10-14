@@ -1,5 +1,17 @@
 # Hywind / HyARPG development baseline
 
+Isolated ME12 Stage 1 checkpoint: **R262ME12S1-CANDIDATE**
+(`0.2.0-R262ME12S1-CANDIDATE`), Hytale `=0.7.1`, branch
+`codex/me12-stage1`. **BLOCKED / QA_PENDING**, not deployed or accepted.
+The reviewed Elite/HRO ports, offline native patch and inactive AD1 policies
+are preserved locally. Seven native compatibility assertions and role/connected
+certification remain unresolved. Stage 2 has not begun; Monster Affix is OPEN.
+See the [Stage 1 report](docs/enemies/ME12_STAGE1_REPORT.md),
+[309-role matrix](docs/enemies/ME12_STAGE1_COVERAGE.md), and
+[source status](docs/DEVELOPMENT_BASELINE.md).
+
+### Previous integrated engineering candidate
+
 HRO finalization engineering candidate: **R262C1HROF-CANDIDATE**
 (`0.2.0-R262C1HROF-CANDIDATE`), Hytale `=0.7.0`, branch
 `codex/hro-finalization`. It adds one-shot next-boot capture, bounded
