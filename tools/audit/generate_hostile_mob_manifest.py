@@ -6,6 +6,7 @@ import collections
 import hashlib
 import json
 import pathlib
+import re
 import subprocess
 import sys
 import zipfile
@@ -73,7 +74,8 @@ def property_value(name, key):
 def attacks(name):
     for path in lineage(name):
         instructions = json.dumps(roles[path].get("Instructions", []), separators=(",", ":"))
-        if '"Combat"' in instructions or '"Attack"' in instructions:
+        if ('"Combat"' in instructions or '"Attack"' in instructions
+                or re.search(r'"Reference":"[^"]*Attack[^"]*"', instructions)):
             return True
     return False
 
@@ -141,6 +143,10 @@ rows.sort(key=lambda row: (row[1].split("_")[0], row[1]))
 scripted.sort(key=lambda row: row[1])
 chapter_goblins = [row for row in rows + scripted if "Goblin" in row[1] or "Feastmaster" in row[1]]
 uncatalogued = [row for row in rows if row[3] == "No catalog role"]
+prior_hostile_missing = {role for role, category in older_categories.items()
+                         if category == "HOSTILE" and role not in {row[1] for row in rows + scripted}}
+if prior_hostile_missing != {"Goblin_Thief"}:
+    raise ValueError(f"Unexpected gap against previous hostile population audit: {prior_hostile_missing}")
 
 
 def table(items):
@@ -175,6 +181,7 @@ These roles may be created by encounters, transitions, or code. Their role asset
 - The Champion/Unique column is authored **0.7.0** eligibility only. Current 0.7.1 connected logs show `RPG_NATURAL_ELITE_HOOKS_MISSING`; promotion needs renewed native-hook and binding verification before QA can establish actual eligibility.
 - The generated rows are exact native roles, so names sharing a player-facing translation may appear several times. This is intentional: their spawn context and mod coverage can differ.
 - Fox and Cactee are omitted from the confirmed list because inherited combat instructions alone do not establish attack-on-sight behavior; the earlier population audit classifies them as wildlife. Additional neutral or unspecified-attitude combat roles may be reactive or scripted. Connected QA would be needed to resolve ambiguous behavior. This manifest is exhaustive for the stated asset classification rule, not proof that every installed NPC has been witnessed in-game.
+- Cross-checking the prior Hywind HOSTILE population list found one omitted role: `Goblin_Thief`. Its installed Chapter I behavior detects and flees rather than executing an attack action, so it does not meet this manifest's attack-on-sight criterion.
 """
 output_path.parent.mkdir(parents=True, exist_ok=True)
 output_path.write_text(document, encoding="utf-8")

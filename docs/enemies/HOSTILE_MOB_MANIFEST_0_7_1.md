@@ -1,12 +1,12 @@
 # Hostile mob manifest — installed Hytale 0.7.1
 
-This is a **source audit**, not a gameplay change. It inventories 204 directly spawnable native roles whose role behavior has a Combat/Attack branch and either an explicit hostile player attitude or a Chapter I Goblin combat role. Another 53 combat roles have no direct production `Server/NPC/Spawn` selector and are listed separately as scripted/conditional encounters. 40 listed roles belong to the Goblin/Feastmaster families. The inspected package is the installed release `Assets.zip` (3,942,663,049 bytes; SHA-256 `B9164EB07D7C42E697D208BA3D35078A9B4A0125BEF6261847A2F91E293E53B4`). The mod comparison is QA-pending `codex/elite-natural-hookup` source commit `1d7e1ab4a3205d27705885da359af20d01e078d9`. This is an asset-defined roster, not an in-game observation of every possible spawn.
+This is a **source audit**, not a gameplay change. It inventories 213 directly spawnable native roles whose role behavior has a Combat/Attack branch and either an explicit hostile player attitude or a Chapter I Goblin combat role. Another 54 combat roles have no direct production `Server/NPC/Spawn` selector and are listed separately as scripted/conditional encounters. 40 listed roles belong to the Goblin/Feastmaster families. The inspected package is the installed release `Assets.zip` (3,942,663,049 bytes; SHA-256 `B9164EB07D7C42E697D208BA3D35078A9B4A0125BEF6261847A2F91E293E53B4`). The mod comparison is QA-pending `codex/elite-natural-hookup` source commit `2dda9cb0c3601c1802e656899a85fc785bcf9340`. This is an asset-defined roster, not an in-game observation of every possible spawn.
 
 **How to read the status.** “Configured” means the native role appears in Hywind's `enemy-registry.json`, so ordinary encounter progression and additional equipment-loot handling have an authored route when admission and player contribution succeed. Native Hytale drops remain native. “No catalog role” means this mod has no authored encounter/reward route for that exact role. “Configured*” means the 0.7.0 production Elite matrix enables both Champion and Unique for that exact role; it is **not a claim of working promotion on 0.7.1**. The latest client log reports all four natural-Elite native hooks missing after the update, so **no listed role is currently verified to promote naturally on 0.7.1**. The old role/asset bindings also require a separate 0.7.1 compatibility review. This table makes the configured coverage gap visible without silently calling new Goblins eligible.
 
 Locations are native production spawn-selector environments or marker families; they indicate where Hytale *can* place a role, not a guaranteed sighting. Test, debug, and deprecated selectors are excluded. Names come from installed `en-US/server.lang` when a role has a translation key. The audit reads `Server/NPC/Roles`, `Server/NPC/Spawn`, and `Server/Languages/en-US/server.lang` in `Assets.zip`; mod status comes from `rpg/progression/enemy-registry.json`, `rpg/spawning/native-population-roles-v1.json`, and `docs/enemies/ELITE_ROLE_MATRIX.md`. A hostile attitude alone is insufficient: passive critters such as frogs are excluded because their behavior flees rather than attacks. Neutral animals that retaliate only after provocation are excluded. Fox and Cactee inherit combat instructions but the earlier Hywind population audit classified them as wildlife; they remain **behavior-review candidates**, not confirmed attackers. Patrol, wander, dungeon, and Coffer variants are separate rows because Hywind binds exact native role IDs.
 
-## Directly spawnable attackers (204)
+## Directly spawnable attackers (213)
 
 | In-game name / native role | Native location selector(s) | Hywind combat/loot | Champion & Unique |
 | --- | --- | --- | --- |
@@ -69,8 +69,12 @@ Locations are native production spawn-selector environments or marker families; 
 | Void Larva (`Larva_Void_Surge`) | Portal Goblin Cave; Portal Goblin Cave Deep; Portal Goblin Cave Void; Portal Goblin Surface | Configured | No |
 | Snow Leopard (`Leopard_Snow`) | Zone3 Glacial | Configured | Configured* |
 | Molerat (`Molerat`) | Zone1 Caves Forests; Zone1 Caves Swamps; Zone1 Mineshafts | Configured | No |
+| Outlander Berserker (`Outlander_Berserker`) | Zone3 Outlander; marker: Intelligent/Outlander | Configured | Configured* |
+| Outlander Brute (`Outlander_Brute`) | marker: Intelligent/Outlander | Configured | No |
 | Outlander Initiate (`Outlander_Cultist`) | marker: Intelligent/Outlander | Configured | No |
 | Outlander Hunter (`Outlander_Hunter`) | Zone3 Outlander; marker: Intelligent/Outlander | Configured | Configured* |
+| Outlander Marauder (`Outlander_Marauder`) | marker: Intelligent/Outlander | Configured | No |
+| Outlander Unsworn (`Outlander_Peon`) | marker: Intelligent/Outlander | Configured | No |
 | Outlander Priest (`Outlander_Priest`) | marker: Intelligent/Outlander | Configured | No |
 | Outlander Sorcerer (`Outlander_Sorcerer`) | marker: Intelligent/Outlander | Configured | No |
 | Outlander Stalker (`Outlander_Stalker`) | marker: Intelligent/Outlander | Configured | No |
@@ -194,11 +198,16 @@ Locations are native production spawn-selector environments or marker families; 
 | Sabertooth Tiger (`Tiger_Sabertooth`) | Portals Oasis; Zone2 Deserts; Zone2 Oasis; Zone2 Savanna | Configured | Configured* |
 | Rhino Toad (`Toad_Rhino`) | Zone4 Wastes; marker: Toad Rhino | Configured | Configured* |
 | Magma Rhino Toad (`Toad_Rhino_Magma`) | Zone1 Caves Volcanic T1; Zone1 Caves Volcanic T2; Zone1 Caves Volcanic T3; Zone2 Caves Volcanic T1; Zone2 Caves Volcanic T2; Zone2 Caves Volcanic T3; Zone4 Caves Volcanic; Zone4 Volcanoes; marker: Toad Rhino Magma | Configured | Configured* |
+| Trork Brawler (`Trork_Brawler`) | marker: Intelligent/Trork | Configured | No |
+| Trork Chieftain (`Trork_Chieftain`) | marker: Intelligent/Trork | Configured | No |
 | Trork Elder (`Trork_Doctor_Witch`) | marker: Intelligent/Trork | Configured | No |
 | Trork Guard (`Trork_Guard`) | marker: Intelligent/Trork | Configured | No |
 | Trork Hunter (`Trork_Hunter`) | marker: Intelligent/Trork | Configured | No |
+| Trork Mauler (`Trork_Mauler`) | marker: Intelligent/Trork | Configured | No |
 | Trork Sentry (`Trork_Sentry`) | marker: Intelligent/Trork | Configured | No |
 | Trork Elder (`Trork_Shaman`) | marker: Intelligent/Trork | Configured | No |
+| Trork Warrior (`Trork_Warrior`) | Beacons/Zone1/Zone1 Player Local; marker: Intelligent/Trork | Configured | Configured* |
+| Trork Warrior (`Trork_Warrior_Patrol`) | marker: Intelligent/Trork | Configured | No |
 | Void Fiend (`Void_Spawn_Entombed`) | marker: Void | Configured | No |
 | Void Fiend (`Void_Spawn_Entombed_Anomaly`) | marker: Void | Configured | No |
 | Void Fiend (`Void_Spawn_Surge`) | Portal Goblin Cave; Portal Goblin Cave Deep; Portal Goblin Cave Void; Portal Goblin Surface | Configured | No |
@@ -215,7 +224,7 @@ Locations are native production spawn-selector environments or marker families; 
 | Frost Zombie (`Zombie_Frost`) | marker: Undead | Configured | No |
 | Sandswept Zombie (`Zombie_Sand`) | marker: Undead | Configured | No |
 
-## Scripted or conditional combat roles without a direct native spawn selector (53)
+## Scripted or conditional combat roles without a direct native spawn selector (54)
 
 These roles may be created by encounters, transitions, or code. Their role assets contain combat behavior, but this audit did not find a direct `Server/NPC/Spawn` entry; their location is therefore intentionally left unasserted.
 
@@ -265,6 +274,7 @@ These roles may be created by encounters, transitions, or code. Their role asset
 | Skeleton Soldier (`Skeleton_Soldier_Wander`) | No direct native spawn selector found | Configured | Configured* |
 | Ember Spirit (`Spirit_Ember`) | No direct native spawn selector found | Configured | No |
 | Trork Sentry (`Trork_Sentry_Patrol`) | No direct native spawn selector found | Configured | No |
+| Trork (`Trork_Unarmed`) | No direct native spawn selector found | Configured | No |
 | Void Fiend (`Void_Spawn`) | No direct native spawn selector found | No catalog role | No |
 | Werewolf (`Werewolf`) | No direct native spawn selector found | Configured | No |
 | Hunting Wolf (`Wolf_Outlander_Priest`) | No direct native spawn selector found | Configured | No |
@@ -281,3 +291,4 @@ These roles may be created by encounters, transitions, or code. Their role asset
 - The Champion/Unique column is authored **0.7.0** eligibility only. Current 0.7.1 connected logs show `RPG_NATURAL_ELITE_HOOKS_MISSING`; promotion needs renewed native-hook and binding verification before QA can establish actual eligibility.
 - The generated rows are exact native roles, so names sharing a player-facing translation may appear several times. This is intentional: their spawn context and mod coverage can differ.
 - Fox and Cactee are omitted from the confirmed list because inherited combat instructions alone do not establish attack-on-sight behavior; the earlier population audit classifies them as wildlife. Additional neutral or unspecified-attitude combat roles may be reactive or scripted. Connected QA would be needed to resolve ambiguous behavior. This manifest is exhaustive for the stated asset classification rule, not proof that every installed NPC has been witnessed in-game.
+- Cross-checking the prior Hywind HOSTILE population list found one omitted role: `Goblin_Thief`. Its installed Chapter I behavior detects and flees rather than executing an attack action, so it does not meet this manifest's attack-on-sight criterion.
