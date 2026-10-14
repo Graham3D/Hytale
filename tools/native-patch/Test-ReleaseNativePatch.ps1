@@ -19,8 +19,8 @@ $patched=Join-Path $output 'HytaleServer-packbound.jar'
 $original=Join-Path $output 'original\HytaleServer.jar'
 if((Get-Sha256 $original) -ne $record.originalServerSha256){throw 'Original server record mismatch'}
 if((Get-Sha256 $patched) -ne $record.patchedServerSha256){throw 'Patched server record mismatch'}
-if(@($record.originalClassHashes).Count -ne 6 -or @($record.patchedClassHashes).Count -ne 6 -or
-   @($record.addedHookClasses).Count -ne 11){throw 'Incomplete native verification record'}
+if(@($record.originalClassHashes).Count -ne 7 -or @($record.patchedClassHashes).Count -ne 7 -or
+   @($record.addedHookClasses).Count -ne 14){throw 'Incomplete native verification record'}
 $libRoot=Join-Path $env:USERPROFILE '.gradle\wrapper\dists\gradle-9.2.0-bin'
 $asm=@(Get-ChildItem -LiteralPath $libRoot -Recurse -File -Filter 'asm-9.8.jar')
 $tree=@(Get-ChildItem -LiteralPath $libRoot -Recurse -File -Filter 'asm-tree-9.8.jar')

@@ -17,10 +17,16 @@ public final class NativeDamageReceiptHook {
     private static volatile MetaKey<String> receiptKey;
     public record Context(UUID world,UUID executor,UUID owner,UUID source,UUID target,
             int chainId,List<Integer> forkPath,String initialRoot,String operationRoot,
-            int operationIndex,int operationCounter,int componentIndex,String cause){
+            int operationIndex,int operationCounter,int componentIndex,String cause,Ref<EntityStore> projectileRef){
         public Context{Objects.requireNonNull(world);Objects.requireNonNull(target);
             forkPath=List.copyOf(forkPath);Objects.requireNonNull(initialRoot);
             Objects.requireNonNull(operationRoot);Objects.requireNonNull(cause);}
+        public Context(UUID world,UUID executor,UUID owner,UUID source,UUID target,
+                int chainId,List<Integer> forkPath,String initialRoot,String operationRoot,
+                int operationIndex,int operationCounter,int componentIndex,String cause){
+            this(world,executor,owner,source,target,chainId,forkPath,initialRoot,operationRoot,
+                    operationIndex,operationCounter,componentIndex,cause,null);
+        }
     }
     @FunctionalInterface public interface Provider { String receipt(Context context); }
     private static final AtomicReference<Provider> PROVIDER=new AtomicReference<>();
@@ -61,7 +67,8 @@ public final class NativeDamageReceiptHook {
                 uuid(interaction,interaction.getEntity()),uuid(interaction,interaction.getOwningEntity()),
                 uuid(interaction,source),uuid(interaction,target),chain.getChainId(),path(chain.getForkedChainId()),
                 initial.getId(),operation.getId(),chain.getOperationIndex(),interaction.getOperationCounter(),
-                componentIndex,damage.getCause().getId());
+                componentIndex,damage.getCause().getId(),damage.getSource() instanceof Damage.ProjectileSource projectile
+                        ?projectile.getProjectile():null);
         if(frozen.target()==null)return;
         var receipt=provider.receipt(frozen);
         if(receipt==null)return;

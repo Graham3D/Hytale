@@ -15,12 +15,15 @@ public final class PatchNativeMutations {
     private static final String HOOK="com/inigmasgames/hytale/patch/NativeMutationHook";
     private static final String DAMAGE_HOOK="com/inigmasgames/hytale/patch/NativeDamageReceiptHook";
     private static final String PROJECTILE_HOOK="com/inigmasgames/hytale/patch/NativeProjectileReceiptHook";
+    private static final String MODERN_HOOK="com/inigmasgames/hytale/patch/NativeModernProjectileHook";
     private static final String POPULATION_HOOK="com/inigmasgames/hytale/patch/NativePopulationProjectionHook";
     private static final String POPULATION_SYSTEM="com/hypixel/hytale/server/spawning/world/system/WorldSpawningSystem.class";
     private static final String DAMAGE_LEAF=BASE+"DamageEntityInteraction.class";
     private static final String PROJECTILE_LEAF=BASE+"LaunchProjectileInteraction.class";
+    private static final String MODERN_LEAF="com/hypixel/hytale/server/core/modules/projectile/interaction/ProjectileInteraction.class";
     private static final String DAMAGE_LEAF_PIN="842fe1dccc7c49feaffc8fb961f346767b66315711e91477710922d6e0f7f9f6";
     private static final String PROJECTILE_LEAF_PIN="973c5e280b171f59c575b9e3cd4b4d0741e538eb40c8699867d16360eb13938e";
+    private static final String MODERN_LEAF_PIN="93886055c33e9ef5b7ebefa537c498ef7e9fea3977d0b8b138dbf5421ede4826";
     private static final String CONTEXT="Lcom/hypixel/hytale/server/core/entity/InteractionContext;";
     private static final String REF="Lcom/hypixel/hytale/component/Ref;";
     private static final String STATS="Lit/unimi/dsi/fastutil/ints/Int2FloatMap;";
@@ -168,6 +171,36 @@ public final class PatchNativeMutations {
         var writer=new ClassWriter(ClassWriter.COMPUTE_FRAMES|ClassWriter.COMPUTE_MAXS);
         tree.accept(writer);return writer.toByteArray();
     }
+    private static byte[] patchModernProjectile(byte[] input){
+        var tree=new ClassNode();new ClassReader(input).accept(tree,0);
+        require(tree.name.equals("com/hypixel/hytale/server/core/modules/projectile/interaction/ProjectileInteraction"),
+                "NATIVE_MODERN_PROJECTILE_CLASS_ID");
+        var methods=tree.methods.stream().filter(m->m.name.equals("firstRun")
+                &&m.desc.startsWith("(Lcom/hypixel/hytale/protocol/InteractionType;")).toList();
+        require(methods.size()==1,"NATIVE_MODERN_PROJECTILE_METHOD_COUNT");
+        var method=methods.getFirst();var spawns=new ArrayList<MethodInsnNode>();var runs=new ArrayList<MethodInsnNode>();
+        for(var node:method.instructions.toArray())if(node instanceof MethodInsnNode call){
+            if(call.owner.equals("com/hypixel/hytale/server/core/modules/projectile/ProjectileModule")
+                    &&call.name.equals("spawnProjectile"))spawns.add(call);
+            if(call.owner.equals("com/hypixel/hytale/component/CommandBuffer")&&call.name.equals("run"))runs.add(call);
+        }
+        require(spawns.size()==1&&runs.size()==1,"NATIVE_MODERN_PROJECTILE_SPAWN_SHAPE");
+        shape(next(spawns.getFirst()),Opcodes.ASTORE,15);
+        shape(next(runs.getFirst()),Opcodes.ALOAD,2);
+        var stamp=new InsnList();
+        stamp.add(new VarInsnNode(Opcodes.ALOAD,2));
+        stamp.add(new VarInsnNode(Opcodes.ALOAD,15));
+        stamp.add(new VarInsnNode(Opcodes.ALOAD,4));
+        stamp.add(new VarInsnNode(Opcodes.ALOAD,16));
+        stamp.add(new MethodInsnNode(Opcodes.INVOKESTATIC,MODERN_HOOK,"afterSpawn",
+                "(Lcom/hypixel/hytale/server/core/entity/InteractionContext;"
+                        +"Lcom/hypixel/hytale/component/Ref;"
+                        +"Lcom/hypixel/hytale/server/core/modules/projectile/config/ProjectileConfig;"
+                        +"Lcom/hypixel/hytale/server/core/modules/projectile/component/ImpactModifiers;)V",false));
+        method.instructions.insert(runs.getFirst(),stamp);
+        var writer=new ClassWriter(ClassWriter.COMPUTE_FRAMES|ClassWriter.COMPUTE_MAXS);
+        tree.accept(writer);return writer.toByteArray();
+    }
     private static List<String> instructionShape(MethodNode method,String injectedHook,List<String> prefix){
         var result=new ArrayList<String>();
         AbstractInsnNode skipThrough=null;
@@ -266,6 +299,20 @@ public final class PatchNativeMutations {
                                 "NATIVE_PROJECTILE_PATCH_BEFORE_QUEUE");
                         continue;
                     }
+                    if(path.equals(MODERN_LEAF)){
+                        var method=tree.methods.stream().filter(m->m.name.equals("firstRun")).findFirst().orElseThrow();
+                        var originalTree=new ClassNode();new ClassReader(before).accept(originalTree,0);
+                        var originalMethod=originalTree.methods.stream().filter(m->m.name.equals("firstRun")).findFirst().orElseThrow();
+                        require(instructionShape(originalMethod,null,List.of()).equals(instructionShape(method,MODERN_HOOK,List.of(
+                                Opcodes.ALOAD+":var:2",Opcodes.ALOAD+":var:15",Opcodes.ALOAD+":var:4",Opcodes.ALOAD+":var:16"))),
+                                "NATIVE_MODERN_PROJECTILE_ORIGINAL_INSTRUCTIONS_CHANGED");
+                        var calls=new ArrayList<MethodInsnNode>();
+                        for(var instruction:method.instructions.toArray())if(instruction instanceof MethodInsnNode call
+                                &&call.owner.equals(MODERN_HOOK)&&call.name.equals("afterSpawn"))calls.add(call);
+                        require(calls.size()==1,"NATIVE_MODERN_PROJECTILE_HOOK_COUNT");
+                        shape(next(calls.getFirst()),Opcodes.ALOAD,2);
+                        continue;
+                    }
                     var method=tree.methods.stream().filter(m->m.name.equals("firstRun")).findFirst().orElseThrow();
                     var calls=new ArrayList<MethodInsnNode>();
                     for(var instruction:method.instructions.toArray())if(instruction instanceof MethodInsnNode call
@@ -303,6 +350,8 @@ public final class PatchNativeMutations {
         var hookClasses=List.of(HOOK+".class",HOOK+"$Kind.class",HOOK+"$Mutation.class",HOOK+"$Policy.class",
                 DAMAGE_HOOK+".class",DAMAGE_HOOK+"$Context.class",DAMAGE_HOOK+"$Provider.class",
                 PROJECTILE_HOOK+".class",PROJECTILE_HOOK+"$Context.class",PROJECTILE_HOOK+"$Provider.class",POPULATION_HOOK+".class");
+        hookClasses=new ArrayList<>(hookClasses);
+        hookClasses.add(MODERN_HOOK+".class");hookClasses.add(MODERN_HOOK+"$Context.class");hookClasses.add(MODERN_HOOK+"$Provider.class");
         var hooks=new LinkedHashMap<String,byte[]>();
         for(var hookClass:hookClasses)hooks.put(hookClass,Files.readAllBytes(classes.resolve(hookClass)));
         var patches=new HashMap<String,byte[]>();
@@ -325,6 +374,11 @@ public final class PatchNativeMutations {
             byte[] projectileBytes;try(var in=source.getInputStream(projectileEntry)){projectileBytes=in.readAllBytes();}
             require(hash(projectileBytes).equals(PROJECTILE_LEAF_PIN),"NATIVE_PROJECTILE_PATCH_CLASS_HASH_MISMATCH");
             patches.put(PROJECTILE_LEAF,patchProjectile(projectileBytes));
+            var modernEntry=source.getEntry(MODERN_LEAF);
+            require(modernEntry!=null,"NATIVE_MODERN_PROJECTILE_CLASS_MISSING");
+            byte[] modernBytes;try(var in=source.getInputStream(modernEntry)){modernBytes=in.readAllBytes();}
+            require(hash(modernBytes).equals(MODERN_LEAF_PIN),"NATIVE_MODERN_PROJECTILE_CLASS_HASH_MISMATCH");
+            patches.put(MODERN_LEAF,patchModernProjectile(modernBytes));
             byte[] populationBytes;try(var in=source.getInputStream(source.getEntry(POPULATION_SYSTEM))){populationBytes=in.readAllBytes();}
             require(hash(populationBytes).equals("c4392e0e579032f3b6f3596d065f010879cedd8d72e01defa4cf82acfff869de"),"NATIVE_POPULATION_CLASS_HASH_MISMATCH");
             patches.put(POPULATION_SYSTEM,patchPopulation(populationBytes));
@@ -354,5 +408,6 @@ public final class PatchNativeMutations {
         System.out.println("NATIVE_PACKBOUND_HOOK_ID="+NativeMutationHook.PATCH_ID);
         System.out.println("NATIVE_DAMAGE_RECEIPT_HOOK_ID="+NativeDamageReceiptHook.PATCH_ID);
         System.out.println("NATIVE_PROJECTILE_RECEIPT_HOOK_ID="+NativeProjectileReceiptHook.PATCH_ID);
+        System.out.println("NATIVE_MODERN_PROJECTILE_HOOK_ID="+NativeModernProjectileHook.PATCH_ID);
     }
 }

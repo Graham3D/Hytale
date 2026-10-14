@@ -26,6 +26,7 @@ public final class NativeBasicAttackPaths implements Collector {
     private final List<DamageEntityInteraction> orderedDamage=new ArrayList<>();
     private final IdentityHashMap<LaunchProjectileInteraction,Integer> projectileOccurrences=new IdentityHashMap<>();
     private final IdentityHashMap<ProjectileInteraction,Integer> configProjectileOccurrences=new IdentityHashMap<>();
+    private final IdentityHashMap<ProjectileInteraction,Boolean> configProjectileNormal=new IdentityHashMap<>();
     private final IdentityHashMap<Interaction,List<Path>> damagePaths=new IdentityHashMap<>();
     private Path pending=new Path(false,false,null,null,-1,false);
     private int visited;
@@ -76,7 +77,11 @@ public final class NativeBasicAttackPaths implements Collector {
             damagePaths.computeIfAbsent(leaf,ignored->new ArrayList<>()).add(pending);
         }
         if(interaction instanceof LaunchProjectileInteraction leaf)projectileOccurrences.merge(leaf,1,Integer::sum);
-        if(interaction instanceof ProjectileInteraction leaf)configProjectileOccurrences.merge(leaf,1,Integer::sum);
+        if(interaction instanceof ProjectileInteraction leaf){
+            configProjectileOccurrences.merge(leaf,1,Integer::sum);
+            configProjectileNormal.put(leaf,!charged&&!pending.afterDamage()&&!pending.nestedChain()
+                    &&!configProjectileNormal.containsKey(leaf));
+        }
         if((interaction instanceof DamageEntityInteraction||interaction instanceof LaunchProjectileInteraction)&&!pending.afterDamage()){
             Kind kind=charged?Kind.CHARGED:Kind.NORMAL;
             damage.merge(interaction,kind,(a,b)->a==b?a:Kind.AMBIGUOUS);
@@ -111,6 +116,8 @@ public final class NativeBasicAttackPaths implements Collector {
     public Map<ProjectileInteraction,Integer> configProjectileOccurrences(){
         return Collections.unmodifiableMap(new IdentityHashMap<>(configProjectileOccurrences));
     }
+    /** Modern launches retain a separate certificate; classify() stays legacy-only. */
+    public boolean modernNormal(ProjectileInteraction leaf){return Boolean.TRUE.equals(configProjectileNormal.get(leaf));}
     public void requireNoUncertifiedConfigProjectiles(){
         if(!configProjectileOccurrences.isEmpty())
             throw new IllegalStateException("ENEMY_ACTION_CONFIG_PROJECTILE_NOT_CERTIFIED");

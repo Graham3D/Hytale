@@ -105,11 +105,20 @@ public final class EnemyNativeBindings {
                 var context=com.hypixel.hytale.server.core.entity.InteractionContext.withoutEntity();
                 context.setInteractionVarsGetter(ignored->npc.getRole().getInteractionVars());
                 var graph=com.inigmasgames.hytalerpg.execution.hytale.NativeBasicAttackPaths.resolve(context,root,InteractionType.Primary);
+                boolean modern=graph.damageOccurrences().isEmpty()&&graph.projectileOccurrences().isEmpty()
+                        &&graph.configProjectileOccurrences().size()==1;
+                if(modern&&action.channels().size()!=1)
+                    throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_CAUSE_COUNT");
                 if(graph.damageOccurrences().isEmpty()&&action.strikeIds().size()!=1)
                     throw new IllegalStateException("ENEMY_PROJECTILE_ONLY_SINGLE_STRIKE_CERTIFIED");
                 var bound=graph.damageOccurrences().isEmpty()
-                        ?NativeEnemyAction.Binding.certifyProjectileSingle(revision,root,InteractionType.Primary,context,
-                                action.strikeIds().getFirst(),action.producer(),nativeStatusSource)
+                        ?modern
+                                ?NativeEnemyAction.Binding.certifyModernProjectileSingle(revision,root,InteractionType.Primary,
+                                        context,action.strikeIds().getFirst(),action.producer(),
+                                        Objects.requireNonNull(graph.configProjectileOccurrences().keySet().iterator().next().getConfig()).getId(),
+                                        action.channels().keySet().iterator().next(),nativeStatusSource)
+                                :NativeEnemyAction.Binding.certifyProjectileSingle(revision,root,InteractionType.Primary,context,
+                                        action.strikeIds().getFirst(),action.producer(),nativeStatusSource)
                         :action.conditionalNativeLeaves()
                                 ?NativeEnemyAction.Binding.certifyConditionalLeaves(revision,root,InteractionType.Primary,
                                         context,action.strikeIds(),action.producer(),nativeStatusSource)
@@ -121,6 +130,16 @@ public final class EnemyNativeBindings {
                                         action.contactOccurrences());
                 if(!bound.projectileStrikes().isEmpty()&&action.supportedAffixIds()==null)
                     throw new IllegalStateException("ENEMY_PROJECTILE_AFFIX_CAPABILITIES_UNDECLARED");
+                if(!bound.modernProjectileStrikes().isEmpty()&&action.supportedAffixIds()==null)
+                    throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_AFFIX_CAPABILITIES_UNDECLARED");
+                if(!bound.modernProjectileStrikes().isEmpty()){
+                    var nativeCause=bound.modernProjectileStrikes().getFirst().nativeCause();
+                    var channel=com.inigmasgames.hytalerpg.combat.damage.DamageChannels.canonical()
+                            .resolve(nativeCause,action.producer());
+                    if(channel.state()!=com.inigmasgames.hytalerpg.combat.damage.DamageChannels.State.RESOLVED
+                            ||!channel.channel().name().equals(action.channels().get(nativeCause)))
+                        throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_CHANNEL_UNCERTIFIED");
+                }
                 if(!bound.projectileStrikes().isEmpty()&&!action.channels().equals(Map.of("Projectile","PHYSICAL")))
                     throw new IllegalStateException("ENEMY_LEGACY_PROJECTILE_CHANNEL_UNCERTIFIED");
                 boolean impulse=bound.strikes().stream().anyMatch(strike->strike.leaf().ownsNativeImpulse());

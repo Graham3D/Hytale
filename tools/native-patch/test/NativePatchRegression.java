@@ -14,6 +14,7 @@ import org.objectweb.asm.tree.MethodInsnNode;
 public final class NativePatchRegression {
     private static final String BASE="com/hypixel/hytale/server/core/modules/interaction/interaction/config/server/";
     private static final String POPULATION="com/hypixel/hytale/server/spawning/world/system/WorldSpawningSystem.class";
+    private static final String MODERN="com/hypixel/hytale/server/core/modules/projectile/interaction/ProjectileInteraction.class";
 
     private static void require(boolean condition,String message){if(!condition)throw new AssertionError(message);}
 
@@ -37,6 +38,7 @@ public final class NativePatchRegression {
             case "mutation" ->PatchNativeMutations.class.getDeclaredMethod("patch",String.class,byte[].class);
             case "damage" ->PatchNativeMutations.class.getDeclaredMethod("patchDamage",byte[].class);
             case "projectile" ->PatchNativeMutations.class.getDeclaredMethod("patchProjectile",byte[].class);
+            case "modern" ->PatchNativeMutations.class.getDeclaredMethod("patchModernProjectile",byte[].class);
             case "population" ->PatchNativeMutations.class.getDeclaredMethod("patchPopulation",byte[].class);
             default ->throw new AssertionError(operation);
         };
@@ -67,6 +69,9 @@ public final class NativePatchRegression {
                 expectShapeRejection(fixture[2],fixture[0],removeExpectedCall(entry(stock,path),fixture[1]),fixture[3]);
             }
             require(!java.util.Arrays.equals(entry(stock,POPULATION),entry(output,POPULATION)),"population unchanged");
+            require(!java.util.Arrays.equals(entry(stock,MODERN),entry(output,MODERN)),"modern projectile unchanged");
+            expectShapeRejection("modern","ProjectileInteraction",
+                    removeExpectedCall(entry(stock,MODERN),"spawnProjectile"),"NATIVE_MODERN_PROJECTILE_SPAWN_SHAPE");
             expectShapeRejection("population","WorldSpawningSystem",
                     removeExpectedCall(entry(stock,POPULATION),"getActiveSpawnJobs"),"NATIVE_POPULATION_SELECTION_SHAPE");
         }
@@ -74,6 +79,8 @@ public final class NativePatchRegression {
                 "ChangeStatWithModifierInteraction","DamageEntityInteraction","LaunchProjectileInteraction"))
             Class.forName((BASE+name).replace('/','.'),false,NativePatchRegression.class.getClassLoader());
         Class.forName(POPULATION.substring(0,POPULATION.length()-6).replace('/','.'),false,
+                NativePatchRegression.class.getClassLoader());
+        Class.forName(MODERN.substring(0,MODERN.length()-6).replace('/','.'),false,
                 NativePatchRegression.class.getClassLoader());
         var refused=Files.createTempFile(patched.getParent(),"duplicate-native-patch-",".jar");
         Files.delete(refused);
@@ -86,6 +93,6 @@ public final class NativePatchRegression {
             }
             require(!Files.exists(refused),"rejected patch wrote output");
         } finally {Files.deleteIfExists(refused);}
-        System.out.println("NATIVE_PATCH_REGRESSION_PASS classes=6 unknownServerRejected=true duplicateRejected=true");
+        System.out.println("NATIVE_PATCH_REGRESSION_PASS classes=7 unknownServerRejected=true duplicateRejected=true");
     }
 }

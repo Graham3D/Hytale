@@ -6,6 +6,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.inigmasgames.hytale.patch.NativeMutationHook;
 import com.inigmasgames.hytale.patch.NativeDamageReceiptHook;
 import com.inigmasgames.hytale.patch.NativeProjectileReceiptHook;
+import com.inigmasgames.hytale.patch.NativeModernProjectileHook;
 import com.inigmasgames.hytale.patch.NativePopulationProjectionHook;
 import com.inigmasgames.hytalerpg.enemies.EnemyActorIdentity;
 import java.nio.file.*;
@@ -14,7 +15,7 @@ import java.util.*;
 
 /** Binds the exact release native hook set to the existing Packbound protection owner. */
 public final class PackboundNativeMutationBridge implements AutoCloseable {
-    private static final String PATCH_HASH="68f37bdf2dfee6f9834f7035e606a506a2e13dede3c36f51ecae4bf11f425b89";
+    private static final String PATCH_HASH="46f4d2f087f15b27151a879e574edfdfec4e4b15fbd381a952a84099a4ff601f";
     private final AutoCloseable registration;
     private boolean closed;
     private PackboundNativeMutationBridge(AutoCloseable registration){this.registration=registration;}
@@ -27,7 +28,7 @@ public final class PackboundNativeMutationBridge implements AutoCloseable {
             if(!PATCH_HASH.equals(hash(nativeSource)))
                 throw new IllegalStateException("PACKBOUND_NATIVE_PATCH_VERSION_MISMATCH:NativeMutationHook");
             for(var hook : List.of(NativeDamageReceiptHook.class,
-                    NativeProjectileReceiptHook.class,NativePopulationProjectionHook.class))
+                    NativeProjectileReceiptHook.class,NativeModernProjectileHook.class,NativePopulationProjectionHook.class))
                 if(!nativeSource.equals(codeSourcePath(hook)))
                     throw new IllegalStateException("PACKBOUND_NATIVE_PATCH_VERSION_MISMATCH:"+hook.getSimpleName());
             return Optional.of(new PackboundNativeMutationBridge(NativeMutationHook.install(mutation->allow(combat,mutation))));

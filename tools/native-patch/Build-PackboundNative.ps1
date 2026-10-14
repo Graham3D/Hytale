@@ -12,7 +12,7 @@ function Get-PinnedHash([string]$path){
     }finally{$digest.Dispose()}
 }
 $expectedOriginal='A60FA0B31F1418691F8D8F7CC1159693E3EC504D4F0567FB91493A842D71F8CA'
-$expectedPatched='68F37BDF2DFEE6F9834F7035E606A506A2E13DEDE3C36F51ECAE4BF11F425B89'
+$expectedPatched='46F4D2F087F15B27151A879E574EDFDFEC4E4B15FBD381A952A84099A4FF601F'
 $root=(Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 $server=(Resolve-Path -LiteralPath $ServerJar).Path
 $target=[IO.Path]::GetFullPath($OutputDirectory)
@@ -45,7 +45,7 @@ $classes=Join-Path $target 'classes'
 New-Item -ItemType Directory -Force $classes | Out-Null
 $classpath="$sourceServer;$($asm[0].FullName);$($tree[0].FullName)"
 $source=Join-Path $root 'tools\native-patch\src\com\inigmasgames\hytale\patch'
-& javac -cp $classpath -d $classes (Join-Path $source 'NativeMutationHook.java') (Join-Path $source 'NativeDamageReceiptHook.java') (Join-Path $source 'NativeProjectileReceiptHook.java') (Join-Path $source 'NativePopulationProjectionHook.java') (Join-Path $source 'PatchNativeMutations.java')
+& javac -cp $classpath -d $classes (Join-Path $source 'NativeMutationHook.java') (Join-Path $source 'NativeDamageReceiptHook.java') (Join-Path $source 'NativeProjectileReceiptHook.java') (Join-Path $source 'NativeModernProjectileHook.java') (Join-Path $source 'NativePopulationProjectionHook.java') (Join-Path $source 'PatchNativeMutations.java')
 if($LASTEXITCODE -ne 0){throw 'Native patch compiler failed'}
 $output=Join-Path $target 'HytaleServer-packbound.jar'
 & java -cp "$classes;$classpath" com.inigmasgames.hytale.patch.PatchNativeMutations $sourceServer $classes $output
@@ -64,9 +64,11 @@ $base='com/hypixel/hytale/server/core/modules/interaction/interaction/config/ser
 $changed=@('ClearEntityEffectInteraction','ChangeStatInteraction','ChangeStatWithModifierInteraction','DamageEntityInteraction','LaunchProjectileInteraction') |
     ForEach-Object { "$base$_.class" }
 $changed+= 'com/hypixel/hytale/server/spawning/world/system/WorldSpawningSystem.class'
+$changed+= 'com/hypixel/hytale/server/core/modules/projectile/interaction/ProjectileInteraction.class'
 $added=@('NativeMutationHook.class','NativeMutationHook$Kind.class','NativeMutationHook$Mutation.class','NativeMutationHook$Policy.class',
     'NativeDamageReceiptHook.class','NativeDamageReceiptHook$Context.class','NativeDamageReceiptHook$Provider.class',
     'NativeProjectileReceiptHook.class','NativeProjectileReceiptHook$Context.class','NativeProjectileReceiptHook$Provider.class',
+    'NativeModernProjectileHook.class','NativeModernProjectileHook$Context.class','NativeModernProjectileHook$Provider.class',
     'NativePopulationProjectionHook.class') | ForEach-Object { "com/inigmasgames/hytale/patch/$_" }
 $before=[IO.Compression.ZipFile]::OpenRead($sourceServer)
 $after=[IO.Compression.ZipFile]::OpenRead($output)

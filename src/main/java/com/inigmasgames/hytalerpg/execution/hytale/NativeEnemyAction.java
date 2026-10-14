@@ -7,12 +7,16 @@ import com.hypixel.hytale.server.core.asset.type.projectile.config.Projectile;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.LaunchProjectileInteraction;
+import com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.DamageEntityInteraction;
+import com.hypixel.hytale.server.core.modules.projectile.config.ProjectileConfig;
+import com.hypixel.hytale.server.core.modules.projectile.interaction.ProjectileInteraction;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
 import com.inigmasgames.hytalerpg.combat.damage.WeaponDamageExecution;
 import com.inigmasgames.hytalerpg.combat.hytale.NativeDamageLeafInteraction;
 import com.inigmasgames.hytalerpg.enemies.*;
 import com.inigmasgames.hytale.patch.NativeProjectileReceiptHook;
+import com.inigmasgames.hytale.patch.NativeModernProjectileHook;
 import java.util.*;
 import java.util.function.*;
 
@@ -40,37 +44,99 @@ public final class NativeEnemyAction {
                 throw new IllegalArgumentException("ENEMY_NATIVE_STATUS_MERGE_OWNER_NOT_BOUND");
         }
     }
+    /** One native 0.7.1 config projectile with its own native hit/miss graph. */
+    public record ModernProjectileStrike(String authoredId,String producer,double procCoefficient,
+            ProjectileInteraction leaf,String configId,String nativeCause,EnemyStatusEffects.Source statusSource){
+        public ModernProjectileStrike{
+            id(authoredId);id(producer);id(configId);id(nativeCause);Objects.requireNonNull(leaf);
+            if(!Double.isFinite(procCoefficient)||procCoefficient<0||procCoefficient>1)
+                throw new IllegalArgumentException("ENEMY_MODERN_PROJECTILE_PROC_COEFFICIENT");
+            if(statusSource!=null&&statusSource.existingChance().values().stream().anyMatch(chance->chance!=0))
+                throw new IllegalArgumentException("ENEMY_NATIVE_STATUS_MERGE_OWNER_NOT_BOUND");
+        }
+    }
+    public record ModernRoute(String configId,String hitRoot,String missRoot,String nativeCause,
+            float nativeMinimum,float nativeMaximum,DamageEntityInteraction damageLeaf){
+        public static ModernRoute certify(ModernProjectileStrike strike){
+            var certifiedCause=switch(strike.configId()){
+                case "Projectile_Config_Goblin_Turret_Trash"->"Physical";
+                case "Projectile_Config_Scarak_Seeker_Spitball"->"Poison";
+                default->throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_CONFIG_UNCERTIFIED");
+            };
+            if(!certifiedCause.equals(strike.nativeCause()))
+                throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_NATIVE_CAUSE");
+            var config=strike.leaf().getConfig();
+            if(config==null||!config.getId().equals(strike.configId())
+                    ||!config.getInteractions().keySet().equals(Set.of(InteractionType.ProjectileHit,InteractionType.ProjectileMiss)))
+                throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_CONFIG_CHANGED");
+            String hitId=config.getInteractions().get(InteractionType.ProjectileHit);
+            String missId=config.getInteractions().get(InteractionType.ProjectileMiss);
+            var hit=hitId==null?null:RootInteraction.getAssetMap().getAsset(hitId);
+            var miss=missId==null?null:RootInteraction.getAssetMap().getAsset(missId);
+            if(hit==null||miss==null||hit==miss)
+                throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_IMPACT_ROOT_MISSING");
+            var paths=NativeBasicAttackPaths.resolve(InteractionContext.withoutEntity(),hit,InteractionType.ProjectileHit);
+            if(paths.damageOccurrences().size()!=1||!paths.projectileOccurrences().isEmpty()
+                    ||!paths.configProjectileOccurrences().isEmpty())
+                throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_IMPACT_DAMAGE_GRAPH");
+            var entry=paths.damageOccurrences().entrySet().iterator().next();
+            var leaf=entry.getKey();
+            if(entry.getValue()!=1||paths.classify(leaf).orElse(null)!=NativeBasicAttackPaths.Kind.NORMAL
+                    ||leaf.getDamageCalculator()==null||leaf.getDamageCalculator().getSequentialModifierStep()!=0
+                    ||leaf.getAngledDamage()!=null&&leaf.getAngledDamage().length!=0
+                    ||leaf.getTargetedDamage()!=null&&!leaf.getTargetedDamage().isEmpty())
+                throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_IMPACT_CALCULATOR");
+            var range=new float[2];leaf.getDamageCalculator().computeDamageRange(leaf.getRunTime(),range);
+            if(!Float.isFinite(range[0])||!Float.isFinite(range[1])||range[0]<=0||range[1]<range[0])
+                throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_NATIVE_RANGE");
+            return new ModernRoute(config.getId(),hitId,missId,strike.nativeCause(),range[0],range[1],leaf);
+        }
+    }
     /** Uses actual resolved assets, not an ID substring or a merely registered damage handler. */
     public record Binding(String revision,RootInteraction root,InteractionType type,List<Strike> strikes,
-            List<ProjectileStrike> projectileStrikes,Map<String,Integer> contactOccurrences){
+            List<ProjectileStrike> projectileStrikes,List<ModernProjectileStrike> modernProjectileStrikes,
+            Map<String,Integer> contactOccurrences){
         public Binding(String revision,RootInteraction root,InteractionType type,List<Strike> strikes){
-            this(revision,root,type,strikes,List.of(),Map.of());
+            this(revision,root,type,strikes,List.of(),List.of(),Map.of());
         }
         public Binding(String revision,RootInteraction root,InteractionType type,List<Strike> strikes,
                 List<ProjectileStrike> projectileStrikes){
-            this(revision,root,type,strikes,projectileStrikes,Map.of());
+            this(revision,root,type,strikes,projectileStrikes,List.of(),Map.of());
+        }
+        public Binding(String revision,RootInteraction root,InteractionType type,List<Strike> strikes,
+                List<ProjectileStrike> projectileStrikes,Map<String,Integer> contactOccurrences){
+            this(revision,root,type,strikes,projectileStrikes,List.of(),contactOccurrences);
         }
         public Binding{
             id(revision);Objects.requireNonNull(root);Objects.requireNonNull(type);
             strikes=List.copyOf(strikes);projectileStrikes=List.copyOf(projectileStrikes);
+            modernProjectileStrikes=List.copyOf(modernProjectileStrikes);
             contactOccurrences=Map.copyOf(contactOccurrences);
-            if(strikes.size()+projectileStrikes.size()<1||strikes.size()+projectileStrikes.size()>32)
+            if(strikes.size()+projectileStrikes.size()+modernProjectileStrikes.size()<1
+                    ||strikes.size()+projectileStrikes.size()+modernProjectileStrikes.size()>32)
                 throw new IllegalArgumentException("ENEMY_ACTION_STRIKE_BOUNDS");
             var ids=new HashSet<String>();var leaves=Collections.newSetFromMap(new IdentityHashMap<NativeEnemyDamageInteraction,Boolean>());
             for(var strike:strikes)if(!ids.add(strike.authoredId())||!leaves.add(strike.leaf()))throw new IllegalArgumentException("ENEMY_ACTION_DUPLICATE_STRIKE");
             var launches=Collections.newSetFromMap(new IdentityHashMap<LaunchProjectileInteraction,Boolean>());
             for(var strike:projectileStrikes)if(!ids.add(strike.authoredId())||!launches.add(strike.leaf()))
                 throw new IllegalArgumentException("ENEMY_ACTION_DUPLICATE_PROJECTILE_STRIKE");
-            if(!contactOccurrences.isEmpty()&&(strikes.size()<2||!projectileStrikes.isEmpty()
+            var modern=Collections.newSetFromMap(new IdentityHashMap<ProjectileInteraction,Boolean>());
+            for(var strike:modernProjectileStrikes)if(!ids.add(strike.authoredId())||!modern.add(strike.leaf()))
+                throw new IllegalArgumentException("ENEMY_ACTION_DUPLICATE_MODERN_PROJECTILE_STRIKE");
+            if(!contactOccurrences.isEmpty()&&(strikes.size()<2||!projectileStrikes.isEmpty()||!modernProjectileStrikes.isEmpty()
                     ||!contactOccurrences.keySet().equals(strikes.stream().map(Strike::authoredId).collect(java.util.stream.Collectors.toSet()))
                     ||contactOccurrences.values().stream().anyMatch(count->count==null||count<1||count>16)))
                 throw new IllegalArgumentException("ENEMY_ACTION_NATIVE_CONTACT_CERTIFICATE");
         }
         public void validate(InteractionContext context){
             var graph=NativeBasicAttackPaths.resolve(context,root,type);var occurrences=graph.damageOccurrences();
-            graph.requireNoUncertifiedConfigProjectiles();
-            if(occurrences.size()!=strikes.size()||graph.projectileOccurrences().size()!=projectileStrikes.size())
+            if(modernProjectileStrikes.isEmpty())graph.requireNoUncertifiedConfigProjectiles();
+            if(occurrences.size()!=strikes.size()||graph.projectileOccurrences().size()!=projectileStrikes.size()
+                    ||graph.configProjectileOccurrences().size()!=modernProjectileStrikes.size())
                 throw new IllegalStateException("ENEMY_ACTION_UNBOUND_STRIKE_ROUTE");
+            if(!modernProjectileStrikes.isEmpty()&&(!projectileStrikes.isEmpty()||!strikes.isEmpty()
+                    ||modernProjectileStrikes.size()!=1))
+                throw new IllegalStateException("ENEMY_ACTION_MIXED_MODERN_ROUTE_UNCERTIFIED");
             for(var strike:strikes){
                 int visits=occurrences.getOrDefault(strike.leaf(),0);
                 int expected=contactOccurrences.getOrDefault(strike.authoredId(),1);
@@ -91,6 +157,12 @@ public final class NativeEnemyAction {
                 var projectile=Projectile.getAssetMap().getAsset(strike.leaf().getProjectileId());
                 if(projectile==null||projectile.getDamage()<=0)
                     throw new IllegalStateException("ENEMY_ACTION_PROJECTILE_ASSET_UNSUPPORTED");
+            }
+            for(var strike:modernProjectileStrikes){
+                if(!Integer.valueOf(1).equals(graph.configProjectileOccurrences().get(strike.leaf()))
+                        ||!graph.modernNormal(strike.leaf()))
+                    throw new IllegalStateException("ENEMY_ACTION_REPEATED_OR_CONDITIONAL_MODERN_PROJECTILE_ROUTE");
+                ModernRoute.certify(strike);
             }
         }
         /** Resolve the actual native Role Replace graph, rather than binding a named parent leaf by guess. */
@@ -195,6 +267,20 @@ public final class NativeEnemyAction {
                     strikeId,producer,1,entry.getKey(),statusSource)));
             binding.validate(context);return binding;
         }
+        public static Binding certifyModernProjectileSingle(String revision,RootInteraction root,InteractionType type,
+                InteractionContext context,String strikeId,String producer,String configId,String nativeCause,
+                EnemyStatusEffects.Source statusSource){
+            var graph=NativeBasicAttackPaths.resolve(context,root,type);
+            if(!graph.damageOccurrences().isEmpty()||!graph.projectileOccurrences().isEmpty()
+                    ||graph.configProjectileOccurrences().size()!=1)
+                throw new IllegalStateException("ENEMY_ACTION_NOT_SINGLE_MODERN_PROJECTILE");
+            var entry=graph.configProjectileOccurrences().entrySet().iterator().next();
+            if(entry.getValue()!=1||!graph.modernNormal(entry.getKey()))
+                throw new IllegalStateException("ENEMY_ACTION_MODERN_PROJECTILE_LEAF_UNCERTIFIED");
+            var binding=new Binding(revision,root,type,List.of(),List.of(),List.of(new ModernProjectileStrike(
+                    strikeId,producer,1,entry.getKey(),configId,nativeCause,statusSource)),Map.of());
+            binding.validate(context);return binding;
+        }
     }
     private final Ref<EntityStore> actor;
     private final InteractionChain root;
@@ -202,6 +288,8 @@ public final class NativeEnemyAction {
     private final Map<NativeEnemyDamageInteraction,EnemyOffenseSnapshot> snapshots;
     private record ProjectileSource(EnemyOffenseSnapshot offense,int nativeBaseDamage){}
     private final Map<LaunchProjectileInteraction,ProjectileSource> projectileSnapshots;
+    private record ModernProjectileSource(EnemyOffenseSnapshot offense,ModernRoute route){}
+    private final Map<ProjectileInteraction,ModernProjectileSource> modernProjectileSnapshots;
     private final BooleanSupplier current;
     private final com.inigmasgames.hytalerpg.execution.math.Vec3 forward;
     private final Set<ReceiptKey> receipts=new HashSet<>();
@@ -209,10 +297,12 @@ public final class NativeEnemyAction {
     private NativeEnemyAction(Ref<EntityStore> actor,InteractionChain root,Binding binding,
             Map<NativeEnemyDamageInteraction,EnemyOffenseSnapshot> snapshots,
             Map<LaunchProjectileInteraction,ProjectileSource> projectileSnapshots,
+            Map<ProjectileInteraction,ModernProjectileSource> modernProjectileSnapshots,
             BooleanSupplier current,com.inigmasgames.hytalerpg.execution.math.Vec3 forward){
         this.actor=actor;this.root=root;this.binding=binding;
         this.snapshots=Collections.unmodifiableMap(new IdentityHashMap<>(snapshots));
         this.projectileSnapshots=Collections.unmodifiableMap(new IdentityHashMap<>(projectileSnapshots));
+        this.modernProjectileSnapshots=Collections.unmodifiableMap(new IdentityHashMap<>(modernProjectileSnapshots));
         this.current=current;this.forward=forward;
     }
     /** rootId is allocated by the encounter's replay owner before this call. No collision-time RNG or timestamp IDs. */
@@ -244,6 +334,19 @@ public final class NativeEnemyAction {
                     strike.producer(),difficultyFactor,nativeSupportFactor,strike.procCoefficient(),providers,
                     directWeakening,encounterSeed),projectile.getDamage()));
         }
+        var modern=new IdentityHashMap<ProjectileInteraction,ModernProjectileSource>();
+        for(var strike:binding.modernProjectileStrikes().stream().sorted(Comparator.comparing(ModernProjectileStrike::authoredId)).toList()){
+            var route=ModernRoute.certify(strike);
+            var sampled=route.damageLeaf().getDamageCalculator().calculateDamage(route.damageLeaf().getRunTime());
+            if(sampled.size()!=1||sampled.keySet().stream().noneMatch(cause->cause.getId().equals(route.nativeCause())))
+                throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_ACCEPTED_CAUSE_CHANGED");
+            var vector=outgoing.snapshot(store,actor,sampled);
+            var identity=new WeaponDamageExecution.Identity(descriptor.worldId(),descriptor.logicalActorId(),rootId,
+                    binding.root().getId(),strike.authoredId());
+            modern.put(strike.leaf(),new ModernProjectileSource(EnemyOffenseSnapshot.freeze(descriptor,identity,vector,
+                    strike.producer(),difficultyFactor,nativeSupportFactor,strike.procCoefficient(),providers,
+                    directWeakening,encounterSeed),route));
+        }
         if(!current.getAsBoolean())throw new IllegalStateException("ENEMY_ACTION_ACCEPTANCE_GENERATION_CHANGED");
         com.inigmasgames.hytalerpg.execution.math.Vec3 forward=null;
         if(descriptor.own(EnemyAffixRegistry.Operator.KNOCKBACK).isPresent()&&binding.strikes().stream().anyMatch(s->!s.leaf().ownsNativeImpulse())){
@@ -255,7 +358,7 @@ public final class NativeEnemyAction {
             if(forward.horizontalLength()<1e-9)throw new IllegalStateException("ENEMY_STRIKE_FORWARD_DEGENERATE");
             forward=forward.horizontalNormalized();
         }
-        return new NativeEnemyAction(actor,chain,binding,values,launches,current,forward);
+        return new NativeEnemyAction(actor,chain,binding,values,launches,modern,current,forward);
     }
     public InteractionChain root(){return root;}
     public EnemyOffenseSnapshot snapshot(NativeEnemyDamageInteraction leaf){
@@ -267,6 +370,35 @@ public final class NativeEnemyAction {
         return result.offense();
     }
     public record ProjectileLaunch(String nativeProjectileAsset,int nativeBaseDamage,EnemyOffenseSnapshot offense){}
+    public record ModernProjectileLaunch(EnemyOffenseSnapshot offense,ModernRoute route){}
+    public Optional<ModernProjectileLaunch> modernProjectileLaunch(NativeModernProjectileHook.Context context){
+        if(!current.getAsBoolean()||!actor.isValid()||!binding.root().getId().equals(context.initialRoot()))
+            return Optional.empty();
+        var queue=new ArrayDeque<InteractionChain>();queue.add(root);
+        var seen=Collections.newSetFromMap(new IdentityHashMap<InteractionChain,Boolean>());
+        ModernProjectileLaunch found=null;
+        while(!queue.isEmpty()){
+            var chain=queue.removeFirst();if(!seen.add(chain))continue;
+            if(seen.size()>256||queue.size()+chain.getForkedChains().size()+chain.getNewForks().size()>256)
+                throw new IllegalStateException("ENEMY_NATIVE_FORK_BOUNDS");
+            if(chain.getChainId()==context.chainId()&&forkPath(chain.getForkedChainId()).equals(context.forkPath())
+                    &&chain.getRootInteraction().getId().equals(context.operationRoot())
+                    &&chain.getOperationIndex()==context.operationIndex()){
+                int operation=context.operationCounter();var operationRoot=chain.getRootInteraction();
+                if(operation<0||operation>=operationRoot.getOperationMax())
+                    throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_OPERATION_OUT_OF_BOUNDS");
+                for(var strike:binding.modernProjectileStrikes())if(operationRoot.getOperation(operation).getInnerOperation()==strike.leaf()){
+                    if(found!=null)throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_AMBIGUOUS_ACCEPTED_ROOT");
+                    var saved=modernProjectileSnapshots.get(strike.leaf());
+                    if(saved==null||!saved.route().configId().equals(context.configId()))
+                        throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_CONFIG_CHANGED");
+                    found=new ModernProjectileLaunch(saved.offense(),saved.route());
+                }
+            }
+            queue.addAll(chain.getForkedChains().values());queue.addAll(chain.getNewForks());
+        }
+        return Optional.ofNullable(found);
+    }
     /** Match the patched launch coordinates to this already accepted root, never to shooter/time proximity. */
     public Optional<ProjectileLaunch> projectileLaunch(NativeProjectileReceiptHook.Context context){
         if(!current.getAsBoolean()||!actor.isValid()||context.projectile()==null

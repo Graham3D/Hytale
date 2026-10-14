@@ -5,6 +5,8 @@ import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.EntityEventSystem;
 import com.hypixel.hytale.server.core.entity.*;
 import com.hypixel.hytale.server.core.entity.entities.ProjectileComponent;
+import com.hypixel.hytale.server.core.modules.projectile.component.ImpactModifiers;
+import com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsProvider;
 import com.hypixel.hytale.server.core.modules.interaction.event.InteractionChainStartEvent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
@@ -12,8 +14,9 @@ import com.inigmasgames.hytalerpg.combat.hytale.NativeDamageLeafInteraction;
 import com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageAdapter;
 import com.inigmasgames.hytalerpg.enemies.*;
 import com.inigmasgames.hytale.patch.NativeProjectileReceiptHook;
+import com.inigmasgames.hytale.patch.NativeModernProjectileHook;
 import com.inigmasgames.hytale.patch.NativeDamageReceiptHook;
-import com.inigmasgames.hytalerpg.combat.hytale.NativeDamageLeafInteraction;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.*;
 
@@ -76,7 +79,8 @@ public final class NativeEnemyActions {
                 // A native combat evaluator can select one of several variable maps for
                 // the same original root. Each variant must own entirely distinct leaves.
                 if(prior.root()!=binding.root()||!prior.projectileStrikes().isEmpty()
-                        ||!binding.projectileStrikes().isEmpty()||prior.strikes().isEmpty()
+                        ||!binding.projectileStrikes().isEmpty()||!prior.modernProjectileStrikes().isEmpty()
+                        ||!binding.modernProjectileStrikes().isEmpty()||prior.strikes().isEmpty()
                         ||binding.strikes().isEmpty()||prior.strikes().stream().anyMatch(left->
                         binding.strikes().stream().anyMatch(right->left.leaf()==right.leaf())))
                     throw new IllegalArgumentException("ENEMY_ACTION_ATTACH_BINDINGS");
@@ -85,7 +89,8 @@ public final class NativeEnemyActions {
         }
         if(EnemyStatusEffects.requiresSource(descriptor)&&bindings.stream().anyMatch(binding->
                 binding.strikes().stream().anyMatch(strike->strike.statusSource()==null)
-                ||binding.projectileStrikes().stream().anyMatch(strike->strike.statusSource()==null)))
+                ||binding.projectileStrikes().stream().anyMatch(strike->strike.statusSource()==null)
+                ||binding.modernProjectileStrikes().stream().anyMatch(strike->strike.statusSource()==null)))
             throw new IllegalArgumentException("ENEMY_ACTION_STATUS_SOURCE_NOT_CERTIFIED");
         Objects.requireNonNull(source);Objects.requireNonNull(nextReplayRoot);Objects.requireNonNull(accepted);Objects.requireNonNull(rejected);
         if(frozenSeed==null||frozenSeed.isBlank())throw new IllegalArgumentException("ENEMY_ACTION_SEED");
@@ -100,8 +105,13 @@ public final class NativeEnemyActions {
         for(var actor:actors.values())if(actor.descriptor.worldId().equals(world)
                 &&actor.descriptor.spawnOrigin()!=EnemyRewardContext.Origin.QA)actor.quarantined=true;
     }
+    public synchronized boolean requiresModernReceipt(Ref<EntityStore> shooter){
+        var actor=actors.get(shooter);
+        return actor!=null&&actor.bindings.stream().anyMatch(b->!b.modernProjectileStrikes().isEmpty());
+    }
     /** The native damage seam runs inside this exact accepted leaf's current invocation. */
     public String originalDamageReceipt(NativeDamageReceiptHook.Context context){
+        var modern=modernDamageReceipt(context);if(modern!=null)return modern;
         var invocation=NativeDamageLeafInteraction.currentInvocation();
         if(invocation==null||!(invocation.scope() instanceof EnemyNativeStrikeScope accepted))return null;
         var active=invocation.context();var chain=active.getChain();
@@ -114,6 +124,50 @@ public final class NativeEnemyActions {
                 ||context.operationCounter()!=active.getOperationCounter())
             throw new IllegalStateException("ENEMY_ORIGINAL_RECEIPT_NATIVE_CHAIN_CHANGED");
         return accepted.originalReceipt(context);
+    }
+    static String modernReceiptToken(UUID projectile,UUID target,String cause){
+        return "me-modern/"+projectile+"/"+target+"/"+cause;
+    }
+    private synchronized String modernDamageReceipt(NativeDamageReceiptHook.Context context){
+        if(context.executor()==null||context.owner()==null)return null;
+        Actor actor=null;
+        for(var candidate:actors.values())if(candidate.descriptor.worldId().equals(context.world())
+                &&candidate.descriptor.entityId().equals(context.owner())
+                &&candidate.bindings.stream().anyMatch(b->!b.modernProjectileStrikes().isEmpty())){
+            if(actor!=null)throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_AMBIGUOUS_OWNER");actor=candidate;
+        }
+        if(actor==null)return null;
+        if(actor.bindings.stream().flatMap(b->b.modernProjectileStrikes().stream()).noneMatch(strike->{
+            var config=strike.leaf().getConfig();
+            return config!=null&&Objects.equals(config.getInteractions().get(com.hypixel.hytale.protocol.InteractionType.ProjectileHit),
+                    context.initialRoot());
+        }))return null;
+        try{
+            requireCurrent(actor,actor.store);
+            if(!Objects.equals(context.owner(),context.source())||context.componentIndex()!=0)
+                throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_NATIVE_SOURCE_CHANGED");
+            var projectile=context.projectileRef();
+            var component=EnemyModernProjectileReceipt.getComponentType();
+            var saved=projectile==null||!projectile.isValid()||projectile.getStore()!=actor.store||component==null
+                    ?null:actor.store.getComponent(projectile,component);
+            if(saved==null)throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_IMPACT_RECEIPT_MISSING");
+            var nativeId=actor.store.getComponent(projectile,UUIDComponent.getComponentType());
+            if(nativeId==null||!nativeId.getUuid().equals(context.executor()))
+                throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_IMPACT_ID_CHANGED");
+            var receipt=saved.state();
+            receipt.require(context.executor(),context.owner(),context.world(),actor.descriptor.encounterGeneration(),
+                    actor.descriptor.nativeBindingRevision(),receipt.configId());
+            if(!receipt.hitRoot().equals(context.initialRoot())||!receipt.nativeCause().equals(context.cause())
+                    ||!receipt.hitRoot().equals(context.operationRoot())||context.operationCounter()<0)
+                throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_IMPACT_CHAIN_CHANGED");
+            var nativeRoot=com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction
+                    .getAssetMap().getAsset(context.operationRoot());
+            if(nativeRoot==null||context.operationCounter()>=nativeRoot.getOperationMax()
+                    ||!(nativeRoot.getOperation(context.operationCounter()).getInnerOperation()
+                            instanceof com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.DamageEntityInteraction))
+                throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_DAMAGE_LEAF_CHANGED");
+            return modernReceiptToken(context.executor(),context.target(),context.cause());
+        }catch(RuntimeException failure){quarantineWorld(context.world());throw failure;}
     }
     private synchronized void start(Ref<EntityStore> ref,Store<EntityStore> store,InteractionChainStartEvent event){
         // The native chain starts with finalState=Finished until its first tick. Capture at
@@ -265,6 +319,79 @@ public final class NativeEnemyActions {
             throw unsupported; // Prevent native queueing of an uncertified ME projectile.
         }
     }
+    static void requireNeutralModifiers(ImpactModifiers modifiers){
+        if(modifiers!=null&&(!modifiers.getAttributes().isEmpty()
+                ||modifiers.getOnHitEffectIds().length!=0||modifiers.getElementalCauseId()!=null))
+            throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_MODIFIERS_UNCERTIFIED");
+    }
+    /** NPC 0.7.1 launches may supply no client UUID; the native entity gets this stable birth-root identity. */
+    public static UUID modernProjectileIdentity(NativeModernProjectileHook.Context context,
+            NativeEnemyAction.ModernProjectileLaunch accepted){
+        var identity=accepted.offense().identity();
+        var key="Hywind/ME12/modern-projectile/"+identity.worldId()+"/"+context.executor()+"/"
+                +identity.rootId()+"/"+identity.authoredTickId()+"/"+context.chainId()+"/"
+                +context.forkPath()+"/"+context.operationCounter()+"/"+context.configId();
+        return UUID.nameUUIDFromBytes(key.getBytes(StandardCharsets.UTF_8));
+    }
+    /** The native modern spawn has already made exactly one projectile and scheduled native launch metadata. */
+    public synchronized void attachModernProjectile(NativeModernProjectileHook.Context context,Ref<EntityStore> projectile,
+            CommandBuffer<EntityStore> buffer,ImpactModifiers modifiers){
+        Objects.requireNonNull(context);Objects.requireNonNull(buffer);
+        if(context.executor()==null)return;
+        Actor actor=null;
+        for(var candidate:actors.values())if(candidate.descriptor.worldId().equals(context.world())
+                &&candidate.descriptor.entityId().equals(context.executor())){
+            if(actor!=null)throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_AMBIGUOUS_SOURCE");actor=candidate;
+        }
+        if(actor==null||actor.bindings.stream().noneMatch(b->!b.modernProjectileStrikes().isEmpty()
+                &&b.root().getId().equals(context.initialRoot())))return;
+        try{
+            requireCurrent(actor,buffer.getStore());requireNeutralModifiers(modifiers);
+            if(!context.executor().equals(context.owner())||projectile==null||projectile.getStore()!=actor.store)
+                throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_PROXY_SOURCE_UNCERTIFIED");
+            NativeEnemyAction.ModernProjectileLaunch accepted=null;
+            for(var root:actor.roots){
+                var match=root.modernProjectileLaunch(context);
+                if(match.isPresent()){
+                    if(accepted!=null)throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_AMBIGUOUS_ROOT");
+                    accepted=match.get();
+                }
+            }
+            if(accepted==null)throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_ACCEPTED_ROOT_MISSING");
+            var matched=accepted;var owner=actor;
+            buffer.run(store->{
+                try{
+                    synchronized(this){
+                        requireCurrent(owner,store);
+                        if(!projectile.isValid())throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_SPAWN_MISSING");
+                        var id=store.getComponent(projectile,UUIDComponent.getComponentType());
+                        if(id==null){
+                            id=new UUIDComponent(modernProjectileIdentity(context,matched));
+                            store.putComponent(projectile,UUIDComponent.getComponentType(),id);
+                        }
+                        var physics=store.getComponent(projectile,StandardPhysicsProvider.getComponentType());
+                        var nativeMarker=store.getComponent(projectile,
+                                com.hypixel.hytale.server.core.modules.projectile.component.Projectile.getComponentType());
+                        var component=EnemyModernProjectileReceipt.getComponentType();
+                        var transform=store.getComponent(projectile,
+                                com.hypixel.hytale.server.core.modules.entity.component.TransformComponent.getComponentType());
+                        if(physics==null||nativeMarker==null||component==null||transform==null
+                                ||!context.executor().equals(physics.getCreatorUuid())
+                                ||store.getComponent(projectile,component)!=null)
+                            throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_NATIVE_ENTITY_CHANGED");
+                        var direction=launchHorizontal(physics.getVelocity(),transform.getRotation());
+                        var route=matched.route();
+                        var receipt=new EnemyModernProjectileReceipt.State(id.getUuid(),context.executor(),
+                                route.configId(),route.hitRoot(),route.missRoot(),route.nativeCause(),
+                                route.nativeMinimum(),route.nativeMaximum(),matched.offense(),direction.x(),direction.z());
+                        receipt.require(id.getUuid(),owner.descriptor.entityId(),owner.descriptor.worldId(),
+                                owner.descriptor.encounterGeneration(),owner.descriptor.nativeBindingRevision(),context.configId());
+                        store.putComponent(projectile,component,new EnemyModernProjectileReceipt(receipt));
+                    }
+                }catch(RuntimeException failure){quarantineWorld(context.world());throw failure;}
+            });
+        }catch(RuntimeException failure){quarantineWorld(context.world());throw failure;}
+    }
     /** Read the vector written by native shoot(), never the holder's pre-physics Velocity component. */
     static com.inigmasgames.hytalerpg.execution.math.Vec3 launchHorizontal(org.joml.Vector3dc velocity,
             com.hypixel.hytale.math.vector.Rotation3f rotation){
@@ -327,6 +454,80 @@ public final class NativeEnemyActions {
         actor.accepted.accept(hit);
             com.inigmasgames.hytalerpg.diagnostics.hro.HroMasterEnemies.hit(actor.descriptor,hit);
     }
+    /** Native Health has applied the sole modern impact packet; reactions and rewards observe its receipt once. */
+    public synchronized void deliveredModernProjectile(Store<EntityStore> store,CommandBuffer<EntityStore> buffer,
+            Ref<EntityStore> source,Ref<EntityStore> victim,EnemyModernProjectileReceipt.State receipt,
+            HytaleDamageAdapter.NativeResult result){
+        Actor actor=null;
+        for(var candidate:actors.values())if(candidate.store==store
+                &&candidate.descriptor.entityId().equals(receipt.sourceEntity())){
+            if(actor!=null)throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_AMBIGUOUS_DELIVERY_SOURCE");
+            actor=candidate;
+        }
+        if(actor==null)throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_DELIVERY_SOURCE_DETACHED");
+        requireCurrent(actor,store);
+        if(!source.isValid()||source.getStore()!=store||source.getIndex()!=actor.ref.getIndex())
+            throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_DELIVERY_NATIVE_SOURCE_CHANGED");
+        var offense=receipt.offense();var identity=offense.identity();
+        if(!actor.descriptor.logicalActorId().equals(identity.actorId())
+                ||!actor.descriptor.worldId().equals(identity.worldId())
+                ||actor.descriptor.encounterGeneration()!=offense.generation())
+            throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_DELIVERY_ACTOR_CHANGED");
+        var target=buffer.getComponent(victim,UUIDComponent.getComponentType());
+        if(target==null)throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_DELIVERY_TARGET_MISSING");
+        var binding=actor.bindings.stream().filter(b->b.root().getId().equals(identity.executionId())).findFirst()
+                .orElseThrow(()->new IllegalStateException("ENEMY_MODERN_PROJECTILE_DELIVERY_ROOT_CHANGED"));
+        var strike=binding.modernProjectileStrikes().stream().filter(s->s.authoredId().equals(identity.authoredTickId())
+                &&s.configId().equals(receipt.configId())&&s.nativeCause().equals(receipt.nativeCause())).findFirst()
+                .orElseThrow(()->new IllegalStateException("ENEMY_MODERN_PROJECTILE_DELIVERY_STRIKE_CHANGED"));
+        var hit=EnemyAppliedHit.completed(offense,target.getUuid(),Map.of(receipt.nativeCause(),result));
+        if(hit.actualHealthLoss()<=0)return;
+        var key=new ProjectileReceiptKey(receipt.projectile(),identity.rootId(),identity.authoredTickId(),target.getUuid());
+        if(actor.projectileReceipts.contains(key))return;
+        if(actor.projectileReceipts.size()>=4096)throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_RECEIPT_BOUNDS");
+        actor.projectileReceipts.add(key);
+        var acceptedActor=actor;
+        reactions.accept(new Delivery(store,buffer,source,victim,actor.descriptor,hit,
+                ()->acceptedActor.attached&&source.isValid()&&acceptedActor.store==buffer.getStore(),
+                strike.statusSource(),actor.seed,
+                "Projectile_Config_Goblin_Turret_Trash".equals(receipt.configId()),
+                new com.inigmasgames.hytalerpg.execution.math.Vec3(receipt.forwardX(),0,receipt.forwardZ())));
+        actor.accepted.accept(hit);
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroMasterEnemies.hit(actor.descriptor,hit);
+    }
+    private synchronized void beginModernImpact(Ref<EntityStore> owner,Store<EntityStore> store,
+            CommandBuffer<EntityStore> buffer,InteractionChainStartEvent event){
+        var projectile=event.getContext().getEntity();
+        if(projectile==null||!projectile.isValid()||projectile==owner||projectile.getStore()!=store)return;
+        var nativeMarker=buffer.getComponent(projectile,
+                com.hypixel.hytale.server.core.modules.projectile.component.Projectile.getComponentType());
+        if(nativeMarker==null)return;
+        var actor=actors.get(owner);if(actor==null||actor.bindings.stream().noneMatch(b->!b.modernProjectileStrikes().isEmpty()))return;
+        // A mixed native actor may also own unrelated projectile routes. Only a
+        // certified modern impact root requires this receipt; do not widen or
+        // quarantine those other routes merely because they share the shooter.
+        var root=event.getRootInteractionId();
+        if(actor.bindings.stream().flatMap(b->b.modernProjectileStrikes().stream()).noneMatch(strike->{
+            var config=strike.leaf().getConfig();
+            return config!=null&&config.getInteractions().values().contains(root);
+        }))return;
+        try{
+            requireCurrent(actor,store);
+            var component=EnemyModernProjectileReceipt.getComponentType();
+            var saved=component==null?null:buffer.getComponent(projectile,component);
+            var nativeOwner=buffer.getComponent(projectile,StandardPhysicsProvider.getComponentType());
+            if(saved==null||nativeOwner==null||!actor.descriptor.entityId().equals(nativeOwner.getCreatorUuid()))
+                throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_IMPACT_SOURCE_MISSING");
+            var id=buffer.getComponent(projectile,UUIDComponent.getComponentType());
+            if(id==null)throw new IllegalStateException("ENEMY_MODERN_PROJECTILE_IMPACT_ID_MISSING");
+            var receipt=saved.state();
+            receipt.require(id.getUuid(),actor.descriptor.entityId(),actor.descriptor.worldId(),
+                    actor.descriptor.encounterGeneration(),actor.descriptor.nativeBindingRevision(),receipt.configId());
+            if(!receipt.hitRoot().equals(root)&&!receipt.missRoot().equals(root))return;
+            if(event.getContext().getOwningEntity()!=owner||!saved.beginImpact(root))event.setCancelled(true);
+        }catch(RuntimeException failure){event.setCancelled(true);quarantineWorld(actor.descriptor.worldId());
+            actor.rejected.accept(failure);}
+    }
     private static void requireCurrent(Actor actor,Store<EntityStore> store){
         if(!actor.attached||actor.quarantined||actor.store!=store||!store.isInThread()||!actor.ref.isValid()
                 ||store.getComponent(actor.ref,EnemyStaging.getComponentType())!=null)
@@ -341,5 +542,15 @@ public final class NativeEnemyActions {
             owner.start(chunk.getReferenceTo(i),store,event);
         
             }}
+    }
+    /** Reject duplicate hit/miss roots before native Stone_Death, Poison or visual/audio leaves run. */
+    public static final class ModernImpactStart extends EntityEventSystem<EntityStore,InteractionChainStartEvent>{
+        private final NativeEnemyActions owner;
+        public ModernImpactStart(NativeEnemyActions owner){super(InteractionChainStartEvent.class);this.owner=owner;}
+        @Override public Query<EntityStore> getQuery(){return NPCEntity.getComponentType();}
+        @Override public void handle(int i,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,
+                CommandBuffer<EntityStore> buffer,InteractionChainStartEvent event){
+            owner.beginModernImpact(chunk.getReferenceTo(i),store,buffer,event);
+        }
     }
 }

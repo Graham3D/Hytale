@@ -106,6 +106,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
     private com.inigmasgames.hytalerpg.combat.hytale.NativeSystemReplacement enemyArmor,enemyOutgoingEffects,enemySpawnGroups;
     private com.inigmasgames.hytalerpg.execution.hytale.PackboundNativeMutationBridge packboundNativeHook;
     private AutoCloseable enemyProjectileHook;
+    private AutoCloseable enemyModernProjectileHook;
     private AutoCloseable enemyDamageReceiptHook;
     private AutoCloseable nativePopulationProjectionHook;
     private com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyActions enemyActions;
@@ -456,6 +457,9 @@ public final class HyArpgPlugin extends TavernsPlugin {
         com.inigmasgames.hytalerpg.enemies.EnemyProjectileReceipt.bind(getEntityStoreRegistry().registerComponent(
                 com.inigmasgames.hytalerpg.enemies.EnemyProjectileReceipt.class,"RpgEnemyProjectileReceipt",
                 com.inigmasgames.hytalerpg.enemies.EnemyProjectileReceipt.CODEC));
+        com.inigmasgames.hytalerpg.enemies.EnemyModernProjectileReceipt.bind(getEntityStoreRegistry().registerComponent(
+                com.inigmasgames.hytalerpg.enemies.EnemyModernProjectileReceipt.class,"RpgEnemyModernProjectileReceipt",
+                com.inigmasgames.hytalerpg.enemies.EnemyModernProjectileReceipt.CODEC));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyActorRecovery());
         com.inigmasgames.hytalerpg.enemies.EnemyEngagementClock.bind(getEntityStoreRegistry().registerComponent(
                 com.inigmasgames.hytalerpg.enemies.EnemyEngagementClock.class,"RpgEnemyEngagementClock",
@@ -946,6 +950,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
         sharedReflection.configureEnemyReaction(enemyReflectiveReaction);
         com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyDamageInteraction.configure(enemyActions::scope);
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyActions.Start(enemyActions));
+        getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyActions.ModernImpactStart(enemyActions));
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyProjectileDamage(
                 difficultyCombat,enemyActions,enemyBindings));
         var enemyBalance=com.inigmasgames.hytalerpg.enemies.EnemyBalance.canonical();
@@ -973,6 +978,12 @@ public final class HyArpgPlugin extends TavernsPlugin {
         }catch(LinkageError|RuntimeException missingHook){
             enemyProjectileHook=null;
             LOGGER.atWarning().withCause(missingHook).log("RPG_ENEMY_PROJECTILE_RECEIPT_HOOK_UNAVAILABLE promotion=false");
+        }
+        if(packboundNativeHook!=null)try{
+            enemyModernProjectileHook=com.inigmasgames.hytale.patch.NativeModernProjectileHook.install(enemyActions::attachModernProjectile);
+        }catch(LinkageError|RuntimeException missingHook){
+            enemyModernProjectileHook=null;
+            LOGGER.atWarning().withCause(missingHook).log("RPG_ENEMY_MODERN_PROJECTILE_HOOK_UNAVAILABLE promotion=false");
         }
         if(packboundNativeHook!=null)try{
             enemyDamageReceiptHook=com.inigmasgames.hytale.patch.NativeDamageReceiptHook.install(context->{
@@ -1264,6 +1275,9 @@ public final class HyArpgPlugin extends TavernsPlugin {
         try{if(enemyProjectileHook!=null)enemyProjectileHook.close();}
         catch(Exception failure){enemyTeardown=enemyTeardownFailure(enemyTeardown,"ENEMY_PROJECTILE_HOOK_TEARDOWN",failure);}
         finally{enemyProjectileHook=null;}
+        try{if(enemyModernProjectileHook!=null)enemyModernProjectileHook.close();}
+        catch(Exception failure){enemyTeardown=enemyTeardownFailure(enemyTeardown,"ENEMY_MODERN_PROJECTILE_HOOK_TEARDOWN",failure);}
+        finally{enemyModernProjectileHook=null;}
         try{if(enemyDamageReceiptHook!=null)enemyDamageReceiptHook.close();}
         catch(Exception failure){enemyTeardown=enemyTeardownFailure(enemyTeardown,"ENEMY_DAMAGE_RECEIPT_HOOK_TEARDOWN",failure);}
         finally{enemyDamageReceiptHook=null;}

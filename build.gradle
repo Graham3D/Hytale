@@ -346,7 +346,7 @@ tasks.register('nativeControlTest', Test) {
           include '**/SignatureConsumerProofTest.class'
         ['EnemyNativePaletteTest','EnemyNativeDamageLeafTest','EnemyNativeTimingTest',
          'EnemyNativeHealthTest','EnemyNativeDefenseTest','EnemyNativeOutgoingTest',
-         'EnemyNativeProjectilePathTest','EnemyNativeStagingTest','Me12DefenderRouteTest',
+         'EnemyNativeProjectilePathTest','EnemyModernProjectileReceiptTest','EnemyNativeStagingTest','Me12DefenderRouteTest',
          'NativePackboundMutationHookTest'].each { include "**/${it}.class" }
         include '**/NativeEnemyActionsStartTest.class'
         include '**/R024NativeInteractionAssetTest.class'

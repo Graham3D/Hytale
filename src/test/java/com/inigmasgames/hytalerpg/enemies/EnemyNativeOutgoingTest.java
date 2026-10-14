@@ -20,11 +20,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /** Real native source-effect calculation and ECS component lookup, without a World/server or plugin startup. */
 class EnemyNativeOutgoingTest {
-    static final DamageCause PHYSICAL=new DamageCause("Physical"),PROJECTILE=new DamageCause("Projectile"),ELEMENTAL=new DamageCause("Elemental"),
+    static final DamageCause PHYSICAL=new DamageCause("Physical"),PROJECTILE=new DamageCause("Projectile"),POISON=new DamageCause("Poison"),ELEMENTAL=new DamageCause("Elemental"),
             FIRE=new DamageCause("Fire","Elemental",false,false,false);
     static final class Causes extends IndexedLookupTableAssetMap<String,DamageCause>{
         Causes(){super(DamageCause[]::new);}
-        void seed(){putAll("OutgoingFixture",DamageCause.CODEC,Map.of("Physical",PHYSICAL,"Projectile",PROJECTILE,"Elemental",ELEMENTAL,"Fire",FIRE),Map.of(),Map.of());}
+        void seed(){putAll("OutgoingFixture",DamageCause.CODEC,Map.of("Physical",PHYSICAL,"Projectile",PROJECTILE,"Poison",POISON,"Elemental",ELEMENTAL,"Fire",FIRE),Map.of(),Map.of());}
     }
     static final class Effect extends EntityEffect {
         Effect(String id,Map<DamageCause,ResistanceModifier[]> outgoing,Map<DamageCause,ResistanceModifier[]> incoming){
@@ -111,8 +111,8 @@ class EnemyNativeOutgoingTest {
                 .setReplaceOnRemove(ignored->{throw new AssertionError("Fixture assets cannot be removed during an action");});
         var interactions=new HytaleAssetStore<>(builder){final EventBus bus=new EventBus(false);@Override protected EventBus getEventBus(){return bus;}};
         AssetRegistry.register(interactions);NativeFixtureAssetCache.clear(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.class);
+        var context=com.hypixel.hytale.server.core.entity.InteractionContext.withoutEntity();
         try{
-            var context=com.hypixel.hytale.server.core.entity.InteractionContext.withoutEntity();
             for(String fieldName:List.of("runningForEntity","owningEntity")){
                 var field=context.getClass().getDeclaredField(fieldName);field.setAccessible(true);field.set(context,actor);
             }
@@ -176,6 +176,8 @@ class EnemyNativeOutgoingTest {
             active.set(false);
             assertThrows(IllegalStateException.class,()->NativeEnemyAction.capture(store,actor,chain,binding,descriptor,providers,"replay-root-2","birth-seed",2,1,0,outgoing,active::get));
         }finally{AssetRegistry.unregister(interactions);NativeFixtureAssetCache.clear(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.class);}
+        modernProjectileAcceptedRoots(store,actor,context,outgoing,
+                new EnemyAffixSnapshotTest().actor(false,List.of(),List.of(),null).nativeBindingRevision());
     }
     static void projectileAcceptedRoot(Store<EntityStore> store,Ref<EntityStore> actor,
             com.hypixel.hytale.server.core.entity.InteractionContext context,NativeEnemyOutgoingEffects outgoing,
@@ -230,6 +232,156 @@ class EnemyNativeOutgoingTest {
                     chain.getOperationIndex(),1)));
             }finally{AssetRegistry.unregister(assetStore);}
         }finally{DamageCause.PROJECTILE=priorCause;}
+    }
+    static void modernProjectileAcceptedRoots(Store<EntityStore> store,Ref<EntityStore> actor,
+            com.hypixel.hytale.server.core.entity.InteractionContext context,NativeEnemyOutgoingEffects outgoing,
+            String revision)throws Exception {
+        for(var caseId:List.of("Goblin_Turret","Scarak_Seeker")){
+            String configId=caseId.equals("Goblin_Turret")
+                    ?"Projectile_Config_Goblin_Turret_Trash":"Projectile_Config_Scarak_Seeker_Spitball";
+            String cause=caseId.equals("Goblin_Turret")?"Physical":"Poison";
+            float expectedBase=caseId.equals("Goblin_Turret")?8:10;
+            var leaf=com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.DamageEntityInteraction.CODEC
+                    .decode(org.bson.BsonDocument.parse("""
+                            {"DamageCalculator":{"Type":"Absolute","BaseDamage":{"%s":%s},"RandomPercentageModifier":%s}}
+                            """.formatted(cause,expectedBase,caseId.equals("Goblin_Turret")?0:0.1)),
+                            new com.hypixel.hytale.codec.ExtraInfo());
+            var id=com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.class.getDeclaredField("id");
+            id.setAccessible(true);id.set(leaf,caseId+"_NativeDamage");
+            class NativeInteractions extends IndexedLookupTableAssetMap<String,com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction>{
+                NativeInteractions(){super(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction[]::new);}
+                void seed(){putAll("ModernFixture",com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.CODEC,
+                        Map.of(leaf.getId(),leaf),Map.of(),Map.of());}
+                void launch(com.hypixel.hytale.server.core.modules.projectile.interaction.ProjectileInteraction value){
+                    putAll("ModernFixture",com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.CODEC,
+                            Map.of(value.getId(),value),Map.of(),Map.of());}
+            }
+            var nativeMap=new NativeInteractions();nativeMap.seed();
+            var ib=HytaleAssetStore.builder(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.class,
+                    (IndexedLookupTableAssetMap<String,com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction>)nativeMap)
+                    .setPath("Item/Interactions").setCodec(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.CODEC)
+                    .setKeyFunction(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction::getId)
+                    .setReplaceOnRemove(ignored->{throw new AssertionError("Native interaction removed");});
+            var nativeAssets=new HytaleAssetStore<>(ib){final EventBus events=new EventBus(false);
+                @Override protected EventBus getEventBus(){return events;}};
+            AssetRegistry.register(nativeAssets);NativeFixtureAssetCache.clear(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.class);
+            try{
+                var hit=new com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction(caseId+"_ProjectileHit",leaf.getId());
+                hit.build();
+                var miss=new com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction(caseId+"_ProjectileMiss");
+                miss.build();
+                class Roots extends IndexedLookupTableAssetMap<String,com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction>{
+                    Roots(){super(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction[]::new);}
+                    void seed(){putAll("ModernFixture",com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction.CODEC,
+                            Map.of(hit.getId(),hit,miss.getId(),miss),Map.of(),Map.of());}
+                    void launch(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction value){
+                        putAll("ModernFixture",com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction.CODEC,
+                                Map.of(value.getId(),value),Map.of(),Map.of());}
+                }
+                var rootMap=new Roots();rootMap.seed();
+                var rb=HytaleAssetStore.builder(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction.class,
+                        (IndexedLookupTableAssetMap<String,com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction>)rootMap)
+                        .setPath("Item/RootInteractions").setCodec(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction.CODEC)
+                        .setKeyFunction(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction::getId)
+                        .setReplaceOnRemove(ignored->{throw new AssertionError("Native impact root removed");});
+                var rootAssets=new HytaleAssetStore<>(rb){final EventBus events=new EventBus(false);
+                    @Override protected EventBus getEventBus(){return events;}};
+                AssetRegistry.register(rootAssets);NativeFixtureAssetCache.clear(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction.class);
+                try{
+                    var config=new com.hypixel.hytale.server.core.modules.projectile.config.ProjectileConfig();
+                    var configClass=com.hypixel.hytale.server.core.modules.projectile.config.ProjectileConfig.class;
+                    var configField=configClass.getDeclaredField("id");configField.setAccessible(true);configField.set(config,configId);
+                    var interactions=configClass.getDeclaredField("interactions");interactions.setAccessible(true);
+                    interactions.set(config,Map.of(com.hypixel.hytale.protocol.InteractionType.ProjectileHit,hit.getId(),
+                            com.hypixel.hytale.protocol.InteractionType.ProjectileMiss,miss.getId()));
+                    class Configs extends DefaultAssetMap<String,com.hypixel.hytale.server.core.modules.projectile.config.ProjectileConfig>{
+                        void seed(){putAll("ModernFixture",com.hypixel.hytale.server.core.modules.projectile.config.ProjectileConfig.CODEC,
+                                Map.of(configId,config),Map.of(),Map.of());}
+                    }
+                    var configMap=new Configs();configMap.seed();
+                    var cb=HytaleAssetStore.builder(com.hypixel.hytale.server.core.modules.projectile.config.ProjectileConfig.class,
+                            (DefaultAssetMap<String,com.hypixel.hytale.server.core.modules.projectile.config.ProjectileConfig>)configMap)
+                            .setPath("ProjectileConfigs").setCodec(com.hypixel.hytale.server.core.modules.projectile.config.ProjectileConfig.CODEC)
+                            .setKeyFunction(com.hypixel.hytale.server.core.modules.projectile.config.ProjectileConfig::getId)
+                            .setReplaceOnRemove(ignored->{throw new AssertionError("Native projectile config removed");});
+                    var configAssets=new HytaleAssetStore<>(cb){final EventBus events=new EventBus(false);
+                        @Override protected EventBus getEventBus(){return events;}};
+                    AssetRegistry.register(configAssets);NativeFixtureAssetCache.clear(com.hypixel.hytale.server.core.modules.projectile.config.ProjectileConfig.class);
+                    try{
+                        var launch=new com.hypixel.hytale.server.core.modules.projectile.interaction.ProjectileInteraction();
+                        id.set(launch,caseId+"_NativeLaunch");
+                        var configRef=launch.getClass().getDeclaredField("config");configRef.setAccessible(true);configRef.set(launch,configId);
+                        nativeMap.launch(launch);
+                        var root=new com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction(caseId+"_NativeRoot",launch.getId());
+                        root.build();rootMap.launch(root);
+                        var type=com.hypixel.hytale.protocol.InteractionType.Primary;
+                        var unsafeClass=Class.forName("sun.misc.Unsafe");var singleton=unsafeClass.getDeclaredField("theUnsafe");
+                        singleton.setAccessible(true);var unsafe=singleton.get(null);
+                        var allocate=unsafeClass.getMethod("allocateInstance",Class.class);
+                        var nativeRole=(com.hypixel.hytale.server.npc.role.Role)allocate.invoke(unsafe,
+                                com.hypixel.hytale.server.npc.role.Role.class);
+                        var vars=com.hypixel.hytale.server.npc.role.Role.class.getDeclaredField("interactionVars");
+                        vars.setAccessible(true);vars.set(nativeRole,Map.of());
+                        var npc=(com.hypixel.hytale.server.npc.entities.NPCEntity)allocate.invoke(unsafe,
+                                com.hypixel.hytale.server.npc.entities.NPCEntity.class);
+                        npc.setRoleName(caseId);npc.setRole(nativeRole);
+                        var base=EnemyNativeBindings.load().role("Larva_Void").orElseThrow();
+                        var roleAction=new EnemyNativeBindings.Action(root.getId(),List.of("projectile"),
+                                "ActionAttack.execute",Map.of(cause,cause.equals("Poison")?"EARTH":"PHYSICAL"),
+                                null,"EnemyNativeOutgoingTest.modernProjectileAcceptedRoots",
+                                "EnemyNativeProjectilePathTest.modernProjectileCannotHideInsideALegacyCertifiedAction",
+                                Set.of("ME-003"));
+                        var roleBinding=new EnemyNativeBindings.Role(caseId,Set.of(caseId),base.profiles(),
+                                Set.of(EnemyAffixRegistry.Capability.DIRECT_HIT,EnemyAffixRegistry.Capability.DEFENSE_STAT,
+                                        EnemyAffixRegistry.Capability.APPLIED_HIT_RECEIPTS),base.modelAssetId(),
+                                base.textures(),base.controlProfileId(),base.sourceValidationId(),base.nativeLootSourceId(),
+                                base.sourceAssetPath(),base.sourceAssetSha256(),Set.of(),
+                                EnemyStatusEffects.Source.noNativeStatus(0),false,false,0,false,false,
+                                List.of(roleAction),base.evidenceFiles());
+                        var certified=roleBinding.certify(revision,npc);
+                        assertEquals(1,certified.size());
+                        assertEquals(1,certified.getFirst().modernProjectileStrikes().size());
+                        var binding=NativeEnemyAction.Binding.certifyModernProjectileSingle(revision,root,type,context,
+                                "projectile","ActionAttack.execute",configId,cause,EnemyStatusEffects.Source.noNativeStatus(0));
+                        assertThrows(IllegalStateException.class,()->NativeEnemyAction.Binding.certifyModernProjectileSingle(
+                                revision,root,type,context,"projectile","ActionAttack.execute",configId,
+                                cause.equals("Physical")?"Poison":"Physical",EnemyStatusEffects.Source.noNativeStatus(0)));
+                        var fixture=new EnemyAffixSnapshotTest();
+                        var descriptor=fixture.actor(false,List.of(),List.of(),null);
+                        var providers=EnemyAffixSnapshot.resolve(descriptor,fixture.balance,fixture.pack(),0,true,true);
+                        var chain=new com.hypixel.hytale.server.core.entity.InteractionChain(type,context,
+                                new com.hypixel.hytale.protocol.InteractionChainData(),root,null,false);chain.setChainId(93);
+                        var accepted=NativeEnemyAction.capture(store,actor,chain,binding,descriptor,providers,
+                                "accepted-modern-root-1","birth-seed",1,1,0,outgoing,()->true);
+                        var exact=new com.inigmasgames.hytale.patch.NativeModernProjectileHook.Context(descriptor.worldId(),
+                                descriptor.entityId(),descriptor.entityId(),93,List.of(),root.getId(),root.getId(),
+                                chain.getOperationIndex(),0,configId);
+                        var launched=accepted.modernProjectileLaunch(exact).orElseThrow();
+                        var exactId=NativeEnemyActions.modernProjectileIdentity(exact,launched);
+                        assertEquals(exactId,NativeEnemyActions.modernProjectileIdentity(exact,launched));
+                        assertNotEquals(exactId,NativeEnemyActions.modernProjectileIdentity(
+                                new com.inigmasgames.hytale.patch.NativeModernProjectileHook.Context(
+                                        descriptor.worldId(),descriptor.entityId(),descriptor.entityId(),94,List.of(),
+                                        root.getId(),root.getId(),chain.getOperationIndex(),0,configId),launched));
+                        assertEquals(configId,launched.route().configId());assertEquals(cause,launched.route().nativeCause());
+                        assertEquals(hit.getId(),launched.route().hitRoot());assertEquals(miss.getId(),launched.route().missRoot());
+                        assertEquals("accepted-modern-root-1",launched.offense().identity().rootId());
+                        assertTrue(accepted.modernProjectileLaunch(new com.inigmasgames.hytale.patch.NativeModernProjectileHook.Context(
+                                descriptor.worldId(),descriptor.entityId(),descriptor.entityId(),94,List.of(),root.getId(),root.getId(),
+                                chain.getOperationIndex(),0,configId)).isEmpty());
+                        assertThrows(IllegalStateException.class,()->accepted.modernProjectileLaunch(
+                                new com.inigmasgames.hytale.patch.NativeModernProjectileHook.Context(descriptor.worldId(),
+                                        descriptor.entityId(),descriptor.entityId(),93,List.of(),root.getId(),root.getId(),
+                                        chain.getOperationIndex(),0,"other-config")));
+                        var repeated=new com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction(
+                                caseId+"_Repeated",launch.getId(),launch.getId());repeated.build();
+                        assertThrows(IllegalStateException.class,()->NativeEnemyAction.Binding.certifyModernProjectileSingle(
+                                revision,repeated,type,context,"projectile","ActionAttack.execute",configId,cause,
+                                EnemyStatusEffects.Source.noNativeStatus(0)));
+                    }finally{AssetRegistry.unregister(configAssets);NativeFixtureAssetCache.clear(com.hypixel.hytale.server.core.modules.projectile.config.ProjectileConfig.class);}
+                }finally{AssetRegistry.unregister(rootAssets);NativeFixtureAssetCache.clear(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction.class);}
+            }finally{AssetRegistry.unregister(nativeAssets);NativeFixtureAssetCache.clear(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.class);}
+        }
     }
     @Test void outgoingAdapterSharesTheProvenReplaceAndRestoreLifecycle() throws Exception {
         try(var fixture=new EnemyNativeDefenseTest.RegistryFixture()){
