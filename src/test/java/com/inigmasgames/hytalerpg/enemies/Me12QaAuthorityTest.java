@@ -34,7 +34,7 @@ class Me12QaAuthorityTest {
         var path=root.resolve("build/guardian/verification.json");Files.createDirectories(path.getParent());
         var log=root.resolve("build/guardian/check.log");Files.writeString(log,"BUILD SUCCESSFUL\n");
         var reports=new ArrayList<String>();
-        for(var test:List.of("NativeEnemyProductionBirthOwnerTest","Me12AffixDiagnosticExecutionTest","Me12QaAuthorityTest")){
+        for(var test:List.of("NativeEnemyProductionBirthOwnerTest","HroMasterEnemiesTest","Me12QaAuthorityTest")){
             var report=root.resolve("build/test-results/test/TEST-"+test+".xml");
             Files.createDirectories(report.getParent());Files.writeString(report,"<testsuite tests=\"1\" failures=\"0\" errors=\"0\"/>");
             reports.add("{\"path\":\"build/test-results/test/TEST-"+test+".xml\",\"sha256\":\""+hash(report)+"\",\"tests\":1}");
@@ -49,17 +49,22 @@ class Me12QaAuthorityTest {
     }
     private static String hash(Path path) throws Exception {return HexFormat.of().formatHex(
             MessageDigest.getInstance("SHA-256").digest(Files.readAllBytes(path)));}
-    @Test void actualManifestBlocksActivationEvenWithSyntheticGreenReceipt() throws Exception {
+    @Test void actualManifestAdmitsCertifiedRolesWithoutInventingProjectileCertificates() throws Exception {
         var config=config();var world=UUID.randomUUID();var gate=admitted(world);
         var bindings=EnemyNativeBindings.load();var now=new AtomicLong(0);
         var identity=new Me12QaAuthority.Identity("a".repeat(40),"rev","version","b".repeat(64),
                 bindings.serverJarSha256(),bindings.assetsSha256());
         var authority=new Me12QaAuthority(config,gate,bindings,()->true,
-                ()->bindings.productionEligibilityRejection("Goblin_Turret").isEmpty()
-                        &&bindings.productionEligibilityRejection("Scarak_Seeker").isEmpty(),()->identity,now::get);
-        assertThrows(IllegalStateException.class,()->authority.activate(new Me12QaAuthority.Request(
-                identity.sourceCommit(),world,"QaWorld",30,receiptUnchecked(identity))));
-        assertFalse(authority.allows(world));
+                ()->bindings.productionEligibilityRejection("Trork_Warrior").isEmpty(),()->identity,now::get);
+        authority.activate(new Me12QaAuthority.Request(
+                identity.sourceCommit(),world,"QaWorld",30,receiptUnchecked(identity)));
+        assertTrue(authority.allows(world,"Trork_Warrior"));
+        assertFalse(authority.allows(world,"Goblin_Turret"));
+        assertFalse(authority.allows(world,"Scarak_Seeker"));
+        assertFalse(authority.allows(world,"Golem_Firesteel"));
+        assertFalse(authority.allows(world,"Trork_Warrior_Patrol"));
+        assertFalse(authority.allows(world,"Coffer_Goblin_Turret"));
+        assertFalse(authority.allows(world,"Unknown_Role"));
     }
     private Path receiptUnchecked(Me12QaAuthority.Identity identity){try{return receipt(identity);}catch(Exception error){throw new RuntimeException(error);}}
     @Test void syntheticPrerequisitesExerciseBoundedLeaseRevocationAndWorldLifetime() throws Exception {
@@ -99,5 +104,16 @@ class Me12QaAuthorityTest {
         assertThrows(IllegalStateException.class,()->authority.activate(request));assertFalse(authority.allows(world));
         assertThrows(IllegalArgumentException.class,()->authority.activate(new Me12QaAuthority.Request(
                 identity.sourceCommit(),world,"QaWorld",601,request.guardianReceipt())));
+    }
+    @Test void missingProductionOwnerEvidenceKeepsTheLeaseClosed() throws Exception {
+        var config=config();var world=UUID.randomUUID();var gate=admitted(world);
+        var bindings=EnemyNativeBindings.load();
+        var identity=new Me12QaAuthority.Identity("a".repeat(40),"rev","version","b".repeat(64),
+                bindings.serverJarSha256(),bindings.assetsSha256());
+        var authority=new Me12QaAuthority(config,gate,bindings,()->true,()->true,()->identity,()->0);
+        var request=new Me12QaAuthority.Request(identity.sourceCommit(),world,"QaWorld",30,receipt(identity));
+        Files.delete(root.resolve("build/test-results/test/TEST-NativeEnemyProductionBirthOwnerTest.xml"));
+        assertThrows(IllegalStateException.class,()->authority.activate(request));
+        assertFalse(authority.allows(world,"Trork_Warrior"));
     }
 }

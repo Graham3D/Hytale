@@ -70,9 +70,12 @@ public final class Me12QaAuthority {
         this.installed=Objects.requireNonNull(installed);this.clock=Objects.requireNonNull(clock);
     }
     private static boolean mandatoryNativeCerts(EnemyNativeBindings bindings){
-        return bindings.productionEligibilityRejection("Goblin_Turret").isEmpty()
-                &&bindings.productionEligibilityRejection("Scarak_Seeker").isEmpty()
-                &&bindings.role("Golem_Firesteel").filter(EnemyIncomingOnlyAttachment::certified).isPresent();
+        // Admission is per concrete native role. An unresolved role must not
+        // prevent an independently certified role from being exercised in QA.
+        return bindings.roles().stream().filter(EnemyNativeBindings.Role::productionPromotionEnabled)
+                .filter(role->!EnemyIncomingOnlyAttachment.certified(role))
+                .flatMap(role->role.nativeRoleIds().stream())
+                .anyMatch(role->bindings.productionEligibilityRejection(role).isEmpty());
     }
     public synchronized void beginVerification(Request request){Objects.requireNonNull(request);revoke();pendingWorld=request.world();}
     public synchronized void activate(Request request){beginVerification(request);activateVerified(verify(request));}
@@ -119,6 +122,12 @@ public final class Me12QaAuthority {
                 &&config.snapshot()==active.snapshot()&&config.snapshot().me12FeatureState()==Me12FeatureState.DRAIN
                 &&admission.admits(world)&&ownersCertified.getAsBoolean()&&mandatoryCertified.getAsBoolean();
     }
+    /** The lease is world-scoped, but each natural birth still needs its own pinned role. */
+    public boolean allows(UUID world,String nativeRole){
+        return allows(world)&&bindings.productionEligibilityRejection(nativeRole).isEmpty()
+                &&bindings.role(nativeRole).filter(EnemyNativeBindings.Role::productionPromotionEnabled)
+                    .filter(role->!EnemyIncomingOnlyAttachment.certified(role)).isPresent();
+    }
     public synchronized void revoke(){epoch++;lease=null;pendingWorld=null;}
     public synchronized void worldUnload(UUID world){if(lease!=null&&lease.world().equals(world)
             ||world.equals(pendingWorld))revoke();}
@@ -152,12 +161,12 @@ public final class Me12QaAuthority {
             for(var entry:reports){var item=entry.getAsJsonObject();
                 var report=text(item,"path");
                 if(report.startsWith("build/test-results/")&&item.has("tests")&&item.get("tests").getAsInt()>0
-                        &&List.of("NativeEnemyProductionBirthOwnerTest.xml","Me12AffixDiagnosticExecutionTest.xml",
+                        &&List.of("NativeEnemyProductionBirthOwnerTest.xml","HroMasterEnemiesTest.xml",
                                 "Me12QaAuthorityTest.xml").stream().anyMatch(report::endsWith)){
                     verifyEvidence(repository,report,text(item,"sha256"));found.add(report);
                 }}
             for(String required:List.of("NativeEnemyProductionBirthOwnerTest.xml",
-                    "Me12AffixDiagnosticExecutionTest.xml","Me12QaAuthorityTest.xml"))
+                    "HroMasterEnemiesTest.xml","Me12QaAuthorityTest.xml"))
                 if(found.stream().noneMatch(value->value.endsWith(required)))
                     throw new IllegalStateException("ME12_QA_GUARDIAN_TESTS_MISSING:"+required);
         }catch(IOException|JsonParseException failure){throw new IllegalStateException("ME12_QA_GUARDIAN_RECEIPT_INVALID",failure);}

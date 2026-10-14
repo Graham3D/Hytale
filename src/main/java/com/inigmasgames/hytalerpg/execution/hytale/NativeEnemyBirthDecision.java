@@ -51,6 +51,11 @@ public final class NativeEnemyBirthDecision implements AutoCloseable {
     public void configureNativeHooks(java.util.function.BooleanSupplier ready){nativeHooksReady=Objects.requireNonNull(ready);}
     public void configureQaAuthority(Me12QaAuthority authority){qaAuthority=Objects.requireNonNull(authority);}
     private boolean qaActive(UUID world){var authority=qaAuthority;return authority!=null&&authority.allows(world);}
+    private boolean qaActive(NativeEnemySpawnGroups.Group group){
+        var authority=qaAuthority;
+        return authority!=null&&authority.allows(group.job().world(),group.job().nativeRole())
+                &&group.members().stream().allMatch(member->authority.allows(group.job().world(),member.nativeRole()));
+    }
     /** Installation cannot bypass the feature or evidence gates. */
     public synchronized void configureV2ContextSource(V2ContextSource source){
         if(!v2Lifetimes.isEmpty())throw new IllegalStateException("ME12_CONTEXT_SOURCE_ALREADY_IN_USE");v2ContextSource=Objects.requireNonNull(source);
@@ -103,7 +108,7 @@ public final class NativeEnemyBirthDecision implements AutoCloseable {
         // Native random FlockSpawnTypes cannot be predicted from the leader. A real
         // v2 birth stages the exact native-selected roles before graph compilation.
         boolean production=settings!=null&&settings.get().me12FeatureState().allowsNewV2Births()
-                ||qaActive(original.job().world());
+                ||qaActive(original);
         try{
         if(offered>original.members().size()&&production){
             NativeEnemyFlockExtension.Attempt attempt;
@@ -111,6 +116,10 @@ public final class NativeEnemyBirthDecision implements AutoCloseable {
             catch(RuntimeException|Error uncertain){throw new IllegalStateException("ME12_NATIVE_RESERVATION_UNCERTAIN",uncertain);}
             reserved=attempt.group();
             if(reserved==null)throw new IllegalStateException("ME12_NATIVE_RESERVATION_"+attempt.rejection());
+            if(settings!=null&&!settings.get().me12FeatureState().allowsNewV2Births()){
+                if(!qaActive(original.job().world()))throw new IllegalStateException("ME12_QA_AUTHORITY_REVOKED");
+                if(!qaActive(reserved))throw new IllegalStateException("ME12_QA_ROLE_UNCERTIFIED");
+            }
             reservedSources=classify(store,reserved,role).orElseThrow(()->new IllegalStateException("ME12_NATIVE_RESERVED_CLASSIFICATION"));
             for(var member:reserved.members()){
                 var ref2=store.getExternalData().getRefFromUUID(member.entity());
@@ -159,7 +168,7 @@ public final class NativeEnemyBirthDecision implements AutoCloseable {
     /** Nonblocking native entry point. Disabled/DRAIN retain v1; SHADOW cannot acquire a lease or write a root. */
     public java.util.concurrent.CompletionStage<Optional<Selected>> selectAsync(Store<EntityStore> store,NativeEnemySpawnGroups.Group original,SpawnJobData nativeJob){
         var state=settings==null?Me12FeatureState.DISABLED:settings.get().me12FeatureState();state.validateStage2();
-        if(!state.evaluatesShadow()&&!state.allowsNewV2Births()&&!qaActive(original.job().world()))
+        if(!state.evaluatesShadow()&&!state.allowsNewV2Births()&&!qaActive(original))
             return java.util.concurrent.CompletableFuture.completedStage(select(store,original,nativeJob));
         if(!store.isInThread()||admission==null||!admission.admits(original.job().world()))throw new IllegalStateException("ME12_CAPTURE_WORLD_THREAD");
         V2Capture capture;
@@ -172,6 +181,8 @@ public final class NativeEnemyBirthDecision implements AutoCloseable {
                 admission.failClosed(original.job().world());throw blocked;
             }
             if("ME12_NOT_PROCEDURAL_UNIQUE".equals(blocked.getMessage()))return java.util.concurrent.CompletableFuture.completedStage(select(store,original,nativeJob));
+            if("ME12_QA_ROLE_UNCERTIFIED".equals(blocked.getMessage()))
+                return java.util.concurrent.CompletableFuture.completedStage(select(store,original,nativeJob));
             com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.spawn(original.job().world(),original.reservation().encounter(),"NATURAL","SPAWN.ADMISSION","ME12_DEPENDENCY",Map.of("reason",String.valueOf(blocked.getMessage()),"nativeRole",original.job().nativeRole(),"featureMode",state));
             if(state.evaluatesShadow())return java.util.concurrent.CompletableFuture.completedStage(select(store,original,nativeJob));
             return java.util.concurrent.CompletableFuture.completedStage(new Rollback(store,original).fallback("ME12_DEPENDENCY_UNCERTIFIED_PRODUCTION_CONTEXT"));
@@ -217,7 +228,7 @@ public final class NativeEnemyBirthDecision implements AutoCloseable {
         var rollback=new Rollback(store,original);rollback.additional=capture.reserved();
         try{
             if((settings==null||!settings.get().me12FeatureState().allowsNewV2Births())
-                    &&!qaActive(original.job().world()))return rollback.fallback("ME12_QA_AUTHORITY_REVOKED");
+                    &&!qaActive(original))return rollback.fallback("ME12_QA_AUTHORITY_REVOKED");
             if(!store.isInThread()||!admission.admits(original.job().world()))return rollback.fallback("ME12_WORLD_CHANGED");
             if(job.jobId()!=original.job().nativeJobId()||job.roleIndex()!=original.job().roleIndex()
                     ||job.environmentIndex()!=original.job().environment()
@@ -236,6 +247,8 @@ public final class NativeEnemyBirthDecision implements AutoCloseable {
             if(admission.reserve(lease).gate()!=EnemyPackCapacity.Gate.RESERVED)return rollback.fallback("ME12_PACK_CAPACITY_CHANGED");rollback.lease=lease;
             var allSources=new ArrayList<>(sources);
             if(capture.reserved()!=null){
+                if((settings==null||!settings.get().me12FeatureState().allowsNewV2Births())
+                        &&!qaActive(capture.reserved()))return rollback.fallback("ME12_QA_RESERVED_ROLE_CHANGED");
                 var current=classify(store,capture.reserved(),capture.role()).orElseThrow(()->new IllegalStateException("ME12_RESERVED_ROLE_CHANGED"));
                 if(!sameSources(capture.reservedSources(),current))return rollback.fallback("ME12_RESERVED_SOURCE_CHANGED");
                 if(extra>capture.reserved().members().size())return rollback.fallback("ME12_RESERVED_CAPACITY_CHANGED");
