@@ -232,3 +232,32 @@ Pending age is diagnostic only: it never releases a lease or assumes a write fai
 `/rpg-trace spawn start` and `/rpg-trace spawn status` retain their existing permissions and two-minute capture.
 Birth root, seal, attachment, durable publication, finish, compensation, uncertain outcome and admission-close events use the bounded priority buffer.
 No configuration changes or save reset are performed by these diagnostics. R245 or newer build required for these fields.
+
+## Owner-authored learning assignments (ME12 Stage 3 continuation)
+
+Registered in the isolated Stage 3 candidate; not deployed or connected-accepted.
+Player or server console may use these commands with the explicit permission
+`inigmasgames.rpg.learning.author`. No Adventurer permission group is granted.
+
+| Command | Effect |
+| --- | --- |
+| `/rpg-learning status` | Read active revision, enabled count, file path and startup rejection. |
+| `/rpg-learning validate` | Validate the complete edited JSON against catalog, source identity, readiness and historical provenance; does not activate it. |
+| `/rpg-learning reload` | Validate, durably archive and atomically activate the whole configuration for new acquisition opportunities. Invalid edits retain the previous configuration. |
+
+These operations use the existing bounded configuration/difficulty IO executor.
+Configuration is `<Hywind save>/mods/InigmasGames_HytaleRPGPhase00Audit/learning-sources.json`,
+retaining HyARPG's existing data-root identity. For the currently reported active save,
+the eventual path is
+`C:/Users/Zemio/AppData/Roaming/Hytale/UserData/Saves/Hywind/mods/InigmasGames_HytaleRPGPhase00Audit/learning-sources.json`.
+It is created empty on candidate startup, not by this engineering pass. Deployment
+and changes to that active-save file still require separate authorization.
+
+Owner workflow: choose an existing ready ability and an authoritative monster source,
+edit the JSON, run `validate`, then `reload`. See
+[schema, gates and recovery](enemies/ME12_LEARNING_AUTHORING.md).
+Reload does not enable v2 births, change rewards already prepared, reset pity or grant
+an ability immediately. Unassigned/disabled/restricted sources receive no roll and no
+pity increment. Historical assignment archives and `learning-sources.active` are
+recovery data; preserve them. ME12-R08 remains BLOCKED pending actual owner-selected
+Skill and Passive acquisition evidence.

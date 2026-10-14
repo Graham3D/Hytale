@@ -867,7 +867,7 @@ public final class FileEncounterStore implements AutoCloseable {
                     write(complete,plan,false);fault.accept(Boundary.AFTER_COMPLETION);deleteCompleted(path);
                 }
                 if(attempts==awardBudget)break;
-                }catch(Me12PolicyHold hold){
+                }catch(Me12PolicyHold|LearningSourceConfiguration.Hold hold){
                     // Missing archived policy is a recoverable dependency, not an uncertain write.
                     // Keep this delivery cursor and let unrelated pending encounters progress.
                 }

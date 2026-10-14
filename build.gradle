@@ -297,6 +297,7 @@ tasks.test {
     exclude '**/GearStatusBindingsTest*'
     exclude '**/GearStatusAcceptanceIntegrationTest*'
     exclude '**/UnifiedTraceCommandTest*'
+    exclude '**/Me12LearningCommandTest*'
     exclude '**/SkillCaptureSessionsTest*'
     exclude '**/SentinelSourceConsumerTest*'
     exclude '**/SentinelConditionalActionTest*'
@@ -320,6 +321,7 @@ tasks.register('nativeControlTest', Test) {
     useJUnitPlatform()
     include '**/CombatDamageTraceServiceTest.class'
     include '**/UnifiedTraceCommandTest.class'
+    include '**/Me12LearningCommandTest.class'
     include '**/SkillCaptureSessionsTest.class'
     include '**/R244NamesTest.class'
     include '**/R245FlockRollbackTest.class'

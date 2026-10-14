@@ -16,6 +16,23 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /** Offline native Health/control contract. Does not certify connected publication or delivery. */
 class Me12DefenderRouteTest {
+    @Test void asynchronousPlanningDoesNotRetainTheMutableNativeSpawnJob()throws Exception{
+        com.hypixel.hytale.server.core.Options.parse(new String[]{"--bare"});
+        var blockField=com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType.class.getDeclaredField("ASSET_STORE");blockField.setAccessible(true);
+        var previous=blockField.get(null);
+        var blocks=new com.hypixel.hytale.assetstore.map.BlockTypeAssetMap<String,com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType>(com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType[]::new,com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType::getId);
+        var builder=com.hypixel.hytale.server.core.asset.HytaleAssetStore.builder(com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType.class,blocks)
+                .setPath("Item/Block").setCodec(com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType.CODEC).setKeyFunction(com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType::getId).setReplaceOnRemove(com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType::getUnknownFor);
+        var assets=new com.hypixel.hytale.server.core.asset.HytaleAssetStore<>(builder){final com.hypixel.hytale.event.EventBus events=new com.hypixel.hytale.event.EventBus(false);@Override protected com.hypixel.hytale.event.EventBus getEventBus(){return events;}};
+        com.hypixel.hytale.assetstore.AssetRegistry.register(assets);blockField.set(null,assets);
+        try{
+        var job=new com.hypixel.hytale.server.spawning.world.component.SpawnJobData();
+        var field=job.getClass().getDeclaredField("roleIndex");field.setAccessible(true);field.setInt(job,7);job.setSpawnFrozen(true);
+        var snapshot=com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyFlockExtension.Source.capture(job);
+        field.setInt(job,19);job.setSpawnFrozen(false);
+        assertEquals(7,snapshot.roleIndex());assertTrue(snapshot.spawnFrozen());assertEquals(19,job.getRoleIndex());
+        }finally{com.hypixel.hytale.assetstore.AssetRegistry.unregister(assets);blockField.set(null,previous);}
+    }
     static final Path ASSETS=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/release/package/game/latest/Assets.zip");
     static JsonArray certificates() throws Exception {
         return JsonParser.parseString(Files.readString(Path.of("src/main/resources/rpg/enemies/defender-routes-0.7.1.json"))).getAsJsonArray();
@@ -73,6 +90,11 @@ class Me12DefenderRouteTest {
         assertEquals(Set.of("ME-017"),EnemyNativeDefenderRoutes.certified(role));
         assertTrue(role.actions().isEmpty());assertFalse(role.nativeStunStaggerImmune());
         var fixture=new EnemyAffixSnapshotTest();var actor=fixture.actor(false,List.of(fixture.affix(UNWAVERING)),List.of(),null);
+        var gson=new Gson();var incoming=gson.toJsonTree(actor).getAsJsonObject();incoming.addProperty("nativeRoleId","Golem_Firesteel");incoming.addProperty("canonicalRoleId","Golem_Firesteel");
+        assertTrue(EnemyIncomingOnlyAttachment.accepts(role,gson.fromJson(incoming,EnemyDescriptor.class)));
+        var outgoing=gson.toJsonTree(fixture.actor(false,List.of(fixture.affix(EXTRA_STRONG)),List.of(),null)).getAsJsonObject();
+        outgoing.addProperty("nativeRoleId","Golem_Firesteel");outgoing.addProperty("canonicalRoleId","Golem_Firesteel");
+        assertFalse(EnemyIncomingOnlyAttachment.accepts(role,gson.fromJson(outgoing,EnemyDescriptor.class)));
         var providers=EnemyAffixSnapshot.resolve(actor,fixture.balance,fixture.pack(),0,false,false);
         var status=new StatusService(CombatBalanceProfile.loadCanonical(),()->1_000_000_000L);
         status.configureEncounterAdmission((id,type)->providers.stunStaggerImmune()&&Set.of("STUN","STAGGER").contains(type),(a,b)->true,id->false);

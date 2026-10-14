@@ -1,11 +1,14 @@
 {
   "schemaVersion": 1,
   "contract": "ME12-ARCH-AD1 / ME12-STAGES-4P-01",
-  "scope": "Stage 3A\u00e2\u20ac\u201c3F applicable isolated offline engineering",
+  "scope": "Stage 3A-3F continuation; incomplete native production integration",
   "branch": "codex/me12-stage3",
   "parentCommit": "a030722af4f9e75db012f18eadfb332f50cbf191",
-  "revision": "R262ME12S3-CANDIDATE",
-  "status": "OFFLINE_IMPLEMENTED_WITH_BLOCKERS_FINAL_RECEIPT_REQUIRED",
+  "revision": "R262ME12S3B-CANDIDATE",
+  "continuationParent": "63fcb510e1a65ba6491b5564fdb20e901cb2360a",
+  "status": "IN_PROGRESS_INTEGRATION_BLOCKED_FINAL_RECEIPT_REQUIRED",
+  "stage4Ready": false,
+  "acquisitionDeferral": "PROPOSED_RELEASE_SCOPE_AMENDMENT_NOT_AD1_COMPLETION",
   "productionV2Births": "DISABLED",
   "stage1": "BLOCKED_OFFLINE_COVERAGE",
   "monsterAffixRelease": "OPEN",
@@ -13,9 +16,9 @@
   "connectedQA": "DEFERRED_TO_STAGE4",
   "finalVerification": {
     "required": true,
-    "manifest": "build/reports/me12/stage3-final-manifest.json",
+    "manifest": "build/reports/me12/stage3-continuation-manifest.json",
     "guardian": "build/guardian/verification.json",
-    "log": "build/guardian/me12-stage3-final.log",
+    "log": "build/guardian/me12-stage3-continuation-final.log",
     "note": "Focused evidence is not a final cumulative pass. Publication requires the clean exact-HEAD receipt. Normative gates remain BLOCKED without connected evidence."
   },
   "gates": [
@@ -372,10 +375,31 @@
       "scope": "Complete reachable native action-path certificates",
       "implemented": false,
       "automatedPassed": false,
-      "offlineEvidence": "Turret/Seeker modern projectiles, Firesteel attachment and exact role/spawn certificates remain missing; no widened damage permission",
+      "offlineEvidence": "Turret/Seeker modern projectile ownership and mixed extensions remain missing. Production capture and Firesteel incoming attachment are implemented partially; full native-owner integration fixtures remain missing. No widened damage permission.",
       "nativeConnectedPassed": false,
       "ownerAccepted": false,
       "normativeStatus": "BLOCKED"
+    },
+    {
+      "id": "ME12-CONT-LEARNING",
+      "scope": "Owner-authored JSON, validation/reload and archived acquisition provenance",
+      "implemented": true,
+      "automatedPassed": true,
+      "automatedScope": "Focused synthetic Skill/Passive/restart/fault tests and native command tree; final exact-HEAD cumulative receipt still required",
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED",
+      "evidence": "Me12LearningConfigurationTest; Me12LearningCommandTest; public mappings remain empty; ME12-R08 unchanged"
+    },
+    {
+      "id": "ME12-CONT-NATIVE-PROVIDER",
+      "scope": "Complete existing-owner production capture, modern projectiles, native publication/recovery and QA activation",
+      "implemented": false,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "normativeStatus": "BLOCKED",
+      "evidence": "Native job immutability and source revalidation boundaries pass; complete provider/publication and modern projectile fixtures are not implemented"
     }
   ]
 }

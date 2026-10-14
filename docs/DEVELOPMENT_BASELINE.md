@@ -1,5 +1,44 @@
 # HyARPG/Hywind development baseline
 
+## ME12 Stage 3 completion work checkpoint (2026-10-14)
+
+Scope: owner-authored learning configuration/recovery, production capture and
+Firesteel incoming attachment, truthful HRO evidence. State: **IN_PROGRESS /
+INTEGRATION_BLOCKED**, not engineering-complete; guarded Stage 4 readiness **NO**.
+Continuation branch/worktree remain `codex/me12-stage3` at
+`C:/Users/Zemio/.codex/worktrees/me12-stage3/Hytale-main-clean`.
+Exact verified parent: `63fcb510e1a65ba6491b5564fdb20e901cb2360a`, 4,375 JUnit,
+16 Python tests, 12 RNG vectors / 96 draws. Its receipts/log/XML baseline are retained
+under `build/guardian/stage3-63fcb510-evidence/` and the previous manifest remains
+`build/reports/me12/stage3-final-manifest.json`.
+
+Provisional checkpoint identity: `R262ME12S3B-CANDIDATE`,
+`0.2.0-R262ME12S3B-CANDIDATE`, target Hytale `=0.7.1`. This is not a new accepted
+cumulative R-revision. Exact successor SHA, build hash, test totals and remote
+publication are recorded after commit in `build/reports/me12/stage3-continuation-manifest.json`
+and `build/guardian/verification.json`; do not infer completion from this record.
+Required final exact-HEAD command: `check jar testReleaseNativePatch guardianSpotBugs
+-PguardianSpotBugs=true --continue`, log `build/guardian/me12-stage3-continuation-final.log`.
+Focused learning/restart/fault, native-job snapshot and command permission tests
+precede it. No mandatory gate is replaced by those focused checks.
+
+Reviewed remote main remains `b839526e7106f780648c315692b04bb372b58d9e`, 14 commits
+behind the starting candidate. The protected primary checkout remains at
+`1dfa2cea3085196c7fd4492518c65a03d5e3b49d` with its local AGENTS/artwork changes.
+Stage 2/Stage 1 and selective Elite `3327a5650cadf0173b336072f614a13c63cecc56` /
+HRO `f7d414e6348c84653d03a51117bdfe2fc427dded` dependencies are preserved;
+Elite/HRO remain QA_PENDING. No accepted dependency was deliberately omitted.
+Installed R262C1ELITE4 JAR, native installation and active Hywind save are unchanged.
+
+Production v2 births remain DISABLED, ENABLED remains rejected, Monster Affix OPEN,
+ownerAccepted=false. Real Skill/Passive sources remain empty and ME12-R08 BLOCKED.
+Acquisition deferral is a proposed release-scope amendment only. Next engineering
+step: modern projectile creation/impact/removal receipt ownership, mixed-flock
+certification and full existing-owner production-provider fixtures, followed by
+separate guarded QA activation engineering. No deployment or connected QA requested.
+See [continuation report](enemies/ME12_STAGE3_CONTINUATION.md),
+[learning authoring](enemies/ME12_LEARNING_AUTHORING.md) and the updated gate ledger.
+
 ## ME12 Stage 3 isolated engineering checkpoint (2026-10-14)
 
 State: **OFFLINE_IMPLEMENTED_WITH_BLOCKERS; INTEGRATION_BLOCKED / QA_PENDING**.

@@ -15,6 +15,11 @@ import org.joml.Vector3d;
 
 /** Native flock extension for a selected Unique demand. No separate placement or population writer. */
 public final class NativeEnemyFlockExtension {
+    /** The pooled native job ends at synchronous capture. Only these immutable inputs may cross planning. */
+    public record Source(int jobId,int roleIndex,int environmentIndex,int spawnConfigIndex,
+            com.hypixel.hytale.server.flock.config.FlockAsset flockAsset,boolean spawnFrozen){
+        public static Source capture(SpawnJobData job){return new Source(job.getJobId(),job.getRoleIndex(),job.getEnvironmentIndex(),job.getSpawnConfigIndex(),job.getFlockAsset(),job.isSpawnFrozen());}
+    }
     public record Attempt(NativeEnemySpawnGroups.Group group,String rejection){
         public Attempt{if((group==null)==(rejection==null))throw new IllegalArgumentException("ENEMY_EXTENSION_ATTEMPT");}
         static Attempt accepted(NativeEnemySpawnGroups.Group group){return new Attempt(group,null);}
@@ -50,13 +55,17 @@ public final class NativeEnemyFlockExtension {
     }
     public static Attempt attempt(Store<EntityStore> store,
             NativeEnemySpawnGroups.Group original,SpawnJobData nativeJob,int additional){
+        return attempt(store,original,Source.capture(nativeJob),additional);
+    }
+    public static Attempt attempt(Store<EntityStore> store,
+            NativeEnemySpawnGroups.Group original,Source nativeJob,int additional){
         Objects.requireNonNull(store);Objects.requireNonNull(original);Objects.requireNonNull(nativeJob);
         if(!store.isInThread()||!store.getExternalData().getWorld().getWorldConfig().getUuid().equals(original.job().world())
                 ||original.nativeFailed()||original.members().isEmpty()||additional<1
-                ||additional>8-original.members().size()||nativeJob.getJobId()!=original.job().nativeJobId()
-                ||nativeJob.getRoleIndex()!=original.job().roleIndex()
-                ||nativeJob.getEnvironmentIndex()!=original.job().environment()
-                ||nativeJob.getSpawnConfigIndex()!=original.job().spawnConfiguration())
+                ||additional>8-original.members().size()||nativeJob.jobId()!=original.job().nativeJobId()
+                ||nativeJob.roleIndex()!=original.job().roleIndex()
+                ||nativeJob.environmentIndex()!=original.job().environment()
+                ||nativeJob.spawnConfigIndex()!=original.job().spawnConfiguration())
             throw new IllegalStateException("ENEMY_NATIVE_EXTENSION_BOUNDARY");
         var leader=store.getExternalData().getRefFromUUID(original.members().getFirst().entity());
         var npc=leader==null||!leader.isValid()?null:store.getComponent(leader,NPCEntity.getComponentType());
@@ -69,8 +78,7 @@ public final class NativeEnemyFlockExtension {
         // creates and joins its flock; an existing flock must still be valid.
         if(flock!=null&&(flock.getFlockRef()==null||!flock.getFlockRef().isValid()))
             return Attempt.denied("FLOCK_IDENTITY");
-        var population=store.getResource(WorldSpawnData.getResourceType());
-        if(population==null)return Attempt.denied("WORLD_POPULATION_RESOURCE");
+        var population=Objects.requireNonNull(store.getResource(WorldSpawnData.getResourceType()),"WORLD_POPULATION_RESOURCE");
         int environment=original.job().environment();
         var nativeEnvironment=population.getWorldEnvironmentSpawnData(environment);
         if(nativeEnvironment==null)return Attempt.denied("ENVIRONMENT_UNAVAILABLE");
@@ -87,12 +95,12 @@ public final class NativeEnemyFlockExtension {
                     original.job().roleIndex(),original.job().nativeRole(),environment,
                     original.job().spawnConfiguration(),additional);
             NativeEnemySpawnGroups.captureAdditional(job,original.reservation(),store,()->
-                    FlockPlugin.trySpawnFlock(leader,npc,nativeJob.getRoleIndex(),origin,rotation,
-                            additional+1,nativeJob.getFlockAsset(),(created,holder,current)->{
-                                created.setSpawnRoleIndex(nativeJob.getRoleIndex());
-                                if(nativeJob.isSpawnFrozen())holder.ensureComponent(Frozen.getComponentType());
+                    FlockPlugin.trySpawnFlock(leader,npc,nativeJob.roleIndex(),origin,rotation,
+                            additional+1,nativeJob.flockAsset(),(created,holder,current)->{
+                                created.setSpawnRoleIndex(nativeJob.roleIndex());
+                                if(nativeJob.spawnFrozen())holder.ensureComponent(Frozen.getComponentType());
                                 created.setEnvironment(environment);
-                                created.setSpawnConfiguration(nativeJob.getSpawnConfigIndex());
+                                created.setSpawnConfiguration(nativeJob.spawnConfigIndex());
                                 created.setActiveMotionControllerName(npc.getActiveMotionControllerName());
                             },null,store),captured->group[0]=captured);
         }catch(RuntimeException|Error error){failure=error;}
@@ -174,7 +182,7 @@ public final class NativeEnemyFlockExtension {
         if(flock.isValid())store.removeEntity(flock,RemoveReason.REMOVE);
     }
 
-    private static Optional<Headroom> headroom(Store<EntityStore> store,Vector3d position,
+    static Optional<Headroom> headroom(Store<EntityStore> store,Vector3d position,
             WorldSpawnData population,int environment){
         var world=store.getExternalData().getWorld();var data=population.getWorldEnvironmentSpawnData(environment);
         // The caller checked this environment on the same world thread.

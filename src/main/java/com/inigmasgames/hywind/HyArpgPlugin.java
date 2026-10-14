@@ -351,6 +351,12 @@ public final class HyArpgPlugin extends TavernsPlugin {
         var allocation = new AttributeAllocationService(loadouts);
         var runtimeProfiles = Stage04SkillProfiles.loadCanonical(catalog);
         validatedRuntimeProfiles = runtimeProfiles;
+        try{
+            var learningConfiguration=new com.inigmasgames.hytalerpg.progress.LearningSourceConfiguration(
+                    rpgDataDirectory(),catalog,com.inigmasgames.hytalerpg.progress.EnemyRewardRegistry.load(),runtimeProfiles::supports);
+            loadouts.configureLearningConfiguration(learningConfiguration);
+            getCommandRegistry().registerCommand(new com.inigmasgames.hytalerpg.commands.RpgLearningCommand(learningConfiguration,()->difficultyIo));
+        }catch(java.io.IOException failure){throw new IllegalStateException("LEARNING_CONFIGURATION_UNAVAILABLE",failure);}
         nativeAbilities = new NativeAbilityProjectionService(loadouts, runtimeProfiles, skillTrace, loadouts::ready);
         uiProjection.configureNativeProjection(nativeAbilities::projectionResult);
         loadouts.addMutationListener(nativeAbilities::onLoadoutMutation);
@@ -994,6 +1000,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
                 com.inigmasgames.hytalerpg.enemies.EnemyVisualVariants.canonical(),enemyBindings,enemyWeaponVisuals);
         boolean naturalEliteHooksReady=packboundNativeHook!=null&&enemyProjectileHook!=null
                 &&enemyDamageReceiptHook!=null&&nativePopulationProjectionHook!=null;
+        enemyDecision.configureNativeHooks(()->packboundNativeHook!=null&&enemyProjectileHook!=null&&enemyDamageReceiptHook!=null&&nativePopulationProjectionHook!=null);
         if(naturalEliteHooksReady)
             LOGGER.atInfo().log("RPG_NATURAL_ELITE_HOOKS_READY packbound=true projectile=true damageReceipt=true populationProjection=true");
         else LOGGER.atWarning().log("RPG_NATURAL_ELITE_HOOKS_MISSING packbound=%s projectile=%s damageReceipt=%s populationProjection=%s",

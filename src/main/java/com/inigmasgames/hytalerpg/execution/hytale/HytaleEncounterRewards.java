@@ -43,7 +43,6 @@ public final class HytaleEncounterRewards implements AutoCloseable {
     private final PersistentEncounterRuntime runtime;
     private final RpgLoadoutService loadouts;
     private final RpgSkillTracer trace;
-    private final LearningSources learning=LearningSources.load(com.inigmasgames.hytalerpg.content.RpgCatalog.loadCanonical());
     private final com.inigmasgames.hytalerpg.combat.RpgCombatKernel kernel;
     private final HostileInjuryLedger injuries=new HostileInjuryLedger();
     private final DurableEncounterEffects durableEffects=new DurableEncounterEffects();
@@ -116,7 +115,7 @@ public final class HytaleEncounterRewards implements AutoCloseable {
         this.runtime=new PersistentEncounterRuntime(store,(player,reward,opportunity)->{
             var priorUnlocks=reward.milestone()==null?Set.<com.inigmasgames.hytalerpg.difficulty.DifficultyId>of():loadouts.getPresentationView(player).state().difficulty.unlocks();
             if(opportunity==null)loadouts.awardEarned(player,reward);
-            else loadouts.awardGenerated(player,reward.eventId(),before->{
+            else loadouts.awardGenerated(player,reward.eventId(),opportunity,before->{
                 var decided=opportunity.decide(reward,before,player,Math::random);
                 com.inigmasgames.hytalerpg.diagnostics.hro.HroMasterEnemies.learning(player,opportunity,before,decided);return decided;
             });
@@ -125,7 +124,7 @@ public final class HytaleEncounterRewards implements AutoCloseable {
             progressionLatency.committed(player,reward.eventId(),deathOrigins.getOrDefault(reward.eventId(),-1L));
         });this.loadouts=loadouts;this.trace=trace;this.kernel=Objects.requireNonNull(kernel);
     }
-    public int verifiedLearningBindings(){return learning.verifiedBindings();}
+    public int verifiedLearningBindings(){return loadouts.verifiedLearningBindings();}
     public synchronized java.util.concurrent.CompletionStage<Void> invalidateConverted(UUID world,UUID enemy){
         if(difficultyCombat!=null)difficultyCombat.detach(world,enemy);
         var key=new ExclusionKey(world,enemy);var existing=exclusionTickets.get(key);if(existing!=null)return existing;
@@ -1106,8 +1105,7 @@ public final class HytaleEncounterRewards implements AutoCloseable {
             var resolved=facts.stream().filter(p->spawn.combat()!=null?loadouts.getPresentationView(p.player()).state().difficulty.unlocked(spawn.combat().difficulty()):spawn.milestone()==null||loadouts.getPresentationView(p.player()).state().difficulty.unlocked(spawn.milestone().difficulty())).map(p->{
                 double wisdom=kernel.effectiveAttributes().effective(loadouts.rawAttribute(p.player(),com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.WIS));
                 return new EncounterContributions.Participant(p.player(),p.world(),p.position(),loadouts.characterLevel(p.player()),p.loaded(),p.partyId(),
-                        spawn.milestone()==null?learning.resolve(spawn.combatIdentity(),spawn.rank(),wisdom)
-                                .map(opportunity->opportunity.withEnemyRewards(spawn.enemyRewards())).orElse(null):null);
+                        spawn.milestone()==null?loadouts.learningOpportunity(p.player(),spawn,wisdom).orElse(null):null);
             }).toList();
             if(gearLoot!=null)gearLoot.freezeMagicFind(spawn.eventId(),gearMf);
             var finalized=runtime.finishDeathOrDisqualify(observation,resolved,gearGold);

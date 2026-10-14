@@ -175,7 +175,7 @@ public final class EnemyBirthPlanner {
     public EnemyBirthPlan planV2Offline(Request request,Me12Planner.Compiled compiled,Me12Planner.Plan selected){
         require(compiled.accepts(selected),"ME12_SELECTED_PLAN_NOT_IN_COMPILED_CONTEXT");
         var context=compiled.context();var policy=compiled.policies();
-        require(context.evidence()==Me12Planner.Evidence.CERTIFIED_STATIC_FIXTURE,"ME12_NATIVE_ADMISSION_DEPENDENCY");
+        require(context.evidence()!=Me12Planner.Evidence.UNCERTIFIED_PRODUCTION,"ME12_NATIVE_ADMISSION_DEPENDENCY");
         require(request.compatibleNativeGroup()&&request.specialPackCapacity()&&request.nativePlanReceipt().equals(context.sourceReceipt()),"ME12_NATIVE_PLAN_IDENTITY");
         require(balance.export().equals(policy.balance().export())&&registry.revision().equals(policy.registry().revision()),"ME12_ARCHIVED_EVALUATOR_IDENTITY");
         var offered=combined(request.originals(),request.additionalSlots());int base=context.minions().size();

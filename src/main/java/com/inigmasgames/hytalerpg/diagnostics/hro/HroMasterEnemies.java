@@ -50,6 +50,7 @@ public final class HroMasterEnemies {
         facts.put("pityBefore",before.acquisition().progress().pity().getOrDefault(opportunity.source(),0));
         facts.put("result",result.progression()==null?"INELIGIBLE_OR_ALREADY_ACQUIRED":result.progression().kind());
         facts.put("durable",false);
+        facts.put("assignmentRevision",String.valueOf(opportunity.assignmentRevision()));
         emit(player,null,"PERSISTENCE.RECOVERY","ME12_LEARN_DECISION",result.eventId(),facts);
     }
     public static void committed(UUID player,RewardIntent intent){
@@ -66,6 +67,8 @@ public final class HroMasterEnemies {
                 "prefix",plan.prefix().text(),"suffix",plan.suffix().text(),"prefixTier",plan.prefix().tier(),"suffixTier",plan.suffix().tier(),
                 "affixCount",plan.affixes().size(),"generation",birth.generation(),"policyDigest",v2.policyDigest(),"sourceReceipt",v2.nativeSourceReceipt(),
                 "nativeRole",leader.nativeRoleId(),"difficulty",leader.difficulty()));
+        emit(player,birth.world(),"SPAWN.PROMOTION","ME12_PROVENANCE",birth.encounter().toString(),Map.of("origin",leader.spawnOrigin(),
+                "schemaVersion",birth.schemaVersion(),"sourceReceipt",v2.nativeSourceReceipt(),"durable",true,"publicationProven",false));
         for(var owned:plan.affixes())emit(player,birth.world(),"SPAWN.PROMOTION","ME12_SELECTED_AFFIX",birth.encounter()+"/"+owned.choice().affixId(),Map.of(
                 "encounter",birth.encounter(),"affixId",owned.choice().affixId(),"selector",String.valueOf(owned.choice().selector()),"slotOwner",owned.owner(),
                 "signature",owned.choice().affixId().equals(plan.prefix().signature())?"PREFIX":owned.choice().affixId().equals(plan.suffix().signature())?"SUFFIX":"NONE"));
@@ -85,5 +88,19 @@ public final class HroMasterEnemies {
         UUID player=HroRuntime.ownerInWorld(actor.worldId());if(player==null)return;
         emit(player,actor.worldId(),"AFFIX.PROC","ME12_EFFECT_RESULT",RewardIntent.digest(hit.offense().identity().rootId()+"/"+hit.offense().identity().authoredTickId()+"/"+hit.victim()+"/"+affix),
                 Map.of("affixId",affix,"requested",requested,"applied",actual,"result",gate,"generation",actor.encounterGeneration(),"targetId",hit.victim(),"rootId",hit.offense().identity().rootId()));
+    }
+    public static void nativeEffect(EnemyDescriptor actor,String affix,String operation,String predicate,String status,Map<String,?> readback){
+        UUID player=HroRuntime.ownerInWorld(actor.worldId());if(player==null)return;
+        var facts=new LinkedHashMap<String,Object>(readback);facts.put("affixId",affix);facts.put("predicate",predicate);facts.put("status",status);
+        facts.put("nativeActor",actor.entityId());facts.put("generation",actor.encounterGeneration());facts.put("origin",actor.spawnOrigin());
+        emit(player,actor.worldId(),"AFFIX.PROC","ME12_OPERATOR_READBACK",operation,facts);
+    }
+    public static void learningSource(UUID player,EnemyRewardRegistry.Spawn spawn,LearningSources.Opportunity opportunity){
+        if(!HroRuntime.active(player))return;
+        emit(player,spawn.world(),"PERSISTENCE.RECOVERY","ME12_LEARN_SOURCE",spawn.eventId(),Map.of(
+                "nativeRole",spawn.roleId(),"combatIdentity",spawn.combatIdentity(),"status",opportunity==null?"NOT_APPLICABLE":"ELIGIBLE",
+                "reason",opportunity==null?"UNASSIGNED_DISABLED_OR_RESTRICTED_NO_ROLL_NO_PITY":"FROZEN_OPPORTUNITY",
+                "abilityKind",opportunity==null?"UNASSIGNED":opportunity.abilityKind(),"abilityId",opportunity==null?"UNASSIGNED":opportunity.skill(),
+                "assignmentRevision",opportunity==null?"NONE":String.valueOf(opportunity.assignmentRevision())));
     }
 }

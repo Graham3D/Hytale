@@ -1,5 +1,10 @@
 # Master Enemies v1.2 Stage 3 engineering handoff
 
+Historical handoff for `63fcb510`. The authorized completion attempt is recorded in
+[Stage 3 continuation](ME12_STAGE3_CONTINUATION.md). That record supersedes current
+provider/configuration status below; this original evidence is retained. The
+continuation is still blocked and does not declare Stage 3 complete or Stage 4 ready.
+
 Contract: ME12-ARCH-AD1 / ME12-STAGES-4P-01, Stage 3A–3F. The owner explicitly
 authorized isolated implementation against Stage 2, retaining Stage 1 blockers.
 State: offline implementation with mandatory native/source/visual gates **BLOCKED**;

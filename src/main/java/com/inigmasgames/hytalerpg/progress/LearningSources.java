@@ -20,13 +20,16 @@ public final class LearningSources {
         public Binding {AcquisitionProgress.id(combatIdentity);AcquisitionProgress.id(source);Objects.requireNonNull(rarity);}
     }
     public record Opportunity(String skill,String source,ProgressionMath.AcquisitionRarity rarity,double effectiveWisdom,
-            com.inigmasgames.hytalerpg.enemies.EnemyRewardContext enemyRewards,AbilityKind kind){
+            com.inigmasgames.hytalerpg.enemies.EnemyRewardContext enemyRewards,AbilityKind kind,String assignmentRevision){
+        public Opportunity(String skill,String source,ProgressionMath.AcquisitionRarity rarity,double effectiveWisdom,
+                           com.inigmasgames.hytalerpg.enemies.EnemyRewardContext enemyRewards,AbilityKind kind){this(skill,source,rarity,effectiveWisdom,enemyRewards,kind,null);}
         public Opportunity(String skill,String source,ProgressionMath.AcquisitionRarity rarity,double effectiveWisdom,
                            com.inigmasgames.hytalerpg.enemies.EnemyRewardContext enemyRewards){this(skill,source,rarity,effectiveWisdom,enemyRewards,null);}
         public Opportunity(String skill,String source,ProgressionMath.AcquisitionRarity rarity,double effectiveWisdom){this(skill,source,rarity,effectiveWisdom,null);}
-        public Opportunity {AcquisitionProgress.id(skill);AcquisitionProgress.id(source);ProgressionMath.learnChance(rarity,effectiveWisdom);}
+        public Opportunity {AcquisitionProgress.id(skill);AcquisitionProgress.id(source);ProgressionMath.learnChance(rarity,effectiveWisdom);
+            if(assignmentRevision!=null&&!assignmentRevision.matches("[a-f0-9]{64}"))throw new IllegalArgumentException("LEARNING_ASSIGNMENT_REVISION");}
         public Opportunity withEnemyRewards(com.inigmasgames.hytalerpg.enemies.EnemyRewardContext context){
-            return new Opportunity(skill,source,rarity,effectiveWisdom,context,kind);
+            return new Opportunity(skill,source,rarity,effectiveWisdom,context,kind,assignmentRevision);
         }
         public AbilityKind abilityKind(){return kind==null?AbilityKind.SKILL:kind;}
         public double chance(){double base=ProgressionMath.learnChance(rarity,effectiveWisdom);
@@ -43,7 +46,7 @@ public final class LearningSources {
             if(defeat.progression()!=null)throw new IllegalArgumentException("DEFEAT_ALREADY_HAS_PROGRESSION");
             return new EarnedReward(defeat.eventId(),defeat.characterXp(),defeat.insight(),defeat.mastery(),defeat.reason(),defeat.rootCastId(),defeat.skillInstanceId(),defeat.correlationId(),
                     new ProgressionDelta(abilityKind()==AbilityKind.SKILL?(learned?ProgressionDelta.Kind.LEARNING_SUCCESS:ProgressionDelta.Kind.LEARNING_FAILURE):
-                            (learned?ProgressionDelta.Kind.PASSIVE_LEARNING_SUCCESS:ProgressionDelta.Kind.PASSIVE_LEARNING_FAILURE),skill,source,0),defeat.milestone(),defeat.goldPot());
+                            (learned?ProgressionDelta.Kind.PASSIVE_LEARNING_SUCCESS:ProgressionDelta.Kind.PASSIVE_LEARNING_FAILURE),skill,source,0,assignmentRevision),defeat.milestone(),defeat.goldPot());
         }
         /** Only v2 changes RNG ownership. DeathPlan already freezes Wisdom/source/context before the player transaction. */
         public EarnedReward decide(EarnedReward defeat,RewardCheckpoint before,UUID player,DoubleSupplier legacyRandom){
@@ -66,6 +69,10 @@ public final class LearningSources {
         }catch(java.io.IOException error){throw new IllegalStateException("LEARNING_SOURCES_UNREADABLE",error);}
     }
     public LearningSources(RpgCatalog catalog,List<Binding> authoredBindings){
+        this(catalog,authoredBindings,false);
+    }
+    /** Only the validated owner configuration adapter may replace catalog-era source assignments. */
+    LearningSources(RpgCatalog catalog,List<Binding> authoredBindings,boolean ownerConfiguration){
         var sources=new TreeMap<String,List<SkillDefinition>>();
         for(var skill:catalog.skills()){
             String source=skill.sourceAcquisition().signatureEnemyId();
@@ -85,7 +92,7 @@ public final class LearningSources {
                 int abilityTier;
                 if(assignment.kind()==AbilityKind.SKILL){
                     var skill=catalog.skill(new com.inigmasgames.hytalerpg.domain.SkillId(assignment.ability())).orElseThrow(()->new IllegalArgumentException("UNKNOWN_SKILL_ASSIGNMENT"));
-                    if(!sourceKey(skill.sourceAcquisition().signatureEnemyId()).equals(binding.source())||assignment.accepted()&&!"VERIFIED_CONNECTED".equals(skill.sourceAcquisition().validationState()))throw new IllegalArgumentException("SKILL_ASSIGNMENT_SOURCE_MISMATCH");
+                    if(!ownerConfiguration&&(!sourceKey(skill.sourceAcquisition().signatureEnemyId()).equals(binding.source())||assignment.accepted()&&!"VERIFIED_CONNECTED".equals(skill.sourceAcquisition().validationState())))throw new IllegalArgumentException("SKILL_ASSIGNMENT_SOURCE_MISMATCH");
                     abilityTier=tier(skill.tier());
                 }else{
                     var passive=catalog.passive(new com.inigmasgames.hytalerpg.domain.PassiveId(assignment.ability())).orElseThrow(()->new IllegalArgumentException("UNKNOWN_PASSIVE_ASSIGNMENT"));

@@ -112,6 +112,19 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
     @Override public void close(){playerWork.close();}
     private java.util.function.Function<UUID,String> respecRejection=ignored->""; // Pure fixtures; production configures before any player load.
     private volatile LearningSources learningSources;
+    private volatile LearningSourceConfiguration learningConfiguration;
+    public synchronized void configureLearningConfiguration(LearningSourceConfiguration configuration){
+        if(!states.isEmpty())throw new IllegalStateException("LEARNING_SOURCES_MUST_BE_CONFIGURED_BEFORE_LOAD");learningConfiguration=java.util.Objects.requireNonNull(configuration);
+    }
+    public java.util.Optional<LearningSources.Opportunity> learningOpportunity(EnemyRewardRegistry.Spawn spawn,double wisdom){
+        var config=learningConfiguration;
+        return config==null?learningSources.resolve(spawn.combatIdentity(),spawn.rank(),wisdom).map(o->o.withEnemyRewards(spawn.enemyRewards())):config.snapshot().resolve(spawn,wisdom);
+    }
+    public java.util.Optional<LearningSources.Opportunity> learningOpportunity(UUID player,EnemyRewardRegistry.Spawn spawn,double wisdom){
+        var opportunity=learningOpportunity(spawn,wisdom);
+        com.inigmasgames.hytalerpg.diagnostics.hro.HroMasterEnemies.learningSource(player,spawn,opportunity.orElse(null));return opportunity;
+    }
+    public int verifiedLearningBindings(){var config=learningConfiguration;return config==null?learningSources.verifiedBindings():config.snapshot().registry().verifiedBindings();}
     public synchronized void configureLearningSources(LearningSources sources){
         if(!states.isEmpty())throw new IllegalStateException("LEARNING_SOURCES_MUST_BE_CONFIGURED_BEFORE_LOAD");learningSources=java.util.Objects.requireNonNull(sources);
     }
@@ -248,19 +261,33 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
 
     /** No client-provided grant payload: callers own a stable server event and a bounded decision factory. */
     public EarnedRewardStore.Result awardGenerated(UUID player,String eventId,java.util.function.Function<RewardCheckpoint,EarnedReward> factory){
+        return awardGenerated(player,eventId,null,factory);
+    }
+    public EarnedRewardStore.Result awardGenerated(UUID player,String eventId,LearningSources.Opportunity opportunity,java.util.function.Function<RewardCheckpoint,EarnedReward> factory){
         if(earnedRewards==null)throw new IllegalStateException("EARNED_REWARDS_NOT_CONFIGURED");
         Holder holder=holder(player);synchronized(holder){
             ensureUsable(player,holder);
             try{return earnedRewards.awardGenerated(player,eventId,before->{
-                var reward=java.util.Objects.requireNonNull(factory.apply(before));validateProgression(reward,before);return reward;
+                var reward=java.util.Objects.requireNonNull(factory.apply(before));validateProgression(reward,before,opportunity);return reward;
             },rewardAuthority(player,holder));}
             catch(RuntimeException error){holder.rewardRecoveryRequired=true;throw error;}
         }
     }
     private void validateProgression(EarnedReward reward,RewardCheckpoint before){
+        validateProgression(reward,before,null);
+    }
+    private void validateProgression(EarnedReward reward,RewardCheckpoint before,LearningSources.Opportunity opportunity){
         for(String id:reward.mastery().keySet())if(catalog.skill(new SkillId(id)).isEmpty())throw new IllegalArgumentException("UNKNOWN_MASTERY_SKILL");
         var delta=reward.progression();if(delta==null)return;
         if(before.acquisition()==null)throw new IllegalArgumentException("PROGRESSION_REQUIRES_VERSIONED_CHECKPOINT");
+        if(delta.assignmentRevision()!=null){
+            var configuration=learningConfiguration;
+            if(configuration==null||!configuration.accepts(delta))throw new IllegalArgumentException("LEARNING_FROZEN_ASSIGNMENT_MISMATCH");
+            if(opportunity!=null&&(!delta.assignmentRevision().equals(opportunity.assignmentRevision())||!delta.source().equals(opportunity.source())
+                    ||!delta.subject().equals(opportunity.skill())||!configuration.accepts(opportunity)))throw new IllegalArgumentException("LEARNING_OPPORTUNITY_CHANGED");
+            return;
+        }
+        if(opportunity!=null&&opportunity.assignmentRevision()!=null)throw new IllegalArgumentException("LEARNING_ASSIGNMENT_PROVENANCE_DROPPED");
         if(delta.kind()==ProgressionDelta.Kind.PASSIVE_PURCHASE){
             var passive=catalog.passive(new PassiveId(delta.subject())).orElseThrow(()->new IllegalArgumentException("UNKNOWN_PASSIVE"));
             if(delta.insightCost()!=ProgressionMath.insightCost(passive.tier()))throw new IllegalArgumentException("INSIGHT_PRICE_MISMATCH");

@@ -12,7 +12,7 @@ import static com.inigmasgames.hytalerpg.enemies.EnemyAffixRegistry.*;
 public final class Me12Planner {
     public static final int MAX_STATES=100000;
     public static final long DEADLINE_NANOS=500_000_000L, STATE_BYTES=512;
-    public enum Evidence { CERTIFIED_STATIC_FIXTURE, UNCERTIFIED_PRODUCTION }
+    public enum Evidence { CERTIFIED_STATIC_FIXTURE, UNCERTIFIED_PRODUCTION, NATIVE_OWNER_CAPTURE }
     public enum Owner { PREFIX_SIGNATURE, SUFFIX_SIGNATURE, PREFIX_FILLER, SUFFIX_FILLER, DIFFICULTY }
     public record Member(String role,String source,EnemyAffixSelection.Binding binding,Set<String> immunities,boolean reachable,String nativeRole) {
         public Member(String role,String source,EnemyAffixSelection.Binding binding,Set<String> immunities,boolean reachable){this(role,source,binding,immunities,reachable,role);}
@@ -89,7 +89,7 @@ public final class Me12Planner {
     }
     public static Compiled compile(Context context,Me12Policies policies,Budget budget) {
         long start=System.nanoTime();budget.check();
-        if(context.evidence()!=Evidence.CERTIFIED_STATIC_FIXTURE)throw new IllegalStateException("ME12_DEPENDENCY_UNCERTIFIED_PRODUCTION_CONTEXT");
+        if(context.evidence()==Evidence.UNCERTIFIED_PRODUCTION)throw new IllegalStateException("ME12_DEPENDENCY_UNCERTIFIED_PRODUCTION_CONTEXT");
         var registry=policies.registry();var balance=policies.balance();var eligibility=new EnemyAffixSelection(registry);
         var options=new ArrayList<List<Option>>();
         boolean nativeSafe=nativeSafe(context.leader(),context.difficulty(),balance,EnemyRarity.UNIQUE);

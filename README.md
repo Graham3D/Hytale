@@ -1,14 +1,17 @@
 # Hywind / HyARPG development baseline
 
-Isolated ME12 Stage 3 engineering: **R262ME12S3-CANDIDATE**
-(`0.2.0-R262ME12S3-CANDIDATE`), Hytale `=0.7.1`, branch
+Isolated ME12 Stage 3 continuation: **R262ME12S3B-CANDIDATE**
+(`0.2.0-R262ME12S3B-CANDIDATE`), Hytale `=0.7.1`, branch
 `codex/me12-stage3`, dependent on verified Stage 2 `a030722af4f9e75db012f18eadfb332f50cbf191`.
-Native integration seams, frozen rewards, typed acquisition, full target details
-and bounded HRO diagnostics are implemented for offline work.
+Owner-editable learning assignments, archived reward provenance, native capture and
+Firesteel attachment changes extend the existing candidate. Stage 3 remains
+**IN_PROGRESS / INTEGRATION_BLOCKED**; Stage 4 readiness is **NO**. Modern projectile
+ownership and complete production-provider integration proof remain offline work.
 Production v2 births remain DISABLED; Stage 1 native certification and owner
 acceptance remain blocked. This is not a deployed or accepted cumulative release.
 Exact-HEAD validation/publication belongs to Guardian's receipt and the generated
-Stage 3 final manifest. Monster Affix remains OPEN, ownerAccepted=false.
+Stage 3 continuation manifest. Monster Affix remains OPEN, ownerAccepted=false.
+See the [continuation findings](docs/enemies/ME12_STAGE3_CONTINUATION.md).
 See the [Stage 3 engineering handoff](docs/enemies/ME12_STAGE3_HANDOFF.md),
 [Stage 1 findings](docs/enemies/ME12_STAGE1_COVERAGE_FINDINGS.md),
 [309-role reconciliation](docs/enemies/ME12_STAGE1_RECONCILIATION.md),

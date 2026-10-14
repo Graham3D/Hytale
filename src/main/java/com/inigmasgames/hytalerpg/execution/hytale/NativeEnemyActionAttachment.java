@@ -71,16 +71,16 @@ public final class NativeEnemyActionAttachment {
             var actorRole=nativeBindings.requireActorRole(actor);
             var certified=actorRole.certify(actor.nativeBindingRevision(),npc);
             if(certified.isEmpty()){
-                if(actor.spawnOrigin()!=EnemyRewardContext.Origin.QA||!actorRole.actions().isEmpty())
+                if(!EnemyIncomingOnlyAttachment.accepts(actorRole,actor)&&(actor.spawnOrigin()!=EnemyRewardContext.Origin.QA||!actorRole.actions().isEmpty()))
                     throw new IllegalStateException("ENEMY_ACTION_GROUP_NO_CERTIFIED_STRIKES");
-                continue; // Passive-only QA role; native outgoing damage retains the existing difficulty owner.
+                // Keep passive-only actors in final publication revalidation without allocating attack roots.
             }
             certificates.add(Map.entry(actor,certified));refs.add(ref);
         }
         var candidates=new ArrayList<Candidate>();
         for(int i=0;i<certificates.size();i++){
             var actor=certificates.get(i).getKey();
-            var lease=EnemyActionRootLease.open(birth.world(),actor.logicalActorId(),birth.generation(),
+            var lease=certificates.get(i).getValue().isEmpty()?CompletableFuture.<EnemyActionRootLease>completedFuture(null):EnemyActionRootLease.open(birth.world(),actor.logicalActorId(),birth.generation(),
                     count->roots.apply(actor,count)).toCompletableFuture();
             candidates.add(new Candidate(actor,refs.get(i),certificates.get(i).getValue(),lease));
         }
@@ -89,7 +89,7 @@ public final class NativeEnemyActionAttachment {
                 .whenComplete((ignored,error)->{
                     if(error!=null){
                         for(var candidate:candidates)if(candidate.lease().isDone()&&!candidate.lease().isCompletedExceptionally())
-                            candidate.lease().join().close();
+                            {var lease=candidate.lease().join();if(lease!=null)lease.close();}
                         result.completeExceptionally(error);return;
                     }
                     result.complete(new Prepared(store,birth,candidates));
@@ -116,6 +116,8 @@ public final class NativeEnemyActionAttachment {
                             ||marker.state().generation()!=birth.generation())
                         throw new IllegalStateException("ENEMY_ACTION_GROUP_ACTOR_CHANGED");
                     var lease=candidate.lease().join();
+                    if(candidate.bindings().isEmpty()){attached.add(null);continue;}
+                    if(lease==null)throw new IllegalStateException("ENEMY_ACTION_ROOT_LEASE_MISSING");
                     attached.add(actions.attach(store,ref,actor,candidate.bindings(),
                             ()->combat.enemySourceState(store,ref,effects),lease::issue,
                             birth.seed()+"/"+actor.logicalActorId(),accepted,rejected));
@@ -137,8 +139,8 @@ public final class NativeEnemyActionAttachment {
                 return;
             }
             if(birth.actors().stream().anyMatch(actor->actor.entityId().equals(nativeEntity)
-                    &&actor.spawnOrigin()==EnemyRewardContext.Origin.QA
-                    &&nativeBindings.requireActorRole(actor).actions().isEmpty()))return;
+                    &&(EnemyIncomingOnlyAttachment.accepts(nativeBindings.requireActorRole(actor),actor)
+                        ||actor.spawnOrigin()==EnemyRewardContext.Origin.QA&&nativeBindings.requireActorRole(actor).actions().isEmpty())))return;
             throw new IllegalArgumentException("ENEMY_ACTION_ACTOR_NOT_IN_PACK");
         }
         /** Close only on the owning world thread; unused committed root IDs remain spent. */
@@ -148,7 +150,7 @@ public final class NativeEnemyActionAttachment {
             closed=true;Exception error=null;
             for(int i=attached.size()-1;i>=0;i--)try{if(attached.get(i)!=null)attached.get(i).close();}
             catch(Exception failure){if(error==null)error=failure;else error.addSuppressed(failure);}
-            for(var candidate:candidates)candidate.lease().join().close();
+            for(var candidate:candidates){var lease=candidate.lease().join();if(lease!=null)lease.close();}
             attached.clear();if(error!=null)throw error;
         }
     }

@@ -41,6 +41,13 @@ public final class NativeEnemyStatuses implements Consumer<NativeEnemyActions.De
             var effect=com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect.getAssetMap().getAsset(asset);
             if(effect!=null)controller.addEffect(victim,effect,4f,
                     com.hypixel.hytale.server.core.asset.type.entityeffect.config.OverlapBehavior.OVERWRITE,store,actor);
+            var observer=com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.ownerInWorld(delivery.descriptor().worldId());
+            if(observer!=null)try{
+                boolean present=effect!=null&&controller.hasEffect(effect);
+                com.inigmasgames.hytalerpg.diagnostics.hro.HroMasterEnemies.nativeEffect(delivery.descriptor(),affix.affixId(),
+                        delivery.hit().offense().identity().rootId()+"/"+delivery.hit().victim()+"/"+affix.affixId(),"NATIVE_EFFECT_PRESENT_AFTER_APPLICATION",
+                        effect==null?"BLOCKED":present?"PASS":"FAIL",Map.of("asset",asset,"target",delivery.hit().victim(),"present",present));
+            }catch(RuntimeException diagnostic){com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.loss(observer,"AFFIX.PROC",affix.affixId(),"NATIVE_EFFECT_READBACK_UNAVAILABLE");}
         }
     }
     private static int tier(double value,double normal,double nightmare,double hell){

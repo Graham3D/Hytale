@@ -108,7 +108,7 @@ public final class EnemyWorldAdmission {
         if(old==null)return;
         if(!old.birth().equals(birth))throw new IllegalStateException("ENEMY_BIRTH_TRANSACTION_IDENTITY");
         if(com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.ownerInWorld(birth.world())!=null)com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.spawn(birth.world(),birth.encounter(),birth.actors().getFirst().spawnOrigin().name(),
-                "SPAWN.PROMOTION",phase,Map.of("generation",birth.generation()));
+                "SPAWN.PROMOTION",phase,Map.of("generation",birth.generation(),"schemaVersion",birth.schemaVersion(),"nativeSourceReceipt",birth.pack().spawnPlanReceipt()));
         Throwable cause=error;while(cause!=null&&cause.getCause()!=null)cause=cause.getCause();
         String reason=cause==null?"none":cause.getClass().getSimpleName()+":"+String.valueOf(cause.getMessage()).replace(' ','_');
         MonsterSpawnTrace.event(phase,birth.world(),old.environment(),old.role(),
