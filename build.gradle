@@ -310,6 +310,8 @@ tasks.test {
      'EnemyNativeHealthTest','EnemyNativeDefenseTest','EnemyNativeOutgoingTest',
      'EnemyNativeProjectilePathTest','EnemyNativeStagingTest','Me12DefenderRouteTest',
      'NativePackboundMutationHookTest'].each { exclude "**/${it}*" }
+    exclude '**/NativeEnemyProductionBirthOwnerTest*'
+    exclude '**/NativeEnemyBirthPublicationIntegrationTest*'
 }
 
 tasks.register('nativeControlTest', Test) {
@@ -349,6 +351,8 @@ tasks.register('nativeControlTest', Test) {
          'EnemyNativeProjectilePathTest','EnemyModernProjectileReceiptTest','EnemyNativeStagingTest','Me12DefenderRouteTest',
          'NativePackboundMutationHookTest'].each { include "**/${it}.class" }
         include '**/NativeEnemyActionsStartTest.class'
+        include '**/NativeEnemyProductionBirthOwnerTest.class'
+        include '**/NativeEnemyBirthPublicationIntegrationTest.class'
         include '**/R024NativeInteractionAssetTest.class'
         include '**/Stage09NativeManaTest.class'
         include '**/Stage12NativeBiomeAssetTest.class'

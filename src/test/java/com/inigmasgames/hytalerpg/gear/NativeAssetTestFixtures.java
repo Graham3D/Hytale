@@ -115,10 +115,16 @@ public final class NativeAssetTestFixtures implements AutoCloseable {
                 ManagedGearProjectile.class, ManagedGearProjectile.CODEC);
         Interaction.CODEC.register(NativeTwinAssaultGate.TYPE,
                 NativeTwinAssaultGate.class, NativeTwinAssaultGate.CODEC);
+        Interaction.CODEC.register(com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyDamageInteraction.TYPE,
+                com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyDamageInteraction.class,
+                com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyDamageInteraction.CODEC);
         Interaction.CODEC.register("Simple", SimpleInteraction.class, SimpleInteraction.CODEC);
         Interaction.CODEC.register("Serial", SerialInteraction.class, SerialInteraction.CODEC);
         Interaction.CODEC.register("Parallel", ParallelInteraction.class, ParallelInteraction.CODEC);
         Interaction.CODEC.register("Condition", ConditionInteraction.class, ConditionInteraction.CODEC);
+        Interaction.CODEC.register("EffectCondition",
+                com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.EffectConditionInteraction.class,
+                com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.EffectConditionInteraction.CODEC);
         Interaction.CODEC.register("Selector", SelectInteraction.class, SelectInteraction.CODEC);
         Interaction.CODEC.register("ResetCooldown", ResetCooldownInteraction.class, ResetCooldownInteraction.CODEC);
         Interaction.CODEC.register("ApplyForce", com.hypixel.hytale.server.core.modules.interaction.interaction.config.client.ApplyForceInteraction.class,
@@ -590,6 +596,25 @@ public final class NativeAssetTestFixtures implements AutoCloseable {
         var value = Objects.requireNonNull(interactionStore.decode(PACK, id, json), id);
         interactions.seed(Map.of(id, value));
         return value;
+    }
+
+    /** Load an installed interaction together with its native contained children. */
+    public void loadInteractionGraph(String id, String json) throws IOException {
+        var source = BsonDocument.parse(json);
+        registerCommonAssets(source);
+        seedActionReferences(source);
+        seedSoundReferences(source);
+        seedParticleReferences(source);
+        NativeSwordActionAssets.load(Interaction.getAssetStore(), Map.of(id, json));
+    }
+
+    public void loadRootGraph(String id, String json) throws IOException {
+        var source = BsonDocument.parse(json);
+        registerCommonAssets(source);
+        seedActionReferences(source);
+        seedSoundReferences(source);
+        seedParticleReferences(source);
+        NativeSwordActionAssets.load(RootInteraction.getAssetStore(), Map.of(id, json));
     }
 
     public RootInteraction decodeRoot(String id, Path path) throws IOException {

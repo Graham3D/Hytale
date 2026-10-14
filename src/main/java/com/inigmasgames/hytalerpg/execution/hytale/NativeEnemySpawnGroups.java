@@ -182,7 +182,7 @@ public final class NativeEnemySpawnGroups extends WorldSpawnJobSystems.Ticking {
     public static void capture(Job job,Owner owner,Store<EntityStore> store,Runnable nativeTick){
         capture(job,owner,store,nativeTick,null);
     }
-    private static void capture(Job job,Owner owner,Store<EntityStore> store,Runnable nativeTick,SpawnJobData nativeJob){
+    static void capture(Job job,Owner owner,Store<EntityStore> store,Runnable nativeTick,SpawnJobData nativeJob){
         if(!store.isInThread()||job.expectedMembers()>8)throw new IllegalStateException("ENEMY_SPAWN_CAPTURE_BOUNDARY");
         if(CURRENT.get()!=null)throw new IllegalStateException("NESTED_NATIVE_WORLD_SPAWN_JOB");
         var frame=new Frame(job,owner,store,false);CURRENT.set(frame);

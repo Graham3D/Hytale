@@ -1,5 +1,36 @@
 # HyARPG/Hywind development baseline
 
+## ME12 Stage 3 native birth-owner verification candidate (2026-10-14)
+
+Source branch `codex/me12-stage3` continues from
+`9e77c48e5441a5a905b7c8e23ecd6013c130a3c4`; all eight earlier local
+commits are retained. The exact final source commit and Guardian publication
+status are established by the post-commit verification receipt, not this
+pre-commit record. Build revision `R262ME12S3B-CANDIDATE`, version
+`0.2.0-R262ME12S3B-CANDIDATE`, and Hytale target `=0.7.1` remain provisional.
+
+The five-argument native capture helper is now package-visible for the
+native-control fixture, without changing production behavior. Joined tests
+use an installed Larva Void world-spawn definition and role action graph,
+the real native capture, production birth/reservation/attachment/publication
+owners, temporary durable encounter files, and the LOAD recovery owner.
+Independent JVM tests cover uninterrupted publication and an interrupted
+durable root followed by runtime, holder, and store reconstruction. Both
+tests pass with a pooled native job mutated after synchronous capture.
+Existing focused persistence, transaction, mixed-flock, lease, HRO, and
+native patch tests remain part of the cumulative gate.
+
+This prepared native opportunity fixture does not run Hytale terrain search,
+collision, connected presentation, or gameplay. Turret and Seeker retain
+their role-specific certificate blockers; Firesteel remains unadmitted
+pending incoming-only lifecycle proof. Full 27-affix causal execution and
+owner-authored acquisition remain for connected Stage 4/owner decisions.
+No JAR was deployed, no active save or `main` changed, and no connected QA
+or owner acceptance occurred. Monster Affix stays OPEN with
+`ownerAccepted=false`; Elite/HRO remain QA_PENDING. The next action is the
+exact-HEAD cumulative check, Guardian receipt, and reviewed branch
+publication; guarded Stage 4 QA still requires separate owner authorization.
+
 ## ME12 Stage 3 guarded QA role-routing checkpoint (2026-10-14)
 
 Source branch `codex/me12-stage3`, code and command-documentation commit

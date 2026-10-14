@@ -1,15 +1,17 @@
 # Master Enemies Stage 4 run sheet
 
-**Current candidate readiness: BLOCKED.** `R262ME12S3B-CANDIDATE` cannot be activated
-for natural v2 gameplay. The guarded QA lease interface is implemented in source,
-but its complete native-owner fixture is absent. The QA lease now checks each
-concrete natural roster against its own pinned production binding, so Turret
-and Seeker do not block independently certified roles. Goblin Turret has no
-explicit hostile-player attitude in the pinned native template; both Turret
-and Seeker lack production bindings. Firesteel is withheld from v2 QA until
-its incoming-only lifecycle is verified. The actual
-birth/publication/recovery owner fixture and all-27 causal affix predicates remain
-incomplete. `masterEnemiesV2=ENABLED` still rejects with
+**Current candidate readiness: pending exact-HEAD verification and Guardian
+publication.** The joined native-owner fixture now exercises a prepared,
+installed Larva Void natural spawn through capture, reservation, durable
+birth, attachment, publication, and interrupted-root LOAD recovery. It does
+not prove Hytale's terrain search, collision or connected presentation.
+The QA lease checks each concrete natural roster against its own pinned
+production binding, allowing independently certified roles to be tested
+without admitting blocked roles. Goblin Turret and Scarak Seeker retain
+their production certificate blockers. Firesteel remains withheld until its
+incoming-only lifecycle is verified. HRO's 27-affix evidence requirements
+remain in force; connected causal acceptance is not an offline prerequisite
+for the first guarded QA lease. `masterEnemiesV2=ENABLED` still rejects with
 `ME12_PRODUCTION_RELEASE_GATE_OPEN`; SHADOW only compiles plans.
 
 ## Activation and rollback boundary
@@ -30,7 +32,7 @@ activation instructions for this blocked checkpoint:
    production role and per-roster native certification,
    matching installed JAR/server/assets hashes, and PASS Guardian checks including
    owner, HRO diagnostic, and lease tests. The present candidate fails because
-   the production birth-owner fixture does not yet exist.
+   an exact-HEAD Guardian receipt has not yet been published for this change.
    `/rpg me12qa status` is read-only. `/rpg me12qa revoke` stops new v2 births.
    Expiry, world unload, configuration reload, or owner-hook loss also stops them.
 2. Obtain separate owner authorization identifying that tested candidate, target
