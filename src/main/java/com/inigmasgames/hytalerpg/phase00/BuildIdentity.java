@@ -13,6 +13,7 @@ public final class BuildIdentity {
     public static final String VERSION = required("rpg.version");
     public static final String STAGE = required("rpg.stage");
     public static final String HYTALE_VERSION = required("hytale.version");
+    public static final String SOURCE_COMMIT = required("rpg.sourceCommit");
 
     private BuildIdentity() {
     }

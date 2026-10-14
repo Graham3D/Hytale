@@ -21,6 +21,36 @@ class HroMasterEnemiesTest {
         assertEquals(HroMasterEnemiesReport.Status.BLOCKED,((Map<?,?>)effects.get("ME-014")).get("nativeEffectPresenceReadback"));
     }
     HroEvent event(String boundary,String operation,Map<String,String> facts){return new HroEvent(1,"SYNTHETIC",1,1,1,"PERSISTENCE.RECOVERY","offline-fixture",boundary,operation,"fixture-world",1L,1L,1L,facts);}
+    HroEvent ownerReadback(String affix,String operation,String predicate,String status){return new HroEvent(1,"fixture",1,1,1,
+            "AFFIX.PROC","MasterEnemies","ME12_OPERATOR_READBACK",operation,"fixture-world",1L,1L,1L,
+            Map.of("affixId",affix,"predicate",predicate,"status",status,"nativeActor","actor","generation","1"));}
+    @Test void all27NamedReadbacksNeverFabricateCompleteNativeAcceptance(){
+        var identified=Map.<String,Object>of("captureBuild",Map.of("rpg.sourceCommit","a".repeat(40),"jarSha256","b".repeat(64)));
+        for(int index=1;index<=27;index++){
+            String id="ME-%03d".formatted(index);var required=HroMasterEnemiesReport.requiredPredicates(id);
+            assertFalse(required.isEmpty(),id);assertEquals(required.size(),Set.copyOf(required).size(),id);
+            var report=new HroMasterEnemiesReport();
+            for(int p=0;p<required.size();p++)report.accept(ownerReadback(id,"split/"+p,required.get(p),"PASS"),"fixture:"+p);
+            var split=(Map<?,?>)((Map<?,?>)report.snapshot(identified,Map.of(),false,0).get("affixReadbackCoverage")).get(id);
+            assertEquals(HroMasterEnemiesReport.Status.BLOCKED,split.get("nativeAcceptance"),id);
+            assertEquals(required.size(),split.get("observedOperations"),id);
+            for(var predicate:required)report.accept(ownerReadback(id,"whole",predicate,"PASS"),"fixture:whole");
+            var complete=(Map<?,?>)((Map<?,?>)report.snapshot(identified,Map.of(),false,0).get("affixReadbackCoverage")).get(id);
+            assertEquals(HroMasterEnemiesReport.Status.BLOCKED,complete.get("nativeAcceptance"),id);
+            assertTrue(((Map<?,?>)complete.get("executionPredicates")).values().stream()
+                    .allMatch(status->status==HroMasterEnemiesReport.Status.PASS),id);
+            var synthetic=(Map<?,?>)((Map<?,?>)report.snapshot(Map.of("synthetic",true,"captureBuild",identified.get("captureBuild")),Map.of(),false,0)
+                    .get("affixReadbackCoverage")).get(id);
+            assertEquals(HroMasterEnemiesReport.Status.BLOCKED,synthetic.get("nativeAcceptance"),id);
+            var lost=(Map<?,?>)((Map<?,?>)report.snapshot(identified,Map.of(),false,1).get("affixReadbackCoverage")).get(id);
+            assertEquals(HroMasterEnemiesReport.Status.BLOCKED,lost.get("nativeAcceptance"),id);
+            assertTrue(((Map<?,?>)lost.get("executionPredicates")).values().stream()
+                    .allMatch(status->status==HroMasterEnemiesReport.Status.BLOCKED),id);
+            report.accept(ownerReadback(id,"whole",required.getFirst(),"FAIL"),"fixture:fail");
+            var failed=(Map<?,?>)((Map<?,?>)report.snapshot(identified,Map.of(),false,0).get("affixReadbackCoverage")).get(id);
+            assertEquals(HroMasterEnemiesReport.Status.FAIL,failed.get("nativeAcceptance"),id);
+        }
+    }
     @Test void qaAndUnprovenPublicationDoNotCountAsNaturalV2AndEmptyEffectsAreNotPasses(){
         var report=new HroMasterEnemiesReport();
         report.accept(event("ELITE_PUBLISHED","qa",Map.of("provenance","QA","schemaVersion","2","nativeSourceReceipt","qa-command/fixture")),"fixture:1");

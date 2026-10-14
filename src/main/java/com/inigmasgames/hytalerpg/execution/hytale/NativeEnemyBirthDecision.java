@@ -46,8 +46,11 @@ public final class NativeEnemyBirthDecision implements AutoCloseable {
     private final Map<UUID,Long> v2Generations=new HashMap<>();
     private long nextV2Generation;
     private volatile java.util.function.BooleanSupplier nativeHooksReady=()->false;
+    private volatile Me12QaAuthority qaAuthority;
     private volatile V2ContextSource v2ContextSource=this::captureProduction;
     public void configureNativeHooks(java.util.function.BooleanSupplier ready){nativeHooksReady=Objects.requireNonNull(ready);}
+    public void configureQaAuthority(Me12QaAuthority authority){qaAuthority=Objects.requireNonNull(authority);}
+    private boolean qaActive(UUID world){var authority=qaAuthority;return authority!=null&&authority.allows(world);}
     /** Installation cannot bypass the feature or evidence gates. */
     public synchronized void configureV2ContextSource(V2ContextSource source){
         if(!v2Lifetimes.isEmpty())throw new IllegalStateException("ME12_CONTEXT_SOURCE_ALREADY_IN_USE");v2ContextSource=Objects.requireNonNull(source);
@@ -99,7 +102,8 @@ public final class NativeEnemyBirthDecision implements AutoCloseable {
         List<EnemyBirthPlanner.Candidate> additions=List.of();
         // Native random FlockSpawnTypes cannot be predicted from the leader. A real
         // v2 birth stages the exact native-selected roles before graph compilation.
-        boolean production=settings!=null&&settings.get().me12FeatureState().allowsNewV2Births();
+        boolean production=settings!=null&&settings.get().me12FeatureState().allowsNewV2Births()
+                ||qaActive(original.job().world());
         try{
         if(offered>original.members().size()&&production){
             NativeEnemyFlockExtension.Attempt attempt;
@@ -155,7 +159,8 @@ public final class NativeEnemyBirthDecision implements AutoCloseable {
     /** Nonblocking native entry point. Disabled/DRAIN retain v1; SHADOW cannot acquire a lease or write a root. */
     public java.util.concurrent.CompletionStage<Optional<Selected>> selectAsync(Store<EntityStore> store,NativeEnemySpawnGroups.Group original,SpawnJobData nativeJob){
         var state=settings==null?Me12FeatureState.DISABLED:settings.get().me12FeatureState();state.validateStage2();
-        if(!state.evaluatesShadow()&&!state.allowsNewV2Births())return java.util.concurrent.CompletableFuture.completedStage(select(store,original,nativeJob));
+        if(!state.evaluatesShadow()&&!state.allowsNewV2Births()&&!qaActive(original.job().world()))
+            return java.util.concurrent.CompletableFuture.completedStage(select(store,original,nativeJob));
         if(!store.isInThread()||admission==null||!admission.admits(original.job().world()))throw new IllegalStateException("ME12_CAPTURE_WORLD_THREAD");
         V2Capture capture;
         try{capture=v2ContextSource.capture(store,original,nativeJob);
@@ -211,6 +216,8 @@ public final class NativeEnemyBirthDecision implements AutoCloseable {
     private Optional<Selected> selectPreparedV2(Store<EntityStore> store,NativeEnemySpawnGroups.Group original,NativeEnemyFlockExtension.Source job,V2Capture capture,Me12PlannerCache.Resolved resolved){
         var rollback=new Rollback(store,original);rollback.additional=capture.reserved();
         try{
+            if((settings==null||!settings.get().me12FeatureState().allowsNewV2Births())
+                    &&!qaActive(original.job().world()))return rollback.fallback("ME12_QA_AUTHORITY_REVOKED");
             if(!store.isInThread()||!admission.admits(original.job().world()))return rollback.fallback("ME12_WORLD_CHANGED");
             if(job.jobId()!=original.job().nativeJobId()||job.roleIndex()!=original.job().roleIndex()
                     ||job.environmentIndex()!=original.job().environment()

@@ -104,6 +104,15 @@ acceptance rows remain BLOCKED. The report keeps PASS/FAIL/BLOCKED/NOT_OBSERVED/
 NOT_APPLICABLE distinct; a selected name or server HUD publication proves neither
 combat execution nor client rendering.
 
+Task 3 adds an explicit named-predicate coverage map for each of the 27 operators.
+Readbacks are keyed by world segment, native actor, encounter generation and
+operation; synthetic or lost evidence cannot produce PASS. This is a diagnostic
+requirements ledger, not a native execution certificate. The production owner
+still emits only the four partial dedicated readbacks above, and no operator has
+a complete causal predicate/join implementation. The combined report therefore
+keeps every operator's full `nativeAcceptance` BLOCKED. Real missing owner
+instrumentation and connected exercise are separate remaining dependencies.
+
 ## Verification and four-axis ledger
 
 The exact source/build/test/publication result is in the post-commit

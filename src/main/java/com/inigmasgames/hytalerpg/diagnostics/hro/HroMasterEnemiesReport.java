@@ -12,6 +12,8 @@ final class HroMasterEnemiesReport {
     private final Map<String,Status> effectReadbacks=new HashMap<>();
     private final Set<String> selectedAffixes=new HashSet<>();
     private final Map<String,Status> operatorReadbacks=new TreeMap<>();
+    /** Identity-scoped observations. A named readback is narrower than complete affix acceptance. */
+    private final Map<String,Map<String,Map<String,Status>>> execution=new TreeMap<>();
     private long omitted;
     private long omittedOperations;
     void accept(HroEvent e,String locator){
@@ -61,14 +63,33 @@ final class HroMasterEnemiesReport {
             if(status==Status.PASS&&!"true".equals(e.facts().get("present")))status=Status.FAIL;
             operatorReadbacks.merge(e.facts().get("affixId"),status,(a,b)->a==Status.FAIL||b==Status.FAIL?Status.FAIL:a==Status.BLOCKED||b==Status.BLOCKED?Status.BLOCKED:b);
         }
+        if(e.contract().equals("AFFIX.PROC")&&e.provider().equals("MasterEnemies")
+                &&e.boundary().equals("ME12_OPERATOR_READBACK")&&operator(e.facts().get("affixId"))){
+            var id=e.facts().get("affixId");var predicate=e.facts().get("predicate");
+            var actor=e.facts().get("nativeActor");var generation=e.facts().get("generation");
+            if(requiredPredicates(id).contains(predicate)&&actor!=null&&generation!=null
+                    &&e.worldSegmentId()!=null&&e.operationId()!=null)
+                execution(id,e.worldSegmentId()+"/"+actor+"/"+generation+"/"+e.operationId(),
+                        predicate,map(e.facts().get("status")));
+        }
     }
     private void count(String name,String operation){var set=denominators.computeIfAbsent(name,k->new HashSet<>());
         if(set.size()<OPERATIONS)set.add(operation);else if(!set.contains(operation))omittedOperations++;}
+    private void execution(String affix,String operation,String predicate,Status status){
+        var operations=execution.computeIfAbsent(affix,k->new TreeMap<>());
+        if(!operations.containsKey(operation)&&operations.size()>=OPERATIONS){omittedOperations++;return;}
+        operations.computeIfAbsent(operation,k->new TreeMap<>()).merge(predicate,status,HroMasterEnemiesReport::combine);
+    }
     private void check(String name,Status status){checks.merge(name,status,(a,b)->a==Status.FAIL||b==Status.FAIL?Status.FAIL:a==Status.BLOCKED||b==Status.BLOCKED?Status.BLOCKED:b);}
     private static Status combine(Status a,Status b){return a==Status.FAIL||b==Status.FAIL?Status.FAIL:a==Status.BLOCKED||b==Status.BLOCKED?Status.BLOCKED:a==Status.PASS||b==Status.PASS?Status.PASS:b;}
     static Status map(String raw){if(raw==null)return Status.BLOCKED;return switch(raw){case "PASS"->Status.PASS;case "FAIL"->Status.FAIL;case "NOT_APPLICABLE"->Status.NOT_APPLICABLE;
         case "NOT_EXERCISED","NOT_OBSERVED"->Status.NOT_OBSERVED;default->Status.BLOCKED;};}
     Map<String,Object> snapshot(Map<String,Object> identity,Map<String,Object> rawCoverage,boolean incomplete,long drops){
+        boolean synthetic=Boolean.TRUE.equals(identity.get("synthetic"))
+                ||identity.get("captureBuild") instanceof Map<?,?> source&&Boolean.TRUE.equals(source.get("synthetic"));
+        boolean identified=identity.get("captureBuild") instanceof Map<?,?> source
+                &&String.valueOf(source.get("rpg.sourceCommit")).matches("[0-9a-f]{40}")
+                &&String.valueOf(source.get("jarSha256")).matches("(?i)[0-9a-f]{64}");
         var statuses=new TreeMap<String,Status>();
         for(String key:List.of("quantityBounds","serverTargetPublication","generatorAvailability","excludedActorOpportunity"))statuses.put(key,checks.getOrDefault(key,Status.NOT_OBSERVED));
         statuses.put("nativeCertification",Status.BLOCKED);statuses.put("realSkillSource",Status.BLOCKED);statuses.put("realPassiveSource",Status.BLOCKED);
@@ -82,30 +103,69 @@ final class HroMasterEnemiesReport {
         report.put("omittedOperationIdentities",omittedOperations);
         var effects=new TreeMap<String,Object>();
         for(var operator:com.inigmasgames.hytalerpg.enemies.EnemyAffixRegistry.Operator.values()){
+            var id=operator.id();var required=requiredPredicates(id);var observed=new TreeMap<String,Status>();
+            var operations=execution.getOrDefault(id,Map.of());
+            for(var predicate:required){
+                Status aggregate=Status.NOT_OBSERVED;
+                for(var readbacks:operations.values())aggregate=combine(aggregate,readbacks.getOrDefault(predicate,Status.NOT_OBSERVED));
+                observed.put(predicate,downgrade(aggregate,synthetic||!identified||incomplete||drops>0||omittedOperations>0));
+            }
+            // Some requirements need mutually exclusive scenarios (for example Horde
+            // publication and rollback). Only an affix-specific causal validator may
+            // combine them into a complete PASS; named events alone cannot.
+            Status acceptance=identified&&!synthetic&&observed.containsValue(Status.FAIL)?Status.FAIL:Status.BLOCKED;
             boolean instrumented=Set.of("ME-013","ME-016").contains(operator.id());
             var status=operatorReadbacks.getOrDefault(operator.id(),Status.NOT_OBSERVED);
             if((incomplete||drops>0||omittedOperations>0)&&status==Status.PASS)status=Status.BLOCKED;
             effects.put(operator.id(),Map.of("selected",selectedAffixes.contains(operator.id()),
                     "directResourceReadback",instrumented?downgrade(effectReadbacks.getOrDefault(operator.id(),Status.NOT_OBSERVED),incomplete||drops>0||omittedOperations>0):Status.NOT_APPLICABLE,
                     "nativeEffectPresenceReadback",Set.of("ME-014","ME-025").contains(operator.id())?status:Status.NOT_APPLICABLE,
-                    "nativeAcceptance",Status.BLOCKED,"requiredExecutionEvidence",requiredExecutionEvidence(operator.ordinal()+1),
-                    "reason","Selection and HUD publication are not execution proof; partial readbacks do not prove the complete operator contract"));
+                    "nativeAcceptance",acceptance,"requiredExecutionEvidence",requiredExecutionEvidence(operator.ordinal()+1),
+                    "executionPredicates",observed,"observedOperations",operations.size(),
+                    "reason","Named owner readbacks are partial; full causal joins, fault scenarios and connected native acceptance remain required"));
         }
         report.put("affixReadbackCoverage",effects);
         for(String family:List.of("nativeEncounters","generation","combat","rewardsAndPersistence","learning","presentation","performance"))
             if(!evidence.containsKey(family))statuses.put("observations/"+family,Status.NOT_OBSERVED);
         report.put("axes",Map.of("implemented",true,"automatedPassed","SEE_EXACT_COMMIT_STAGE3_MANIFEST","nativeConnectedPassed",false,"ownerAccepted",false));
-        report.put("releaseGate","OPEN");report.put("synthetic",Boolean.TRUE.equals(identity.get("synthetic"))
-                ||identity.get("captureBuild") instanceof Map<?,?> build&&Boolean.TRUE.equals(build.get("synthetic")));
+        report.put("releaseGate","OPEN");report.put("synthetic",synthetic);
         report.put("limitations",List.of("PASS applies only to the named observed predicate; server publication does not prove rendering or combat execution",
                 "Native coverage: 84 configured; 5 authored exclusions; 179 uncertified IDs; 41 catalog-only (5 retired); 16 Normal immunity exclusions",
-                "Turret/Seeker projectile receipts and mixed-flock certificates remain offline dependencies; Firesteel incoming attachment requires native execution evidence",
+                "Turret/Seeker modern projectile route has offline fixtures, but production role certificates and complete native-owner lifecycle fixture remain missing; Firesteel incoming attachment needs owner-boundary proof",
                 "Real accepted Skill/first-copy Passive sources unavailable; synthetic fixtures are not source certification",
                 "70/25/5 requires automated analytical/sampling evidence; gameplay frequency is not a distribution test",
                 "Missing facts are NOT_OBSERVED; unavailable providers or dependencies are BLOCKED; raw HRO evidence is retained"));
         return report;
     }
     private static boolean operator(String id){return id!=null&&id.matches("ME-0(0[1-9]|1[0-9]|2[0-7])");}
+    /** Exact readbacks needed at the existing native owners; a missing owner stays BLOCKED. */
+    static List<String> requiredPredicates(String id){
+        if(!operator(id))throw new IllegalArgumentException("ME12_OPERATOR_ID");
+        return switch(Integer.parseInt(id.substring(3))){
+            case 1->List.of("NATIVE_MOVEMENT_APPLIED","NATIVE_RECOVERY_PRESERVED");
+            case 2->List.of("PHYSICAL_DELTA_FROZEN","NATIVE_HEALTH_LOSS");
+            case 3->List.of("ELEMENTAL_MITIGATION_APPLIED","NATIVE_IMMUNITY_AND_CAP_PRESERVED");
+            case 4->List.of("DEFENSE_RATING_APPLIED","PHYSICAL_MITIGATION_APPLIED");
+            case 5,6,7,8,9,10,11->List.of("ELEMENTAL_DELTA_APPLIED","DEFENSIVE_RESISTANCE_APPLIED","NATIVE_EFFECTS_PRESERVED");
+            case 12->List.of("SPECTRAL_CHANNEL_FROZEN","NATIVE_COMPONENT_RECEIPT");
+            case 13->List.of("RESOURCE_APPLIED","OPPORTUNITY_LOCK","RESOURCE_CAP");
+            case 14->List.of("NATIVE_EFFECT_PRESENT_AFTER_APPLICATION","OUTGOING_REDUCTION_APPLIED","EFFECT_EXPIRED");
+            case 15->List.of("NATIVE_IMPULSE_PRESERVED","SINGLE_MODIFIER_APPLIED");
+            case 16->List.of("RESOURCE_APPLIED","HEALTH_RATE_CAP","NO_RECURSIVE_HEAL");
+            case 17->List.of("STUN_STAGGER_REJECTED","OTHER_STATUS_ALLOWED");
+            case 18->List.of("MOVEMENT_CONTROL_REJECTED","DAMAGE_STATUS_PRESERVED");
+            case 19->List.of("ENGAGEMENT_PHASE_APPLIED","DAMAGE_MOVEMENT_RECOVERY_APPLIED");
+            case 20->List.of("DISTINCT_MINION_DEATH_STACK","BOUNDED_STACK_APPLIED","STACK_RECOVERED");
+            case 21->List.of("MINION_HEALTH_DIRECT_MOVEMENT_APPLIED","MINION_REWARD_ISOLATED");
+            case 22->List.of("TWO_NATIVE_MEMBERS_PUBLISHED","NATIVE_POPULATION_ACCOUNTED","ROLLBACK_IDEMPOTENT");
+            case 23->List.of("SELECTOR_MEMBERSHIP_APPLIED","AURA_RADIUS_APPLIED","AURA_EXPIRED");
+            case 24->List.of("GUARD_PROTECTION_APPLIED","PROTECTION_RELEASED","NATIVE_HEALTH_PRESERVED");
+            case 25->List.of("NATIVE_EFFECT_PRESENT_AFTER_APPLICATION","DEFENSE_REDUCTION_APPLIED","EFFECT_EXPIRED");
+            case 26->List.of("SOURCE_HEALTH_LOSS","REFLECTED_RECEIPT","NO_REFLECTION_LOOP");
+            case 27->List.of("INITIAL_SHIELD_APPLIED","SHIELD_ABSORPTION_APPLIED","NO_RELOAD_REGENERATION");
+            default->throw new IllegalArgumentException("ME12_OPERATOR_ID");
+        };
+    }
     private static Status downgrade(Status status,boolean incomplete){return status==Status.PASS&&incomplete?Status.BLOCKED:status;}
     static String requiredExecutionEvidence(int id){return switch(id){
         case 1->"Native movement and recovery timing readback; movement-only route distinguished";

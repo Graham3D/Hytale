@@ -1,5 +1,13 @@
 # Master Enemies v1.2 diagnostic trace contract
 
+Stage 3 Task 3 implementation note: the HRO combined report now lists named
+readback predicates for all 27 affixes and correlates observed readbacks by
+world segment/native actor/generation/operation. These names specify required
+evidence; most are not yet emitted by native owners. Existing dedicated
+resource readbacks (ME-013/016) and native-effect presence (ME-014/025) remain
+partial. The full causal acceptance result stays BLOCKED for all 27. Synthetic
+fixtures test report classification only and do not certify execution.
+
 Stage 1 requirements only, under ME12-ARCH-AD1. Implementation belongs to separately authorized Stage 3. No command is added or promised as currently registered. Connected observation and owner acceptance are deferred to Stage 4.
 
 ## Ownership and entry point

@@ -1,25 +1,33 @@
 # Master Enemies Stage 4 run sheet
 
 **Current candidate readiness: BLOCKED.** `R262ME12S3B-CANDIDATE` cannot be activated
-for natural v2 gameplay. The modern projectile route has a Task 1 offline
-candidate; Task 2 still lacks complete mixed-flock owner certification,
-the full native-provider birth/publication/recovery fixture, Firesteel
-lifecycle proof, Turret/Seeker production certificates, and a candidate-only
-QA activation authority. `masterEnemiesV2=ENABLED` is rejected with
-`ME12_PRODUCTION_RELEASE_GATE_OPEN`. No command or undocumented config switch
-bypasses this. SHADOW only compiles plans and retains v1 gameplay.
+for natural v2 gameplay. The guarded QA lease interface is implemented in source,
+but its mandatory production certificates and complete native-owner fixtures
+are absent. Goblin Turret has no explicit hostile-player attitude in the pinned
+native template; both Turret and Seeker lack production bindings. The actual
+birth/publication/recovery owner fixture and all-27 causal affix predicates remain
+incomplete. `masterEnemiesV2=ENABLED` still rejects with
+`ME12_PRODUCTION_RELEASE_GATE_OPEN`; SHADOW only compiles plans.
 
 ## Activation and rollback boundary
 
 This is the exact required sequence for a future ready candidate, not executable
 activation instructions for this blocked checkpoint:
 
-1. Complete and verify the offline blockers in `ME12_STAGE3_CONTINUATION.md`. Add
-   a separate QA-only activation authority tied to an exact candidate SHA, native
-   hook/assets identity and owner-selected existing world(s), with bounded lifetime
-   and explicit revocation. Retain the global production ENABLED guard. Its exact
-   registered command/config syntax must be implemented, tested and documented
-   before requesting authorization; none is invented here.
+1. Complete and verify the offline blockers in `ME12_STAGE3_CONTINUATION.md`.
+   The source registers `/rpg me12qa activate <candidateSha> <worldUuid> <saveName>
+   <seconds> <guardianReceipt>` for an operator player with
+   `inigmasgames.rpg.me12.qa` and the parent `/rpg` permission. Use the exact
+   loaded world UUID, active save directory name, lowercase 40-character verified
+   source commit, 1–600 second lifetime, and absolute path to its exact-commit
+   Guardian verification JSON. Artifact/evidence hashes are checked off the
+   world thread; the command reports activation only after live revalidation.
+   The command requires `masterEnemiesV2=DRAIN`,
+   admitted recovered world, all native owner hooks, mandatory role certificates,
+   matching installed JAR/server/assets hashes, and PASS Guardian checks including
+   owner, diagnostic, and lease tests. The present candidate fails these checks.
+   `/rpg me12qa status` is read-only. `/rpg me12qa revoke` stops new v2 births.
+   Expiry, world unload, configuration reload, or owner-hook loss also stops them.
 2. Obtain separate owner authorization identifying that tested candidate, target
    save and QA activation. Recheck cumulative ancestry, game stopped, actual save
    identity, native compatibility and previous mod hash. Back up the installed JAR
@@ -31,7 +39,7 @@ activation instructions for this blocked checkpoint:
    mappings remain empty unless the owner separately authors accepted sources.
 4. Use the short capture sequence below. Missing source/operator evidence remains
    BLOCKED or NOT_OBSERVED and does not require extra diagnostic chores.
-5. Revoke the future QA-only birth authority to stop new v2 births. Keep the same
+5. Revoke the QA-only birth authority with `/rpg me12qa revoke` to stop new v2 births. Keep the same
    v2-capable reader and all policy/learning archives, roots, reward intents and
    delivery cursors. After separate authorization, a world-config edit to
    `"masterEnemiesV2":"DRAIN"`, followed by `/rpg worldconfig reload`, preserves
@@ -44,6 +52,9 @@ activation instructions for this blocked checkpoint:
    Saves. A return to DISABLED or DRAIN is not owner acceptance.
 
 `inigmasgames.rpg.worldconfig` is required for the existing reload/status command.
+Revocation/expiry returns new births to the DRAIN v1 path without erasing any v2
+roots, policy archives, or delivery cursors. The QA lease is memory-only and does
+not persist across restart. A failed activation revokes any earlier lease.
 No steps above were performed against the active installation in Stage 3.
 
 ## Future short capture

@@ -112,6 +112,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
     private com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyActions enemyActions;
     private com.inigmasgames.hytalerpg.enemies.EnemyReflectiveEffects enemyReflectiveEffects;
     private com.inigmasgames.hytalerpg.enemies.EnemyWorldAdmission enemyWorldAdmission;
+    private com.inigmasgames.hytalerpg.enemies.Me12QaAuthority me12QaAuthority;
     private com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyBirthOwner enemyBirthOwner;
     private com.inigmasgames.hytalerpg.execution.hytale.EnemyHealthBarPresentation enemyHealthBars;
     private com.inigmasgames.hytalerpg.execution.hytale.NativeHostileNames hostileNames;
@@ -787,6 +788,10 @@ public final class HyArpgPlugin extends TavernsPlugin {
                 enemyBindings,enemyWorldAdmission,()->packboundNativeHook!=null&&enemyProjectileHook!=null&&enemyDamageReceiptHook!=null&&nativePopulationProjectionHook!=null,difficultyCombat,
                 supportSystem.runtime().finite()));
         rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgSpawnCommand(()->enemyBirthOwner));
+        me12QaAuthority=new com.inigmasgames.hytalerpg.enemies.Me12QaAuthority(worldConfiguration,enemyWorldAdmission,
+                enemyBindings,()->enemyBirthOwner!=null&&packboundNativeHook!=null&&enemyProjectileHook!=null
+                        &&enemyModernProjectileHook!=null&&enemyDamageReceiptHook!=null&&nativePopulationProjectionHook!=null);
+        rpgCommand.addSubCommand(new com.inigmasgames.hytalerpg.commands.RpgMe12QaCommand(me12QaAuthority));
         getCommandRegistry().registerCommand(rpgCommand);
         if(Boolean.getBoolean("rpg.healingPresentationProbe")||com.inigmasgames.hytalerpg.execution.hytale.HealingProbePolicy.liveTestBuild()){
             healingProbe=new com.inigmasgames.hytalerpg.execution.hytale.HealingPresentationProbe(skillTrace);
@@ -873,6 +878,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
                     difficultyCombat.names().forgetWorld(worldId);
                     if(aquaticHabitat!=null)aquaticHabitat.forgetWorld(worldId);
                     enemyWorldAdmission.worldUnload(worldId);
+                    if(me12QaAuthority!=null)me12QaAuthority.worldUnload(worldId);
                     if(enemyBirthOwner!=null)enemyBirthOwner.worldUnload(worldId);
                 }});
         getEntityStoreRegistry().registerSystem(new HytaleDamageLifecycleSystems.Application(combatTrace,
@@ -999,6 +1005,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
         skillExecutionSystem.nativeBasics().configureNativeDamageReceipt(enemyDamageReceiptHook!=null);
         var enemyDecision=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyBirthDecision(
                 encounterRewards,enemyBindings,enemyBalance,worldConfiguration::snapshot,enemyWorldAdmission);
+        enemyDecision.configureQaAuthority(me12QaAuthority);
         var enemyReservation=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyBirthReservation(
                 enemyDecision,enemyWorldAdmission,encounterRewards);
         var enemyAttachment=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyBirthAttachment(
@@ -1263,6 +1270,7 @@ public final class HyArpgPlugin extends TavernsPlugin {
     private void shutdownRpg() {
         com.inigmasgames.hytalerpg.diagnostics.hro.HroRuntime.shutdown();
         if(enemyBirthOwner!=null)enemyBirthOwner.close();
+        if(me12QaAuthority!=null)me12QaAuthority.revoke();
         if(hostileNames!=null){hostileNames.close();hostileNames=null;}
         if(aquaticHabitat!=null){aquaticHabitat.close();aquaticHabitat=null;}
         RuntimeException enemyTeardown=null;

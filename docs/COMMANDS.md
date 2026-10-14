@@ -1,5 +1,26 @@
 # HyARPG gameplay and QA commands
 
+## Master Enemies candidate QA lease (Stage 3 source only)
+
+`/rpg me12qa activate <candidateSha> <worldUuid> <saveName> <seconds> <guardianReceipt>`
+arms natural v2 births for the player's current loaded world only. The five arguments
+are a 40-character lowercase source commit, the native world UUID, the exact active
+save directory name, a lifetime from 1 to 600 seconds, and an absolute path to the
+Guardian verification JSON for that exact installed JAR. Hash verification runs
+asynchronously; activation is announced only after rechecking the live world.
+`/rpg me12qa status` reads
+the current lease; `/rpg me12qa revoke` immediately stops new v2 births. All three
+are in-game player commands requiring `inigmasgames.rpg.me12.qa` and the parent
+`/rpg` permission. The player must be in the named world. The world configuration
+must be `masterEnemiesV2=DRAIN`; world recovery/admission, all native hooks, the
+mandatory production role certificates, exact 0.7.1 hashes, and Guardian's
+candidate/test receipt must pass. Any missing prerequisite rejects activation.
+Unloading the world, reloading world configuration, expiry, revocation, or a lost
+owner hook stops new v2 births. Existing v2 roots and archives remain recoverable;
+the production `ENABLED` guard remains closed. This command is present in source,
+but this candidate lacks mandatory Turret/Seeker certificates and owner fixtures,
+so activation is currently blocked. Nothing was deployed or activated in Stage 3.
+
 ## Master Enemies capture (Stage 3 candidate; Stage 4 workflow)
 
 `R262ME12S3-CANDIDATE`, Hytale `=0.7.1`, registers `/rpg-trace enemies start`,
