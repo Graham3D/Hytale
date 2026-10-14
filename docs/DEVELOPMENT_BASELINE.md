@@ -17,7 +17,8 @@ and retains the existing fallback when colored title rendering is unavailable.
 
 The new regression reproduced the mismatch before the fix and its two cases
 passed after the fix. The focused `:test` run with the obsolete 0.7.0 native
-asset/identity gates excluded passed, including CustomUI validation. A full
+asset/identity gates excluded passed, including CustomUI validation. The
+separate `:nativeControlTest` run passed two native-name cases. A full
 offline check/package is **blocked**, not passed: the installed release is
 Hytale 0.7.1, while this branch's `hytale_version=0.7.0` and the HRO identity
 gate require 0.7.0; the pre-release `Assets.zip` it audits is no longer
