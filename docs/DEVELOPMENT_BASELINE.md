@@ -1,5 +1,36 @@
 # HyARPG/Hywind development baseline
 
+## Promoted title ownership correction — source checkpoint (2026-10-13)
+
+State: **IN_PROGRESS; QA_PENDING on the existing Elite feature**. Branch
+`codex/elite-natural-hookup` contains the source correction at
+`1d7e1ab4a3205d27705885da359af20d01e078d9`, based on the previously
+deployed candidate branch commit `1ff1f06989493135e62b2866393673185ab5083d`.
+The branch still depends on QA-pending HRO correction
+`f7d414e6348c84653d03a51117bdfe2fc427dded`; `origin/main` is
+`c69e44f16302e68ebd625d65039a457ad92ead06`. The owner's screenshots
+show both a colored Champion/Unique title and a white native actor name.
+The white-plate compositor previously suppressed the native plate only when
+its text exactly equaled the colored title; those texts can differ. It now
+suppresses the native plate whenever a valid colored title owns the actor,
+and retains the existing fallback when colored title rendering is unavailable.
+
+The new regression reproduced the mismatch before the fix and its two cases
+passed after the fix. The focused `:test` run with the obsolete 0.7.0 native
+asset/identity gates excluded passed, including CustomUI validation. A full
+offline check/package is **blocked**, not passed: the installed release is
+Hytale 0.7.1, while this branch's `hytale_version=0.7.0` and the HRO identity
+gate require 0.7.0; the pre-release `Assets.zip` it audits is no longer
+installed. The latest connected log also reports the 0.7.1 native mutation
+patch mismatch and missing natural-Elite hooks. This checkpoint keeps the
+existing `R262C1ELITE4-CANDIDATE` revision and
+`0.2.0-R262C1ELITE4-CANDIDATE` version; **no new revision is completed, no
+JAR is built or deployed, and connected QA has not accepted the fix**.
+Next: bring the native asset/hook and HRO identity work onto 0.7.1, run the
+required full offline gates, then deploy a new reviewed candidate to the
+verified active save for owner QA. Do not merge this feature or its HRO
+dependency into `main` before affirmative acceptance.
+
 ## Numeric-only top-right revision badge — R262C1ELITE4-CANDIDATE (2026-10-13)
 
 State: **ENGINEERING_READY, DEPLOYED, QA_PENDING**. The continuing
