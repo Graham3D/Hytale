@@ -95,7 +95,7 @@ public final class NativeHostileNames {
         if(text==null||text.isBlank()){event(key,"MISSING_BASE",npc.getRoleName());return;}
         // Only this compositor writes the actor plate. The existing per-viewer
         // glyph renderer may replace its visible text, but never its identity.
-        String visible=combat.hasColoredPromotedName(key.world(),key.actor(),text)?"":text;
+        String visible=combat.visibleNativeName(key.world(),key.actor(),text);
         if(!visible.equals(current)){
             write(store,ref,Nameplate.getComponentType(),visible);
             event(key,current==null||current.isBlank()?"NAMED":"UPDATED",npc.getRoleName());

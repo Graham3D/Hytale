@@ -128,9 +128,13 @@ public final class EnemyHealthBarPresentation {
         return affixAnchors.containsKey(key)||coloredNames.containsKey(key);
     }
 
-    boolean hasColoredName(UUID world,UUID id,String text) {
+    String visibleNativeName(UUID world,UUID id,String nativeText) {
         var name=coloredNames.get(new Enemy(world,id));
-        return name!=null&&name.valid()&&name.text().equals(text);
+        return nativePlateText(name,nativeText);
+    }
+
+    static String nativePlateText(PromotedNameGlyphs.Name name,String nativeText) {
+        return name!=null&&name.valid()?"":nativeText;
     }
 
     private static Ref<EntityStore> createAnchor(Store<EntityStore> store,ModelAsset asset,
