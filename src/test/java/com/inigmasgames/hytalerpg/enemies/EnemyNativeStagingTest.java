@@ -109,11 +109,14 @@ class EnemyNativeStagingTest {
             assertEquals("Trork_Fighter",groups.getFirst().members().get(1).nativeRole());
             var additional=new ArrayList<NativeEnemySpawnGroups.Group>();
             var third=member.apply(5);var fourth=member.apply(5);
+            third.getComponent(npcType).setRoleName("Trork_Fighter");
             var extensionJob=new NativeEnemySpawnGroups.Job(world,42,4,"Trork_Warrior",3,5,2);
             NativeEnemySpawnGroups.captureAdditional(extensionJob,groups.getFirst().reservation(),store,()->{
                 capture.onEntityAdd(third,AddReason.SPAWN,store);capture.onEntityAdd(fourth,AddReason.SPAWN,store);
             },additional::add);
             assertEquals(1,reservations.get());assertEquals(2,additional.getFirst().members().size());
+            assertEquals(List.of("Trork_Fighter","Trork_Warrior"),additional.getFirst().members().stream()
+                    .map(NativeEnemySpawnGroups.Member::nativeRole).toList());
             assertTrue(additional.getFirst().members().stream().allMatch(value->value.staging().additional()));
             assertEquals(groups.getFirst().reservation(),additional.getFirst().reservation());
             assertFalse(additional.getFirst().nativeFailed());
@@ -124,6 +127,13 @@ class EnemyNativeStagingTest {
                     },additional::add));
             assertTrue(additional.getLast().nativeFailed());assertEquals(1,additional.getLast().members().size());
             assertTrue(additional.getLast().members().getFirst().staging().additional());
+            var denied=member.apply(5);var noReservation=new NativeEnemySpawnGroups.Owner(){
+                public boolean eligible(NativeEnemySpawnGroups.Job ignored){return true;}
+                public Optional<NativeEnemySpawnGroups.Reservation> reserve(NativeEnemySpawnGroups.Job ignored,UUID firstId,String role){return Optional.empty();}
+                public void captured(Store<EntityStore> ignored,NativeEnemySpawnGroups.Group result){fail("A denied reservation cannot publish a captured group");}
+            };
+            NativeEnemySpawnGroups.capture(job,noReservation,store,()->capture.onEntityAdd(denied,AddReason.SPAWN,store));
+            assertNull(denied.getComponent(marker));
             assertNull(unrelated.getComponent(marker));
             var outside=member.apply(5);capture.onEntityAdd(outside,AddReason.SPAWN,store);assertNull(outside.getComponent(marker));
             var failed=member.apply(5);

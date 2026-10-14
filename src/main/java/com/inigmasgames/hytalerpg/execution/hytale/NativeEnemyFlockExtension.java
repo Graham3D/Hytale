@@ -171,6 +171,40 @@ public final class NativeEnemyFlockExtension {
                 ||environment.getActualNPCs()!=environmentBefore-references.size())
             throw new IllegalStateException("ENEMY_NATIVE_EXTENSION_DISCARD_POPULATION");
     }
+    record Retention(NativeEnemySpawnGroups.Group kept,NativeEnemySpawnGroups.Group removed){}
+    static Retention partition(NativeEnemySpawnGroups.Group reserved,int count){
+        if(reserved==null||reserved.nativeFailed()||reserved.members().isEmpty()
+                ||count<0||count>reserved.members().size())
+            throw new IllegalArgumentException("ENEMY_NATIVE_EXTENSION_RETAIN_COUNT");
+        if(count==reserved.members().size())return new Retention(reserved,null);
+        if(count==0)return new Retention(null,reserved);
+        var job=reserved.job();
+        var tail=new NativeEnemySpawnGroups.Group(new NativeEnemySpawnGroups.Job(job.world(),job.nativeJobId(),
+                job.roleIndex(),job.nativeRole(),job.environment(),job.spawnConfiguration(),
+                reserved.members().size()-count),reserved.reservation(),
+                reserved.members().subList(count,reserved.members().size()),false);
+        var kept=new NativeEnemySpawnGroups.Group(new NativeEnemySpawnGroups.Job(job.world(),job.nativeJobId(),
+                job.roleIndex(),job.nativeRole(),job.environment(),job.spawnConfiguration(),count),
+                reserved.reservation(),reserved.members().subList(0,count),false,
+                reserved.extensionCreatedFlock(),reserved.extensionFlockRef());
+        return new Retention(kept,tail);
+    }
+    /** Keep the exact native-selected prefix; remove only the unselected tail
+     * through the existing native population and flock rollback owner. */
+    public static NativeEnemySpawnGroups.Group retain(Store<EntityStore> store,
+            NativeEnemySpawnGroups.Group original,NativeEnemySpawnGroups.Group reserved,int count){
+        var partition=partition(reserved,count);
+        if(partition.removed()!=null)discard(store,original,partition.removed());
+        if(partition.kept()!=null&&partition.kept().extensionCreatedFlock()){
+            var leader=store.getExternalData().getRefFromUUID(original.members().getFirst().entity());
+            var member=leader==null||!leader.isValid()?null:store.getComponent(leader,FlockMembership.getComponentType());
+            if(member==null||partition.kept().extensionFlockRef()==null
+                    ||!partition.kept().extensionFlockRef().isValid()
+                    ||!partition.kept().extensionFlockRef().equals(member.getFlockRef()))
+                throw new IllegalStateException("ME12_RESERVED_FLOCK_CHANGED_AFTER_TRIM");
+        }
+        return partition.kept();
+    }
     static void removeCreatedFlock(Store<EntityStore> store,Ref<EntityStore> leader,Ref<EntityStore> flock){
         if(flock==null||leader==null||!leader.isValid())throw new IllegalStateException("ENEMY_EXTENSION_FLOCK_ROLLBACK_IDENTITY");
         var membership=store.getComponent(leader,FlockMembership.getComponentType());

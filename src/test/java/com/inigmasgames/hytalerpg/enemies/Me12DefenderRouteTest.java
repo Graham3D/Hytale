@@ -114,4 +114,26 @@ class Me12DefenderRouteTest {
             assertFalse(Files.exists(Path.of("src/main/resources",role.sourceAssetPath())));
         }
     }
+    @Test void firesteelV2OfflineGraphsUseOnlyItsIncomingContractAcrossEras(){
+        var role=EnemyNativeBindings.load().role("Golem_Firesteel").orElseThrow();
+        var policy=Me12Policies.canonical();
+        var allowed=Set.of("ME-003","ME-004","ME-017","ME-018","ME-022","ME-023","ME-024","ME-026","ME-027");
+        for(var era:DifficultyId.values()){
+            var member=new Me12Planner.Member(role.canonicalRoleId(),role.sourceValidationId(),
+                    role.affixBinding(EnemyNativeBindings.load().revision(),true,3),role.nativeImmunityChannels(),true,"Golem_Firesteel");
+            var context=new Me12Planner.Context("a".repeat(64),"native-job/firesteel",1,era,
+                    Me12Planner.Evidence.CERTIFIED_STATIC_FIXTURE,member,List.of(member,member,member),
+                    List.of(member,member),Me12Planner.weights(policy.registry(),era,
+                    new EnemyAffixSelection.WeightPolicy(Map.of(),Set.of())));
+            var compiled=Me12Planner.compile(context,policy,new Me12Planner.Budget(n->{}));
+            if(era==DifficultyId.NORMAL){
+                // Firesteel's native Fire immunity is an existing Normal-era policy exclusion.
+                assertEquals(0,Arrays.stream(compiled.tierMasses()).sum());
+                continue;
+            }
+            assertTrue(Arrays.stream(compiled.tierMasses()).sum()>0,era.name());
+            for(int i=0;i<20;i++)assertTrue(compiled.sample("firesteel/"+era+"/"+i).choices().stream()
+                    .allMatch(choice->allowed.contains(choice.affixId())),era.name());
+        }
+    }
 }

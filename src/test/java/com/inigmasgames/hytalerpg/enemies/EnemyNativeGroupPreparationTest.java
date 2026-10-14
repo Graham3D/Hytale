@@ -92,6 +92,62 @@ class EnemyNativeGroupPreparationTest {
         assertTrue(EnemyNativeGroupPreparation.prepare(group,List.of(sourceRole(first,leaderRole),sourceRole(second,leaderRole)),
                 manifest::role,Vec3.ZERO,balance,manifest.revision(),true).isEmpty());
     }
+    @Test void nativeSelectedMixedAdditionsChangeTheFrozenPlanAndUncertifiedSelectionsFailClosed(){
+        String leader="Skeleton_Frost_Fighter",soldier="Skeleton_Frost_Soldier";
+        var selectedJob=new NativeEnemySpawnGroups.Job(world,47,8,leader,3,5,2);
+        var reservation=new NativeEnemySpawnGroups.Reservation(world,encounter,1);
+        var original=new NativeEnemySpawnGroups.Group(selectedJob,reservation,List.of(
+                new NativeEnemySpawnGroups.Member(first,leader,new EnemyStaging.State(world,encounter,first,1,7)),
+                new NativeEnemySpawnGroups.Member(second,soldier,new EnemyStaging.State(world,encounter,second,1,7))),false);
+        var request=EnemyNativeGroupPreparation.prepare(original,List.of(sourceRole(first,leader),sourceRole(second,soldier)),
+                manifest::role,Vec3.ZERO,balance,manifest.revision(),true).orElseThrow();
+        var third=UUID.randomUUID();var extensionJob=new NativeEnemySpawnGroups.Job(world,47,8,leader,3,5,1);
+        var soldierPick=new NativeEnemySpawnGroups.Group(extensionJob,reservation,List.of(
+                new NativeEnemySpawnGroups.Member(third,soldier,new EnemyStaging.State(world,encounter,third,1,7))),false);
+        var fighterPick=new NativeEnemySpawnGroups.Group(extensionJob,reservation,List.of(
+                new NativeEnemySpawnGroups.Member(third,leader,new EnemyStaging.State(world,encounter,third,1,7))),false);
+        var soldierPlan=EnemyNativeGroupPreparation.completeAdditional(original,request,soldierPick,
+                List.of(sourceRole(third,soldier)),manifest::role,balance,manifest.revision()).orElseThrow();
+        var fighterPlan=EnemyNativeGroupPreparation.completeAdditional(original,request,fighterPick,
+                List.of(sourceRole(third,leader)),manifest::role,balance,manifest.revision()).orElseThrow();
+        assertEquals(request.seed(),soldierPlan.seed());assertEquals(request.seed(),fighterPlan.seed());
+        assertEquals(soldier,soldierPlan.additionalSlots().getFirst().nativeBaseline().nativeRoleId());
+        assertEquals(leader,fighterPlan.additionalSlots().getFirst().nativeBaseline().nativeRoleId());
+        assertNotEquals(soldierPlan.additionalSlots(),fighterPlan.additionalSlots());
+        assertTrue(EnemyNativeGroupPreparation.completeAdditional(original,request,soldierPick,
+                List.of(sourceRole(third,leader)),manifest::role,balance,manifest.revision()).isEmpty());
+        assertTrue(EnemyNativeGroupPreparation.completeAdditional(original,request,soldierPick,
+                List.of(sourceRole(third,soldier)),id->id.equals(soldier)?Optional.empty():manifest.role(id),
+                balance,manifest.revision()).isEmpty());
+        var stale=new NativeEnemySpawnGroups.Group(extensionJob,new NativeEnemySpawnGroups.Reservation(world,encounter,2),
+                soldierPick.members(),false);
+        assertTrue(EnemyNativeGroupPreparation.completeAdditional(original,request,stale,
+                List.of(sourceRole(third,soldier)),manifest::role,balance,manifest.revision()).isEmpty());
+    }
+    @Test void capturedReservationCannotSubstituteAnotherNativeEntityOrRole(){
+        var original=group(false,2);
+        var request=EnemyNativeGroupPreparation.prepare(original,sources(),manifest::role,Vec3.ZERO,
+                balance,manifest.revision(),true).orElseThrow();
+        var template=Me12PlannerTest.context(DifficultyId.NORMAL);
+        var context=new Me12Planner.Context(template.nativeSnapshotDigest(),request.nativePlanReceipt(),
+                original.reservation().generation(),template.difficulty(),Me12Planner.Evidence.NATIVE_OWNER_CAPTURE,
+                template.leader(),template.minions(),template.hordeSlots(),template.effectiveWeights());
+        var third=UUID.randomUUID();var extraJob=new NativeEnemySpawnGroups.Job(world,job.nativeJobId(),
+                job.roleIndex(),job.nativeRole(),job.environment(),job.spawnConfiguration(),1);
+        var reserved=new NativeEnemySpawnGroups.Group(extraJob,original.reservation(),List.of(
+                new NativeEnemySpawnGroups.Member(third,"Larva_Void",new EnemyStaging.State(world,encounter,third,1,8))),false);
+        var valid=new NativeEnemyBirthDecision.V2Capture(request,context,Me12Policies.canonical(),enabled,sources(),
+                reserved,List.of(source(third)));
+        assertSame(reserved,valid.reserved());
+        assertThrows(IllegalArgumentException.class,()->new NativeEnemyBirthDecision.V2Capture(request,context,
+                Me12Policies.canonical(),enabled,sources(),reserved,List.of(source(UUID.randomUUID()))));
+        assertThrows(IllegalArgumentException.class,()->new NativeEnemyBirthDecision.V2Capture(request,context,
+                Me12Policies.canonical(),enabled,sources(),reserved,List.of()));
+        var foreign=new NativeEnemySpawnGroups.Group(extraJob,new NativeEnemySpawnGroups.Reservation(world,encounter,2),
+                reserved.members(),false);
+        assertThrows(IllegalArgumentException.class,()->new NativeEnemyBirthDecision.V2Capture(request,context,
+                Me12Policies.canonical(),enabled,sources(),foreign,List.of(source(third))));
+    }
     private EnemyNativeGroupPreparation.MemberSource sourceRole(UUID id,String roleId){
         var profile=AuthoredEncounterCatalog.load().profiles().stream().filter(p->p.roleId().equals(roleId)
                 &&p.difficulty()==DifficultyId.NORMAL).findFirst().orElseThrow();

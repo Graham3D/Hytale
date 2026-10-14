@@ -77,6 +77,30 @@ class Me12NativeCompatibilityTest {
             assertEquals("User",turretMiss.get(2).getAsJsonObject().get("Entity").getAsString());
         }
     }
+    @Test void productionRoleAdmissionStillRequiresExactPinnedHostilityAndActionCertificates()throws Exception{
+        try(var zip=new ZipFile(Path.of(System.getProperty("user.home"),
+                "AppData/Roaming/Hytale/install/release/package/game/latest/Assets.zip").toFile())){
+            String turretPath="Server/NPC/Roles/Intelligent/Faction/Goblin/Goblin_Turret.json";
+            String seekerPath="Server/NPC/Roles/Intelligent/Faction/Scarak/Scarak_Seeker.json";
+            try(var turret=zip.getInputStream(zip.getEntry(turretPath));
+                var seeker=zip.getInputStream(zip.getEntry(seekerPath))){
+                assertEquals("0c6f664472429c3116146141c64c5367dc3aa21d267b6f6eb61d17273b10e338",
+                        hash(turret.readAllBytes()));
+                assertEquals("f3eb48ce74ac32c8b793ac80c452f43c81b1b656df0f2884532544bb592c3ca5",
+                        hash(seeker.readAllBytes()));
+            }
+            assertEquals("Template_Goblin_Turret",read(zip,turretPath).get("Reference").getAsString());
+            assertEquals("Template_Flying_Aggressive",read(zip,seekerPath).get("Reference").getAsString());
+            var turretTemplate=read(zip,"Server/NPC/Roles/Intelligent/Faction/Goblin/Templates/Template_Goblin_Turret.json");
+            assertFalse(turretTemplate.has("DefaultPlayerAttitude"));
+            var seekerTemplate=read(zip,"Server/NPC/Roles/_Core/Templates/Template_Flying_Aggressive.json");
+            assertEquals("Hostile",seekerTemplate.get("DefaultPlayerAttitude").getAsString());
+            assertEquals("Root_NPC_Goblin_Turret_Attack",turretTemplate.getAsJsonObject("Parameters")
+                    .getAsJsonObject("Attack").get("Value").getAsString());
+            assertEquals("Scarak_Seeker_Spit",read(zip,seekerPath).getAsJsonObject("Modify")
+                    .get("RangedAttack").getAsString());
+        }
+    }
     private static JsonObject read(ZipFile zip,String path)throws Exception{
         try(var input=zip.getInputStream(zip.getEntry(path))){return JsonParser.parseString(new String(input.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();}
     }
