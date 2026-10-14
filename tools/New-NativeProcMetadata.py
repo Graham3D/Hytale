@@ -12,7 +12,7 @@ import zipfile
 from collections import Counter, defaultdict
 from pathlib import Path
 
-PIN = "eddf425546559bfbc3f2656babf30daa4008543c38ee5aa4499c605ed1732236"
+PIN = "b9164eb07d7c42e697d208ba3d35078a9b4a0125bef6261847a2f91e293e53b4"
 FAMILIES = {
     "plate": 360, "tool": 135, "cloth": 120, "leather": 120, "robes": 120,
     "staff": 120, "battleaxe": 105, "book": 105, "daggers": 105,
@@ -260,7 +260,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--verify", action="store_true")
     parser.add_argument("--server-root", type=Path, default=SERVER)
-    parser.add_argument("--assets-zip", type=Path, default=Path.home() / "AppData/Roaming/Hytale/install/pre-release/package/game/latest/Assets.zip")
+    parser.add_argument("--assets-zip", type=Path, default=Path.home() / "AppData/Roaming/Hytale/install/release/package/game/latest/Assets.zip")
     args = parser.parse_args()
     try:
         run(args.verify, args.server_root.resolve(), args.assets_zip)

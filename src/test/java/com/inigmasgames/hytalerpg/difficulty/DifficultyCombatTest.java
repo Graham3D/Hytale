@@ -93,7 +93,7 @@ class DifficultyCombatTest {
         assertThrows(IllegalStateException.class,()->resolver.resolveProduction(id,UUID.randomUUID(),"Wolf_Black",legacy.biomes().getFirst().key()));
     }
     @Test void installedRoleHashesAndHealthMatchEveryAuthoredBaseline() throws Exception {
-        Path assets=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/pre-release/package/game/latest/Assets.zip");
+        Path assets=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/release/package/game/latest/Assets.zip");
         try(var zip=new java.util.zip.ZipFile(assets.toFile())){
             for(var role:catalog.roles()){
                 var entry=zip.stream().filter(e->e.getName().startsWith("Server/NPC/Roles/")&&e.getName().endsWith("/"+role.id()+".json")).findFirst().orElseThrow();

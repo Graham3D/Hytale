@@ -31,7 +31,7 @@ class Stage13HealingProbeAITest {
     }
     @Test void visibleControlChangesOnlyModelAndTextureAndDependenciesExist()throws Exception{
         var empty=json("Server/Models/RPG/RPG_Healing_Stream.json");var visible=json("Server/Models/RPG/RPG_Probe_Healing_Visible.json");
-        try(var zip=new ZipFile(Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/pre-release/package/game/latest/Assets.zip").toFile())){
+        try(var zip=new ZipFile(Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/release/package/game/latest/Assets.zip").toFile())){
             for(var model:List.of(empty,visible))for(String key:List.of("Model","Texture"))assertNotNull(zip.getEntry("Common/"+model.get(key).getAsString()));
         }
         empty.remove("Model");empty.remove("Texture");visible.remove("Model");visible.remove("Texture");assertEquals(empty,visible);

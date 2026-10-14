@@ -74,7 +74,7 @@ class Stage13V2RecoveryEdgesTest {
         try(var store=FileEncounterStore.durableV2(migrated)){assertEquals(64,store.journalSequence());advance(store,1,165);store.checkpoint();}
         Path jar=Path.of("evidence/stage-13/cohort-h/artifacts/HytaleRPG-0.0.25.jar").toAbsolutePath();
         assertEquals("8849f88cb9225e847c05580ce1eb e3e2fb6be0d487c73aa4408526c1ed6381d6".replace(" ",""),EncounterCheckpointBundle.digest(Files.readAllBytes(jar)));
-        Path server=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/pre-release/package/game/latest/Server/HytaleServer.jar");
+        Path server=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/release/package/game/latest/Server/HytaleServer.jar");
         try(var loader=new java.net.URLClassLoader(new java.net.URL[]{jar.toUri().toURL(),server.toUri().toURL()},ClassLoader.getPlatformClassLoader())){
             var type=loader.loadClass("com.inigmasgames.hytalerpg.progress.FileEncounterStore");
             Object incompatible=type.getConstructor(Path.class).newInstance(migrated);

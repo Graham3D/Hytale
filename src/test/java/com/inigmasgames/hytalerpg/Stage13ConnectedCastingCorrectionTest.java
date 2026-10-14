@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /** Production coordinator, equipment resolver, geometry and projectile lifecycle with bounded world ports.
  * Does not substitute for connected native animation, carrier spawn or damage evidence. */
 class Stage13ConnectedCastingCorrectionTest {
-    static final Path ASSETS=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/pre-release/package/game/latest/Assets.zip");
+    static final Path ASSETS=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/release/package/game/latest/Assets.zip");
     static Map<String,String[]> installedTags(String id) throws Exception {
         String asset=NativeItemPowerRegistry.loadCanonical().find(id).map(NativeItemPowerRegistry.Entry::sourceAsset)
                 .orElse("Server/Item/Items/Weapon/Staff/Weapon_Staff_Mithril.json");

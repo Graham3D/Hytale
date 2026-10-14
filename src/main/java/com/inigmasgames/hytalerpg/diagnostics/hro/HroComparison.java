@@ -109,8 +109,16 @@ final class HroComparison {
         List<String> matches=operations.entrySet().stream().filter(entry->recipe.getAsJsonObject("match").entrySet().stream()
                 .allMatch(match->match.getValue().getAsString().equals(entry.getValue().get(match.getKey())))).map(Map.Entry::getKey).toList();
         JsonObject build=manifest.has("captureBuild")&&manifest.get("captureBuild").isJsonObject()?manifest.getAsJsonObject("captureBuild"):new JsonObject();
+        long dropped=integrity.has("dropped")?integrity.get("dropped").getAsLong():1;
+        List<HroContracts.Loss> losses=HroTool.lossScopes(integrity);
+        long attributed=0;for(var loss:losses){if(loss.count()<=0||attributed>dropped-loss.count())throw new IOException("INVALID_LOSS_SCOPE_COUNT");attributed+=loss.count();}
+        String match=matches.size()==1?matches.getFirst():null;
+        boolean relevantLoss=attributed<dropped || losses.stream().anyMatch(loss->loss.contract().equals(contract)
+                &&(loss.operationId()==null||loss.operationId().isBlank()||loss.operationId().equals(match)));
+        boolean finalized=HroOffline.value(manifest,"state").equals("COMPLETE")
+                && Set.of("STOPPED","EXPIRED").contains(HroOffline.value(integrity,"termination"));
         String quality=!valid[0]||!HroOffline.value(manifest,"eventCount").equals(Long.toString(count[0]))?"INVALID_SEQUENCE_OR_ORIGIN":
-                !HroOffline.value(manifest,"state").equals("COMPLETE")||!HroOffline.value(integrity,"evidenceComplete").equals("true")?"INCOMPLETE_CAPTURE":
+                !finalized||relevantLoss?"INCOMPLETE_CAPTURE":
                 matches.size()!=1?"MISSING_OR_AMBIGUOUS_SCENARIO":"COMPLETE";
         if(matches.size()!=1)return new Observation("INCONCLUSIVE",quality,"NONE",List.of(),HroBundle.sha256(bundle.resolve("manifest.json")),build,quality);
         Set<String> registered=new HashSet<>();HroOffline.object(bundle.resolve("capabilities.json")).getAsJsonArray("registeredContracts").forEach(e->registered.add(e.getAsString()));

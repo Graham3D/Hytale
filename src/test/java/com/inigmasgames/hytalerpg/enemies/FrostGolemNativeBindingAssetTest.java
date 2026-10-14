@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /** Checks the shipped native attack graph and the exact adapter-only role overlay. */
 class FrostGolemNativeBindingAssetTest {
     private static final Path GAME=Path.of(System.getProperty("user.home"),"AppData","Roaming","Hytale",
-            "install","pre-release","package","game","latest","Assets.zip");
+            "install","release","package","game","latest","Assets.zip");
     private static final String ROLE="Server/NPC/Roles/Elemental/Golem/Golem_Crystal_Frost.json";
     private static final List<String> STRIKES=List.of("Swing_Left_Damage","Swing_Right_Damage","Spin_Damage",
             "Ground_Slam_Damage","Stomp_Damage","Spin_Heavy_Damage","Clap_Damage");

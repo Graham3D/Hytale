@@ -21,7 +21,7 @@ class HytaleEliteTintTest {
 
     @Test void sameRoleIndependentNativeTintPathCoversThreeDifferentModels()throws Exception{
         var installed=Path.of(System.getProperty("user.home"),"AppData","Roaming","Hytale",
-                "install","pre-release","package","game","latest","Assets.zip");
+                "install","release","package","game","latest","Assets.zip");
         try(var zip=new ZipFile(installed.toFile())){
             for(var sample:SAMPLES){
                 assertNotNull(zip.getEntry(sample.nativeRolePath()),sample.role());

@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class Stage13NativeEquipmentSourceTest {
     @Test void everySelectedProductionBaseHasAnExactSourceOrExplicitAuthoredPolicy() throws Exception {
         var registry=NativeItemPowerRegistry.loadCanonical();assertEquals(15,registry.all().size());
-        var path=Path.of(System.getProperty("user.home"),"AppData","Roaming","Hytale","install","pre-release","package","game","latest","Assets.zip");
+        var path=Path.of(System.getProperty("user.home"),"AppData","Roaming","Hytale","install","release","package","game","latest","Assets.zip");
         assertTrue(Files.isRegularFile(path));
         try(var zip=new ZipFile(path.toFile())){
             for(var record:registry.all()){

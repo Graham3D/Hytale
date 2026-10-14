@@ -58,7 +58,7 @@ class ProductionEliteArchetypeAssetTest {
         assertTrue(bindings.productionEligibilityRejection("Skeleton_Frost_Scout").isPresent());
     }
     private static final Path ASSETS=Path.of(System.getProperty("user.home"),
-            "AppData/Roaming/Hytale/install/pre-release/package/game/latest/Assets.zip");
+            "AppData/Roaming/Hytale/install/release/package/game/latest/Assets.zip");
     private static final Set<String> PLAIN=Set.of("Cow_Undead","Crocodile","Emberwulf","Hound_Bleached",
             "Leopard_Snow","Pig_Undead","Raptor_Cave","Tiger_Sabertooth");
     private static final Set<String> SELECTOR=Set.of("Fen_Stalker","Rex_Cave");

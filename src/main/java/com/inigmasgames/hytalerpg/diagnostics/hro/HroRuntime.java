@@ -35,6 +35,8 @@ public final class HroRuntime {
     public static boolean active(UUID player) { var r=recorder;return r!=null&&r.active(player); }
     public static boolean recording(){var r=recorder;return r!=null&&r.recording();}
     public static void loss(UUID owner){var r=recorder;if(r!=null)r.loss(owner);}
+    public static void loss(UUID owner,String contract,String operation,String reason){var r=recorder;
+        if(r!=null)r.loss(owner,contract,operation,reason);}
     public static UUID ownerInWorld(UUID world){var r=recorder;return r==null?null:r.ownerInWorld(world);}
     public static String token(UUID player){var r=recorder;return r==null?null:r.token(player);}
     public static String packet(UUID player){var r=recorder;return r==null?null:r.packet(player);}
@@ -42,7 +44,7 @@ public final class HroRuntime {
     public static void equipment(UUID player,com.inigmasgames.hytalerpg.gear.GearEffectSnapshot snapshot,
             List<com.inigmasgames.hytalerpg.gear.GearInstance> candidates,Set<UUID> accepted) {
         var r=recorder;if(r==null||!r.active(player))return;
-        int candidatesHash=1,scanned=0;for(var item:candidates){if(++scanned>16){r.loss(player);break;}candidatesHash=31*candidatesHash+item.identity().hashCode();}
+        int candidatesHash=1,scanned=0;for(var item:candidates){if(++scanned>16){r.loss(player,"GEAR.EQUIPPED",null,"EQUIPMENT_CANDIDATE_LIMIT");break;}candidatesHash=31*candidatesHash+item.identity().hashCode();}
         if(!r.firstEquipment(player,snapshot.revision()+":"+candidatesHash))return;
         if(snapshot.empty())observe(player,"GEAR.EQUIPPED","HytaleGearEquipment","EQUIPMENT_EMPTY","equipment-empty",null,null,null,null,
                 Map.of("equipmentRevision",snapshot.revision(),"quantity",0));
@@ -50,7 +52,7 @@ public final class HroRuntime {
         for(var item:candidates){if(++count>16)break;
             observe(player,"GEAR.EQUIPPED","HytaleGearEquipment","EQUIPMENT",item.identity()+":"+snapshot.revision(),null,null,null,null,
                     Map.of("itemId",item.identity(),"equipmentRevision",snapshot.revision(),"accepted",accepted.contains(item.identity()),"equipmentSlot",item.category()));
-            int rolls=0;for(var roll:item.affixes()){if(++rolls>8){r.loss(player);break;}
+            int rolls=0;for(var roll:item.affixes()){if(++rolls>8){r.loss(player,"AFFIX.MODIFIER",item.identity()+":"+roll.familyId(),"AFFIX_ROLL_LIMIT");break;}
                 observe(player,"AFFIX.MODIFIER","HytaleGearEquipment","ROLLED_VALUE",item.identity()+":"+roll.familyId(),null,null,null,null,
                         Map.of("itemId",item.identity(),"equipmentRevision",snapshot.revision(),"affixId",roll.familyId(),"value",roll.value(),"units","AUTHORED_ROLL"));
             }

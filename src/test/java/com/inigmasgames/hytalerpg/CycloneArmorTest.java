@@ -137,7 +137,7 @@ class CycloneArmorTest {
         assertEquals("Self",particle.get("TargetEntityPart").getAsString());
         assertTrue(particle.get("ClearParticlesOnRemove").getAsBoolean());
         var nativeZip=Path.of(System.getProperty("user.home"),
-                "AppData/Roaming/Hytale/install/pre-release/package/game/latest/Assets.zip");
+                "AppData/Roaming/Hytale/install/release/package/game/latest/Assets.zip");
         try(var zip=new java.util.zip.ZipFile(nativeZip.toFile())){
             var source=zip.getEntry("Server/Particles/Combat/Abilities/Windstrike/Spawners/Wind_Swoosh.particlespawner");
             assertNotNull(source);

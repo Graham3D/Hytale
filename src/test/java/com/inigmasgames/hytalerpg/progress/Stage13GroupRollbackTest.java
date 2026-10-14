@@ -18,7 +18,7 @@ class Stage13GroupRollbackTest {
             Stage13EncounterGroupCommitTest.done(Stage13EncounterGroupCommitTest.submit(store,Stage13EncounterGroupCommitTest.frames(store,64)));store.checkpoint();
             var runtime=Stage13EncounterGroupCommitTest.runtime(store);assertTrue(Stage13EncounterGroupCommitTest.done(Stage13EncounterGroupCommitTest.hit(runtime,165).durable()));expected=new com.google.gson.Gson().toJson(store.load(new UUID(1,1),new UUID(2,2)).orElseThrow());
         }
-        Path server=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/pre-release/package/game/latest/Server/HytaleServer.jar");
+        Path server=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/release/package/game/latest/Server/HytaleServer.jar");
         try(var old=new URLClassLoader(new java.net.URL[]{jar.toUri().toURL(),server.toUri().toURL()},ClassLoader.getPlatformClassLoader())){
             var type=old.loadClass("com.inigmasgames.hytalerpg.progress.FileEncounterStore");Object store=type.getConstructor(Path.class).newInstance(directory);
             try{assertEquals(65L,type.getMethod("journalSequence").invoke(store));var value=(Optional<?>)type.getMethod("load",UUID.class,UUID.class).invoke(store,new UUID(1,1),new UUID(2,2));var gsonType=old.loadClass("com.google.gson.Gson");var gson=gsonType.getConstructor().newInstance();assertEquals(expected,gsonType.getMethod("toJson",Object.class).invoke(gson,value.orElseThrow()));}

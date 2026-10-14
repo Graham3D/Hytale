@@ -2,7 +2,7 @@
 import hashlib, json, re, sys, zipfile
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
-ASSETS = Path.home()/"AppData/Roaming/Hytale/install/pre-release/package/game/latest/Assets.zip"
+ASSETS = Path.home()/"AppData/Roaming/Hytale/install/release/package/game/latest/Assets.zip"
 OUT = ROOT/"src/main/resources/rpg/progression/campaign-biomes-v1.json"
 registry=json.loads((ROOT/"src/main/resources/rpg/progression/enemy-registry.json").read_text())
 zones={}

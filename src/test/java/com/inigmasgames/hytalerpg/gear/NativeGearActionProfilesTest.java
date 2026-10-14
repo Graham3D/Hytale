@@ -44,7 +44,7 @@ class NativeGearActionProfilesTest {
 
     private static JsonObject installed(String path) throws Exception {
         var zipPath = Path.of(System.getProperty("user.home"), "AppData", "Roaming", "Hytale",
-                "install", "pre-release", "package", "game", "latest", "Assets.zip");
+                "install", "release", "package", "game", "latest", "Assets.zip");
         try (var zip = new ZipFile(zipPath.toFile())) {
             var entry = zip.getEntry(path);
             assertNotNull(entry, path);

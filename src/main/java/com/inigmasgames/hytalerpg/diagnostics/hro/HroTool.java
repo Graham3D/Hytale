@@ -50,10 +50,10 @@ public final class HroTool {
         HroContracts contracts=new HroContracts(registered);
         HroMechanicalReport mechanical=new HroMechanicalReport();
         JsonObject integrity=json(directory.resolve("integrity.json"));
-        boolean complete="COMPLETE".equals(manifest.get("state").getAsString())
-                && integrity.has("evidenceComplete") && integrity.get("evidenceComplete").getAsBoolean();
+        boolean finalized="COMPLETE".equals(manifest.get("state").getAsString())
+                && integrity.has("termination") && Set.of("STOPPED","EXPIRED").contains(integrity.get("termination").getAsString());
         long dropped=integrity.has("dropped")?integrity.get("dropped").getAsLong():1;
-        contracts.lost(dropped);
+        List<HroContracts.Loss> scopes=lossScopes(integrity);
         long[] count={0};boolean[] gap={false};String run=manifest.get("runId").getAsString();
         read(directory,(event,locator)->{
             if(!run.equals(event.runId()) || event.schemaVersion()!=1)throw new IllegalArgumentException("EVENT_ORIGIN_OR_SCHEMA_MISMATCH");
@@ -62,9 +62,22 @@ public final class HroTool {
             mechanical.accept(event,locator);
         });
         if(!manifest.has("eventCount")||count[0]!=manifest.get("eventCount").getAsLong()){contracts.lost(1);gap[0]=true;}
+        contracts.lost(dropped,scopes);
         HroOffline.derived(directory.resolve("analysis.json"),Map.of("captureBuild",manifest.get("captureBuild"),
-                "coverage",contracts.coverage(!complete),"findings",contracts.findings(!complete),"mechanical",mechanical.snapshot(!complete||dropped>0||gap[0]),
-                "cascades",HroMaps.cascades(contracts.findings(!complete)),"implementationMap",HroMaps.implementation()));
+                "coverage",contracts.coverage(!finalized),"findings",contracts.findings(!finalized),"mechanical",mechanical.snapshot(!finalized||dropped>0||gap[0]),
+                "cascades",HroMaps.cascades(contracts.findings(!finalized)),"implementationMap",HroMaps.implementation()));
+    }
+    static List<HroContracts.Loss> lossScopes(JsonObject integrity)throws IOException {
+        List<HroContracts.Loss> sites=new ArrayList<>();
+        if(integrity.has("lossScopes")&&integrity.get("lossScopes").isJsonArray()){
+            JsonArray scopes=integrity.getAsJsonArray("lossScopes");
+            if(scopes.size()>HroContracts.IDS.size()+128)throw new IOException("LOSS_SCOPE_LIMIT");
+            for(JsonElement element:scopes){JsonObject site=element.getAsJsonObject();
+                sites.add(new HroContracts.Loss(site.get("contract").getAsString(),
+                        site.has("operationId")?site.get("operationId").getAsString():"",
+                        site.get("reason").getAsString(),site.get("count").getAsLong()));}
+        }
+        return List.copyOf(sites);
     }
     static void verifyChecksums(Path directory)throws IOException {
         Path base=directory.toAbsolutePath().normalize();Path checksum=base.resolve("checksums.sha256");

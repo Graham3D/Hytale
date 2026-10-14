@@ -335,7 +335,7 @@ public final class NativeAssetTestFixtures implements AutoCloseable {
     /** Decode the installed animation profile and its common assets for variant publication. */
     public void loadInstalledAnimation(String id) throws IOException {
         var zipPath = Path.of(System.getProperty("user.home"), "AppData", "Roaming", "Hytale",
-                "install", "pre-release", "package", "game", "latest", "Assets.zip");
+                "install", "release", "package", "game", "latest", "Assets.zip");
         loadInstalledAnimation(id, zipPath);
     }
 
@@ -358,7 +358,7 @@ public final class NativeAssetTestFixtures implements AutoCloseable {
     }
     public void loadInstalledDamageParents() throws IOException {
         var zipPath = Path.of(System.getProperty("user.home"), "AppData", "Roaming", "Hytale",
-                "install", "pre-release", "package", "game", "latest", "Assets.zip");
+                "install", "release", "package", "game", "latest", "Assets.zip");
         try (var zip = new ZipFile(zipPath.toFile())) {
             for (var id : List.of("DamageEntityParent", "DamageEntityParent_Hit_Interrupt")) {
                 var entry = Objects.requireNonNull(zip.getEntry(
@@ -376,7 +376,7 @@ public final class NativeAssetTestFixtures implements AutoCloseable {
     }
     public void loadInstalledParentReferences(String json) throws IOException {
         var zipPath = Path.of(System.getProperty("user.home"), "AppData", "Roaming", "Hytale",
-                "install", "pre-release", "package", "game", "latest", "Assets.zip");
+                "install", "release", "package", "game", "latest", "Assets.zip");
         try (var zip = new ZipFile(zipPath.toFile())) {
             var index = new java.util.HashMap<String, java.util.zip.ZipEntry>();
             zip.stream().filter(entry -> entry.getName().startsWith("Server/Item/Interactions/")
@@ -470,7 +470,7 @@ public final class NativeAssetTestFixtures implements AutoCloseable {
                 "Fall", "OutOfWorld", "Suffocation", "Bludgeoning", "Earth", "Poison", "Water");
         var decoded = new LinkedHashMap<String, DamageCause>();
         var zipPath = Path.of(System.getProperty("user.home"), "AppData", "Roaming", "Hytale",
-                "install", "pre-release", "package", "game", "latest", "Assets.zip");
+                "install", "release", "package", "game", "latest", "Assets.zip");
         try (var zip = new ZipFile(zipPath.toFile())) {
             for (var id : selected) {
                 String json;
@@ -546,7 +546,7 @@ public final class NativeAssetTestFixtures implements AutoCloseable {
     }
 
     public void loadInstalledQuality(String id) throws IOException {
-        var zipPath=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/pre-release/package/game/latest/Assets.zip");
+        var zipPath=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/release/package/game/latest/Assets.zip");
         try(var zip=new ZipFile(zipPath.toFile())){
             var entry=Objects.requireNonNull(zip.getEntry("Server/Item/Qualities/"+id+".json"),id);
             try(var input=zip.getInputStream(entry)){
@@ -568,7 +568,7 @@ public final class NativeAssetTestFixtures implements AutoCloseable {
         if (keys.isEmpty()) return;
         if (installedRoots == null) {
             var zipPath = Path.of(System.getProperty("user.home"), "AppData", "Roaming", "Hytale",
-                    "install", "pre-release", "package", "game", "latest", "Assets.zip");
+                    "install", "release", "package", "game", "latest", "Assets.zip");
             try (var zip = new ZipFile(zipPath.toFile())) {
                 installedRoots = zip.stream().map(java.util.zip.ZipEntry::getName)
                         .filter(name -> name.startsWith("Server/Item/RootInteractions/") && name.endsWith(".json"))
@@ -618,7 +618,7 @@ public final class NativeAssetTestFixtures implements AutoCloseable {
 
     public void loadInstalledModel(String id) throws IOException {
         if(models.getAsset(id)!=null)return;
-        var zipPath=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/pre-release/package/game/latest/Assets.zip");
+        var zipPath=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/release/package/game/latest/Assets.zip");
         try(var zip=new ZipFile(zipPath.toFile())){
             var entry=zip.stream().filter(e->e.getName().startsWith("Server/Models/")&&e.getName().endsWith("/"+id+".json"))
                     .findFirst().orElseThrow(()->new IOException("Missing installed model "+id));
@@ -668,7 +668,7 @@ public final class NativeAssetTestFixtures implements AutoCloseable {
 
     private void loadProjectileModels() throws IOException {
         var zipPath = Path.of(System.getProperty("user.home"), "AppData", "Roaming", "Hytale",
-                "install", "pre-release", "package", "game", "latest", "Assets.zip");
+                "install", "release", "package", "game", "latest", "Assets.zip");
         try (var zip = new ZipFile(zipPath.toFile())) {
             for (var entryName : List.of("Server/Models/Projectiles/Weapons/Bomb/Bomb.json",
                     "Server/Models/Projectiles/NPCs/Undead/Skeleton_Mage/Skeleton_Mage_Corruption_Orb.json")) {
@@ -724,7 +724,7 @@ public final class NativeAssetTestFixtures implements AutoCloseable {
         collectCommonPaths(json, paths);
         if (paths.isEmpty()) return;
         var zipPath = Path.of(System.getProperty("user.home"), "AppData", "Roaming", "Hytale",
-                "install", "pre-release", "package", "game", "latest", "Assets.zip");
+                "install", "release", "package", "game", "latest", "Assets.zip");
         try (var zip = new ZipFile(zipPath.toFile())) {
             for (var id : paths) {
                 if (CommonAssetRegistry.hasCommonAsset(id)) continue;

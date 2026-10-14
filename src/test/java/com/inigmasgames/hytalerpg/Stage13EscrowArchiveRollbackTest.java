@@ -32,7 +32,7 @@ class Stage13EscrowArchiveRollbackTest {
         copy(running,checkpoint);var original=hashes(checkpoint);
         state.support=actual.nextRevision();repository.save(state); // Independent later state must NOT leak into rollback.
         copy(checkpoint,restored);assertEquals(original,hashes(restored));
-        var server=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/pre-release/package/game/latest/Server/HytaleServer.jar");
+        var server=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/release/package/game/latest/Server/HytaleServer.jar");
         try(var legacy=new URLClassLoader(new URL[]{jar.toUri().toURL(),server.toUri().toURL()},ClassLoader.getPlatformClassLoader())){
             var playerClass=legacy.loadClass("com.inigmasgames.hytalerpg.progress.RpgPlayerState");var repoClass=legacy.loadClass("com.inigmasgames.hytalerpg.progress.FileRpgPlayerStateRepository");
             var repo=repoClass.getConstructor(Path.class).newInstance(restored.resolve("players"));var load=repoClass.getMethod("load",UUID.class).invoke(repo,actor);var loaded=load.getClass().getMethod("state").invoke(load);
@@ -61,7 +61,7 @@ class Stage13EscrowArchiveRollbackTest {
     private static void copy(Path from,Path to)throws Exception{try(var paths=Files.walk(from)){for(var p:paths.toList()){var target=to.resolve(from.relativize(p));if(Files.isDirectory(p))Files.createDirectories(target);else Files.copy(p,target);}}}
     private static void writeArchivedFixture(Path jar,Path players,RpgPlayerState fixture)throws Exception{
         assertEquals(com.inigmasgames.hytalerpg.difficulty.DifficultyProgress.INITIAL,fixture.difficulty);
-        var server=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/pre-release/package/game/latest/Server/HytaleServer.jar");
+        var server=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/release/package/game/latest/Server/HytaleServer.jar");
         try(var legacy=new URLClassLoader(new URL[]{jar.toUri().toURL(),server.toUri().toURL()},ClassLoader.getPlatformClassLoader())){
             var json=new com.google.gson.Gson().toJsonTree(fixture).getAsJsonObject();json.remove("difficulty");json.remove("gearEconomy");json.addProperty("schemaVersion",9);
             var gsonClass=legacy.loadClass("com.google.gson.Gson");var gson=gsonClass.getConstructor().newInstance();

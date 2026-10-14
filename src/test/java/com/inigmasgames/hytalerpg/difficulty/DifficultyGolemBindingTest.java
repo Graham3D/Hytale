@@ -8,7 +8,7 @@ class DifficultyGolemBindingTest {
     @TempDir Path root;
     @Test void installedGolemRolesResolveTheNativeModelsUsedForPreSpawnClearance() throws Exception {
         var assets=Path.of(System.getProperty("user.home"),"AppData","Roaming","Hytale","install",
-                "pre-release","package","game","latest","Assets.zip");
+                "release","package","game","latest","Assets.zip");
         try(var zip=new java.util.zip.ZipFile(assets.toFile())){
             for(var golem:GolemMilestones.load().golems()){
                 var roleEntry=zip.getEntry(golem.assetPath());

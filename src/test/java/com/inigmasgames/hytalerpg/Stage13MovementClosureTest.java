@@ -111,7 +111,7 @@ class Stage13MovementClosureTest {
         var p=new Stage11FoundationTest().effective("void_dash","concentration");assertEquals(.98,p.movement().details().pathWidth(),1e-9);assertEquals(.49,p.strike().lineHalfWidth(),1e-9);assertEquals(9,p.movement().maxDistance());
     }
     @Test void installedGuardDataDistinguishesWeaponOverrideFromGenericWielding()throws Exception {
-        try(var zip=new java.util.zip.ZipFile(java.nio.file.Path.of(System.getenv("APPDATA"),"Hytale","install","pre-release","package","game","latest","Assets.zip").toFile())){
+        try(var zip=new java.util.zip.ZipFile(java.nio.file.Path.of(System.getenv("APPDATA"),"Hytale","install","release","package","game","latest","Assets.zip").toFile())){
             var item=asset(zip,"Server/Item/Items/Weapon/Sword/Weapon_Sword_Iron.json");
             var override=item.getAsJsonObject("InteractionVars").getAsJsonObject("Guard_Wield").getAsJsonArray("Interactions").get(0).getAsJsonObject();
             assertEquals("Weapon_Sword_Secondary_Guard_Wield",override.get("Parent").getAsString());assertEquals(10,override.getAsJsonObject("StaminaCost").get("Value").getAsDouble());

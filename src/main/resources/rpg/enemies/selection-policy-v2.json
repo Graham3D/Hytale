@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 2,
+  "revision": "ME12-ARCH-AD1-selection-1",
+  "scope": "NEW_NATURAL_PROCEDURAL_UNIQUE",
+  "activation": "DISABLED",
+  "tierWeights": [
+    70,
+    25,
+    5
+  ],
+  "difficultySlots": {
+    "NORMAL": 0,
+    "NIGHTMARE": 1,
+    "HELL": 2
+  },
+  "maximumOwnAffixes": 8,
+  "genericCandidates": [
+    "ME-001",
+    "ME-002",
+    "ME-003",
+    "ME-004",
+    "ME-005",
+    "ME-006",
+    "ME-007",
+    "ME-008",
+    "ME-009",
+    "ME-010",
+    "ME-011",
+    "ME-012",
+    "ME-013",
+    "ME-014",
+    "ME-015",
+    "ME-016",
+    "ME-017",
+    "ME-018",
+    "ME-019",
+    "ME-020",
+    "ME-021",
+    "ME-022",
+    "ME-023",
+    "ME-024",
+    "ME-025",
+    "ME-026",
+    "ME-027"
+  ],
+  "affixWeights": "CAPTURE_EXISTING_REGISTRY_AND_ALLOWED_OVERRIDES",
+  "legality": "PRESERVE_V1_NATIVE_ROSTER_IMMUNITY_SEMANTIC_RULES",
+  "tierDraw": "JOINT_CONDITION_ON_COMPLETE_FEASIBILITY",
+  "nameDraw": "PRODUCT_NAME_WEIGHTS_INDEPENDENT_OF_COMPLETION_MASS",
+  "setDraw": "EXACT_PRODUCT_DISTINCT_ID_SELECTOR_SET",
+  "ownership": "SIGNATURES_THEN_CANONICAL_PREFIX_SUFFIX_DIFFICULTY",
+  "plannerLimits": {
+    "memoStates": 100000,
+    "sharedAndInflightBytes": 67108864,
+    "builders": 2,
+    "outstandingPerWorld": 32,
+    "outstandingPerServer": 256,
+    "coldDeadlineMs": 500,
+    "warmP95Micros": 500,
+    "warmP99Micros": 1000
+  }
+}

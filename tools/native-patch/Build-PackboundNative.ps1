@@ -11,8 +11,8 @@ function Get-PinnedHash([string]$path){
         finally{$stream.Dispose()}
     }finally{$digest.Dispose()}
 }
-$expectedOriginal='C3B5985B9E72727BF3BCF220923D7E61E78FE0F37CD1CD9C2A73F51E4F408FF8'
-$expectedPatched='E0BCD36C7A981949D2C15B1B48F1CDD7F9623373269EF03B58F2D9B9DA7F6EDF'
+$expectedOriginal='A60FA0B31F1418691F8D8F7CC1159693E3EC504D4F0567FB91493A842D71F8CA'
+$expectedPatched='68F37BDF2DFEE6F9834F7035E606A506A2E13DEDE3C36F51ECAE4BF11F425B89'
 $root=(Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
 $server=(Resolve-Path -LiteralPath $ServerJar).Path
 $target=[IO.Path]::GetFullPath($OutputDirectory)
@@ -80,7 +80,7 @@ $commit=(& git -C $root rev-parse HEAD).Trim()
 if($LASTEXITCODE -ne 0){throw 'Could not resolve native patcher source commit'}
 $sourceDirty=@(& git -C $root status --porcelain -- tools/native-patch/src tools/native-patch/Build-PackboundNative.ps1).Count -ne 0
 $record=[ordered]@{
-    targetVersion='0.7.0';sourceCommit=$commit;patcherSourceTreeDirty=$sourceDirty
+    targetVersion='0.7.1';sourceCommit=$commit;patcherSourceTreeDirty=$sourceDirty
     originalServerSha256=$expectedOriginal.ToLowerInvariant();patchedServerSha256=$expectedPatched.ToLowerInvariant()
     originalClassHashes=$classHashes | ForEach-Object { @{path=$_.path;sha256=$_.originalSha256} }
     patchedClassHashes=$classHashes | ForEach-Object { @{path=$_.path;sha256=$_.patchedSha256} }

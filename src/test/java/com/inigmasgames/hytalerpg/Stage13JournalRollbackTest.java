@@ -16,7 +16,7 @@ class Stage13JournalRollbackTest {
     @Test void actualArchivedFRestoresItsPreWalCheckpointAfterCurrentJournalMutatesCopy()throws Exception {
         Path jar=Path.of("evidence/stage-13/cohort-f/artifacts/HytaleRPG-0.0.25.jar").toAbsolutePath();
         assertEquals("f7f55fcf05afea2a985ac2801cb4f78d346389c2e135e2dcea22e1f193bcfa83",sha(jar));
-        Path server=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/pre-release/package/game/latest/Server/HytaleServer.jar");
+        Path server=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/release/package/game/latest/Server/HytaleServer.jar");
         Path running=directory.resolve("running"),backup=directory.resolve("pre-wal-checkpoint"),restored=directory.resolve("restored");
         try(var legacy=new URLClassLoader(new java.net.URL[]{jar.toUri().toURL(),server.toUri().toURL()},ClassLoader.getPlatformClassLoader())){
             var storeClass=legacy.loadClass("com.inigmasgames.hytalerpg.progress.FileEncounterStore");

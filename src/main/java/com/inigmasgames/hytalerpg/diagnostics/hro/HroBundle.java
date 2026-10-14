@@ -107,6 +107,9 @@ final class HroBundle implements AutoCloseable {
         Files.delete(raw);
     }
     void finish(long drops,String reason,Map<String,Object> performance)throws IOException {
+        finish(drops,reason,performance,List.of());
+    }
+    void finish(long drops,String reason,Map<String,Object> performance,List<HroContracts.Loss> lossSites)throws IOException {
         if(finished)return;finished=true;
         events.close();index.close();compress(directory.resolve(segmentName()+".pending"),directory.resolve(segmentName()+".gz"));
         providers.forEach(contracts::registered);
@@ -114,7 +117,7 @@ final class HroBundle implements AutoCloseable {
                 "physicalInput","UNOBSERVABLE","renderAcknowledgement","UNOBSERVABLE",
                 "nativeTick","NULL_WHEN_NOT_AT_OWNER_TICK","slots",Map.of("skill01","Ability2","skill02","Ability3",
                         "skill03","UNBOUND","skill04","UNBOUND"),"legacyRecorders","INDEPENDENT_NOT_ENABLED_BY_HRO"));
-        contracts.lost(drops);
+        contracts.lost(drops,lossSites);
         boolean incomplete=!reason.equals("STOPPED") && !reason.equals("EXPIRED");
         var coverage=contracts.coverage(incomplete);
         var findings=contracts.findings(incomplete);
@@ -129,12 +132,19 @@ final class HroBundle implements AutoCloseable {
         writeJson("cascades.json",cascades);
         writeJson("report.json",Map.of("schemaVersion",1,"findings",HroMaps.details(findings),"checkpoints",checkpoints));
         writeJson("checkpoints.json",Map.of("checkpoints",checkpoints,"omitted",Math.max(0,markerCount-checkpoints.size())));
-        writeJson("integrity.json",Map.of("dropped",drops,"termination",reason,"evidenceComplete",drops==0&&!incomplete,
+        writeJson("integrity.json",Map.of("dropped",drops,"lossScopes",lossSites,"lossScopePolicy","BOUNDED_CONTRACT_AND_OPERATION; missing attribution remains global",
+                "termination",reason,"evidenceComplete",drops==0&&!incomplete,
                 "uncompressedEventBytes",total,"pendingOperationsAreInconclusive",true,
                 "observedDisconnects",performance.getOrDefault("observedDisconnects",0),
                 "correlatedReconnects",performance.getOrDefault("correlatedReconnects",0)));
         StringBuilder summary=new StringBuilder("# Hywind Regression Observatory\n\nRun: "+manifest.get("runId")+"\n\nTermination: "+reason+
                 "; dropped observations: "+drops+". Scope: invoking subject only.\n\n");
+        if(drops>0){long attributed=lossSites.stream().filter(site->HroContracts.IDS.contains(site.contract())
+                ||site.contract().equals("PERFORMANCE")||site.contract().equals("MARK"))
+                .mapToLong(HroContracts.Loss::count).sum();
+            summary.append("Loss attribution: ").append(attributed).append(" scoped, ")
+                    .append(Math.max(0,drops-attributed)).append(" unattributed; see integrity.json/lossScopes. ")
+                    .append("Unattributed loss remains conservative.\n\n");}
         coverage.forEach((id,value)->summary.append("- ").append(id).append(": ").append(((Map<?,?>)value).get("outcome")).append('\n'));
         summary.append("\nSupported failures: ").append(findings.stream().filter(f->f.outcome()==HroContracts.Outcome.FAIL).count())
                 .append("; downstream blockers: ").append(findings.stream().filter(f->f.outcome()==HroContracts.Outcome.BLOCKED).count())

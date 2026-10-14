@@ -110,11 +110,13 @@ public final class NativeInventoryEntryProbe implements AutoCloseable {
                     if (diagnostic != null) diagnostic.event(player.getUuid(), "FIELD_CRAFTING_WINDOW", "",
                             Map.of("page", "inventory", "windowId", 0, "windowType", "PocketCrafting", "observation", "OPEN"));
                     if (entry.open(player, ref, store)) {
-                        // Close only the exact window we observed. Never touch other
-                        // crafting stations or a replacement opened meanwhile.
-                        if (windows.getWindow(0) == nativeWindow) windows.closeWindow(ref, 0, store);
+                        // The client owns the PocketCrafting close after Tab swaps to
+                        // the custom page. Closing slot zero here races that packet:
+                        // Hytale then rejects the client's close as an invalid id.
+                        // Keep the observed native window until its client close.
                         entryTrace(player.getUuid(), "INVENTORY_POST_OPEN_BRIDGED", 0,
-                                Map.of("source", "UpdateWindow", "windowType", "PocketCrafting"));
+                                Map.of("source", "UpdateWindow", "windowType", "PocketCrafting",
+                                        "nativeWindowClose", "CLIENT_OWNED"));
                     }
                 } catch (RuntimeException error) {
                     entryTrace(player.getUuid(), "INVENTORY_POST_OPEN_ABORTED", 0,

@@ -36,7 +36,7 @@ class NativeAffixU7P5AssetValidationTest {
             @Override protected com.hypixel.hytale.event.EventBus getEventBus(){return events;}
         };
         com.hypixel.hytale.assetstore.AssetRegistry.register(blockStore);
-        var zipPath=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/pre-release/package/game/latest/Assets.zip");
+        var zipPath=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/release/package/game/latest/Assets.zip");
         try(var zip=new java.util.zip.ZipFile(zipPath.toFile())){
             zip.stream().filter(e->e.getName().startsWith("Server/Item/Block/Sets/")&&e.getName().endsWith(".json"))
                     .forEach(e->map.seed(Path.of(e.getName()).getFileName().toString().replace(".json","")));

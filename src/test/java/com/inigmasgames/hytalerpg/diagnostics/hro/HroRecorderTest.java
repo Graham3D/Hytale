@@ -59,6 +59,54 @@ class HroRecorderTest {
         }finally{release.countDown();}
         await(()->SharedTraceBudget.used()==0);
     }
+    @Test void scopedLossSurvivesChecksumsAndOfflineReplay()throws Exception {
+        try(var recorder=recorder(()->{})) {
+            begin(recorder);
+            recorder.observe(owner,"HUD.PUBLICATION","fixture","HUD_LAYOUT_READY","complete-hud",world,1L,1L,1L,Map.of());
+            recorder.loss(owner,"GEAR.EQUIPPED","missing-item","QUEUE_LOCK_CONTENTION");
+            recorder.stop();await(()->finalized(recorder.status()));
+            Path directory=bundle();
+            JsonObject integrity=JsonParser.parseString(Files.readString(directory.resolve("integrity.json"))).getAsJsonObject();
+            assertEquals(1,integrity.get("dropped").getAsLong());
+            assertEquals("GEAR.EQUIPPED",integrity.getAsJsonArray("lossScopes").get(0).getAsJsonObject().get("contract").getAsString());
+            JsonObject coverage=JsonParser.parseString(Files.readString(directory.resolve("coverage.json"))).getAsJsonObject();
+            assertEquals("PASS",coverage.getAsJsonObject("HUD.PUBLICATION").get("outcome").getAsString());
+            assertEquals("INCONCLUSIVE",coverage.getAsJsonObject("GEAR.EQUIPPED").get("outcome").getAsString());
+            HroTool.analyze(directory);
+            JsonObject offline=JsonParser.parseString(Files.readString(directory.resolve("analysis.json"))).getAsJsonObject()
+                    .getAsJsonObject("coverage");
+            assertEquals("PASS",offline.getAsJsonObject("HUD.PUBLICATION").get("outcome").getAsString());
+            assertEquals("INCONCLUSIVE",offline.getAsJsonObject("GEAR.EQUIPPED").get("outcome").getAsString());
+            HroTool.verifyChecksums(directory);
+        }
+    }
+    @Test void lossDetailOverflowStaysBoundedToItsContract()throws Exception {
+        try(var recorder=recorder(()->{})) {
+            begin(recorder);observe(recorder);
+            for(int i=0;i<160;i++)recorder.loss(owner,"GEAR.EQUIPPED","item-"+i,"FACT_LIMIT");
+            recorder.stop();await(()->finalized(recorder.status()));
+            JsonObject integrity=JsonParser.parseString(Files.readString(bundle().resolve("integrity.json"))).getAsJsonObject();
+            assertEquals(160,integrity.get("dropped").getAsLong());
+            JsonArray scopes=integrity.getAsJsonArray("lossScopes");assertTrue(scopes.size()<=129);
+            assertEquals("LOSS_DETAIL_CAP",scopes.get(scopes.size()-1).getAsJsonObject().get("reason").getAsString());
+            assertEquals(32,scopes.get(scopes.size()-1).getAsJsonObject().get("count").getAsInt());
+            HroTool.analyze(bundle());
+            JsonObject coverage=HroOffline.object(bundle().resolve("analysis.json")).getAsJsonObject("coverage");
+            assertEquals("PASS",coverage.getAsJsonObject("HUD.PUBLICATION").get("outcome").getAsString());
+            assertEquals("INCONCLUSIVE",coverage.getAsJsonObject("GEAR.EQUIPPED").get("outcome").getAsString());
+        }
+    }
+    @Test void lossReportedAfterStopDoesNotAlterFinalizedEvidence()throws Exception {
+        try(var recorder=recorder(()->{})) {
+            begin(recorder);observe(recorder);
+            recorder.stop();
+            recorder.loss(owner,"GEAR.EQUIPPED","late-item","LATE_CALLBACK");
+            await(()->finalized(recorder.status()));
+            JsonObject integrity=JsonParser.parseString(Files.readString(bundle().resolve("integrity.json"))).getAsJsonObject();
+            assertEquals(0,integrity.get("dropped").getAsLong());
+            assertEquals(0,integrity.getAsJsonArray("lossScopes").size());
+        }
+    }
     @Test void diskFailureDoesNotEscapeCallbackAndRecoveryRetainsCaptureBuild()throws Exception {
         try(var recorder=recorder(()->{throw new java.io.IOException("disk full");})) {
             recorder.start(owner,world);assertDoesNotThrow(()->observe(recorder));await(()->recorder.status().contains("PARTIAL"));
@@ -86,11 +134,43 @@ class HroRecorderTest {
             recorder.stop();await(()->recorder.status().startsWith("HRO COMPLETE"));
         }
     }
+    @Test void eventWorldHasAliasWhenCaptureStartedWithoutWorld()throws Exception {
+        try(var recorder=recorder(()->{})) {
+            HroContracts.IDS.forEach(recorder::registered);
+            assertTrue(recorder.start(owner,null).contains("STARTING"));
+            await(()->recorder.active(owner));
+            recorder.observe(owner,"HUD.PUBLICATION","fixture","HUD_LAYOUT_READY","hud",world,1L,1L,1L,Map.of());
+            recorder.stop();await(()->finalized(recorder.status()));
+            try(var in=new GZIPInputStream(Files.newInputStream(bundle().resolve("events/segment-0001.jsonl.gz")))) {
+                String event=new String(in.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8);
+                assertFalse(event.contains("\"worldSegmentId\":\"null:segment-1\""));
+                assertTrue(event.contains("\"worldSegmentId\":\""));
+                assertTrue(event.contains(":segment-1"));
+            }
+        }
+    }
     @Test void saveDirectoryIsRejected(){assertThrows(IllegalArgumentException.class,()->new HroRecorder(root.resolve("Saves/Hywind/diagnostics")));}
     @Test void originalOriginRequiredForRecovery(){assertThrows(java.io.IOException.class,()->HroBundle.recover(root));}
     @Test void sharedQueueBudgetRejectsInsteadOfBorrowingUnboundedMemory() {
         long available=SharedTraceBudget.LIMIT-SharedTraceBudget.used();
         assertTrue(SharedTraceBudget.acquire(available));
         try{assertFalse(SharedTraceBudget.acquire(1));}finally{SharedTraceBudget.release(available);}
+    }
+    @Test void producerThresholdCountResolvesLogBucketAmbiguity() {
+        assertFalse(HroRecorder.producerP99WithinBudget(0,0));
+        assertTrue(HroRecorder.producerP99WithinBudget(1000,10));
+        assertFalse(HroRecorder.producerP99WithinBudget(1000,11));
+        assertTrue(HroRecorder.producerP99WithinBudget(16325,163));
+        assertFalse(HroRecorder.producerP99WithinBudget(16325,164));
+    }
+    @Test void performanceReportAttributesExactThresholdCrossings()throws Exception {
+        AtomicLong clock=new AtomicLong();
+        try(var recorder=new HroRecorder(root,()->clock.addAndGet(40_000),()->IDENTITY,()->{})) {
+            begin(recorder);observe(recorder);recorder.stop();await(()->finalized(recorder.status()));
+            JsonObject performance=JsonParser.parseString(Files.readString(bundle().resolve("performance.json"))).getAsJsonObject();
+            assertTrue(performance.get("producerAtOrAboveBudgetSamples").getAsLong()>0);
+            assertTrue(performance.getAsJsonObject("producerAtOrAboveBudgetByContract").get("HUD.PUBLICATION").getAsLong()>0);
+            assertEquals("OBSERVED_BUDGET_EXCEEDED",performance.get("producerQualification").getAsString());
+        }
     }
 }

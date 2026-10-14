@@ -39,8 +39,8 @@ public final class HytaleDifficultyCombat {
     private final Map<UUID,Entry> statusActors=new ConcurrentHashMap<>();
     private final NativeHostileNames names=new NativeHostileNames(this);
     public NativeHostileNames names(){return names;}
-    boolean hasColoredPromotedName(UUID world,UUID actor,String text){
-        return healthBars.hasColoredName(world,actor,text);
+    String visibleNativeName(UUID world,UUID actor,String nativeText){
+        return healthBars.visibleNativeName(world,actor,nativeText);
     }
     private final EnemyHealthBarPresentation healthBars=new EnemyHealthBarPresentation();
     public EnemyHealthBarPresentation healthBars(){return healthBars;}

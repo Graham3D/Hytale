@@ -85,7 +85,7 @@ class EnemyNativeProjectilePathTest {
     }
     @Test void installedScoutKeepsItsOriginalSingleArrowWithoutNativeDisplacement() throws Exception {
         var game=Path.of(System.getProperty("user.home"),"AppData","Roaming","Hytale","install",
-                "pre-release","package","game","latest","Assets.zip");
+                "release","package","game","latest","Assets.zip");
         try(var zip=new ZipFile(game.toFile())){
             var role=asset(zip,"Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Scout.json");
             var binding=EnemyNativeBindings.load().role("Skeleton_Scout").orElseThrow();
@@ -129,7 +129,7 @@ class EnemyNativeProjectilePathTest {
     @Test void installedScoutActionHydratesThroughNativeAssetStore() throws Exception {
         com.hypixel.hytale.server.core.Options.parse(new String[]{"--bare"});
         var game=Path.of(System.getProperty("user.home"),"AppData","Roaming","Hytale","install",
-                "pre-release","package","game","latest","Assets.zip");
+                "release","package","game","latest","Assets.zip");
         try(var zip=new ZipFile(game.toFile())){
             var entry=zip.getEntry("Server/Item/Interactions/NPCs/Undead/Skeleton_Scout/Skeleton_Scout_Bow_Shoot.json");
             assertNotNull(entry);

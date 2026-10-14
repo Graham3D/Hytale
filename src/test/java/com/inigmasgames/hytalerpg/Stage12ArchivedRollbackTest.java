@@ -16,7 +16,7 @@ class Stage12ArchivedRollbackTest {
     @Test void coordinatedCheckpointRestoresInArchivedGWhileInPlaceDowngradeIsRejected()throws Exception{
         Path jar=Path.of("evidence/stage-12/cohort-g/artifacts/HytaleRPG-0.0.24.jar").toAbsolutePath();
         assertEquals("3dbb0cfc764cc68c1d29aba20915c48286d6e8b640738466c6263fa333aaef78",sha(jar));
-        Path server=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/pre-release/package/game/latest/Server/HytaleServer.jar");
+        Path server=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/release/package/game/latest/Server/HytaleServer.jar");
         try(var legacy=new URLClassLoader(new URL[]{jar.toUri().toURL(),server.toUri().toURL()},ClassLoader.getPlatformClassLoader())){
             Class<?> playerClass=legacy.loadClass("com.inigmasgames.hytalerpg.progress.RpgPlayerState"),repoClass=legacy.loadClass("com.inigmasgames.hytalerpg.progress.FileRpgPlayerStateRepository");
             UUID player=UUID.randomUUID();Object state=playerClass.getMethod("create",UUID.class).invoke(null,player);

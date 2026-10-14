@@ -23,7 +23,7 @@ class Stage12NativeBiomeAssetTest {
         var next=new com.hypixel.hytale.server.core.modules.entity.damage.Damage(com.hypixel.hytale.server.core.modules.entity.damage.Damage.NULL_SOURCE,0,1f);
         assertNull(com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageAdapter.executionContext(next));
     }
-    private Path assets(){return Path.of(System.getProperty("user.home"),"AppData","Roaming","Hytale","install","pre-release","package","game","latest","Assets.zip");}
+    private Path assets(){return Path.of(System.getProperty("user.home"),"AppData","Roaming","Hytale","install","release","package","game","latest","Assets.zip");}
     @Test void installedFileContextLoaderResolvesAllFourQualifiedPilotBiomes()throws Exception{
         try(var zip=FileSystems.newFileSystem(assets());var io=FileIO.openFileIOSystem(new FileIOSystem(){
             public Path baseRoot(){return zip.getPath("/Server/World/Default");}

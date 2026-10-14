@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class Stage13HealingParticlePathAMTest {
     static JsonObject json(Path p)throws Exception{return JsonParser.parseString(Files.readString(p)).getAsJsonObject();}
     @Test void derivativesRetainExactInstalledChildAppearanceAndOnlyChangePlacementAndEmissionBudgets()throws Exception{
-        try(var zip=new ZipFile(Path.of(System.getenv("APPDATA"),"Hytale/install/pre-release/package/game/latest/Assets.zip").toFile())){
+        try(var zip=new ZipFile(Path.of(System.getenv("APPDATA"),"Hytale/install/release/package/game/latest/Assets.zip").toFile())){
             for(String name:List.of("Sparks","Glow","Plus")){
                 var entry=zip.getEntry("Server/Particles/_Test/HealBeams/Spawners/Beam_Heal_Green2_"+name+".particlespawner");
                 JsonObject stock;try(var in=zip.getInputStream(entry)){stock=JsonParser.parseString(new String(in.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();}

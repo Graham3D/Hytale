@@ -12,6 +12,7 @@ public final class HroRecorder implements AutoCloseable {
     public static final long DURATION_NANOS=600_000_000_000L;
     public static final long RECONNECT_GRACE_NANOS=30_000_000_000L;
     static final int CAPACITY=512, RESERVATION=16*1024;
+    private static final int LOSS_DETAIL_LIMIT=128;
     private static final Set<String> CRITICAL=Set.of("IDENTITY","MARK","PAYMENT","DEBIT","NATIVE_RESULT","OUTCOME",
             "SAVED","LOADED","PLAN_ACCEPTED","ELITE_PUBLISHED","BIRTH_COMPENSATED","BIRTH_DECLINED");
     private static final Set<String> FACTS=Set.of("result","reason","failureCode","validationResult","skillSlot","logicalSlot",
@@ -27,7 +28,7 @@ public final class HroRecorder implements AutoCloseable {
             "durableSubject","fingerprint","phase","activation","manaReceipt","cooldownReceipt","label","critical","coefficient",
             "manaSpent","intended","uncertain","proof");
     private record Request(UUID owner,UUID world,boolean armed) { }
-    private record ScopeState(UUID world,long connection,int worldSegment,long disconnectAt) { }
+    private record ScopeState(UUID world,String worldAlias,long connection,int worldSegment,long disconnectAt) { }
     private final Path root;
     private final AtomicReference<Request> request=new AtomicReference<>();
     private final Set<String> providers=java.util.concurrent.ConcurrentHashMap.newKeySet();
@@ -46,6 +47,11 @@ public final class HroRecorder implements AutoCloseable {
         final ReentrantLock lock=new ReentrantLock();final ArrayDeque<HroEvent> queue=new ArrayDeque<>(CAPACITY);
         final AtomicLong drops=new AtomicLong(),sequence=new AtomicLong(),admitted=new AtomicLong(),nanos=new AtomicLong(),timingSamples=new AtomicLong();
         final AtomicLongArray timing=new AtomicLongArray(32);
+        final AtomicReferenceArray<HroContracts.Loss> lossDetails=new AtomicReferenceArray<>(LOSS_DETAIL_LIMIT);
+        final AtomicLong lossDetailSlots=new AtomicLong();
+        final AtomicLongArray lossOverflowByContract=new AtomicLongArray(HroContracts.IDS.size()+1);
+        final AtomicLong producerAtOrAboveBudget=new AtomicLong();
+        final AtomicLongArray producerOverBudgetByContract=new AtomicLongArray(HroContracts.IDS.size()+1);
         volatile String stop; long maximumQueue,writerNanos;final AtomicLong contention=new AtomicLong();
         final AtomicReference<ScopeState> scope;
         final AtomicLongArray tickTiming=new AtomicLongArray(32);
@@ -57,7 +63,7 @@ public final class HroRecorder implements AutoCloseable {
         final AtomicLong packets=new AtomicLong();
         final AtomicLong disconnections=new AtomicLong(),reconnections=new AtomicLong(),tickMetricGaps=new AtomicLong(),observationsWithoutTick=new AtomicLong();
         Session(UUID owner,UUID world,String id,Path directory,long now){this.owner=owner;this.id=id;this.salt=UUID.randomUUID();this.directory=directory;start=now;
-            scope=new AtomicReference<>(new ScopeState(world,Long.MIN_VALUE,1,-1));
+            scope=new AtomicReference<>(new ScopeState(world,world==null?null:alias(this,world),Long.MIN_VALUE,1,-1));
             initialGcCount=gcCount();initialGcMillis=gcMillis();initialUsedBytes=ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed();}
     }
     private static final class TickWindow {
@@ -76,12 +82,35 @@ public final class HroRecorder implements AutoCloseable {
     public void registered(String contract){if(HroContracts.IDS.contains(contract))providers.add(contract);}
     public boolean active(UUID owner){Session current=session;return current!=null&&current.stop==null&&current.scope.get().disconnectAt()<0&&current.owner.equals(owner);}
     public boolean recording(){Session s=session;return s!=null&&s.stop==null;}
-    public void loss(UUID owner){Session s=session;if(s!=null&&s.owner.equals(owner))s.drops.incrementAndGet();}
+    public void loss(UUID owner){loss(owner,null,null,"UNATTRIBUTED_PRODUCER_GAP");}
+    public void loss(UUID owner,String contract,String operation,String reason){Session s=session;
+        if(s!=null&&s.stop==null&&s.owner.equals(owner))drop(s,contract,operation,reason);}
+    private static void drop(Session s,String contract,String operation,String reason){
+        // Count first: an in-flight loss without published detail remains conservatively unscoped.
+        s.drops.incrementAndGet();
+        int slot=(int)Math.min(Integer.MAX_VALUE,s.lossDetailSlots.getAndIncrement());
+        if(slot<LOSS_DETAIL_LIMIT)s.lossDetails.set(slot,new HroContracts.Loss(contract==null?"UNATTRIBUTED":contract,
+                operation==null?"":clip(operation),reason,1));
+        else {int contractIndex=HroContracts.IDS.indexOf(contract);s.lossOverflowByContract.incrementAndGet(contractIndex<0?
+                HroContracts.IDS.size():contractIndex);}
+    }
+    private static List<HroContracts.Loss> lossSites(Session s){
+        var sites=new ArrayList<HroContracts.Loss>();
+        for(int i=0;i<Math.min(LOSS_DETAIL_LIMIT,s.lossDetailSlots.get());i++){
+            var site=s.lossDetails.get(i);if(site!=null)sites.add(site);
+        }
+        for(int i=0;i<s.lossOverflowByContract.length();i++){
+            long count=s.lossOverflowByContract.get(i);
+            if(count>0)sites.add(new HroContracts.Loss(i==HroContracts.IDS.size()?"UNATTRIBUTED":HroContracts.IDS.get(i),
+                    "","LOSS_DETAIL_CAP",count));
+        }
+        return List.copyOf(sites);
+    }
     public UUID ownerInWorld(UUID world){Session s=session;if(s==null||s.stop!=null)return null;
         ScopeState scope=s.scope.get();return scope.disconnectAt()<0&&Objects.equals(scope.world(),world)?s.owner:null;}
     public String token(UUID owner){Session s=session;return s!=null&&s.stop==null&&s.scope.get().disconnectAt()<0&&s.owner.equals(owner)?s.id:null;}
     public String packet(UUID owner){Session s=session;if(s==null||s.stop!=null||s.scope.get().disconnectAt()>=0||!s.owner.equals(owner))return null;
-        long n=s.packets.incrementAndGet();if(n>2048){s.drops.incrementAndGet();s.stop="PACKET_OBSERVER_BUDGET";return null;}return s.id+":"+n;}
+        long n=s.packets.incrementAndGet();if(n>2048){drop(s,null,null,"PACKET_OBSERVER_BUDGET");s.stop="PACKET_OBSERVER_BUDGET";return null;}return s.id+":"+n;}
     public boolean firstEquipment(UUID owner,String revision){Session s=session;if(s==null||s.stop!=null||s.scope.get().disconnectAt()>=0||!s.owner.equals(owner))return false;
         String prior=s.equipmentRevision.get();return !Objects.equals(prior,revision)&&s.equipmentRevision.compareAndSet(prior,revision);}
     public String start(UUID owner,UUID world) {
@@ -102,7 +131,7 @@ public final class HroRecorder implements AutoCloseable {
     public void disconnect(UUID owner,long generation){Session current=session;
         if(current==null||!current.owner.equals(owner)||current.stop!=null)return;
         while(true){ScopeState old=current.scope.get();if(generation!=old.connection()||old.disconnectAt()>=0)return;
-            ScopeState next=new ScopeState(old.world(),old.connection(),old.worldSegment(),clock.getAsLong());
+            ScopeState next=new ScopeState(old.world(),old.worldAlias(),old.connection(),old.worldSegment(),clock.getAsLong());
             if(current.scope.compareAndSet(old,next)){current.disconnections.incrementAndGet();LockSupport.unpark(worker);return;}}
     }
     /** Only the native owner connection lifecycle may advance a generation or world segment. */
@@ -115,7 +144,8 @@ public final class HroRecorder implements AutoCloseable {
             reconnected=old.disconnectAt()>=0&&generation>old.connection();
             UUID nextWorld=world==null?old.world():world;
             int nextSegment=old.world()!=null&&world!=null&&!old.world().equals(world)?old.worldSegment()+1:old.worldSegment();
-            ScopeState next=new ScopeState(nextWorld,generation,nextSegment,generation>old.connection()?-1:old.disconnectAt());
+            ScopeState next=new ScopeState(nextWorld,Objects.equals(nextWorld,old.world())?old.worldAlias():
+                    nextWorld==null?null:alias(current,nextWorld),generation,nextSegment,generation>old.connection()?-1:old.disconnectAt());
             if(current.scope.compareAndSet(old,next)){resetRevision=generation>old.connection()||nextSegment>old.worldSegment();break;}
         }
         if(reconnected)current.reconnections.incrementAndGet();
@@ -151,47 +181,51 @@ public final class HroRecorder implements AutoCloseable {
         Session current=session;if(current==null||current.stop!=null||!current.owner.equals(owner))return;
         long began=clock.getAsLong();
         if(began-current.start>=DURATION_NANOS){current.stop="EXPIRED";return;}
-        if(!SharedTraceBudget.acquire(RESERVATION)){current.drops.incrementAndGet();current.stop="SHARED_QUEUE_BUDGET";return;}
+        if(!SharedTraceBudget.acquire(RESERVATION)){drop(current,contract,operation,"SHARED_QUEUE_BUDGET");current.stop="SHARED_QUEUE_BUDGET";return;}
         boolean retained=false;
         try {
-            if(!current.lock.tryLock()){current.drops.incrementAndGet();current.contention.incrementAndGet();return;}
+            if(!current.lock.tryLock()){drop(current,contract,operation,"QUEUE_LOCK_CONTENTION");current.contention.incrementAndGet();return;}
             try {
                 if(current.stop!=null)return;
                 ScopeState scope=current.scope.get();
                 if(scope.disconnectAt()>=0)return;
                 if(connection!=null&&scope.connection()!=Long.MIN_VALUE&&connection.longValue()!=scope.connection()){
-                    current.drops.incrementAndGet();return;}
-                if(world!=null&&scope.world()!=null&&!scope.world().equals(world)){current.drops.incrementAndGet();return;}
-                if(current.queue.size()>=CAPACITY){current.drops.incrementAndGet();current.stop="QUEUE_BUDGET";return;}
+                    drop(current,contract,operation,"STALE_CONNECTION");return;}
+                if(world!=null&&scope.world()!=null&&!scope.world().equals(world)){drop(current,contract,operation,"STALE_WORLD");return;}
+                if(current.queue.size()>=CAPACITY){drop(current,contract,operation,"QUEUE_BUDGET");current.stop="QUEUE_BUDGET";return;}
                 // Thirty-two slots remain available for final outcomes/control receipts under routine pressure.
-                if(current.queue.size()>=CAPACITY-32&&!critical(boundary)){current.drops.incrementAndGet();return;}
+                if(current.queue.size()>=CAPACITY-32&&!critical(boundary)){drop(current,contract,operation,"ROUTINE_QUEUE_PRESSURE");return;}
                 Map<String,String> facts=new LinkedHashMap<>(); int visited=0;
                 for(var entry:values.entrySet()) {
-                    if(++visited>48 || facts.size()>=20){current.drops.incrementAndGet();break;}
+                    if(++visited>48 || facts.size()>=20){drop(current,contract,operation,"FACT_LIMIT");break;}
                     if(!FACTS.contains(entry.getKey()))continue;
                     Object value=entry.getValue();
-                    if(value instanceof String s){if(s.length()>192)current.drops.incrementAndGet();facts.put(entry.getKey(),clip(s));}
+                    if(value instanceof String s){if(s.length()>192)drop(current,contract,operation,"FACT_TRUNCATED");facts.put(entry.getKey(),clip(s));}
                     else if(value instanceof Number || value instanceof Boolean || value instanceof Enum<?>)facts.put(entry.getKey(),clip(value.toString()));
                     else if(value instanceof UUID id)facts.put(entry.getKey(),alias(current,id));
                 }
-                if(current.scope.get()!=scope){current.drops.incrementAndGet();return;}
+                if(current.scope.get()!=scope){drop(current,contract,operation,"SCOPE_CHANGED_DURING_COPY");return;}
                 long sequence=current.sequence.incrementAndGet();
                 if(connection==null)facts.put("connectionEvidenceGap","PROVIDER_HAS_NO_CONNECTION_GENERATION");
                 if(world==null)facts.put("worldEvidenceGap","PROVIDER_HAS_NO_WORLD_ID");
                 if(revision==null)facts.put("revisionEvidenceGap","PROVIDER_HAS_NO_STATE_REVISION");
-                if(operation!=null&&operation.length()>192)current.drops.incrementAndGet();
+                if(operation!=null&&operation.length()>192)drop(current,contract,operation,"OPERATION_ID_TRUNCATED");
                 current.queue.addLast(new HroEvent(1,current.id,sequence,System.currentTimeMillis(),began-current.start,
                         clip(contract),clip(provider),clip(boundary),operation==null||operation.isBlank()?"unjoined-"+sequence:clip(operation),
-                        world==null?null:alias(current,world)+":segment-"+scope.worldSegment(),connection,tick,revision,facts));
+                        world==null?null:(scope.worldAlias()==null?alias(current,world):scope.worldAlias())+
+                                ":segment-"+scope.worldSegment(),connection,tick,revision,facts));
                 retained=true;current.admitted.incrementAndGet();current.maximumQueue=Math.max(current.maximumQueue,current.queue.size());
             }finally{current.lock.unlock();}
-        }catch(RuntimeException diagnosticFailure){current.drops.incrementAndGet();}
+        }catch(RuntimeException diagnosticFailure){drop(current,contract,operation,"PRODUCER_EXCEPTION");}
         finally {
             if(!retained)SharedTraceBudget.release(RESERVATION);
             long tickCost=Math.max(0,clock.getAsLong()-began);
             if(tick!=null)recordTick(current,world,tick,tickCost);else current.observationsWithoutTick.incrementAndGet();
             long elapsed=Math.max(0,clock.getAsLong()-began);current.nanos.addAndGet(elapsed);
             current.timing.incrementAndGet(Math.min(31,64-Long.numberOfLeadingZeros(elapsed)));
+            if(elapsed>=50_000){current.producerAtOrAboveBudget.incrementAndGet();
+                int contractIndex=HroContracts.IDS.indexOf(contract);
+                current.producerOverBudgetByContract.incrementAndGet(contractIndex<0?HroContracts.IDS.size():contractIndex);}
             current.timingSamples.incrementAndGet();
         }
     }
@@ -271,7 +305,7 @@ public final class HroRecorder implements AutoCloseable {
                 current.lock.lock();try{event=current.queue.pollFirst();}finally{current.lock.unlock();}
                 if(event!=null) {
                     try {long writing=clock.getAsLong();fault.beforeWrite();bundle.event(event);current.writerNanos+=Math.max(0,clock.getAsLong()-writing);}
-                    catch(java.io.IOException failure){current.drops.incrementAndGet();current.stop="WRITE_FAILED";throw failure;}
+                    catch(java.io.IOException failure){drop(current,event.contract(),event.operationId(),"WRITE_FAILED");current.stop="WRITE_FAILED";throw failure;}
                     finally{SharedTraceBudget.release(RESERVATION);}
                 }else if(current.stop!=null)break;
                 else LockSupport.parkNanos(2_000_000L);
@@ -287,7 +321,17 @@ public final class HroRecorder implements AutoCloseable {
             long producerP99=percentile(current.timing,current.timingSamples.get(),99);
             performance.put("producerP99NanosUpperBound",producerP99);
             performance.put("producerBudgetNanos",50_000);
-            performance.put("producerQualification",producerP99<0?"UNVERIFIED_NO_SAMPLES":producerP99<50_000?"OBSERVED_WITHIN_BUDGET":"OBSERVED_BUDGET_EXCEEDED");
+            long overBudget=current.producerAtOrAboveBudget.get(),producerSamples=current.timingSamples.get();
+            performance.put("producerAtOrAboveBudgetSamples",overBudget);
+            Map<String,Long> overByContract=new LinkedHashMap<>();
+            for(int i=0;i<HroContracts.IDS.size();i++)if(current.producerOverBudgetByContract.get(i)>0)
+                overByContract.put(HroContracts.IDS.get(i),current.producerOverBudgetByContract.get(i));
+            if(current.producerOverBudgetByContract.get(HroContracts.IDS.size())>0)
+                overByContract.put("OTHER",current.producerOverBudgetByContract.get(HroContracts.IDS.size()));
+            performance.put("producerAtOrAboveBudgetByContract",overByContract);
+            performance.put("producerQualificationMethod","EXACT_50US_THRESHOLD_COUNT; log2 p99 remains a conservative upper bound");
+            performance.put("producerQualification",producerSamples==0?"UNVERIFIED_NO_SAMPLES":
+                    producerP99WithinBudget(producerSamples,overBudget)?"OBSERVED_WITHIN_BUDGET":"OBSERVED_BUDGET_EXCEEDED");
             TickWindow finalTick=current.tickWindow.getAndSet(null);
             if(finalTick!=null)current.tickTiming.incrementAndGet(Math.min(31,64-Long.numberOfLeadingZeros(finalTick.nanos.get())));
             List<Long> ticks=new ArrayList<>(32);long tickCount=0;for(int i=0;i<32;i++){long n=current.tickTiming.get(i);ticks.add(n);tickCount+=n;}
@@ -309,7 +353,9 @@ public final class HroRecorder implements AutoCloseable {
                     Map.of("state","STOPPED_OR_SUSPENDED","reason",current.stop,"monotonicNanos",Math.max(0,clock.getAsLong()-current.start))));
             performance.put("diskUsableBytesAtFinish",diskUsable());
             performance.put("observedDisconnects",current.disconnections.get());performance.put("correlatedReconnects",current.reconnections.get());
-            bundle.finish(current.drops.get(),current.stop,performance);
+            // Read details before the count so a concurrently published scope cannot outrun it.
+            List<HroContracts.Loss> sites=lossSites(current);
+            bundle.finish(current.drops.get(),current.stop,performance,sites);
             String analysis=HroAutoAnalysis.finish(root,current.directory,clock);
             last="HRO "+(current.drops.get()==0&&("STOPPED".equals(current.stop)||"EXPIRED".equals(current.stop))&&analysis.equals("COMPLETE")?"COMPLETE":"PARTIAL")+
                     "; run="+current.id+"; dropped="+current.drops.get()+"; folder="+current.directory+"; termination="+current.stop+"; analysis="+analysis;
@@ -317,6 +363,10 @@ public final class HroRecorder implements AutoCloseable {
     }
     private static long percentile(AtomicLongArray histogram,long count,int percent){if(count<=0)return -1;long target=(count*percent+99)/100,sum=0;
         for(int i=0;i<histogram.length();i++){sum+=histogram.get(i);if(sum>=target)return 1L<<Math.min(30,i);}return -1;}
+    static boolean producerP99WithinBudget(long samples,long atOrAboveBudget){
+        if(samples<=0||atOrAboveBudget<0||atOrAboveBudget>samples)return false;
+        return atOrAboveBudget<=samples-(samples*99+99)/100;
+    }
     private static long gcCount(){long n=0;for(var bean:ManagementFactory.getGarbageCollectorMXBeans())if(bean.getCollectionCount()>0)n+=bean.getCollectionCount();return n;}
     private static long gcMillis(){long n=0;for(var bean:ManagementFactory.getGarbageCollectorMXBeans())if(bean.getCollectionTime()>0)n+=bean.getCollectionTime();return n;}
     private long diskUsable(){try{return Files.getFileStore(root).getUsableSpace();}catch(java.io.IOException|SecurityException unavailable){return -1;}}

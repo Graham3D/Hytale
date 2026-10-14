@@ -89,7 +89,7 @@ class MantleNativeSourceContractTest {
                 .setPath("Audio/SoundEvents").setCodec(SoundEvent.CODEC).setKeyFunction(SoundEvent::getId).setReplaceOnRemove(SoundEvent::new);
         soundAssets=new HytaleAssetStore<>(soundBuilder){final EventBus events=new EventBus(false);@Override protected EventBus getEventBus(){return events;}};
         AssetRegistry.register(soundAssets);
-        var path=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/pre-release/package/game/latest/Assets.zip");
+        var path=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/release/package/game/latest/Assets.zip");
         try(var zip=new ZipFile(path.toFile());var stream=zip.getInputStream(zip.getEntry("Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Flame.json"))){
             var json=JsonParser.parseString(new String(stream.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
             var calculator=json.getAsJsonObject("InteractionVars").getAsJsonObject("Longsword_Swing_Left_Damage")
@@ -137,7 +137,7 @@ class MantleNativeSourceContractTest {
                 ()->leaf.getDamageCalculator().calculateDamage(1)).getMessage());
     }
     @Test void packagedWeaponChangesOnlyFourAuthoredFireLeafTypes()throws Exception{
-        var path=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/pre-release/package/game/latest/Assets.zip");
+        var path=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/release/package/game/latest/Assets.zip");
         String entry="Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Flame.json";
         try(var zip=new ZipFile(path.toFile());var stream=zip.getInputStream(zip.getEntry(entry))){
             var nativeItem=JsonParser.parseString(new String(stream.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8));

@@ -185,9 +185,24 @@ tasks.register('auditNativeProcAssets', Exec) {
     description = 'Checks every managed damage leaf against the pinned native strike and pellet graphs.'
     def bundledPython = file("${System.getProperty('user.home')}/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe")
     def python = providers.gradleProperty('pythonExecutable').getOrElse(bundledPython.exists() ? bundledPython.absolutePath : 'python')
-    commandLine python, file('tools/New-NativeProcMetadata.py'), '--verify'
+    commandLine python, file('tools/New-NativeProcMetadata.py'), '--verify', '--assets-zip', assetsZip
 }
 tasks.named('processResources') { dependsOn tasks.named('auditNativeProcAssets') }
+
+tasks.register('auditMe12Content', Exec) {
+    group = 'verification'
+    description = 'Lint inactive AD1 policies; does not enable v2 births.'
+    def bundledPython = file("${System.getProperty('user.home')}/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe")
+    def python = providers.gradleProperty('pythonExecutable').getOrElse(bundledPython.exists() ? bundledPython.absolutePath : 'python')
+    commandLine python, file('tools/audit/me12_content.py')
+}
+tasks.register('testMe12Content', Exec) {
+    group = 'verification'
+    def bundledPython = file("${System.getProperty('user.home')}/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe")
+    def python = providers.gradleProperty('pythonExecutable').getOrElse(bundledPython.exists() ? bundledPython.absolutePath : 'python')
+    commandLine python, '-m', 'unittest', 'discover', '-s', 'tools/audit', '-p', 'test_me12_content.py', '-v'
+}
+tasks.named('check') { dependsOn tasks.named('auditMe12Content'), tasks.named('testMe12Content') }
 
 allprojects {
     tasks.matching { it.name == 'processResources' }.configureEach {

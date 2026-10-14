@@ -8,9 +8,9 @@ import java.security.MessageDigest;
 import java.util.*;
 import java.util.zip.*;
 
-/** Exact-bytecode Packbound, damage-receipt and projectile-holder patcher for Chapter I 0.7.0. */
+/** Exact-bytecode Packbound, damage-receipt and projectile-holder patcher for Chapter I 0.7.1. */
 public final class PatchNativeMutations {
-    private static final String ORIGINAL="c3b5985b9e72727bf3bcf220923d7e61e78fe0f37cd1cd9c2a73f51e4f408ff8";
+    private static final String ORIGINAL="a60fa0b31f1418691f8d8f7cc1159693e3ec504d4f0567fb91493a842d71f8ca";
     private static final String BASE="com/hypixel/hytale/server/core/modules/interaction/interaction/config/server/";
     private static final String HOOK="com/inigmasgames/hytale/patch/NativeMutationHook";
     private static final String DAMAGE_HOOK="com/inigmasgames/hytale/patch/NativeDamageReceiptHook";

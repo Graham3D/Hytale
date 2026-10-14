@@ -49,7 +49,7 @@ class Stage13PlayerFeedbackCorrectionTest {
         }
     }
     @Test void animationAssetsReuseInstalledLightSwingsAtExactlyTwiceSpeed()throws Exception{
-        try(var zip=new ZipFile(Path.of(System.getenv("APPDATA"),"Hytale/install/pre-release/package/game/latest/Assets.zip").toFile())){
+        try(var zip=new ZipFile(Path.of(System.getenv("APPDATA"),"Hytale/install/release/package/game/latest/Assets.zip").toFile())){
             for(String profile:List.of("Sword","Longsword","Daggers")){
                 JsonObject source;try(var reader=new java.io.InputStreamReader(zip.getInputStream(zip.getEntry("Server/Item/Animations/"+profile+".json")))){source=JsonParser.parseReader(reader).getAsJsonObject().getAsJsonObject("Animations");}
                 var replacement=json("/Server/Item/Animations/RPG_QuickSlash_"+profile+".json");assertEquals(profile,replacement.get("Parent").getAsString());

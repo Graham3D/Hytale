@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 2,
+  "revision": "ME12-ARCH-AD1-names-1",
+  "format": "{prefix} {suffix}",
+  "prefixes": [
+    {
+      "id": "ashclaw",
+      "text": "Ashclaw",
+      "tier": 1,
+      "nameWeight": 1,
+      "signature": "ME-005",
+      "fillers": []
+    },
+    {
+      "id": "grimtooth",
+      "text": "Grimtooth",
+      "tier": 1,
+      "nameWeight": 1,
+      "signature": "ME-002",
+      "fillers": []
+    },
+    {
+      "id": "ironhide",
+      "text": "Ironhide",
+      "tier": 1,
+      "nameWeight": 1,
+      "signature": "ME-004",
+      "fillers": []
+    },
+    {
+      "id": "gorefang",
+      "text": "Gorefang",
+      "tier": 2,
+      "nameWeight": 1,
+      "signature": "ME-002",
+      "fillers": [
+        "ME-001",
+        "ME-004",
+        "ME-015",
+        "ME-017",
+        "ME-018",
+        "ME-019",
+        "ME-025"
+      ]
+    },
+    {
+      "id": "duskmaw",
+      "text": "Duskmaw",
+      "tier": 2,
+      "nameWeight": 1,
+      "signature": "ME-014",
+      "fillers": [
+        "ME-001",
+        "ME-011",
+        "ME-012",
+        "ME-017",
+        "ME-018",
+        "ME-025",
+        "ME-026"
+      ]
+    },
+    {
+      "id": "stormscar",
+      "text": "Stormscar",
+      "tier": 2,
+      "nameWeight": 1,
+      "signature": "ME-007",
+      "fillers": [
+        "ME-001",
+        "ME-002",
+        "ME-017",
+        "ME-018",
+        "ME-025",
+        "ME-026"
+      ]
+    },
+    {
+      "id": "dreadtusk",
+      "text": "Dreadtusk",
+      "tier": 2,
+      "nameWeight": 1,
+      "signature": "ME-025",
+      "fillers": [
+        "ME-002",
+        "ME-004",
+        "ME-010",
+        "ME-015",
+        "ME-017",
+        "ME-018",
+        "ME-026"
+      ]
+    },
+    {
+      "id": "ruinbone",
+      "text": "Ruinbone",
+      "tier": 3,
+      "nameWeight": 1,
+      "signature": "ME-004",
+      "fillers": [
+        "ME-002",
+        "ME-003",
+        "ME-017",
+        "ME-018",
+        "ME-026",
+        "ME-027"
+      ]
+    }
+  ],
+  "suffixes": [
+    {
+      "id": "cruel",
+      "text": "the Cruel",
+      "tier": 1,
+      "nameWeight": 1,
+      "signature": "ME-002",
+      "fillers": []
+    },
+    {
+      "id": "stubborn",
+      "text": "the Stubborn",
+      "tier": 1,
+      "nameWeight": 1,
+      "signature": "ME-017",
+      "fillers": []
+    },
+    {
+      "id": "hollow",
+      "text": "the Hollow",
+      "tier": 1,
+      "nameWeight": 1,
+      "signature": "ME-013",
+      "fillers": []
+    },
+    {
+      "id": "ashen",
+      "text": "the Ashen",
+      "tier": 1,
+      "nameWeight": 1,
+      "signature": "ME-005",
+      "fillers": []
+    },
+    {
+      "id": "scarred",
+      "text": "the Scarred",
+      "tier": 1,
+      "nameWeight": 1,
+      "signature": "ME-026",
+      "fillers": []
+    },
+    {
+      "id": "relentless",
+      "text": "the Relentless",
+      "tier": 2,
+      "nameWeight": 1,
+      "signature": "ME-018",
+      "fillers": [
+        "ME-001",
+        "ME-002",
+        "ME-017",
+        "ME-019",
+        "ME-025"
+      ]
+    },
+    {
+      "id": "watchful",
+      "text": "the Watchful",
+      "tier": 2,
+      "nameWeight": 1,
+      "signature": "ME-003",
+      "fillers": [
+        "ME-001",
+        "ME-002",
+        "ME-017",
+        "ME-018",
+        "ME-025",
+        "ME-026"
+      ]
+    },
+    {
+      "id": "unbroken",
+      "text": "the Unbroken",
+      "tier": 3,
+      "nameWeight": 1,
+      "signature": "ME-017",
+      "fillers": [
+        "ME-001",
+        "ME-002",
+        "ME-003",
+        "ME-004",
+        "ME-018",
+        "ME-019",
+        "ME-025",
+        "ME-026",
+        "ME-027"
+      ]
+    }
+  ]
+}

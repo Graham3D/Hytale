@@ -5,3 +5,5 @@
 /src/main/resources/Server/Particles/RPG/HealingPath/RPG_Heal_Path_* text eol=lf
 /src/main/resources/Server/Models/RPG/RPG_Heal_Path_*.json text eol=lf
 /tools/guardian/hooks/pre-commit text eol=lf
+/src/main/resources/rpg/enemies/*-v2.json text eol=lf
+/docs/enemies/ME12_STAGE1* text eol=lf

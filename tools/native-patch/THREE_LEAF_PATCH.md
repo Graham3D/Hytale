@@ -1,11 +1,11 @@
 # Packbound mutation, damage receipt and projectile holder patch
 
-## Chapter I release 0.7.0
+## ME12 Stage 1 release 0.7.1 candidate (not installed or accepted)
 
 `Build-PackboundNative.ps1` now targets the exact stock release server SHA-256
-`c3b5985b9e72727bf3bcf220923d7e61e78fe0f37cd1cd9c2a73f51e4f408ff8`.
+`a60fa0b31f1418691f8d8f7cc1159693e3ec504d4f0567fb91493a842d71f8ca`.
 The reviewed, reproducible patched server SHA-256 is
-`e0bcd36c7a981949d2c15b1b48f1cdd7f9623373269ef03b58f2d9b9da7f6edf`.
+`68f37bdf2dfee6f9834f7035e606a506a2e13dede3c36f51ecae4bf11f425b89`.
 It is built only in an isolated output directory, with an original recovery
 copy and `verification.json` record outside saves. The executable patcher checks
 the whole server identity, all six target class hashes, the exact insertion
@@ -14,7 +14,16 @@ surface. `Test-ReleaseNativePatch.ps1` adds negative bytecode-layout fixtures,
 unknown-server rejection, and JVM class verification. The corresponding Hywind
 JAR and this native server artifact must be deployed as a matching pair only
 after separate authorization. See the Stage 2 engineering report for exact
-class identities, runtime gate, and rollback steps.
+class identities, runtime gate, and rollback steps. All six target classes are
+byte-identical to the prior 0.7.0 pins. The hook PATCH_ID strings retain their
+original ABI revision; the whole-JAR pin, not those historical strings, admits
+the new artifact. The eleven added hook classes and instruction-preservation
+checks are unchanged. See docs/enemies/ME12_STAGE1_REPORT.md for remaining
+asset, role and connected-acceptance blockers. This artifact is not release-ready.
+
+Historical 0.7.0 stock/patched identities were
+`c3b5985b9e72727bf3bcf220923d7e61e78fe0f37cd1cd9c2a73f51e4f408ff8` /
+`e0bcd36c7a981949d2c15b1b48f1cdd7f9623373269ef03b58f2d9b9da7f6edf`.
 
 ## Historical pre-release 0.7.0-pre.5.1 design
 

@@ -33,7 +33,7 @@ final class NativeCarrierReachabilityAudit implements AutoCloseable {
 
     NativeCarrierReachabilityAudit(Path serverRoot) throws IOException {
         var installed = Path.of(System.getProperty("user.home"), "AppData", "Roaming", "Hytale",
-                "install", "pre-release", "package", "game", "latest", "Assets.zip");
+                "install", "release", "package", "game", "latest", "Assets.zip");
         zip = new ZipFile(installed.toFile());
         for (var entry : java.util.Collections.list(zip.entries())) {
             var name = entry.getName();

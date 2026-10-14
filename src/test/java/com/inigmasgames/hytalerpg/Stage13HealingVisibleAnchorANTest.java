@@ -24,7 +24,7 @@ class Stage13HealingVisibleAnchorANTest {
         assertEquals("Entity",particle.get("TargetEntityPart").getAsString());
         assertEquals(1,particle.get("Scale").getAsInt());
         assertFalse(particle.get("DetachedFromModel").getAsBoolean());assertTrue(particle.get("ClearParticlesOnRemove").getAsBoolean());
-        try(var assets=new ZipFile(Path.of(System.getenv("APPDATA"),"Hytale/install/pre-release/package/game/latest/Assets.zip").toFile())){
+        try(var assets=new ZipFile(Path.of(System.getenv("APPDATA"),"Hytale/install/release/package/game/latest/Assets.zip").toFile())){
             assertNotNull(assets.getEntry("Common/"+model.get("Model").getAsString()));
             assertNotNull(assets.getEntry("Common/"+model.get("Texture").getAsString()));
         }

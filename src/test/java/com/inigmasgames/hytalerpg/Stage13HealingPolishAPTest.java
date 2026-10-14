@@ -18,7 +18,7 @@ class Stage13HealingPolishAPTest {
         }
     }
     @Test void recipientAndStaffRetainExactShippedNonColorBehavior()throws Exception{
-        try(var zip=new ZipFile(Path.of(System.getenv("APPDATA"),"Hytale/install/pre-release/package/game/latest/Assets.zip").toFile())){
+        try(var zip=new ZipFile(Path.of(System.getenv("APPDATA"),"Hytale/install/release/package/game/latest/Assets.zip").toFile())){
             for(var pair:List.of(new String[]{"Status_Effect/Heal/Spawners/Heal2","Heal2"},new String[]{"Status_Effect/Heal/Spawners/Heal_Rays","Heal_Rays"},
                     new String[]{"Weapon/Staff/Spawners/Staff_Bronze_Air","Staff_Air"},new String[]{"Weapon/Staff/Spawners/Staff_Bronze_Sparks","Staff_Sparks"})){
                 JsonElement before;try(var in=zip.getInputStream(zip.getEntry("Server/Particles/"+pair[0]+".particlespawner"))){before=JsonParser.parseString(new String(in.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8));}

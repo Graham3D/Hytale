@@ -51,7 +51,7 @@ public final class NativeAffixActionAssetQualificationTest {
             throws Exception {
         if (!item.has("InteractionVars")) return;
         var zipPath = Path.of(System.getProperty("user.home"), "AppData", "Roaming", "Hytale",
-                "install", "pre-release", "package", "game", "latest", "Assets.zip");
+                "install", "release", "package", "game", "latest", "Assets.zip");
         try (var zip = new ZipFile(zipPath.toFile())) {
             for (var variable : item.getAsJsonObject("InteractionVars").entrySet()) {
                 if (!variable.getValue().isJsonPrimitive()) continue;

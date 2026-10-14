@@ -949,13 +949,13 @@ public final class HyArpgPlugin extends TavernsPlugin {
             nativePopulationProjectionHook=com.inigmasgames.hytale.patch.NativePopulationProjectionHook.install(
                     store->populationBalance.applySafely(store.getExternalData().getWorld()));
             populationBalance.useNativeFinalSeam(true);
-            LOGGER.atInfo().log("RPG_POPULATION_PROJECTION release=0.7.0 mode=NATIVE_FINAL nativeFinalSeam=true connectedBehaviorUnverified=true");
+            LOGGER.atInfo().log("RPG_POPULATION_PROJECTION release=0.7.1 mode=NATIVE_FINAL nativeFinalSeam=true connectedBehaviorUnverified=true");
         }catch(LinkageError|RuntimeException unavailable){
             nativePopulationProjectionHook=null;
             LOGGER.atWarning().withCause(unavailable).log("RPG_POPULATION_PROJECTION_NATIVE_HOOK_UNAVAILABLE nativeFinalSeam=false");
         }
         if(nativePopulationProjectionHook==null)
-            LOGGER.atWarning().log("RPG_POPULATION_PROJECTION release=0.7.0 mode=ORDERED_TICK nativeFinalSeam=false unspawnableChunkRefreshMayResetWeights=true");
+            LOGGER.atWarning().log("RPG_POPULATION_PROJECTION release=0.7.1 mode=ORDERED_TICK nativeFinalSeam=false unspawnableChunkRefreshMayResetWeights=true");
         if(packboundNativeHook!=null)try{
             enemyProjectileHook=com.inigmasgames.hytale.patch.NativeProjectileReceiptHook.install(enemyActions::attachProjectile);
         }catch(LinkageError|RuntimeException missingHook){
@@ -986,9 +986,15 @@ public final class HyArpgPlugin extends TavernsPlugin {
         var enemyPublication=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyBirthPublication(
                 encounterRewards,difficultyCombat,enemyWorldAdmission,
                 com.inigmasgames.hytalerpg.enemies.EnemyVisualVariants.canonical(),enemyBindings,enemyWeaponVisuals);
+        boolean naturalEliteHooksReady=packboundNativeHook!=null&&enemyProjectileHook!=null
+                &&enemyDamageReceiptHook!=null&&nativePopulationProjectionHook!=null;
+        if(naturalEliteHooksReady)
+            LOGGER.atInfo().log("RPG_NATURAL_ELITE_HOOKS_READY packbound=true projectile=true damageReceipt=true populationProjection=true");
+        else LOGGER.atWarning().log("RPG_NATURAL_ELITE_HOOKS_MISSING packbound=%s projectile=%s damageReceipt=%s populationProjection=%s",
+                packboundNativeHook!=null,enemyProjectileHook!=null,enemyDamageReceiptHook!=null,nativePopulationProjectionHook!=null);
         var enemyBirthOwner=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyBirthOwner(
                 enemyBindings,enemyWorldAdmission,encounterRewards,difficultyCombat,enemyActions,
-                enemyReservation,enemyDecision,enemyAttachment,enemyPublication,packboundNativeHook!=null&&enemyProjectileHook!=null&&enemyDamageReceiptHook!=null&&nativePopulationProjectionHook!=null);
+                enemyReservation,enemyDecision,enemyAttachment,enemyPublication,naturalEliteHooksReady);
         this.enemyBirthOwner=enemyBirthOwner;
         encounterRewards.configureQaEncounters(enemyBirthOwner.qaEncounters());
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyBirthOwner.Removal(enemyBirthOwner));

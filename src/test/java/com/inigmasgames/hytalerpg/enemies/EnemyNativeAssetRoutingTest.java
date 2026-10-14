@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /** Exact installed asset comparison; does not launch a server or establish connected behavior. */
 class EnemyNativeAssetRoutingTest {
-    final Path assets=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/pre-release/package/game/latest/Assets.zip");
+    final Path assets=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/release/package/game/latest/Assets.zip");
     static final String PREFIX="Server/NPC/Roles/Intelligent/Faction/Trork/";
     JsonObject packaged(String path)throws Exception{
         try(var input=getClass().getResourceAsStream("/"+path)){assertNotNull(input,path);return JsonParser.parseReader(new InputStreamReader(input,StandardCharsets.UTF_8)).getAsJsonObject();}

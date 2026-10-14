@@ -105,7 +105,7 @@ public final class EnemyHealthBarPresentation {
             }
         }
         // The native compositor retains the authoritative text. A prepared glyph row
-        // lets it suppress the duplicate white plate for this exact display name.
+        // lets it suppress the duplicate white plate even when the native text differs.
         removeAnchor(store,nameAnchors.remove(key));
         if (coloredEligible) {
             var prior=coloredNames.get(key);
@@ -128,9 +128,13 @@ public final class EnemyHealthBarPresentation {
         return affixAnchors.containsKey(key)||coloredNames.containsKey(key);
     }
 
-    boolean hasColoredName(UUID world,UUID id,String text) {
+    String visibleNativeName(UUID world,UUID id,String nativeText) {
         var name=coloredNames.get(new Enemy(world,id));
-        return name!=null&&name.valid()&&name.text().equals(text);
+        return nativePlateText(name,nativeText);
+    }
+
+    static String nativePlateText(PromotedNameGlyphs.Name name,String nativeText) {
+        return name!=null&&name.valid()?"":nativeText;
     }
 
     private static Ref<EntityStore> createAnchor(Store<EntityStore> store,ModelAsset asset,

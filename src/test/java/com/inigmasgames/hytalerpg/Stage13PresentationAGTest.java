@@ -56,7 +56,7 @@ class Stage13PresentationAGTest {
         }
     }
     @Test void everyStaffOverridePreservesAllNativeGameplayFieldsAndOtherParticles()throws Exception{
-        var zipPath=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/pre-release/package/game/latest/Assets.zip");
+        var zipPath=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/release/package/game/latest/Assets.zip");
         try(var zip=new ZipFile(zipPath.toFile());var files=Files.list(Path.of("src/main/resources/Server/Item/Items/Weapon/Staff"))){
             var list=files.filter(p->p.toString().endsWith(".json")).toList();assertEquals(26,list.size());
             for(var path:list){

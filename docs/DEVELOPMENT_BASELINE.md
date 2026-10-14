@@ -1,5 +1,35 @@
 # HyARPG/Hywind development baseline
 
+## ME12 Stage 1 isolated engineering checkpoint (2026-10-14)
+
+State: **INTEGRATION_BLOCKED / QA_PENDING; Stage 1 BLOCKED**.
+Branch `codex/me12-stage1`, managed worktree
+`C:/Users/Zemio/.codex/worktrees/me12-stage1/Hytale-main-clean`,
+parent integrated main `b839526e7106f780648c315692b04bb372b58d9e`.
+Provisional revision `R262ME12S1-CANDIDATE`, version
+`0.2.0-R262ME12S1-CANDIDATE`, target Hytale `=0.7.1`.
+No new completed or accepted cumulative R-revision is claimed.
+
+The owner authorized selective engineering inclusion from Elite
+`3327a5650cadf0173b336072f614a13c63cecc56` and HRO
+`f7d414e6348c84653d03a51117bdfe2fc427dded`; their unverified changes remain
+QA_PENDING. Eight implementation commits were inspected and their source/test
+deltas ported onto integrated main. No whole-branch merge or ancestry claim.
+The primary dirty main checkout, installed game and active Hywind save are
+preserved. The inherited tracked AGENTS.md differs from the current user policy;
+it remains untouched and the current user policy governs.
+
+Stage 1 adds a pinned offline 0.7.1 hook artifact, inactive AD1 policy content,
+strict offline lint, and a 309-ID native/catalog coverage inventory. It does
+not implement the v2 sampler, persistence, rewards, activation or acquisition.
+Compilation, package validation, native patch regression and policy tests pass.
+The cumulative regression is blocked by actual native asset differences;
+missing pre-release fixture paths were corrected without weakening assertions.
+No deployment, connected QA, promotion to main or release acceptance occurred.
+Monster Affix remains OPEN with ownerAccepted=false. Continue Stage 1
+compatibility/certification reconciliation; do not advance to Stage 2.
+Exact committed-source and final verification evidence follow in the Stage 1 report.
+
 ## Hytale 0.7.1 hostile-mob audit publication (2026-10-13)
 
 State: **MERGED — documentation audit only; no gameplay acceptance claimed**.
