@@ -1,5 +1,44 @@
 # HyARPG/Hywind development baseline
 
+## Numeric-only top-right revision badge — R262C1ELITE4-CANDIDATE (2026-10-13)
+
+State: **ENGINEERING_READY, DEPLOYED, QA_PENDING**. The continuing
+`codex/elite-natural-hookup` branch at
+`C:/Users/Zemio/.codex/worktrees/elite-natural-hookup/Hytale-main-clean`
+has exact gameplay source `e491c692bcf0ea48d210ef5fd378ed4e1a7d5adc`,
+on the prior deployed ELITE3 candidate `2ea2e36931a6fbf9428f333c43f57f2fe2b76a95`.
+It remains dependent on QA-pending HRO correction
+`f7d414e6348c84653d03a51117bdfe2fc427dded`. Remote `main` was
+`c69e44f16302e68ebd625d65039a457ad92ead06` at review and does not
+contain this branch. The primary Windows checkout and its owner-owned changes
+remain untouched.
+
+The HUD's `BuildIdentity.DISPLAY_REVISION` previously stripped only the
+hyphenated suffix, leaving `R262C1ELITE3` at the top right. It now extracts
+the leading `R` plus digits, so this candidate displays exactly `R262`.
+`BuildIdentity.REVISION`, the manifest version, and diagnostic metadata retain
+the full `R262C1ELITE4-CANDIDATE` identity. No save data, command, natural
+Elite, inventory, or native server behavior changed. Focused JUnit tests for
+the formatter and existing HUD passed; the CustomUI audit and package
+validator passed. Connected badge appearance and gameplay require owner QA.
+
+Revision `R262C1ELITE4-CANDIDATE`, version
+`0.2.0-R262C1ELITE4-CANDIDATE`, Hytale `=0.7.0`. The package-validated
+implementation JAR SHA-256 is
+`EE5A5D9FFC7200E2308798332EE1F7CB34C9068D82DC4CB75B32D07CA0C11639`.
+After verifying the active save, stopped game, pinned native server hash, and
+existing JAR hash, the previous JAR was backed up and hash-verified outside
+`Saves` at
+`C:/Users/Zemio/AppData/Roaming/Hytale/UserData/Diagnostics/Hywind/Rollback/ELITE4-20261013-203126/Hywind-before.jar`
+(SHA-256 `20CE529766F0F2AE0E04DAF4992CA38A329BA75A2261E04C3AE7B5979C96C07B`).
+The new JAR was installed at
+`C:/Users/Zemio/AppData/Roaming/Hytale/UserData/Saves/Hywind/mods/Hywind.jar`
+and rehashed to the candidate value. No game or standalone server was
+launched. This later documentation commit does not change deployed gameplay
+source. Next: owner connected QA of the `R262` badge, world/chunk loading,
+Tab/Hywind inventory, and natural Elites. Merge into `main` awaits affirmative
+acceptance of this branch and its HRO dependency.
+
 ## White-limbo join recovery — R262C1ELITE3-CANDIDATE (2026-10-13)
 
 State: **ENGINEERING_READY, DEPLOYED, QA_PENDING**. The continuing

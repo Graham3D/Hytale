@@ -1,5 +1,15 @@
 # Hywind / HyARPG development baseline
 
+Revision badge QA candidate: **R262C1ELITE4-CANDIDATE**
+(`0.2.0-R262C1ELITE4-CANDIDATE`), Hytale `=0.7.0`, on
+`codex/elite-natural-hookup`. The top-right HUD now shows only the numeric
+revision (`R262`); diagnostics retain the full candidate ID. The verified JAR
+is deployed to the existing Hywind save. See the
+[baseline status](docs/DEVELOPMENT_BASELINE.md). Connected UI and gameplay
+acceptance remain pending.
+
+### Earlier white-limbo recovery candidate
+
 White-limbo recovery QA candidate: **R262C1ELITE3-CANDIDATE**
 (`0.2.0-R262C1ELITE3-CANDIDATE`), Hytale `=0.7.0`, on
 `codex/elite-natural-hookup`. Gear action assets now publish off the world
