@@ -53,7 +53,7 @@ class Me12QaAuthorityTest {
         var config=config();var world=UUID.randomUUID();var gate=admitted(world);
         var bindings=EnemyNativeBindings.load();var now=new AtomicLong(0);
         var identity=new Me12QaAuthority.Identity("a".repeat(40),"rev","version","b".repeat(64),
-                bindings.serverJarSha256(),bindings.assetsSha256());
+                com.inigmasgames.hytalerpg.execution.hytale.PackboundNativeMutationBridge.patchedServerSha256(),bindings.assetsSha256());
         var authority=new Me12QaAuthority(config,gate,bindings,()->true,
                 ()->bindings.productionEligibilityRejection("Trork_Warrior").isEmpty(),()->identity,now::get);
         authority.activate(new Me12QaAuthority.Request(
@@ -71,7 +71,7 @@ class Me12QaAuthorityTest {
         var config=config();var world=UUID.randomUUID();var gate=admitted(world);
         var bindings=EnemyNativeBindings.load();var now=new AtomicLong(0);var owner=new AtomicBoolean(true);
         var identity=new Me12QaAuthority.Identity("a".repeat(40),"rev","version","b".repeat(64),
-                bindings.serverJarSha256(),bindings.assetsSha256());
+                com.inigmasgames.hytalerpg.execution.hytale.PackboundNativeMutationBridge.patchedServerSha256(),bindings.assetsSha256());
         var authority=new Me12QaAuthority(config,gate,bindings,owner::get,()->true,()->identity,now::get);
         var request=new Me12QaAuthority.Request(identity.sourceCommit(),world,"QaWorld",2,receipt(identity));
         assertThrows(IllegalStateException.class,()->authority.activate(new Me12QaAuthority.Request(
@@ -93,7 +93,7 @@ class Me12QaAuthorityTest {
     @Test void receiptAndIdentityFailuresCannotArm() throws Exception {
         var config=config();var world=UUID.randomUUID();var gate=admitted(world);
         var bindings=EnemyNativeBindings.load();var identity=new Me12QaAuthority.Identity("a".repeat(40),"rev","version","b".repeat(64),
-                bindings.serverJarSha256(),bindings.assetsSha256());
+                com.inigmasgames.hytalerpg.execution.hytale.PackboundNativeMutationBridge.patchedServerSha256(),bindings.assetsSha256());
         var authority=new Me12QaAuthority(config,gate,bindings,()->true,()->true,()->identity,()->0);
         var request=new Me12QaAuthority.Request(identity.sourceCommit(),world,"QaWorld",2,receipt(identity));
         assertThrows(IllegalStateException.class,()->authority.activate(new Me12QaAuthority.Request(
@@ -105,11 +105,26 @@ class Me12QaAuthorityTest {
         assertThrows(IllegalArgumentException.class,()->authority.activate(new Me12QaAuthority.Request(
                 identity.sourceCommit(),world,"QaWorld",601,request.guardianReceipt())));
     }
+    @Test void sourceManifestHashCannotStandInForTheInstalledNativePatch() throws Exception {
+        var config=config();var world=UUID.randomUUID();var gate=admitted(world);
+        var bindings=EnemyNativeBindings.load();
+        var patched=new Me12QaAuthority.Identity("a".repeat(40),"rev","version","b".repeat(64),
+                com.inigmasgames.hytalerpg.execution.hytale.PackboundNativeMutationBridge.patchedServerSha256(),
+                bindings.assetsSha256());
+        var request=new Me12QaAuthority.Request(patched.sourceCommit(),world,"QaWorld",30,receipt(patched));
+        for(var serverHash:List.of(bindings.serverJarSha256(),"c".repeat(64))){
+            var runtime=new Me12QaAuthority.Identity(patched.sourceCommit(),patched.revision(),patched.version(),
+                    patched.jarSha256(),serverHash,patched.assetsSha256());
+            var authority=new Me12QaAuthority(config,gate,bindings,()->true,()->true,()->runtime,()->0);
+            assertThrows(IllegalStateException.class,()->authority.activate(request));
+            assertFalse(authority.allows(world));
+        }
+    }
     @Test void missingProductionOwnerEvidenceKeepsTheLeaseClosed() throws Exception {
         var config=config();var world=UUID.randomUUID();var gate=admitted(world);
         var bindings=EnemyNativeBindings.load();
         var identity=new Me12QaAuthority.Identity("a".repeat(40),"rev","version","b".repeat(64),
-                bindings.serverJarSha256(),bindings.assetsSha256());
+                com.inigmasgames.hytalerpg.execution.hytale.PackboundNativeMutationBridge.patchedServerSha256(),bindings.assetsSha256());
         var authority=new Me12QaAuthority(config,gate,bindings,()->true,()->true,()->identity,()->0);
         var request=new Me12QaAuthority.Request(identity.sourceCommit(),world,"QaWorld",30,receipt(identity));
         Files.delete(root.resolve("build/test-results/test/TEST-NativeEnemyProductionBirthOwnerTest.xml"));

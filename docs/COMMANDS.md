@@ -1,6 +1,6 @@
 # HyARPG gameplay and QA commands
 
-## Master Enemies candidate QA lease (Stage 3 source only)
+## Master Enemies candidate QA lease (guarded Stage 4)
 
 `/rpg me12qa activate <candidateSha> <worldUuid> <saveName> <seconds> <guardianReceipt>`
 arms natural v2 births for the player's current loaded world only. The five arguments
@@ -13,17 +13,17 @@ the current lease; `/rpg me12qa revoke` immediately stops new v2 births. All thr
 are in-game player commands requiring `inigmasgames.rpg.me12.qa` and the parent
 `/rpg` permission. The player must be in the named world. The world configuration
 must be `masterEnemiesV2=DRAIN`; world recovery/admission, all native hooks, at
-least one production-eligible role, exact 0.7.1 hashes, and Guardian's
+least one production-eligible role, the exact verified 0.7.1 native-hook patch
+and assets hashes, and Guardian's
 candidate/test receipt must pass. Each natural roster is checked against its
 own pinned production roles before v2 planning. An uncertified role retains
 the existing v1/native path. Firesteel remains outside v2 QA until its
 incoming-only lifecycle is verified. Any missing prerequisite rejects activation.
 Unloading the world, reloading world configuration, expiry, revocation, or a lost
 owner hook stops new v2 births. Existing v2 roots and archives remain recoverable;
-the production `ENABLED` guard remains closed. This command is present in source,
-but this candidate lacks the complete production birth-owner fixture required
-by Guardian. Turret and Seeker remain independently blocked. Nothing was
-deployed or activated in Stage 3.
+the production `ENABLED` guard remains closed. The production birth-owner fixture
+is included in the exact-commit Guardian receipt. Turret and Seeker remain
+independently blocked. Nothing was deployed or activated in Stage 3.
 
 ## Master Enemies capture (Stage 3 candidate; Stage 4 workflow)
 

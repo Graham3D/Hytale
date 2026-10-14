@@ -2,9 +2,12 @@
 
 **Guarded Stage 4 QA readiness: independently certified roles only.** The
 exact candidate is identified by `build/guardian/verification.json` and
-`build/reports/me12/stage3-continuation-manifest.json`; both must name the
-same published source commit and installed native hashes before use. The
-joined native-owner fixture exercises a prepared, installed Larva Void
+the exact-commit Stage 4 verification manifest. The native bindings pin the
+unmodified 0.7.1 server (`a60fa0b31f1418691f8d8f7cc1159693e3ec504d4f0567fb91493a842d71f8ca`);
+the running server must be the separately verified native-hook patch
+(`46f4d2f087f15b27151a879e574edfdfec4e4b15fbd381a952a84099a4ff601f`).
+The QA lease checks that patched runtime identity and the pinned assets hash.
+The joined native-owner fixture exercises a prepared, installed Larva Void
 natural spawn through capture, reservation, durable
 birth, attachment, publication, and interrupted-root LOAD recovery. It does
 not prove Hytale's terrain search, collision or connected presentation.
@@ -34,17 +37,21 @@ candidate. No deployment or activation occurred during Stage 3:
    The command requires `masterEnemiesV2=DRAIN`,
    admitted recovered world, all native owner hooks, at least one eligible
    production role and per-roster native certification,
-   matching installed JAR/server/assets hashes, and PASS Guardian checks including
+   matching installed JAR, patched-server and assets hashes, and PASS Guardian checks including
    owner, HRO diagnostic, and lease tests. Activation fails if the receipt,
    native identity or concrete roster is uncertified.
    `/rpg me12qa status` is read-only. `/rpg me12qa revoke` stops new v2 births.
    Expiry, world unload, configuration reload, or owner-hook loss also stops them.
 2. Obtain separate owner authorization identifying that tested candidate, target
    save and QA activation. Recheck cumulative ancestry, game stopped, actual save
-   identity, native compatibility and previous mod hash. Back up the installed JAR
-   outside Saves and the coordinated authoritative data/config/archive set. Do not
+   identity, native compatibility and previous mod hash. Back up the installed JAR,
+   unmodified game server JAR, and coordinated authoritative data/config/archive set
+   outside Saves. Build the reviewed native patch from the pinned 0.7.1 server and
+   verify its whole-JAR hash before installing it. Do not
    create another QA save or launch a server/game/authentication flow.
-3. Deploy only under that authorization; verify checksum. Owner starts the main
+3. Deploy the verified patched server and mod JAR only under that authorization;
+   verify both checksums. Keep `masterEnemiesV2=DRAIN` so new v2 births require
+   the short-lived QA lease. Owner starts the main
    game. Confirm hook readiness and no outstanding recovery holds before the
    separately authorized QA-only gate can admit new v2 births. Empty learning
    mappings remain empty unless the owner separately authors accepted sources.
@@ -59,7 +66,8 @@ candidate. No deployment or activation occurred during Stage 3:
 6. Binary rollback must use a verified v2-capable build. Never replace it with the
    currently installed older JAR after v2 records have been created. Restoring a
    pre-candidate save requires explicit approval and a coordinated backup restore;
-   it is not the default rollback procedure. Preserve diagnostic evidence outside
+   it is not the default rollback procedure. Do not remove the native patch while
+   the QA candidate still depends on its owner hooks. Preserve diagnostic evidence outside
    Saves. A return to DISABLED or DRAIN is not owner acceptance.
 
 `inigmasgames.rpg.worldconfig` is required for the existing reload/status command.

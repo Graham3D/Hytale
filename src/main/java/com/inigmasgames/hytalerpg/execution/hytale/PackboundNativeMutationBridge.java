@@ -16,6 +16,8 @@ import java.util.*;
 /** Binds the exact release native hook set to the existing Packbound protection owner. */
 public final class PackboundNativeMutationBridge implements AutoCloseable {
     private static final String PATCH_HASH="46f4d2f087f15b27151a879e574edfdfec4e4b15fbd381a952a84099a4ff601f";
+    /** The only native runtime JAR accepted by the guarded ME12 QA lease. */
+    public static String patchedServerSha256(){return PATCH_HASH;}
     private final AutoCloseable registration;
     private boolean closed;
     private PackboundNativeMutationBridge(AutoCloseable registration){this.registration=registration;}

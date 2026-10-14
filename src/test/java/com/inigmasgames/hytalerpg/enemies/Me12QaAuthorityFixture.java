@@ -14,7 +14,7 @@ public final class Me12QaAuthorityFixture {
         var json=JsonParser.parseString(Files.readString(config.path())).getAsJsonObject();
         json.addProperty("masterEnemiesV2","DRAIN");Files.writeString(config.path(),json.toString());config.reload();
         var identity=new Me12QaAuthority.Identity("a".repeat(40),"test-revision","test-version","b".repeat(64),
-                bindings.serverJarSha256(),bindings.assetsSha256());
+                com.inigmasgames.hytalerpg.execution.hytale.PackboundNativeMutationBridge.patchedServerSha256(),bindings.assetsSha256());
         var receipt=root.resolve("build/guardian/verification.json");Files.createDirectories(receipt.getParent());
         var log=root.resolve("build/guardian/check.log");Files.writeString(log,"BUILD SUCCESSFUL\n");
         var reports=new ArrayList<String>();
