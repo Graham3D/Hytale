@@ -1,7 +1,8 @@
 """Stage 1 offline content lint and existential coverage audit; no RNG or runtime loader.
 
-Uses current Java eligibility exports. Witnesses are structural upper bounds until
-native paths, actual immunity projection and ephemeral roster admission are certified.
+Uses current Java eligibility, immunity and inheritance owners. Complete static
+plans are conditional on the explicitly specified admitted homogeneous native roster;
+connected path execution and ephemeral world admission are separate Stage 4 gates.
 Never grants production eligibility, changes a binding, or writes encounter data.
 """
 import argparse
@@ -425,12 +426,16 @@ def main():
                 if not source["hasBinding"]:
                     row["eras"][era] = dict(status="BLOCKED_NO_BINDING")
                     continue
-                if "PHYSICAL" in source["role"]["nativeImmunityChannels"] or len(source["role"]["nativeImmunityChannels"]) > era_no:
+                complete = source["completeConstraints"][era]
+                if not complete["leaderAccepted"]:
                     row["eras"][era] = dict(status="POLICY_EXCLUDED_NATIVE_IMMUNITY_CAP")
                     continue
-                eligible = tuple(k for k, v in sorted(source["individualEligibility"][era].items()) if v == "ELIGIBLE")
+                require(complete["minionMinimum"] == 3 and complete["minionMaximum"] == 5
+                        and complete["maximumMembers"] == 8, "review changed native roster contract")
+                eligible = tuple(k for k, v in sorted(complete["choices"].items()) if v == "ELIGIBLE")
                 key = f"{era}:" + ",".join(eligible)
-                row["eras"][era] = dict(status="BLOCKED_NATIVE_CERTIFICATION", structuralContext=key)
+                row["eras"][era] = dict(status="OFFLINE_COMPLETE_CONDITIONAL_PLAN", structuralContext=key,
+                    nativeImmunities=complete["nativeImmunities"], minionAccepted=complete["minionAccepted"])
                 if key in contexts:
                     continue
                 pairs = {}
@@ -451,17 +456,23 @@ def main():
                           for a, b in tier_pairs}
                 contexts[key] = dict(feasibleNamePairs=pairs, tierMassNumerators=masses,
                     normalization=sum(masses.values()), reachableOperators=sorted(reachable),
+                    rosterProof={str(n): {pair: dict(totalMembers=1+n+(2 if "ME-022" in v["witness"] else 0),
+                        guards=n if "ME-024" in v["witness"] else 0) for pair, v in pairs.items()} for n in range(3,6)},
                     minimumSupported=bool(pairs), maximumOwnCount=max((len(v["witness"]) for v in pairs.values()), default=0))
                 if not pairs:
-                    row["eras"][era]["status"] = "BLOCKED_NO_STRUCTURAL_NAME_PLAN"
+                    row["eras"][era]["status"] = "BLOCKED_NO_COMPLETE_NAME_PLAN"
             # Cached empty contexts must retain the same failure status for all aliases.
             for era in row["eras"].values():
                 if era.get("structuralContext") and not contexts[era["structuralContext"]]["minimumSupported"]:
-                    era["status"] = "BLOCKED_NO_STRUCTURAL_NAME_PLAN"
+                    era["status"] = "BLOCKED_NO_COMPLETE_NAME_PLAN"
             rows.append(row)
-        report.update(coverageKind="STRUCTURAL_UPPER_BOUND_NOT_NATIVE_CERTIFICATION",
-                      assumptions=["three reachable initial minions; Horde requires five total minions and six members",
-                                   "native certificates, inherited effects, full immunity projection and live admission still required",
+        blockers = [r["roleId"] + "/" + era for r in rows if not r["productionRejection"]
+                    for era, state in r["eras"].items() if state["status"] == "BLOCKED_NO_COMPLETE_NAME_PLAN"]
+        require(not blockers, "ENABLED_ROLE_MINIMUM_UNSATISFIED:" + ",".join(blockers))
+        report.update(coverageKind="COMPLETE_STATIC_NAME_CONDITIONED_FEASIBILITY",
+                      assumptions=["homogeneous admitted native roster, each base minion count 3/4/5; Horde adds 2; maximum 8 members",
+                                   "actual Java immunity and inheritance predicates applied; guard, survival and native caps retained",
+                                   "live spawn capacity, sealed/reachable roster and actual native connected execution remain DEFERRED_TO_STAGE4",
                                    "no operator overrides; current registry weights; aliases evaluated independently"],
                       contexts=contexts, rows=rows)
     args.output.parent.mkdir(parents=True, exist_ok=True)

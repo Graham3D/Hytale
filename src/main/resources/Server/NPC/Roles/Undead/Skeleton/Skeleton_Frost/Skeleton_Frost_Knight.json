@@ -93,6 +93,9 @@
           }
         ]
       }
-    }
+    },
+    "DisableDamageGroups": [
+      "Skeleton"
+    ]
   }
 }

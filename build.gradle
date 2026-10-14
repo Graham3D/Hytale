@@ -202,7 +202,22 @@ tasks.register('testMe12Content', Exec) {
     def python = providers.gradleProperty('pythonExecutable').getOrElse(bundledPython.exists() ? bundledPython.absolutePath : 'python')
     commandLine python, '-m', 'unittest', 'discover', '-s', 'tools/audit', '-p', 'test_me12_content.py', '-v'
 }
+tasks.register('auditMe12Coverage', Exec) {
+    group = 'verification'
+    dependsOn tasks.named('test')
+    def bundledPython = file("${System.getProperty('user.home')}/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe")
+    def python = providers.gradleProperty('pythonExecutable').getOrElse(bundledPython.exists() ? bundledPython.absolutePath : 'python')
+    commandLine python, file('tools/audit/me12_content.py'), '--inputs', 'build/reports/me12/coverage-inputs.json', '--output', 'build/reports/me12/structural-coverage.json'
+}
+tasks.register('verifyMe12Coverage', Exec) {
+    group = 'verification'
+    dependsOn tasks.named('auditMe12Coverage')
+    def bundledPython = file("${System.getProperty('user.home')}/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe")
+    def python = providers.gradleProperty('pythonExecutable').getOrElse(bundledPython.exists() ? bundledPython.absolutePath : 'python')
+    commandLine python, file('tools/audit/me12_native_inventory.py'), '--check'
+}
 tasks.named('check') { dependsOn tasks.named('auditMe12Content'), tasks.named('testMe12Content') }
+tasks.named('check') { dependsOn tasks.named('verifyMe12Coverage') }
 
 allprojects {
     tasks.matching { it.name == 'processResources' }.configureEach {
@@ -269,7 +284,7 @@ tasks.test {
     exclude '**/SignatureConsumerProofTest*'
     ['EnemyNativePaletteTest','EnemyNativeDamageLeafTest','EnemyNativeTimingTest',
      'EnemyNativeHealthTest','EnemyNativeDefenseTest','EnemyNativeOutgoingTest',
-     'EnemyNativeProjectilePathTest','EnemyNativeStagingTest',
+     'EnemyNativeProjectilePathTest','EnemyNativeStagingTest','Me12DefenderRouteTest',
      'NativePackboundMutationHookTest'].each { exclude "**/${it}*" }
 }
 
@@ -306,7 +321,7 @@ tasks.register('nativeControlTest', Test) {
           include '**/SignatureConsumerProofTest.class'
         ['EnemyNativePaletteTest','EnemyNativeDamageLeafTest','EnemyNativeTimingTest',
          'EnemyNativeHealthTest','EnemyNativeDefenseTest','EnemyNativeOutgoingTest',
-         'EnemyNativeProjectilePathTest','EnemyNativeStagingTest',
+         'EnemyNativeProjectilePathTest','EnemyNativeStagingTest','Me12DefenderRouteTest',
          'NativePackboundMutationHookTest'].each { include "**/${it}.class" }
         include '**/NativeEnemyActionsStartTest.class'
         include '**/R024NativeInteractionAssetTest.class'

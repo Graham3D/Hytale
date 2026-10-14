@@ -1,0 +1,9 @@
+{
+  "itemId": "Weapon_Flamethrower_Scrap",
+  "sourceAsset": "Server/Item/Items/Weapon/Flamethrower/Weapon_Flamethrower_Scrap.json",
+  "sourceProperty": "InteractionVars/Burn_Damage/Interactions/0/DamageCalculator/BaseDamage/Fire",
+  "nativeSha256": "8932a625ae0d68bf1cf4cf6d0b5a86f6c1c48d223026f224d9b4306945fac0c8",
+  "historicalPower": 6,
+  "nativePower": 4,
+  "reason": "Frozen pre1 RPG skill power; 0.7.1 native burn tick changed independently."
+}

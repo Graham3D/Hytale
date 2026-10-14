@@ -5,7 +5,7 @@
     "DropList": "Drop_Rat",
     "Appearance": "Rat",
     "AttitudeGroup": "Vermin",
-    "MaxHealth": 15,
+    "MaxHealth": 10,
     "MaxSpeed": 8,
     "WanderRadius": 20,
     "ViewRange": 8,
@@ -76,7 +76,10 @@
     },
     "NameTranslationKey": {
       "Compute": "NameTranslationKey"
-    }
+    },
+    "HiddenUIComponents": [
+      "Healthbar"
+    ]
   },
   "Parameters": {
     "NameTranslationKey": {

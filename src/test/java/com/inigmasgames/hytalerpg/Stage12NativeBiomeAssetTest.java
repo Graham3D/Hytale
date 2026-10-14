@@ -40,9 +40,9 @@ class Stage12NativeBiomeAssetTest {
         }
     }
     @Test void exactInstalledAssetsMatchRegistryPins()throws Exception{
-        // R031's gameplay baselines remain frozen. U7P5 removed three native roles and
-        // edited eight reference assets; qualify those explicitly without remapping rewards.
-        var audit=com.google.gson.JsonParser.parseString(Files.readString(Path.of("src/test/resources/u7p5-native-references.json"))).getAsJsonObject();
+        // R031 gameplay values and retired identities remain frozen. The explicit 0.7.1
+        // source audit qualifies current bytes without remapping historical rewards.
+        var audit=com.google.gson.JsonParser.parseString(Files.readString(Path.of("src/test/resources/native-0.7.1-references.json"))).getAsJsonObject();
         var retired=new HashSet<String>();
         audit.getAsJsonArray("retiredRoles").forEach(id->retired.add(id.getAsString()));
         var observed=new HashSet<String>();

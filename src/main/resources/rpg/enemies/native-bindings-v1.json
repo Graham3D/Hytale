@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "revision": "hytale-0.7.0-pre.5.1-larva-owner-qa-1",
-  "serverJarSha256": "35a34a32175cd92ce5e2a51310953db3a4a64cac89d995cbd4830c52a9b1b904",
-  "assetsSha256": "eddf425546559bfbc3f2656babf30daa4008543c38ee5aa4499c605ed1732236",
+  "serverJarSha256": "a60fa0b31f1418691f8d8f7cc1159693e3ec504d4f0567fb91493a842d71f8ca",
+  "assetsSha256": "b9164eb07d7c42e697d208ba3d35078a9b4a0125bef6261847a2f91e293e53b4",
   "bindings": [
     {
       "canonicalRoleId": "Larva_Void",
@@ -371,7 +371,7 @@
       "maximumBaseEquipmentSlots": 1,
       "productionPromotionEnabled": true,
       "sourceAssetPath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Scout.json",
-      "sourceAssetSha256": "28d93a5c856bb1965d82d33e78b173027944569d7f14abe4f25f5f53c9ac99ee",
+      "sourceAssetSha256": "beafa5f64ea5cfd798df65a71bb46a721f0e221876991793ca78b47d1cfdec80",
       "distanceDisplacementDelivery": true,
       "evidenceFiles": [
         "docs/enemies/INTEGRATION_MAP.md",

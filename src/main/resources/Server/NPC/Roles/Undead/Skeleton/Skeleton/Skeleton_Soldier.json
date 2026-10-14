@@ -103,6 +103,9 @@
     "BreathesInWater": true,
     "NameTranslationKey": {
       "Compute": "NameTranslationKey"
-    }
+    },
+    "DisableDamageGroups": [
+      "Skeleton"
+    ]
   }
 }

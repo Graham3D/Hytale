@@ -1,0 +1,95 @@
+package com.inigmasgames.hytalerpg.enemies;
+
+import com.google.gson.*;
+import com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap;
+import com.hypixel.hytale.server.core.modules.entitystats.asset.DefaultEntityStatTypes;
+import com.inigmasgames.hytalerpg.difficulty.DifficultyId;
+import com.inigmasgames.hytalerpg.combat.balance.CombatBalanceProfile;
+import com.inigmasgames.hytalerpg.combat.status.*;
+import java.nio.file.*;
+import java.security.MessageDigest;
+import java.util.*;
+import java.util.zip.ZipFile;
+import org.junit.jupiter.api.*;
+import static com.inigmasgames.hytalerpg.enemies.EnemyAffixRegistry.Operator.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+/** Offline native Health/control contract. Does not certify connected publication or delivery. */
+class Me12DefenderRouteTest {
+    static final Path ASSETS=Path.of(System.getProperty("user.home"),"AppData/Roaming/Hytale/install/release/package/game/latest/Assets.zip");
+    static JsonArray certificates() throws Exception {
+        return JsonParser.parseString(Files.readString(Path.of("src/main/resources/rpg/enemies/defender-routes-0.7.1.json"))).getAsJsonArray();
+    }
+    @BeforeAll static void setup() throws Exception {EnemyNativeHealthTest.setup();}
+    @AfterAll static void cleanup() throws Exception {EnemyNativeHealthTest.cleanup();}
+    @Test void everyDefenderRoutePinsItsActualRoleAndPreservesOutgoingRestrictions() throws Exception {
+        var bindings=EnemyNativeBindings.load();var selector=new EnemyAffixSelection(EnemyAffixRegistry.canonical());
+        assertEquals(26,certificates().size());
+        try(var zip=new ZipFile(ASSETS.toFile())){
+            for(var element:certificates()){
+                var row=element.getAsJsonObject();String id=row.get("roleId").getAsString();
+                var role=bindings.role(id).orElseThrow();
+                try(var input=zip.getInputStream(zip.getEntry(role.sourceAssetPath()))){
+                    assertEquals(role.sourceAssetSha256(),HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(input.readAllBytes())),id);
+                }
+                var binding=role.affixBinding(bindings.revision(),true,3);
+                assertTrue(bindings.productionEligibilityRejection(id).isEmpty(),id);
+                var own=id.equals("Golem_Firesteel")?List.of(STONE_SKIN,UNWAVERING,HORDE,REFLECTIVE):List.of(EXTRA_STRONG,STONE_SKIN,UNWAVERING,REFLECTIVE);
+                var request=new EnemyAffixSelection.Request(binding,DifficultyId.HELL,EnemyRarity.UNIQUE,4,List.of(),true);
+                assertTrue(selector.legal(request,own.stream().map(EnemyAffixSelection.Choice::of).toList()),id);
+                assertFalse(selector.legal(request,List.of(EnemyAffixSelection.Choice.of(STONE_SKIN),EnemyAffixSelection.Choice.of(MAGIC_RESISTANT))),id);
+                if(!id.equals("Golem_Firesteel"))for(var action:role.actions())
+                    assertEquals(Set.of("ME-002","ME-003","ME-004","ME-017"),action.supportedAffixIds(),id);
+                assertFalse(selector.eligible(request,EnemyAffixSelection.Choice.of(FIRE_ENCHANTED)),id);
+                var gson=new Gson();var changed=gson.toJsonTree(role).getAsJsonObject();
+                changed.addProperty("sourceAssetSha256","0".repeat(64));
+                assertTrue(EnemyNativeDefenderRoutes.certified(gson.fromJson(changed,EnemyNativeBindings.Role.class)).isEmpty(),id);
+            }
+        }
+    }
+    @Test void actualNativeHealthLossFeedsRoleIndependentReflectionAndRejectsNoLossOrIndirect() throws Exception {
+        var fixture=new EnemyAffixSnapshotTest();var gson=new Gson();
+        for(var element:certificates()){
+            String id=element.getAsJsonObject().get("roleId").getAsString();
+            var role=EnemyNativeBindings.load().role(id).orElseThrow();
+            var actor=gson.toJsonTree(fixture.actor(false,List.of(fixture.affix(REFLECTIVE)),List.of(),null)).getAsJsonObject();
+            actor.addProperty("nativeRoleId",id);actor.addProperty("canonicalRoleId",role.canonicalRoleId());
+            var defender=gson.fromJson(actor,EnemyDescriptor.class);
+            var nativeHealth=new EntityStatMap();nativeHealth.update();int health=DefaultEntityStatTypes.getHealth();
+            nativeHealth.setStatValue(health,100);double before=nativeHealth.get(health).get();
+            nativeHealth.setStatValue(health,93);double after=nativeHealth.get(health).get();
+            var effects=new EnemyReflectiveEffects();var writes=new ArrayList<Double>();var attacker=UUID.randomUUID();
+            assertEquals(.7,effects.offer(defender,attacker,"native-loss",before-after,after,200,2,true,0,()->true,
+                    raw->{writes.add(raw);return raw;}).rawSent(),1e-8,id);
+            assertEquals(93,nativeHealth.get(health).get(),id);
+            assertEquals(0,effects.offer(defender,attacker,"absorbed",0,after,200,2,true,0,()->true,raw->fail()).rawSent(),id);
+            assertEquals(0,effects.offer(defender,attacker,"secondary",7,after,200,2,false,0,()->true,raw->fail()).rawSent(),id);
+            assertEquals(0,effects.offer(defender,attacker,"stale",7,after,200,2,true,0,()->false,raw->fail()).rawSent(),id);
+            assertEquals(1,writes.size(),id);
+        }
+    }
+    @Test void firesteelControlRouteBlocksOnlyStunFamilyAndDoesNotTouchAnyNativeAttack() throws Exception {
+        var role=EnemyNativeBindings.load().role("Golem_Firesteel").orElseThrow();
+        assertEquals(Set.of("ME-017"),EnemyNativeDefenderRoutes.certified(role));
+        assertTrue(role.actions().isEmpty());assertFalse(role.nativeStunStaggerImmune());
+        var fixture=new EnemyAffixSnapshotTest();var actor=fixture.actor(false,List.of(fixture.affix(UNWAVERING)),List.of(),null);
+        var providers=EnemyAffixSnapshot.resolve(actor,fixture.balance,fixture.pack(),0,false,false);
+        var status=new StatusService(CombatBalanceProfile.loadCanonical(),()->1_000_000_000L);
+        status.configureEncounterAdmission((id,type)->providers.stunStaggerImmune()&&Set.of("STUN","STAGGER").contains(type),(a,b)->true,id->false);
+        var source=UUID.randomUUID();var target=UUID.randomUUID();
+        assertEquals("IMMUNE",status.applyHostile(source,target,RpgStatusType.STAGGER,ControlProfile.NORMAL,2).detail());
+        assertEquals(StatusService.Outcome.APPLIED,status.applyHostile(source,target,RpgStatusType.ROOT,ControlProfile.NORMAL,2).outcome());
+        try(var zip=new ZipFile(ASSETS.toFile());var input=zip.getInputStream(zip.getEntry(role.sourceAssetPath()))){
+            var nativeRole=JsonParser.parseString(new String(input.readAllBytes(),java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
+            var modify=nativeRole.getAsJsonObject("Modify");
+            assertEquals("Root_NPC_Golem_Firesteel_Attack",modify.get("Attack").getAsString());
+            assertEquals(Set.of("Immunity_Fire"),new HashSet<>(new Gson().fromJson(modify.getAsJsonObject("_CombatConfig").get("EntityEffects"),List.class)));
+            var variables=modify.getAsJsonObject("_InteractionVars");assertEquals(7,variables.size());
+            for(var variable:variables.entrySet()){
+                var leaf=variable.getValue().getAsJsonObject().getAsJsonArray("Interactions").get(0).getAsJsonObject();
+                assertEquals(-10,leaf.getAsJsonObject("DamageEffects").getAsJsonObject("Knockback").get("Force").getAsInt());
+            }
+            assertFalse(Files.exists(Path.of("src/main/resources",role.sourceAssetPath())));
+        }
+    }
+}

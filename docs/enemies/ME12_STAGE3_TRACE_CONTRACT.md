@@ -1,0 +1,43 @@
+# Master Enemies v1.2 diagnostic trace contract
+
+Stage 1 requirements only, under ME12-ARCH-AD1. Implementation belongs to separately authorized Stage 3. No command is added or promised as currently registered. Connected observation and owner acceptance are deferred to Stage 4.
+
+## Ownership and entry point
+
+Extend the existing `RpgTraceCommand` / HRO capture infrastructure, `HroRuntime`, `HroRecorder`, `HroContracts`, `HroMechanicalReport`, `HroDurable`, `HroNativeCombat`, `CombatDamageTraceService`, `MonsterSpawnTrace` and the existing `RpgEnemiesCommand` inspection projection. Inspect actual registrations again in Stage 3. There must be one owner-scoped capture and one combined report, not another combat listener, reward ledger, learning roll or independent capture service.
+
+Stage 3 must update `docs/COMMANDS.md` in the same change as the actual registered interface. Document exact start/stop/report syntax, permission string, player/console and ownership restrictions, save/build/feature-mode gates, capture lifetime and limits, asynchronous finalization, report location, and the short operational procedure. Do not invent that syntax now. Existing HRO output is outside Saves at `%APPDATA%/Hytale/UserData/Diagnostics/Hywind/HRO/<runId>/`; extend its artifact owner rather than storing diagnostic files in encounter/player data.
+
+## Evidence envelope
+
+Each report must identify source commit and dirty state, build revision/version, mod/server/assets hashes, native hook identity and readiness, policy revisions/digests, feature mode, config revision, difficulty, world and run/connection segment. Each observation joins by native and logical actor, encounter generation, pack, birth reservation/publication receipt, original action root/strike/victim and economic entitlement/receipt as applicable. Absence of a field must be explicit; a display name is never identity.
+
+Record the initial frozen values and the authoritative result at each existing boundary. Observation must not reroll RNG, re-run reward generation, mutate pity, inspect a different loaded actor after an async wait, or initiate gameplay/recovery solely to obtain evidence. Use bounded immutable event records on the world thread; perform serialization, joins and analysis on HRO's existing worker. Preserve scoped loss accounting, truncation, reconnect and stop-time uncertainty.
+
+## Required observation families
+
+| Requirement | Existing owner to extend | Required evidence |
+| --- | --- | --- |
+| Natural births and coverage | Native population/spawn hooks, `NativeEnemyBirthPublication`, `EnemyBirthPlanner`, `MonsterSpawnTrace`, HRO SPAWN.ADMISSION/PROMOTION | Actual role/alias, spawn provenance, eligibility and explicit rejection, world admission, original and added native members, reserved capacity, rarity draw, sealed roster, publication/compensation outcome. A QA spawn is labeled QA and cannot prove natural coverage. |
+| Tiered identity | Versioned policy compiler and birth planner (Stage 2), `EnemyDescriptor`, `RpgEnemiesCommand` | Prefix/suffix IDs and text, tiers, locked signatures, difficulty slots, exact distinct own count, full selected IDs/selectors, deterministic slot ownership, feasible tier support and normalization, zero-mass/budget-exhaustion reasons. Inherited effects and immunity tags are separate. |
+| Native affix execution | `NativeEnemyActionAttachment`, `NativeEnemyActions`, `NativeEnemyProjectileDamage`, `SupportDamageSystems.Reflect`, `NativeEnemyReflectiveReaction`, status/resource owners | Actual certified root and native leaf, original packet channel/creator, accepted offense snapshot, completed Health loss, native versus adapter path, effect admission/readback, suppression reason, duplicate/secondary rejection, conditional branch and poison/Antidote result. A selected affix alone is not execution evidence. |
+| Difficulty, immunity and protection | `EnemyImmunitySelection`, `HytaleDifficultyCombat`, `NativeEnemyArmor`, `EnemyAffixSnapshot`, shield/Packbound owners | Preserved native channels, affinity and selected grants, caps, status immunity, shield/resource absorption, guard state, protected mutation rejection, actual before/after Health and native effect result. Normal policy exclusions and unavailable Packbound guards remain visible. |
+| Frozen economics | `EnemyRewardContext`, `HytaleEncounterRewards`, `DurableEncounterEffects` | Evaluator and policy version, reward-counting own set, integer threat units, B, rarity factors, XP cap and final eligible XP, K0 eligible successful original slots before generation, Q, expected-count cap, fractional rounding input/key/outcome, final count. Existing saved v1 actors must show their original arithmetic. |
+| Gear quality and Magic Find | `GearLootService` and existing item-generation/MF owners, HRO gear events | Existing quality-policy digest, actual effective MF and source, ordinary quality/category/base draws and outcomes per generated opportunity, unchanged quality API ownership. Quantity changes are separate. A small live sample cannot establish distribution equality: link deterministic Stage 3 equivalence tests and label sample size/limits. |
+| Public Skill and first-copy Passive learning | `LearningSources`, `RpgLoadoutService`, `AcquisitionCheckpoint`/`AcquisitionProgress`, future typed first-acquisition adapter | Real certified source and ability kind, first-copy/eligibility decision, Wisdom snapshot, base and rarity-adjusted chance, separate affix delta (at most .03), ordinary .95 cap, pity-before/after and guarantee, RNG opportunity/roll/outcome, durable acquisition receipt. Already-known/uncertified sources do not gain rolls or pity. Track Skills and Passives independently; both remain implementation dependencies now. |
+| Persistence and exactly-once rewards | `FileEncounterStore`, birth roots/checkpoint/journal owners, archived policy resolver (Stage 2), `FileEarnedRewardStore`, `DurableEncounterEffects`, HRO PERSISTENCE.RECOVERY | Frozen identity/economics before and after reload, archive lookup/digest, missing/unsupported-version hold, recovery boundary, entitlement/receipt identities, duplicate attempt and observed suppression, item/XP/learning delivery acknowledgment. No new authoritative store. A single successful kill does not prove replay safety. |
+| Runtime and performance | Existing HRO runtime/tick metrics, shared trace budget, planner metrics (Stage 2/3) | Exceptions with source anchor, scoped dropped/omitted events, unfulfilled contracts, cold/warm timing distributions and sample counts, memo states, shared/inflight memory, queue depths/rejections/cancellation, world-thread cost, config density/pack limits, enabled/disabled overhead. Use actual 8x-density config when qualifying this installation; do not substitute the old 4x example. |
+
+## Outcomes and acceptance
+
+The ME12 report uses exactly these requirement outcomes:
+
+- **PASS:** the requirement was applicable, authoritative boundaries were observed, its predicate held, and required evidence was not lost. Applies only to the specified operation/window/candidate.
+- **FAIL:** authoritative observed evidence contradicts the requirement. Include expected/actual values, first divergence, source anchor and evidence locator.
+- **BLOCKED:** a dependency, unsupported route/version, missing archive, unregistered instrumentation or scoped evidence loss prevents a reliable result. Include the precise blocker and owning stage.
+- **NOT_OBSERVED:** instrumentation and dependencies were available but the required opportunity/boundary did not occur during the capture. Never promote it to PASS after a timeout.
+- **NOT_APPLICABLE:** an explicit product or source rule makes the requirement irrelevant to this actor/operation; include that rule. Uncertified roles and unimplemented acquisition are BLOCKED, not NOT_APPLICABLE.
+
+Preserve raw HRO outcomes for backward compatibility. The new view may map HRO NOT_EXERCISED to NOT_OBSERVED and INCONCLUSIVE to BLOCKED with its original reason; it must not rewrite archived HRO records or erase uncertainty. Persist separate `implemented`, `automatedPassed`, `nativeConnectedPassed`, `ownerAccepted` axes. A report PASS never sets ownerAccepted or closes Monster Affix.
+
+Stage 3 offline gates must demonstrate each outcome, missing observations, scoped/unscoped loss, identity changes/reconnects, full eight-affix display, bounded capture under load, and absence of economic side effects. Stage 4 then records real natural births, native damage, real Skill and Passive opportunities, recovery and owner acceptance. No intermediate gameplay or deployment is requested.

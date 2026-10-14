@@ -1,0 +1,210 @@
+[
+  {
+    "roleId": "Eye_Void",
+    "sourcePath": "Server/NPC/Roles/Void/Eye_Void.json",
+    "sourceSha256": "8a3d9ae0b92ca09fd96e8d8c8f2df81a71d1c4240d5915c0b5499b20f985c7a5",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Golem_Firesteel",
+    "sourcePath": "Server/NPC/Roles/Elemental/Golem/Golem_Firesteel.json",
+    "sourceSha256": "7117e1725a8306e235edd01802c295a3af95cbebead8eb05bd910ae3285c0d9f",
+    "affixes": [
+      "ME-017"
+    ]
+  },
+  {
+    "roleId": "Outlander_Berserker",
+    "sourcePath": "Server/NPC/Roles/Intelligent/Faction/Outlander/Outlander_Berserker.json",
+    "sourceSha256": "123450de8dafdeac9b163e016479ecb7f98d8259ed9ac3f9675596881052e709",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Outlander_Hunter",
+    "sourcePath": "Server/NPC/Roles/Intelligent/Faction/Outlander/Outlander_Hunter.json",
+    "sourceSha256": "4f29876f32fc22a9373b53ba871d78f968937441646038902081284127bcb61b",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Skeleton_Archer",
+    "sourcePath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Archer.json",
+    "sourceSha256": "c7f2faaeb41bc6dc2d68ac8a0593ca7b63125035fbba9162f1ba2d8eaa9e6960",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Skeleton_Archer_Wander",
+    "sourcePath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Archer_Wander.json",
+    "sourceSha256": "8443b15d8ffe49b71c151fe0b128d12b81518632d5606213c594e9aa07869605",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Skeleton_Burnt_Archer",
+    "sourcePath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Archer.json",
+    "sourceSha256": "fafcdb450f504637b1cbcf88e8898f7e1092065938c825e666f554fa053429a4",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Skeleton_Burnt_Archer_Wander",
+    "sourcePath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Archer_Wander.json",
+    "sourceSha256": "7cfc1319347913f1822965a02aec69e66b73069b353da616b2003edd56053e49",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Skeleton_Burnt_Gunner",
+    "sourcePath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Burnt/Skeleton_Burnt_Gunner.json",
+    "sourceSha256": "c7d951ff76b38d41dd52909fd8c3cc39df7d83f44cbe57fa5591bf8c5913218b",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Skeleton_Frost_Archer",
+    "sourcePath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Archer.json",
+    "sourceSha256": "568d5dde8e0e00fba44bda676020c531e65f263bda3140b5599e9c512c8bedc7",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Skeleton_Frost_Archer_Patrol",
+    "sourcePath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Archer_Patrol.json",
+    "sourceSha256": "cc46b740d6a90f03b74609108c2c4ca6c1a7307348742219e2a6249f65ade453",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Skeleton_Frost_Archer_Wander",
+    "sourcePath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Archer_Wander.json",
+    "sourceSha256": "b596add18aab6b0231cc05f7df0b9a07f609a9eb97f175890fb4e63dcb2f5133",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Skeleton_Frost_Mage",
+    "sourcePath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Mage.json",
+    "sourceSha256": "af4f4d792fdbd1a38b3877044f8c838b78b9c8fdfe77b768ba5ff6b94401d01a",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Skeleton_Frost_Mage_Wander",
+    "sourcePath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Mage_Wander.json",
+    "sourceSha256": "85a184ba3d0f279cd4e259a2faaec1c3f332e1211d1b3d028fd655ec83366732",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Skeleton_Frost_Ranger",
+    "sourcePath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Ranger.json",
+    "sourceSha256": "49b5bb38dc4fe11acdf5bc264f2120e6baebd5234f557e1de685eeca3bafa1f9",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Skeleton_Frost_Ranger_Patrol",
+    "sourcePath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Ranger_Patrol.json",
+    "sourceSha256": "e7cb89640bb2d256b65018e52797d972b9125b27a9b742f8f4c655cf5845722f",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Skeleton_Frost_Ranger_Wander",
+    "sourcePath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Frost/Skeleton_Frost_Ranger_Wander.json",
+    "sourceSha256": "b751c48fed0f3be60151a39caf0368c74f99a98c9ba838e8827b22448f4fde10",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Skeleton_Incandescent_Mage",
+    "sourcePath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Incandescent/Skeleton_Incandescent_Mage.json",
+    "sourceSha256": "b361aec434232616296707ed2ce8ade46ca82fa706605532c73264753460004b",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Skeleton_Incandescent_Mage_Wander",
+    "sourcePath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Incandescent/Skeleton_Incandescent_Mage_Wander.json",
+    "sourceSha256": "8cbc52faa3a01de800a6fe959290d0ca1f59b20b5929cc60e6e69ab4bc6a524b",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Skeleton_Mage",
+    "sourcePath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Mage.json",
+    "sourceSha256": "b50cb958207507c461542ea9c20c8ac8a9a1731d37c55e3a071fdc25208cece9",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Skeleton_Mage_Wander",
+    "sourcePath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Mage_Wander.json",
+    "sourceSha256": "62bd3cf53243f8e23334131831a7c0066a93c527c168cc55b1f0e05e4814fb38",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Skeleton_Sand_Mage",
+    "sourcePath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Mage.json",
+    "sourceSha256": "76b8b17c8d07818171508c8e43513372b542fb278673450937556f615fc42b35",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Skeleton_Sand_Mage_Wander",
+    "sourcePath": "Server/NPC/Roles/Undead/Skeleton/Skeleton_Sand/Skeleton_Sand_Mage_Wander.json",
+    "sourceSha256": "ebeafbbba6bcde5589789d1c39fdf69155c050162dfc9412796bfd259255458f",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Skeleton_Scout",
+    "sourcePath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Scout.json",
+    "sourceSha256": "beafa5f64ea5cfd798df65a71bb46a721f0e221876991793ca78b47d1cfdec80",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Skeleton_Scout_Patrol",
+    "sourcePath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Scout_Patrol.json",
+    "sourceSha256": "5777d4924f5d31e019c58427120919c7baccce8bfb2e1a26442e7c05b165041a",
+    "affixes": [
+      "ME-026"
+    ]
+  },
+  {
+    "roleId": "Skeleton_Scout_Wander",
+    "sourcePath": "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Scout_Wander.json",
+    "sourceSha256": "b1eed1fb1eeec6e9c31604f2a9ff90b5a1bb87a7f64bef135a843a675f9d4458",
+    "affixes": [
+      "ME-026"
+    ]
+  }
+]

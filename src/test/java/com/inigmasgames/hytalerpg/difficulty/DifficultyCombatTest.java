@@ -98,7 +98,10 @@ class DifficultyCombatTest {
             for(var role:catalog.roles()){
                 var entry=zip.stream().filter(e->e.getName().startsWith("Server/NPC/Roles/")&&e.getName().endsWith("/"+role.id()+".json")).findFirst().orElseThrow();
                 byte[] bytes;try(var in=zip.getInputStream(entry)){bytes=in.readAllBytes();}
-                assertEquals(role.assetSha256(),HexFormat.of().withUpperCase().formatHex(MessageDigest.getInstance("SHA-256").digest(bytes)));
+                var current=JsonParser.parseString(Files.readString(Path.of("src/test/resources/native-0.7.1-references.json")))
+                        .getAsJsonObject().getAsJsonObject("updatedReferences");
+                String pin=current.has(entry.getName())?current.get(entry.getName()).getAsString():role.assetSha256();
+                assertEquals(pin,HexFormat.of().withUpperCase().formatHex(MessageDigest.getInstance("SHA-256").digest(bytes)),role.id());
                 assertEquals(role.nativeHealth(),JsonParser.parseString(new String(bytes,java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject().getAsJsonObject("Modify").get("MaxHealth").getAsDouble());
             }
         }

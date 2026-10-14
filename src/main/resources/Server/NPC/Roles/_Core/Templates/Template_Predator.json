@@ -945,7 +945,8 @@
                       },
                       "Attitudes": [
                         "Hostile",
-                        "Neutral"
+                        "Neutral",
+                        "Ignore"
                       ]
                     }
                   },

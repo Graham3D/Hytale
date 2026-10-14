@@ -78,7 +78,20 @@ class Stage13VanillaPowerExpansionTest {
                 if(e.selectionPolicy().equals("NATIVE_UNCHARGED_BASE")){
                     assertFalse(e.sourceProperty().isBlank());assertFalse(e.sourceProperty().matches(".*(Charged|Signature|Strength_[1-9]).*"),e.itemId());
                     for(String part:e.sourceProperty().split("/"))leaf=leaf.isJsonArray()?leaf.getAsJsonArray().get(Integer.parseInt(part)):leaf.getAsJsonObject().get(part);
-                    assertNotNull(leaf,e.itemId());assertEquals(e.basePower(),leaf.getAsDouble(),e.itemId());
+                    assertNotNull(leaf,e.itemId());
+                    if(e.itemId().equals("Weapon_Flamethrower_Scrap")){
+                        var audit=JsonParser.parseString(java.nio.file.Files.readString(java.nio.file.Path.of(
+                                "src/test/resources/native-0.7.1-power-reference.json"))).getAsJsonObject();
+                        assertEquals(e.itemId(),audit.get("itemId").getAsString());
+                        assertEquals(e.sourceAsset(),audit.get("sourceAsset").getAsString());
+                        assertEquals(e.sourceProperty(),audit.get("sourceProperty").getAsString());
+                        assertEquals(audit.get("historicalPower").getAsDouble(),e.basePower());
+                        assertEquals(audit.get("nativePower").getAsDouble(),leaf.getAsDouble());
+                        try(var input=zip.getInputStream(zip.getEntry(e.sourceAsset()))){
+                            assertEquals(audit.get("nativeSha256").getAsString(),HexFormat.of().formatHex(
+                                    java.security.MessageDigest.getInstance("SHA-256").digest(input.readAllBytes())));
+                        }
+                    }else assertEquals(e.basePower(),leaf.getAsDouble(),e.itemId());
                 }else{assertTrue(Set.of("STAFF","WAND","SPELLBOOK","SHIELD").contains(e.kind()));assertEquals(20,e.basePower());assertEquals("",e.sourceProperty());}
                 assertTrue(REGISTRY.resolve(e.itemId(),Map.of("Family",new String[]{e.nativeFamily()})).isEmpty());
                 assertTrue(REGISTRY.resolve(e.itemId(),tags("NotTheAuditedFamily")).isEmpty());

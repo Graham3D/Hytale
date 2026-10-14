@@ -195,6 +195,8 @@ public final class EnemyNativeBindings {
             var supported=new HashSet<String>();for(var op:EnemyAffixRegistry.Operator.values())supported.add(op.id());
             if(actions.isEmpty())supported.retainAll(Set.of("ME-003","ME-004","ME-022","ME-023","ME-024","ME-026","ME-027"));
             for(var action:actions)if(action.supportedAffixIds()!=null)supported.retainAll(action.supportedAffixIds());
+            // Incoming Health/control routes do not inherit the outgoing projectile restrictions.
+            supported.addAll(EnemyNativeDefenderRoutes.certified(this));
             return new EnemyAffixSelection.Binding(bindingRevision,capabilities,0,improvesElementalResistance,
                     nativeStunStaggerImmune,nativeSlowImmune,initialMinions,distanceDisplacementDelivery,supported);
         }
@@ -204,6 +206,26 @@ public final class EnemyNativeBindings {
     private final Map<String,Role> qaCatalogRoles=new HashMap<>();
     private EnemyNativeBindings(String revision,String serverJarSha256,String assetsSha256,Map<String,Role> roles){
         this.revision=revision;this.serverJarSha256=serverJarSha256;this.assetsSha256=assetsSha256;this.roles=Map.copyOf(roles);
+    }
+    private static final Map<String,String> SOURCE_PINS=loadSourcePins();
+    private static Map<String,String> loadSourcePins(){
+        try(var stream=EnemyNativeBindings.class.getResourceAsStream("/rpg/enemies/native-source-pins-0.7.1.json")){
+            if(stream==null)throw new IllegalStateException("ENEMY_NATIVE_SOURCE_PINS_MISSING");
+            var object=JsonParser.parseReader(new InputStreamReader(stream,StandardCharsets.UTF_8)).getAsJsonObject();
+            var pins=new TreeMap<String,String>();
+            for(var entry:object.entrySet()){
+                String value=entry.getValue().getAsString();hash(value);
+                if(!entry.getKey().startsWith("Server/NPC/Roles/")||!entry.getKey().endsWith(".json"))
+                    throw new IllegalArgumentException("ENEMY_NATIVE_SOURCE_PATH");
+                pins.put(entry.getKey(),value);
+            }
+            return Map.copyOf(pins);
+        }catch(IOException failure){throw new IllegalStateException(failure);}
+    }
+    private static String sourcePin(String path){
+        var pin=SOURCE_PINS.get(path);
+        if(pin==null)throw new IllegalArgumentException("ENEMY_NATIVE_SOURCE_PIN_MISSING:"+path);
+        return pin;
     }
     public String revision(){return revision;}
     public String serverJarSha256(){return serverJarSha256;}
@@ -272,6 +294,7 @@ public final class EnemyNativeBindings {
         }catch(IOException failure){throw new IllegalStateException("ENEMY_NATIVE_BINDINGS_UNREADABLE",failure);}
     }
     public static EnemyNativeBindings decode(JsonObject root){
+        EnemyNativeDefenderRoutes.initialize();
         exact(root,"schemaVersion","revision","serverJarSha256","assetsSha256","bindings","derivedBindings");
         if(root.get("schemaVersion").getAsInt()!=1)throw new IllegalArgumentException("ENEMY_NATIVE_BINDING_SCHEMA");
         String revision=string(root,"revision"),server=string(root,"serverJarSha256"),assets=string(root,"assetsSha256");
@@ -383,7 +406,7 @@ public final class EnemyNativeBindings {
                         "ProductionEliteArchetypeAssetTest.rejectsChangedNativeLeaf",supported);
                 var binding=new Role(id,Set.of(id),profiles(id),capabilities,string(member,"modelAssetId"),
                         strings(member,"defaultTextureAssetIds"),parent,"EncounterProfileResolver.classifyAuthored",
-                        string(member,"nativeLootSourceId"),source.assetPath(),source.assetSha256().toLowerCase(Locale.ROOT),
+                        string(member,"nativeLootSourceId"),source.assetPath(),sourcePin(source.assetPath()),
                         Set.of(),EnemyStatusEffects.Source.noNativeStatus(0),false,false,1,false,true,List.of(action),
                         List.of(source.assetPath(),"Server/NPC/Roles/_Core/Templates/Template_Predator.json",
                                 bite?"installed-native-root:"+memberRoot:
@@ -447,7 +470,7 @@ public final class EnemyNativeBindings {
                 var source=resolved.canonical();
                 var binding=new Role(id,Set.of(id),profiles(id),capabilities,string(member,"modelAssetId"),
                         strings(member,"defaultTextureAssetIds"),parent,"EncounterProfileResolver.classifyAuthored",
-                        string(member,"nativeLootSourceId"),source.assetPath(),source.assetSha256().toLowerCase(Locale.ROOT),
+                        string(member,"nativeLootSourceId"),source.assetPath(),sourcePin(source.assetPath()),
                         Set.copyOf(stringsOrEmpty(member,"nativeImmunityChannels")),EnemyStatusEffects.Source.noNativeStatus(0),
                         member.get("nativeStunStaggerImmune").getAsBoolean(),member.get("nativeSlowImmune").getAsBoolean(),
                         1,false,true,actions,List.of(source.assetPath(),"docs/enemies/R229_PRODUCTION_ELITE_COVERAGE.md"));
@@ -467,7 +490,7 @@ public final class EnemyNativeBindings {
                 var alias=ENCOUNTER_ROLES.aliases().stream().filter(item->item.roleId().equals(id)).findFirst().orElseThrow();
                 var inherited=new Role(canonical,Set.of(id),profiles(id),base.capabilities(),base.modelAssetId(),base.textures(),
                         base.controlProfileId(),base.sourceValidationId(),base.nativeLootSourceId(),alias.assetPath(),
-                        alias.assetSha256().toLowerCase(Locale.ROOT),base.nativeImmunityChannels(),base.nativeStatusSource(),
+                        sourcePin(alias.assetPath()),base.nativeImmunityChannels(),base.nativeStatusSource(),
                         base.nativeStunStaggerImmune(),base.nativeSlowImmune(),base.maximumBaseEquipmentSlots(),
                         base.distanceDisplacementDelivery(),true,base.actions(),List.of(alias.assetPath(),base.sourceAssetPath()));
                 if(roles.putIfAbsent(id,inherited)!=null)throw new IllegalArgumentException("ENEMY_NATIVE_ROLE_DUPLICATE:"+id);

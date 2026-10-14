@@ -9,7 +9,7 @@
   },
   {
     "path": "Server/NPC/Roles/_Core/Templates/Template_Predator.json",
-    "nativeSha256": "c7fb6f17a96e0dd674e27fab416ef56c970a072d468f29fbed5b3f0de4800736"
+    "nativeSha256": "5b626a65e6eeec59b188ac4129350e9395b81c6215390dfe64cb96359b5c8cbd"
   },
   {
     "path": "Server/NPC/Roles/Intelligent/Faction/Trork/Templates/Template_Trork_Melee.json",

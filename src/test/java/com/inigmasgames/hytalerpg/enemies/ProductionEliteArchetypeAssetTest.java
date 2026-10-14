@@ -122,7 +122,7 @@ class ProductionEliteArchetypeAssetTest {
             for(var id:all){
                 var source=catalog.roles().stream().filter(row->row.roleId().equals(id)).findFirst().orElseThrow();
                 var nativeRole=read(zip,source.assetPath());var actual=packaged(source.assetPath());
-                assertEquals(source.assetSha256().toLowerCase(Locale.ROOT),
+                assertEquals(bindings.role(id).orElseThrow().sourceAssetSha256(),
                         hash(zip.getInputStream(zip.getEntry(source.assetPath())).readAllBytes()));
                 var leaf=actual.getAsJsonObject("Modify").getAsJsonObject("_InteractionVars")
                         .getAsJsonObject(BITE.containsKey(id)?"Bite_Damage":"Melee_Damage")
