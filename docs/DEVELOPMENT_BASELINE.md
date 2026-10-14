@@ -1,5 +1,36 @@
 # HyARPG/Hywind development baseline
 
+## ME12 Stage 3 guarded QA role-routing checkpoint (2026-10-14)
+
+Source branch `codex/me12-stage3`, code and command-documentation commit
+`93668b509c6157df10ec41777d3a784eb7047415`, based on
+`404abdfba89aaad5cef5803af79f17f22762d745` with all six prior
+unpublished commits preserved. The branch remains **IN_PROGRESS /
+INTEGRATION_BLOCKED** and unpublished. Build revision
+`R262ME12S3B-CANDIDATE`, version `0.2.0-R262ME12S3B-CANDIDATE`, remain
+provisional. No JAR was deployed; the installed game, active save and `main`
+are unchanged. Connected QA and owner acceptance have not occurred.
+
+The QA lease now admits independently pinned production roles per actual
+native roster. Turret/Seeker remain excluded by their missing production
+bindings, and Firesteel remains withheld from v2 QA pending its complete
+incoming-only lifecycle fixture. Uncertified original rosters retain the
+DRAIN v1 path; a later uncertified native-selected addition is discarded
+before v1 selection. Exact world, candidate, native-hash, Guardian and
+production `ENABLED` safeguards remain. The Guardian QA receipt now checks
+the existing HRO all-27 instrumentation test while still requiring the
+missing complete `NativeEnemyProductionBirthOwnerTest` report; activation
+remains fail-closed. This is a source correction, not a Stage 4 candidate.
+
+Focused verification passed: 28 standard JUnit cases in the selected QA
+authority, compatibility, mixed-role, birth-transaction and HRO classes;
+11 native-control cases in staging, Firesteel defender and modern projectile
+classes. Native asset and UI validations in those Gradle invocations passed.
+The complete production capture-to-recovery owner fixture remains the exact
+offline blocker. No cumulative exact-HEAD check, Guardian completion receipt
+or publication was attempted for this incomplete checkpoint. Monster Affix
+remains OPEN with `ownerAccepted=false`; Elite/HRO remain QA_PENDING.
+
 ## ME12 Stage 3 Task 3 partial offline checkpoint (2026-10-14)
 
 Source branch `codex/me12-stage3`, starting at
