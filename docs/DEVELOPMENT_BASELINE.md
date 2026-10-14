@@ -1,5 +1,38 @@
 # HyARPG/Hywind development baseline
 
+## ME12 Stage 3 Task 3 partial offline checkpoint (2026-10-14)
+
+Source branch `codex/me12-stage3`, starting at
+`5c9ea3d116a930c52c1292ddc0427c15da6560c0` with four unpublished
+commits preserved. Reviewed implementation checkpoint
+`42a30544006180ea7c35ae25520678f55e0e543b` is committed locally. This
+pass remains **IN_PROGRESS / INTEGRATION_BLOCKED**; build revision
+`R262ME12S3B-CANDIDATE` and version `0.2.0-R262ME12S3B-CANDIDATE` remain
+provisional. No build was deployed, no active save or `main` was changed, and
+connected QA was not performed. The Task 4 cumulative exact-HEAD receipt and
+Guardian publication are pending.
+
+Source adds a DRAIN-only, candidate SHA/native-identity/world/save-bound,
+1–600 second in-memory QA lease with operator activate/status/revoke commands.
+It verifies the installed JAR and native hashes against Guardian evidence and
+uses the existing native birth decision, without opening production `ENABLED`.
+The lease remains fail-closed in this candidate because mandatory production
+certificates and owner-boundary test receipts are absent. The HRO report now
+lists named, identity-scoped requirements for all 27 affixes, but all complete
+native-execution acceptance stays BLOCKED; source emission and causal joins
+remain incomplete. Existing partial native readbacks are retained.
+
+Focused verification: 37 standard JUnit and 15 native-control cases passed;
+`testReleaseNativePatch` passed against the pinned Hytale 0.7.1 source.
+An initial invocation of `EnemyModernProjectileReceiptTest` in the ordinary
+test task failed during Hytale logger initialization; the same native fixture
+passed in its required `nativeControlTest` task. Final exact-HEAD suite and
+Guardian completion receipt remain for Task 4. The full native-owner lifecycle
+fixture, Firesteel attachment proof, Turret hostile-attitude/production binding,
+Seeker production binding/legal plan, and all-27 causal owner instrumentation
+remain offline engineering blockers. The Monster Affix release gate remains
+OPEN with `ownerAccepted=false`; Elite/HRO remain QA_PENDING.
+
 ## ME12 Stage 3 Task 2 native selection checkpoint (2026-10-14)
 
 Code commit `578da777` on `codex/me12-stage3` descends from the requested
