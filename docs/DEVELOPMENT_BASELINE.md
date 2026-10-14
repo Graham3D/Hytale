@@ -1,12 +1,14 @@
 # HyARPG/Hywind development baseline
 
-## ME12 Stage 3 native birth-owner verification candidate (2026-10-14)
+## ME12 Stage 3 guarded Stage 4 QA handoff (2026-10-14)
 
 Source branch `codex/me12-stage3` continues from
 `9e77c48e5441a5a905b7c8e23ecd6013c130a3c4`; all eight earlier local
-commits are retained. The exact final source commit and Guardian publication
-status are established by the post-commit verification receipt, not this
-pre-commit record. Build revision `R262ME12S3B-CANDIDATE`, version
+commits are retained. Native-owner integration commit `736445a1ab3557990068c91219ebaa8809e1137e`
+and gate-correction commit `4ed45e0467bff388ece710bfba5f17b618a3ea44`
+passed the cumulative offline gate and were Guardian-published. The exact final
+documentation successor and publication status are established by its own
+post-commit verification receipt. Build revision `R262ME12S3B-CANDIDATE`, version
 `0.2.0-R262ME12S3B-CANDIDATE`, and Hytale target `=0.7.1` remain provisional.
 
 The five-argument native capture helper is now package-visible for the
@@ -30,18 +32,20 @@ and modern impact claims use a private lock. The two pinned native patch
 `Ref` exposures are explicitly reviewed in the SpotBugs baseline because
 copying the borrowed ECS identity would break impact correlation. Corrected
 targeted tests and strict SpotBugs pass; the final cumulative exact-HEAD
-rerun and Guardian receipt remain required.
+rerun and Guardian receipt remain required for any successor commit.
 
 This prepared native opportunity fixture does not run Hytale terrain search,
 collision, connected presentation, or gameplay. Turret and Seeker retain
 their role-specific certificate blockers; Firesteel remains unadmitted
 pending incoming-only lifecycle proof. Full 27-affix causal execution and
 owner-authored acquisition remain for connected Stage 4/owner decisions.
-No JAR was deployed, no active save or `main` changed, and no connected QA
-or owner acceptance occurred. Monster Affix stays OPEN with
+This is **ENGINEERING_READY for guarded Stage 4 QA on independently certified
+roles only**. Full AD1/release gates stay BLOCKED. No JAR was deployed, no
+active save or `main` changed, and no connected QA or owner acceptance occurred.
+Monster Affix stays OPEN with
 `ownerAccepted=false`; Elite/HRO remain QA_PENDING. The next action is the
-exact-HEAD cumulative check, Guardian receipt, and reviewed branch
-publication; guarded Stage 4 QA still requires separate owner authorization.
+final exact-HEAD documentation check and Guardian publication; guarded Stage 4
+deployment and QA still require separate owner authorization.
 
 ## ME12 Stage 3 guarded QA role-routing checkpoint (2026-10-14)
 

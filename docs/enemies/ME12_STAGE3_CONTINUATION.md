@@ -1,5 +1,12 @@
 # Stage 3 continuation: implemented changes and remaining blockers
 
+This is the historical `ad1e31bd` continuation checkpoint. The later joined
+native-owner fixture, guarded role routing and final exact-HEAD results are
+recorded in `ME12_STAGE4_RUN_SHEET.md`,
+`build/reports/me12/stage3-continuation-manifest.json` and
+`build/guardian/verification.json`. Its "missing fixture" statements below
+describe that earlier checkpoint, not the current guarded QA candidate.
+
 Starting source: Guardian-published `63fcb510e1a65ba6491b5564fdb20e901cb2360a`.
 Branch: `codex/me12-stage3`. Candidate: `R262ME12S3B-CANDIDATE` / Hytale 0.7.1.
 State: **IN_PROGRESS / INTEGRATION_BLOCKED**, not engineering-complete.

@@ -1,8 +1,11 @@
 # Master Enemies Stage 4 run sheet
 
-**Current candidate readiness: pending exact-HEAD verification and Guardian
-publication.** The joined native-owner fixture now exercises a prepared,
-installed Larva Void natural spawn through capture, reservation, durable
+**Guarded Stage 4 QA readiness: independently certified roles only.** The
+exact candidate is identified by `build/guardian/verification.json` and
+`build/reports/me12/stage3-continuation-manifest.json`; both must name the
+same published source commit and installed native hashes before use. The
+joined native-owner fixture exercises a prepared, installed Larva Void
+natural spawn through capture, reservation, durable
 birth, attachment, publication, and interrupted-root LOAD recovery. It does
 not prove Hytale's terrain search, collision or connected presentation.
 The QA lease checks each concrete natural roster against its own pinned
@@ -16,11 +19,12 @@ for the first guarded QA lease. `masterEnemiesV2=ENABLED` still rejects with
 
 ## Activation and rollback boundary
 
-This is the exact required sequence for a future ready candidate, not executable
-activation instructions for this blocked checkpoint:
+This is the exact required sequence for a separately authorized Stage 4 QA
+candidate. No deployment or activation occurred during Stage 3:
 
-1. Complete and verify the offline blockers in `ME12_STAGE3_CONTINUATION.md`.
-   The source registers `/rpg me12qa activate <candidateSha> <worldUuid> <saveName>
+1. Confirm the final candidate's exact-HEAD Guardian receipt, published
+   source commit and pinned native hashes. The source registers
+   `/rpg me12qa activate <candidateSha> <worldUuid> <saveName>
    <seconds> <guardianReceipt>` for an operator player with
    `inigmasgames.rpg.me12.qa` and the parent `/rpg` permission. Use the exact
    loaded world UUID, active save directory name, lowercase 40-character verified
@@ -31,8 +35,8 @@ activation instructions for this blocked checkpoint:
    admitted recovered world, all native owner hooks, at least one eligible
    production role and per-roster native certification,
    matching installed JAR/server/assets hashes, and PASS Guardian checks including
-   owner, HRO diagnostic, and lease tests. The present candidate fails because
-   an exact-HEAD Guardian receipt has not yet been published for this change.
+   owner, HRO diagnostic, and lease tests. Activation fails if the receipt,
+   native identity or concrete roster is uncertified.
    `/rpg me12qa status` is read-only. `/rpg me12qa revoke` stops new v2 births.
    Expiry, world unload, configuration reload, or owner-hook loss also stops them.
 2. Obtain separate owner authorization identifying that tested candidate, target

@@ -6,17 +6,18 @@
   "parentCommit": "a030722af4f9e75db012f18eadfb332f50cbf191",
   "revision": "R262ME12S3B-CANDIDATE",
   "continuationParent": "63fcb510e1a65ba6491b5564fdb20e901cb2360a",
-  "status": "IN_PROGRESS_GUARDED_QA_FINAL_RECEIPT_REQUIRED",
+  "status": "ENGINEERING_READY_GUARDED_QA_CONNECTED_PENDING",
   "task3OfflineCheckpoint": {
-    "nativeOwnerFixture": "TARGETED_PASS_PREPARED_NATURAL_CAPTURE_DURABLE_PUBLICATION_AND_INTERRUPTED_LOAD_RECOVERY; FINAL_EXACT_HEAD_PENDING",
+    "nativeOwnerFixture": "PASS_PREPARED_NATURAL_CAPTURE_DURABLE_PUBLICATION_AND_INTERRUPTED_LOAD_RECOVERY; SEE_EXACT_HEAD_RECEIPT",
     "turretProductionCertificate": "BLOCKED_PINNED_071_TEMPLATE_LACKS_HOSTILE_PLAYER_ATTITUDE_AND_BINDING",
     "seekerProductionCertificate": "BLOCKED_PRODUCTION_BINDING_AND_LEGAL_PLAN_NOT_CERTIFIED",
     "diagnosticPredicates": "27_NAMED_REQUIREMENT_SETS_REPORTED_FULL_NATIVE_CAUSAL_ACCEPTANCE_BLOCKED",
-    "qaAuthority": "IMPLEMENTED_ROLE_SCOPED; EXACT_HEAD_GUARDIAN_RECEIPT_AND_OWNER_STAGE4_AUTHORIZATION_PENDING",
-    "guardianExactHead": "DEFERRED_TO_TASK4",
+    "qaAuthority": "IMPLEMENTED_ROLE_SCOPED; OWNER_STAGE4_DEPLOYMENT_AUTHORIZATION_PENDING",
+    "guardianExactHead": "SEE_BUILD_GUARDIAN_VERIFICATION_JSON",
     "normativeStatus": "BLOCKED"
   },
-  "stage4Ready": false,
+  "stage4Ready": true,
+  "stage4Scope": "GUARDED_QA_ONLY_FOR_INDEPENDENTLY_CERTIFIED_ROLES; FULL_AD1_GATES_REMAIN_BLOCKED",
   "acquisitionDeferral": "PROPOSED_RELEASE_SCOPE_AMENDMENT_NOT_AD1_COMPLETION",
   "productionV2Births": "DISABLED",
   "stage1": "BLOCKED_OFFLINE_COVERAGE",
@@ -28,7 +29,7 @@
     "manifest": "build/reports/me12/stage3-continuation-manifest.json",
     "guardian": "build/guardian/verification.json",
     "log": "build/guardian/me12-stage3-continuation-final.log",
-    "note": "Focused evidence is not a final cumulative pass. Publication requires the clean exact-HEAD receipt. Normative gates remain BLOCKED without connected evidence."
+    "note": "The ignored Guardian receipt is authoritative for exact-HEAD cumulative verification and branch publication. Normative gates remain BLOCKED without connected evidence."
   },
   "gates": [
     {
