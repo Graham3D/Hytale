@@ -15,6 +15,16 @@ hash. Five focused lease tests pass, including rejection of the unpatched and
 unknown server hashes. The native role certificates, owner hooks, production
 release gate and per-role QA routing are unchanged.
 
+The first cumulative run at documentation checkpoint
+`5e8161946f18560cb4eddf1e228bd778b5a07614` found one lifecycle test
+failure: a rejected native attachment's completion could wake its caller
+before the false-result cleanup callback removed the provisional attachment.
+Correction `7353e68f3231c35177c5d105290f144ea514e49a` performs that cleanup
+before completing the receipt. The targeted runtime regression now checks 32
+rejected attachments, and the native production birth-owner fixture still
+passes. The cumulative exact-HEAD gate must be repeated on the final committed
+documentation successor; this failure is not waived.
+
 The final documentation successor, exact-HEAD cumulative check, JAR hash,
 Guardian receipt and task-branch publication must be recorded in the generated
 Stage 4 verification manifest before installation. At this checkpoint the
