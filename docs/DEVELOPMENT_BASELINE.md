@@ -28,7 +28,17 @@ missing pre-release fixture paths were corrected without weakening assertions.
 No deployment, connected QA, promotion to main or release acceptance occurred.
 Monster Affix remains OPEN with ownerAccepted=false. Continue Stage 1
 compatibility/certification reconciliation; do not advance to Stage 2.
-Exact committed-source and final verification evidence follow in the Stage 1 report.
+Production-source checkpoint is `c37a10408501b11c49fd273eeec39725158c863d`.
+Its mod JAR SHA-256 is
+`093A2B18180832AF0250A1BD1D8EEA52DE7150700AFE8BB37525352CC5FC1210`.
+The exact-source cumulative gate ran 4,317 JUnit tests with eight failures;
+eight policy tests and the offline native patch regression passed. A subsequent
+fixture-only native particle path correction passes its focused test; seven
+known native assertions remain. See [Stage 1 report](enemies/ME12_STAGE1_REPORT.md),
+[coverage](enemies/ME12_STAGE1_COVERAGE.md), and
+[four-axis gates](enemies/ME12_STAGE1_GATES.json). The documentation/fixture
+successor does not change production code or the built artifact's source SHA.
+Guardian publication remains blocked; all task commits are local and unpushed.
 
 ## Hytale 0.7.1 hostile-mob audit publication (2026-10-13)
 

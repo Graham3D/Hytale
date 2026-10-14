@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "architecture": "ME12-ARCH-AD1",
+  "stage": 1,
+  "status": "BLOCKED",
+  "sourceCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+  "revision": "R262ME12S1-CANDIDATE",
+  "ownerAccepted": false,
+  "stage2Authorized": false,
+  "monsterAffixGate": {
+    "status": "OPEN",
+    "ownerAccepted": false,
+    "modified": false,
+    "sha256": "a6926627b6295c9a2c82e3a86068071eb4dd6a19718d04a9016cb0f4bdc1ad91"
+  },
+  "gates": [
+    {
+      "id": "ME12-B01",
+      "implemented": false,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "status": "OPEN",
+      "evidence": "Source/provenance and native hashes recorded; compilation and package check pass.",
+      "blocker": "Cumulative native asset regression fails; Elite/HRO and paired 0.7.1 candidate not connected-accepted."
+    },
+    {
+      "id": "ME12-B02",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "status": "OPEN",
+      "evidence": "Strict 0.7.1 offline patch regression: six class pins, eleven added classes, instruction/archive checks, unknown and duplicate rejection.",
+      "blocker": "Installed stock server still lacks required hooks; exact paired candidate has not been installed or tested."
+    },
+    {
+      "id": "ME12-B03",
+      "implemented": false,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "status": "OPEN",
+      "evidence": "309-ID union inventory; 23 structural contexts; every catalog alias and native attacker has an explicit status.",
+      "blocker": "Source-reference inventory and existential witnesses do not replace complete role execution/roster/immunity certification."
+    },
+    {
+      "id": "ME12-B04",
+      "implemented": false,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "status": "OPEN",
+      "evidence": "Restricted-pool regression proves five/three/zero N/NM/H name pairs.",
+      "blocker": "26 production-enabled concrete roles still lack a structural Hell plan; additional roles have no certificate/catalog mapping."
+    },
+    {
+      "id": "ME12-B05",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "status": "OPEN",
+      "evidence": "Existing immunity policy and source unchanged; 16 concrete Normal exclusions explicit; existing immunity tests pass.",
+      "blocker": "No connected ordinary-spawn or immunity acceptance for this cumulative candidate."
+    },
+    {
+      "id": "ME12-B06",
+      "implemented": false,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "status": "OPEN",
+      "evidence": "Prioritized action/motion/projectile references and restrictions documented; no allowlists widened.",
+      "blocker": "All reachable action roots, applied Health, conditional delivery and projectile-config seams still require route certification."
+    },
+    {
+      "id": "ME12-N03",
+      "implemented": false,
+      "automatedPassed": false,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "status": "OPEN",
+      "evidence": "Inactive AD1 assets strictly linted; eight content regressions pass.",
+      "blocker": "No v2 runtime preflight/planner installed; complete certified plans unavailable."
+    },
+    {
+      "id": "ME12-N08",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "status": "OPEN",
+      "evidence": "v1 production names, selector, descriptors, rewards and authored/minion caps unchanged; legacy/recovery tests exercised.",
+      "blocker": "Connected cumulative behavior remains pending; native foundation failures are independently blocking."
+    }
+  ]
+}

@@ -139,7 +139,7 @@ class CycloneArmorTest {
         var nativeZip=Path.of(System.getProperty("user.home"),
                 "AppData/Roaming/Hytale/install/release/package/game/latest/Assets.zip");
         try(var zip=new java.util.zip.ZipFile(nativeZip.toFile())){
-            var source=zip.getEntry("Server/Particles/Combat/Abilities/Windstrike/Spawners/Wind_Swoosh.particlespawner");
+            var source=zip.getEntry("Server/Particles/Abilities/Windstrike/Spawners/Wind_Swoosh.particlespawner");
             assertNotNull(source);
             var original=JsonParser.parseString(new String(zip.getInputStream(source).readAllBytes(),
                     java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
