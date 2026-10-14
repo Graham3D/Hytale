@@ -1,5 +1,30 @@
 # HyARPG/Hywind development baseline
 
+## Hytale 0.7.1 hostile-mob audit publication (2026-10-13)
+
+State: **MERGED — documentation audit only; no gameplay acceptance claimed**.
+`codex/hostile-mob-audit` began at integrated `main`
+`c69e44f16302e68ebd625d65039a457ad92ead06`; its reviewed audit commit
+`38936a3193c6c503736fcd65aa85b159fe81327b` adds only
+`docs/enemies/HOSTILE_MOB_MANIFEST_0_7_1.md` and the read-only generator
+`tools/audit/generate_hostile_mob_manifest.py`. The manifest regenerated
+exactly from the inspected 0.7.1 assets and records 267 distinct role IDs.
+Remote `main` was non-force fast-forwarded to that audit commit after PR
+creation returned GitHub 403. The owner explicitly authorized proceeding
+with this documentation publication after being told the Guardian receipt
+was blocked; Guardian itself was not changed or reported as passing.
+
+Guardian Preflight passed, but full offline `check` stopped at
+`auditNativeProcAssets` because the pinned 0.7.0 pre-release `Assets.zip`
+is no longer installed after the 0.7.1 game update. Therefore no valid
+exact-commit verification receipt exists and Guardian Completion remains
+**BLOCKED**. Revision `R262C1HROF-CANDIDATE`, version
+`0.2.0-R262C1HROF-CANDIDATE`, and `hytale_version=0.7.0` remain unchanged.
+No JAR was deployed, no save was touched, and the primary Windows `main`
+checkout remains behind with its owner-owned changes preserved. The
+0.7.0 native build gate needs separate resolution before further
+Guardian-verified engineering publication; it is not resolved by this audit.
+
 ## HRO finalization and connected QA readiness (2026-10-13)
 
 State: **MERGED, DEPLOYED, QA_PENDING — connected acceptance unverified**. The
