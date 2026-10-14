@@ -1,15 +1,15 @@
 # Hywind / HyARPG development baseline
 
-Isolated ME12 Stage 1 remediation: **R262ME12S1R1-CANDIDATE**
-(`0.2.0-R262ME12S1R1-CANDIDATE`), Hytale `=0.7.1`, branch
+Isolated ME12 Stage 1 coverage reconciliation: **R262ME12S1R2-CANDIDATE**
+(`0.2.0-R262ME12S1R2-CANDIDATE`), Hytale `=0.7.1`, branch
 `codex/me12-stage1`. **BLOCKED / QA_PENDING**, not deployed or accepted.
 Seven compatibility assertions and all 26 enabled-role Hell minimum failures
 have focused passing evidence. Broader native certification remains incomplete;
 connected QA is deferred to Stage 4. Exact-HEAD cumulative evidence and Guardian
 publication are required and recorded in the generated final manifest.
 Stage 2 has not begun; Monster Affix remains OPEN, ownerAccepted=false.
-See the [Stage 1 report](docs/enemies/ME12_STAGE1_REPORT.md),
-[309-role matrix](docs/enemies/ME12_STAGE1_COVERAGE.md),
+See the [current findings](docs/enemies/ME12_STAGE1_COVERAGE_FINDINGS.md),
+[309-role reconciliation](docs/enemies/ME12_STAGE1_RECONCILIATION.md),
 [Stage 3 trace contract](docs/enemies/ME12_STAGE3_TRACE_CONTRACT.md), and
 [source status](docs/DEVELOPMENT_BASELINE.md).
 

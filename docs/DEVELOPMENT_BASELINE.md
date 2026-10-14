@@ -1,5 +1,49 @@
 # HyARPG/Hywind development baseline
 
+## ME12 Stage 1 coverage reconciliation checkpoint (2026-10-14)
+
+State: **INTEGRATION_BLOCKED / QA_PENDING; normative Stage 1 BLOCKED**.
+Continue `codex/me12-stage1` in
+`C:/Users/Zemio/.codex/worktrees/me12-stage1/Hytale-main-clean` from
+Guardian-published `b7b952ba02e9f49265f15ad4adac6df17a2b70c8`.
+Implementation checkpoint `2d021f9c727c6de039c26e87fc32488d6f67f53b`;
+reviewed integrated parent/remote main `b839526e7106f780648c315692b04bb372b58d9e`.
+Documentation/build successor: provisional `R262ME12S1R2-CANDIDATE`, version
+`0.2.0-R262ME12S1R2-CANDIDATE`, native target `=0.7.1`.
+No accepted cumulative revision is assigned.
+
+309-ID evidence reconciliation preserves 84 configured roles, five existing
+authored exclusions, 179 unbound native inventory IDs and 41 unbound catalog-only
+IDs. The last two are NOT automatically approved new procedural population.
+304 concrete native Variants exist; five retired IDs remain in the saved catalog.
+Mixed legacy/config projectile action validation now fails closed instead of
+silently ignoring the modern operation. No outgoing permission or eligibility changed.
+Static minima 68/84/84 remain; Firesteel still has an offline production attachment
+gap. Modern projectile ownership/certification and scope/provenance work remain.
+
+Focused native tests and 16 Python policy/reconciliation tests pass. Preserve the
+previous 4324-pass cumulative log/manifest. Final clean-HEAD cumulative command:
+`check jar testReleaseNativePatch guardianSpotBugs -PguardianSpotBugs=true --continue`.
+Its unmodified log is `build/guardian/me12-reconcile-final.log`; exact tested HEAD,
+actual totals, hashes and publication status belong to
+`build/reports/me12/reconciliation-final-manifest.json` and Guardian's receipt.
+This record precedes that required run and does not predeclare its result.
+
+No local feature tip outside main was found except the ME12, Elite and HRO tasks;
+Elite 3327a565 and HRO f7d414e6 remain preserved QA_PENDING dependencies with the
+same reviewed selective ports. Dirty primary main remains 124 commits behind
+remote main. Its changes, AGENTS, installed game/mod and active Hywind save remain
+untouched. Main integration and deployment remain unauthorized. Monster Affix is
+OPEN, ownerAccepted=false; connected evidence is DEFERRED_TO_STAGE4. Stage 2 has
+not begun. Next action: finish shared modern projectile ownership and Firesteel
+attachment offline; preserve unresolved scope decisions and release gates.
+
+See [current findings](enemies/ME12_STAGE1_COVERAGE_FINDINGS.md),
+[309-row matrix](enemies/ME12_STAGE1_RECONCILIATION.md),
+[evidence CSV](enemies/ME12_STAGE1_RECONCILIATION.csv),
+[gate ledger](enemies/ME12_STAGE1_GATES.json), and
+[pinned offline Stage 2 dependency inputs](enemies/ME12_STAGE2_INPUT_SNAPSHOT.json).
+
 ## ME12 Stage 1 remediation checkpoint (2026-10-14)
 
 State: **INTEGRATION_BLOCKED / QA_PENDING; Stage 1 BLOCKED by remaining offline coverage**.

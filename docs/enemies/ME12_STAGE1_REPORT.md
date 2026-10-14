@@ -1,5 +1,7 @@
 # Master Enemies v1.2 Stage 1 remediation handoff
 
+Historical b7 remediation record. Superseded by [coverage reconciliation findings](ME12_STAGE1_COVERAGE_FINDINGS.md). The 179 native inventory IDs are not all approved procedural targets; the current evidence matrix separates catalog/scope reconciliation from combat implementation. Firesteel static feasibility is not production attachment readiness.
+
 **Stage 1 remains BLOCKED by offline coverage/certification gaps.** The seven known compatibility assertions and all 26 enabled-role Hell minimum failures have focused passing evidence. This is not STAGE1_OFFLINE_READY: broader intended-role prerequisites are incomplete. Connected evidence is independently **BLOCKED / DEFERRED_TO_STAGE4** by owner instruction. Monster Affix remains OPEN, ownerAccepted=false; Elite/HRO remain QA_PENDING. Stage 2 has not begun. No intermediate deployment or gameplay test is requested.
 
 ## Source and verification records

@@ -3,8 +3,8 @@
   "architecture": "ME12-ARCH-AD1",
   "stage": 1,
   "status": "BLOCKED_OFFLINE_COVERAGE",
-  "sourceCommit": "a83e9ef548932ebbe47a9bdc10a4bf4d3f2e7471",
-  "revision": "R262ME12S1R1-CANDIDATE",
+  "sourceCommit": "2d021f9c727c6de039c26e87fc32488d6f67f53b",
+  "revision": "R262ME12S1R2-CANDIDATE",
   "ownerAccepted": false,
   "stage2Authorized": false,
   "monsterAffixGate": {
@@ -20,9 +20,10 @@
       "automatedPassed": false,
       "nativeConnectedPassed": false,
       "ownerAccepted": false,
-      "status": "OPEN",
+      "status": "BLOCKED",
       "evidence": "Seven compatibility assertions pass focused tests; source/provenance and isolated 0.7.1 artifact identity recorded.",
-      "blocker": "Accepted cumulative baseline and installed-pair agreement are not established. Elite/HRO remain QA_PENDING; connected verification deferred to Stage 4."
+      "blocker": "Accepted cumulative baseline and installed-pair agreement are not established. Elite/HRO remain QA_PENDING; connected verification deferred to Stage 4.",
+      "releaseStatus": "OPEN"
     },
     {
       "id": "ME12-B02",
@@ -30,9 +31,10 @@
       "automatedPassed": true,
       "nativeConnectedPassed": false,
       "ownerAccepted": false,
-      "status": "OPEN",
+      "status": "BLOCKED",
       "evidence": "Offline 0.7.1 patch regression: six class pins, eleven added classes, instruction/archive identity, unknown/duplicate rejection.",
-      "blocker": "Stock installed server remains unchanged and lacks required hooks; actual paired-candidate native proof deferred to Stage 4."
+      "blocker": "Stock installed server remains unchanged and lacks required hooks; actual paired-candidate native proof deferred to Stage 4.",
+      "releaseStatus": "OPEN"
     },
     {
       "id": "ME12-B03",
@@ -40,9 +42,10 @@
       "automatedPassed": false,
       "nativeConnectedPassed": false,
       "ownerAccepted": false,
-      "status": "OPEN",
-      "evidence": "309-ID matrix and 25 complete static contexts; every catalog/native ID remains visible. Enabled roster has full minimum witnesses.",
-      "blocker": "179 non-excluded native attacker IDs still lack production certificate/catalog mapping; 41 catalog-only entries need scope reconciliation."
+      "status": "BLOCKED",
+      "evidence": "309-ID reconciliation records native ancestry, spawn definitions, combat roots, aliases, source hashes and explicit unknowns; no scope or eligibility changed.",
+      "blocker": "179 native inventory and 41 catalog-only IDs reconciled as evidence, not blanket approved population. Mapping/provenance decisions and native certificates remain incomplete.",
+      "releaseStatus": "OPEN"
     },
     {
       "id": "ME12-B04",
@@ -50,9 +53,10 @@
       "automatedPassed": false,
       "nativeConnectedPassed": false,
       "ownerAccepted": false,
-      "status": "OPEN",
+      "status": "BLOCKED",
       "evidence": "All 26 formerly blocked enabled roles repaired; enabled minima N/NM/H 68/84/84, with 16 unchanged Normal policy exclusions.",
-      "blocker": "All-intended-role gate still blocked by unbound attackers. Static proof assumes admitted reachable homogeneous rosters; actual native admission deferred to Stage 4."
+      "blocker": "Static enabled minima remain 68/84/84 with 16 existing Normal exclusions. Firesteel production attachment is still blocked despite static feasibility. All-intended-role capability inputs remain incomplete.",
+      "releaseStatus": "OPEN"
     },
     {
       "id": "ME12-B05",
@@ -60,9 +64,10 @@
       "automatedPassed": true,
       "nativeConnectedPassed": false,
       "ownerAccepted": false,
-      "status": "OPEN",
+      "status": "BLOCKED",
       "evidence": "Native immunity policy unchanged, 16 Normal exclusions explicit, current stock role changes reconciled only at existing adapters.",
-      "blocker": "Actual original natural spawns and immunity behavior deferred to Stage 4."
+      "blocker": "Actual original natural spawns and immunity behavior deferred to Stage 4.",
+      "releaseStatus": "OPEN"
     },
     {
       "id": "ME12-B06",
@@ -70,9 +75,10 @@
       "automatedPassed": false,
       "nativeConnectedPassed": false,
       "ownerAccepted": false,
-      "status": "OPEN",
-      "evidence": "Pinned independent incoming Reflective/Unwavering routes preserve outgoing restrictions; native Health/control and original route fixtures pass.",
-      "blocker": "Turret/Seeker modern ProjectileConfig creation/impact/removal/recovery routes lack production implementation/certification; other unbound paths remain explicit."
+      "status": "BLOCKED",
+      "evidence": "Mixed legacy/config projectile certificate hole reproduced and guarded; legacy native fixtures pass. Installed Turret/Seeker graph and effect-path evidence retained.",
+      "blocker": "Modern projectile creation/impact/removal/recovery implementation, Firesteel action attachment and additional exact role certificates remain missing offline. Connected execution is independently deferred to Stage 4.",
+      "releaseStatus": "OPEN"
     },
     {
       "id": "ME12-N03",
@@ -80,9 +86,10 @@
       "automatedPassed": false,
       "nativeConnectedPassed": false,
       "ownerAccepted": false,
-      "status": "OPEN",
+      "status": "BLOCKED",
       "evidence": "Inactive AD1 lint, semantic conflict tests and complete name-conditioned static audit; no v2 runtime activation.",
-      "blocker": "Runtime v2 compiler/planner/preflight belongs to separately authorized Stage 2."
+      "blocker": "Runtime v2 compiler/planner/preflight belongs to separately authorized Stage 2.",
+      "releaseStatus": "OPEN"
     },
     {
       "id": "ME12-N08",
@@ -90,13 +97,14 @@
       "automatedPassed": true,
       "nativeConnectedPassed": false,
       "ownerAccepted": false,
-      "status": "OPEN",
+      "status": "BLOCKED",
       "evidence": "Legacy balance/names/affixes/progression/power files unchanged; counts, wire identity and saved v1 actor reader preserved.",
-      "blocker": "Cumulative legacy regression required by final exact-HEAD receipt; actual connected behavior deferred to Stage 4."
+      "blocker": "Previous 4324-test baseline preserved; final successor requires exact-HEAD cumulative receipt. Connected acceptance remains deferred to Stage 4.",
+      "releaseStatus": "OPEN"
     }
   ],
   "connectedStatus": "BLOCKED / DEFERRED_TO_STAGE4",
-  "finalVerificationManifest": "build/reports/me12/remediation-final-manifest.json",
+  "finalVerificationManifest": "build/reports/me12/reconciliation-final-manifest.json",
   "cumulativeVerification": "REQUIRED_ON_FINAL_CLEAN_HEAD; see exact-HEAD generated receipt",
   "enabledRosterOffline": {
     "implemented": true,
@@ -109,5 +117,19 @@
     "hellPlans": 84,
     "formerlyBlockedRolesRepaired": 26,
     "scope": "complete static name-conditioned feasibility under admitted homogeneous 3/4/5-minion roster; no operator overrides"
+  },
+  "releaseStatus": "OPEN",
+  "reconciliation": {
+    "roles": 309,
+    "configured": 84,
+    "authoredExclusions": 5,
+    "nativeUncertified": 179,
+    "catalogOnlyUncertified": 41,
+    "nativeVariantsPresent": 304,
+    "retiredIds": 5,
+    "eligibilityChanged": false,
+    "newPolicyExclusions": 0,
+    "nativeExecutionCertifiedByThisPass": false,
+    "matrix": "docs/enemies/ME12_STAGE1_RECONCILIATION.csv"
   }
 }
