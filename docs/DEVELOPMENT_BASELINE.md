@@ -1,5 +1,31 @@
 # HyARPG/Hywind development baseline
 
+## ME12 guarded Stage 4 QA native-runtime identity correction (2026-10-14)
+
+The Stage 3 candidate on `codex/me12-stage3` was Guardian-published at
+`7f2ae104cf35f9a56460a76c968c0b08c6eae4b3`. The focused Stage 4
+predeployment correction is committed as
+`85663af41a00da9f328c4d06b2d3bc3971189875`, dependent on that candidate.
+It retains build revision `R262ME12S3B-CANDIDATE` and version
+`0.2.0-R262ME12S3B-CANDIDATE` pending connected QA. The installed 0.7.1
+server originally had the unpatched source hash pinned by native bindings,
+while the Packbound/native receipt hooks require the separately verified
+patched server. The guarded QA lease now checks that exact patched runtime
+hash. Five focused lease tests pass, including rejection of the unpatched and
+unknown server hashes. The native role certificates, owner hooks, production
+release gate and per-role QA routing are unchanged.
+
+The final documentation successor, exact-HEAD cumulative check, JAR hash,
+Guardian receipt and task-branch publication must be recorded in the generated
+Stage 4 verification manifest before installation. At this checkpoint the
+active save and installed game remain unchanged; a full external save snapshot
+and old-JAR backup have been made. Deployment, connected QA and owner acceptance
+are separate later facts. Monster Affix stays OPEN with `ownerAccepted=false`;
+Elite/HRO remain QA_PENDING and `main` is unchanged. The next action is the
+exact-HEAD offline gate, Guardian publication, checksum-verified native patch
+and mod deployment to the authorized Hywind save, then connected QA in the main
+game. No standalone server is authorized.
+
 ## ME12 Stage 3 guarded Stage 4 QA handoff (2026-10-14)
 
 Source branch `codex/me12-stage3` continues from
