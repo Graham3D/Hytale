@@ -1,14 +1,15 @@
 # Hywind / HyARPG development baseline
 
-Isolated ME12 Stage 1 coverage reconciliation: **R262ME12S1R2-CANDIDATE**
-(`0.2.0-R262ME12S1R2-CANDIDATE`), Hytale `=0.7.1`, branch
-`codex/me12-stage1`. **BLOCKED / QA_PENDING**, not deployed or accepted.
-Seven compatibility assertions and all 26 enabled-role Hell minimum failures
-have focused passing evidence. Broader native certification remains incomplete;
-connected QA is deferred to Stage 4. Exact-HEAD cumulative evidence and Guardian
-publication are required and recorded in the generated final manifest.
-Stage 2 has not begun; Monster Affix remains OPEN, ownerAccepted=false.
-See the [current findings](docs/enemies/ME12_STAGE1_COVERAGE_FINDINGS.md),
+Isolated ME12 Stage 2 engineering: **R262ME12S2-CANDIDATE**
+(`0.2.0-R262ME12S2-CANDIDATE`), Hytale `=0.7.1`, branch
+`codex/me12-stage2`, dependent on verified Stage 1 `b0844f8a013305cffa0b6a9c8912dad571027c3c`.
+Exact weighted planning and versioned persistence are implemented for offline work.
+Production v2 births remain DISABLED; Stage 1 native certification and owner
+acceptance remain blocked. This is not a deployed or accepted cumulative release.
+Exact-HEAD validation/publication belongs to Guardian's receipt and the generated
+Stage 2 final manifest. Monster Affix remains OPEN, ownerAccepted=false.
+See the [Stage 2 engineering handoff](docs/enemies/ME12_STAGE2_HANDOFF.md),
+[Stage 1 findings](docs/enemies/ME12_STAGE1_COVERAGE_FINDINGS.md),
 [309-role reconciliation](docs/enemies/ME12_STAGE1_RECONCILIATION.md),
 [Stage 3 trace contract](docs/enemies/ME12_STAGE3_TRACE_CONTRACT.md), and
 [source status](docs/DEVELOPMENT_BASELINE.md).

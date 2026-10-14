@@ -34,6 +34,9 @@ public final class HywindWorldConfiguration implements SpawnDensitySetting {
             randomAffixesDisabled=Set.copyOf(randomAffixesDisabled);
         }
         public JsonObject export(){return source.deepCopy();}
+        @Override public JsonObject source(){return source.deepCopy();}
+        public Me12FeatureState me12FeatureState(){return source.has("masterEnemiesV2")
+                ?Me12FeatureState.valueOf(source.get("masterEnemiesV2").getAsString()):Me12FeatureState.DISABLED;}
     }
     private final Path path,archiveDirectory;
     private volatile Snapshot current;
@@ -99,7 +102,11 @@ public final class HywindWorldConfiguration implements SpawnDensitySetting {
     }
     public static Snapshot parse(JsonObject source){
         var json=source.deepCopy();
-        exact(json,"", "schemaVersion","configRevision","world","spawnPopulationBalance","monsterRarity",
+        var shape=json.deepCopy();
+        if(shape.has("masterEnemiesV2")){
+            Me12FeatureState.valueOf(text(shape,"masterEnemiesV2")).validateStage2();shape.remove("masterEnemiesV2");
+        }
+        exact(shape,"", "schemaVersion","configRevision","world","spawnPopulationBalance","monsterRarity",
                 "packs","combat","monsterAffixes","newImmunityGrants","rewards");
         if(integer(json,"schemaVersion",1,1)!=1)throw new IllegalArgumentException("WORLD_CONFIG_SCHEMA");
         String revision=text(json,"configRevision");

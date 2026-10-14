@@ -45,6 +45,10 @@ public final class PersistentEncounterRuntime implements AutoCloseable {
         Objects.requireNonNull(root);
         return birthIo(()->store.reserveEnemyBirthRoot(root));
     }
+    /** Archive on the existing bounded encounter IO owner before exposing a v2 policy reference. */
+    public synchronized CompletionStage<com.inigmasgames.hytalerpg.enemies.Me12Policies> archiveMe12Policies(com.inigmasgames.hytalerpg.enemies.Me12Policies policies){
+        Objects.requireNonNull(policies);return birthIo(()->store.archiveMe12Policies(policies));
+    }
     public synchronized CompletionStage<Optional<EnemyBirthRoot>> enemyBirthRoot(UUID world,UUID encounter){
         Objects.requireNonNull(world);Objects.requireNonNull(encounter);
         return birthIo(()->store.enemyBirthRoot(world,encounter));
@@ -121,13 +125,20 @@ public final class PersistentEncounterRuntime implements AutoCloseable {
         Objects.requireNonNull(world);Objects.requireNonNull(pack);
         return birthIo(()->store.reconcileEnemyPackDefeats(world,pack));
     }
+    private record BirthIoResult<T>(T value,FileEncounterStore.Me12PolicyHold hold){}
     private <T> CompletionStage<T> birthIo(Supplier<T> valuesOnlyWork){
         if(stopping)throw new IllegalStateException("ENCOUNTER_SHUTDOWN_ADMISSION_CLOSED");
         if(unavailable)throw new IllegalStateException("ENCOUNTER_PERSISTENCE_UNAVAILABLE");
-        var receipt=contextLoads.submit(()->guarded(valuesOnlyWork));
-        receipt.whenComplete((ignored,error)->{if(error!=null)unavailable=true;});
+        // A missing immutable dependency performed no uncertain effect. Carry the hold through the
+        // ordered worker as a value, then expose it to this encounter's caller without poisoning IO.
+        var receipt=contextLoads.submit(()->{
+            try{return new BirthIoResult<>(guarded(valuesOnlyWork),null);}
+            catch(FileEncounterStore.Me12PolicyHold hold){return new BirthIoResult<T>(null,hold);}
+        }).thenApply(result->{if(result.hold()!=null)throw result.hold();return result.value();});
+        receipt.whenComplete((ignored,error)->{if(error!=null&&!policyHold(error))unavailable=true;});
         return receipt;
     }
+    private static boolean policyHold(Throwable error){while(error instanceof CompletionException||error instanceof ExecutionException)error=error.getCause();return error instanceof FileEncounterStore.Me12PolicyHold;}
     /** Startup/load IO is independent of the short ledger monitor. No native handle is queued. */
     public synchronized CompletionStage<Boolean> attachNative(UUID world,UUID enemy,String role,Optional<EnemyRewardRegistry.Spawn> candidate){
         if(stopping)throw new IllegalStateException("ENCOUNTER_SHUTDOWN_ADMISSION_CLOSED");
@@ -426,6 +437,6 @@ public final class PersistentEncounterRuntime implements AutoCloseable {
             "pendingTransitions",pendingTransitions,"maxTransitions",MAX_TRANSITIONS,"transitionRejections",transitionRejections,"loads",contextLoads.metrics(),"wal",store.submissionMetrics(),"uncertain",unavailable);}
     private <T> T guarded(Supplier<T> operation){
         if(unavailable)throw new IllegalStateException("ENCOUNTER_PERSISTENCE_UNCERTAIN_RESTART_REQUIRED");
-        try{return operation.get();}catch(FileEncounterStore.CapacityRejected rejection){throw rejection;}catch(RuntimeException failure){unavailable=true;throw failure;}
+        try{return operation.get();}catch(FileEncounterStore.CapacityRejected|FileEncounterStore.Me12PolicyHold rejection){throw rejection;}catch(RuntimeException failure){unavailable=true;throw failure;}
     }
 }

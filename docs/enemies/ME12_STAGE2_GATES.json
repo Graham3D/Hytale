@@ -1,0 +1,319 @@
+{
+  "schemaVersion": 1,
+  "contract": "ME12-ARCH-AD1 / ME12-STAGES-4P-01",
+  "scope": "Stage 2A–2E isolated offline engineering",
+  "branch": "codex/me12-stage2",
+  "parentCommit": "b0844f8a013305cffa0b6a9c8912dad571027c3c",
+  "revision": "R262ME12S2-CANDIDATE",
+  "status": "OFFLINE_IMPLEMENTED_FOCUSED_VERIFIED_FINAL_RECEIPT_REQUIRED",
+  "finalVerification": {
+    "required": true,
+    "manifest": "build/reports/me12/stage2-final-manifest.json",
+    "guardian": "build/guardian/verification.json",
+    "log": "build/guardian/me12-stage2-final.log",
+    "note": "This tracked ledger records focused evidence before the mandatory exact-final-HEAD cumulative run. The ignored exact-HEAD receipt must independently pass before publication or an engineering-ready claim."
+  },
+  "productionV2Births": "DISABLED",
+  "stage1": "BLOCKED_OFFLINE_COVERAGE",
+  "monsterAffixRelease": "OPEN",
+  "ownerAccepted": false,
+  "connectedQA": "DEFERRED_TO_STAGE4",
+  "gates": [
+    {
+      "id": "ME12-N01",
+      "scope": "Exact nine joint tier masses",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12PlannerTest.N01N04N05AnalyticalTierMasses",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "OFFLINE_PASS_NATIVE_AND_OWNER_UNACCEPTED"
+    },
+    {
+      "id": "ME12-N02",
+      "scope": "Exact 2–8 budget with included signatures",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12PlannerTest.N02S03FullGraphsHaveExactBudgetsAndCanonicalOwnership",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "OFFLINE_PASS_NATIVE_AND_OWNER_UNACCEPTED"
+    },
+    {
+      "id": "ME12-N03",
+      "scope": "Signature, selector, weight and semantic exclusions",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12DistributionTest.N03N06N07NameCountAndCompletionMassDoNotBiasTiersOrNameWeights",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "OFFLINE_PASS_NATIVE_AND_OWNER_UNACCEPTED"
+    },
+    {
+      "id": "ME12-N04",
+      "scope": "Three-affix Normal conditional probabilities",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12PlannerTest.N01N04N05AnalyticalTierMasses",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "OFFLINE_PASS_NATIVE_AND_OWNER_UNACCEPTED"
+    },
+    {
+      "id": "ME12-N05",
+      "scope": "Five-affix count-feasibility normalizers",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12PlannerTest.N01N04N05AnalyticalTierMasses",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "OFFLINE_PASS_NATIVE_AND_OWNER_UNACCEPTED"
+    },
+    {
+      "id": "ME12-N06",
+      "scope": "Name-count invariance and first-feasibility change",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12DistributionTest.N06FirstFeasibleNameInANewTierChangesOnlyItsIndicator; N03N06N07NameCountAndCompletionMassDoNotBiasTiersOrNameWeights",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "OFFLINE_PASS_NATIVE_AND_OWNER_UNACCEPTED"
+    },
+    {
+      "id": "ME12-N07",
+      "scope": "Name probability independent of completion mass",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12DistributionTest.N03N06N07NameCountAndCompletionMassDoNotBiasTiersOrNameWeights",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "OFFLINE_PASS_NATIVE_AND_OWNER_UNACCEPTED"
+    },
+    {
+      "id": "ME12-N08",
+      "scope": "Original non-procedural and v1 identity/count contracts",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12LegacyWireTest; EnemyBirthPlannerTest; EnemyDescriptorTest; EnemyRewardsTest",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "OFFLINE_PASS_NATIVE_AND_OWNER_UNACCEPTED"
+    },
+    {
+      "id": "ME12-S01",
+      "scope": "Exact small-catalog exhaustive oracle with selectors",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12DistributionTest.S01S02DistinctSetsNotOwnershipArrangementsAndSelectorOracle",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "OFFLINE_PASS_NATIVE_AND_OWNER_UNACCEPTED"
+    },
+    {
+      "id": "ME12-S02",
+      "scope": "Distinct sets weigh 6:10:15 without ownership multiplicity",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12DistributionTest.S01S02DistinctSetsNotOwnershipArrangementsAndSelectorOracle",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "OFFLINE_PASS_NATIVE_AND_OWNER_UNACCEPTED"
+    },
+    {
+      "id": "ME12-S03",
+      "scope": "Canonical matching capacities, themes and repeatability",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12PlannerTest.N02S03FullGraphsHaveExactBudgetsAndCanonicalOwnership; Me12ReplayTest",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "OFFLINE_PASS_NATIVE_AND_OWNER_UNACCEPTED"
+    },
+    {
+      "id": "ME12-S04",
+      "scope": "Beyond-long graph and unbiased zero/singleton/random bounds",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12PlannerTest.S04BeyondLongAndZeroSingleton; S04IndependentPythonGoldenVectorsAndNonPowerOfTwoSampling; tools/audit/me12_rng_vectors.py",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "OFFLINE_PASS_NATIVE_AND_OWNER_UNACCEPTED"
+    },
+    {
+      "id": "ME12-S05",
+      "scope": "100000 samples for each of nine role/era contexts",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12DistributionTest.S05OneHundredThousandPinnedSamplesPerRepresentativeRoleAndEra",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "OFFLINE_PASS_NATIVE_AND_OWNER_UNACCEPTED"
+    },
+    {
+      "id": "ME12-S06",
+      "scope": "Two fresh supported Java 25 JVMs and unchanged legacy vectors",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12ReplayTest.S06CrossJvmPlansAreByteIdenticalAndLegacyVectorsRemainUnchanged",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "OFFLINE_PASS_NATIVE_AND_OWNER_UNACCEPTED"
+    },
+    {
+      "id": "ME12-S07",
+      "scope": "Full context keys and frozen identity independent of later changes",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12CacheTest.S07AllFrozenRestrictionsParticipateInKeysAndWarmLookupDoesNoCompile; Me12PersistenceTest",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "OFFLINE_PASS_NATIVE_AND_OWNER_UNACCEPTED"
+    },
+    {
+      "id": "ME12-S08",
+      "scope": "Accounted memory, two builders, bounded requests/states/deadline and latency",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12CacheTest; Me12HeapQualification; Me12StaticCoverageTest",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "OFFLINE_PASS_NATIVE_AND_OWNER_UNACCEPTED"
+    },
+    {
+      "id": "ME12-S09",
+      "scope": "Explicit engineering failures and stale-generation fence",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12PlannerTest.S09DeadlineIsFailureAndProductionUncertifiedIsNotZeroMass; Me12CacheTest",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "OFFLINE_PASS_NATIVE_AND_OWNER_UNACCEPTED"
+    },
+    {
+      "id": "ME12-S10",
+      "scope": "Horde, inheritance, native immunities, Packbound and aggregate caps",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12FinalizerTest",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "OFFLINE_PASS_NATIVE_AND_OWNER_UNACCEPTED"
+    },
+    {
+      "id": "ME12-P01",
+      "scope": "Baseline-produced v1 wire bytes, checksums, journal replay",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12LegacyWireTest; src/test/resources/enemies/me12-v1-wire/provenance.json",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "OFFLINE_PASS_NATIVE_AND_OWNER_UNACCEPTED"
+    },
+    {
+      "id": "ME12-P02",
+      "scope": "Mixed nested descriptor/root/context/death/quantity/checkpoint/journal versions",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12PersistenceTest; Me12LegacyWireTest",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "OFFLINE_PASS_NATIVE_AND_OWNER_UNACCEPTED"
+    },
+    {
+      "id": "ME12-P03",
+      "scope": "V2 leader and inherited-only minion with legacy economics",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12PersistenceTest.P02P03StrictNestedVersionsAndInheritedMinions",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "OFFLINE_PASS_NATIVE_AND_OWNER_UNACCEPTED"
+    },
+    {
+      "id": "ME12-P04",
+      "scope": "Archive-before-reference, exact restore and recoverable holds",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12PersistenceTest.P04ArchiveBeforeReferenceMissingCorruptHoldAndExactRestoration; P04StartupPolicyHoldDoesNotPoisonWriterAfterExactRestoration; P04AsyncEncounterOwnerRemainsUsableAcrossPolicyHold",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "OFFLINE_PASS_NATIVE_AND_OWNER_UNACCEPTED"
+    },
+    {
+      "id": "ME12-P05",
+      "scope": "Stage 2 durable fault boundaries, projection recovery and native identity codec",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12PersistenceTest.P05EveryStage2DurablePublicationBoundaryIsIdempotentAndEventuallyRecoverable; P02P05MixedJournalCheckpointQuantityAndInterruptedIndexesRecoverSameIds",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "BLOCKED_EXTERNAL_INTEGRATION",
+      "remaining": "Actual native actor publication and Stage 3 reward-effect exactly-once execution remain BLOCKED. Offline codec/projection recovery is not native execution."
+    },
+    {
+      "id": "ME12-P07",
+      "scope": "Offline config reload, SHADOW isolation, DRAIN readers and ENABLED rejection",
+      "implemented": true,
+      "automatedPassed": true,
+      "nativeConnectedPassed": false,
+      "ownerAccepted": false,
+      "evidence": "Me12PersistenceTest.P07DisabledShadowDrainRetainReadersAndEnabledIsRefused; Me12CacheTest.P07ShadowCannotPublishOrConsumeLegacyRngAndDrainDoesNotCompile",
+      "automatedScope": "Stage 2 offline portions; focused run; exact-HEAD cumulative receipt additionally required",
+      "normativeStatus": "BLOCKED_EXTERNAL_INTEGRATION",
+      "remaining": "Connected reload/drain and pending v2 reward evaluation remain deferred; Stage 3 evaluator not implemented. Rollback requires a v2-capable reader, never a pre-v2 binary."
+    }
+  ],
+  "preservedDependencies": {
+    "configuredRoles": 84,
+    "authoredExclusions": 5,
+    "uncertifiedNativeIds": 179,
+    "uncertifiedCatalogOnly": 41,
+    "retiredWithinCatalogOnly": 5,
+    "staticMinima": {
+      "Normal": 68,
+      "Nightmare": 84,
+      "Hell": 84
+    },
+    "unknownFeasibility": "UNKNOWN_NOT_ZERO",
+    "native": [
+      "Goblin Turret projectile ownership",
+      "Scarak Seeker projectile ownership",
+      "Firesteel production attachment",
+      "Exact role and spawn certificates"
+    ],
+    "ownerScope": [
+      "Neutral/retaliatory populations",
+      "Marker/beacon/encounter variants",
+      "Retired identity successors"
+    ],
+    "elite": "QA_PENDING",
+    "hro": "QA_PENDING",
+    "acquisition": [
+      "Public Skill acquisition",
+      "First-copy Passive acquisition"
+    ]
+  }
+}

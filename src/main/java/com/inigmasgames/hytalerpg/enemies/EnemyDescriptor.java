@@ -13,7 +13,19 @@ public record EnemyDescriptor(int schemaVersion,long descriptorRevision,String b
         String sourceValidationId,String lootSourceId,String acquisitionSourceId,String nameToken,String nameSeed,String paletteId,
         List<AffixInstance> ownAffixes,List<AffixInstance> inheritedAffixes,Set<String> nativeImmunityChannels,
         List<ImmunityGrant> selectedImmunityGrants,String controlProfileId,EnemyRewardContext immutableRewardContext,
-        String nativeBaselineFingerprint,TemplateBirth templateBirth) {
+        String nativeBaselineFingerprint,TemplateBirth templateBirth,Me12Identity v2) {
+    public EnemyDescriptor(int schemaVersion,long descriptorRevision,String balanceRevision,String nativeBindingRevision,
+        UUID worldId,UUID encounterId,long encounterGeneration,UUID logicalActorId,UUID entityId,String spawnCycleId,
+        EnemyRewardContext.Origin spawnOrigin,String canonicalRoleId,String nativeRoleId,int combatLevel,DifficultyId difficulty,
+        ProgressionMath.Rank encounterRank,EnemyRarity enemyRarity,PackRole packRole,UUID packId,UUID leaderId,
+        String sourceValidationId,String lootSourceId,String acquisitionSourceId,String nameToken,String nameSeed,String paletteId,
+        List<AffixInstance> ownAffixes,List<AffixInstance> inheritedAffixes,Set<String> nativeImmunityChannels,
+        List<ImmunityGrant> selectedImmunityGrants,String controlProfileId,EnemyRewardContext immutableRewardContext,
+        String nativeBaselineFingerprint,TemplateBirth templateBirth){
+        this(schemaVersion,descriptorRevision,balanceRevision,nativeBindingRevision,worldId,encounterId,encounterGeneration,logicalActorId,entityId,spawnCycleId,
+            spawnOrigin,canonicalRoleId,nativeRoleId,combatLevel,difficulty,encounterRank,enemyRarity,packRole,packId,leaderId,sourceValidationId,lootSourceId,
+            acquisitionSourceId,nameToken,nameSeed,paletteId,ownAffixes,inheritedAffixes,nativeImmunityChannels,selectedImmunityGrants,controlProfileId,immutableRewardContext,nativeBaselineFingerprint,templateBirth,null);
+    }
     public enum PackRole { NONE,MEMBER,LEADER,MINION }
     public enum AffixOrigin { OWN,INHERITED }
     public enum ImmunitySource { NATIVE,AFFINITY,AFFIX,TEMPLATE,SCRIPT }
@@ -45,7 +57,7 @@ public record EnemyDescriptor(int schemaVersion,long descriptorRevision,String b
         public double value(String key){var value=parameters.get(key);if(value==null)throw new IllegalArgumentException("MISSING_RESOLVED_PARAMETER:"+key);return value;}
     }
     public EnemyDescriptor {
-        require(schemaVersion==1&&descriptorRevision>=1&&encounterGeneration>=0,"ENEMY_DESCRIPTOR_VERSION");
+        require((schemaVersion==1&&v2==null||schemaVersion==2&&v2!=null)&&descriptorRevision>=1&&encounterGeneration>=0,"ENEMY_DESCRIPTOR_VERSION");
         for(var uuid:List.of(worldId,encounterId,logicalActorId,entityId))Objects.requireNonNull(uuid);
         for(var value:List.of(balanceRevision,nativeBindingRevision,spawnCycleId,canonicalRoleId,nativeRoleId,
                 sourceValidationId,lootSourceId,nameToken,nameSeed,controlProfileId))id(value);
@@ -55,7 +67,7 @@ public record EnemyDescriptor(int schemaVersion,long descriptorRevision,String b
         Objects.requireNonNull(enemyRarity);Objects.requireNonNull(packRole);Objects.requireNonNull(immutableRewardContext);
         require((enemyRarity==EnemyRarity.SUPER_UNIQUE)==(templateBirth!=null),"SUPER_UNIQUE_TEMPLATE_BIRTH_REQUIRED");
         ownAffixes=List.copyOf(ownAffixes);inheritedAffixes=List.copyOf(inheritedAffixes);
-        int affixCap=spawnOrigin==EnemyRewardContext.Origin.QA?27:4;
+        int affixCap=schemaVersion==2?8:spawnOrigin==EnemyRewardContext.Origin.QA?27:4;
         require(ownAffixes.size()<=affixCap&&inheritedAffixes.size()<=affixCap,"ENEMY_AFFIX_INSTANCE_CAP");
         var ids=new HashSet<String>();for(var affix:ownAffixes){require(affix.origin()==AffixOrigin.OWN&&ids.add(affix.affixId()),"OWN_AFFIX_DUPLICATE_OR_ORIGIN");}
         ids.clear();for(var affix:inheritedAffixes){require(affix.origin()==AffixOrigin.INHERITED&&ids.add(affix.affixId())
@@ -77,6 +89,17 @@ public record EnemyDescriptor(int schemaVersion,long descriptorRevision,String b
         nativeImmunityChannels=Collections.unmodifiableSet(nativeChannels);selectedImmunityGrants=List.copyOf(selectedImmunityGrants);
         var channels=new HashSet<>(nativeImmunityChannels);for(var grant:selectedImmunityGrants)require(channels.add(grant.channel()),"DUPLICATE_IMMUNITY_GRANT");
         require(nativeBaselineFingerprint!=null&&nativeBaselineFingerprint.matches("[a-f0-9]{64}"),"NATIVE_BASELINE_FINGERPRINT_REQUIRED");
+        require(schemaVersion==2||immutableRewardContext.v2()==null,"ME12_REWARD_DESCRIPTOR_VERSION");
+        if(v2!=null){
+            require(v2.generation()==encounterGeneration&&templateBirth==null,"ME12_GENERATION_SCOPE");
+            if(v2.kind()==Me12Identity.Kind.PROCEDURAL_UNIQUE){
+                require(enemyRarity==EnemyRarity.UNIQUE&&packRole==PackRole.LEADER&&spawnOrigin==EnemyRewardContext.Origin.NATURAL
+                        &&v2.plan().difficultySlots()==difficulty.ordinal()&&nameToken.equals(v2.plan().displayName()),"ME12_UNIQUE_IDENTITY");
+                require(ownAffixes.stream().map(a->new EnemyAffixSelection.Choice(a.affixId(),a.selector())).toList().equals(v2.plan().choices())
+                        &&v2.rewards().equals(immutableRewardContext.v2()),"ME12_FROZEN_EFFECT_REWARD_IDENTITY");
+            }else require(packRole==PackRole.MINION&&spawnOrigin==EnemyRewardContext.Origin.INITIAL_PACK_MINION
+                    &&v2.sourceLeader().equals(leaderId)&&immutableRewardContext.v2()==null,"ME12_INITIAL_MINION_ONLY");
+        }
     }
     public Set<String> activeImmuneChannels(){var result=new TreeSet<>(nativeImmunityChannels);selectedImmunityGrants.forEach(g->result.add(g.channel()));return Collections.unmodifiableSet(result);}
     public Optional<AffixInstance> own(EnemyAffixRegistry.Operator operator){return ownAffixes.stream().filter(a->a.affixId().equals(operator.id())).findFirst();}

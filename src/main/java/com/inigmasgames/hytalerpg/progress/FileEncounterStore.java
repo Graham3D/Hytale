@@ -1,5 +1,7 @@
 package com.inigmasgames.hytalerpg.progress;
 
+import com.inigmasgames.hytalerpg.enemies.Me12Policies;
+
 import com.google.gson.*;
 import com.inigmasgames.hytalerpg.execution.summon.IronSentinelBinding;
 import java.io.IOException;
@@ -23,7 +25,8 @@ public final class FileEncounterStore implements AutoCloseable {
     // envelope can exceed the single-record limit even when each bag is valid.
     public static final int MAX_SPATIAL_EQUIPMENT_FILE_BYTES=4*1024*1024;
     public enum Boundary { AFTER_CONTEXT, AFTER_DISQUALIFY, AFTER_FREEZE, AFTER_AWARD, AFTER_CURSOR, AFTER_COMPLETION, AFTER_CLEANUP,
-        AFTER_ENEMY_COMPENSATION_MARKER, AFTER_FIRST_ORIGINAL_CONTEXT, AFTER_ENEMY_COMPENSATION_PACK_ABORT }
+        AFTER_ENEMY_COMPENSATION_MARKER, AFTER_FIRST_ORIGINAL_CONTEXT, AFTER_ENEMY_COMPENSATION_PACK_ABORT,
+        ME12_POLICY_CONTENT, ME12_POLICY_REVISION, ME12_POLICY_BUNDLE, ME12_BIRTH_ROOT, ME12_BIRTH_PLAN, ME12_DESCRIPTOR, ME12_NATIVE_INDEX, ME12_PACK }
     public enum JournalBoundary { AFTER_APPEND, AFTER_FORCE, AFTER_CHECKPOINT_FILE, AFTER_CHECKPOINT_POINTER, AFTER_CHECKPOINTS, AFTER_ROTATION, AFTER_FLOOR }
     public enum GroupBoundary { BEFORE_DEQUEUE, AFTER_FIRST_FRAME, AFTER_GROUP_APPEND, BEFORE_FORCE, AFTER_GROUP_FORCE, BEFORE_ACKNOWLEDGEMENTS, MID_ACKNOWLEDGEMENTS, ANOTHER_GROUP_QUEUED, CHECKPOINT_WORKER_STARTED }
     public enum DurabilityBoundary { PREPARE_CREATED, PREPARE_HEADER_WRITTEN, PREPARE_FORCED, ACTIVATION_WRITTEN, ACTIVATION_FORCED, BEFORE_ACTIVE_SWITCH, AFTER_ACTIVE_SWITCH, BUNDLE_SERIALIZATION, BUNDLE_PARTIAL_WRITE, BUNDLE_BEFORE_FORCE, BUNDLE_AFTER_FORCE, BUNDLES_DURABLE, MANIFEST_PARTIAL_WRITE, MANIFEST_BEFORE_FORCE, MANIFEST_AFTER_FORCE, MANIFEST_PUBLISHED, BEFORE_WAL_RETIRE, DURING_WAL_RETIRE }
@@ -107,7 +110,7 @@ public final class FileEncounterStore implements AutoCloseable {
             }
             // Every index is idempotent. A caller cannot publish any actor until this method succeeds.
             for(var actor:plan.actors())reserveEnemyDescriptor(actor);
-            if(plan.pack()!=null)reserveEnemyPack(plan.pack());
+            if(plan.pack()!=null){reserveEnemyPack(plan.pack());if(plan.schemaVersion()==2)fault.accept(Boundary.ME12_PACK);}
             return plan;
         });
     }
@@ -384,7 +387,7 @@ public final class FileEncounterStore implements AutoCloseable {
         Path path=keyPath("enemy-native-actors",index.world(),index.entity());
         if(Files.exists(path)){
             if(!read(path,EnemyEntityIndex.class).equals(index))throw new IllegalStateException("SEALED_ENEMY_ENTITY_INDEX_MISMATCH");
-        }else write(path,index,false);
+        }else {write(path,index,false);if(descriptor.schemaVersion()==2)fault.accept(Boundary.ME12_NATIVE_INDEX);}
     }
     public Optional<com.inigmasgames.hytalerpg.enemies.EnemyDescriptor> enemyDescriptor(UUID world,UUID logicalActor){
         return locked(()->{Path path=keyPath("enemy-descriptors",world,logicalActor);
@@ -651,6 +654,7 @@ public final class FileEncounterStore implements AutoCloseable {
         // Public reads retain on-disk validation. Hot-path save uses the replayed durable mirror.
         var baseline=baseline(new EncounterJournal.Key(world,enemy));if(baseline==null)return Optional.empty();
         var value=journal.entry(new EncounterJournal.Key(world,enemy)).snapshot();
+        requireMe12Reward(value.spawn());
         if(rejected(world,enemy))value=value.invalidated();return Optional.of(value);
     }
     /** Caller creates this only from audited natural spawn evidence. LOAD is read-only, never reclassification. */
@@ -681,6 +685,7 @@ public final class FileEncounterStore implements AutoCloseable {
     }
     public void save(EncounterContributions.Snapshot value){try(var reservation=reserve(1)){save(value,reservation);}}
     public void save(EncounterContributions.Snapshot value,Reservation reservation){locked(()->{
+        requireMe12Reward(value.spawn());
         if(reservation==null||reservation.owner!=this||reservation.released)throw new CapacityRejected();
         var spawn=value.spawn();
         if(deathLocked(spawn.world(),spawn.enemy()).isPresent())throw new IllegalStateException("ENCOUNTER_ALREADY_DIED");
@@ -722,6 +727,7 @@ public final class FileEncounterStore implements AutoCloseable {
         if(legacyReservation)throw new CapacityRejected();
         long validationStart=System.nanoTime();
         for(var value:values){var spawn=value.spawn();var key=new EncounterJournal.Key(spawn.world(),spawn.enemy());
+            requireMe12Reward(spawn);
             AdmissionState state=durabilityV2?admissionStates.get(key):null;
             if(state==null){state=new AdmissionState(deathLocked(spawn.world(),spawn.enemy()).isPresent(),rejected(spawn.world(),spawn.enemy()));
                 if(durabilityV2){if(admissionStates.size()>=EncounterContributions.MAX_ENCOUNTERS)admissionStates.remove(admissionStates.keySet().iterator().next());admissionStates.put(key,state);}}
@@ -910,7 +916,8 @@ public final class FileEncounterStore implements AutoCloseable {
                 }
                 journal=new EncounterJournalV2(directory,legacy,barriers,timings,durabilityFault,journalFault,v2,legacyFloor,preallocate);
             }
-        }catch(IOException|RuntimeException error){releaseHandles();uncertain=true;throw failure("ENCOUNTER_STORE_UNAVAILABLE",error);}
+        }catch(Me12PolicyHold hold){releaseHandles();throw hold;}
+        catch(IOException|RuntimeException error){releaseHandles();uncertain=true;throw failure("ENCOUNTER_STORE_UNAVAILABLE",error);}
     }
     private EncounterJournal.Entry baseline(EncounterJournal.Key key){
         synchronized(checkpointPublication){return readBaseline(key);}
@@ -962,7 +969,61 @@ public final class FileEncounterStore implements AutoCloseable {
         }catch(InterruptedException error){checkpointWorker.shutdownNow();Thread.currentThread().interrupt();throw persistenceFailure(error);}
         catch(RuntimeException error){checkpointWorker.shutdownNow();throw persistenceFailure(error);}
     }
-    private static <T> T read(Path path,Class<T> type){
+    /** A recoverable dependency hold is distinct from an uncertain write or invalid encounter. */
+    public static final class Me12PolicyHold extends IllegalStateException {
+        public Me12PolicyHold(String digest,Throwable cause){super("ME12_POLICY_HOLD:"+digest,cause);}
+    }
+    private record Me12PolicyBundle(String digest,List<Me12Policies.Reference> references){
+        Me12PolicyBundle{references=List.copyOf(references);}
+    }
+    /** Existing encounter IO/writer owner. Immutable bytes and revision bindings precede publication. */
+    public Me12Policies archiveMe12Policies(Me12Policies policies){return locked(()->{
+        // Validate the complete bundle before the first immutable archive write.
+        var bytes=new LinkedHashMap<String,String>();policies.documents().forEach(d->bytes.put(d.reference().asset(),d.utf8()));
+        if(!Me12Policies.load(bytes).equals(policies))throw new IllegalArgumentException("ME12_POLICY_BUNDLE_MISMATCH");
+        for(var document:policies.documents()){
+            var ref=document.reference();Path revision=me12RevisionPath(ref);
+            if(Files.exists(revision)&&!read(revision,Me12Policies.Reference.class).equals(ref))throw new IllegalStateException("ME12_POLICY_REVISION_COLLISION");
+            Path content=me12DocumentPath(ref.digest());
+            if(Files.exists(content)){if(!read(content,Me12Policies.Document.class).equals(document))throw new IllegalStateException("ME12_POLICY_HASH_COLLISION");}
+            else write(content,document,false);
+            if(!Files.exists(revision))write(revision,ref,false);
+        }
+        var bundle=new Me12PolicyBundle(policies.digest(),policies.references());var path=me12BundlePath(policies.digest());
+        if(Files.exists(path)){if(!read(path,Me12PolicyBundle.class).equals(bundle))throw new IllegalStateException("ME12_POLICY_BUNDLE_COLLISION");}
+        else write(path,bundle,false);
+        return policies;
+    });}
+    public Me12Policies requireMe12Policies(String digest,List<Me12Policies.Reference> references){return locked(()->{
+        try{
+            var bundle=read(me12BundlePath(digest),Me12PolicyBundle.class);
+            if(!bundle.equals(new Me12PolicyBundle(digest,references)))throw new IllegalStateException("ME12_POLICY_REFERENCE_MISMATCH");
+            var bytes=new LinkedHashMap<String,String>();
+            for(var ref:references){
+                if(!read(me12RevisionPath(ref),Me12Policies.Reference.class).equals(ref))throw new IllegalStateException("ME12_POLICY_REVISION_MISMATCH");
+                var document=read(me12DocumentPath(ref.digest()),Me12Policies.Document.class);
+                if(!document.reference().equals(ref))throw new IllegalStateException("ME12_POLICY_CONTENT_MISMATCH");bytes.put(ref.asset(),document.utf8());
+            }
+            var policies=Me12Policies.load(bytes);if(!policies.digest().equals(digest))throw new IllegalStateException("ME12_POLICY_DIGEST_MISMATCH");return policies;
+        }catch(RuntimeException missingOrCorrupt){throw new Me12PolicyHold(digest,missingOrCorrupt);}
+    });}
+    private Path me12DocumentPath(String digest){if(digest==null||!digest.matches("[a-f0-9]{64}"))throw new IllegalArgumentException("ME12_DIGEST");return directory.resolve("me12-policies/content").resolve(digest+".json");}
+    private Path me12BundlePath(String digest){if(digest==null||!digest.matches("[a-f0-9]{64}"))throw new IllegalArgumentException("ME12_DIGEST");return directory.resolve("me12-policies/bundles").resolve(digest+".json");}
+    private Path me12RevisionPath(Me12Policies.Reference ref){return directory.resolve("me12-policies/revisions").resolve(RewardIntent.digest(ref.asset()+"/"+ref.revision())+".json");}
+    private void requireMe12Dependencies(JsonElement value){
+        if(value.isJsonArray()){value.getAsJsonArray().forEach(this::requireMe12Dependencies);return;}
+        if(!value.isJsonObject())return;var object=value.getAsJsonObject();
+        if(object.has("v2")&&!object.get("v2").isJsonNull()){
+            var identity=object.getAsJsonObject("v2");
+            var refs=new ArrayList<Me12Policies.Reference>();identity.getAsJsonArray("policies").forEach(r->refs.add(JSON.fromJson(r,Me12Policies.Reference.class)));
+            requireMe12Policies(identity.get("policyDigest").getAsString(),refs);
+        }
+        object.entrySet().forEach(e->requireMe12Dependencies(e.getValue()));
+    }
+    private void requireMe12Reward(EnemyRewardRegistry.Spawn spawn){
+        if(spawn.enemyRewards()!=null&&spawn.enemyRewards().v2()!=null){var ref=spawn.enemyRewards().v2();requireMe12Policies(ref.policyDigest(),ref.policies());}
+    }
+    private <T> T read(Path path,Class<T> type){
         try{
             if(!Files.isRegularFile(path)||Files.size(path)>fileLimit(path))throw new IllegalStateException("ENCOUNTER_FILE_BOUNDS");
             var envelope=JsonParser.parseString(Files.readString(path,StandardCharsets.UTF_8)).getAsJsonObject();
@@ -971,8 +1032,10 @@ public final class FileEncounterStore implements AutoCloseable {
             T value=JSON.fromJson(payload,type);
             if(value==null||!matchesPersistedShape(payload,JSON.toJsonTree(value),type))
                 throw new IllegalStateException("ENCOUNTER_FILE_SHAPE");
+            requireMe12Dependencies(payload);
             return value;
-        }catch(IOException|RuntimeException error){throw failure("ENCOUNTER_FILE_UNREADABLE: "+path,error);}
+        }catch(Me12PolicyHold hold){throw hold;}
+        catch(IOException|RuntimeException error){throw failure("ENCOUNTER_FILE_UNREADABLE: "+path,error);}
     }
     private static boolean matchesPersistedShape(JsonElement persisted,JsonElement current,Class<?> type){
         if(current.equals(persisted))return true;
@@ -1006,7 +1069,7 @@ public final class FileEncounterStore implements AutoCloseable {
         try{
             Files.createDirectories(path.getParent());if(!replace&&Files.exists(path))throw new IllegalStateException("ENCOUNTER_IMMUTABLE_FILE_EXISTS");
             long serializationStart=System.nanoTime();
-            var payload=JSON.toJsonTree(value);var envelope=new JsonObject();envelope.addProperty("schema",1);
+            var payload=JSON.toJsonTree(value);requireMe12Dependencies(payload);var envelope=new JsonObject();envelope.addProperty("schema",1);
             envelope.addProperty("checksum",RewardIntent.digest(JSON.toJson(payload)));envelope.add("payload",payload);
             byte[] bytes=JSON.toJson(envelope).getBytes(StandardCharsets.UTF_8);if(bytes.length>fileLimit(path))throw new IllegalStateException("ENCOUNTER_FILE_BOUNDS");
             timings.record(EncounterPersistenceTimings.Phase.CHECKPOINT_SERIALIZATION,System.nanoTime()-serializationStart);
@@ -1014,6 +1077,12 @@ public final class FileEncounterStore implements AutoCloseable {
             try(var channel=FileChannel.open(temporary,CREATE_NEW,WRITE)){var buffer=ByteBuffer.wrap(bytes);while(buffer.hasRemaining())channel.write(buffer);
                 long forceStart=System.nanoTime();try{if(durabilityV2)barriers.force(channel,EncounterBarrierArbiter.Kind.AUTHORITY);else channel.force(true);}finally{forceTime=System.nanoTime()-forceStart;if(!durabilityV2)timings.record(EncounterPersistenceTimings.Phase.CHECKPOINT_FORCE,forceTime);}}
             if(replace)Files.move(temporary,path,StandardCopyOption.ATOMIC_MOVE,StandardCopyOption.REPLACE_EXISTING);else Files.move(temporary,path,StandardCopyOption.ATOMIC_MOVE);
+            if(value instanceof Me12Policies.Document)fault.accept(Boundary.ME12_POLICY_CONTENT);
+            else if(value instanceof Me12Policies.Reference)fault.accept(Boundary.ME12_POLICY_REVISION);
+            else if(value instanceof Me12PolicyBundle)fault.accept(Boundary.ME12_POLICY_BUNDLE);
+            else if(value instanceof com.inigmasgames.hytalerpg.enemies.EnemyBirthRoot r&&r.plan().schemaVersion()==2)fault.accept(Boundary.ME12_BIRTH_ROOT);
+            else if(value instanceof com.inigmasgames.hytalerpg.enemies.EnemyBirthPlan p&&p.schemaVersion()==2)fault.accept(Boundary.ME12_BIRTH_PLAN);
+            else if(value instanceof com.inigmasgames.hytalerpg.enemies.EnemyDescriptor d&&d.schemaVersion()==2)fault.accept(Boundary.ME12_DESCRIPTOR);
             timings.record(EncounterPersistenceTimings.Phase.CHECKPOINT_WRITE,System.nanoTime()-writeStart-forceTime);
         }catch(IOException error){if(durabilityV2)throw persistenceFailure(error);throw failure("ENCOUNTER_WRITE_FAILED",error);}
         finally{foregroundCompleted();try{Files.deleteIfExists(temporary);}catch(IOException ignored){/* Incomplete uniquely named files are not replayable. */}}

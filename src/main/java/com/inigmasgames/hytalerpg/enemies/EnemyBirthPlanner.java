@@ -170,6 +170,53 @@ public final class EnemyBirthPlanner {
                 request.anchor(),membersRecord,leaderId,guards,Map.of(),false,false,request.nativePlanReceipt(),null);
         return new Result(birth(request,actors,pack,floors),rolled,null);
     }
+    /** Stage 2 offline composition only. This is deliberately absent from natural admission and QA commands.
+     * The selected graph and frozen native candidates must agree before the one legacy immunity draw. */
+    public EnemyBirthPlan planV2Offline(Request request,Me12Planner.Compiled compiled,Me12Planner.Plan selected){
+        require(compiled.accepts(selected),"ME12_SELECTED_PLAN_NOT_IN_COMPILED_CONTEXT");
+        var context=compiled.context();var policy=compiled.policies();
+        require(context.evidence()==Me12Planner.Evidence.CERTIFIED_STATIC_FIXTURE,"ME12_NATIVE_ADMISSION_DEPENDENCY");
+        require(request.compatibleNativeGroup()&&request.specialPackCapacity()&&request.nativePlanReceipt().equals(context.sourceReceipt()),"ME12_NATIVE_PLAN_IDENTITY");
+        require(balance.export().equals(policy.balance().export())&&registry.revision().equals(policy.registry().revision()),"ME12_ARCHIVED_EVALUATOR_IDENTITY");
+        var offered=combined(request.originals(),request.additionalSlots());int base=context.minions().size();
+        var expected=new ArrayList<Me12Planner.Member>();expected.add(context.leader());expected.addAll(context.minions());expected.addAll(context.hordeSlots());
+        require(offered.size()==expected.size(),"ME12_NATIVE_ROSTER_NOT_FROZEN");
+        for(int i=0;i<offered.size();i++){
+            var candidate=offered.get(i);var source=candidate.nativeBaseline();var member=expected.get(i);
+            require(source.spawnOrigin()==EnemyRewardContext.Origin.NATURAL&&source.encounterGeneration()==context.generation()
+                    &&source.difficulty()==context.difficulty()&&source.canonicalRoleId().equals(member.role())&&source.nativeRoleId().equals(member.nativeRole())
+                    &&source.sourceValidationId().equals(member.source())&&source.nativeImmunityChannels().equals(member.immunities())
+                    &&withMinions(candidate.binding(),base).equals(member.binding()),"ME12_NATIVE_CONTEXT_CHANGED");
+        }
+        var choices=selected.choices();boolean horde=choices.stream().anyMatch(c->c.affixId().equals(Operator.HORDE.id()));
+        int count=1+base+(horde?2:0);
+        require(count>=request.originals().size()&&count-request.originals().size()<=request.additionalNativeCapacity(),"ME12_NATIVE_CAPACITY_CHANGED");
+        var roster=offered.subList(0,count);var leader=roster.getFirst().nativeBaseline();
+        String rosterDigest=RewardIntent.digest(roster.stream().map(c->c.nativeBaseline().logicalActorId()+"/"+c.nativeBaseline().entityId()+"/"+c.nativeBaseline().nativeRoleId()+"/"+c.nativeBaseline().nativeBaselineFingerprint()).collect(java.util.stream.Collectors.joining("\n")));
+        var identity=Me12Identity.leader(compiled,selected,rosterDigest);
+        var own=choices.stream().map(c->{var a=ownInstance(c,context.difficulty(),context.leader().binding());
+            return new EnemyDescriptor.AffixInstance(a.affixId(),a.definitionRevision(),a.parameters(),a.selector(),a.origin(),a.sourceLeaderId(),a.contributesToRewardCount(),Me12Random.SET+"/"+a.affixId());}).toList();
+        var inherited=own.stream().map(a->EnemyDescriptor.inheritedInstance(registry.require(a.affixId()),a,leader.logicalActorId(),"me.inherit/"+a.affixId())).flatMap(Optional::stream).toList();
+        boolean packbound=choices.stream().anyMatch(c->c.affixId().equals(Operator.PACKBOUND.id()));
+        var actors=new ArrayList<EnemyDescriptor>();var floors=new TreeMap<UUID,Map<String,Double>>();
+        var archivedImmunity=new EnemyImmunitySelection(policy.balance(),policy.affinities());
+        for(int i=0;i<roster.size();i++){
+            var candidate=roster.get(i);var s=candidate.nativeBaseline();boolean minion=i>0;var rarity=minion?EnemyRarity.NORMAL:EnemyRarity.UNIQUE;
+            require(!minion||supportsInheritance(candidate.binding(),inherited),"ME12_INHERITANCE_CHANGED");
+            var grants=archivedImmunity.select(s.canonicalRoleId(),rarity,s.difficulty(),false,s.nativeImmunityChannels(),Set.of(),minion?List.of():choices,true,packbound&&!minion,packbound&&minion,false,actorSeed(request,s));
+            require(grants.accepted(),"ME12_FINALIZER_CONTRADICTION:"+grants.rejection());
+            var origin=minion?EnemyRewardContext.Origin.INITIAL_PACK_MINION:EnemyRewardContext.Origin.NATURAL;
+            var legacy=balance.rewards(rarity,origin,minion,minion?0:1);
+            var rewards=minion?legacy:new EnemyRewardContext(legacy.balanceRevision(),rarity,origin,false,own.size(),legacy.rarityXp(),legacy.rarityQuantity(),legacy.learningMultiplier(),legacy.learningPointCap(),legacy.xpPerAdditionalAffix(),legacy.quantityPerAdditionalAffix(),identity.rewards());
+            String actorSeed=actorSeed(request,s);String palette=visuals.select(s.canonicalRoleId(),rarity,null,actorSeed).map(EnemyVisualVariants.Variant::id).orElse(null);
+            actors.add(new EnemyDescriptor(2,s.descriptorRevision(),balance.revision(),s.nativeBindingRevision(),s.worldId(),s.encounterId(),s.encounterGeneration(),s.logicalActorId(),s.entityId(),s.spawnCycleId(),origin,s.canonicalRoleId(),s.nativeRoleId(),s.combatLevel(),s.difficulty(),s.encounterRank(),rarity,minion?EnemyDescriptor.PackRole.MINION:EnemyDescriptor.PackRole.LEADER,request.packId(),leader.logicalActorId(),s.sourceValidationId(),s.lootSourceId(),s.acquisitionSourceId(),minion?s.nameToken():selected.displayName(),actorSeed,palette,minion?List.of():own,minion?inherited:List.of(),grants.preservedNative(),grants.selected(),s.controlProfileId(),rewards,s.nativeBaselineFingerprint(),null,minion?identity.inherited(leader.logicalActorId()):identity));
+            floors.put(s.logicalActorId(),grants.affinityFloors());
+        }
+        var members=actors.stream().map(a->new EnemyPackRecord.Member(a.logicalActorId(),a.entityId(),a.canonicalRoleId(),EnemyPackRecord.Role.valueOf(a.packRole().name()))).toList();
+        var guards=new TreeSet<UUID>();if(packbound)actors.stream().skip(1).forEach(a->guards.add(a.logicalActorId()));
+        var pack=new EnemyPackRecord(1,request.packId(),leader.worldId(),leader.encounterId(),leader.encounterGeneration(),EnemyPackRecord.State.RESERVED,null,request.anchor(),members,leader.logicalActorId(),guards,Map.of(),false,false,request.nativePlanReceipt(),null);
+        return new EnemyBirthPlan(2,leader.worldId(),leader.encounterId(),leader.encounterGeneration(),request.seed(),request.originals().stream().map(c->c.nativeBaseline().entityId()).toList(),actors,pack,floors);
+    }
     /** Explicit operator birth uses the same descriptor, immunity, inheritance and pack owners as natural birth. */
     public EnemyBirthPlan planQa(Request request,EnemyQaSpawnRequest qa){
         require(request.originals().getFirst().nativeBaseline().spawnOrigin()==EnemyRewardContext.Origin.QA

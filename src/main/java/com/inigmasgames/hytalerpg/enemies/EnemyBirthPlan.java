@@ -9,12 +9,13 @@ public record EnemyBirthPlan(int schemaVersion,UUID world,UUID encounter,long ge
         Map<UUID,Map<String,Double>> affinityFloors){
     public EnemyBirthPlan{
         Objects.requireNonNull(world);Objects.requireNonNull(encounter);
-        require(schemaVersion==1&&generation>=0&&seed!=null&&!seed.isBlank()&&seed.length()<=512,"ENEMY_BIRTH_IDENTITY");
+        require((schemaVersion==1||schemaVersion==2)&&generation>=0&&seed!=null&&!seed.isBlank()&&seed.length()<=512,"ENEMY_BIRTH_IDENTITY");
         originalNativeEntities=List.copyOf(originalNativeEntities);actors=List.copyOf(actors);
         require(!originalNativeEntities.isEmpty()&&originalNativeEntities.size()<=8&&actors.size()>=originalNativeEntities.size()&&actors.size()<=8,"ENEMY_BIRTH_SIZE");
         require(new HashSet<>(originalNativeEntities).size()==originalNativeEntities.size(),"ENEMY_BIRTH_DUPLICATE_ORIGINAL");
         var logical=new HashMap<UUID,EnemyDescriptor>();var nativeIds=new HashSet<UUID>();
         for(var actor:actors){
+            require(actor.schemaVersion()==schemaVersion,"ENEMY_BIRTH_NESTED_VERSION");
             require(actor.worldId().equals(world)&&actor.encounterId().equals(encounter)&&actor.encounterGeneration()==generation,"ENEMY_BIRTH_ACTOR_IDENTITY");
             require(logical.putIfAbsent(actor.logicalActorId(),actor)==null&&nativeIds.add(actor.entityId()),"ENEMY_BIRTH_DUPLICATE_ACTOR");
             require(Objects.equals(actor.packId(),pack==null?null:pack.packId()),"ENEMY_BIRTH_PACK_BINDING");
@@ -46,6 +47,8 @@ public record EnemyBirthPlan(int schemaVersion,UUID world,UUID encounter,long ge
                 require(actors.stream().filter(actor->actor!=leader).allMatch(actor->actor.packRole()==EnemyDescriptor.PackRole.MINION
                         &&(actor.spawnOrigin()==EnemyRewardContext.Origin.INITIAL_PACK_MINION||actor.spawnOrigin()==EnemyRewardContext.Origin.QA)),"ENEMY_BIRTH_MINION_PROVENANCE");
                 require(leader.own(EnemyAffixRegistry.Operator.PACKBOUND).isPresent()==!pack.guardIds().isEmpty(),"ENEMY_BIRTH_GUARD_AFFIX_MISMATCH");
+                if(schemaVersion==2)require(actors.stream().allMatch(a->a.v2().policyDigest().equals(leader.v2().policyDigest())
+                        &&a.v2().rosterDigest().equals(leader.v2().rosterDigest())&&a.v2().nativeSourceReceipt().equals(leader.v2().nativeSourceReceipt())),"ME12_BIRTH_SNAPSHOT_MISMATCH");
             }
         }
         var frozen=new TreeMap<UUID,Map<String,Double>>();

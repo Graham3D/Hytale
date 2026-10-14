@@ -6,12 +6,19 @@ import java.util.*;
 /** Frozen inputs for the existing XP, acquisition and equipment owners; no reward delivery here. */
 public record EnemyRewardContext(String balanceRevision,EnemyRarity rarity,Origin origin,boolean minion,
                                  int ownAffixCount,double rarityXp,double rarityQuantity,double learningMultiplier,
-                                 double learningPointCap,double xpPerAdditionalAffix,double quantityPerAdditionalAffix) {
+                                 double learningPointCap,double xpPerAdditionalAffix,double quantityPerAdditionalAffix,
+                                 Me12Identity.RewardReference v2) {
+    public EnemyRewardContext(String balanceRevision,EnemyRarity rarity,Origin origin,boolean minion,
+            int ownAffixCount,double rarityXp,double rarityQuantity,double learningMultiplier,double learningPointCap,
+            double xpPerAdditionalAffix,double quantityPerAdditionalAffix){
+        this(balanceRevision,rarity,origin,minion,ownAffixCount,rarityXp,rarityQuantity,learningMultiplier,learningPointCap,xpPerAdditionalAffix,quantityPerAdditionalAffix,null);
+    }
     public enum Origin { NATURAL, AUTHORED_ENCOUNTER, INITIAL_PACK_MINION, COMBAT_SUMMON, REVIVED, PLAYER_OWNED, QA }
     public EnemyRewardContext {
         Objects.requireNonNull(rarity);Objects.requireNonNull(origin);
         EnemyAffixRegistry.require(balanceRevision!=null&&!balanceRevision.isBlank()&&ownAffixCount>=0
-                &&ownAffixCount<=(origin==Origin.QA?27:4),"INVALID_ENEMY_REWARD_CONTEXT");
+                &&ownAffixCount<=(v2!=null?8:origin==Origin.QA?27:4),"INVALID_ENEMY_REWARD_CONTEXT");
+        EnemyAffixRegistry.require(v2==null||rarity==EnemyRarity.UNIQUE&&origin==Origin.NATURAL&&!minion&&ownAffixCount==v2.ownAffixCount(),"ME12_REWARD_SCOPE");
         EnemyAffixRegistry.require(!minion||rarity==EnemyRarity.NORMAL&&ownAffixCount==0,"MINION_CANNOT_INHERIT_REWARD_RARITY");
         EnemyAffixRegistry.require(origin!=Origin.INITIAL_PACK_MINION||minion,"INITIAL_MINION_RELATION_REQUIRED");
         for(double value:new double[]{rarityXp,rarityQuantity,learningMultiplier,learningPointCap,xpPerAdditionalAffix,quantityPerAdditionalAffix})
@@ -19,9 +26,11 @@ public record EnemyRewardContext(String balanceRevision,EnemyRarity rarity,Origi
         EnemyAffixRegistry.require(rarityQuantity>=1&&learningMultiplier>=1&&learningPointCap<=.10,"INVALID_ENEMY_REWARD_CAP");
     }
     public boolean economic(){return origin==Origin.NATURAL||origin==Origin.AUTHORED_ENCOUNTER||origin==Origin.INITIAL_PACK_MINION;}
-    public double xpFactor(){return economic()?rarityXp*(1+xpPerAdditionalAffix*Math.clamp(ownAffixCount-1,0,3)):0;}
-    public double quantityFactor(){return economic()?rarityQuantity*(1+quantityPerAdditionalAffix*Math.clamp(ownAffixCount-1,0,3)):0;}
+    private void legacyEvaluator(){if(v2!=null)throw new IllegalStateException("ME12_STAGE3_REWARD_EVALUATOR_REQUIRED");}
+    public double xpFactor(){legacyEvaluator();return economic()?rarityXp*(1+xpPerAdditionalAffix*Math.clamp(ownAffixCount-1,0,3)):0;}
+    public double quantityFactor(){legacyEvaluator();return economic()?rarityQuantity*(1+quantityPerAdditionalAffix*Math.clamp(ownAffixCount-1,0,3)):0;}
     public double learningChance(double existingChance){
+        legacyEvaluator();
         EnemyAffixRegistry.require(Double.isFinite(existingChance)&&existingChance>=0&&existingChance<=.95,"INVALID_EXISTING_LEARNING_CHANCE");
         return economic()?Math.min(.95,existingChance+Math.min(existingChance*(learningMultiplier-1),learningPointCap)):0;
     }

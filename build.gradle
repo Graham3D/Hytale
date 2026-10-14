@@ -108,6 +108,21 @@ tasks.register('hroHeapQualification', JavaExec) {
         }
     }
 }
+tasks.register('me12HeapQualification', JavaExec) {
+    group = 'verification'
+    description = 'Offline ME12 planner retained-heap qualification; never starts Hytale.'
+    dependsOn tasks.named('hroHeapAgent')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.inigmasgames.hytalerpg.enemies.Me12HeapQualification'
+    doFirst {
+        jvmArgs "-javaagent:${tasks.named('hroHeapAgent').get().archiveFile.get().asFile}"
+        ['java.lang','java.util','java.math','java.util.concurrent','java.util.concurrent.atomic','java.util.concurrent.locks'].each {
+            jvmArgs '--add-opens', "java.base/${it}=ALL-UNNAMED"
+        }
+    }
+}
+tasks.named('check') { dependsOn tasks.named('me12HeapQualification') }
+
 def htDevLibJar = file("${hytaleHome}/UserData/Saves/Hywind/mods/HYTALEDEVLIB-0.5.0.jar")
 
 if (!serverJar.exists()) {

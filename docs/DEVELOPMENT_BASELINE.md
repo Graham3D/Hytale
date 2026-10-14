@@ -1,5 +1,50 @@
 # HyARPG/Hywind development baseline
 
+## ME12 Stage 2 offline engineering checkpoint (2026-10-14)
+
+State: **OFFLINE_IMPLEMENTED; final exact-HEAD verification required;
+INTEGRATION_BLOCKED / QA_PENDING**. The owner explicitly authorized isolated
+Stage 2 despite Stage 1 native/scope blockers. This entry supersedes older
+statements that Stage 2 has not started; their historical evidence is preserved.
+
+Branch `codex/me12-stage2`, isolated worktree
+`C:/Users/Zemio/.codex/worktrees/me12-stage2/Hytale-main-clean`, starts at tested,
+Guardian-published `b0844f8a013305cffa0b6a9c8912dad571027c3c` on
+`codex/me12-stage1` (4,325 JUnit and 16 Python passes). Snapshot checkpoint
+`2d021f9c727c6de039c26e87fc32488d6f67f53b` is not the final tested parent.
+Remote main remains `b839526e7106f780648c315692b04bb372b58d9e`, eight commits
+behind the Stage 1 parent. Preserved selective dependencies are Elite
+`3327a5650cadf0173b336072f614a13c63cecc56` and HRO
+`f7d414e6348c84653d03a51117bdfe2fc427dded`, both **QA_PENDING**.
+
+Provisional revision `R262ME12S2-CANDIDATE`, version
+`0.2.0-R262ME12S2-CANDIDATE`, target Hytale `=0.7.1`.
+Implemented strict versioned identities/archives/recovery, exact weighted
+distinct-set planning and bounded asynchronous compilation. Production v2 births
+remain DISABLED; no Stage 3 reward or acquisition implementation is included.
+Focused tests pass, including 900,000 representative samples, 756 static
+role/era/roster compilations, real retained-heap measurement, bounded concurrent
+cache work, legacy bytes, cross-JVM replay and fault recovery.
+
+Final source identity and actual cumulative totals are recorded after the final
+commit in `build/reports/me12/stage2-final-manifest.json` and Guardian's
+`build/guardian/verification.json`. Required command: `check jar
+testReleaseNativePatch guardianSpotBugs -PguardianSpotBugs=true --continue`;
+unmodified log: `build/guardian/me12-stage2-final.log`. This tracked record does
+not predeclare that run's result. Publish only a clean, reviewed exact HEAD to
+the matching feature branch after Guardian verifies it.
+
+The 21 pinned inputs and 309-ID matrix are unchanged. Stage 1 remains
+BLOCKED_OFFLINE_COVERAGE; Monster Affix OPEN, ownerAccepted=false. Native
+execution and connected QA are deferred to Stage 4. Main, the dirty primary
+checkout/artwork, Stage 1 checkout, installed game/mod and active save are
+untouched. No deployment, main integration or intermediate gameplay QA is
+authorized. Next action after verification/publication: request owner
+authorization for isolated Stage 3, retaining all native and acquisition blockers.
+
+See [Stage 2 handoff](enemies/ME12_STAGE2_HANDOFF.md) and
+[four-axis gates](enemies/ME12_STAGE2_GATES.json).
+
 ## ME12 Stage 1 coverage reconciliation checkpoint (2026-10-14)
 
 State: **INTEGRATION_BLOCKED / QA_PENDING; normative Stage 1 BLOCKED**.
