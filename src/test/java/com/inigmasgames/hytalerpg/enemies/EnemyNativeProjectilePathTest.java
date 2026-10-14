@@ -124,7 +124,13 @@ class EnemyNativeProjectilePathTest {
     }
     private static final class Interactions extends IndexedLookupTableAssetMap<String,Interaction> {
         Interactions(){super(Interaction[]::new);}
-        void seed(Interaction launch){putAll("ScoutFixture",Interaction.CODEC,Map.of(launch.getId(),launch),Map.of(),Map.of());}
+        void seed(Interaction... values){var entries=new java.util.HashMap<String,Interaction>();
+            for(var value:values)entries.put(value.getId(),value);
+            putAll("ScoutFixture",Interaction.CODEC,entries,Map.of(),Map.of());}
+    }
+    private static final class Projectiles extends com.hypixel.hytale.assetstore.map.DefaultAssetMap<String,Projectile> {
+        Projectiles(){super();}
+        void seed(Projectile value){putAll("MixedFixture",Projectile.CODEC,Map.of("LegacyArrow",value),Map.of(),Map.of());}
     }
     @Test void installedScoutActionHydratesThroughNativeAssetStore() throws Exception {
         com.hypixel.hytale.server.core.Options.parse(new String[]{"--bare"});
@@ -193,5 +199,51 @@ class EnemyNativeProjectilePathTest {
             assertEquals(2,NativeBasicAttackPaths.resolve(context,repeated,InteractionType.Primary)
                     .projectileOccurrences().get(launch));
         }finally{AssetRegistry.unregister(assets);NativeFixtureAssetCache.clear(Interaction.class);}
+    }
+    @Test void modernProjectileCannotHideInsideALegacyCertifiedAction() throws Exception {
+        com.hypixel.hytale.server.core.Options.parse(new String[]{"--bare"});
+        var legacy=new LaunchProjectileInteraction();
+        var modern=new com.hypixel.hytale.server.core.modules.projectile.interaction.ProjectileInteraction();
+        var id=Interaction.class.getDeclaredField("id");id.setAccessible(true);
+        id.set(legacy,"LegacyLaunch");id.set(modern,"ModernLaunch");
+        var projectileId=LaunchProjectileInteraction.class.getDeclaredField("projectileId");
+        projectileId.setAccessible(true);projectileId.set(legacy,"LegacyArrow");
+        var constructor=Projectile.class.getDeclaredConstructor();constructor.setAccessible(true);
+        var arrow=constructor.newInstance();
+        var damage=Projectile.class.getDeclaredField("damage");damage.setAccessible(true);damage.setInt(arrow,13);
+        var arrows=new Projectiles();arrows.seed(arrow);
+        var arrowBuilder=HytaleAssetStore.builder(Projectile.class,(com.hypixel.hytale.assetstore.map.DefaultAssetMap<String,Projectile>)arrows)
+                .setPath("Projectiles").setCodec(Projectile.CODEC).setKeyFunction(Projectile::getId)
+                .setReplaceOnRemove(ignored->{throw new AssertionError("Fixture projectile removed");});
+        var arrowAssets=new HytaleAssetStore<>(arrowBuilder){final EventBus events=new EventBus(false);
+            @Override protected EventBus getEventBus(){return events;}};
+        var map=new Interactions();map.seed(legacy,modern);
+        var builder=HytaleAssetStore.builder(Interaction.class,(IndexedLookupTableAssetMap<String,Interaction>)map)
+                .setPath("Item/Interactions").setCodec(Interaction.CODEC).setKeyFunction(Interaction::getId)
+                .setReplaceOnRemove(ignored->{throw new AssertionError("Fixture asset removed");});
+        var assets=new HytaleAssetStore<>(builder){final EventBus events=new EventBus(false);
+            @Override protected EventBus getEventBus(){return events;}};
+        AssetRegistry.register(assets);NativeFixtureAssetCache.clear(Interaction.class);
+        AssetRegistry.register(arrowAssets);NativeFixtureAssetCache.clear(Projectile.class);
+        try{
+            var context=InteractionContext.withoutEntity();
+            var single=new RootInteraction("LegacyOnly",legacy.getId());single.build();
+            var strike=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyAction.ProjectileStrike(
+                    "arrow","ActionAttack.execute",1,legacy,EnemyStatusEffects.Source.noNativeStatus(0));
+            new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyAction.Binding("test",single,
+                    InteractionType.Primary,java.util.List.of(),java.util.List.of(strike)).validate(context);
+            var mixed=new RootInteraction("MixedLaunch",legacy.getId(),modern.getId());mixed.build();
+            var graph=NativeBasicAttackPaths.resolve(context,mixed,InteractionType.Primary);
+            assertEquals(1,graph.configProjectileOccurrences().get(modern));
+            assertTrue(graph.classify(modern).isEmpty());
+            assertEquals(1,graph.projectileOccurrences().size());
+            var repeated=new RootInteraction("RepeatedModern",modern.getId(),modern.getId());repeated.build();
+            assertEquals(2,NativeBasicAttackPaths.resolve(context,repeated).configProjectileOccurrences().get(modern));
+            var binding=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyAction.Binding("test",mixed,
+                    InteractionType.Primary,java.util.List.of(),java.util.List.of(strike));
+            var failure=assertThrows(IllegalStateException.class,()->binding.validate(context));
+            assertEquals("ENEMY_ACTION_CONFIG_PROJECTILE_NOT_CERTIFIED",failure.getMessage());
+        }finally{AssetRegistry.unregister(assets);NativeFixtureAssetCache.clear(Interaction.class);
+            AssetRegistry.unregister(arrowAssets);NativeFixtureAssetCache.clear(Projectile.class);}
     }
 }

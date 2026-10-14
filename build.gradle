@@ -200,7 +200,7 @@ tasks.register('testMe12Content', Exec) {
     group = 'verification'
     def bundledPython = file("${System.getProperty('user.home')}/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe")
     def python = providers.gradleProperty('pythonExecutable').getOrElse(bundledPython.exists() ? bundledPython.absolutePath : 'python')
-    commandLine python, '-m', 'unittest', 'discover', '-s', 'tools/audit', '-p', 'test_me12_content.py', '-v'
+    commandLine python, '-m', 'unittest', 'discover', '-s', 'tools/audit', '-p', 'test_me12_*.py', '-v'
 }
 tasks.register('auditMe12Coverage', Exec) {
     group = 'verification'
@@ -218,6 +218,14 @@ tasks.register('verifyMe12Coverage', Exec) {
 }
 tasks.named('check') { dependsOn tasks.named('auditMe12Content'), tasks.named('testMe12Content') }
 tasks.named('check') { dependsOn tasks.named('verifyMe12Coverage') }
+tasks.register('verifyMe12Reconciliation', Exec) {
+    group = 'verification'
+    dependsOn tasks.named('verifyMe12Coverage')
+    def bundledPython = file("${System.getProperty('user.home')}/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe")
+    def python = providers.gradleProperty('pythonExecutable').getOrElse(bundledPython.exists() ? bundledPython.absolutePath : 'python')
+    commandLine python, file('tools/audit/me12_reconcile.py'), '--check'
+}
+tasks.named('check') { dependsOn tasks.named('verifyMe12Reconciliation') }
 
 allprojects {
     tasks.matching { it.name == 'processResources' }.configureEach {

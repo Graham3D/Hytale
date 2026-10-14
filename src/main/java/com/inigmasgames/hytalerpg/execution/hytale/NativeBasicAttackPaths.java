@@ -11,6 +11,7 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.dat
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.data.CollectorTag;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.DamageEntityInteraction;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.LaunchProjectileInteraction;
+import com.hypixel.hytale.server.core.modules.projectile.interaction.ProjectileInteraction;
 import java.util.*;
 
 /** Uses the installed engine's Replace/Charging walk, including the actual equipped item's variables.
@@ -24,6 +25,7 @@ public final class NativeBasicAttackPaths implements Collector {
     private final IdentityHashMap<DamageEntityInteraction,Integer> damageOccurrences=new IdentityHashMap<>();
     private final List<DamageEntityInteraction> orderedDamage=new ArrayList<>();
     private final IdentityHashMap<LaunchProjectileInteraction,Integer> projectileOccurrences=new IdentityHashMap<>();
+    private final IdentityHashMap<ProjectileInteraction,Integer> configProjectileOccurrences=new IdentityHashMap<>();
     private final IdentityHashMap<Interaction,List<Path>> damagePaths=new IdentityHashMap<>();
     private Path pending=new Path(false,false,null,null,-1,false);
     private int visited;
@@ -39,7 +41,8 @@ public final class NativeBasicAttackPaths implements Collector {
     @Override public void into(InteractionContext context,Interaction interaction){
         if(stack.size()>=64)throw new IllegalStateException("NATIVE_BASIC_PATH_DEPTH_LIMIT");
         stack.push(new Path(pending.charged(),pending.afterDamage()
-                ||interaction instanceof DamageEntityInteraction||interaction instanceof LaunchProjectileInteraction,
+                ||interaction instanceof DamageEntityInteraction||interaction instanceof LaunchProjectileInteraction
+                ||interaction instanceof ProjectileInteraction,
                 interaction,pending.chain(),pending.branch(),pending.nestedChain()));
     }
     @Override public boolean collect(CollectorTag tag,InteractionContext context,Interaction interaction){
@@ -73,6 +76,7 @@ public final class NativeBasicAttackPaths implements Collector {
             damagePaths.computeIfAbsent(leaf,ignored->new ArrayList<>()).add(pending);
         }
         if(interaction instanceof LaunchProjectileInteraction leaf)projectileOccurrences.merge(leaf,1,Integer::sum);
+        if(interaction instanceof ProjectileInteraction leaf)configProjectileOccurrences.merge(leaf,1,Integer::sum);
         if((interaction instanceof DamageEntityInteraction||interaction instanceof LaunchProjectileInteraction)&&!pending.afterDamage()){
             Kind kind=charged?Kind.CHARGED:Kind.NORMAL;
             damage.merge(interaction,kind,(a,b)->a==b?a:Kind.AMBIGUOUS);
@@ -101,6 +105,15 @@ public final class NativeBasicAttackPaths implements Collector {
     /** Native launch operations are independent strike producers. Counting them cannot certify a later hit. */
     public Map<LaunchProjectileInteraction,Integer> projectileOccurrences(){
         return Collections.unmodifiableMap(new IdentityHashMap<>(projectileOccurrences));
+    }
+    /** Modern config projectiles require their own creation/impact/recovery receipt owner.
+     * Inventory them without granting the legacy launch certificate or basic-attack classification. */
+    public Map<ProjectileInteraction,Integer> configProjectileOccurrences(){
+        return Collections.unmodifiableMap(new IdentityHashMap<>(configProjectileOccurrences));
+    }
+    public void requireNoUncertifiedConfigProjectiles(){
+        if(!configProjectileOccurrences.isEmpty())
+            throw new IllegalStateException("ENEMY_ACTION_CONFIG_PROJECTILE_NOT_CERTIFIED");
     }
     public Map<String,String> audit(){
         var result=new TreeMap<String,String>();damage.forEach((interaction,kind)->result.put(interaction.getId(),kind.name()));return Map.copyOf(result);

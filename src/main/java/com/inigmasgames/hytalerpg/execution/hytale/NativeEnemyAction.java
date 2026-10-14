@@ -68,6 +68,7 @@ public final class NativeEnemyAction {
         }
         public void validate(InteractionContext context){
             var graph=NativeBasicAttackPaths.resolve(context,root,type);var occurrences=graph.damageOccurrences();
+            graph.requireNoUncertifiedConfigProjectiles();
             if(occurrences.size()!=strikes.size()||graph.projectileOccurrences().size()!=projectileStrikes.size())
                 throw new IllegalStateException("ENEMY_ACTION_UNBOUND_STRIKE_ROUTE");
             for(var strike:strikes){
