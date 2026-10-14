@@ -9,7 +9,7 @@ class BuildIdentityTest {
         assertEquals("R262", BuildIdentity.displayRevision("R262C1ELITE4-CANDIDATE"));
         assertEquals("R250", BuildIdentity.displayRevision("R250-U7P5B"));
         assertEquals("R262", BuildIdentity.DISPLAY_REVISION);
-        assertEquals("R262ME12S1-CANDIDATE", BuildIdentity.REVISION);
+        assertEquals("R262ME12S1R1-CANDIDATE", BuildIdentity.REVISION);
     }
 
     @Test void malformedRevisionCannotLeakToTheBadge() {

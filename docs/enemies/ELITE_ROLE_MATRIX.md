@@ -507,7 +507,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Fen_Stalker
@@ -626,7 +626,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-014 Cursed | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-015 Knockback | NATIVE_KNOCKBACK_NOT_CERTIFIED |
 | ME-016 Vampiric | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-017 Unwavering | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-017 Unwavering | LEGAL |
 | ME-018 Unstoppable | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-019 Frenzied | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-020 Avenger | ACTION_ROUTE_NOT_CERTIFIED |
@@ -795,7 +795,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Outlander_Hunter
@@ -827,7 +827,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Pig_Undead
@@ -1115,7 +1115,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Archer_Wander
@@ -1147,7 +1147,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Burnt_Archer
@@ -1179,7 +1179,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Burnt_Archer_Wander
@@ -1211,7 +1211,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Burnt_Gunner
@@ -1243,7 +1243,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Burnt_Lancer
@@ -1531,7 +1531,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Frost_Archer_Patrol
@@ -1563,7 +1563,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Frost_Archer_Wander
@@ -1595,7 +1595,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Frost_Fighter
@@ -1755,7 +1755,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Frost_Mage_Wander
@@ -1787,7 +1787,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Frost_Ranger
@@ -1819,7 +1819,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Frost_Ranger_Patrol
@@ -1851,7 +1851,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Frost_Ranger_Wander
@@ -1883,7 +1883,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Frost_Soldier
@@ -2043,7 +2043,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Incandescent_Mage_Wander
@@ -2075,7 +2075,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Mage
@@ -2107,7 +2107,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Mage_Wander
@@ -2139,7 +2139,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Sand_Assassin
@@ -2299,7 +2299,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Sand_Mage_Wander
@@ -2331,7 +2331,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Scout
@@ -2363,7 +2363,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Scout_Patrol
@@ -2395,7 +2395,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Scout_Wander
@@ -2427,7 +2427,7 @@ The entries below use the real Unique/Hell selector with the authored minimum mi
 | ME-023 Aura Enchanted | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-024 Packbound | ACTION_ROUTE_NOT_CERTIFIED |
 | ME-025 Armor Breaker | ACTION_ROUTE_NOT_CERTIFIED |
-| ME-026 Reflective | ACTION_ROUTE_NOT_CERTIFIED |
+| ME-026 Reflective | LEGAL |
 | ME-027 Bulwark | ACTION_ROUTE_NOT_CERTIFIED |
 
 ### Skeleton_Soldier

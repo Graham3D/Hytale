@@ -27,7 +27,11 @@ The unmodified log is `build/guardian/me12-remediation-final.log`;
 `build/reports/me12/remediation-final-manifest.json` records exact tested HEAD,
 JUnit totals, native/mod/policy hashes, four-axis gates and Git synchronization.
 Guardian's exact-HEAD receipt is `build/guardian/verification.json`.
-This record is written before that mandatory run and does not predeclare it.
+The first remediation cumulative at 57ddc525 ran 4,324 tests with two
+artifact-synchronization failures (generated Elite matrix and candidate-string
+fixture). Both are narrowly corrected without changing assertions or gameplay.
+This record precedes the mandatory final exact-commit rerun and does not
+predeclare its result; the failed log is preserved separately.
 Only verified commits may be published to the matching codex branch; main
 integration and deployment remain unauthorized while acceptance is pending.
 
