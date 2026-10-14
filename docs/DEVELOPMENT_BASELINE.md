@@ -1,5 +1,41 @@
 # HyARPG/Hywind development baseline
 
+## ME12 Stage 3 Task 1 local checkpoint (2026-10-14)
+
+Code candidate `0ffb2c2476e2353dea5d9ec28077be19429e930b` on
+`codex/me12-stage3` descends from verified Guardian-published
+`ad1e31bd88818fdf11eaf213a35685a1bba8df09`. State remains
+**IN_PROGRESS / INTEGRATION_BLOCKED**: this is an isolated offline modern
+projectile integration candidate, not a completed Stage 3 or accepted release.
+The existing `R262ME12S3B-CANDIDATE` build revision and version remain
+provisional; no new cumulative revision is claimed.
+
+The pinned 0.7.1 native patch now observes the original modern spawn and
+native impact packet. Turret and Seeker route fixtures cover the creation
+seam, ECS owner identity, one hit or miss, bounded Health/economic receipt guards,
+restart fail-closed behavior and the installed Poison/Antidote,
+Stone_Death/knockback, audio/visual and removal assets. The patched server
+artifact SHA-256 is
+`46f4d2f087f15b27151a879e574edfdfec4e4b15fbd381a952a84099a4ff601f`.
+Targeted native projectile, receipt, persistence and lifecycle JUnit subsets
+passed; `testReleaseNativePatch` passed seven changed-class and fourteen
+added-hook checks. Offline `verifyHyArpgJar` package validation passed for
+code commit `0ffb2c24` (JAR SHA-256
+`5cd0881730e24aa3c7f1b956448f5dc5ebe93a08e204b087ab42e4ccef387ec2`).
+The whole regression suite and Guardian exact-HEAD publication were deferred
+under the Task 1 verification limit. The synthetic native Role fixture does not admit Turret or
+Seeker to production: the existing 86-role manifest, procedural eligibility,
+v2 new-birth gate, Monster Affix release gate (OPEN,
+`ownerAccepted=false`), Elite/HRO QA_PENDING status, installed JAR, active save
+and protected primary checkout remain unchanged. No connected QA was run.
+
+Task 2 may use the code candidate and pinned native capability evidence as
+an offline dependency after verifying the branch HEAD. Admission of the two
+roles and legal multi-cause affix combinations still require explicit
+certificates under the existing selection rules; a static or synthetic
+fixture alone is not connected native acceptance. Do not start Task 2 or
+Stage 4 from this record without the owner's separate instruction.
+
 ## ME12 Stage 3 completion work checkpoint (2026-10-14)
 
 Scope: owner-authored learning configuration/recovery, production capture and
