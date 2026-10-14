@@ -12,6 +12,7 @@ active-save migration, main integration, native server launch or Stage 4 work oc
 | Item | Exact identity |
 | --- | --- |
 | Stage 3 branch | `codex/me12-stage3` |
+| Implementation checkpoint | `1bfbd3484daebb783bd67386259f7cb33683b187`; final successor in exact-HEAD receipt |
 | Worktree | `C:/Users/Zemio/.codex/worktrees/me12-stage3/Hytale-main-clean` |
 | Starting Stage 2 HEAD | `a030722af4f9e75db012f18eadfb332f50cbf191` |
 | Stage 1 parent | `b0844f8a013305cffa0b6a9c8912dad571027c3c` |

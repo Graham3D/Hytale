@@ -18,6 +18,8 @@ after commit in `build/reports/me12/stage3-final-manifest.json` and Guardian's
 testReleaseNativePatch guardianSpotBugs -PguardianSpotBugs=true --continue`, log
 `build/guardian/me12-stage3-final.log`. Focused reward, acquisition, HUD, cache,
 recovery and trace fixtures precede this cumulative exact-HEAD gate.
+Implementation checkpoint: `1bfbd3484daebb783bd67386259f7cb33683b187`.
+The documentation successor is verified as the exact final HEAD in those receipts.
 
 Native v2 context certification remains fail-closed; public Skill/Passive source
 bindings remain empty. Production v2 births DISABLED; Monster Affix OPEN,
