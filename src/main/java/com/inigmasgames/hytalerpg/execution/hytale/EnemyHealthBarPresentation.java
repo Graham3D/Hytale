@@ -105,7 +105,7 @@ public final class EnemyHealthBarPresentation {
             }
         }
         // The native compositor retains the authoritative text. A prepared glyph row
-        // lets it suppress the duplicate white plate for this exact display name.
+        // lets it suppress the duplicate white plate even when the native text differs.
         removeAnchor(store,nameAnchors.remove(key));
         if (coloredEligible) {
             var prior=coloredNames.get(key);
