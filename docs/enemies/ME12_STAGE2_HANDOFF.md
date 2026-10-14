@@ -19,7 +19,7 @@ Development is on `codex/me12-stage2`, in the separate
 Revision: `R262ME12S2-CANDIDATE`; version `0.2.0-R262ME12S2-CANDIDATE`;
 native target `=0.7.1`. This is a provisional candidate, not an accepted cumulative revision.
 Implementation checkpoint: `572ee68ffeaed4936bd9630e9a029511139e27b5`;
-its documentation successor is tested and published as the final HEAD.
+its reviewed verification successor is tested and published as the final HEAD.
 The exact final tested commit, test totals, build hashes and publication results
 are in `build/reports/me12/stage2-final-manifest.json` and
 `build/guardian/verification.json`. Those generated receipts supersede preliminary
@@ -47,6 +47,12 @@ game, active Hywind save and release gate are not modified by this pass.
 Final source review added a red/green regression for ambiguous policy JSON:
 duplicate keys, numeric strings and integer overflow are rejected before archive
 publication. The approved policy bytes remain unchanged.
+
+The first cumulative run passed 4,357 JUnit tests and the native patch checks;
+SpotBugs required six explicit non-null guards in the new validators. No findings
+were suppressed. The failed first log remains available at
+`build/guardian/me12-stage2-d52d326a-first.log`; the final receipt requires a fresh
+successful run at the corrected commit.
 
 ## Implemented boundaries
 

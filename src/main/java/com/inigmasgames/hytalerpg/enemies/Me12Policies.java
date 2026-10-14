@@ -23,7 +23,7 @@ public record Me12Policies(List<Name> prefixes,List<Name> suffixes,List<Document
         public Reference {require(ASSETS.contains(asset)&&revision!=null&&!revision.isBlank()&&revision.length()<=128&&digest!=null&&digest.matches("[a-f0-9]{64}"),"ME12_POLICY_REFERENCE");}
     }
     public record Document(Reference reference,String utf8) {
-        public Document {Objects.requireNonNull(reference);require(utf8!=null&&utf8.length()<=131072&&RewardIntent.digest(utf8).equals(reference.digest()),"ME12_POLICY_DIGEST");
+        public Document {Objects.requireNonNull(reference);Objects.requireNonNull(utf8,"ME12_POLICY_BYTES");require(utf8.length()<=131072&&RewardIntent.digest(utf8).equals(reference.digest()),"ME12_POLICY_DIGEST");
             var object=strictObject(utf8);require(string(object,"revision").equals(reference.revision()),"ME12_POLICY_REVISION");validateContent(reference.asset(),object);}
     }
     public Me12Policies {
@@ -61,7 +61,7 @@ public record Me12Policies(List<Name> prefixes,List<Name> suffixes,List<Document
     }
     public int threat(String id){return JsonParser.parseString(documents.get(2).utf8()).getAsJsonObject().getAsJsonObject("threatUnits").get(id).getAsInt();}
     private static List<Name> names(JsonArray array){
-        require(array!=null&&!array.isEmpty()&&array.size()<=256,"ME12_NAME_POOL_SIZE");var result=new ArrayList<Name>();var ids=new HashSet<String>();
+        Objects.requireNonNull(array,"ME12_NAME_POOL");require(!array.isEmpty()&&array.size()<=256,"ME12_NAME_POOL_SIZE");var result=new ArrayList<Name>();var ids=new HashSet<String>();
         for(var e:array){var n=e.getAsJsonObject();require(n.keySet().equals(Set.of("id","text","tier","nameWeight","signature","fillers")),"ME12_NAME_FIELDS");
             var f=new TreeSet<String>();n.getAsJsonArray("fillers").forEach(v->{require(v.isJsonPrimitive()&&v.getAsJsonPrimitive().isString(),"ME12_FILLER_TYPE");require(f.add(v.getAsString()),"ME12_DUPLICATE_FILLER");});
             var name=new Name(string(n,"id"),string(n,"text"),integer(n,"tier"),integer(n,"nameWeight"),string(n,"signature"),f);
@@ -69,10 +69,10 @@ public record Me12Policies(List<Name> prefixes,List<Name> suffixes,List<Document
         }return List.copyOf(result);
     }
     public static String bundleDigest(List<Document> documents){return RewardIntent.digest(documents.stream().map(d->d.reference().asset()+"/"+d.reference().revision()+"/"+d.reference().digest()).collect(java.util.stream.Collectors.joining("\n")));}
-    private static String string(JsonObject object,String key){var value=object.get(key);require(value!=null&&value.isJsonPrimitive()&&value.getAsJsonPrimitive().isString(),"ME12_POLICY_STRING:"+key);return value.getAsString();}
-    private static int integer(JsonObject object,String key){var value=object.get(key);require(value!=null&&value.isJsonPrimitive()&&value.getAsJsonPrimitive().isNumber()&&value.getAsBigDecimal().scale()<=0,"ME12_POLICY_INTEGER:"+key);return value.getAsBigDecimal().intValueExact();}
+    private static String string(JsonObject object,String key){var value=Objects.requireNonNull(object.get(key),"ME12_POLICY_FIELD:"+key);require(value.isJsonPrimitive()&&value.getAsJsonPrimitive().isString(),"ME12_POLICY_STRING:"+key);return value.getAsString();}
+    private static int integer(JsonObject object,String key){var value=Objects.requireNonNull(object.get(key),"ME12_POLICY_FIELD:"+key);require(value.isJsonPrimitive()&&value.getAsJsonPrimitive().isNumber()&&value.getAsBigDecimal().scale()<=0,"ME12_POLICY_INTEGER:"+key);return value.getAsBigDecimal().intValueExact();}
     private static JsonObject strictObject(String text){
-        require(text!=null&&text.length()<=131072,"ME12_POLICY_SIZE");
+        Objects.requireNonNull(text,"ME12_POLICY_BYTES");require(text.length()<=131072,"ME12_POLICY_SIZE");
         try(var reader=new com.google.gson.stream.JsonReader(new StringReader(text))){
             reader.setStrictness(Strictness.STRICT);validateTokens(reader,0);
             require(reader.peek()==com.google.gson.stream.JsonToken.END_DOCUMENT,"ME12_POLICY_TRAILING_CONTENT");

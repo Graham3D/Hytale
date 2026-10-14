@@ -15,7 +15,8 @@ public record Me12Identity(int schemaVersion,Kind kind,String policyDigest,List<
         require(policies.stream().map(Me12Policies.Reference::asset).toList().equals(Me12Policies.ASSETS),"ME12_POLICY_REFS");
         threatUnits=Collections.unmodifiableMap(new TreeMap<>(threatUnits));
         if(kind==Kind.PROCEDURAL_UNIQUE) {
-            require(plan!=null&&sourceLeader==null&&plan.difficultySlots()>=0&&plan.difficultySlots()<=2,"ME12_LEADER_IDENTITY");
+            Objects.requireNonNull(plan,"ME12_LEADER_PLAN");
+            require(sourceLeader==null&&plan.difficultySlots()>=0&&plan.difficultySlots()<=2,"ME12_LEADER_IDENTITY");
             require(plan.affixes().size()>=2&&plan.affixes().size()<=8,"ME12_LEADER_COUNT");
             require(threatUnits.keySet().equals(new TreeSet<>(plan.choices().stream().map(EnemyAffixSelection.Choice::affixId).toList()))
                     &&threatUnits.values().stream().allMatch(v->Set.of(100,115,130,150).contains(v)),"ME12_THREAT_SNAPSHOT");

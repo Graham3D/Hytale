@@ -20,7 +20,7 @@ behind the Stage 1 parent. Preserved selective dependencies are Elite
 Provisional revision `R262ME12S2-CANDIDATE`, version
 `0.2.0-R262ME12S2-CANDIDATE`, target Hytale `=0.7.1`.
 Implementation checkpoint: `572ee68ffeaed4936bd9630e9a029511139e27b5`.
-The documentation successor is the exact final HEAD identified by the receipts below.
+The verified successor is the exact final HEAD identified by the receipts below.
 Implemented strict versioned identities/archives/recovery, exact weighted
 distinct-set planning and bounded asynchronous compilation. Production v2 births
 remain DISABLED; no Stage 3 reward or acquisition implementation is included.
@@ -35,6 +35,14 @@ testReleaseNativePatch guardianSpotBugs -PguardianSpotBugs=true --continue`;
 unmodified log: `build/guardian/me12-stage2-final.log`. This tracked record does
 not predeclare that run's result. Publish only a clean, reviewed exact HEAD to
 the matching feature branch after Guardian verifies it.
+
+The first cumulative run at `d52d326a96acf550d73c06027641ca6aadfd7f02`
+passed all 4,357 JUnit tests and offline native patch checks, but SpotBugs flagged
+six null-flow paths behind the project's throwing validation helper. Explicit
+non-null guards replace those ambiguous paths without suppressions or policy
+changes. The original log is preserved as
+`build/guardian/me12-stage2-d52d326a-first.log`; mandatory exact-commit
+verification is repeated for the corrected successor before publication.
 
 The 21 pinned inputs and 309-ID matrix are unchanged. Stage 1 remains
 BLOCKED_OFFLINE_COVERAGE; Monster Affix OPEN, ownerAccepted=false. Native
