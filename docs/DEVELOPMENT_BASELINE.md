@@ -1,5 +1,43 @@
 # HyARPG/Hywind development baseline
 
+## ME12 Stage 3 Task 2 native selection checkpoint (2026-10-14)
+
+Code commit `578da777` on `codex/me12-stage3` descends from the requested
+`ccba40a95089fe4737ffdc42d2277e0b12bd70d6` checkpoint and preserves
+Task 1's `0ffb2c2476e2353dea5d9ec28077be19429e930b`. State remains
+**IN_PROGRESS / INTEGRATION_BLOCKED**; Task 2 offline engineering is not complete.
+The existing `R262ME12S3B-CANDIDATE` revision is still provisional. No JAR was
+deployed, no save or `main` was changed, and connected QA was not performed.
+
+The native birth decision now reserves actual `FlockSpawnTypes` selections
+before asynchronous v2 planning, freezes each selected entity/role/source,
+rechecks them on the world thread, and discards unselected tail actors through
+the native population owner. A mismatched role, source, job, capacity, or
+Firesteel incoming-only affix plan fails closed. Original-group rollback and
+v1 fallback remain under their existing owners; the v2 new-birth gate remains
+closed. This is a guarded source checkpoint, not a full production lifecycle
+certificate.
+
+Focused JUnit subsets passed: 39 `test` cases and 23 `nativeControlTest`
+cases, including mixed-role capture, selected-prefix partition, staging,
+Firesteel static plans, projectile compatibility, persistence, and v1 birth
+regressions. `testReleaseNativePatch` passed against the pinned 0.7.1 patch.
+Offline `verifyHyArpgJar` passed with JAR SHA-256
+`60dc1d7be2df7f23d3258deac9ff29053b9e4e14591e41421c508e9f830d656f`.
+Guardian's staged-commit check passed. The cumulative exact-HEAD suite,
+Guardian completion receipt, and remote publication are not yet complete
+for this checkpoint.
+
+Remaining Task 2 blockers: a full offline fixture through the real native
+owner capture/reservation/archive/attachment/publication/recovery boundaries;
+Firesteel lifecycle proof at those same boundaries; and production native
+binding/hostility/legal-affix certification for Goblin Turret and Scarak
+Seeker. The installed Turret template lacks an explicit hostile player
+attitude, and both roles remain absent from the production native binding
+manifest. These roles have not been excluded by new policy. The 309-role
+reconciliation, Elite/HRO QA_PENDING state, Monster Affix gate OPEN with
+`ownerAccepted=false`, and all normative connected gates remain unchanged.
+
 ## ME12 Stage 3 Task 1 local checkpoint (2026-10-14)
 
 Code candidate `0ffb2c2476e2353dea5d9ec28077be19429e930b` on
