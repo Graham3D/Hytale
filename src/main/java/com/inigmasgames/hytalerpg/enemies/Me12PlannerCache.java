@@ -36,9 +36,15 @@ public final class Me12PlannerCache implements AutoCloseable {
             leases.add(this);pins.merge(key,1,Integer::sum);
         }
         /** Graph may be consumed only while this lease is live; callers must not retain it. */
-        public Me12Planner.Compiled compiled(){synchronized(Me12PlannerCache.this){current(world,generation);if(compiled==null)throw new Me12Planner.CompileFailure("LEASE_CLOSED");return compiled;}}
+        public Me12Planner.Compiled compiled(){return leaseGraph(this);}
         public Me12Planner.Plan plan(){return plan;}
-        @Override public void close(){synchronized(Me12PlannerCache.this){if(compiled==null)return;compiled=null;leases.remove(this);pins.compute(key,(k,n)->n==null||n<=1?null:n-1);releaseRequest(world);}}
+        @Override public void close(){releaseLease(this);}
+    }
+    private synchronized Me12Planner.Compiled leaseGraph(Resolved lease){
+        current(lease.world,lease.generation);if(lease.compiled==null)throw new Me12Planner.CompileFailure("LEASE_CLOSED");return lease.compiled;
+    }
+    private synchronized void releaseLease(Resolved lease){
+        if(lease.compiled==null)return;lease.compiled=null;leases.remove(lease);pins.compute(lease.key,(k,n)->n==null||n<=1?null:n-1);releaseRequest(lease.world);
     }
     private void releaseRequest(UUID world){requests--;outstanding.compute(world,(k,n)->n==null||n<=1?null:n-1);}
     public synchronized Metrics metrics(){return new Metrics(bytes,peak,cache.size(),flights.size(),requests,workers.getActiveCount(),hits,misses);}

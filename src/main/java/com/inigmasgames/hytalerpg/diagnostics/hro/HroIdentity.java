@@ -17,8 +17,9 @@ final class HroIdentity {
             Path nativeJar=Path.of(server.getProtectionDomain().getCodeSource().getLocation().toURI());
             result.put("serverSha256",HroBundle.sha256(nativeJar));
             result.put("serverVersion",String.valueOf(server.getPackage().getImplementationVersion()));
-            var assets=nativeJar.getParent().getParent().resolve("Assets.zip");
-            result.put("assetsSha256",Files.isRegularFile(assets)?HroBundle.sha256(assets):"UNAVAILABLE_RUNTIME_ASSET_ARCHIVE");
+            var serverFolder=nativeJar.getParent();var gameFolder=serverFolder==null?null:serverFolder.getParent();
+            var assets=gameFolder==null?null:gameFolder.resolve("Assets.zip");
+            result.put("assetsSha256",assets!=null&&Files.isRegularFile(assets)?HroBundle.sha256(assets):"UNAVAILABLE_RUNTIME_ASSET_ARCHIVE");
         }catch(Exception unavailable){result.put("identityGap",unavailable.getClass().getSimpleName());}
         result.put("clientVersion","UNOBSERVABLE");result.put("assetIdentity","SEE_PACKAGED_OFFLINE_AUDIT_RUNTIME_ARCHIVE_NOT_ASSUMED");
         result.put("registrationWitnesses",HroRuntime.witnesses());

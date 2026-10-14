@@ -111,7 +111,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
     }
     @Override public void close(){playerWork.close();}
     private java.util.function.Function<UUID,String> respecRejection=ignored->""; // Pure fixtures; production configures before any player load.
-    private LearningSources learningSources;
+    private volatile LearningSources learningSources;
     public synchronized void configureLearningSources(LearningSources sources){
         if(!states.isEmpty())throw new IllegalStateException("LEARNING_SOURCES_MUST_BE_CONFIGURED_BEFORE_LOAD");learningSources=java.util.Objects.requireNonNull(sources);
     }

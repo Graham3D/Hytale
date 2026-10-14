@@ -31,9 +31,9 @@ class UnifiedTraceCommandTest {
     @Test void categoriesHaveNativeSubcommandsAndNoLegacyModes(){
         var root=command();
         assertEquals(Set.of("status","list","help","skill","combat","skilltree","inventory","ui",
-                "gear","sentinel","spawn","inventory-tab","inventory-drop","patch"),root.getSubCommands().keySet());
+                "gear","sentinel","spawn","inventory-tab","inventory-drop","patch","enemies"),root.getSubCommands().keySet());
         for(String category: new String[]{"skill","combat","skilltree","inventory","ui","gear","sentinel","spawn",
-                "inventory-tab","inventory-drop","patch"}){
+                "inventory-tab","inventory-drop","patch","enemies"}){
             assertNotNull(leaf(root,category,"start"));
             assertNotNull(leaf(root,category,"stop"));
             assertNotNull(leaf(root,category,"status"));
@@ -56,6 +56,11 @@ class UnifiedTraceCommandTest {
         assertFalse(leaf(root,"combat","start").hasPermission(gear));
         assertFalse(leaf(root,"combat","last").hasPermission(gear));
         assertFalse(leaf(root,"combat","inspect").hasPermission(gear));
+        for(String action:new String[]{"start","stop","status"}){
+            assertTrue(leaf(root,"enemies",action).hasPermission(sender("inigmasgames.rpg.trace.patch"::equals)));
+            assertFalse(leaf(root,"enemies",action).hasPermission(gear));
+            assertFalse(leaf(root,"enemies",action).hasPermission(sender(permission->false)));
+        }
         assertFalse(leaf(root,"skill","start").getSubCommand("detailed").hasPermission(gear));
         assertFalse(leaf(root,"skill","start").getSubCommand("performance").hasPermission(gear));
 

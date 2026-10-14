@@ -21,6 +21,18 @@ recovery and trace fixtures precede this cumulative exact-HEAD gate.
 Implementation checkpoint: `1bfbd3484daebb783bd67386259f7cb33683b187`.
 The documentation successor is verified as the exact final HEAD in those receipts.
 
+First cumulative run at `69025033d46465f87918f82c14cb23b34787f313` executed
+4,375 JUnit tests with three failures: two source/registration assertions needed
+the authorized new command/archive paths, and the reconnect evidence fixture raced
+the intentionally nonblocking recorder queue. Six SpotBugs findings prompted
+explicit nullable-path handling, synchronized cache-owner lease access, safe
+publication of immutable providers, and reuse of the existing gear-store constructor.
+No analysis suppression or production queue blocking was added. The reconnect
+fixture controls queue scheduling; its assertions and separate contention test remain.
+Original evidence: `build/guardian/me12-stage3-69025033-first.log` and
+`me12-stage3-69025033-spotbugs.xml`. The corrected successor requires the full
+exact-commit gate again; the earlier run is not counted as a pass.
+
 Native v2 context certification remains fail-closed; public Skill/Passive source
 bindings remain empty. Production v2 births DISABLED; Monster Affix OPEN,
 ownerAccepted=false. All 309-role reconciliation inputs and native attack/immunity

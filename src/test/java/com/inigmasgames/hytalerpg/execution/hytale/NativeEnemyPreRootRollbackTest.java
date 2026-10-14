@@ -44,7 +44,9 @@ class NativeEnemyPreRootRollbackTest {
     }
     @Test void actualCommittedEliteStillUsesDurableRootAndWorldThreadHandoffDoesNotThrow() throws Exception {
         var reservation=source("NativeEnemyBirthReservation.java");
-        assertTrue(reservation.contains("write=rewards.reserveEnemyBirthRoot(selected.root())"));
+        assertTrue(reservation.contains("selected.archivedPolicies()==null?rewards.reserveEnemyBirthRoot(selected.root()):rewards.reserveEnemyBirthRoot(selected.root(),selected.archivedPolicies())"));
+        assertTrue(reservation.contains("decisions.selectAsync(store,original,nativeJob)"));
+        assertTrue(reservation.contains("nativeWorld.execute(()->"));
         var owner=source("NativeEnemyBirthOwner.java");
         var start=owner.indexOf("@Override public void captured(Store<EntityStore> store,NativeEnemySpawnGroups.Group group,SpawnJobData nativeJob)");
         var end=owner.indexOf("private record QaSpawnSite",start);

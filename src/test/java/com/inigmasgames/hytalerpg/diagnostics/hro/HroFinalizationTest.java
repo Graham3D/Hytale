@@ -49,6 +49,13 @@ class HroFinalizationTest {
         try(var recorder=recorder()){
             HroContracts.IDS.forEach(recorder::registered);recorder.start(owner,world);
             HroRecorderTest.await(()->recorder.active(owner));
+            // This test proves segment attribution. Control scheduling so deliberate tryLock loss
+            // cannot erase its witnesses; nativeLifecycleAdvancesWithoutWaitingForBusyEvidenceQueue
+            // separately exercises actual queue contention and nonblocking lifecycle behavior.
+            var sessionField=HroRecorder.class.getDeclaredField("session");sessionField.setAccessible(true);
+            Object session=sessionField.get(recorder);var lockField=session.getClass().getDeclaredField("lock");lockField.setAccessible(true);
+            var queueLock=(ReentrantLock)lockField.get(session);queueLock.lock();
+            try{
             recorder.lifecycle(owner,world,1,"READY_QUEUED");
             recorder.observe(owner,"HUD.PUBLICATION","fixture","HUD_LAYOUT_READY","first",world,1L,1L,null,Map.of());
             recorder.disconnect(owner,1);assertFalse(recorder.active(owner));
@@ -59,7 +66,9 @@ class HroFinalizationTest {
             recorder.observe(UUID.randomUUID(),"HUD.PUBLICATION","fixture","HUD_LAYOUT_READY","intruder",later,2L,2L,null,Map.of());
             assertTrue(recorder.mark(owner,later,"bad / label : \n !!").contains("bad___label"));
             assertTrue(recorder.mark(owner,later,null).contains("USER_CHECKPOINT"));
-            recorder.stop();HroRecorderTest.await(()->HroRecorderTest.finalized(recorder.status()));
+            recorder.stop();
+            }finally{queueLock.unlock();}
+            HroRecorderTest.await(()->HroRecorderTest.finalized(recorder.status()));
             List<HroEvent> events=new ArrayList<>();HroTool.read(bundle(),(event,locator)->events.add(event));
             assertTrue(events.stream().anyMatch(e->e.operationId().equals("first")));
             assertTrue(events.stream().anyMatch(e->e.operationId().equals("second")));

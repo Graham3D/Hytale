@@ -24,7 +24,7 @@ public final class NativeEnemyBirthDecision implements AutoCloseable {
     private final Map<UUID,Object> v2Lifetimes=new HashMap<>();
     private final Map<UUID,Long> v2Generations=new HashMap<>();
     private long nextV2Generation;
-    private V2ContextSource v2ContextSource=(store,group,job)->{throw new IllegalStateException("ME12_DEPENDENCY_UNCERTIFIED_PRODUCTION_CONTEXT");};
+    private volatile V2ContextSource v2ContextSource=(store,group,job)->{throw new IllegalStateException("ME12_DEPENDENCY_UNCERTIFIED_PRODUCTION_CONTEXT");};
     /** No shipped provider is certified. Installation cannot bypass the feature or evidence gates. */
     public synchronized void configureV2ContextSource(V2ContextSource source){
         if(!v2Lifetimes.isEmpty())throw new IllegalStateException("ME12_CONTEXT_SOURCE_ALREADY_IN_USE");v2ContextSource=Objects.requireNonNull(source);

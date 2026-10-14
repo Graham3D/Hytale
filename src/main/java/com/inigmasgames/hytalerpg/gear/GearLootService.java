@@ -144,12 +144,15 @@ public final class GearLootService {
     public Loot deliver(EncounterContributions.DeathPlan plan){return death(plan,store.gearRead("claims","mf/"+plan.spawn().eventId(),MagicFindSnapshot.class).orElse(new MagicFindSnapshot(Map.of())).players());}
     private final FileEncounterStore store;private final GearDropGenerator generator;
     private final java.util.function.LongSupplier clock;
-    private final java.util.function.Function<String,Optional<GearDropGenerator>> historicalGenerator;
+    private java.util.function.Function<String,Optional<GearDropGenerator>> historicalGenerator;
     private int recoveryCursor;
     public GearLootService(FileEncounterStore store,GearDropGenerator generator){this(store,generator,System::currentTimeMillis);}
-    public GearLootService(FileEncounterStore store,GearDropGenerator generator,java.util.function.LongSupplier clock){this(store,generator,clock,revision->revision.equals(generator.revision())?Optional.of(generator):Optional.empty());}
+    public GearLootService(FileEncounterStore store,GearDropGenerator generator,java.util.function.LongSupplier clock){
+        this.store=store;this.generator=generator;this.clock=clock;
+        this.historicalGenerator=revision->revision.equals(generator.revision())?Optional.of(generator):Optional.empty();
+    }
     public GearLootService(FileEncounterStore store,GearDropGenerator generator,java.util.function.LongSupplier clock,
-                           java.util.function.Function<String,Optional<GearDropGenerator>> historicalGenerator){this.store=store;this.generator=generator;this.clock=clock;this.historicalGenerator=Objects.requireNonNull(historicalGenerator);}
+                           java.util.function.Function<String,Optional<GearDropGenerator>> historicalGenerator){this(store,generator,clock);this.historicalGenerator=Objects.requireNonNull(historicalGenerator);}
     private static String encounter(UUID world,UUID enemy){return "enemy-death/"+world+"/"+enemy;}
     public void contribute(UUID world,UUID enemy,UUID actor,GearClaims.Policy policy,long at){
         store.gearTransaction("claims",encounter(world,enemy),GearClaims.Ledger.class,old->old.orElse(GearClaims.Ledger.EMPTY).contribute(actor,policy,at));
@@ -170,7 +173,8 @@ public final class GearLootService {
             var eligible=new HashSet<UUID>();plan.shares().forEach(share->eligible.add(share.player()));
             if(plan.spawn().lootSource().isEmpty()||store.gearRead("claims",parent,GearClaims.Ledger.class)
                     .flatMap(ledger->ledger.select(eligible,plan.deathAtMillis())).isEmpty())
-                return List.of(deathOne(plan,Map.of(),parent,parent)); // Denial only: no quantity or generator evaluation.
+                return List.of(plan.spawn().enemyRewards()!=null&&plan.spawn().enemyRewards().v2()!=null
+                        ?deathOne(plan,Map.of(),parent,parent):deliver(plan)); // V2 denial only; legacy entry and MF receipt remain unchanged.
         }
         var frozen=store.gearRead("claims","mf/"+parent,MagicFindSnapshot.class)
                 .orElse(new MagicFindSnapshot(Map.of()));
