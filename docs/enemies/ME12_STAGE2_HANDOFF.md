@@ -18,6 +18,8 @@ Development is on `codex/me12-stage2`, in the separate
 `C:/Users/Zemio/.codex/worktrees/me12-stage2/Hytale-main-clean` checkout.
 Revision: `R262ME12S2-CANDIDATE`; version `0.2.0-R262ME12S2-CANDIDATE`;
 native target `=0.7.1`. This is a provisional candidate, not an accepted cumulative revision.
+Implementation checkpoint: `572ee68ffeaed4936bd9630e9a029511139e27b5`;
+its documentation successor is tested and published as the final HEAD.
 The exact final tested commit, test totals, build hashes and publication results
 are in `build/reports/me12/stage2-final-manifest.json` and
 `build/guardian/verification.json`. Those generated receipts supersede preliminary

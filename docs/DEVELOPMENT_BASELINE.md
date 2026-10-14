@@ -19,6 +19,8 @@ behind the Stage 1 parent. Preserved selective dependencies are Elite
 
 Provisional revision `R262ME12S2-CANDIDATE`, version
 `0.2.0-R262ME12S2-CANDIDATE`, target Hytale `=0.7.1`.
+Implementation checkpoint: `572ee68ffeaed4936bd9630e9a029511139e27b5`.
+The documentation successor is the exact final HEAD identified by the receipts below.
 Implemented strict versioned identities/archives/recovery, exact weighted
 distinct-set planning and bounded asynchronous compilation. Production v2 births
 remain DISABLED; no Stage 3 reward or acquisition implementation is included.
