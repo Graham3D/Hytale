@@ -6,6 +6,9 @@ Branch `codex/me12-072-modonly` continues the GitHub-main QA3 source
 `96d748e09cc86aa6fc8015c47ae08ffa92f09c06`. Revision
 `R262ME12S3B-072-QA4-CANDIDATE`, version
 `0.2.0-R262ME12S3B-072-QA4-CANDIDATE` targets stock Hytale `=0.7.2`.
+The source correction is recorded in commits
+`840948196db4ca6a42e0a21d2f3df1d2929ceb5f` and
+`970208e7b97194a616d37d776aa634475251df62` on that branch.
 The owner's Normal/Hell QA reported ordinary hostile attacks not applying
 damage while wildlife remained hittable. The QA3 HRO capture recorded 19
 gathered player attacks: five reached matching native Health receipts, while
