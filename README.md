@@ -1,13 +1,15 @@
 # Hywind / HyARPG development baseline
 
-0.7.2 Chapter I portal-recovery QA candidate: **R262ME12S3B-072-QA2-CANDIDATE**
-(`0.2.0-R262ME12S3B-072-QA2-CANDIDATE`) on `codex/me12-072-modonly`.
+0.7.2 Chapter I spawn-load QA candidate: **R262ME12S3B-072-QA3-CANDIDATE**
+(`0.2.0-R262ME12S3B-072-QA3-CANDIDATE`) on `codex/me12-072-modonly`.
 The exact Hywind save and its two current worlds automatically acquire a bounded,
 Guardian-verified QA lease after native recovery. Production v2 remains disabled,
 and connected gameplay acceptance remains pending. Copied Nightmare/Hell destination
 bindings can be provisioned once under new native UUIDs, preserving historical IDs;
 those verified destinations also receive the same bounded QA lease after recovery.
 No patched Hytale server is required.
+QA3 bounds extra native flock births by the spawn-role target and reuses validated
+ME12 birth policies on the world thread. Hit responsiveness awaits connected QA.
 The prior Stage 3 record below is
 retained as historical context; see [current source status](docs/DEVELOPMENT_BASELINE.md).
 
