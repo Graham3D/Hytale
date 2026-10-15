@@ -119,7 +119,21 @@ public final class WorldDifficultyRegistry {
             }
             var backup = path.resolveSibling(path.getFileName() + ".bak");
             if (Files.exists(path) && !Files.exists(backup)) Files.copy(path, backup);
-            Files.move(temp, path, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+            // Windows file-indexing/sync can briefly hold the old file open. Retry only that
+            // atomic replacement; never publish the new in-memory binding before it succeeds.
+            for (int attempt = 0; ; attempt++) {
+                try {
+                    Files.move(temp, path, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+                    break;
+                } catch (AccessDeniedException busy) {
+                    if (attempt == 4) throw busy;
+                    try { Thread.sleep(25L * (attempt + 1)); }
+                    catch (InterruptedException stopped) {
+                        Thread.currentThread().interrupt();
+                        throw new java.io.IOException("WORLD_REGISTRY_MOVE_INTERRUPTED", stopped);
+                    }
+                }
+            }
             worlds = candidate;
             historical = provenance;
         } catch (Exception error) { throw new IllegalStateException("WORLD_DIFFICULTY_PERSISTENCE_FAILED", error); }

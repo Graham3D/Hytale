@@ -100,4 +100,25 @@ class ChapterIWorldIdentityRecoveryTest {
             assertTrue(store.load(NEW_DEFAULT,enemy).isEmpty());
         }
     }
+    @Test void copiedDestinationProvisionRetainsOldIdAsHistoricalAndSurvivesRestart()throws Exception {
+        copiedRegistry();nativeWorld("default",NEW_DEFAULT);nativeWorld("zone3_taiga1_world",NEW_ZONE);
+        var runtime=new DifficultyRuntime(registry(),nativeWorlds());
+        var old=runtime.worlds().bindings().stream().filter(b->b.difficulty()==DifficultyId.HELL).findFirst().orElseThrow();
+        assertTrue(DifficultyRuntime.copiedDestination(old,DifficultyId.HELL));
+        assertFalse(DifficultyRuntime.copiedDestination(old,DifficultyId.NIGHTMARE));
+        UUID created=UUID.randomUUID();nativeWorld("rpg_hell",created);
+        assertEquals(created,runtime.worldLoaded(created,"rpg_hell").orElseThrow().worldId());
+        assertTrue(runtime.worlds().find(old.worldId()).isEmpty());
+        assertEquals(old,runtime.worlds().historical(old.worldId()).orElseThrow());
+        assertEquals(created,new DifficultyRuntime(registry(),nativeWorlds()).worlds().require(created).worldId());
+    }
+    @Test void interruptedDestinationProvisionReconcilesOnlyAnActualNativeConfig()throws Exception {
+        copiedRegistry();nativeWorld("default",NEW_DEFAULT);nativeWorld("zone3_taiga1_world",NEW_ZONE);
+        UUID created=UUID.randomUUID();nativeWorld("rpg_nightmare",created);
+        var runtime=new DifficultyRuntime(registry(),nativeWorlds());
+        assertEquals(created,runtime.worlds().require(created).worldId());
+        assertEquals(UUID.fromString("31cb4ecd-7908-4aa4-b7b3-46a687ff2ee3"),
+                runtime.worlds().historical(UUID.fromString("31cb4ecd-7908-4aa4-b7b3-46a687ff2ee3")).orElseThrow().worldId());
+        assertFalse(DifficultyRuntime.copiedDestination(runtime.worlds().require(created),DifficultyId.NIGHTMARE));
+    }
 }
