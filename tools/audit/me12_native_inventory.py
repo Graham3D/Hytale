@@ -1,4 +1,4 @@
-"""Render Stage 1 structural coverage and honest 0.7.1 certificate gaps.
+"""Render Stage 1 structural coverage and honest native certificate gaps.
 
 Reads installed assets only. All output is inside the selected source worktree.
 Native reference inventories are evidence for review, not execution certificates.
@@ -11,7 +11,7 @@ import zipfile
 from pathlib import Path
 import me12_content as m
 
-ASSET_PIN = "b9164eb07d7c42e697d208ba3d35078a9b4a0125beF6261847a2f91e293e53b4".lower()
+ASSET_PIN = m.read(m.ROOT / "src/main/resources/rpg/enemies/native-bindings-v1.json")["assetsSha256"].lower()
 
 
 def strings(value):
