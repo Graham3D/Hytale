@@ -67,6 +67,31 @@ class Me12QaAuthorityTest {
         assertFalse(authority.allows(world,"Unknown_Role"));
     }
     private Path receiptUnchecked(Me12QaAuthority.Identity identity){try{return receipt(identity);}catch(Exception error){throw new RuntimeException(error);}}
+    @Test void automaticQaCoversBothRecoveredWorldsButRemainsBoundedAndRevocable() throws Exception {
+        var config=config();var first=UUID.randomUUID();var second=UUID.randomUUID();
+        var gate=new EnemyWorldAdmission(id->CompletableFuture.completedFuture(
+                new FileEncounterStore.EnemyWorldInventory(List.of(),List.of())),
+                new EnemyPackCapacity(EnemyBalance.canonical()),true);
+        for(var world:List.of(first,second)){gate.begin(world).toCompletableFuture().join();gate.rebindComplete(world,List.of());}
+        var bindings=EnemyNativeBindings.load();var now=new AtomicLong();var owners=new AtomicBoolean(true);
+        var identity=new Me12QaAuthority.Identity("a".repeat(40),"rev","version","b".repeat(64),
+                bindings.serverJarSha256(),bindings.assetsSha256());
+        var authority=new Me12QaAuthority(config,gate,bindings,owners::get,()->true,()->identity,now::get);
+        var proofA=authority.verify(new Me12QaAuthority.Request(identity.sourceCommit(),first,"QaWorld",600,receipt(identity)));
+        var proofB=authority.verify(new Me12QaAuthority.Request(identity.sourceCommit(),second,"QaWorld",600,receipt(identity)));
+        authority.activateAutomaticVerified(proofA);authority.activateAutomaticVerified(proofB);
+        assertTrue(authority.allows(first,"Trork_Warrior"));assertTrue(authority.allows(second,"Trork_Warrior"));
+        assertFalse(authority.allows(first,"Goblin_Turret"));
+        assertTrue(authority.status(first).startsWith("ACTIVE_AUTO"));
+        assertThrows(IllegalStateException.class,()->authority.activateAutomaticVerified(proofA));
+        owners.set(false);assertFalse(authority.allows(first));owners.set(true);
+        authority.worldUnload(first);assertFalse(authority.allows(first));assertTrue(authority.allows(second));
+        now.set(Me12QaAuthority.AUTOMATIC_QA_SECONDS*1_000_000_000L);
+        assertFalse(authority.allows(second));
+        now.set(0);authority.revoke();assertFalse(authority.allows(second));
+        assertThrows(IllegalStateException.class,()->authority.activateAutomaticVerified(
+                authority.verify(new Me12QaAuthority.Request(identity.sourceCommit(),second,"QaWorld",600,receipt(identity)))));
+    }
     @Test void syntheticPrerequisitesExerciseBoundedLeaseRevocationAndWorldLifetime() throws Exception {
         var config=config();var world=UUID.randomUUID();var gate=admitted(world);
         var bindings=EnemyNativeBindings.load();var now=new AtomicLong(0);var owner=new AtomicBoolean(true);

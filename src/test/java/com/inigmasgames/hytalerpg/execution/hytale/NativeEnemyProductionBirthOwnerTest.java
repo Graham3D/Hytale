@@ -43,6 +43,7 @@ import java.nio.file.Path;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipFile;
 import org.junit.jupiter.api.Test;
@@ -460,14 +461,17 @@ class NativeEnemyBirthOwnerFixture {
                             EnemyVisualVariants.canonical(),bindings,new HytaleEnemyWeaponVisuals());
                     var restoredOwner=new NativeEnemyBirthOwner(bindings,restoredAdmission,restoredRewards,restoredCombat,
                             restoredActions,restoredReservation,restoredDecision,restoredAttachment,restoredPublication,true);
-                    var rebind=new NativeEnemyWorldRebind(restoredAdmission,restoredOwner,true,true);
+                    var qaRebound=new AtomicBoolean();
+                    var rebind=new NativeEnemyWorldRebind(restoredAdmission,restoredOwner,()->true,()->true,
+                            reboundWorld->{assertSame(world,reboundWorld);assertTrue(restoredAdmission.admits(worldId));
+                                qaRebound.set(true);});
                     var recovery=new NativeEnemyWholeBirthRecovery(restoredAdmission,restoredRewards,bindings,
                             restoredAttachment,restoredPublication,restoredOwner);
                     recovery.onPublished(rebind::retryInitial);
                     rebind.begin(world);
                     for(var id:selectedActors)recovery.onEntityAdded(restoredIndex.get(id),AddReason.LOAD,restored,null);
                     world.drainUntil(()->actorsPublished(restored,restoredIndex,selectedActors)
-                            &&restoredOwner.bound(selectedActors[0]));
+                            &&restoredOwner.bound(selectedActors[0])&&qaRebound.get());
                     var recovered=reopened.recoverEnemyWorld(worldId);
                     assertEquals(1,recovered.births().size());
                     assertEquals(interrupted.births().getFirst(),recovered.births().getFirst());

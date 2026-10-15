@@ -2,6 +2,17 @@
 
 ## Master Enemies candidate QA lease (guarded Stage 4)
 
+The `R262ME12S3B-072-QA1-CANDIDATE` build starts QA automatically for the
+configured Hywind save and its two pinned world UUIDs after native world recovery.
+The operator does not need to enter a command. It verifies the exact installed JAR,
+0.7.2 server and assets, and this build's Guardian receipt off the world thread;
+admission, native hooks, DRAIN policy, and each concrete role are rechecked before
+birth. Each world lease lasts at most eight hours, ends on unload, and never opens
+production `ENABLED`. Missing or changed evidence leaves v1/native spawning intact.
+The server log reports `ME12_AUTO_QA_ACTIVE` or `ME12_AUTO_QA_BLOCKED`.
+The existing `status` and `revoke` commands remain optional diagnostics and
+emergency controls; revocation prevents another automatic lease in that session.
+
 `/rpg me12qa activate <candidateSha> <worldUuid> <saveName> <seconds> <guardianReceipt>`
 arms natural v2 births for the player's current loaded world only. The five arguments
 are a 40-character lowercase source commit, the native world UUID, the exact active
@@ -13,8 +24,8 @@ the current lease; `/rpg me12qa revoke` immediately stops new v2 births. All thr
 are in-game player commands requiring `inigmasgames.rpg.me12.qa` and the parent
 `/rpg` permission. The player must be in the named world. The world configuration
 must be `masterEnemiesV2=DRAIN`; world recovery/admission, all native hooks, at
-least one production-eligible role, the exact verified 0.7.1 native-hook patch
-and assets hashes, and Guardian's
+least one production-eligible role, the exact verified 0.7.2 mod-side native
+integration and assets hashes, and Guardian's
 candidate/test receipt must pass. Each natural roster is checked against its
 own pinned production roles before v2 planning. An uncertified role retains
 the existing v1/native path. Firesteel remains outside v2 QA until its

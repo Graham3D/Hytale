@@ -146,6 +146,41 @@ public final class HyArpgPlugin extends TavernsPlugin {
                 &&enemyOutgoingEffects!=null&&enemyOutgoingEffects.verified();
     }
 
+    private void beginAutomaticMe12Qa(com.hypixel.hytale.server.core.universe.world.World world){
+        var save=worldConfiguration.path().getParent();
+        var worldId=world.getWorldConfig().getUuid();
+        if(!BuildIdentity.REVISION.equals("R262ME12S3B-072-QA1-CANDIDATE")
+                ||save==null||save.getFileName()==null
+                ||!save.getFileName().toString().equals(BuildIdentity.QA_AUTO_SAVE)
+                ||java.util.Arrays.stream(BuildIdentity.QA_AUTO_WORLDS.split(","))
+                        .noneMatch(worldId.toString()::equals)
+                ||me12QaAuthority.automaticRevoked()||me12QaAuthority.allows(worldId))return;
+        if(BuildIdentity.QA_RECEIPT_PATH.isBlank()
+                ||worldConfiguration.snapshot().me12FeatureState()!=com.inigmasgames.hytalerpg.enemies.Me12FeatureState.DRAIN){
+            LOGGER.atWarning().log("ME12_AUTO_QA_BLOCKED world=%s reason=RECEIPT_OR_DRAIN_MISSING",world.getName());return;
+        }
+        var receipt=Path.of(BuildIdentity.QA_RECEIPT_PATH);
+        if(!receipt.isAbsolute()){
+            LOGGER.atWarning().log("ME12_AUTO_QA_BLOCKED world=%s reason=RECEIPT_PATH_NOT_ABSOLUTE",world.getName());return;
+        }
+        var request=new com.inigmasgames.hytalerpg.enemies.Me12QaAuthority.Request(
+                BuildIdentity.SOURCE_COMMIT,worldId,BuildIdentity.QA_AUTO_SAVE,600,receipt);
+        LOGGER.atInfo().log("ME12_AUTO_QA_VERIFY_STARTED world=%s candidate=%s",world.getName(),BuildIdentity.SOURCE_COMMIT);
+        java.util.concurrent.CompletableFuture.supplyAsync(()->me12QaAuthority.verify(request))
+                .whenComplete((proof,error)->{
+                    try{world.execute(()->{
+                        if(error!=null){LOGGER.atWarning().withCause(error).log(
+                                "ME12_AUTO_QA_BLOCKED world=%s reason=VERIFICATION_FAILED",world.getName());return;}
+                        try{me12QaAuthority.activateAutomaticVerified(proof);
+                            LOGGER.atInfo().log("ME12_AUTO_QA_ACTIVE %s",me12QaAuthority.status(worldId));}
+                        catch(RuntimeException blocked){LOGGER.atWarning().withCause(blocked).log(
+                                "ME12_AUTO_QA_BLOCKED world=%s reason=ADMISSION_CHANGED",world.getName());}
+                    });}catch(RuntimeException unloaded){
+                        LOGGER.atWarning().log("ME12_AUTO_QA_BLOCKED world=%s reason=WORLD_UNLOADED",world.getName());
+                    }
+                });
+    }
+
     /** Trusted server-plugin integration only; no command or packet can supply party membership. */
     public void configurePartyMembership(com.inigmasgames.hytalerpg.progress.PartyMembershipProvider provider){
         if(encounterRewards==null)throw new IllegalStateException("RPG_ENCOUNTER_SERVICE_NOT_READY");
@@ -1060,18 +1095,18 @@ public final class HyArpgPlugin extends TavernsPlugin {
         var enemyWorldRebind=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyWorldRebind(
                 enemyWorldAdmission,enemyBirthOwner,()->packboundNativeHook!=null&&packboundNativeHook.verified(),
                 ()->enemyDamageReceiptHook instanceof com.inigmasgames.hytalerpg.combat.hytale.NativeDamageInteractions damage
-                        &&damage.verified());
+                        &&damage.verified(),this::beginAutomaticMe12Qa);
         enemyStagingRecovery.onReconciled(enemyWorldRebind::retryInitial);
         enemyWholeBirthRecovery.onPublished(enemyWorldRebind::retryInitial);
-        getEventRegistry().registerGlobal(com.hypixel.hytale.server.core.universe.world.events.AddWorldEvent.class,
-                event->enemyWorldRebind.begin(event.getWorld()));
-        for(var existingWorld:com.hypixel.hytale.server.core.universe.Universe.get().getWorlds().values())
-            enemyWorldRebind.begin(existingWorld);
         var nativeGroups=new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemySpawnGroups(
                 com.hypixel.hytale.server.spawning.SpawningPlugin.get(),enemyBirthOwner);
         aquaticHabitat=nativeGroups.habitat;
         getChunkStoreRegistry().registerSystem(nativeGroups.habitat.new Completion());
         enemySpawnGroups=nativeGroups.install(com.hypixel.hytale.server.core.universe.world.storage.ChunkStore.REGISTRY);
+        getEventRegistry().registerGlobal(com.hypixel.hytale.server.core.universe.world.events.AddWorldEvent.class,
+                event->enemyWorldRebind.begin(event.getWorld()));
+        for(var existingWorld:com.hypixel.hytale.server.core.universe.Universe.get().getWorlds().values())
+            enemyWorldRebind.begin(existingWorld);
         getEntityStoreRegistry().registerSystem(new com.inigmasgames.hytalerpg.execution.hytale.NativeEnemyEngagement(
                 difficultyCombat,supportSystem.runtime().finite(),
                 enemyBindings,enemyBalance));

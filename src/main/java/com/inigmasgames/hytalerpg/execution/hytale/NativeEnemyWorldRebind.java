@@ -19,6 +19,7 @@ public final class NativeEnemyWorldRebind {
     private final NativeEnemyBirthOwner owner;
     private final java.util.function.BooleanSupplier nativePackboundHookReady;
     private final java.util.function.BooleanSupplier nativeDamageReceiptHookReady;
+    private final java.util.function.Consumer<World> onAdmitted;
 
     public NativeEnemyWorldRebind(EnemyWorldAdmission admission,NativeEnemyBirthOwner owner,
             boolean nativePackboundHookReady){
@@ -31,9 +32,16 @@ public final class NativeEnemyWorldRebind {
     public NativeEnemyWorldRebind(EnemyWorldAdmission admission,NativeEnemyBirthOwner owner,
             java.util.function.BooleanSupplier nativePackboundHookReady,
             java.util.function.BooleanSupplier nativeDamageReceiptHookReady){
+        this(admission,owner,nativePackboundHookReady,nativeDamageReceiptHookReady,world->{});
+    }
+    public NativeEnemyWorldRebind(EnemyWorldAdmission admission,NativeEnemyBirthOwner owner,
+            java.util.function.BooleanSupplier nativePackboundHookReady,
+            java.util.function.BooleanSupplier nativeDamageReceiptHookReady,
+            java.util.function.Consumer<World> onAdmitted){
         this.admission=Objects.requireNonNull(admission);this.owner=Objects.requireNonNull(owner);
         this.nativePackboundHookReady=Objects.requireNonNull(nativePackboundHookReady);
         this.nativeDamageReceiptHookReady=Objects.requireNonNull(nativeDamageReceiptHookReady);
+        this.onAdmitted=Objects.requireNonNull(onAdmitted);
     }
 
     public void begin(World world){
@@ -59,6 +67,11 @@ public final class NativeEnemyWorldRebind {
                     com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log(
                             "RPG_ENEMY_WORLD_REBIND_COMPLETE world=%s recovered=%s freshAdmission=%s",
                             world.getName(),reconciled.size(),admission.admits(worldId));
+                    try{onAdmitted.accept(world);}
+                    catch(RuntimeException qaFailure){
+                        com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(qaFailure)
+                                .log("ME12_AUTO_QA_BOOTSTRAP_BLOCKED world=%s",world.getName());
+                    }
                 }
                 catch(PendingStaging pending){/* Existing recovery owners retry after publication or restore/remove. */}
                 catch(RuntimeException failure){owner.fail(worldId,"WORLD_INVENTORY_REBIND",failure);}

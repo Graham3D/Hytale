@@ -1,5 +1,26 @@
 # HyARPG/Hywind development baseline
 
+## 0.7.2 commandless ME12 QA candidate (2026-10-15)
+
+Branch `codex/me12-072-modonly` continues the verified mod-only source at
+`19d7e58ea1c57b65d60f6ed914168e74d06d105a`. Revision
+`R262ME12S3B-072-QA1-CANDIDATE`, version
+`0.2.0-R262ME12S3B-072-QA1-CANDIDATE`, targets stock Hytale `=0.7.2`.
+The build selects only the `Hywind` save and its two existing world UUIDs for
+automatic, eight-hour, per-world QA leases after native recovery. It uses the
+same exact-JAR Guardian receipt, installed server/asset identity, native owner,
+role certificate, and DRAIN checks as manual QA activation. Receipt location
+is embedded from the building worktree; a missing or changed receipt fails
+closed to existing v1/native spawning. No command or save-configuration edit
+is needed. `/rpg me12qa revoke` remains an emergency stop.
+
+This remains **QA_PENDING** until connected gameplay is accepted. Production
+`ENABLED` remains blocked, Monster Affix release gate remains OPEN with
+`ownerAccepted=false`, and Elite/HRO remain QA_PENDING. Exact final source,
+test, JAR, and deployment identities are recorded in the worktree's Guardian,
+compatibility, and deployment manifests; source integration and connected QA
+are separate statuses.
+
 ## 0.7.2 mod-only ME12 compatibility candidate (2026-10-15)
 
 Branch `codex/me12-072-modonly` is a dependent continuation of Stage 3 source

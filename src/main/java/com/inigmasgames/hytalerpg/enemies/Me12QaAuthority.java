@@ -51,7 +51,9 @@ public final class Me12QaAuthority {
             this.owner=owner;this.request=request;this.verifiedAtNanos=verifiedAtNanos;this.epoch=epoch;
             this.policy=policy;this.lifetime=lifetime;}
     }
-    private record Lease(UUID world,HywindWorldConfiguration.Snapshot snapshot,String candidate,long expiresNanos){}
+    private record Lease(UUID world,HywindWorldConfiguration.Snapshot snapshot,String candidate,long expiresNanos,
+                         boolean automatic){}
+    public static final long AUTOMATIC_QA_SECONDS=8*60*60;
     private final HywindWorldConfiguration config;
     private final EnemyWorldAdmission admission;
     private final EnemyNativeBindings bindings;
@@ -60,6 +62,8 @@ public final class Me12QaAuthority {
     private final Supplier<Identity> installed;
     private final LongSupplier clock;
     private volatile Lease lease;
+    private final java.util.concurrent.ConcurrentMap<UUID,Lease> automaticLeases=new java.util.concurrent.ConcurrentHashMap<>();
+    private volatile boolean automaticRevoked;
     private final java.util.concurrent.atomic.AtomicLong epoch=new java.util.concurrent.atomic.AtomicLong();
     private volatile UUID pendingWorld;
     public Me12QaAuthority(HywindWorldConfiguration config,EnemyWorldAdmission admission,
@@ -99,10 +103,24 @@ public final class Me12QaAuthority {
         return new Verified(this,request,clock.getAsLong(),token,policy,lifetime);
     }
     public synchronized void activateVerified(Verified verified){
+        lease=null;
+        var request=validateVerified(verified);
+        long now=clock.getAsLong();long duration=Math.multiplyExact(request.seconds(),1_000_000_000L);
+        epoch.incrementAndGet();
+        lease=new Lease(request.world(),verified.policy,request.candidateSha(),Math.addExact(now,duration),false);
+        pendingWorld=null;
+    }
+    /** The build-selected worlds get one bounded, receipt-verified lease per recovered world. */
+    public synchronized void activateAutomaticVerified(Verified verified){
+        if(automaticRevoked)throw new IllegalStateException("ME12_QA_AUTOMATIC_REVOKED");
+        var request=validateVerified(verified);
+        long expires=Math.addExact(clock.getAsLong(),Math.multiplyExact(AUTOMATIC_QA_SECONDS,1_000_000_000L));
+        automaticLeases.put(request.world(),new Lease(request.world(),verified.policy,request.candidateSha(),expires,true));
+    }
+    private Request validateVerified(Verified verified){
         Objects.requireNonNull(verified);
         if(verified.owner!=this||verified.epoch!=epoch.get())
             throw new IllegalStateException("ME12_QA_FOREIGN_OR_REVOKED_VERIFICATION");
-        lease=null;
         long age=clock.getAsLong()-verified.verifiedAtNanos;
         if(!verified.used.compareAndSet(false,true)||age<0||age>30_000_000_000L)
             throw new IllegalStateException("ME12_QA_VERIFICATION_EXPIRED_OR_REUSED");
@@ -118,13 +136,10 @@ public final class Me12QaAuthority {
                 ||!admission.admits(request.world()))throw new IllegalStateException("ME12_QA_SAVE_OR_WORLD_MISMATCH");
         if(!ownersCertified.getAsBoolean()||!mandatoryCertified.getAsBoolean())
             throw new IllegalStateException("ME12_QA_NATIVE_CERTIFICATION_BLOCKED");
-        long now=clock.getAsLong();long duration=Math.multiplyExact(request.seconds(),1_000_000_000L);
-        epoch.incrementAndGet();
-        lease=new Lease(request.world(),snapshot,request.candidateSha(),Math.addExact(now,duration));
-        pendingWorld=null;
+        return request;
     }
     public boolean allows(UUID world){
-        var active=lease;
+        var active=selected(world);
         return active!=null&&active.world().equals(world)&&clock.getAsLong()<active.expiresNanos()
                 &&config.snapshot()==active.snapshot()&&config.snapshot().me12FeatureState()==Me12FeatureState.DRAIN
                 &&admission.admits(world)&&ownersCertified.getAsBoolean()&&mandatoryCertified.getAsBoolean();
@@ -135,10 +150,22 @@ public final class Me12QaAuthority {
                 &&bindings.role(nativeRole).filter(EnemyNativeBindings.Role::productionPromotionEnabled)
                     .filter(role->!EnemyIncomingOnlyAttachment.certified(role)).isPresent();
     }
-    public synchronized void revoke(){epoch.incrementAndGet();lease=null;pendingWorld=null;}
-    public synchronized void worldUnload(UUID world){if(lease!=null&&lease.world().equals(world)
-            ||world.equals(pendingWorld))revoke();}
-    public String status(UUID world){var active=lease;return allows(world)?"ACTIVE candidate="+active.candidate()+
+    private Lease selected(UUID world){
+        var manual=lease;
+        return manual!=null&&manual.world().equals(world)&&clock.getAsLong()<manual.expiresNanos()
+                ?manual:automaticLeases.get(world);
+    }
+    public boolean automaticRevoked(){return automaticRevoked;}
+    public synchronized void revoke(){epoch.incrementAndGet();lease=null;pendingWorld=null;
+        automaticLeases.clear();automaticRevoked=true;}
+    public synchronized void worldUnload(UUID world){
+        automaticLeases.remove(world);
+        if(lease!=null&&lease.world().equals(world)||world.equals(pendingWorld)){
+            epoch.incrementAndGet();lease=null;pendingWorld=null;
+        }
+    }
+    public String status(UUID world){var active=selected(world);return allows(world)?
+            (active.automatic()?"ACTIVE_AUTO":"ACTIVE")+" candidate="+active.candidate()+
             " world="+world+" secondsRemaining="+Math.max(0,(active.expiresNanos()-clock.getAsLong())/1_000_000_000L):"INACTIVE";}
     static void verifyGuardian(Path path,Identity identity){
         try{

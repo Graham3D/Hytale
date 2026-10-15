@@ -1,10 +1,11 @@
 # Hywind / HyARPG development baseline
 
-0.7.2 mod-only compatibility candidate: **R262ME12S3B-072-CANDIDATE**
-(`0.2.0-R262ME12S3B-072-CANDIDATE`) on `codex/me12-072-modonly`.
-The source is under offline verification. It keeps Master Enemies v1.2 guarded,
-production v2 disabled, and connected gameplay acceptance pending. It does not
-modify or require a patched Hytale server. The prior Stage 3 record below is
+0.7.2 mod-only automatic QA candidate: **R262ME12S3B-072-QA1-CANDIDATE**
+(`0.2.0-R262ME12S3B-072-QA1-CANDIDATE`) on `codex/me12-072-modonly`.
+The exact Hywind save and its two current worlds automatically acquire a bounded,
+Guardian-verified QA lease after native recovery. Production v2 remains disabled,
+and connected gameplay acceptance remains pending. No patched Hytale server is required.
+The prior Stage 3 record below is
 retained as historical context; see [current source status](docs/DEVELOPMENT_BASELINE.md).
 
 Isolated ME12 Stage 3 continuation: **R262ME12S3B-CANDIDATE**
