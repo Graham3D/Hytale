@@ -27,7 +27,10 @@ public final class NativeEnemyProjectileDamage extends DamageEventSystem {
     @Override public java.util.Set<com.hypixel.hytale.component.dependency.Dependency<EntityStore>> getDependencies(){
         return java.util.Set.of(new com.hypixel.hytale.component.dependency.SystemDependency<>(
                 com.hypixel.hytale.component.dependency.Order.BEFORE,
-                com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageLifecycleSystems.Gather.class));}
+                com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageLifecycleSystems.Gather.class),
+                new com.hypixel.hytale.component.dependency.SystemDependency<>(
+                        com.hypixel.hytale.component.dependency.Order.AFTER,
+                        NativeDamageLeafReceipts.Gather.class));}
     @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,
             CommandBuffer<EntityStore> buffer,Damage damage){
             try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.DAMAGE)){

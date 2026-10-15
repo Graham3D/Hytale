@@ -190,8 +190,13 @@ public final class NativeWorldSpawnDensity implements AutoCloseable {
     }
 
     public final class Tick extends TickingSystem<ChunkStore> {
+        private final boolean nativeFinalSelection;
+        public Tick(){this(false);}
+        public Tick(boolean nativeFinalSelection){this.nativeFinalSelection=nativeFinalSelection;}
         @Override public Set<Dependency<ChunkStore>> getDependencies() {
-            return Set.of(new SystemDependency<>(Order.BEFORE, WorldSpawningSystem.class));
+            return nativeFinalSelection
+                    ? Set.of(new SystemDependency<>(Order.BEFORE, NativePopulationSelection.class))
+                    : Set.of(new SystemDependency<>(Order.BEFORE, WorldSpawningSystem.class));
         }
         @Override public void tick(float dt, int index, Store<ChunkStore> store) {
             if (!closed) apply(store.getExternalData().getWorld(), store, settings.multiplier());

@@ -4,19 +4,13 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.inigmasgames.hytale.patch.NativeMutationHook;
-import com.inigmasgames.hytale.patch.NativeDamageReceiptHook;
-import com.inigmasgames.hytale.patch.NativeProjectileReceiptHook;
-import com.inigmasgames.hytale.patch.NativeModernProjectileHook;
-import com.inigmasgames.hytale.patch.NativePopulationProjectionHook;
 import com.inigmasgames.hytalerpg.enemies.EnemyActorIdentity;
-import java.nio.file.*;
-import java.security.MessageDigest;
 import java.util.*;
 
 /** Binds the exact release native hook set to the existing Packbound protection owner. */
 public final class PackboundNativeMutationBridge implements AutoCloseable {
-    private static final String PATCH_HASH="46f4d2f087f15b27151a879e574edfdfec4e4b15fbd381a952a84099a4ff601f";
-    /** The only native runtime JAR accepted by the guarded ME12 QA lease. */
+    private static final String PATCH_HASH="23f71f03763422ce7c04df191db49cd0e7d87d43b12baad75c43fdc202410aff";
+    /** Exact stock 0.7.2 server accepted for this mod-side interaction codec adapter. */
     public static String patchedServerSha256(){return PATCH_HASH;}
     private final AutoCloseable registration;
     private boolean closed;
@@ -24,39 +18,15 @@ public final class PackboundNativeMutationBridge implements AutoCloseable {
     public static Optional<PackboundNativeMutationBridge> tryInstall(HytaleDifficultyCombat combat){
         Objects.requireNonNull(combat);
         try{
-            Class.forName("com.inigmasgames.hytale.patch.NativeMutationHook",false,
-                    PackboundNativeMutationBridge.class.getClassLoader());
-            var nativeSource=codeSourcePath(NativeMutationHook.class);
-            if(!PATCH_HASH.equals(hash(nativeSource)))
-                throw new IllegalStateException("PACKBOUND_NATIVE_PATCH_VERSION_MISMATCH:NativeMutationHook");
-            for(var hook : List.of(NativeDamageReceiptHook.class,
-                    NativeProjectileReceiptHook.class,NativeModernProjectileHook.class,NativePopulationProjectionHook.class))
-                if(!nativeSource.equals(codeSourcePath(hook)))
-                    throw new IllegalStateException("PACKBOUND_NATIVE_PATCH_VERSION_MISMATCH:"+hook.getSimpleName());
-            return Optional.of(new PackboundNativeMutationBridge(NativeMutationHook.install(mutation->allow(combat,mutation))));
-        }catch(ClassNotFoundException|LinkageError missing){
-            com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(missing)
-                    .log("RPG_PACKBOUND_NATIVE_PATCH_UNAVAILABLE promotion=false");
-            return Optional.empty();
-        }catch(Exception invalid){
+            return Optional.of(new PackboundNativeMutationBridge(
+                    NativeMutationInteractions.install(mutation->allow(combat,mutation))));
+        }catch(LinkageError|RuntimeException invalid){
             com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(invalid)
-                    .log("RPG_PACKBOUND_NATIVE_PATCH_INVALID promotion=false");
+                    .log("RPG_PACKBOUND_MUTATION_INTERACTIONS_UNAVAILABLE promotion=false");
             return Optional.empty();
         }
     }
-    private static Path codeSourcePath(Class<?> hookType)throws Exception{
-        var source=hookType.getProtectionDomain().getCodeSource();
-        if(source==null)throw new IllegalStateException("PACKBOUND_NATIVE_PATCH_SOURCE_MISSING");
-        var path=Path.of(source.getLocation().toURI());
-        if(!Files.isRegularFile(path))throw new IllegalStateException("PACKBOUND_NATIVE_PATCH_NOT_JAR");
-        return path;
-    }
-    private static String hash(Path path)throws Exception{
-        var digest=MessageDigest.getInstance("SHA-256");
-        try(var input=Files.newInputStream(path)){byte[] block=new byte[65536];int length;
-            while((length=input.read(block))!=-1)digest.update(block,0,length);}
-        return HexFormat.of().formatHex(digest.digest());
-    }
+    public boolean verified(){return !closed&&registration instanceof NativeMutationInteractions guarded&&guarded.verified();}
     static boolean allow(HytaleDifficultyCombat combat,NativeMutationHook.Mutation mutation){
         Ref<EntityStore> target=mutation.target(),source=mutation.source();
         if(target==null||!target.isValid())return true; // Preserve native target rejection/no-op.

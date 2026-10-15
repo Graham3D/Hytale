@@ -56,6 +56,7 @@ public final class NativeDamageLeafReceipts {
         @Override public Set<Dependency<EntityStore>> getDependencies(){return Set.of(
                 new SystemDependency<>(Order.BEFORE,HytaleDamageLifecycleSystems.Gather.class));}
         @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){
+            NativeDamageInteractions.stamp(buffer,chunk.getReferenceTo(index),damage);
             var call=NativeDamageLeafInteraction.currentInvocation();
             if(call==null||!(call.scope() instanceof Scope scope)||HytaleDamageAdapter.metadata(damage)!=null
                     ||damage.getIfPresentMetaObject(Damage.INTERACTION_TYPE)==null

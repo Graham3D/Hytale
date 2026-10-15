@@ -17,8 +17,8 @@ public final class NativeEnemyWorldRebind {
     }
     private final EnemyWorldAdmission admission;
     private final NativeEnemyBirthOwner owner;
-    private final boolean nativePackboundHookReady;
-    private final boolean nativeDamageReceiptHookReady;
+    private final java.util.function.BooleanSupplier nativePackboundHookReady;
+    private final java.util.function.BooleanSupplier nativeDamageReceiptHookReady;
 
     public NativeEnemyWorldRebind(EnemyWorldAdmission admission,NativeEnemyBirthOwner owner,
             boolean nativePackboundHookReady){
@@ -26,9 +26,14 @@ public final class NativeEnemyWorldRebind {
     }
     public NativeEnemyWorldRebind(EnemyWorldAdmission admission,NativeEnemyBirthOwner owner,
             boolean nativePackboundHookReady,boolean nativeDamageReceiptHookReady){
+        this(admission,owner,()->nativePackboundHookReady,()->nativeDamageReceiptHookReady);
+    }
+    public NativeEnemyWorldRebind(EnemyWorldAdmission admission,NativeEnemyBirthOwner owner,
+            java.util.function.BooleanSupplier nativePackboundHookReady,
+            java.util.function.BooleanSupplier nativeDamageReceiptHookReady){
         this.admission=Objects.requireNonNull(admission);this.owner=Objects.requireNonNull(owner);
-        this.nativePackboundHookReady=nativePackboundHookReady;
-        this.nativeDamageReceiptHookReady=nativeDamageReceiptHookReady;
+        this.nativePackboundHookReady=Objects.requireNonNull(nativePackboundHookReady);
+        this.nativeDamageReceiptHookReady=Objects.requireNonNull(nativeDamageReceiptHookReady);
     }
 
     public void begin(World world){
@@ -38,7 +43,7 @@ public final class NativeEnemyWorldRebind {
         startup.whenComplete((inventory,error)->{
             if(!admission.current(worldId,lifetime))return;
             if(error!=null){owner.fail(worldId,"WORLD_INVENTORY",error);return;}
-            if(!nativePackboundHookReady&&inventory.packs().stream().anyMatch(pack->
+            if(!nativePackboundHookReady.getAsBoolean()&&inventory.packs().stream().anyMatch(pack->
                     pack.state()!=EnemyPackRecord.State.ABORTED&&pack.state()!=EnemyPackRecord.State.DEFEATED
                     &&inventory.births().stream().filter(birth->birth.encounter().equals(pack.encounterId()))
                             .flatMap(birth->birth.activeActors(pack).stream()).anyMatch(actor->actor.ownAffixes().stream()

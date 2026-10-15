@@ -143,9 +143,15 @@ class EnemyNativeProjectilePathTest {
             try(var input=zip.getInputStream(entry)){json=new String(input.readAllBytes(),StandardCharsets.UTF_8);}
             boolean simpleAdded=Interaction.CODEC.getCodecFor("Simple")==null;
             boolean launchAdded=Interaction.CODEC.getCodecFor("LaunchProjectile")==null;
+            boolean modernAdded=Interaction.CODEC.getCodecFor("Projectile")==null;
             if(simpleAdded)Interaction.CODEC.register("Simple",SimpleInteraction.class,SimpleInteraction.CODEC);
             if(launchAdded)Interaction.CODEC.register("LaunchProjectile",LaunchProjectileInteraction.class,LaunchProjectileInteraction.CODEC);
+            if(modernAdded)Interaction.CODEC.register("Projectile",
+                    com.hypixel.hytale.server.core.modules.projectile.interaction.ProjectileInteraction.class,
+                    com.hypixel.hytale.server.core.modules.projectile.interaction.ProjectileInteraction.CODEC);
             try{
+                try(var nativeRoutes=com.inigmasgames.hytalerpg.execution.hytale.NativeProjectileInteractions.install(
+                        (context,holder)->{},(context,projectile,buffer,modifiers)->{})){
                 var map=new Interactions();
                 var builder=HytaleAssetStore.builder(Interaction.class,(IndexedLookupTableAssetMap<String,Interaction>)map)
                         .setPath("Item/Interactions").setCodec(Interaction.CODEC).setKeyFunction(Interaction::getId)
@@ -162,16 +168,21 @@ class EnemyNativeProjectilePathTest {
                     var decoded=assets.decode("ScoutFixture","Skeleton_Scout_Bow_Shoot",route);
                     assertNotNull(decoded);
                     assets.loadAssets("ScoutFixture",java.util.List.of(decoded));
+                    assertTrue(nativeRoutes.verified());
                     var root=new RootInteraction("Skeleton_Scout_Bow_Shoot",decoded.getId());root.build();
                     var graph=NativeBasicAttackPaths.resolve(InteractionContext.withoutEntity(),root,InteractionType.Primary);
                     assertTrue(graph.damageOccurrences().isEmpty());
                     assertEquals(1,graph.projectileOccurrences().size());
                     var launch=graph.projectileOccurrences().keySet().iterator().next();
+                    assertInstanceOf(com.inigmasgames.hytalerpg.execution.hytale.NativeProjectileInteractions.ObservedLegacy.class,launch);
                     assertEquals("Skeleton_Scout_Arrow",launch.getProjectileId());
                     assertEquals(1,graph.projectileOccurrences().get(launch));
                     assertEquals(NativeBasicAttackPaths.Kind.NORMAL,graph.classify(launch).orElseThrow());
                 }finally{AssetRegistry.unregister(assets);NativeFixtureAssetCache.clear(Interaction.class);}
+                }
             }finally{
+                if(modernAdded)Interaction.CODEC.remove(
+                        com.hypixel.hytale.server.core.modules.projectile.interaction.ProjectileInteraction.class);
                 if(launchAdded)Interaction.CODEC.remove(LaunchProjectileInteraction.class);
                 if(simpleAdded)Interaction.CODEC.remove(SimpleInteraction.class);
             }

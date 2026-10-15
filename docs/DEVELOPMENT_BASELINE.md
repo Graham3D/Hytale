@@ -1,5 +1,28 @@
 # HyARPG/Hywind development baseline
 
+## 0.7.2 mod-only ME12 compatibility candidate (2026-10-15)
+
+Branch `codex/me12-072-modonly` is a dependent continuation of Stage 3 source
+`69d1388443a6838809d4788263f19f10b3acb0bf`; GitHub `main` contains the
+earlier ME12 engineering commit `b50c49a51970622af9e4c781f35e8a67b05efb9a`.
+Revision `R262ME12S3B-072-CANDIDATE`, version
+`0.2.0-R262ME12S3B-072-CANDIDATE`, target Hytale `=0.7.2` are an
+**IN_PROGRESS / QA_PENDING** mod-only compatibility candidate. The exact final
+source SHA, JAR SHA, cumulative test counts, and Guardian status must be
+recorded after verification. No deployment or connected gameplay QA is implied.
+
+The 0.7.2 adapter preserves native spawn-job selection and exact-role birth
+capture, adds scoped native mutation, damage and projectile interaction
+observers, and retains existing durability, receipt, and release guards. The
+native binding revision remains unchanged to preserve archived actor identity;
+the top-level server and asset hashes are repinned only after verifying all 86
+role source pins and six explicit binding paths against installed 0.7.2 assets.
+`check` now includes a read-only exact native identity/role verification task.
+The active game, save, and installed JAR remain untouched by this engineering
+candidate. Monster Affix release gate remains OPEN with `ownerAccepted=false`;
+Elite/HRO connected acceptance remains QA_PENDING. This entry supersedes the
+older 0.7.2 blocker status below without erasing its history.
+
 ## ME12 0.7.2 join-failure remediation in progress (2026-10-14)
 
 The installed launcher updated Hytale to 0.7.2 after the guarded Stage 4

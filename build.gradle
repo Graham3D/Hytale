@@ -138,13 +138,13 @@ tasks.register('buildPackboundNative', Exec) {
 }
 tasks.register('testReleaseNativePatch', Exec) {
     group = 'verification'
-    description = 'Build and regression-test the exact Chapter I native patch without installing it.'
+    description = 'Historical 0.7.1 native-patch verification only; not part of the 0.7.2 mod-only gate.'
     commandLine 'powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
         file('tools/native-patch/Test-ReleaseNativePatch.ps1'), '-ServerJar', serverJar,
         '-OutputDirectory', file('build/native-patch')
 }
-// Compile against the installed release API and include the neutral hook types.
-// Runtime providers still require the separately verified patched server JAR.
+// Compile against the installed release API and bundle the neutral hook types.
+// The 0.7.2 runtime providers are owned by the exact-version mod-side adapters.
 sourceSets.main.java {
     srcDir 'tools/native-patch/src'
     exclude '**/PatchNativeMutations.java'
@@ -241,6 +241,21 @@ tasks.register('verifyMe12Reconciliation', Exec) {
     commandLine python, file('tools/audit/me12_reconcile.py'), '--check'
 }
 tasks.named('check') { dependsOn tasks.named('verifyMe12Reconciliation') }
+tasks.register('verifyMe12NativeCompatibility', Exec) {
+    group = 'verification'
+    description = 'Read-only 0.7.2 server, asset and certified role identity check; never launches Hytale.'
+    inputs.property('sourceCommit', providers.exec { commandLine 'git', 'rev-parse', 'HEAD' }.standardOutput.asText.map { it.trim() })
+    inputs.files(serverJar, assetsZip, file('src/main/resources/rpg/enemies/native-bindings-v1.json'),
+            file('src/main/resources/rpg/enemies/native-source-pins-0.7.1.json'),
+            file('tools/Test-Me12NativeCompatibility.ps1'), file('gradle.properties'))
+    outputs.file(layout.buildDirectory.file('compatibility/identity.json'))
+    commandLine 'powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
+            file('tools/Test-Me12NativeCompatibility.ps1'), '-ServerJar', serverJar,
+            '-AssetsZip', assetsZip, '-Manifest', file('src/main/resources/rpg/enemies/native-bindings-v1.json'),
+            '-SourcePins', file('src/main/resources/rpg/enemies/native-source-pins-0.7.1.json'),
+            '-Output', layout.buildDirectory.file('compatibility/identity.json').get().asFile
+}
+tasks.named('check') { dependsOn tasks.named('verifyMe12NativeCompatibility') }
 
 allprojects {
     tasks.matching { it.name == 'processResources' }.configureEach {
@@ -313,6 +328,10 @@ tasks.test {
     exclude '**/NativeEnemyProductionBirthOwnerTest*'
     exclude '**/NativeEnemyBirthPublicationIntegrationTest*'
     exclude '**/EnemyModernProjectileReceiptTest*'
+    exclude '**/NativePopulationSelectionTest*'
+    exclude '**/NativeMutationInteractionsTest*'
+    exclude '**/NativeDamageInteractionsTest*'
+    exclude '**/NativeProjectileInteractionsTest*'
 }
 
 tasks.register('nativeControlTest', Test) {
@@ -330,6 +349,10 @@ tasks.register('nativeControlTest', Test) {
     include '**/R245FlockRollbackTest.class'
     include '**/R261Qa2StartupRegistrationTest.class'
     include '**/R244PopulationProjectionTest.class'
+    include '**/NativePopulationSelectionTest.class'
+    include '**/NativeMutationInteractionsTest.class'
+    include '**/NativeDamageInteractionsTest.class'
+    include '**/NativeProjectileInteractionsTest.class'
     include '**/NativeHookLifecycleTest.class'
     include '**/NativeGearWorldProjectionTest.class'
     include '**/NativePatchGateTest.class'

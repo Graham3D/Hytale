@@ -92,8 +92,7 @@ public final class Me12QaAuthority {
             throw new IllegalArgumentException("ME12_QA_REQUEST_BOUNDS");
         var identity=installed.get();
         if(!identity.sourceCommit().equals(request.candidateSha())
-                ||!identity.serverSha256().equalsIgnoreCase(
-                        com.inigmasgames.hytalerpg.execution.hytale.PackboundNativeMutationBridge.patchedServerSha256())
+                ||!identity.serverSha256().equalsIgnoreCase(bindings.serverJarSha256())
                 ||!identity.assetsSha256().equalsIgnoreCase(bindings.assetsSha256()))
             throw new IllegalStateException("ME12_QA_CANDIDATE_OR_NATIVE_IDENTITY_MISMATCH");
         verifyGuardian(request.guardianReceipt(),identity);

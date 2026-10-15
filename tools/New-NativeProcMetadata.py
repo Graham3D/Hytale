@@ -12,7 +12,7 @@ import zipfile
 from collections import Counter, defaultdict
 from pathlib import Path
 
-PIN = "b9164eb07d7c42e697d208ba3d35078a9b4a0125bef6261847a2f91e293e53b4"
+PIN = "ee8f8d5b332874eb928144726077fa66f80c117a5412017a5cde6fce2d9bb2a0"
 FAMILIES = {
     "plate": 360, "tool": 135, "cloth": 120, "leather": 120, "robes": 120,
     "staff": 120, "battleaxe": 105, "book": 105, "daggers": 105,

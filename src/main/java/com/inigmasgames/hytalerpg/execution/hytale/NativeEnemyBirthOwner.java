@@ -22,7 +22,7 @@ public final class NativeEnemyBirthOwner implements NativeEnemySpawnGroups.Owner
     private final NativeEnemyBirthDecision decisions;
     private final NativeEnemyBirthAttachment attachment;
     private final NativeEnemyBirthPublication publication;
-    private final boolean nativeHooksReady;
+    private final java.util.function.BooleanSupplier nativeHooksReady;
     private final TransientQaEncounters qaEncounters;
     private final Map<UUID,NativeEnemyBirthAttachment.Prepared> liveActors=new HashMap<>();
 
@@ -31,18 +31,26 @@ public final class NativeEnemyBirthOwner implements NativeEnemySpawnGroups.Owner
             NativeEnemyBirthReservation reservation,NativeEnemyBirthDecision decisions,
             NativeEnemyBirthAttachment attachment,NativeEnemyBirthPublication publication,
             boolean nativeHooksReady){
+        this(bindings,admission,rewards,combat,actions,reservation,decisions,attachment,publication,
+                ()->nativeHooksReady);
+    }
+    public NativeEnemyBirthOwner(EnemyNativeBindings bindings,EnemyWorldAdmission admission,
+            HytaleEncounterRewards rewards,HytaleDifficultyCombat combat,NativeEnemyActions actions,
+            NativeEnemyBirthReservation reservation,NativeEnemyBirthDecision decisions,
+            NativeEnemyBirthAttachment attachment,NativeEnemyBirthPublication publication,
+            java.util.function.BooleanSupplier nativeHooksReady){
         this.bindings=Objects.requireNonNull(bindings);this.admission=Objects.requireNonNull(admission);
         this.rewards=Objects.requireNonNull(rewards);this.combat=Objects.requireNonNull(combat);
         this.actions=Objects.requireNonNull(actions);
         this.reservation=Objects.requireNonNull(reservation);this.decisions=Objects.requireNonNull(decisions);
         this.attachment=Objects.requireNonNull(attachment);this.publication=Objects.requireNonNull(publication);
-        this.nativeHooksReady=nativeHooksReady;
+        this.nativeHooksReady=Objects.requireNonNull(nativeHooksReady);
         this.qaEncounters=new TransientQaEncounters(combat);
     }
     public TransientQaEncounters qaEncounters(){return qaEncounters;}
 
     @Override public boolean eligible(NativeEnemySpawnGroups.Job job){
-        return nativeHooksReady&&job.expectedMembers()<=8&&admission.admits(job.world())
+        return nativeHooksReady.getAsBoolean()&&job.expectedMembers()<=8&&admission.admits(job.world())
                 &&bindings.productionEligibilityRejection(job.nativeRole()).isEmpty()
                 &&bindings.role(job.nativeRole()).map(EnemyNativeBindings.Role::productionPromotionEnabled).orElse(false);
     }
@@ -184,7 +192,7 @@ public final class NativeEnemyBirthOwner implements NativeEnemySpawnGroups.Owner
             com.hypixel.hytale.server.core.universe.world.World world,org.joml.Vector3dc playerPosition,
             com.hypixel.hytale.math.vector.Rotation3fc facing,EnemyQaSpawnRequest qa){
         if(!store.isInThread()||!world.getWorldConfig().getUuid().equals(store.getExternalData().getWorld().getWorldConfig().getUuid())
-                ||!nativeHooksReady)
+                ||!nativeHooksReady.getAsBoolean())
             throw new IllegalStateException("ENEMY_QA_WORLD_UNAVAILABLE");
         var role=bindings.qaRole(qa.nativeRoleId()).orElseThrow(()->new IllegalArgumentException(
                 "Role is absent from the authored monster catalog: "+qa.nativeRoleId()));

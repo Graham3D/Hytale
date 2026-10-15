@@ -105,14 +105,15 @@ class Me12QaAuthorityTest {
         assertThrows(IllegalArgumentException.class,()->authority.activate(new Me12QaAuthority.Request(
                 identity.sourceCommit(),world,"QaWorld",601,request.guardianReceipt())));
     }
-    @Test void sourceManifestHashCannotStandInForTheInstalledNativePatch() throws Exception {
+    @Test void historicalOrUnknownServerCannotStandInForTheInstalled072Server() throws Exception {
         var config=config();var world=UUID.randomUUID();var gate=admitted(world);
         var bindings=EnemyNativeBindings.load();
         var patched=new Me12QaAuthority.Identity("a".repeat(40),"rev","version","b".repeat(64),
                 com.inigmasgames.hytalerpg.execution.hytale.PackboundNativeMutationBridge.patchedServerSha256(),
                 bindings.assetsSha256());
         var request=new Me12QaAuthority.Request(patched.sourceCommit(),world,"QaWorld",30,receipt(patched));
-        for(var serverHash:List.of(bindings.serverJarSha256(),"c".repeat(64))){
+        for(var serverHash:List.of("a60fa0b31f1418691f8d8f7cc1159693e3ec504d4f0567fb91493a842d71f8ca",
+                "c".repeat(64))){
             var runtime=new Me12QaAuthority.Identity(patched.sourceCommit(),patched.revision(),patched.version(),
                     patched.jarSha256(),serverHash,patched.assetsSha256());
             var authority=new Me12QaAuthority(config,gate,bindings,()->true,()->true,()->runtime,()->0);

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "revision": "hytale-0.7.0-pre.5.1-larva-owner-qa-1",
-  "serverJarSha256": "a60fa0b31f1418691f8d8f7cc1159693e3ec504d4f0567fb91493a842d71f8ca",
-  "assetsSha256": "b9164eb07d7c42e697d208ba3d35078a9b4a0125bef6261847a2f91e293e53b4",
+  "serverJarSha256": "23f71f03763422ce7c04df191db49cd0e7d87d43b12baad75c43fdc202410aff",
+  "assetsSha256": "ee8f8d5b332874eb928144726077fa66f80c117a5412017a5cde6fce2d9bb2a0",
   "bindings": [
     {
       "canonicalRoleId": "Larva_Void",

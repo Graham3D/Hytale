@@ -1,5 +1,12 @@
 # Hywind / HyARPG development baseline
 
+0.7.2 mod-only compatibility candidate: **R262ME12S3B-072-CANDIDATE**
+(`0.2.0-R262ME12S3B-072-CANDIDATE`) on `codex/me12-072-modonly`.
+The source is under offline verification. It keeps Master Enemies v1.2 guarded,
+production v2 disabled, and connected gameplay acceptance pending. It does not
+modify or require a patched Hytale server. The prior Stage 3 record below is
+retained as historical context; see [current source status](docs/DEVELOPMENT_BASELINE.md).
+
 Isolated ME12 Stage 3 continuation: **R262ME12S3B-CANDIDATE**
 (`0.2.0-R262ME12S3B-CANDIDATE`), Hytale `=0.7.1`, branch
 `codex/me12-stage3`, dependent on verified Stage 2 `a030722af4f9e75db012f18eadfb332f50cbf191`.

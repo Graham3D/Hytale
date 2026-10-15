@@ -50,6 +50,8 @@ public final class NativeSystemReplacement<E> implements AutoCloseable {
         for(int i=0;i<data.getSystemSize();i++){var system=data.getSystem(i);if(system!=null&&system.getClass()==type)return system;}
         return null;
     }
+    public boolean verified(){return !closed&&!registry.isShutdown()
+            &&find(registry,adapterType)==adapter&&find(registry,originalType)==null;}
     @Override public synchronized void close(){
         if(closed)return;
         if(registry.isShutdown()){closed=true;return;}

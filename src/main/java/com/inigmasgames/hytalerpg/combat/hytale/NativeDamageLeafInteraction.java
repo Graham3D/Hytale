@@ -40,8 +40,9 @@ public abstract class NativeDamageLeafInteraction extends DamageEntityInteractio
     }
     @Override protected void tick0(boolean first,float dt,InteractionType type,InteractionContext context,CooldownHandler cooldowns){
         var previous=CURRENT.get();var call=invocation(context);CURRENT.set(call);Throwable failed=null;
-        try{super.tick0(first,dt,type,context,cooldowns);}
+        try(var ignored=NativeDamageInteractions.enter(context)){super.tick0(first,dt,type,context,cooldowns);}
         catch(RuntimeException|Error failure){failed=failure;throw failure;}
+        catch(Exception failure){failed=failure;throw new IllegalStateException("NATIVE_DAMAGE_SCOPE_TEARDOWN",failure);}
         finally{
             try{if(call.scope()!=null)call.scope().completed(failed);}
             catch(RuntimeException|Error completionFailure){
