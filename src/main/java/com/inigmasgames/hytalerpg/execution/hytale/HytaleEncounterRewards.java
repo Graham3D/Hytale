@@ -957,7 +957,10 @@ public final class HytaleEncounterRewards implements AutoCloseable {
                     difficultyCombat.ready(nativeWorld.getEntityStore().getStore(),enemy,ticket,Optional.empty(),true)));
             return;
         }
-        attachObserved(world,enemy,role,spawn).whenComplete((attached,error)->{
+        java.util.concurrent.CompletionStage<Boolean> attachment;
+        try{attachment=attachObserved(world,enemy,role,spawn);}
+        catch(RuntimeException rejected){attachment=java.util.concurrent.CompletableFuture.failedStage(rejected);}
+        attachment.whenComplete((attached,error)->{
             // The asynchronous closure carries immutable snapshots/IDs only; native work is reacquired on its world queue.
             if(error!=null){
                 // The durable owner has rejected this attachment. Release only its
