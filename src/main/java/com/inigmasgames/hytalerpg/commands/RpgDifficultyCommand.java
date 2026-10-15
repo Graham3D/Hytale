@@ -103,7 +103,12 @@ public final class RpgDifficultyCommand extends AbstractCommandCollection {
                 var at=HytaleDifficultyTravel.findSafe(w,pos.x()-Math.sin(yaw)*distance,pos.y(),pos.z()-Math.cos(yaw)*distance);
                 if(action.equals("portal")){
                     var mode=DifficultyId.valueOf(text.toUpperCase(Locale.ROOT));var portal=new DifficultyPortals.Portal(UUID.randomUUID(),p.getUuid(),p.getWorldUuid(),mode,at.x(),at.y(),at.z());
-                    reply(c,worlds.prepare(mode).thenRunAsync(()->portals.add(portal),io),"Placed "+portal.label()+". Portal ID: "+portal.id());return;
+                    worlds.prepare(mode).thenRunAsync(()->portals.add(portal),io).whenComplete((v,e)->{
+                        if(e!=null)com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(e).log(
+                                "RPG_DIFFICULTY_PORTAL_FAILED target=%s",mode);
+                        c.sendMessage(Message.raw(e==null?"Placed "+portal.label()+". Portal ID: "+portal.id():
+                                "Difficulty: "+HytaleDifficultyPortals.failure(e)));
+                    });return;
                 }
                 var golem=GolemMilestones.load().require(text.toLowerCase(Locale.ROOT));
                 // Explicit campaign authoring, distinct from /npc spawn and forced travel. Native role stats are retained.
@@ -119,7 +124,11 @@ public final class RpgDifficultyCommand extends AbstractCommandCollection {
                         },null);
                 if(result==null)throw new IllegalStateException("CAMPAIGN_GOLEM_SPAWN_FAILED");
                 c.sendMessage(Message.raw("Placed campaign encounter "+golem.label()+" in "+runtime.currentWorld(p.getWorldUuid()).difficulty()+"; placement "+placement+". Eligible contributors earn completion on native death."));
-            }catch(RuntimeException e){c.sendMessage(Message.raw("Difficulty command: "+e.getMessage()));}}
+            }catch(RuntimeException e){
+                if(action.equals("portal"))com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().withCause(e).log(
+                        "RPG_DIFFICULTY_PORTAL_FAILED before destination preparation");
+                c.sendMessage(Message.raw("Difficulty command: "+e.getMessage()));
+            }}
         });
     }
     private static void reply(CommandContext c,CompletionStage<?> task,String success){task.whenComplete((v,e)->c.sendMessage(Message.raw(e==null?success:"Difficulty: "+HytaleDifficultyPortals.failure(e))));}
