@@ -18,7 +18,10 @@ class Me12ReplayTest {
         for(int i=0;i<2;i++){
             Path output=directory.resolve("replay-"+i+".txt");var command=new ArrayList<String>();command.add(Path.of(System.getProperty("java.home"),"bin/java.exe").toString());
             if(i==1)command.add("-XX:TieredStopAtLevel=1");Collections.addAll(command,"-cp",String.join(System.getProperty("path.separator"),cp),Me12ReplayProcess.class.getName());
-            var child=new ProcessBuilder(command).redirectErrorStream(true).redirectOutput(output.toFile()).start();
+            command.add(1,"-Djava.io.tmpdir="+System.getProperty("java.io.tmpdir"));
+            var childCommand=new ProcessBuilder(command).redirectErrorStream(true).redirectOutput(output.toFile());
+            childCommand.environment().remove("JAVA_TOOL_OPTIONS"); // The inherited JVM banner is not a planner transcript.
+            var child=childCommand.start();
             assertTrue(child.waitFor(30,TimeUnit.SECONDS));assertEquals(0,child.exitValue(),Files.readString(output));transcripts.add(Files.readString(output));
         }
         assertEquals(transcripts.get(0),transcripts.get(1));assertEquals(128,transcripts.getFirst().lines().count());

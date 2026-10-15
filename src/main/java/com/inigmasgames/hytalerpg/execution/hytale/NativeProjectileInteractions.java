@@ -141,6 +141,8 @@ public final class NativeProjectileInteractions implements AutoCloseable {
         @Override public Query<EntityStore> getQuery(){return NPCEntity.getComponentType();}
         @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,
                 CommandBuffer<EntityStore> buffer,ProjectileLaunchEvent event){
+            try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,
+                    com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.EXECUTION)){
             var frame=MODERN.get();if(frame==null)return;
             var context=frame.context;
             if(context.getCommandBuffer()!=buffer||context.getEntity()!=chunk.getReferenceTo(index))return;
@@ -150,6 +152,7 @@ public final class NativeProjectileInteractions implements AutoCloseable {
             if(source==null||!source.isValid())source=context.getEntity();
             var modifiers=ImpactModifiers.collect(context,source,buffer);
             NativeModernProjectileHook.afterSpawn(context,event.getProjectileRef(),frame.leaf.getConfig(),modifiers);
+            }
         }
     }
 }
