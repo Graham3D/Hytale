@@ -960,6 +960,11 @@ public final class HytaleEncounterRewards implements AutoCloseable {
         attachObserved(world,enemy,role,spawn).whenComplete((attached,error)->{
             // The asynchronous closure carries immutable snapshots/IDs only; native work is reacquired on its world queue.
             if(error!=null){
+                // The durable owner has rejected this attachment. Release only its
+                // provisional combat ticket; ordinary native NPC damage must still
+                // work while rewards remain fail-closed. Staged/published ME actors
+                // retain their separate identity and staging protection.
+                if(difficultyCombat!=null)difficultyCombat.abandonPending(world,enemy,ticket);
                 var cause=error instanceof java.util.concurrent.CompletionException&&error.getCause()!=null?error.getCause():error;
                 synchronized(this){if(!failureLogged){failureLogged=true;
                     com.hypixel.hytale.logger.HytaleLogger.getLogger().atWarning().log(

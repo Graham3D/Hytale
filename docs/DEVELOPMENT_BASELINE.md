@@ -1,5 +1,29 @@
 # HyARPG/Hywind development baseline
 
+## 0.7.2 hostile-damage recovery QA correction (2026-10-15)
+
+Branch `codex/me12-072-modonly` continues the GitHub-main QA3 source
+`96d748e09cc86aa6fc8015c47ae08ffa92f09c06`. Revision
+`R262ME12S3B-072-QA4-CANDIDATE`, version
+`0.2.0-R262ME12S3B-072-QA4-CANDIDATE` targets stock Hytale `=0.7.2`.
+The owner's Normal/Hell QA reported ordinary hostile attacks not applying
+damage while wildlife remained hittable. The QA3 HRO capture recorded 19
+gathered player attacks: five reached matching native Health receipts, while
+14 had no successor. At startup the server log showed a five-second encounter
+world-recovery timeout, followed by `ENCOUNTER_EFFECTS_UNAVAILABLE`.
+Failed ordinary-NPC context attachment left a provisional difficulty-combat
+ticket whose incoming guard cancelled native damage indefinitely.
+
+QA4 abandons only that failed ticket and never a newer generation or published
+profile. Ordinary native combat resumes when rewards fail closed; staged and
+unrecovered v2 actors retain identity protection. Cold world-inventory replay
+gets a separate bounded 30-second deadline and avoids duplicate birth-index
+replay; the five-second durable write deadline remains unchanged. Production
+v2 is still disabled, Monster Affix release gate OPEN with
+`ownerAccepted=false`, and Elite/HRO connected acceptance remains QA_PENDING.
+Offline verification, deployment, source integration, and connected hit QA are
+recorded as separate outcomes.
+
 ## 0.7.2 Chapter I spawn-load QA correction (2026-10-15)
 
 Branch `codex/me12-072-modonly` continues QA2 source

@@ -300,6 +300,13 @@ public final class HytaleDifficultyCombat {
         var key=new Key(world,enemy);if(active.size()>=EncounterContributions.MAX_ENCOUNTERS&&!active.containsKey(key))throw new IllegalStateException("DIFFICULTY_PROJECTION_CAPACITY");
         var entry=new Entry();var previous=active.put(key,entry);if(previous!=null)statusActors.remove(enemy,previous);return entry.ticket;
     }
+    /** A failed durable attachment must not leave an ordinary NPC invulnerable forever.
+     * Only the still-pending generation may be abandoned; a later attachment or a
+     * published profile retains its own native combat protection. */
+    public boolean abandonPending(UUID world,UUID enemy,Object ticket){
+        var key=new Key(world,enemy);var entry=active.get(key);
+        return entry!=null&&entry.ticket==ticket&&entry.spawn==null&&active.remove(key,entry);
+    }
     public void detach(UUID world,UUID enemy){
         var key=new Key(world,enemy);remove(key,active.get(key));
         boolean qaNative=healthBars.qaNativeEnabled(world,enemy);

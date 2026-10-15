@@ -301,11 +301,17 @@ public final class FileEncounterStore implements AutoCloseable {
         Objects.requireNonNull(world);
         awaitSubmissions();awaitCheckpoints();
         return locked(()->{
-            for(var root:enemyBirthRoots(world))reserveEnemyBirthRoot(root);
+            var rootedEncounters=new HashSet<UUID>();
+            for(var root:enemyBirthRoots(world)){
+                reserveEnemyBirthRoot(root);
+                rootedEncounters.add(root.encounter());
+            }
             for(var compensation:enemyBirthCompensations(world))compensateEnemyBirthPrepared(compensation.world(),compensation.encounter());
             var births=enemyBirths(world);var expected=new HashMap<UUID,com.inigmasgames.hytalerpg.enemies.EnemyPackRecord>();
             for(var birth:births){
-                reserveEnemyBirth(birth);
+                // Root replay already reconciled its sealed plan and actor/pack
+                // indexes. Re-reading every one on the startup path doubles IO.
+                if(!rootedEncounters.contains(birth.encounter()))reserveEnemyBirth(birth);
                 if(birth.pack()!=null&&expected.putIfAbsent(birth.pack().packId(),birth.pack())!=null)
                     throw new IllegalStateException("ENEMY_WORLD_DUPLICATE_PACK_BIRTH");
             }

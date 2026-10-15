@@ -12,6 +12,9 @@ import java.util.concurrent.*;
 
 /** One serialized authority for native encounter callbacks. Storage uncertainty freezes awards, never combat. */
 public final class PersistentEncounterRuntime implements AutoCloseable {
+    /** Cold world inventory replays checksummed birth/index files. Its bounded
+     * startup budget is separate from the five-second combat/write deadline. */
+    static final long WORLD_RECOVERY_DEADLINE_MILLIS=30_000;
     private final EncounterContributions ledger=new EncounterContributions();
     private final FileEncounterStore store;
     private final FileEncounterStore.AwardDelivery awards;
@@ -88,7 +91,7 @@ public final class PersistentEncounterRuntime implements AutoCloseable {
     }
     public synchronized CompletionStage<FileEncounterStore.EnemyWorldInventory> recoverEnemyWorld(UUID world){
         Objects.requireNonNull(world);
-        return birthIo(()->store.recoverEnemyWorld(world));
+        return birthIo(()->store.recoverEnemyWorld(world),WORLD_RECOVERY_DEADLINE_MILLIS);
     }
     public synchronized CompletionStage<FileEncounterStore.EnemyActionRootBlock> reserveEnemyActionRoots(
             UUID world,UUID encounter,long generation,UUID logicalActor,int count){
@@ -132,6 +135,9 @@ public final class PersistentEncounterRuntime implements AutoCloseable {
     }
     private record BirthIoResult<T>(T value,FileEncounterStore.Me12PolicyHold hold){}
     private <T> CompletionStage<T> birthIo(Supplier<T> valuesOnlyWork){
+        return birthIo(valuesOnlyWork,EncounterGroupCommit.DEADLINE_MILLIS);
+    }
+    private <T> CompletionStage<T> birthIo(Supplier<T> valuesOnlyWork,long deadlineMillis){
         if(stopping)throw new IllegalStateException("ENCOUNTER_SHUTDOWN_ADMISSION_CLOSED");
         if(unavailable)throw new IllegalStateException("ENCOUNTER_PERSISTENCE_UNAVAILABLE");
         // A missing immutable dependency performed no uncertain effect. Carry the hold through the
@@ -139,7 +145,7 @@ public final class PersistentEncounterRuntime implements AutoCloseable {
         var receipt=contextLoads.submit(()->{
             try{return new BirthIoResult<>(guarded(valuesOnlyWork),null);}
             catch(FileEncounterStore.Me12PolicyHold hold){return new BirthIoResult<T>(null,hold);}
-        }).thenApply(result->{if(result.hold()!=null)throw result.hold();return result.value();});
+        },deadlineMillis).thenApply(result->{if(result.hold()!=null)throw result.hold();return result.value();});
         receipt.whenComplete((ignored,error)->{if(error!=null&&!policyHold(error))unavailable=true;});
         return receipt;
     }

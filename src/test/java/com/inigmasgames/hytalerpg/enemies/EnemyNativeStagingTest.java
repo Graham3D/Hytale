@@ -173,6 +173,14 @@ class EnemyNativeStagingTest {
             assertNull(store.getComponent(stagedRef,immune),"Staging must not leave an ordinary Elite invulnerable");
             assertNotNull(store.getComponent(secondRef,immune),"Publication must preserve independently owned protection");
             assertFalse(projection.blocksIncoming(store,stagedRef));
+            var ordinaryId=captured.getFirst().entity();
+            var failedTicket=projection.begin(world,ordinaryId);
+            assertTrue(projection.blocksIncoming(store,stagedRef),"Pending encounter projection owns admission");
+            var replacement=projection.begin(world,ordinaryId);
+            assertFalse(projection.abandonPending(world,ordinaryId,failedTicket),"Late failure cannot detach a newer generation");
+            assertTrue(projection.blocksIncoming(store,stagedRef));
+            assertTrue(projection.abandonPending(world,ordinaryId,replacement));
+            assertFalse(projection.blocksIncoming(store,stagedRef),"Failed ordinary attachment restores native damage");
             assertThrows(IllegalStateException.class,()->EnemyStaging.releaseGroup(store,captured));
             assertEquals(Set.copyOf(captured.stream().map(EnemyStaging.State::entity).toList()),nativeIndex.keySet());
         }finally{registry.shutdown();instance.set(null,previous);EnemyNativeOutgoingTest.cleanup();}

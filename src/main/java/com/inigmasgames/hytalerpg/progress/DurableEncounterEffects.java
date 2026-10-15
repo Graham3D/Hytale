@@ -18,7 +18,11 @@ public final class DurableEncounterEffects implements AutoCloseable {
     public final class Reservation implements AutoCloseable {
         private boolean submitted,released;
         private final long admitted=System.nanoTime();
-        public <T> CompletionStage<Void> submit(CompletionStage<T> durable,Consumer<T> effect){synchronized(DurableEncounterEffects.this){
+        public <T> CompletionStage<Void> submit(CompletionStage<T> durable,Consumer<T> effect){
+            return submit(durable,effect,EncounterGroupCommit.DEADLINE_MILLIS);
+        }
+        public <T> CompletionStage<Void> submit(CompletionStage<T> durable,Consumer<T> effect,long deadlineMillis){synchronized(DurableEncounterEffects.this){
+            if(deadlineMillis<1||deadlineMillis>60_000)throw new IllegalArgumentException("ENCOUNTER_EFFECTS_DEADLINE");
             if(submitted||released||closed||failure!=null)throw new IllegalStateException("ENCOUNTER_EFFECTS_UNAVAILABLE",failure);
             submitted=true;
             var receipt=new CompletableFuture<Void>();
@@ -29,10 +33,10 @@ public final class DurableEncounterEffects implements AutoCloseable {
             worker.execute(()->{
                 // Queue time is bounded by MAX_PENDING, but it is not execution time.
                 // Start the uncertainty deadline only when this ordered job actually runs.
-                receipt.orTimeout(EncounterGroupCommit.DEADLINE_MILLIS,TimeUnit.MILLISECONDS);
+                receipt.orTimeout(deadlineMillis,TimeUnit.MILLISECONDS);
                 try{
                     if(failure!=null)throw new IllegalStateException("ENCOUNTER_EFFECTS_UNAVAILABLE",failure);
-                    T result=durable.toCompletableFuture().get(EncounterGroupCommit.DEADLINE_MILLIS,TimeUnit.MILLISECONDS);
+                    T result=durable.toCompletableFuture().get(deadlineMillis,TimeUnit.MILLISECONDS);
                     effect.accept(result);
                     receipt.complete(null);
                 }catch(Throwable error){
@@ -57,11 +61,14 @@ public final class DurableEncounterEffects implements AutoCloseable {
     /** Finite predecessor snapshot. Capture BEFORE submitting dependent work on this executor. */
     public synchronized CompletionStage<Void> frontier(){return tail.minimalCompletionStage();}
     public <T> CompletionStage<T> submit(java.util.function.Supplier<T> valuesOnlyWork){
+        return submit(valuesOnlyWork,EncounterGroupCommit.DEADLINE_MILLIS);
+    }
+    public <T> CompletionStage<T> submit(java.util.function.Supplier<T> valuesOnlyWork,long deadlineMillis){
         var result=new CompletableFuture<T>();
         try(var lease=reserve()){
             var completion=lease.submit(CompletableFuture.completedStage(null),ignored->{
                 try{result.complete(valuesOnlyWork.get());}catch(Throwable error){result.completeExceptionally(error);throw error;}
-            });
+            },deadlineMillis);
             completion.whenComplete((ignored,error)->{if(error!=null)result.completeExceptionally(error);});
         }
         return result.minimalCompletionStage();

@@ -121,6 +121,18 @@ class Stage13EncounterGroupCommitTest {
         }
         try(var store=new FileEncounterStore(directory)){assertEquals(1,store.journalSequence());assertEquals(101,store.load(WORLD,ENEMY).orElseThrow().lastObserved());}
     }
+    @Test void coldInventoryWorkHasItsOwnBoundedDeadlineWithoutChangingWriteAdmission() throws Exception {
+        try(var effects=new DurableEncounterEffects()){
+            assertThrows(IllegalArgumentException.class,()->effects.submit(()->1,60_001));
+            var result=effects.submit(()->{
+                try{Thread.sleep(80);}catch(InterruptedException interrupted){Thread.currentThread().interrupt();throw new IllegalStateException(interrupted);}
+                return 7;
+            },500);
+            assertEquals(7,result.toCompletableFuture().get(2,TimeUnit.SECONDS));
+            assertNull(effects.failure());
+            assertEquals(8,effects.submit(()->8).toCompletableFuture().get(2,TimeUnit.SECONDS));
+        }
+    }
     @Test void checkpointWorkerFailureBeforePublicationCannotDiscardTheWal()throws Exception{
         try(var store=new FileEncounterStore(directory,b->{},b->{},b->{if(b==FileEncounterStore.GroupBoundary.CHECKPOINT_WORKER_STARTED)throw new IllegalStateException("CHECKPOINT_WORKER_FAILED");})){
             done(submit(store,frames(store,64)));assertThrows(IllegalStateException.class,store::checkpoint);assertFalse(Files.exists(directory.resolve("checkpoint-floor.json")));assertEquals(2,segments().size());assertThrows(IllegalStateException.class,store::pendingCount);
