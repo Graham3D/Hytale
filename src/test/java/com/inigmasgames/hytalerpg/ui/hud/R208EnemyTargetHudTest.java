@@ -9,6 +9,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class R208EnemyTargetHudTest {
     private static final Path UI=Path.of("src/main/resources/Common/UI/Custom/RpgEnemyTarget.ui");
     private static final Path ART=Path.of("src/main/resources/Common/UI/Custom/Assets/MonsterHealth");
+    @Test void targetDocumentUsesOnlySupportedLabelAlignmentValues()throws Exception{
+        var ui=Files.readString(UI);
+        assertFalse(ui.contains("Alignment: Left"),"Left is a layout direction, not a LabelAlignment value");
+    }
     @Test void authoredLayersKeepArtAndUseStage3SelectedDetailSurface()throws Exception{
         var ui=Files.readString(UI);
         assertTrue(ui.contains("Anchor: (Right: 16, Top: 16, Width: 480, Height: 96)"));

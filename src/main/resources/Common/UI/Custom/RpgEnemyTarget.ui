@@ -30,6 +30,6 @@ Group #RpgEnemyTarget {
     Label #RpgEnemyAffixes {
       Anchor: (Top: 66, Width: 192, Height: 30);
       Text: "";
-      Style: (FontSize: 12, RenderBold: false, TextColor: #f2eee5, Alignment: Left, Wrap: false);
+      Style: (FontSize: 12, RenderBold: false, TextColor: #f2eee5, Wrap: false);
     }
 }
