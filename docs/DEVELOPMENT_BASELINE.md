@@ -22,6 +22,20 @@ and neither gameplay acceptance nor main integration is implied. The next
 engineering step is a separate 0.7.2 asset, HRO, and native-hook compatibility
 pass before any replacement JAR or server patch is deployed.
 
+The owner subsequently authorized an immediate join repair. The JAR built
+from source commit `7c1a1fc4e6ae1c218dba5740e34300edffd3ac6e` has
+SHA-256 `46D90367C887BA8082AF7AB40732A80A37F78D83678551C6A2B9C8B91D8917C9`.
+An entry-by-entry SHA-256 comparison against the previous deployed JAR found
+only `Common/UI/Custom/RpgEnemyTarget.ui` and `rpg-build.properties` changed.
+The package validator, forced 0.7.2 Java compilation, focused root JUnit, and
+88-document CustomUI syntax validation passed. The JAR was deployed to the
+existing Hywind save after backing up the prior JAR and configuration outside
+`Saves`; see the external `UI-join-20261014T003231Z/deployment-manifest.json`.
+This deployment is **JOIN_AND_UI_ONLY / connected QA pending**. It is not
+Guardian-published or 0.7.2 native-certified, the full offline gate remains
+blocked, and v2 remains `DRAIN`. No gameplay acceptance or main integration
+is implied. The prior paragraph's predeployment status is retained as history.
+
 ## ME12 guarded Stage 4 QA native-runtime identity correction (2026-10-14)
 
 The Stage 3 candidate on `codex/me12-stage3` was Guardian-published at
