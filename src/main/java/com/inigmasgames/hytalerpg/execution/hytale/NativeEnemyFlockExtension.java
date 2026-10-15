@@ -46,6 +46,9 @@ public final class NativeEnemyFlockExtension {
             return null;
         }
     }
+    static boolean nativeRoleAdmits(int actual,double expected,int additional){
+        return actual>=0&&Double.isFinite(expected)&&additional>=0&&actual+additional<=expected;
+    }
     private NativeEnemyFlockExtension(){}
 
     /** A failed extension removes only its newly captured actors; originals stay staged for ordinary fallback. */
@@ -82,6 +85,11 @@ public final class NativeEnemyFlockExtension {
         int environment=original.job().environment();
         var nativeEnvironment=population.getWorldEnvironmentSpawnData(environment);
         if(nativeEnvironment==null)return Attempt.denied("ENVIRONMENT_UNAVAILABLE");
+        // Mixed FlockSpawnTypes still carry the original spawn-role index for
+        // native accounting. Check that native role target before creating actors.
+        var roleStat=nativeEnvironment.getNpcStatMap().get(original.job().roleIndex());
+        if(roleStat==null||!nativeRoleAdmits(roleStat.getActual(),roleStat.getExpected(),additional))
+            return Attempt.denied("ROLE_HEADROOM");
         var headroom=headroom(store,position.getPosition(),population,environment);
         if(headroom.isEmpty())return Attempt.denied("CHUNK_REFERENCE_UNAVAILABLE");
         var headroomRejection=headroom.get().rejection(additional);
@@ -108,9 +116,10 @@ public final class NativeEnemyFlockExtension {
         boolean complete=failure==null&&result!=null&&!result.nativeFailed()&&result.members().size()==additional
                 &&population.getActualNPCs()==beforeWorld+additional
                 &&nativeEnvironment.getActualNPCs()==beforeEnvironment+additional;
+        boolean roleHeadroom=complete&&nativeRoleAdmits(roleStat.getActual(),roleStat.getExpected(),0);
         var createdFlock=flock==null?store.getComponent(leader,FlockMembership.getComponentType()):null;
         var createdFlockRef=createdFlock==null?null:createdFlock.getFlockRef();
-        if(complete){
+        if(complete&&roleHeadroom){
             if(flock==null&&(createdFlockRef==null||!createdFlockRef.isValid()))
                 throw new IllegalStateException("ENEMY_NATIVE_EXTENSION_FLOCK_NOT_CREATED");
             return Attempt.accepted(new NativeEnemySpawnGroups.Group(result.job(),result.reservation(),
@@ -128,7 +137,8 @@ public final class NativeEnemyFlockExtension {
             throw new IllegalStateException("ENEMY_NATIVE_EXTENSION_POPULATION_ROLLBACK",failure);
         if(flock==null&&createdFlockRef!=null)removeCreatedFlock(store,leader,createdFlockRef);
         if(failure instanceof Error error)throw error;
-        return Attempt.denied(failure==null?"NATIVE_FLOCK_INCOMPLETE":"NATIVE_FLOCK_FAILURE_"+failure.getClass().getSimpleName());
+        return Attempt.denied(failure==null?(complete?"ROLE_HEADROOM":"NATIVE_FLOCK_INCOMPLETE")
+                :"NATIVE_FLOCK_FAILURE_"+failure.getClass().getSimpleName());
     }
 
     /** Discard a fully captured but unused extension before releasing the original native flock. */

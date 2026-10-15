@@ -98,8 +98,7 @@ public final class NativeEnemyBirthDecision implements AutoCloseable {
         var promotion=policy.balance().promotion();
         int base=Math.max(Math.min(original.members().size()-1,promotion.minionMaximum()),new com.inigmasgames.hytalerpg.gear.GearRandom("master-enemies-v1.1/"+policy.balance().revision()+"/"+request.seed()).stream("me.minion-count").nextInt(promotion.minionMinimum(),promotion.minionMaximum()+1));
         if(1+base<original.members().size()||1+base>original.members().size()+capacity)throw new IllegalStateException("ME12_NATIVE_MINION_CAPACITY");
-        var docs=new LinkedHashMap<String,String>();Me12Policies.canonical().documents().forEach(d->docs.put(d.reference().asset(),d.utf8()));
-        docs.put("master-enemies-v1.json",policy.balance().export().toString());var policies=Me12Policies.load(docs);
+        var policies=v2Policies(policy).policies();
         var originals=request.originals();var members=new ArrayList<Me12Planner.Member>();
         int offered=1+base+(original.members().size()+capacity>=3+base?2:0);
         NativeEnemySpawnGroups.Group reserved=null;
@@ -270,7 +269,9 @@ public final class NativeEnemyBirthDecision implements AutoCloseable {
                     if(position==null||leader.getPosition().distanceSquared(position.getPosition())>radius*radius)return rollback.fallback("ME12_PACKBOUND_REACHABILITY_CHANGED");
                 }
             }
-            var finalizer=new EnemyBirthPlanner(capture.policies().balance(),capture.policies().registry(),capture.policies().affinities(),EnemyNamePools.canonical(),EnemyVisualVariants.canonical());
+            var cached=v2PolicyCache;
+            var finalizer=cached!=null&&cached.policies()==capture.policies()?cached.finalizer()
+                    :new EnemyBirthPlanner(capture.policies().balance(),capture.policies().registry(),capture.policies().affinities(),EnemyNamePools.canonical(),EnemyVisualVariants.canonical());
             var birth=finalizer.planV2Offline(request,resolved.compiled(),resolved.plan());
             for(var actor:birth.actors()){
                 var actorRole=bindings.requireActorRole(actor);
@@ -312,8 +313,10 @@ public final class NativeEnemyBirthDecision implements AutoCloseable {
     private final EnemyBalance fallbackBalance;
     private final EnemyWorldAdmission admission;
     private volatile PlannerCache plannerCache;
+    private volatile V2PolicyCache v2PolicyCache;
     private record Policy(EnemyBalance balance,EnemyAffixSelection.WeightPolicy weights){}
     private record PlannerCache(String revision,EnemyBirthPlanner planner){}
+    private record V2PolicyCache(EnemyBalance balance,Me12Policies policies,EnemyBirthPlanner finalizer){}
     public NativeEnemyBirthDecision(HytaleEncounterRewards rewards,EnemyNativeBindings bindings,EnemyBalance balance){
         this(rewards,bindings,balance,null,null);
     }
@@ -332,6 +335,19 @@ public final class NativeEnemyBirthDecision implements AutoCloseable {
         var snapshot=settings.get();
         return new Policy(snapshot.enemyBalance(),new EnemyAffixSelection.WeightPolicy(
                 snapshot.affixWeightMultipliers(),snapshot.randomAffixesDisabled()));
+    }
+    private synchronized V2PolicyCache v2Policies(Policy policy){
+        var cached=v2PolicyCache;
+        if(cached!=null&&cached.balance()==policy.balance())return cached;
+        var docs=new LinkedHashMap<String,String>();
+        Me12Policies.canonical().documents().forEach(d->docs.put(d.reference().asset(),d.utf8()));
+        docs.put("master-enemies-v1.json",policy.balance().export().toString());
+        var policies=Me12Policies.load(docs);
+        var finalizer=new EnemyBirthPlanner(policies.balance(),policies.registry(),policies.affinities(),
+                EnemyNamePools.canonical(),EnemyVisualVariants.canonical());
+        cached=new V2PolicyCache(policy.balance(),policies,finalizer);
+        v2PolicyCache=cached;
+        return cached;
     }
     private synchronized EnemyBirthPlanner planner(Policy policy){
         var balance=policy.balance();

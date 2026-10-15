@@ -6,6 +6,14 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 class NativeEnemyFlockExtensionTest {
+    @Test void additionalFlockMustFitTheOriginalNativeSpawnRoleTarget(){
+        // All mixed native variants retain their original spawn-role accounting index.
+        assertTrue(NativeEnemyFlockExtension.nativeRoleAdmits(10,13.5,3));
+        assertFalse(NativeEnemyFlockExtension.nativeRoleAdmits(11,13.5,3));
+        assertFalse(NativeEnemyFlockExtension.nativeRoleAdmits(60,15.25,1));
+        assertFalse(NativeEnemyFlockExtension.nativeRoleAdmits(10,Double.NaN,1));
+        assertFalse(NativeEnemyFlockExtension.nativeRoleAdmits(-1,13.5,1));
+    }
     @Test void loadedNeighborWithoutRequestedEnvironmentHasNoExtensionHeadroom(){
         var chunk=new com.hypixel.hytale.server.spawning.world.component.ChunkSpawnData();
         var counted=new com.hypixel.hytale.server.spawning.world.component.ChunkSpawnedNPCData();

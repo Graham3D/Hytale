@@ -1,5 +1,33 @@
 # HyARPG/Hywind development baseline
 
+## 0.7.2 Chapter I spawn-load QA correction (2026-10-15)
+
+Branch `codex/me12-072-modonly` continues QA2 source
+`7df9a3d5517232467df8d902138fd801494e9769`. Revision
+`R262ME12S3B-072-QA3-CANDIDATE`, version
+`0.2.0-R262ME12S3B-072-QA3-CANDIDATE` targets stock Hytale `=0.7.2`.
+The owner's Hell portal and Elite observations are positive connected QA;
+hit responsiveness remains **QA_PENDING**. In the latest Hell capture, native
+spawning logged 169 role-overpopulation removals across the session, and 18
+ME12 birth callbacks exceeded the native task warning threshold. The final
+Hell tick summary attributed 2756 ms of 2822 ms measured Hywind callback time
+to lifecycle/spawning across 46 samples, versus 3.5 ms to damage. The bounded
+combat trace had no hit receipts during that capture, so it cannot establish
+per-hit latency. The saved world density remains the owner's existing 4x.
+
+This correction checks the original native spawn-role target before creating
+additional flock members, and again after native selection. Mixed selected
+member identities still receive exact-role certification; all members retain
+the original native role index for population accounting. A denied extension
+keeps the existing complete native rollback and ordinary-spawn fallback.
+The immutable ME12 policy archive and finalizer are now cached for the active
+balance object, avoiding repeated JSON validation and planner construction on
+the world thread. Combat, density configuration, save data, production release
+guards, and role eligibility are unchanged. Final exact-commit verification,
+package identity, deployment and GitHub integration are recorded separately.
+The owner has authorized safe main integration after the corrective JAR is
+deployed, while connected hit responsiveness remains pending follow-up QA.
+
 ## 0.7.2 Chapter I difficulty destination recovery (2026-10-15)
 
 Branch `codex/me12-072-modonly` continues the integrated QA1 source at
