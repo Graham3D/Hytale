@@ -7,9 +7,14 @@ Branch `codex/me12-072-modonly` is a dependent continuation of Stage 3 source
 earlier ME12 engineering commit `b50c49a51970622af9e4c781f35e8a67b05efb9a`.
 Revision `R262ME12S3B-072-CANDIDATE`, version
 `0.2.0-R262ME12S3B-072-CANDIDATE`, target Hytale `=0.7.2` are an
-**IN_PROGRESS / QA_PENDING** mod-only compatibility candidate. The exact final
-source SHA, JAR SHA, cumulative test counts, and Guardian status must be
-recorded after verification. No deployment or connected gameplay QA is implied.
+**ENGINEERING_READY / QA_PENDING** mod-only compatibility candidate. Code
+through `95e271d760784ea7fd61283cccfa5002db08688b` passed the offline
+cumulative `check`: 3,851 root JUnit tests, 509 native-control tests, 49
+Canvas UI tests, and 5 Taverns tests, with no failures or skips. The package,
+CustomUI, 309-role reconciliation, and read-only 0.7.2 native identity gates
+also passed. The final documentation-successor source SHA and JAR SHA are
+recorded by the exact-HEAD Guardian receipt and candidate identity manifest
+under `build/` after verification. No deployment or connected gameplay QA is implied.
 
 The 0.7.2 adapter preserves native spawn-job selection and exact-role birth
 capture, adds scoped native mutation, damage and projectile interaction
