@@ -14,6 +14,9 @@ one-time provisioning only for those exact copied binding IDs in the verified
 release default world. New native destination UUIDs replace active bindings;
 the copied IDs remain historical, so old records are not aliased to new terrain.
 An already provisioned destination that later disappears still fails closed.
+The explicit QA revision pin now follows build metadata, and automatic QA can
+select a newly provisioned destination only after its native UUID and archived
+copied binding match. The two existing Normal world pins are preserved.
 The registry's atomic replacement tolerates brief Windows sharing locks with
 bounded retries; a persistent denial still aborts without publishing the new
 in-memory binding.

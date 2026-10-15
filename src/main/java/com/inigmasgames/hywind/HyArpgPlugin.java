@@ -149,11 +149,10 @@ public final class HyArpgPlugin extends TavernsPlugin {
     private void beginAutomaticMe12Qa(com.hypixel.hytale.server.core.universe.world.World world){
         var save=worldConfiguration.path().getParent();
         var worldId=world.getWorldConfig().getUuid();
-        if(!BuildIdentity.REVISION.equals("R262ME12S3B-072-QA1-CANDIDATE")
-                ||save==null||save.getFileName()==null
-                ||!save.getFileName().toString().equals(BuildIdentity.QA_AUTO_SAVE)
-                ||java.util.Arrays.stream(BuildIdentity.QA_AUTO_WORLDS.split(","))
-                        .noneMatch(worldId.toString()::equals)
+        if(save==null||save.getFileName()==null
+                ||!com.inigmasgames.hytalerpg.enemies.Me12QaAuthority.automaticWorldSelected(
+                        BuildIdentity.REVISION,BuildIdentity.QA_AUTO_REVISION,save.getFileName().toString(),
+                        BuildIdentity.QA_AUTO_SAVE,worldId,world.getName(),BuildIdentity.QA_AUTO_WORLDS,difficultyRuntime)
                 ||me12QaAuthority.automaticRevoked()||me12QaAuthority.allows(worldId))return;
         if(BuildIdentity.QA_RECEIPT_PATH.isBlank()
                 ||worldConfiguration.snapshot().me12FeatureState()!=com.inigmasgames.hytalerpg.enemies.Me12FeatureState.DRAIN){

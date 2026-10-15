@@ -492,14 +492,17 @@ tasks.processResources {
     inputs.property('rpgRevision', rpg_revision)
     inputs.property('hytaleVersion', hytale_version)
     def qaAutoSave = providers.gradleProperty('me12_qa_auto_save').getOrElse('')
+    def qaAutoRevision = providers.gradleProperty('me12_qa_auto_revision').getOrElse('')
     def qaAutoWorlds = providers.gradleProperty('me12_qa_auto_worlds').getOrElse('')
     def qaReceiptPath = file('build/guardian/verification.json').absolutePath.replace('\\', '/')
     inputs.property('qaAutoSave', qaAutoSave)
+    inputs.property('qaAutoRevision', qaAutoRevision)
     inputs.property('qaAutoWorlds', qaAutoWorlds)
     inputs.property('qaReceiptPath', qaReceiptPath)
     filesMatching(['manifest.json', 'rpg-build.properties']) {
         expand(version: project.version, rpgRevision: rpg_revision, hytaleVersion: hytale_version, sourceCommit: sourceCommit,
-                qaAutoSave: qaAutoSave, qaAutoWorlds: qaAutoWorlds, qaReceiptPath: qaReceiptPath)
+                qaAutoSave: qaAutoSave, qaAutoRevision: qaAutoRevision,
+                qaAutoWorlds: qaAutoWorlds, qaReceiptPath: qaReceiptPath)
     }
     def gearLanguage = file('src/main/gearLanguage/server.lang')
     def tavernLanguage = file('hytale-taverns/src/main/tavernLanguage/server.lang')

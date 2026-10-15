@@ -2,8 +2,9 @@
 
 ## Master Enemies candidate QA lease (guarded Stage 4)
 
-The `R262ME12S3B-072-QA1-CANDIDATE` build starts QA automatically for the
-configured Hywind save and its two pinned world UUIDs after native world recovery.
+The `R262ME12S3B-072-QA2-CANDIDATE` build starts QA automatically for the
+configured Hywind save, its two pinned Normal world UUIDs, and newly provisioned
+Nightmare/Hell worlds with verified copied-registry provenance after native recovery.
 The operator does not need to enter a command. It verifies the exact installed JAR,
 0.7.2 server and assets, and this build's Guardian receipt off the world thread;
 admission, native hooks, DRAIN policy, and each concrete role are rechecked before

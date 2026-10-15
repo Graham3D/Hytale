@@ -97,6 +97,18 @@ public final class DifficultyRuntime {
         return new WorldDifficultyRegistry.Binding(world,name,WorldDifficultyRegistry.Kind.CAMPAIGN,DifficultyId.NORMAL,legacyProfile,"server-character",true);
     }
     public WorldDifficultyRegistry worlds() { return worlds; }
+    /** QA may include a destination only after its copied identity has been archived and rebound to this native world. */
+    public boolean recoveredCopiedDestination(UUID nativeWorld,String name) {
+        var current=worlds.find(nativeWorld).orElse(null);
+        if(current==null||!current.worldName().equals(name))return false;
+        var oldId=COPIED_DESTINATIONS.get(current.difficulty());
+        if(oldId==null||oldId.equals(nativeWorld))return false;
+        var historical=worlds.historical(oldId).orElse(null);
+        return historical!=null&&copiedDestination(historical,current.difficulty())
+                &&current.equals(new WorldDifficultyRegistry.Binding(nativeWorld,historical.worldName(),
+                    historical.kind(),historical.difficulty(),historical.profileId(),
+                    historical.progressionScope(),historical.enabled()));
+    }
     public EncounterProfileResolver encounters() { return encounters; }
     public WorldDifficultyRegistry.Binding currentWorld(UUID nativePlayerWorld) { return worlds.require(nativePlayerWorld); }
 }

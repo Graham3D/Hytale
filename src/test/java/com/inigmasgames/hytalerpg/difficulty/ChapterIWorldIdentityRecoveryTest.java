@@ -108,6 +108,18 @@ class ChapterIWorldIdentityRecoveryTest {
         assertFalse(DifficultyRuntime.copiedDestination(old,DifficultyId.NIGHTMARE));
         UUID created=UUID.randomUUID();nativeWorld("rpg_hell",created);
         assertEquals(created,runtime.worldLoaded(created,"rpg_hell").orElseThrow().worldId());
+        assertTrue(runtime.recoveredCopiedDestination(created,"rpg_hell"));
+        assertFalse(runtime.recoveredCopiedDestination(created,"rpg_nightmare"));
+        assertTrue(com.inigmasgames.hytalerpg.enemies.Me12QaAuthority.automaticWorldSelected(
+                "QA2","QA2","Hywind","Hywind",created,"rpg_hell",NEW_DEFAULT.toString(),runtime));
+        assertFalse(com.inigmasgames.hytalerpg.enemies.Me12QaAuthority.automaticWorldSelected(
+                "QA3","QA2","Hywind","Hywind",created,"rpg_hell",NEW_DEFAULT.toString(),runtime));
+        assertFalse(com.inigmasgames.hytalerpg.enemies.Me12QaAuthority.automaticWorldSelected(
+                "QA2","QA2","Other","Hywind",created,"rpg_hell",NEW_DEFAULT.toString(),runtime));
+        assertTrue(com.inigmasgames.hytalerpg.enemies.Me12QaAuthority.automaticWorldSelected(
+                "QA2","QA2","Hywind","Hywind",NEW_DEFAULT,"default",NEW_DEFAULT.toString(),runtime));
+        assertFalse(com.inigmasgames.hytalerpg.enemies.Me12QaAuthority.automaticWorldSelected(
+                "QA2","QA2","Hywind","Hywind",old.worldId(),"rpg_hell",NEW_DEFAULT.toString(),runtime));
         assertTrue(runtime.worlds().find(old.worldId()).isEmpty());
         assertEquals(old,runtime.worlds().historical(old.worldId()).orElseThrow());
         assertEquals(created,new DifficultyRuntime(registry(),nativeWorlds()).worlds().require(created).worldId());
@@ -117,6 +129,7 @@ class ChapterIWorldIdentityRecoveryTest {
         UUID created=UUID.randomUUID();nativeWorld("rpg_nightmare",created);
         var runtime=new DifficultyRuntime(registry(),nativeWorlds());
         assertEquals(created,runtime.worlds().require(created).worldId());
+        assertTrue(runtime.recoveredCopiedDestination(created,"rpg_nightmare"));
         assertEquals(UUID.fromString("31cb4ecd-7908-4aa4-b7b3-46a687ff2ee3"),
                 runtime.worlds().historical(UUID.fromString("31cb4ecd-7908-4aa4-b7b3-46a687ff2ee3")).orElseThrow().worldId());
         assertFalse(DifficultyRuntime.copiedDestination(runtime.worlds().require(created),DifficultyId.NIGHTMARE));

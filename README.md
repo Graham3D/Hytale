@@ -5,7 +5,8 @@
 The exact Hywind save and its two current worlds automatically acquire a bounded,
 Guardian-verified QA lease after native recovery. Production v2 remains disabled,
 and connected gameplay acceptance remains pending. Copied Nightmare/Hell destination
-bindings can be provisioned once under new native UUIDs, preserving historical IDs.
+bindings can be provisioned once under new native UUIDs, preserving historical IDs;
+those verified destinations also receive the same bounded QA lease after recovery.
 No patched Hytale server is required.
 The prior Stage 3 record below is
 retained as historical context; see [current source status](docs/DEVELOPMENT_BASELINE.md).

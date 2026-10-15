@@ -2,6 +2,7 @@ package com.inigmasgames.hytalerpg.enemies;
 
 import com.google.gson.*;
 import com.inigmasgames.hytalerpg.phase00.BuildIdentity;
+import com.inigmasgames.hytalerpg.difficulty.DifficultyRuntime;
 import com.inigmasgames.hytalerpg.spawning.HywindWorldConfiguration;
 import java.io.*;
 import java.nio.file.*;
@@ -11,6 +12,16 @@ import java.util.function.*;
 
 /** A short-lived, world-scoped QA lease. It never changes world configuration or production ENABLED. */
 public final class Me12QaAuthority {
+    /** The exact QA build/save and a registered native identity must agree before automatic verification starts. */
+    public static boolean automaticWorldSelected(String revision,String authorizedRevision,String save,String authorizedSave,
+                                                 UUID world,String name,String pinnedWorlds,DifficultyRuntime difficulty){
+        if(authorizedRevision==null||authorizedRevision.isBlank()||authorizedSave==null||authorizedSave.isBlank()
+                ||!authorizedRevision.equals(revision)||!authorizedSave.equals(save)||difficulty==null)return false;
+        var binding=difficulty.worlds().find(world).orElse(null);
+        if(binding==null||!binding.worldName().equals(name))return false;
+        return Arrays.stream(pinnedWorlds.split(",")).anyMatch(world.toString()::equals)
+                ||difficulty.recoveredCopiedDestination(world,name);
+    }
     public record Identity(String sourceCommit,String revision,String version,String jarSha256,
                            String serverSha256,String assetsSha256){
         public Identity{Objects.requireNonNull(sourceCommit);Objects.requireNonNull(revision);

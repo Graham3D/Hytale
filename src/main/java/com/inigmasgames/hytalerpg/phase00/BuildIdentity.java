@@ -15,6 +15,7 @@ public final class BuildIdentity {
     public static final String HYTALE_VERSION = required("hytale.version");
     public static final String SOURCE_COMMIT = required("rpg.sourceCommit");
     public static final String QA_AUTO_SAVE = VALUES.getProperty("rpg.qaAutoSave", "");
+    public static final String QA_AUTO_REVISION = VALUES.getProperty("rpg.qaAutoRevision", "");
     public static final String QA_AUTO_WORLDS = VALUES.getProperty("rpg.qaAutoWorlds", "");
     public static final String QA_RECEIPT_PATH = VALUES.getProperty("rpg.qaReceiptPath", "");
 
