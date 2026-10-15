@@ -1,5 +1,27 @@
 # HyARPG/Hywind development baseline
 
+## ME12 0.7.2 join-failure remediation in progress (2026-10-14)
+
+The installed launcher updated Hytale to 0.7.2 after the guarded Stage 4
+candidate at `b50c49a51970622af9e4c781f35e8a67b05efb9a` was deployed.
+The client log shows a CustomUI parse failure in `RpgEnemyTarget.ui` line 33:
+`Alignment: Left` is not a valid `LabelAlignment`. Branch
+`codex/me12-stage3` commit `a7897d618f52251d7c8ed3e225e08d242cee68fe`
+removes that property and adds a regression assertion. Focused root JUnit and
+`validateCustomUi` pass with the 0.7.2 asset/HRO prerequisites omitted solely
+for diagnosis. A forced Java recompile against 0.7.2 succeeds.
+
+This is **IN_PROGRESS**, not a new completed revision. The ordinary 0.7.2
+offline gate fails on the pinned 0.7.1 `Assets.zip` audit and HRO native
+identity. The native patch builder also rejects the new server hash by design;
+the installed 0.7.2 runtime reports `PACKBOUND_NATIVE_PATCH_VERSION_MISMATCH`.
+No 0.7.2 native patch has been certified. Guardian exact-HEAD verification and
+publication are pending. The active save and deployed Hywind JAR remain at the
+verified Stage 4 candidate; world v2 remains `DRAIN`, connected QA is blocked,
+and neither gameplay acceptance nor main integration is implied. The next
+engineering step is a separate 0.7.2 asset, HRO, and native-hook compatibility
+pass before any replacement JAR or server patch is deployed.
+
 ## ME12 guarded Stage 4 QA native-runtime identity correction (2026-10-14)
 
 The Stage 3 candidate on `codex/me12-stage3` was Guardian-published at
