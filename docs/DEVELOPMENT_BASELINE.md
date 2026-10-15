@@ -1,5 +1,25 @@
 # HyARPG/Hywind development baseline
 
+## 0.7.2 Chapter I difficulty destination recovery (2026-10-15)
+
+Branch `codex/me12-072-modonly` continues the integrated QA1 source at
+`4cf6e82c2e15e50426dd6c90e7f954a3fc864316`. Revision
+`R262ME12S3B-072-QA2-CANDIDATE`, version
+`0.2.0-R262ME12S3B-072-QA2-CANDIDATE`, targets stock Hytale `=0.7.2`.
+The Chapter I release save has checksum-protected copied bindings for
+`rpg_nightmare` and `rpg_hell`, but no corresponding native world directories;
+the QA1 backup confirms the same absence. Portal placement therefore reaches
+`DIFFICULTY_WORLD_MISSING` after its native ground check. This pass permits
+one-time provisioning only for those exact copied binding IDs in the verified
+release default world. New native destination UUIDs replace active bindings;
+the copied IDs remain historical, so old records are not aliased to new terrain.
+An already provisioned destination that later disappears still fails closed.
+Native world creation and registry reconciliation are covered by targeted
+identity/restart tests; connected portal travel remains **QA_PENDING**.
+Exact final source, test, build and deployment identities are recorded in
+the Guardian and deployment receipts after verification. ME12 production
+`ENABLED` and the Monster Affix release gate remain unchanged.
+
 ## 0.7.2 commandless ME12 QA candidate (2026-10-15)
 
 Branch `codex/me12-072-modonly` continues the verified mod-only source at

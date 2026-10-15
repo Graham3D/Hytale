@@ -13,6 +13,17 @@ public final class DifficultyRuntime {
                     UUID.fromString("3d366b79-f367-419a-87b7-a8d53cde7ec0")),
             "zone3_taiga1_world",new Lineage(UUID.fromString("5cc8eef5-cf14-4e85-81ba-2dd651909658"),
                     UUID.fromString("6e88444d-898b-4a9d-99a6-f5f19d0257a1")));
+    /** Copied pre-release destination bindings that have no native worlds in the Chapter I release save. */
+    private static final Map<DifficultyId,UUID> COPIED_DESTINATIONS = Map.of(
+            DifficultyId.NIGHTMARE,UUID.fromString("31cb4ecd-7908-4aa4-b7b3-46a687ff2ee3"),
+            DifficultyId.HELL,UUID.fromString("30db8b52-170f-41a5-afe3-1bb01107f328"));
+    static boolean copiedDestination(WorldDifficultyRegistry.Binding binding,DifficultyId mode) {
+        return mode!=DifficultyId.NORMAL && COPIED_DESTINATIONS.get(mode).equals(binding.worldId())
+                && binding.worldName().equals("rpg_"+mode.name().toLowerCase(Locale.ROOT))
+                && binding.kind()==WorldDifficultyRegistry.Kind.CAMPAIGN && binding.difficulty()==mode
+                && binding.enabled() && binding.profileId().equals("rpg.encounters."+mode.name().toLowerCase(Locale.ROOT)+".pending")
+                && binding.progressionScope().equals("server-character");
+    }
     private final WorldDifficultyRegistry worlds;
     private final EncounterProfileResolver encounters;
     private final Set<String> legacyWorldNames;
@@ -35,6 +46,12 @@ public final class DifficultyRuntime {
                     if (uuid == null || !seen.add(uuid)) throw new IllegalStateException("DUPLICATE_NATIVE_WORLD_UUID");
                     var name=path.getFileName().toString();
                     if (firstMigration) { imported.add(normal(uuid,name)); continue; }
+                    var destination=Arrays.stream(DifficultyId.values()).filter(mode->copiedName(mode,name)).findFirst();
+                    if(destination.isPresent()) {
+                        var old=worlds.bindings().stream().filter(b->b.worldName().equals(name)).findFirst();
+                        if(old.isPresent() && copiedDestination(old.get(),destination.get()) && !old.get().worldId().equals(uuid))
+                            replacements.put(old.get().worldId(),uuid);
+                    }
                     var known=CHAPTER_I_LINEAGE.get(name);
                     if (known==null || !known.release().equals(uuid)) continue;
                     var old=worlds.find(known.historical());
@@ -62,8 +79,19 @@ public final class DifficultyRuntime {
             if (!prior.get().worldName().equals(name)) throw new IllegalStateException("WORLD_NAME_IDENTITY_CHANGED");
             return prior;
         }
+        var destination=Arrays.stream(DifficultyId.values()).filter(mode->copiedName(mode,name)).findFirst();
+        if(destination.isPresent()) {
+            var old=worlds.bindings().stream().filter(b->b.worldName().equals(name)).findFirst();
+            if(old.isPresent() && copiedDestination(old.get(),destination.get())) {
+                worlds.reconcile(Map.of(old.get().worldId(),world));
+                return worlds.find(world);
+            }
+        }
         if (!legacyWorldNames.contains(name)) return Optional.empty();
         return Optional.of(worlds.register(normal(world,name)));
+    }
+    private static boolean copiedName(DifficultyId mode,String name) {
+        return mode!=DifficultyId.NORMAL && name.equals("rpg_"+mode.name().toLowerCase(Locale.ROOT));
     }
     private WorldDifficultyRegistry.Binding normal(UUID world,String name) {
         return new WorldDifficultyRegistry.Binding(world,name,WorldDifficultyRegistry.Kind.CAMPAIGN,DifficultyId.NORMAL,legacyProfile,"server-character",true);
