@@ -1,7 +1,7 @@
 # Hywind / HyARPG development baseline
 
-0.7.2 Chapter I hostile-damage recovery QA candidate: **R262ME12S3B-072-QA4-CANDIDATE**
-(`0.2.0-R262ME12S3B-072-QA4-CANDIDATE`) on `codex/me12-072-modonly`.
+0.7.2 Chapter I natural-Unique recovery QA candidate: **R262ME12S3B-072-QA5-CANDIDATE**
+(`0.2.0-R262ME12S3B-072-QA5-CANDIDATE`) on `codex/me12-072-modonly`.
 The exact Hywind save and its two current worlds automatically acquire a bounded,
 Guardian-verified QA lease after native recovery. Production v2 remains disabled,
 and connected gameplay acceptance remains pending. Copied Nightmare/Hell destination
@@ -11,7 +11,10 @@ No patched Hytale server is required.
 QA3 bounds extra native flock births by the spawn-role target and reuses validated
 ME12 birth policies on the world thread. QA4 releases failed ordinary hostile
 combat attachments and bounds cold encounter recovery separately from writes.
-Hostile hit behavior awaits connected QA.
+QA5 defers periodic reward delivery while cold world recovery is in flight and
+keeps a bounded 30-second delivery deadline if recovery begins just afterward.
+This prevents startup storage contention from disabling natural Unique birth
+admission. Hostile hit and natural Unique behavior await connected QA.
 The prior Stage 3 record below is
 retained as historical context; see [current source status](docs/DEVELOPMENT_BASELINE.md).
 

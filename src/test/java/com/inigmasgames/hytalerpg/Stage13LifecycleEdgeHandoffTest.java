@@ -16,6 +16,51 @@ class Stage13LifecycleEdgeHandoffTest {
     @TempDir Path root;
     private EnemyRewardRegistry.Spawn spawn(UUID w,UUID e){return EnemyRewardRegistry.load().classify(w,e,"Wolf_Black","Default/Zone1_Tier1/Forest_Birch",EnemyRewardRegistry.Origin.WILD_WORLD_SPAWN,100).orElseThrow();}
     private HytaleEncounterRewards.DamageObservation hit(UUID w,UUID e,UUID a){return new HytaleEncounterRewards.DamageObservation(w,e,a,100,90,100,10,101,"root","instance","correlation");}
+    @Test void deliveryDoesNotStartWhileWorldRecoveryOwnsTheDurableStore()throws Exception{
+        var bundle=Stage01BTestSupport.bundle();var clock=new AtomicLong();
+        var entered=new CountDownLatch(1);var release=new CountDownLatch(1);
+        try(var store=FileEncounterStore.durableV2(root.resolve("startup-recovery"));
+            var rewards=new HytaleEncounterRewards(store,bundle.service(),ignored->{},RpgCombatKernel.createProduction(),clock::get)){
+            var held=CompletableFuture.runAsync(()->store.withDeathCapacity(()->{
+                entered.countDown();waitFor(release);return null;
+            }));
+            try{
+                assertTrue(entered.await(2,TimeUnit.SECONDS));
+                var recovery=rewards.recoverEnemyWorld(UUID.randomUUID());
+                assertFalse(recovery.toCompletableFuture().isDone());
+                rewards.deliveryTick();
+                var effects=(Map<?,?>)rewards.handoffMetrics().get("effects");
+                assertEquals(0,effects.get("pendingCount"),"Startup recovery must not race the short delivery deadline");
+                release.countDown();held.get(4,TimeUnit.SECONDS);recovery.toCompletableFuture().get(4,TimeUnit.SECONDS);
+                clock.set(1_000_000_000L);rewards.deliveryTick();
+                rewards.durableFrontier().toCompletableFuture().get(4,TimeUnit.SECONDS);
+                assertEquals(0L,((Map<?,?>)rewards.handoffMetrics().get("effects")).get("failures"));
+                assertEquals(false,((Map<?,?>)rewards.handoffMetrics().get("runtime")).get("uncertain"));
+            }finally{release.countDown();}
+        }finally{release.countDown();bundle.service().close();}
+    }
+    @Test void alreadyStartedDeliverySurvivesBoundedRecoveryContention()throws Exception{
+        var bundle=Stage01BTestSupport.bundle();var entered=new CountDownLatch(1);var release=new CountDownLatch(1);
+        try(var store=FileEncounterStore.durableV2(root.resolve("delivery-recovery-race"));
+            var rewards=new HytaleEncounterRewards(store,bundle.service(),ignored->{},RpgCombatKernel.createProduction())){
+            var held=CompletableFuture.runAsync(()->store.withDeathCapacity(()->{
+                entered.countDown();try{if(!release.await(8,TimeUnit.SECONDS))throw new AssertionError("Recovery lock not released");}
+                catch(InterruptedException interrupted){Thread.currentThread().interrupt();throw new IllegalStateException(interrupted);}
+                return null;
+            }));
+            try{
+                assertTrue(entered.await(2,TimeUnit.SECONDS));
+                rewards.deliveryTick();
+                assertEquals(1,((Map<?,?>)rewards.handoffMetrics().get("effects")).get("pendingCount"));
+                // The old five-second delivery deadline poisoned the durable owner here.
+                assertFalse(release.await(6,TimeUnit.SECONDS));
+                assertEquals(0L,((Map<?,?>)rewards.handoffMetrics().get("effects")).get("failures"));
+                release.countDown();held.get(4,TimeUnit.SECONDS);
+                rewards.durableFrontier().toCompletableFuture().get(4,TimeUnit.SECONDS);
+                assertEquals(false,((Map<?,?>)rewards.handoffMetrics().get("runtime")).get("uncertain"));
+            }finally{release.countDown();}
+        }finally{release.countDown();bundle.service().close();}
+    }
     @Test void twoWorldsShareOneEightAttemptOneSecondDeliveryBudget()throws Exception{
         var bundle=Stage01BTestSupport.bundle();var actor=UUID.randomUUID();bundle.service().configureEarnedRewards(new FileEarnedRewardStore(root.resolve("rewards")));bundle.service().getLoadout(actor);
         var clock=new AtomicLong();

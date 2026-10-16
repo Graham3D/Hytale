@@ -1,5 +1,32 @@
 # HyARPG/Hywind development baseline
 
+## 0.7.2 natural-Unique startup recovery QA correction (2026-10-16)
+
+Branch `codex/me12-072-modonly` continues deployed QA4 source
+`21972ab56b1892fe57dc2d96cbeaa81cf9d8478b`. Revision
+`R262ME12S3B-072-QA5-CANDIDATE`, version
+`0.2.0-R262ME12S3B-072-QA5-CANDIDATE` targets stock Hytale `=0.7.2`.
+The owner's Hell QA found no natural Uniques while ordinary hostile combat
+appeared restored. The new spawn trace recorded 26,575 native job eligibility
+checks with no captured Master Enemy group. The server log showed a verified
+automatic QA lease in Hell followed by `REBIND_READ` failure and closed birth
+admission. Trace metrics identify the first failure: periodic durable death
+delivery hit its five-second deadline while three cold world recoveries were
+reading the shared encounter store. This marked persistence uncertain and
+correctly blocked subsequent births and rewards.
+
+QA5 defers periodic death delivery while a world recovery is pending and uses
+the same bounded 30-second cold-replay budget if a recovery starts after
+delivery was scheduled. Failed recovery releases the scheduling fence but
+remains fail-closed. No affix weights, roster, release gate, active save, or
+native server files change in source. An offline copy of the current backup
+recovered the main, secondary, and Hell inventories with 39, 0, and 29 births
+respectively and no persistence uncertainty. The temporary copy-specific
+probe is excluded from source. Production v2 remains disabled, Monster Affix
+release gate OPEN with `ownerAccepted=false`, and Elite/HRO/ME12 connected
+acceptance stays QA_PENDING. Source publication, offline verification,
+deployment, and connected gameplay are distinct gates.
+
 ## 0.7.2 hostile-damage recovery QA correction (2026-10-15)
 
 Branch `codex/me12-072-modonly` continues the GitHub-main QA3 source

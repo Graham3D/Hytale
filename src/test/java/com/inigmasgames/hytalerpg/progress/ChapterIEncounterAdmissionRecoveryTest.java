@@ -1,7 +1,7 @@
 package com.inigmasgames.hytalerpg.progress;
 
 import java.lang.reflect.Constructor;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.*;
 import org.junit.jupiter.api.Test;
@@ -12,6 +12,19 @@ class ChapterIEncounterAdmissionRecoveryTest {
     @TempDir Path root;
     private EnemyRewardRegistry.Spawn spawn(UUID world,UUID enemy,long observed){return EnemyRewardRegistry.load().classify(world,enemy,
             "Wolf_Black","Default/Zone1_Tier1/Forest_Birch",EnemyRewardRegistry.Origin.WILD_WORLD_SPAWN,observed).orElseThrow();}
+    @Test void failedWorldRecoveryReleasesItsDeliveryFenceAndKeepsPersistenceFailClosed()throws Exception{
+        var path=root.resolve("malformed-recovery");Files.createDirectories(path.resolve("enemy-birth-roots"));
+        Files.writeString(path.resolve("enemy-birth-roots").resolve("invalid-shard"),"invalid");
+        try(var store=new FileEncounterStore(path)){
+            var runtime=new PersistentEncounterRuntime(store,(id,reward)->{});
+            try{
+                var recovery=runtime.recoverEnemyWorld(UUID.randomUUID());
+                assertThrows(ExecutionException.class,()->recovery.toCompletableFuture().get(5,TimeUnit.SECONDS));
+                assertFalse(runtime.worldRecoveryInProgress(),"A rejected recovery cannot suppress delivery forever");
+                assertTrue(runtime.unavailable(),"Invalid durable indexes remain fail-closed");
+            }finally{assertThrows(IllegalStateException.class,runtime::close);}
+        }
+    }
     @Test void unclassifiedLoadsRetireAttachmentsAndDoNotAccumulateCapacity()throws Exception {
         try(var store=new FileEncounterStore(root.resolve("contexts"));var runtime=new PersistentEncounterRuntime(store,(id,reward)->{})){
             UUID world=UUID.randomUUID();

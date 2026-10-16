@@ -27,7 +27,7 @@ public final class PersistentEncounterRuntime implements AutoCloseable {
     // Derived ceiling: two lifecycle transitions/context, plus one mutation, one death and
     // up to 64 captured mastery predicates per each of the 256 already admitted effect jobs.
     private static final int MAX_TRANSITIONS=EncounterContributions.MAX_ENCOUNTERS*2+DurableEncounterEffects.MAX_PENDING*(EncounterContributions.MAX_SUPPORT_ENCOUNTERS+2);
-    private int pendingTransitions;private long transitionRejections;private boolean stopping;
+    private int pendingTransitions,pendingWorldRecoveries;private long transitionRejections;private boolean stopping;
     private final ExecutorService transitions=new ThreadPoolExecutor(1,1,0,TimeUnit.MILLISECONDS,new ArrayBlockingQueue<>(MAX_TRANSITIONS),
             r->Thread.ofPlatform().daemon().name("RPG-encounter-ledger-transitions").unstarted(r));
     private static final class Attachment {
@@ -91,8 +91,14 @@ public final class PersistentEncounterRuntime implements AutoCloseable {
     }
     public synchronized CompletionStage<FileEncounterStore.EnemyWorldInventory> recoverEnemyWorld(UUID world){
         Objects.requireNonNull(world);
-        return birthIo(()->store.recoverEnemyWorld(world),WORLD_RECOVERY_DEADLINE_MILLIS);
+        pendingWorldRecoveries++;
+        try{
+            return birthIo(()->store.recoverEnemyWorld(world),WORLD_RECOVERY_DEADLINE_MILLIS)
+                    .whenComplete((ignored,error)->{synchronized(this){pendingWorldRecoveries--;}});
+        }catch(RuntimeException rejected){pendingWorldRecoveries--;throw rejected;}
     }
+    /** Periodic reward delivery must not contend with cold, bounded inventory replay. */
+    public synchronized boolean worldRecoveryInProgress(){return pendingWorldRecoveries>0;}
     public synchronized CompletionStage<FileEncounterStore.EnemyActionRootBlock> reserveEnemyActionRoots(
             UUID world,UUID encounter,long generation,UUID logicalActor,int count){
         Objects.requireNonNull(world);Objects.requireNonNull(encounter);Objects.requireNonNull(logicalActor);
@@ -448,7 +454,8 @@ public final class PersistentEncounterRuntime implements AutoCloseable {
     public synchronized boolean unavailable(){return unavailable;}
     public void rejectIncompleteNativeObservation(){unavailable=true;}
     public synchronized Map<String,Object> handoffMetrics(){return Map.of("contexts",attachments.size(),"pendingDeaths",FileEncounterStore.MAX_PENDING-freeDeathTickets,
-            "pendingTransitions",pendingTransitions,"maxTransitions",MAX_TRANSITIONS,"transitionRejections",transitionRejections,"loads",contextLoads.metrics(),"wal",store.submissionMetrics(),"uncertain",unavailable);}
+            "pendingTransitions",pendingTransitions,"pendingWorldRecoveries",pendingWorldRecoveries,"maxTransitions",MAX_TRANSITIONS,
+            "transitionRejections",transitionRejections,"loads",contextLoads.metrics(),"wal",store.submissionMetrics(),"uncertain",unavailable);}
     private <T> T guarded(Supplier<T> operation){
         if(unavailable)throw new IllegalStateException("ENCOUNTER_PERSISTENCE_UNCERTAIN_RESTART_REQUIRED");
         try{return operation.get();}catch(FileEncounterStore.CapacityRejected|FileEncounterStore.Me12PolicyHold rejection){throw rejection;}catch(RuntimeException failure){unavailable=true;throw failure;}

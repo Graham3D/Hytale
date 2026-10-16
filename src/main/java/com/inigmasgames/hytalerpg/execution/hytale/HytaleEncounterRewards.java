@@ -1164,11 +1164,17 @@ public final class HytaleEncounterRewards implements AutoCloseable {
     public void deliveryTick(){if(!running())return;safely("DURABLE_DEATH_DELIVERY",this::deliver);}
     private synchronized void deliver(){
         ownerMaintenance.run();
+        // Recovery replays sealed birth indexes under the same durable store lock.
+        // Starting a short delivery cycle during that replay can time out the
+        // effects owner and poison all subsequent birth admission.
+        if(runtime.worldRecoveryInProgress())return;
         long now=nanoTime.getAsLong();if(now<nextDeliveryNanos)return;nextDeliveryNanos=now+1_000_000_000L;
         emit(null,RpgTraceEventType.PERSISTENCE_HANDOFF_METRICS,"",handoffMetrics());
         // A single globally scheduled slow cycle. Native ticking never performs a new store read/write.
         if(delivery!=null&&!delivery.toCompletableFuture().isDone())return;
-        delivery=durableEffects.submit(()->runtime.drainReadyPlans(8));
+        // A recovery can begin just after the check above. Keep that race bounded
+        // by the same cold-replay budget; a true storage failure still fails closed.
+        delivery=durableEffects.submit(()->runtime.drainReadyPlans(8),30_000);
     }
     private java.util.concurrent.CompletionStage<Integer> delivery;
     private synchronized void safely(String boundary,Runnable operation){
