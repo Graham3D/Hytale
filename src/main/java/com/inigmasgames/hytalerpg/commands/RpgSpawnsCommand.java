@@ -43,14 +43,7 @@ public final class RpgSpawnsCommand extends AbstractAsyncCommand {
                 return CompletableFuture.completedFuture(null);
             }
         }
-        try{return density.set(value).handle((ignored,error)->{
-            if(error==null)context.sendMessage(Message.raw(String.format(Locale.ROOT,
-                    "World spawn density set to %.2fx in world-config.json.", value)));
-            else context.sendMessage(Message.raw("Spawn density change failed: "+error.getMessage()));
-            return null;
-        });}catch(RuntimeException error){
-            context.sendMessage(Message.raw("Spawn density change rejected: "+error.getMessage()));
-            return CompletableFuture.completedFuture(null);
-        }
+        return density.set(value).thenRun(() -> context.sendMessage(Message.raw(String.format(Locale.ROOT,
+                "World spawn density set to %.2fx (persisted).", value))));
     }
 }

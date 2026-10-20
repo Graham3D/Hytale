@@ -8,9 +8,8 @@ ItemGrid #GearTargetOffhand {
   Padding: 0;
   ShowScrollbar: false;
   AreItemsDraggable: true;
-  AllowMaxStackDraggableItems: false;
+  AllowMaxStackDraggableItems: true;
   DisplayItemQuantity: false;
   RenderItemQualityBackground: false;
   RenderEmptySlots: true;
-  InfoDisplay: None;
 }

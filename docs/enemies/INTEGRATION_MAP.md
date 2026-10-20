@@ -565,17 +565,3 @@ The single screen-space target HUD reads the targeted actor's `EntityStatMap.Hea
 ## R209 monster health presentation correction
 
 R209 supersedes the R208 **top-center presentation** described above. The installed 0.7.0-pre.5.1 `EntityUIModule` exposes only `EntityStat` and `CombatText`; its packet has no custom texture/text UI fields. Native `Nameplate` is text-only. This SDK therefore cannot attach the supplied three-PNG CustomUI document as a true engine-owned world-space entity billboard. The permitted fallback projects the selected actor's transformed bounding-box top through the viewing player's head rotation into a compact CustomUI root and scales the three art layers with inverse depth. The existing target-specific refresh and 4 Hz poll remain the update owner. The native managed-enemy nameplate text is blanked while the unified projected stack owns name, rarity/level, bar, and actor-specific affixes. Native Health remains the fill source and the R208 fraction/left-edge calculation is preserved. There is no global NPC scan, change to damage, or server-side camera rotation loop. The projection uses a fixed virtual focal length and can lag fast motion or differ with client camera FOV/UI scale; connected visual QA remains required. Full details and deployment hash: `docs/enemies/R209-TARGET-BILLBOARD.md`.
-
-
-## R244 production admission and primary-name ownership
-
-R244 consolidates primary hostile text in `NativeHostileNames`; reward/profile admission no longer gates names. Reliable actor Nameplate remains nonblank and the duplicate promoted custom-name segment is suppressed; affix anchors, Healthbar, tint and gameplay stay with their existing owners. Exact installed Tile/Custom campaign biome bindings feed the shared typed production classifier. Native population projection runs after native target reconstruction via one neutral pinned WorldSpawningSystem callback. The existing native job adapter gains environment-span/fluid-aware bounded aquatic admission. No affix, reward or pack-lease owner is replaced. See [R244 implementation and evidence](R244_HOSTILE_NAMES_AND_SPAWNING.md) and `tools/native-patch/THREE_LEAF_PATCH.md`.
-
-
-## R245 — natural Elite birth transaction repair
-
-See [R245_ELITE_BIRTH_TRANSACTION_REPAIR.md](R245_ELITE_BIRTH_TRANSACTION_REPAIR.md) and the read-only [evidence inventory](R245_EVIDENCE.json). Native Health readiness uses `Role.getInitialMaxHealth()` while the existing frozen RPG profile remains the target. A transient exact created-flock reference survives native dissolution during rollback. Existing birth, file-store, pack-capacity and LOAD owners handle completion/compensation/recovery; the continuation is a single callback owner, not new gameplay. New roots retain frozen all-actor attachment sources; legacy checksummed roots are accepted without save rewriting. No affix owner, tuning, population policy or native-server patch changes.
-
-## R249 — promoted names and Frost bow coverage
-
-`NativeHostileNames` remains the sole actor Nameplate writer and retains the authoritative display text. It blanks the actor plate only while `EnemyHealthBarPresentation` owns a prepared, matching per-viewer colored glyph row; a failed glyph delivery restores the native fallback. Affix anchors and colored names consume one hitbox-derived `MonsterPresentationLayout`. The pinned native projectile archetype now certifies Frost Ranger and the exact Frost Archer/Ranger movement variants without extending projectile affix capabilities. See [R249 release candidate](R249_RELEASE_CANDIDATE.md).

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "catalogRevision": 3,
+  "catalogRevision": 2,
   "sourceAssetsSha256": "C02E69A0FA4088B965D0CA9D01C6A55610229EFA3F78F91FB45463108F07D022",
   "bindings": {
     "Debug_Beacon_Horn": {
@@ -19084,12 +19084,10 @@
       "source": "Server/Item/Items/Weapon/Arrow/Weapon_Arrow_Trueshot.json"
     },
     "Weapon_Axe_Adamantite": {
-      "width": 2,
-      "height": 2,
+      "width": 1,
+      "height": 3,
       "rule": "Weapon/Axe",
-      "source": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Adamantite.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Adamantite.json"
     },
     "Weapon_Axe_Bone": {
       "width": 1,
@@ -19099,27 +19097,21 @@
     },
     "Weapon_Axe_Cobalt": {
       "width": 1,
-      "height": 2,
+      "height": 3,
       "rule": "Weapon/Axe",
-      "source": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Cobalt.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Cobalt.json"
     },
     "Weapon_Axe_Copper": {
       "width": 1,
-      "height": 2,
+      "height": 3,
       "rule": "Weapon/Axe",
-      "source": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Copper.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Copper.json"
     },
     "Weapon_Axe_Crude": {
-      "width": 2,
-      "height": 2,
+      "width": 1,
+      "height": 3,
       "rule": "Weapon/Axe",
-      "source": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Crude.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Crude.json"
     },
     "Weapon_Axe_Doomed": {
       "width": 1,
@@ -19128,12 +19120,10 @@
       "source": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Doomed.json"
     },
     "Weapon_Axe_Iron_Rusty": {
-      "width": 2,
-      "height": 2,
+      "width": 1,
+      "height": 3,
       "rule": "Weapon/Axe",
-      "source": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Iron_Rusty.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Iron_Rusty.json"
     },
     "Weapon_Axe_Iron": {
       "width": 1,
@@ -19143,19 +19133,15 @@
     },
     "Weapon_Axe_Mithril": {
       "width": 1,
-      "height": 2,
+      "height": 3,
       "rule": "Weapon/Axe",
-      "source": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Mithril.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Mithril.json"
     },
     "Weapon_Axe_Onyxium": {
       "width": 1,
-      "height": 2,
+      "height": 3,
       "rule": "Weapon/Axe",
-      "source": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Onyxium.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Onyxium.json"
     },
     "Weapon_Axe_Stone_Trork": {
       "width": 1,
@@ -19165,11 +19151,9 @@
     },
     "Weapon_Axe_Thorium": {
       "width": 1,
-      "height": 2,
+      "height": 3,
       "rule": "Weapon/Axe",
-      "source": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Thorium.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Axe/Weapon_Axe_Thorium.json"
     },
     "Weapon_Axe_Tribal": {
       "width": 1,
@@ -19232,12 +19216,10 @@
       "source": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Onyxium.json"
     },
     "Weapon_Battleaxe_Scarab": {
-      "width": 3,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Battleaxe",
-      "source": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Scarab.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Battleaxe/Weapon_Battleaxe_Scarab.json"
     },
     "Weapon_Battleaxe_Scythe_Void": {
       "width": 2,
@@ -19402,12 +19384,10 @@
       "source": "Server/Item/Items/Weapon/Club/Weapon_Club_Scrap.json"
     },
     "Weapon_Club_Steel_Flail_Rusty": {
-      "width": 2,
+      "width": 1,
       "height": 3,
       "rule": "Weapon/Club",
-      "source": "Server/Item/Items/Weapon/Club/Weapon_Club_Steel_Flail_Rusty.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Club/Weapon_Club_Steel_Flail_Rusty.json"
     },
     "Weapon_Club_Stone_Trork": {
       "width": 1,
@@ -19483,19 +19463,15 @@
     },
     "Weapon_Crossbow_Ancient_Steel": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "Weapon/Crossbow",
-      "source": "Server/Item/Items/Weapon/Crossbow/Weapon_Crossbow_Ancient_Steel.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Crossbow/Weapon_Crossbow_Ancient_Steel.json"
     },
     "Weapon_Crossbow_Iron": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "Weapon/Crossbow",
-      "source": "Server/Item/Items/Weapon/Crossbow/Weapon_Crossbow_Iron.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Crossbow/Weapon_Crossbow_Iron.json"
     },
     "Template_Weapon_Daggers": {
       "width": 1,
@@ -19678,28 +19654,22 @@
       "source": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Adamantite.json"
     },
     "Weapon_Longsword_Cobalt": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Longsword",
-      "source": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Cobalt.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Cobalt.json"
     },
     "Weapon_Longsword_Copper": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Longsword",
-      "source": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Copper.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Copper.json"
     },
     "Weapon_Longsword_Crude": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Longsword",
-      "source": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Crude.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Crude.json"
     },
     "Weapon_Longsword_Flame": {
       "width": 2,
@@ -19714,12 +19684,10 @@
       "source": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Iron.json"
     },
     "Weapon_Longsword_Katana": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Longsword",
-      "source": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Katana.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Katana.json"
     },
     "Weapon_Longsword_Mithril": {
       "width": 2,
@@ -19806,28 +19774,22 @@
       "source": "Server/Item/Items/Weapon/Mace/Template_Weapon_Mace.json"
     },
     "Weapon_Mace_Adamantite": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "Weapon/Mace",
-      "source": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Adamantite.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Adamantite.json"
     },
     "Weapon_Mace_Cobalt": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "Weapon/Mace",
-      "source": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Cobalt.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Cobalt.json"
     },
     "Weapon_Mace_Copper": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "Weapon/Mace",
-      "source": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Copper.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Copper.json"
     },
     "Weapon_Mace_Crude": {
       "width": 1,
@@ -19836,36 +19798,28 @@
       "source": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Crude.json"
     },
     "Weapon_Mace_Iron": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "Weapon/Mace",
-      "source": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Iron.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Iron.json"
     },
     "Weapon_Mace_Mithril": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "Weapon/Mace",
-      "source": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Mithril.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Mithril.json"
     },
     "Weapon_Mace_Onyxium": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "Weapon/Mace",
-      "source": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Onyxium.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Onyxium.json"
     },
     "Weapon_Mace_Prisma": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "Weapon/Mace",
-      "source": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Prisma.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Prisma.json"
     },
     "Weapon_Mace_Scrap_NPC": {
       "width": 1,
@@ -19886,12 +19840,10 @@
       "source": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Stone_Trork.json"
     },
     "Weapon_Mace_Thorium": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "Weapon/Mace",
-      "source": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Thorium.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Mace/Weapon_Mace_Thorium.json"
     },
     "Template_Weapon_Shield": {
       "width": 2,
@@ -19900,28 +19852,22 @@
       "source": "Server/Item/Items/Weapon/Shield/Template_Weapon_Shield.json"
     },
     "Weapon_Shield_Adamantite": {
-      "width": 4,
-      "height": 4,
+      "width": 2,
+      "height": 3,
       "rule": "Weapon/Shield",
-      "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Adamantite.json",
-      "previousWidth": 2,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Adamantite.json"
     },
     "Weapon_Shield_Cobalt": {
-      "width": 4,
-      "height": 4,
+      "width": 2,
+      "height": 3,
       "rule": "Weapon/Shield",
-      "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Cobalt.json",
-      "previousWidth": 2,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Cobalt.json"
     },
     "Weapon_Shield_Copper": {
-      "width": 4,
-      "height": 4,
+      "width": 2,
+      "height": 3,
       "rule": "Weapon/Shield",
-      "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Copper.json",
-      "previousWidth": 2,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Copper.json"
     },
     "Weapon_Shield_Doomed": {
       "width": 2,
@@ -19930,44 +19876,34 @@
       "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Doomed.json"
     },
     "Weapon_Shield_Iron": {
-      "width": 4,
-      "height": 4,
+      "width": 2,
+      "height": 3,
       "rule": "Weapon/Shield",
-      "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Iron.json",
-      "previousWidth": 2,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Iron.json"
     },
     "Weapon_Shield_Mithril": {
-      "width": 4,
-      "height": 4,
+      "width": 2,
+      "height": 3,
       "rule": "Weapon/Shield",
-      "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Mithril.json",
-      "previousWidth": 2,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Mithril.json"
     },
     "Weapon_Shield_Onyxium": {
-      "width": 4,
-      "height": 4,
+      "width": 2,
+      "height": 3,
       "rule": "Weapon/Shield",
-      "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Onyxium.json",
-      "previousWidth": 2,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Onyxium.json"
     },
     "Weapon_Shield_Orbis_Incandescent": {
-      "width": 4,
-      "height": 4,
+      "width": 2,
+      "height": 3,
       "rule": "Weapon/Shield",
-      "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Orbis_Incandescent.json",
-      "previousWidth": 2,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Orbis_Incandescent.json"
     },
     "Weapon_Shield_Orbis_Knight": {
-      "width": 4,
-      "height": 4,
+      "width": 2,
+      "height": 3,
       "rule": "Weapon/Shield",
-      "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Orbis_Knight.json",
-      "previousWidth": 2,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Orbis_Knight.json"
     },
     "Weapon_Shield_Praetorian": {
       "width": 2,
@@ -19982,12 +19918,10 @@
       "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Ruined_Giant.json"
     },
     "Weapon_Shield_Rusty": {
-      "width": 4,
-      "height": 4,
+      "width": 2,
+      "height": 3,
       "rule": "Weapon/Shield",
-      "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Rusty.json",
-      "previousWidth": 2,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Rusty.json"
     },
     "Weapon_Shield_Scrap_Spiked": {
       "width": 2,
@@ -20002,20 +19936,16 @@
       "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Scrap.json"
     },
     "Weapon_Shield_Thorium": {
-      "width": 4,
-      "height": 4,
+      "width": 2,
+      "height": 3,
       "rule": "Weapon/Shield",
-      "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Thorium.json",
-      "previousWidth": 2,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Thorium.json"
     },
     "Weapon_Shield_Wood": {
-      "width": 4,
-      "height": 4,
+      "width": 2,
+      "height": 3,
       "rule": "Weapon/Shield",
-      "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Wood.json",
-      "previousWidth": 2,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Shield/Weapon_Shield_Wood.json"
     },
     "Template_Weapon_Shortbow": {
       "width": 2,
@@ -20144,12 +20074,10 @@
       "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Adamantite_Saurian.json"
     },
     "Weapon_Spear_Adamantite": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Spear",
-      "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Adamantite.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Adamantite.json"
     },
     "Weapon_Spear_Bone": {
       "width": 2,
@@ -20158,44 +20086,34 @@
       "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Bone.json"
     },
     "Weapon_Spear_Bronze": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Spear",
-      "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Bronze.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Bronze.json"
     },
     "Weapon_Spear_Cobalt": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Spear",
-      "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Cobalt.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Cobalt.json"
     },
     "Weapon_Spear_Copper": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Spear",
-      "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Copper.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Copper.json"
     },
     "Weapon_Spear_Crude": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Spear",
-      "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Crude.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Crude.json"
     },
     "Weapon_Spear_Double_Incandescent": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Spear",
-      "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Double_Incandescent.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Double_Incandescent.json"
     },
     "Weapon_Spear_Fishbone": {
       "width": 2,
@@ -20204,12 +20122,10 @@
       "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Fishbone.json"
     },
     "Weapon_Spear_Iron": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Spear",
-      "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Iron.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Iron.json"
     },
     "Weapon_Spear_Leaf": {
       "width": 2,
@@ -20218,20 +20134,16 @@
       "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Leaf.json"
     },
     "Weapon_Spear_Mithril": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Spear",
-      "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Mithril.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Mithril.json"
     },
     "Weapon_Spear_Onyxium": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Spear",
-      "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Onyxium.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Onyxium.json"
     },
     "Weapon_Spear_Scrap": {
       "width": 2,
@@ -20246,12 +20158,10 @@
       "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Stone_Trork.json"
     },
     "Weapon_Spear_Thorium": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Spear",
-      "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Thorium.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Thorium.json"
     },
     "Weapon_Spear_Tribal": {
       "width": 2,
@@ -20314,12 +20224,10 @@
       "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Bo_Bamboo.json"
     },
     "Weapon_Staff_Bo_Wood": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Staff",
-      "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Bo_Wood.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Bo_Wood.json"
     },
     "Weapon_Staff_Bone": {
       "width": 2,
@@ -20340,20 +20248,16 @@
       "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Cane.json"
     },
     "Weapon_Staff_Cobalt": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Staff",
-      "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Cobalt.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Cobalt.json"
     },
     "Weapon_Staff_Copper": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Staff",
-      "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Copper.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Copper.json"
     },
     "Weapon_Staff_Crystal_Fire_Trork": {
       "width": 2,
@@ -20362,36 +20266,28 @@
       "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Fire_Trork.json"
     },
     "Weapon_Staff_Crystal_Flame": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Staff",
-      "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Flame.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Flame.json"
     },
     "Weapon_Staff_Crystal_Ice": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Staff",
-      "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Ice.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Ice.json"
     },
     "Weapon_Staff_Crystal_Purple": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Staff",
-      "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Purple.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Purple.json"
     },
     "Weapon_Staff_Crystal_Red": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Staff",
-      "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Red.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Crystal_Red.json"
     },
     "Weapon_Staff_Doomed": {
       "width": 2,
@@ -20406,12 +20302,10 @@
       "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Frost.json"
     },
     "Weapon_Staff_Iron": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Staff",
-      "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Iron.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Iron.json"
     },
     "Weapon_Staff_Mithril": {
       "width": 2,
@@ -20426,12 +20320,10 @@
       "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Onion.json"
     },
     "Weapon_Staff_Onyxium": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Staff",
-      "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Onyxium.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Onyxium.json"
     },
     "Weapon_Staff_Scrap_Lightbulb": {
       "width": 2,
@@ -20440,12 +20332,10 @@
       "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Scrap_Lightbulb.json"
     },
     "Weapon_Staff_Thorium": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "Weapon/Staff",
-      "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Thorium.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Thorium.json"
     },
     "Weapon_Staff_Wizard": {
       "width": 2,
@@ -20479,11 +20369,9 @@
     },
     "Weapon_Sword_Adamantite": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "Weapon/Sword",
-      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Adamantite.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Adamantite.json"
     },
     "Weapon_Sword_Bone": {
       "width": 1,
@@ -20492,52 +20380,40 @@
       "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Bone.json"
     },
     "Weapon_Sword_Bronze_Ancient": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "Weapon/Sword",
-      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Bronze_Ancient.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Bronze_Ancient.json"
     },
     "Weapon_Sword_Bronze": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "Weapon/Sword",
-      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Bronze.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Bronze.json"
     },
     "Weapon_Sword_Cobalt": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "Weapon/Sword",
-      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Cobalt.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Cobalt.json"
     },
     "Weapon_Sword_Copper": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "Weapon/Sword",
-      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Copper.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Copper.json"
     },
     "Weapon_Sword_Crude": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "Weapon/Sword",
-      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Crude.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Crude.json"
     },
     "Weapon_Sword_Cutlass": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "Weapon/Sword",
-      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Cutlass.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Cutlass.json"
     },
     "Weapon_Sword_Doomed": {
       "width": 1,
@@ -20546,52 +20422,40 @@
       "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Doomed.json"
     },
     "Weapon_Sword_Frost": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "Weapon/Sword",
-      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Frost.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Frost.json"
     },
     "Weapon_Sword_Iron": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "Weapon/Sword",
-      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Iron.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Iron.json"
     },
     "Weapon_Sword_Mithril": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "Weapon/Sword",
-      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Mithril.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Mithril.json"
     },
     "Weapon_Sword_Nexus": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "Weapon/Sword",
-      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Nexus.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Nexus.json"
     },
     "Weapon_Sword_Onyxium": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "Weapon/Sword",
-      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Onyxium.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Onyxium.json"
     },
     "Weapon_Sword_Runic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "Weapon/Sword",
-      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Runic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Runic.json"
     },
     "Weapon_Sword_Scrap": {
       "width": 1,
@@ -20600,12 +20464,10 @@
       "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Scrap.json"
     },
     "Weapon_Sword_Silversteel": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "Weapon/Sword",
-      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Silversteel.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Silversteel.json"
     },
     "Weapon_Sword_Steel_Incandescent": {
       "width": 1,
@@ -20621,11 +20483,9 @@
     },
     "Weapon_Sword_Steel": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "Weapon/Sword",
-      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Steel.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Steel.json"
     },
     "Weapon_Sword_Stone_Trork": {
       "width": 1,
@@ -20634,20 +20494,16 @@
       "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Stone_Trork.json"
     },
     "Weapon_Sword_Thorium": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "Weapon/Sword",
-      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Thorium.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Thorium.json"
     },
     "Weapon_Sword_Wood": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "Weapon/Sword",
-      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Wood.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "Server/Item/Items/Weapon/Sword/Weapon_Sword_Wood.json"
     },
     "Weapon_Wand_Root": {
       "width": 1,
@@ -20668,20 +20524,16 @@
       "source": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Tribal.json"
     },
     "Weapon_Wand_Wood_Rotten": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 2,
       "rule": "Weapon/Wand",
-      "source": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Wood_Rotten.json",
-      "previousWidth": 1,
-      "previousHeight": 2
+      "source": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Wood_Rotten.json"
     },
     "Weapon_Wand_Wood": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 2,
       "rule": "Weapon/Wand",
-      "source": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Wood.json",
-      "previousWidth": 1,
-      "previousHeight": 2
+      "source": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Wood.json"
     },
     "Wood_Amber_Branch_Corner": {
       "width": 1,
@@ -25419,603 +25271,453 @@
     },
     "RPG_Gear_crossbow_heavy_h_Epic": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_h_Epic.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_h_Epic.json"
     },
     "RPG_Gear_crossbow_heavy_h_Legendary": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_h_Legendary.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_h_Legendary.json"
     },
     "RPG_Gear_crossbow_heavy_h_Rare": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_h_Rare.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_h_Rare.json"
     },
     "RPG_Gear_crossbow_heavy_h_Uncommon": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_h_Uncommon.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_h_Uncommon.json"
     },
     "RPG_Gear_crossbow_heavy_h": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_h.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_h.json"
     },
     "RPG_Gear_crossbow_heavy_n_Epic": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_n_Epic.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_n_Epic.json"
     },
     "RPG_Gear_crossbow_heavy_n_Legendary": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_n_Legendary.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_n_Legendary.json"
     },
     "RPG_Gear_crossbow_heavy_n_Rare": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_n_Rare.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_n_Rare.json"
     },
     "RPG_Gear_crossbow_heavy_n_Uncommon": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_n_Uncommon.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_n_Uncommon.json"
     },
     "RPG_Gear_crossbow_heavy_n": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_n.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_n.json"
     },
     "RPG_Gear_crossbow_heavy_nm_Epic": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_nm_Epic.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_nm_Epic.json"
     },
     "RPG_Gear_crossbow_heavy_nm_Legendary": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_nm_Legendary.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_nm_Legendary.json"
     },
     "RPG_Gear_crossbow_heavy_nm_Rare": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_nm_Rare.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_nm_Rare.json"
     },
     "RPG_Gear_crossbow_heavy_nm_Uncommon": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_nm_Uncommon.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_nm_Uncommon.json"
     },
     "RPG_Gear_crossbow_heavy_nm": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_nm.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_heavy_nm.json"
     },
     "RPG_Gear_crossbow_repeater_h_Epic": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_h_Epic.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_h_Epic.json"
     },
     "RPG_Gear_crossbow_repeater_h_Legendary": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_h_Legendary.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_h_Legendary.json"
     },
     "RPG_Gear_crossbow_repeater_h_Rare": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_h_Rare.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_h_Rare.json"
     },
     "RPG_Gear_crossbow_repeater_h_Uncommon": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_h_Uncommon.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_h_Uncommon.json"
     },
     "RPG_Gear_crossbow_repeater_h": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_h.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_h.json"
     },
     "RPG_Gear_crossbow_repeater_n_Epic": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_n_Epic.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_n_Epic.json"
     },
     "RPG_Gear_crossbow_repeater_n_Legendary": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_n_Legendary.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_n_Legendary.json"
     },
     "RPG_Gear_crossbow_repeater_n_Rare": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_n_Rare.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_n_Rare.json"
     },
     "RPG_Gear_crossbow_repeater_n_Uncommon": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_n_Uncommon.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_n_Uncommon.json"
     },
     "RPG_Gear_crossbow_repeater_n": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_n.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_n.json"
     },
     "RPG_Gear_crossbow_repeater_nm_Epic": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_nm_Epic.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_nm_Epic.json"
     },
     "RPG_Gear_crossbow_repeater_nm_Legendary": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_nm_Legendary.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_nm_Legendary.json"
     },
     "RPG_Gear_crossbow_repeater_nm_Rare": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_nm_Rare.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_nm_Rare.json"
     },
     "RPG_Gear_crossbow_repeater_nm_Uncommon": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_nm_Uncommon.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_nm_Uncommon.json"
     },
     "RPG_Gear_crossbow_repeater_nm": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_nm.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_repeater_nm.json"
     },
     "RPG_Gear_crossbow_runed_h_Epic": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_h_Epic.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_h_Epic.json"
     },
     "RPG_Gear_crossbow_runed_h_Legendary": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_h_Legendary.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_h_Legendary.json"
     },
     "RPG_Gear_crossbow_runed_h_Rare": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_h_Rare.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_h_Rare.json"
     },
     "RPG_Gear_crossbow_runed_h_Uncommon": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_h_Uncommon.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_h_Uncommon.json"
     },
     "RPG_Gear_crossbow_runed_h": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_h.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_h.json"
     },
     "RPG_Gear_crossbow_runed_n_Epic": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_n_Epic.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_n_Epic.json"
     },
     "RPG_Gear_crossbow_runed_n_Legendary": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_n_Legendary.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_n_Legendary.json"
     },
     "RPG_Gear_crossbow_runed_n_Rare": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_n_Rare.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_n_Rare.json"
     },
     "RPG_Gear_crossbow_runed_n_Uncommon": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_n_Uncommon.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_n_Uncommon.json"
     },
     "RPG_Gear_crossbow_runed_n": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_n.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_n.json"
     },
     "RPG_Gear_crossbow_runed_nm_Epic": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_nm_Epic.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_nm_Epic.json"
     },
     "RPG_Gear_crossbow_runed_nm_Legendary": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_nm_Legendary.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_nm_Legendary.json"
     },
     "RPG_Gear_crossbow_runed_nm_Rare": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_nm_Rare.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_nm_Rare.json"
     },
     "RPG_Gear_crossbow_runed_nm_Uncommon": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_nm_Uncommon.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_nm_Uncommon.json"
     },
     "RPG_Gear_crossbow_runed_nm": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Ancient_Steel",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_nm.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_runed_nm.json"
     },
     "RPG_Gear_crossbow_scout_h_Epic": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_h_Epic.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_h_Epic.json"
     },
     "RPG_Gear_crossbow_scout_h_Legendary": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_h_Legendary.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_h_Legendary.json"
     },
     "RPG_Gear_crossbow_scout_h_Rare": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_h_Rare.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_h_Rare.json"
     },
     "RPG_Gear_crossbow_scout_h_Uncommon": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_h_Uncommon.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_h_Uncommon.json"
     },
     "RPG_Gear_crossbow_scout_h": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_h.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_h.json"
     },
     "RPG_Gear_crossbow_scout_n_Epic": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_n_Epic.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_n_Epic.json"
     },
     "RPG_Gear_crossbow_scout_n_Legendary": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_n_Legendary.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_n_Legendary.json"
     },
     "RPG_Gear_crossbow_scout_n_Rare": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_n_Rare.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_n_Rare.json"
     },
     "RPG_Gear_crossbow_scout_n_Uncommon": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_n_Uncommon.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_n_Uncommon.json"
     },
     "RPG_Gear_crossbow_scout_n": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_n.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_n.json"
     },
     "RPG_Gear_crossbow_scout_nm_Epic": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_nm_Epic.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_nm_Epic.json"
     },
     "RPG_Gear_crossbow_scout_nm_Legendary": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_nm_Legendary.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_nm_Legendary.json"
     },
     "RPG_Gear_crossbow_scout_nm_Rare": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_nm_Rare.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_nm_Rare.json"
     },
     "RPG_Gear_crossbow_scout_nm_Uncommon": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_nm_Uncommon.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_nm_Uncommon.json"
     },
     "RPG_Gear_crossbow_scout_nm": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_nm.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_scout_nm.json"
     },
     "RPG_Gear_crossbow_standard_h_Epic": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_h_Epic.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_h_Epic.json"
     },
     "RPG_Gear_crossbow_standard_h_Legendary": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_h_Legendary.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_h_Legendary.json"
     },
     "RPG_Gear_crossbow_standard_h_Rare": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_h_Rare.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_h_Rare.json"
     },
     "RPG_Gear_crossbow_standard_h_Uncommon": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_h_Uncommon.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_h_Uncommon.json"
     },
     "RPG_Gear_crossbow_standard_h": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_h.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_h.json"
     },
     "RPG_Gear_crossbow_standard_n_Epic": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_n_Epic.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_n_Epic.json"
     },
     "RPG_Gear_crossbow_standard_n_Legendary": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_n_Legendary.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_n_Legendary.json"
     },
     "RPG_Gear_crossbow_standard_n_Rare": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_n_Rare.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_n_Rare.json"
     },
     "RPG_Gear_crossbow_standard_n_Uncommon": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_n_Uncommon.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_n_Uncommon.json"
     },
     "RPG_Gear_crossbow_standard_n": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_n.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_n.json"
     },
     "RPG_Gear_crossbow_standard_nm_Epic": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_nm_Epic.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_nm_Epic.json"
     },
     "RPG_Gear_crossbow_standard_nm_Legendary": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_nm_Legendary.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_nm_Legendary.json"
     },
     "RPG_Gear_crossbow_standard_nm_Rare": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_nm_Rare.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_nm_Rare.json"
     },
     "RPG_Gear_crossbow_standard_nm_Uncommon": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_nm_Uncommon.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_nm_Uncommon.json"
     },
     "RPG_Gear_crossbow_standard_nm": {
       "width": 2,
-      "height": 2,
+      "height": 4,
       "rule": "ManagedGear/Weapon_Crossbow_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_nm.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_crossbow_standard_nm.json"
     },
     "RPG_Gear_daggers_adamantite_h_Epic": {
       "width": 1,
@@ -27818,244 +27520,184 @@
       "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_adamantite_nm.json"
     },
     "RPG_Gear_longsword_cobalt_h_Epic": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_h_Epic.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_h_Epic.json"
     },
     "RPG_Gear_longsword_cobalt_h_Legendary": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_h_Legendary.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_h_Legendary.json"
     },
     "RPG_Gear_longsword_cobalt_h_Rare": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_h_Rare.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_h_Rare.json"
     },
     "RPG_Gear_longsword_cobalt_h_Uncommon": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_h_Uncommon.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_h_Uncommon.json"
     },
     "RPG_Gear_longsword_cobalt_h": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_h.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_h.json"
     },
     "RPG_Gear_longsword_cobalt_n_Epic": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_n_Epic.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_n_Epic.json"
     },
     "RPG_Gear_longsword_cobalt_n_Legendary": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_n_Legendary.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_n_Legendary.json"
     },
     "RPG_Gear_longsword_cobalt_n_Rare": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_n_Rare.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_n_Rare.json"
     },
     "RPG_Gear_longsword_cobalt_n_Uncommon": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_n_Uncommon.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_n_Uncommon.json"
     },
     "RPG_Gear_longsword_cobalt_n": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_n.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_n.json"
     },
     "RPG_Gear_longsword_cobalt_nm_Epic": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_nm_Epic.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_nm_Epic.json"
     },
     "RPG_Gear_longsword_cobalt_nm_Legendary": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_nm_Legendary.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_nm_Legendary.json"
     },
     "RPG_Gear_longsword_cobalt_nm_Rare": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_nm_Rare.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_nm_Rare.json"
     },
     "RPG_Gear_longsword_cobalt_nm_Uncommon": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_nm_Uncommon.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_nm_Uncommon.json"
     },
     "RPG_Gear_longsword_cobalt_nm": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_nm.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_cobalt_nm.json"
     },
     "RPG_Gear_longsword_crude_h_Epic": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_h_Epic.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_h_Epic.json"
     },
     "RPG_Gear_longsword_crude_h_Legendary": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_h_Legendary.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_h_Legendary.json"
     },
     "RPG_Gear_longsword_crude_h_Rare": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_h_Rare.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_h_Rare.json"
     },
     "RPG_Gear_longsword_crude_h_Uncommon": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_h_Uncommon.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_h_Uncommon.json"
     },
     "RPG_Gear_longsword_crude_h": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_h.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_h.json"
     },
     "RPG_Gear_longsword_crude_n_Epic": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_n_Epic.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_n_Epic.json"
     },
     "RPG_Gear_longsword_crude_n_Legendary": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_n_Legendary.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_n_Legendary.json"
     },
     "RPG_Gear_longsword_crude_n_Rare": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_n_Rare.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_n_Rare.json"
     },
     "RPG_Gear_longsword_crude_n_Uncommon": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_n_Uncommon.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_n_Uncommon.json"
     },
     "RPG_Gear_longsword_crude_n": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_n.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_n.json"
     },
     "RPG_Gear_longsword_crude_nm_Epic": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_nm_Epic.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_nm_Epic.json"
     },
     "RPG_Gear_longsword_crude_nm_Legendary": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_nm_Legendary.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_nm_Legendary.json"
     },
     "RPG_Gear_longsword_crude_nm_Rare": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_nm_Rare.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_nm_Rare.json"
     },
     "RPG_Gear_longsword_crude_nm_Uncommon": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_nm_Uncommon.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_nm_Uncommon.json"
     },
     "RPG_Gear_longsword_crude_nm": {
-      "width": 1,
+      "width": 2,
       "height": 4,
       "rule": "ManagedGear/Weapon_Longsword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_nm.json",
-      "previousWidth": 2,
-      "previousHeight": 4
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_crude_nm.json"
     },
     "RPG_Gear_longsword_iron_h_Epic": {
       "width": 2,
@@ -28238,364 +27880,274 @@
       "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_longsword_mithril_nm.json"
     },
     "RPG_Gear_mace_adamantite_h_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_h_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_h_Epic.json"
     },
     "RPG_Gear_mace_adamantite_h_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_h_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_h_Legendary.json"
     },
     "RPG_Gear_mace_adamantite_h_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_h_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_h_Rare.json"
     },
     "RPG_Gear_mace_adamantite_h_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_h_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_h_Uncommon.json"
     },
     "RPG_Gear_mace_adamantite_h": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_h.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_h.json"
     },
     "RPG_Gear_mace_adamantite_n_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_n_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_n_Epic.json"
     },
     "RPG_Gear_mace_adamantite_n_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_n_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_n_Legendary.json"
     },
     "RPG_Gear_mace_adamantite_n_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_n_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_n_Rare.json"
     },
     "RPG_Gear_mace_adamantite_n_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_n_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_n_Uncommon.json"
     },
     "RPG_Gear_mace_adamantite_n": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_n.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_n.json"
     },
     "RPG_Gear_mace_adamantite_nm_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_nm_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_nm_Epic.json"
     },
     "RPG_Gear_mace_adamantite_nm_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_nm_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_nm_Legendary.json"
     },
     "RPG_Gear_mace_adamantite_nm_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_nm_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_nm_Rare.json"
     },
     "RPG_Gear_mace_adamantite_nm_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_nm_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_nm_Uncommon.json"
     },
     "RPG_Gear_mace_adamantite_nm": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_nm.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_adamantite_nm.json"
     },
     "RPG_Gear_mace_cobalt_h_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_h_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_h_Epic.json"
     },
     "RPG_Gear_mace_cobalt_h_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_h_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_h_Legendary.json"
     },
     "RPG_Gear_mace_cobalt_h_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_h_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_h_Rare.json"
     },
     "RPG_Gear_mace_cobalt_h_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_h_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_h_Uncommon.json"
     },
     "RPG_Gear_mace_cobalt_h": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_h.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_h.json"
     },
     "RPG_Gear_mace_cobalt_n_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_n_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_n_Epic.json"
     },
     "RPG_Gear_mace_cobalt_n_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_n_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_n_Legendary.json"
     },
     "RPG_Gear_mace_cobalt_n_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_n_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_n_Rare.json"
     },
     "RPG_Gear_mace_cobalt_n_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_n_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_n_Uncommon.json"
     },
     "RPG_Gear_mace_cobalt_n": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_n.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_n.json"
     },
     "RPG_Gear_mace_cobalt_nm_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_nm_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_nm_Epic.json"
     },
     "RPG_Gear_mace_cobalt_nm_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_nm_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_nm_Legendary.json"
     },
     "RPG_Gear_mace_cobalt_nm_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_nm_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_nm_Rare.json"
     },
     "RPG_Gear_mace_cobalt_nm_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_nm_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_nm_Uncommon.json"
     },
     "RPG_Gear_mace_cobalt_nm": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_nm.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_cobalt_nm.json"
     },
     "RPG_Gear_mace_copper_h_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_h_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_h_Epic.json"
     },
     "RPG_Gear_mace_copper_h_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_h_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_h_Legendary.json"
     },
     "RPG_Gear_mace_copper_h_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_h_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_h_Rare.json"
     },
     "RPG_Gear_mace_copper_h_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_h_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_h_Uncommon.json"
     },
     "RPG_Gear_mace_copper_h": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_h.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_h.json"
     },
     "RPG_Gear_mace_copper_n_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_n_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_n_Epic.json"
     },
     "RPG_Gear_mace_copper_n_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_n_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_n_Legendary.json"
     },
     "RPG_Gear_mace_copper_n_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_n_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_n_Rare.json"
     },
     "RPG_Gear_mace_copper_n_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_n_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_n_Uncommon.json"
     },
     "RPG_Gear_mace_copper_n": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_n.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_n.json"
     },
     "RPG_Gear_mace_copper_nm_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_nm_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_nm_Epic.json"
     },
     "RPG_Gear_mace_copper_nm_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_nm_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_nm_Legendary.json"
     },
     "RPG_Gear_mace_copper_nm_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_nm_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_nm_Rare.json"
     },
     "RPG_Gear_mace_copper_nm_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_nm_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_nm_Uncommon.json"
     },
     "RPG_Gear_mace_copper_nm": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_nm.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_copper_nm.json"
     },
     "RPG_Gear_mace_crude_h_Epic": {
       "width": 1,
@@ -28688,364 +28240,274 @@
       "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_crude_nm.json"
     },
     "RPG_Gear_mace_iron_h_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_h_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_h_Epic.json"
     },
     "RPG_Gear_mace_iron_h_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_h_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_h_Legendary.json"
     },
     "RPG_Gear_mace_iron_h_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_h_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_h_Rare.json"
     },
     "RPG_Gear_mace_iron_h_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_h_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_h_Uncommon.json"
     },
     "RPG_Gear_mace_iron_h": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_h.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_h.json"
     },
     "RPG_Gear_mace_iron_n_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_n_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_n_Epic.json"
     },
     "RPG_Gear_mace_iron_n_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_n_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_n_Legendary.json"
     },
     "RPG_Gear_mace_iron_n_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_n_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_n_Rare.json"
     },
     "RPG_Gear_mace_iron_n_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_n_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_n_Uncommon.json"
     },
     "RPG_Gear_mace_iron_n": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_n.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_n.json"
     },
     "RPG_Gear_mace_iron_nm_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_nm_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_nm_Epic.json"
     },
     "RPG_Gear_mace_iron_nm_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_nm_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_nm_Legendary.json"
     },
     "RPG_Gear_mace_iron_nm_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_nm_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_nm_Rare.json"
     },
     "RPG_Gear_mace_iron_nm_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_nm_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_nm_Uncommon.json"
     },
     "RPG_Gear_mace_iron_nm": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_nm.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_iron_nm.json"
     },
     "RPG_Gear_mace_mithril_h_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_h_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_h_Epic.json"
     },
     "RPG_Gear_mace_mithril_h_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_h_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_h_Legendary.json"
     },
     "RPG_Gear_mace_mithril_h_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_h_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_h_Rare.json"
     },
     "RPG_Gear_mace_mithril_h_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_h_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_h_Uncommon.json"
     },
     "RPG_Gear_mace_mithril_h": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_h.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_h.json"
     },
     "RPG_Gear_mace_mithril_n_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_n_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_n_Epic.json"
     },
     "RPG_Gear_mace_mithril_n_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_n_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_n_Legendary.json"
     },
     "RPG_Gear_mace_mithril_n_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_n_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_n_Rare.json"
     },
     "RPG_Gear_mace_mithril_n_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_n_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_n_Uncommon.json"
     },
     "RPG_Gear_mace_mithril_n": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_n.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_n.json"
     },
     "RPG_Gear_mace_mithril_nm_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_nm_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_nm_Epic.json"
     },
     "RPG_Gear_mace_mithril_nm_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_nm_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_nm_Legendary.json"
     },
     "RPG_Gear_mace_mithril_nm_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_nm_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_nm_Rare.json"
     },
     "RPG_Gear_mace_mithril_nm_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_nm_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_nm_Uncommon.json"
     },
     "RPG_Gear_mace_mithril_nm": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_nm.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_mithril_nm.json"
     },
     "RPG_Gear_mace_thorium_h_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_h_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_h_Epic.json"
     },
     "RPG_Gear_mace_thorium_h_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_h_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_h_Legendary.json"
     },
     "RPG_Gear_mace_thorium_h_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_h_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_h_Rare.json"
     },
     "RPG_Gear_mace_thorium_h_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_h_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_h_Uncommon.json"
     },
     "RPG_Gear_mace_thorium_h": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_h.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_h.json"
     },
     "RPG_Gear_mace_thorium_n_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_n_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_n_Epic.json"
     },
     "RPG_Gear_mace_thorium_n_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_n_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_n_Legendary.json"
     },
     "RPG_Gear_mace_thorium_n_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_n_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_n_Rare.json"
     },
     "RPG_Gear_mace_thorium_n_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_n_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_n_Uncommon.json"
     },
     "RPG_Gear_mace_thorium_n": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_n.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_n.json"
     },
     "RPG_Gear_mace_thorium_nm_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_nm_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_nm_Epic.json"
     },
     "RPG_Gear_mace_thorium_nm_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_nm_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_nm_Legendary.json"
     },
     "RPG_Gear_mace_thorium_nm_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_nm_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_nm_Rare.json"
     },
     "RPG_Gear_mace_thorium_nm_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_nm_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_nm_Uncommon.json"
     },
     "RPG_Gear_mace_thorium_nm": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Mace_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_nm.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_mace_thorium_nm.json"
     },
     "RPG_Gear_plate_adamantite_chest_h_Epic": {
       "width": 2,
@@ -32559,843 +32021,633 @@
     },
     "RPG_Gear_sword_adamantite_h_Epic": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_h_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_h_Epic.json"
     },
     "RPG_Gear_sword_adamantite_h_Legendary": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_h_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_h_Legendary.json"
     },
     "RPG_Gear_sword_adamantite_h_Rare": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_h_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_h_Rare.json"
     },
     "RPG_Gear_sword_adamantite_h_Uncommon": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_h_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_h_Uncommon.json"
     },
     "RPG_Gear_sword_adamantite_h": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_h.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_h.json"
     },
     "RPG_Gear_sword_adamantite_n_Epic": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_n_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_n_Epic.json"
     },
     "RPG_Gear_sword_adamantite_n_Legendary": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_n_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_n_Legendary.json"
     },
     "RPG_Gear_sword_adamantite_n_Rare": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_n_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_n_Rare.json"
     },
     "RPG_Gear_sword_adamantite_n_Uncommon": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_n_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_n_Uncommon.json"
     },
     "RPG_Gear_sword_adamantite_n": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_n.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_n.json"
     },
     "RPG_Gear_sword_adamantite_nm_Epic": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_nm_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_nm_Epic.json"
     },
     "RPG_Gear_sword_adamantite_nm_Legendary": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_nm_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_nm_Legendary.json"
     },
     "RPG_Gear_sword_adamantite_nm_Rare": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_nm_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_nm_Rare.json"
     },
     "RPG_Gear_sword_adamantite_nm_Uncommon": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_nm_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_nm_Uncommon.json"
     },
     "RPG_Gear_sword_adamantite_nm": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Adamantite",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_nm.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_adamantite_nm.json"
     },
     "RPG_Gear_sword_cobalt_h_Epic": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_h_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_h_Epic.json"
     },
     "RPG_Gear_sword_cobalt_h_Legendary": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_h_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_h_Legendary.json"
     },
     "RPG_Gear_sword_cobalt_h_Rare": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_h_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_h_Rare.json"
     },
     "RPG_Gear_sword_cobalt_h_Uncommon": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_h_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_h_Uncommon.json"
     },
     "RPG_Gear_sword_cobalt_h": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_h.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_h.json"
     },
     "RPG_Gear_sword_cobalt_n_Epic": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_n_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_n_Epic.json"
     },
     "RPG_Gear_sword_cobalt_n_Legendary": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_n_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_n_Legendary.json"
     },
     "RPG_Gear_sword_cobalt_n_Rare": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_n_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_n_Rare.json"
     },
     "RPG_Gear_sword_cobalt_n_Uncommon": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_n_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_n_Uncommon.json"
     },
     "RPG_Gear_sword_cobalt_n": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_n.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_n.json"
     },
     "RPG_Gear_sword_cobalt_nm_Epic": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_nm_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_nm_Epic.json"
     },
     "RPG_Gear_sword_cobalt_nm_Legendary": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_nm_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_nm_Legendary.json"
     },
     "RPG_Gear_sword_cobalt_nm_Rare": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_nm_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_nm_Rare.json"
     },
     "RPG_Gear_sword_cobalt_nm_Uncommon": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_nm_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_nm_Uncommon.json"
     },
     "RPG_Gear_sword_cobalt_nm": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Cobalt",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_nm.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_cobalt_nm.json"
     },
     "RPG_Gear_sword_copper_h_Epic": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_h_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_h_Epic.json"
     },
     "RPG_Gear_sword_copper_h_Legendary": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_h_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_h_Legendary.json"
     },
     "RPG_Gear_sword_copper_h_Rare": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_h_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_h_Rare.json"
     },
     "RPG_Gear_sword_copper_h_Uncommon": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_h_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_h_Uncommon.json"
     },
     "RPG_Gear_sword_copper_h": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_h.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_h.json"
     },
     "RPG_Gear_sword_copper_n_Epic": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_n_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_n_Epic.json"
     },
     "RPG_Gear_sword_copper_n_Legendary": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_n_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_n_Legendary.json"
     },
     "RPG_Gear_sword_copper_n_Rare": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_n_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_n_Rare.json"
     },
     "RPG_Gear_sword_copper_n_Uncommon": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_n_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_n_Uncommon.json"
     },
     "RPG_Gear_sword_copper_n": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_n.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_n.json"
     },
     "RPG_Gear_sword_copper_nm_Epic": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_nm_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_nm_Epic.json"
     },
     "RPG_Gear_sword_copper_nm_Legendary": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_nm_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_nm_Legendary.json"
     },
     "RPG_Gear_sword_copper_nm_Rare": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_nm_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_nm_Rare.json"
     },
     "RPG_Gear_sword_copper_nm_Uncommon": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_nm_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_nm_Uncommon.json"
     },
     "RPG_Gear_sword_copper_nm": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Copper",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_nm.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_copper_nm.json"
     },
     "RPG_Gear_sword_crude_h_Epic": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_h_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_h_Epic.json"
     },
     "RPG_Gear_sword_crude_h_Legendary": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_h_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_h_Legendary.json"
     },
     "RPG_Gear_sword_crude_h_Rare": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_h_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_h_Rare.json"
     },
     "RPG_Gear_sword_crude_h_Uncommon": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_h_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_h_Uncommon.json"
     },
     "RPG_Gear_sword_crude_h": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_h.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_h.json"
     },
     "RPG_Gear_sword_crude_n_Epic": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_n_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_n_Epic.json"
     },
     "RPG_Gear_sword_crude_n_Legendary": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_n_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_n_Legendary.json"
     },
     "RPG_Gear_sword_crude_n_Rare": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_n_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_n_Rare.json"
     },
     "RPG_Gear_sword_crude_n_Uncommon": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_n_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_n_Uncommon.json"
     },
     "RPG_Gear_sword_crude_n": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_n.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_n.json"
     },
     "RPG_Gear_sword_crude_nm_Epic": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_nm_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_nm_Epic.json"
     },
     "RPG_Gear_sword_crude_nm_Legendary": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_nm_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_nm_Legendary.json"
     },
     "RPG_Gear_sword_crude_nm_Rare": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_nm_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_nm_Rare.json"
     },
     "RPG_Gear_sword_crude_nm_Uncommon": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_nm_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_nm_Uncommon.json"
     },
     "RPG_Gear_sword_crude_nm": {
       "width": 1,
-      "height": 4,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Crude",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_nm.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_crude_nm.json"
     },
     "RPG_Gear_sword_iron_h_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_h_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_h_Epic.json"
     },
     "RPG_Gear_sword_iron_h_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_h_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_h_Legendary.json"
     },
     "RPG_Gear_sword_iron_h_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_h_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_h_Rare.json"
     },
     "RPG_Gear_sword_iron_h_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_h_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_h_Uncommon.json"
     },
     "RPG_Gear_sword_iron_h": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_h.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_h.json"
     },
     "RPG_Gear_sword_iron_n_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_n_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_n_Epic.json"
     },
     "RPG_Gear_sword_iron_n_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_n_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_n_Legendary.json"
     },
     "RPG_Gear_sword_iron_n_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_n_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_n_Rare.json"
     },
     "RPG_Gear_sword_iron_n_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_n_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_n_Uncommon.json"
     },
     "RPG_Gear_sword_iron_n": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_n.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_n.json"
     },
     "RPG_Gear_sword_iron_nm_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_nm_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_nm_Epic.json"
     },
     "RPG_Gear_sword_iron_nm_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_nm_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_nm_Legendary.json"
     },
     "RPG_Gear_sword_iron_nm_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_nm_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_nm_Rare.json"
     },
     "RPG_Gear_sword_iron_nm_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_nm_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_nm_Uncommon.json"
     },
     "RPG_Gear_sword_iron_nm": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Iron",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_nm.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_iron_nm.json"
     },
     "RPG_Gear_sword_mithril_h_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_h_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_h_Epic.json"
     },
     "RPG_Gear_sword_mithril_h_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_h_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_h_Legendary.json"
     },
     "RPG_Gear_sword_mithril_h_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_h_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_h_Rare.json"
     },
     "RPG_Gear_sword_mithril_h_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_h_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_h_Uncommon.json"
     },
     "RPG_Gear_sword_mithril_h": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_h.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_h.json"
     },
     "RPG_Gear_sword_mithril_n_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_n_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_n_Epic.json"
     },
     "RPG_Gear_sword_mithril_n_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_n_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_n_Legendary.json"
     },
     "RPG_Gear_sword_mithril_n_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_n_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_n_Rare.json"
     },
     "RPG_Gear_sword_mithril_n_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_n_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_n_Uncommon.json"
     },
     "RPG_Gear_sword_mithril_n": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_n.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_n.json"
     },
     "RPG_Gear_sword_mithril_nm_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_nm_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_nm_Epic.json"
     },
     "RPG_Gear_sword_mithril_nm_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_nm_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_nm_Legendary.json"
     },
     "RPG_Gear_sword_mithril_nm_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_nm_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_nm_Rare.json"
     },
     "RPG_Gear_sword_mithril_nm_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_nm_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_nm_Uncommon.json"
     },
     "RPG_Gear_sword_mithril_nm": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Mithril",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_nm.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_mithril_nm.json"
     },
     "RPG_Gear_sword_thorium_h_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_h_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_h_Epic.json"
     },
     "RPG_Gear_sword_thorium_h_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_h_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_h_Legendary.json"
     },
     "RPG_Gear_sword_thorium_h_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_h_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_h_Rare.json"
     },
     "RPG_Gear_sword_thorium_h_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_h_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_h_Uncommon.json"
     },
     "RPG_Gear_sword_thorium_h": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_h.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_h.json"
     },
     "RPG_Gear_sword_thorium_n_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_n_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_n_Epic.json"
     },
     "RPG_Gear_sword_thorium_n_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_n_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_n_Legendary.json"
     },
     "RPG_Gear_sword_thorium_n_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_n_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_n_Rare.json"
     },
     "RPG_Gear_sword_thorium_n_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_n_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_n_Uncommon.json"
     },
     "RPG_Gear_sword_thorium_n": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_n.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_n.json"
     },
     "RPG_Gear_sword_thorium_nm_Epic": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_nm_Epic.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_nm_Epic.json"
     },
     "RPG_Gear_sword_thorium_nm_Legendary": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_nm_Legendary.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_nm_Legendary.json"
     },
     "RPG_Gear_sword_thorium_nm_Rare": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_nm_Rare.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_nm_Rare.json"
     },
     "RPG_Gear_sword_thorium_nm_Uncommon": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_nm_Uncommon.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_nm_Uncommon.json"
     },
     "RPG_Gear_sword_thorium_nm": {
-      "width": 2,
-      "height": 4,
+      "width": 1,
+      "height": 3,
       "rule": "ManagedGear/Weapon_Sword_Thorium",
-      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_nm.json",
-      "previousWidth": 1,
-      "previousHeight": 3
+      "source": "src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_sword_thorium_nm.json"
     },
     "RPG_Gear_tool_hatchet_adamantite_h_Epic": {
       "width": 1,

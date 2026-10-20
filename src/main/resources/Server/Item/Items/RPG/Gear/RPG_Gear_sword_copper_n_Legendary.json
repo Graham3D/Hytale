@@ -36,9 +36,7 @@
             "WorldSoundEventId": "SFX_Light_Melee_T1_Impact",
             "LocalSoundEventId": "SFX_Light_Melee_T1_Impact"
           },
-          "Type": "RPG_GearDamage",
-          "RpgProcSelector": "Swing_Left_Damage",
-          "RpgProcCoefficient": 1.0
+          "Type": "RPG_GearDamage"
         }
       ]
     },
@@ -55,9 +53,7 @@
             "WorldSoundEventId": "SFX_Light_Melee_T1_Impact",
             "LocalSoundEventId": "SFX_Light_Melee_T1_Impact"
           },
-          "Type": "RPG_GearDamage",
-          "RpgProcSelector": "Swing_Right_Damage",
-          "RpgProcCoefficient": 1.0
+          "Type": "RPG_GearDamage"
         }
       ]
     },
@@ -74,9 +70,7 @@
             "WorldSoundEventId": "SFX_Light_Melee_T1_Impact",
             "LocalSoundEventId": "SFX_Light_Melee_T1_Impact"
           },
-          "Type": "RPG_GearDamage",
-          "RpgProcSelector": "Swing_Down_Damage",
-          "RpgProcCoefficient": 1.0
+          "Type": "RPG_GearDamage"
         }
       ]
     },
@@ -99,9 +93,7 @@
             "WorldSoundEventId": "SFX_Light_Melee_T1_Impact",
             "LocalSoundEventId": "SFX_Light_Melee_T1_Impact"
           },
-          "Type": "RPG_GearDamage",
-          "RpgProcSelector": "Thrust_Damage",
-          "RpgProcCoefficient": 1.0
+          "Type": "RPG_GearDamage"
         }
       ]
     },
@@ -119,9 +111,7 @@
             "WorldSoundEventId": "SFX_Light_Melee_T1_Impact",
             "LocalSoundEventId": "SFX_Light_Melee_T1_Impact"
           },
-          "Type": "RPG_GearDamage",
-          "RpgProcSelector": "Vortexstrike_Spin_Damage",
-          "RpgProcCoefficient": 1.0
+          "Type": "RPG_GearDamage"
         }
       ]
     },
@@ -139,9 +129,7 @@
             "WorldSoundEventId": "SFX_Light_Melee_T1_Impact",
             "LocalSoundEventId": "SFX_Light_Melee_T1_Impact"
           },
-          "Type": "RPG_GearDamage",
-          "RpgProcSelector": "Vortexstrike_Stab_Damage",
-          "RpgProcCoefficient": 1.0
+          "Type": "RPG_GearDamage"
         }
       ]
     },

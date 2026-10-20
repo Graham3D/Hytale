@@ -138,12 +138,6 @@ final class EncounterJournal implements EncounterLog {
         value=checkpoints.load(key);
         if(value!=null){if(!replaying&&value.sequence()>sequence)throw corrupt("CHECKPOINT_AHEAD_OF_JOURNAL");cache.put(key,value);}return value;
     }
-    @Override public void discardUnmodifiedBaseline(Key key){
-        var value=entry(key);
-        if(value!=null&&value.sequence()!=0||dirty.contains(key)||pinned.containsKey(key))
-            throw new IllegalStateException("ENEMY_BIRTH_CONTEXT_HAS_DURABLE_CONTRIBUTIONS");
-        cache.remove(key);
-    }
     public void reserve(int count)throws IOException {
         if(count<0||count>EncounterContributions.MAX_SUPPORT_ENCOUNTERS)throw new FileEncounterStore.CapacityRejected();
         if(admission)throw new FileEncounterStore.CapacityRejected();

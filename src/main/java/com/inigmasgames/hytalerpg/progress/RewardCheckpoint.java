@@ -5,17 +5,13 @@ import java.util.*;
 /** Only fields modified by earned awards; resources, cooldowns, support and loadout are excluded. */
 public record RewardCheckpoint(long currentXp,int level,int pendingPoints,int unspentPoints,
                                Map<String,Long> mastery,RewardLedger ledger,AcquisitionCheckpoint acquisition,
-                               com.inigmasgames.hytalerpg.difficulty.DifficultyProgress difficulty,GoldBalance goldBalance) {
-    public RewardCheckpoint(long currentXp,int level,int pendingPoints,int unspentPoints,Map<String,Long> mastery,RewardLedger ledger,AcquisitionCheckpoint acquisition,
-                            com.inigmasgames.hytalerpg.difficulty.DifficultyProgress difficulty){
-        this(currentXp,level,pendingPoints,unspentPoints,mastery,ledger,acquisition,difficulty,null);
-    }
+                               com.inigmasgames.hytalerpg.difficulty.DifficultyProgress difficulty) {
     public RewardCheckpoint(long currentXp,int level,int pendingPoints,int unspentPoints,Map<String,Long> mastery,RewardLedger ledger,AcquisitionCheckpoint acquisition){
-        this(currentXp,level,pendingPoints,unspentPoints,mastery,ledger,acquisition,null,null);
+        this(currentXp,level,pendingPoints,unspentPoints,mastery,ledger,acquisition,null);
     }
     /** Null is deliberately retained for historical v1 intent hashes, never normalized while reading. */
     public RewardCheckpoint(long currentXp,int level,int pendingPoints,int unspentPoints,Map<String,Long> mastery,RewardLedger ledger){
-        this(currentXp,level,pendingPoints,unspentPoints,mastery,ledger,null,null,null);
+        this(currentXp,level,pendingPoints,unspentPoints,mastery,ledger,null);
     }
     public RewardCheckpoint {
         Objects.requireNonNull(ledger);
@@ -31,14 +27,13 @@ public record RewardCheckpoint(long currentXp,int level,int pendingPoints,int un
         if(acquisition!=null)acquisition.progress().availableInsight(ledger.insight());
     }
     public static RewardCheckpoint of(RpgPlayerState state){return new RewardCheckpoint(state.currentXp,state.level,
-            state.pendingLevelUpPoints,state.unspentAttributePoints,state.skillMastery,state.rewards,AcquisitionCheckpoint.of(state),state.difficulty,state.goldBalance);}
-    public RewardCheckpoint withoutDifficulty(){return new RewardCheckpoint(currentXp,level,pendingPoints,unspentPoints,mastery,ledger,acquisition,null,goldBalance);}
-    public RewardCheckpoint withoutGold(){return new RewardCheckpoint(currentXp,level,pendingPoints,unspentPoints,mastery,ledger,acquisition,difficulty,null);}
+            state.pendingLevelUpPoints,state.unspentAttributePoints,state.skillMastery,state.rewards,AcquisitionCheckpoint.of(state),state.difficulty);}
+    public RewardCheckpoint withoutDifficulty(){return new RewardCheckpoint(currentXp,level,pendingPoints,unspentPoints,mastery,ledger,acquisition);}
     /** Only a historical checkpoint may omit fields that did not exist when its intent was written. */
     public boolean matches(RewardCheckpoint current){
         return current!=null&&currentXp==current.currentXp&&level==current.level&&pendingPoints==current.pendingPoints&&unspentPoints==current.unspentPoints
                 &&mastery.equals(current.mastery)&&ledger.equals(current.ledger)&&(acquisition==null||acquisition.equals(current.acquisition))
-                &&(difficulty==null||difficulty.equals(current.difficulty))&&(goldBalance==null||goldBalance.equals(current.goldBalance));
+                &&(difficulty==null||difficulty.equals(current.difficulty));
     }
     public RewardCheckpoint advance(EarnedReward reward,String hash){
         var before=ProgressionMath.advance(currentXp,0);
@@ -48,18 +43,15 @@ public record RewardCheckpoint(long currentXp,int level,int pendingPoints,int un
         reward.mastery().forEach((id,value)->nextMastery.merge(id,value,Math::addExact));
         if(reward.progression()!=null&&acquisition==null)throw new IllegalArgumentException("PROGRESSION_REQUIRES_VERSIONED_CHECKPOINT");
         if(reward.milestone()!=null&&difficulty==null)throw new IllegalArgumentException("MILESTONE_REQUIRES_DIFFICULTY_CHECKPOINT");
-        if(reward.goldPot()!=null&&goldBalance==null)throw new IllegalArgumentException("GOLD_REQUIRES_VERSIONED_CHECKPOINT");
         return new RewardCheckpoint(advance.totalXp(),advance.level(),Math.addExact(pendingPoints,advance.pendingPointAward()),
                 Math.addExact(unspentPoints,advance.unspentPointAward()),nextMastery,
                 new RewardLedger(Math.addExact(ledger.sequence(),1),hash,Math.addExact(ledger.insight(),reward.insight())),
                 acquisition==null?null:acquisition.advance(reward.progression(),Math.addExact(ledger.insight(),reward.insight())),
-                reward.milestone()==null?difficulty:reward.milestone().apply(difficulty),
-                goldBalance==null?null:goldBalance.award(reward.goldPot()));
+                reward.milestone()==null?difficulty:reward.milestone().apply(difficulty));
     }
     public void applyTo(RpgPlayerState state){
         state.currentXp=currentXp;state.level=level;state.pendingLevelUpPoints=pendingPoints;
         state.unspentAttributePoints=unspentPoints;state.skillMastery=new LinkedHashMap<>(mastery);state.rewards=ledger;
-        if(goldBalance!=null)state.goldBalance=goldBalance;
         if(acquisition!=null)acquisition.applyTo(state);
         if(difficulty!=null)state.difficulty=difficulty;
     }

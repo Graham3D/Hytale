@@ -32,7 +32,5 @@
     "BaseDamage": {
       "Physical": 6
     }
-  },
-  "RpgProcSelector": "RPG_GearRoute_I_Weapon_Crossbow_Damage_Standard_Projectile",
-  "RpgProcCoefficient": 1.0
+  }
 }

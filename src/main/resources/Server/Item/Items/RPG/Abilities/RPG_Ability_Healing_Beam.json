@@ -15,10 +15,13 @@
   "Scale": 0.8,
   "ItemSoundSetId": "ISS_Items_Gems",
   "Ability": {
-    "Slot": "Core",
+    "Slot": "Primary",
     "Cooldown": 0,
     "Cost": 0,
     "CostType": "None",
+    "Tags": [
+      "rpg.native.bridge"
+    ],
     "Cast": "Root_RPG_Healing_Beam_Held"
   }
 }
