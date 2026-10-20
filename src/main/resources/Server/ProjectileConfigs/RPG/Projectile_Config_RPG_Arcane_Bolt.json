@@ -1,0 +1,5 @@
+{
+  "Model": "RPG_Arcane_Bolt", "UseModelScale": true,
+  "Physics": { "Type": "Standard", "Gravity": 0, "TerminalVelocityAir": 26, "TerminalVelocityWater": 26, "RotationMode": "Velocity", "Bounciness": 0.0 },
+  "LaunchForce": 26, "SpawnOffset": { "X": 0, "Y": 0, "Z": 0 }, "Interactions": {}
+}

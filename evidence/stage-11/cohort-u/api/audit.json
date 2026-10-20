@@ -1,0 +1,7 @@
+{
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "jarSha256": "B160EC472928883C07AA8264E58929214C5BF946675F9FEF0E84A419C604741F",
+  "scope": "Real native DeathComponent -> claimed source packages -> bounded nearest/LOS propagation -> existing native source-owned status authorities",
+  "evidence": "Bytecode/call-site structure only; not connected death ordering, propagation, NPC status or presentation proof",
+  "connected": "UNVERIFIED"
+}

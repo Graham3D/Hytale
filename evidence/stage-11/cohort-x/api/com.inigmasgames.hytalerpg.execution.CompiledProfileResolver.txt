@@ -1,0 +1,1668 @@
+Compiled from "CompiledProfileResolver.java"
+public final class com.inigmasgames.hytalerpg.execution.CompiledProfileResolver {
+  private static final com.google.gson.Gson JSON;
+
+  private static final int CAPACITY;
+
+  private final java.util.Map<com.inigmasgames.hytalerpg.execution.CompiledProfileResolver$Key, com.inigmasgames.hytalerpg.execution.Stage04SkillProfile> cache;
+
+  public com.inigmasgames.hytalerpg.execution.CompiledProfileResolver();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #7                  // class java/util/LinkedHashMap
+         8: dup
+         9: bipush        32
+        11: ldc           #9                  // float 0.75f
+        13: iconst_1
+        14: invokespecial #10                 // Method java/util/LinkedHashMap."<init>":(IFZ)V
+        17: putfield      #13                 // Field cache:Ljava/util/Map;
+        20: return
+
+  public synchronized com.inigmasgames.hytalerpg.execution.Stage04SkillProfile resolve(com.inigmasgames.hytalerpg.execution.Stage04SkillProfile, com.inigmasgames.hytalerpg.domain.CompiledSkillPlan);
+    Code:
+         0: aload_1
+         1: invokevirtual #19                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.skillId:()Ljava/lang/String;
+         4: aload_2
+         5: invokevirtual #25                 // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.skillId:()Lcom/inigmasgames/hytalerpg/domain/SkillId;
+         8: invokevirtual #30                 // Method com/inigmasgames/hytalerpg/domain/SkillId.value:()Ljava/lang/String;
+        11: invokevirtual #35                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+        14: ifeq          33
+        17: aload_2
+        18: invokevirtual #41                 // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.degraded:()Z
+        21: ifne          33
+        24: aload_2
+        25: invokevirtual #45                 // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.schemaVersion:()I
+        28: bipush        33
+        30: if_icmpeq     43
+        33: new           #49                 // class java/lang/IllegalArgumentException
+        36: dup
+        37: ldc           #51                 // String Profile requires a current matching compiled plan
+        39: invokespecial #53                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        42: athrow
+        43: aload_2
+        44: invokevirtual #56                 // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.zones:()Lcom/inigmasgames/hytalerpg/domain/ZoneModifiers;
+        47: invokevirtual #60                 // Method com/inigmasgames/hytalerpg/domain/ZoneModifiers.mobileDomain:()Z
+        50: ifeq          70
+        53: aload_1
+        54: invokestatic  #65                 // Method com/inigmasgames/hytalerpg/execution/ProfileComponentPolicy.mobileZone:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;)Z
+        57: ifne          70
+        60: new           #49                 // class java/lang/IllegalArgumentException
+        63: dup
+        64: ldc           #71                 // String MOBILE_FINITE_ZONE_COMPONENT_REQUIRED
+        66: invokespecial #53                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        69: athrow
+        70: aload_2
+        71: invokevirtual #73                 // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.foundationModifiers:()Lcom/inigmasgames/hytalerpg/domain/FoundationModifiers;
+        74: astore_3
+        75: aload_2
+        76: invokevirtual #77                 // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.geometry:()Lcom/inigmasgames/hytalerpg/domain/GeometryModifiers;
+        79: astore        4
+        81: aload_2
+        82: invokevirtual #81                 // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.pulses:()Lcom/inigmasgames/hytalerpg/domain/PulseModifiers;
+        85: astore        5
+        87: aload_2
+        88: invokevirtual #85                 // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.dots:()Lcom/inigmasgames/hytalerpg/domain/DotModifiers;
+        91: astore        6
+        93: aload_2
+        94: invokevirtual #89                 // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.controls:()Lcom/inigmasgames/hytalerpg/domain/ControlModifiers;
+        97: astore        7
+        99: aload_2
+       100: invokevirtual #93                 // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.strikes:()Lcom/inigmasgames/hytalerpg/domain/StrikeModifiers;
+       103: astore        8
+       105: aload_2
+       106: invokevirtual #97                 // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.orbit:()Z
+       109: ifne          189
+       112: aload_3
+       113: invokevirtual #100                // Method com/inigmasgames/hytalerpg/domain/FoundationModifiers.longReach:()Z
+       116: ifne          189
+       119: aload_3
+       120: invokevirtual #105                // Method com/inigmasgames/hytalerpg/domain/FoundationModifiers.rapidInvocation:()Z
+       123: ifne          189
+       126: aload_3
+       127: invokevirtual #108                // Method com/inigmasgames/hytalerpg/domain/FoundationModifiers.concentration:()Z
+       130: ifne          189
+       133: aload_3
+       134: invokevirtual #111                // Method com/inigmasgames/hytalerpg/domain/FoundationModifiers.lingering:()Z
+       137: ifne          189
+       140: aload_3
+       141: invokevirtual #114                // Method com/inigmasgames/hytalerpg/domain/FoundationModifiers.reversal:()Z
+       144: ifne          189
+       147: aload         4
+       149: invokevirtual #117                // Method com/inigmasgames/hytalerpg/domain/GeometryModifiers.active:()Z
+       152: ifne          189
+       155: aload         5
+       157: invokevirtual #122                // Method com/inigmasgames/hytalerpg/domain/PulseModifiers.rapidPulse:()Z
+       160: ifne          189
+       163: aload         6
+       165: invokevirtual #127                // Method com/inigmasgames/hytalerpg/domain/DotModifiers.active:()Z
+       168: ifne          189
+       171: aload         7
+       173: invokevirtual #130                // Method com/inigmasgames/hytalerpg/domain/ControlModifiers.deepFreeze:()Z
+       176: ifne          189
+       179: aload         8
+       181: invokevirtual #135                // Method com/inigmasgames/hytalerpg/domain/StrikeModifiers.multistrike:()Z
+       184: ifne          189
+       187: aload_1
+       188: areturn
+       189: new           #140                // class com/inigmasgames/hytalerpg/execution/CompiledProfileResolver$Key
+       192: dup
+       193: aload_1
+       194: aload_3
+       195: aload         4
+       197: aload         5
+       199: aload         6
+       201: aload         7
+       203: aload         8
+       205: aload_2
+       206: invokevirtual #97                 // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.orbit:()Z
+       209: ifeq          220
+       212: aload_1
+       213: aload_2
+       214: invokestatic  #142                // Method com/inigmasgames/hytalerpg/execution/connection/OrbitConversionProfiles.count:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;)I
+       217: goto          221
+       220: iconst_0
+       221: aload_2
+       222: invokevirtual #148                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.concentrationOnlyOnSecondary:()Z
+       225: aload_2
+       226: invokevirtual #151                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.impactOnlyOnSecondary:()Z
+       229: aload_2
+       230: invokevirtual #154                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.positions:()Lcom/inigmasgames/hytalerpg/domain/PositionModifiers;
+       233: invokevirtual #158                // Method com/inigmasgames/hytalerpg/domain/PositionModifiers.repulsion:()Z
+       236: aload_2
+       237: invokevirtual #163                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.hitProcs:()Lcom/inigmasgames/hytalerpg/domain/HitProcModifiers;
+       240: invokevirtual #167                // Method com/inigmasgames/hytalerpg/domain/HitProcModifiers.hemorrhage:()Z
+       243: invokespecial #172                // Method com/inigmasgames/hytalerpg/execution/CompiledProfileResolver$Key."<init>":(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Lcom/inigmasgames/hytalerpg/domain/FoundationModifiers;Lcom/inigmasgames/hytalerpg/domain/GeometryModifiers;Lcom/inigmasgames/hytalerpg/domain/PulseModifiers;Lcom/inigmasgames/hytalerpg/domain/DotModifiers;Lcom/inigmasgames/hytalerpg/domain/ControlModifiers;Lcom/inigmasgames/hytalerpg/domain/StrikeModifiers;IZZZZ)V
+       246: astore        9
+       248: aload_0
+       249: getfield      #13                 // Field cache:Ljava/util/Map;
+       252: aload         9
+       254: invokeinterface #175,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       259: checkcast     #20                 // class com/inigmasgames/hytalerpg/execution/Stage04SkillProfile
+       262: astore        10
+       264: aload         10
+       266: ifnull        272
+       269: aload         10
+       271: areturn
+       272: aload_2
+       273: invokevirtual #97                 // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.orbit:()Z
+       276: ifeq          285
+       279: aload_1
+       280: aload_2
+       281: invokestatic  #181                // Method com/inigmasgames/hytalerpg/execution/connection/OrbitConversionProfiles.convert:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;)Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+       284: astore_1
+       285: getstatic     #185                // Field JSON:Lcom/google/gson/Gson;
+       288: aload_1
+       289: invokevirtual #189                // Method com/google/gson/Gson.toJsonTree:(Ljava/lang/Object;)Lcom/google/gson/JsonElement;
+       292: invokevirtual #195                // Method com/google/gson/JsonElement.getAsJsonObject:()Lcom/google/gson/JsonObject;
+       295: astore        11
+       297: aload         11
+       299: ldc           #201                // String windupSeconds
+       301: aload_3
+       302: aload_1
+       303: invokevirtual #203                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.windupSeconds:()D
+       306: invokevirtual #206                // Method com/inigmasgames/hytalerpg/domain/FoundationModifiers.windup:(D)D
+       309: invokestatic  #210                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       312: invokevirtual #216                // Method com/google/gson/JsonObject.addProperty:(Ljava/lang/String;Ljava/lang/Number;)V
+       315: aload_3
+       316: invokevirtual #222                // Method com/inigmasgames/hytalerpg/domain/FoundationModifiers.rangeFactor:()D
+       319: dstore        12
+       321: aload_3
+       322: invokevirtual #100                // Method com/inigmasgames/hytalerpg/domain/FoundationModifiers.longReach:()Z
+       325: ifeq          633
+       328: aload_1
+       329: invokevirtual #225                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.strike:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Strike;
+       332: ifnull        366
+       335: aload_1
+       336: invokevirtual #225                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.strike:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Strike;
+       339: invokevirtual #229                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Strike.geometry:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Geometry;
+       342: getstatic     #234                // Field com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Geometry.RADIUS:Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Geometry;
+       345: if_acmpeq     366
+       348: aload         11
+       350: ldc           #240                // String strike
+       352: dload         12
+       354: iconst_1
+       355: anewarray     #36                 // class java/lang/String
+       358: dup
+       359: iconst_0
+       360: ldc           #241                // String range
+       362: aastore
+       363: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       366: aload         11
+       368: ldc           #247                // String movement
+       370: dload         12
+       372: iconst_1
+       373: anewarray     #36                 // class java/lang/String
+       376: dup
+       377: iconst_0
+       378: ldc           #249                // String maxDistance
+       380: aastore
+       381: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       384: aload         11
+       386: ldc           #251                // String projectile
+       388: dload         12
+       390: iconst_1
+       391: anewarray     #36                 // class java/lang/String
+       394: dup
+       395: iconst_0
+       396: ldc           #249                // String maxDistance
+       398: aastore
+       399: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       402: aload         11
+       404: ldc           #253                // String area
+       406: dload         12
+       408: iconst_1
+       409: anewarray     #36                 // class java/lang/String
+       412: dup
+       413: iconst_0
+       414: ldc           #255                // String placementRange
+       416: aastore
+       417: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       420: aload_1
+       421: invokevirtual #257                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+       424: ifnull        459
+       427: aload_1
+       428: invokevirtual #257                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+       431: invokevirtual #260                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.geometry:()Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Kind;
+       434: getstatic     #265                // Field com/inigmasgames/hytalerpg/execution/area/AreaGeometry$Kind.SECTOR:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Kind;
+       437: if_acmpne     459
+       440: aload         11
+       442: ldc           #253                // String area
+       444: dload         12
+       446: iconst_1
+       447: anewarray     #36                 // class java/lang/String
+       450: dup
+       451: iconst_0
+       452: ldc_w         #271                // String radius
+       455: aastore
+       456: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       459: aload_1
+       460: invokevirtual #273                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+       463: ifnull        479
+       466: aload_1
+       467: invokevirtual #273                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+       470: invokevirtual #277                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile.kind:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind;
+       473: getstatic     #283                // Field com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind.ORBIT:Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind;
+       476: if_acmpeq     498
+       479: aload         11
+       481: ldc_w         #289                // String connection
+       484: dload         12
+       486: iconst_1
+       487: anewarray     #36                 // class java/lang/String
+       490: dup
+       491: iconst_0
+       492: ldc           #241                // String range
+       494: aastore
+       495: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       498: aload_1
+       499: invokevirtual #273                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+       502: ifnull        538
+       505: aload_1
+       506: invokevirtual #273                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+       509: invokevirtual #277                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile.kind:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind;
+       512: getstatic     #290                // Field com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind.WAVE:Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind;
+       515: if_acmpne     538
+       518: aload         11
+       520: ldc_w         #289                // String connection
+       523: dload         12
+       525: iconst_1
+       526: anewarray     #36                 // class java/lang/String
+       529: dup
+       530: iconst_0
+       531: ldc_w         #293                // String lifetimeSeconds
+       534: aastore
+       535: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       538: aload         11
+       540: ldc_w         #295                // String support
+       543: dload         12
+       545: iconst_1
+       546: anewarray     #36                 // class java/lang/String
+       549: dup
+       550: iconst_0
+       551: ldc           #241                // String range
+       553: aastore
+       554: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       557: aload         11
+       559: ldc_w         #297                // String summon
+       562: dload         12
+       564: iconst_1
+       565: anewarray     #36                 // class java/lang/String
+       568: dup
+       569: iconst_0
+       570: ldc           #241                // String range
+       572: aastore
+       573: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       576: aload         11
+       578: ldc_w         #299                // String summonAction
+       581: dload         12
+       583: iconst_1
+       584: anewarray     #36                 // class java/lang/String
+       587: dup
+       588: iconst_0
+       589: ldc           #241                // String range
+       591: aastore
+       592: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       595: aload         11
+       597: ldc_w         #301                // String conversion
+       600: dload         12
+       602: iconst_1
+       603: anewarray     #36                 // class java/lang/String
+       606: dup
+       607: iconst_0
+       608: ldc           #241                // String range
+       610: aastore
+       611: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       614: aload         11
+       616: ldc_w         #303                // String cage
+       619: dload         12
+       621: iconst_1
+       622: anewarray     #36                 // class java/lang/String
+       625: dup
+       626: iconst_0
+       627: ldc           #241                // String range
+       629: aastore
+       630: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       633: aload_3
+       634: invokevirtual #108                // Method com/inigmasgames/hytalerpg/domain/FoundationModifiers.concentration:()Z
+       637: ifeq          653
+       640: aload_2
+       641: invokevirtual #148                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.concentrationOnlyOnSecondary:()Z
+       644: ifne          653
+       647: aload_1
+       648: aload         11
+       650: invokestatic  #305                // Method concentrate:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Lcom/google/gson/JsonObject;)V
+       653: aload_3
+       654: invokevirtual #111                // Method com/inigmasgames/hytalerpg/domain/FoundationModifiers.lingering:()Z
+       657: ifeq          697
+       660: aload_1
+       661: invokestatic  #309                // Method com/inigmasgames/hytalerpg/execution/ProfileComponentPolicy.finiteDuration:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;)Z
+       664: ifeq          676
+       667: aload_1
+       668: aload         11
+       670: invokestatic  #312                // Method linger:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Lcom/google/gson/JsonObject;)V
+       673: goto          697
+       676: aload_2
+       677: invokevirtual #163                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.hitProcs:()Lcom/inigmasgames/hytalerpg/domain/HitProcModifiers;
+       680: invokevirtual #167                // Method com/inigmasgames/hytalerpg/domain/HitProcModifiers.hemorrhage:()Z
+       683: ifne          697
+       686: new           #49                 // class java/lang/IllegalArgumentException
+       689: dup
+       690: ldc_w         #315                // String NO_FINITE_EFFECT_DURATION_COMPONENT
+       693: invokespecial #53                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+       696: athrow
+       697: aload_3
+       698: invokevirtual #114                // Method com/inigmasgames/hytalerpg/domain/FoundationModifiers.reversal:()Z
+       701: ifeq          743
+       704: aload_1
+       705: invokevirtual #317                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.reaction:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Reaction;
+       708: ifnonnull     722
+       711: new           #49                 // class java/lang/IllegalArgumentException
+       714: dup
+       715: ldc_w         #321                // String NO_REACTION_WINDOW_COMPONENT
+       718: invokespecial #53                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+       721: athrow
+       722: aload         11
+       724: ldc_w         #323                // String reaction
+       727: ldc2_w        #324                // double 1.3d
+       730: iconst_1
+       731: anewarray     #36                 // class java/lang/String
+       734: dup
+       735: iconst_0
+       736: ldc_w         #326                // String windowSeconds
+       739: aastore
+       740: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       743: aload         4
+       745: invokevirtual #328                // Method com/inigmasgames/hytalerpg/domain/GeometryModifiers.impactForce:()Z
+       748: ifeq          771
+       751: aload_2
+       752: invokevirtual #151                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.impactOnlyOnSecondary:()Z
+       755: ifne          771
+       758: aload_1
+       759: aload         11
+       761: aload_2
+       762: invokevirtual #154                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.positions:()Lcom/inigmasgames/hytalerpg/domain/PositionModifiers;
+       765: invokevirtual #158                // Method com/inigmasgames/hytalerpg/domain/PositionModifiers.repulsion:()Z
+       768: invokestatic  #331                // Method impact:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Lcom/google/gson/JsonObject;Z)V
+       771: aload         4
+       773: invokevirtual #335                // Method com/inigmasgames/hytalerpg/domain/GeometryModifiers.widening:()Z
+       776: ifne          787
+       779: aload         4
+       781: invokevirtual #338                // Method com/inigmasgames/hytalerpg/domain/GeometryModifiers.focusedChannel:()Z
+       784: ifeq          871
+       787: aload_1
+       788: invokestatic  #341                // Method com/inigmasgames/hytalerpg/execution/ProfileComponentPolicy.resolvingWidth:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;)Z
+       791: ifne          805
+       794: new           #49                 // class java/lang/IllegalArgumentException
+       797: dup
+       798: ldc_w         #344                // String NO_RESOLVING_WIDTH_COMPONENT
+       801: invokespecial #53                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+       804: athrow
+       805: aload         11
+       807: ldc_w         #289                // String connection
+       810: invokevirtual #346                // Method com/google/gson/JsonObject.getAsJsonObject:(Ljava/lang/String;)Lcom/google/gson/JsonObject;
+       813: astore        14
+       815: aload         14
+       817: ldc_w         #349                // String width
+       820: aload         4
+       822: aload         14
+       824: ldc_w         #349                // String width
+       827: invokevirtual #351                // Method com/google/gson/JsonObject.get:(Ljava/lang/String;)Lcom/google/gson/JsonElement;
+       830: invokevirtual #354                // Method com/google/gson/JsonElement.getAsDouble:()D
+       833: invokevirtual #357                // Method com/inigmasgames/hytalerpg/domain/GeometryModifiers.width:(D)D
+       836: invokestatic  #210                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       839: invokevirtual #216                // Method com/google/gson/JsonObject.addProperty:(Ljava/lang/String;Ljava/lang/Number;)V
+       842: aload         4
+       844: invokevirtual #335                // Method com/inigmasgames/hytalerpg/domain/GeometryModifiers.widening:()Z
+       847: ifeq          871
+       850: aload         11
+       852: ldc_w         #289                // String connection
+       855: ldc2_w        #359                // double 0.85d
+       858: iconst_1
+       859: anewarray     #36                 // class java/lang/String
+       862: dup
+       863: iconst_0
+       864: ldc_w         #361                // String coefficient
+       867: aastore
+       868: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       871: aload         5
+       873: invokevirtual #122                // Method com/inigmasgames/hytalerpg/domain/PulseModifiers.rapidPulse:()Z
+       876: ifeq          885
+       879: aload_1
+       880: aload         11
+       882: invokestatic  #363                // Method rapidPulse:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Lcom/google/gson/JsonObject;)V
+       885: aload         6
+       887: invokevirtual #127                // Method com/inigmasgames/hytalerpg/domain/DotModifiers.active:()Z
+       890: ifeq          901
+       893: aload_1
+       894: aload         11
+       896: aload         6
+       898: invokestatic  #365                // Method dots:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Lcom/google/gson/JsonObject;Lcom/inigmasgames/hytalerpg/domain/DotModifiers;)V
+       901: aload         7
+       903: invokevirtual #130                // Method com/inigmasgames/hytalerpg/domain/ControlModifiers.deepFreeze:()Z
+       906: ifeq          996
+       909: aload_1
+       910: invokestatic  #368                // Method com/inigmasgames/hytalerpg/execution/ProfileComponentPolicy.chillPayload:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;)Z
+       913: ifne          927
+       916: new           #49                 // class java/lang/IllegalArgumentException
+       919: dup
+       920: ldc_w         #371                // String CHILL_APPLICATION_COMPONENT_REQUIRED
+       923: invokespecial #53                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+       926: athrow
+       927: aload         11
+       929: ldc           #251                // String projectile
+       931: ldc2_w        #373                // double 0.9d
+       934: iconst_1
+       935: anewarray     #36                 // class java/lang/String
+       938: dup
+       939: iconst_0
+       940: ldc_w         #361                // String coefficient
+       943: aastore
+       944: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       947: aload_1
+       948: invokevirtual #257                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+       951: ifnull        996
+       954: aload_1
+       955: invokevirtual #257                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+       958: invokevirtual #375                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.periodic:()Z
+       961: ifne          996
+       964: aload         11
+       966: ldc           #253                // String area
+       968: ldc2_w        #373                // double 0.9d
+       971: iconst_3
+       972: anewarray     #36                 // class java/lang/String
+       975: dup
+       976: iconst_0
+       977: ldc_w         #361                // String coefficient
+       980: aastore
+       981: dup
+       982: iconst_1
+       983: ldc_w         #378                // String innerCoefficient
+       986: aastore
+       987: dup
+       988: iconst_2
+       989: ldc_w         #380                // String finalCoefficient
+       992: aastore
+       993: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       996: aload         8
+       998: invokevirtual #135                // Method com/inigmasgames/hytalerpg/domain/StrikeModifiers.multistrike:()Z
+      1001: ifeq          1058
+      1004: aload_1
+      1005: iconst_1
+      1006: invokestatic  #382                // Method com/inigmasgames/hytalerpg/execution/ProfileComponentPolicy.discreteStrike:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Z)Z
+      1009: ifne          1023
+      1012: new           #49                 // class java/lang/IllegalArgumentException
+      1015: dup
+      1016: ldc_w         #386                // String MULTISTRIKE_SINGLE_STRIKE_REQUIRED
+      1019: invokespecial #53                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+      1022: athrow
+      1023: aload         11
+      1025: ldc           #240                // String strike
+      1027: invokevirtual #346                // Method com/google/gson/JsonObject.getAsJsonObject:(Ljava/lang/String;)Lcom/google/gson/JsonObject;
+      1030: astore        14
+      1032: aload         14
+      1034: ldc_w         #388                // String repeats
+      1037: iconst_3
+      1038: invokestatic  #390                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+      1041: invokevirtual #216                // Method com/google/gson/JsonObject.addProperty:(Ljava/lang/String;Ljava/lang/Number;)V
+      1044: aload         14
+      1046: ldc_w         #395                // String repeatIntervalSeconds
+      1049: ldc2_w        #397                // double 0.25d
+      1052: invokestatic  #210                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+      1055: invokevirtual #216                // Method com/google/gson/JsonObject.addProperty:(Ljava/lang/String;Ljava/lang/Number;)V
+      1058: aload_2
+      1059: invokevirtual #97                 // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.orbit:()Z
+      1062: ifeq          1099
+      1065: aload_1
+      1066: invokevirtual #399                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.projectile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile;
+      1069: ifnull        1099
+      1072: aload         11
+      1074: ldc_w         #289                // String connection
+      1077: invokevirtual #346                // Method com/google/gson/JsonObject.getAsJsonObject:(Ljava/lang/String;)Lcom/google/gson/JsonObject;
+      1080: ldc_w         #361                // String coefficient
+      1083: aload         11
+      1085: ldc           #251                // String projectile
+      1087: invokevirtual #346                // Method com/google/gson/JsonObject.getAsJsonObject:(Ljava/lang/String;)Lcom/google/gson/JsonObject;
+      1090: ldc_w         #361                // String coefficient
+      1093: invokevirtual #351                // Method com/google/gson/JsonObject.get:(Ljava/lang/String;)Lcom/google/gson/JsonElement;
+      1096: invokevirtual #402                // Method com/google/gson/JsonObject.add:(Ljava/lang/String;Lcom/google/gson/JsonElement;)V
+      1099: getstatic     #185                // Field JSON:Lcom/google/gson/Gson;
+      1102: aload         11
+      1104: ldc           #20                 // class com/inigmasgames/hytalerpg/execution/Stage04SkillProfile
+      1106: invokevirtual #406                // Method com/google/gson/Gson.fromJson:(Lcom/google/gson/JsonElement;Ljava/lang/Class;)Ljava/lang/Object;
+      1109: checkcast     #20                 // class com/inigmasgames/hytalerpg/execution/Stage04SkillProfile
+      1112: astore        14
+      1114: aload_0
+      1115: getfield      #13                 // Field cache:Ljava/util/Map;
+      1118: invokeinterface #410,  1          // InterfaceMethod java/util/Map.size:()I
+      1123: sipush        1024
+      1126: if_icmplt     1158
+      1129: aload_0
+      1130: getfield      #13                 // Field cache:Ljava/util/Map;
+      1133: aload_0
+      1134: getfield      #13                 // Field cache:Ljava/util/Map;
+      1137: invokeinterface #413,  1          // InterfaceMethod java/util/Map.keySet:()Ljava/util/Set;
+      1142: invokeinterface #417,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+      1147: invokeinterface #423,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      1152: invokeinterface #429,  2          // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+      1157: pop
+      1158: aload_0
+      1159: getfield      #13                 // Field cache:Ljava/util/Map;
+      1162: aload         9
+      1164: aload         14
+      1166: invokeinterface #432,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+      1171: pop
+      1172: aload         14
+      1174: areturn
+
+  private static void scale(com.google.gson.JsonObject, java.lang.String, double, java.lang.String...);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #436                // Method com/google/gson/JsonObject.has:(Ljava/lang/String;)Z
+         5: ifeq          19
+         8: aload_0
+         9: aload_1
+        10: invokevirtual #351                // Method com/google/gson/JsonObject.get:(Ljava/lang/String;)Lcom/google/gson/JsonElement;
+        13: invokevirtual #440                // Method com/google/gson/JsonElement.isJsonNull:()Z
+        16: ifeq          20
+        19: return
+        20: aload_0
+        21: aload_1
+        22: invokevirtual #346                // Method com/google/gson/JsonObject.getAsJsonObject:(Ljava/lang/String;)Lcom/google/gson/JsonObject;
+        25: astore        5
+        27: aload         4
+        29: astore        6
+        31: aload         6
+        33: arraylength
+        34: istore        7
+        36: iconst_0
+        37: istore        8
+        39: iload         8
+        41: iload         7
+        43: if_icmpge     91
+        46: aload         6
+        48: iload         8
+        50: aaload
+        51: astore        9
+        53: aload         5
+        55: aload         9
+        57: invokevirtual #436                // Method com/google/gson/JsonObject.has:(Ljava/lang/String;)Z
+        60: ifeq          85
+        63: aload         5
+        65: aload         9
+        67: aload         5
+        69: aload         9
+        71: invokevirtual #351                // Method com/google/gson/JsonObject.get:(Ljava/lang/String;)Lcom/google/gson/JsonElement;
+        74: invokevirtual #354                // Method com/google/gson/JsonElement.getAsDouble:()D
+        77: dload_2
+        78: dmul
+        79: invokestatic  #210                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+        82: invokevirtual #216                // Method com/google/gson/JsonObject.addProperty:(Ljava/lang/String;Ljava/lang/Number;)V
+        85: iinc          8, 1
+        88: goto          39
+        91: return
+
+  public static com.inigmasgames.hytalerpg.execution.Stage04SkillProfile ruthless(com.inigmasgames.hytalerpg.execution.Stage04SkillProfile, boolean);
+    Code:
+         0: iload_1
+         1: ifeq          27
+         4: aload_0
+         5: invokevirtual #225                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.strike:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Strike;
+         8: ifnull        27
+        11: aload_0
+        12: invokevirtual #225                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.strike:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Strike;
+        15: invokevirtual #443                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Strike.statusId:()Ljava/lang/String;
+        18: ldc_w         #446                // String STAGGER
+        21: invokevirtual #35                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+        24: ifne          29
+        27: aload_0
+        28: areturn
+        29: getstatic     #185                // Field JSON:Lcom/google/gson/Gson;
+        32: aload_0
+        33: invokevirtual #189                // Method com/google/gson/Gson.toJsonTree:(Ljava/lang/Object;)Lcom/google/gson/JsonElement;
+        36: invokevirtual #195                // Method com/google/gson/JsonElement.getAsJsonObject:()Lcom/google/gson/JsonObject;
+        39: astore_2
+        40: aload_2
+        41: ldc           #240                // String strike
+        43: ldc2_w        #448                // double 1.5d
+        46: iconst_1
+        47: anewarray     #36                 // class java/lang/String
+        50: dup
+        51: iconst_0
+        52: ldc_w         #450                // String statusSeconds
+        55: aastore
+        56: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+        59: getstatic     #185                // Field JSON:Lcom/google/gson/Gson;
+        62: aload_2
+        63: ldc           #20                 // class com/inigmasgames/hytalerpg/execution/Stage04SkillProfile
+        65: invokevirtual #406                // Method com/google/gson/Gson.fromJson:(Lcom/google/gson/JsonElement;Ljava/lang/Class;)Ljava/lang/Object;
+        68: checkcast     #20                 // class com/inigmasgames/hytalerpg/execution/Stage04SkillProfile
+        71: areturn
+
+  public synchronized int cachedProfiles();
+    Code:
+         0: aload_0
+         1: getfield      #13                 // Field cache:Ljava/util/Map;
+         4: invokeinterface #410,  1          // InterfaceMethod java/util/Map.size:()I
+         9: ireturn
+
+  private static void dots(com.inigmasgames.hytalerpg.execution.Stage04SkillProfile, com.google.gson.JsonObject, com.inigmasgames.hytalerpg.domain.DotModifiers);
+    Code:
+         0: aload_2
+         1: invokevirtual #452                // Method com/inigmasgames/hytalerpg/domain/DotModifiers.combustion:()Z
+         4: ifeq          102
+         7: aload_0
+         8: ldc_w         #455                // String BURN
+        11: invokestatic  #457                // Method com/inigmasgames/hytalerpg/execution/ProfileComponentPolicy.dotPayload:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Ljava/lang/String;)Z
+        14: ifne          28
+        17: new           #49                 // class java/lang/IllegalArgumentException
+        20: dup
+        21: ldc_w         #461                // String BURN_APPLICATION_COMPONENT_REQUIRED
+        24: invokespecial #53                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        27: athrow
+        28: aload_0
+        29: invokevirtual #399                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.projectile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile;
+        32: ifnull        54
+        35: aload_1
+        36: ldc           #251                // String projectile
+        38: ldc2_w        #359                // double 0.85d
+        41: iconst_1
+        42: anewarray     #36                 // class java/lang/String
+        45: dup
+        46: iconst_0
+        47: ldc_w         #361                // String coefficient
+        50: aastore
+        51: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+        54: aload_0
+        55: invokevirtual #257                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+        58: ifnull        102
+        61: aload_0
+        62: invokevirtual #257                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+        65: invokevirtual #375                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.periodic:()Z
+        68: ifne          102
+        71: aload_1
+        72: ldc           #253                // String area
+        74: ldc2_w        #359                // double 0.85d
+        77: iconst_3
+        78: anewarray     #36                 // class java/lang/String
+        81: dup
+        82: iconst_0
+        83: ldc_w         #361                // String coefficient
+        86: aastore
+        87: dup
+        88: iconst_1
+        89: ldc_w         #378                // String innerCoefficient
+        92: aastore
+        93: dup
+        94: iconst_2
+        95: ldc_w         #380                // String finalCoefficient
+        98: aastore
+        99: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       102: aload_2
+       103: invokevirtual #463                // Method com/inigmasgames/hytalerpg/domain/DotModifiers.virulence:()Z
+       106: ifne          116
+       109: aload_2
+       110: invokevirtual #466                // Method com/inigmasgames/hytalerpg/domain/DotModifiers.concentratedVenom:()Z
+       113: ifeq          137
+       116: aload_0
+       117: ldc_w         #469                // String POISON
+       120: invokestatic  #457                // Method com/inigmasgames/hytalerpg/execution/ProfileComponentPolicy.dotPayload:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Ljava/lang/String;)Z
+       123: ifne          137
+       126: new           #49                 // class java/lang/IllegalArgumentException
+       129: dup
+       130: ldc_w         #471                // String POISON_APPLICATION_COMPONENT_REQUIRED
+       133: invokespecial #53                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+       136: athrow
+       137: aload_2
+       138: invokevirtual #452                // Method com/inigmasgames/hytalerpg/domain/DotModifiers.combustion:()Z
+       141: ifeq          150
+       144: ldc_w         #455                // String BURN
+       147: goto          153
+       150: ldc_w         #469                // String POISON
+       153: astore_3
+       154: aload_2
+       155: invokevirtual #452                // Method com/inigmasgames/hytalerpg/domain/DotModifiers.combustion:()Z
+       158: ifeq          167
+       161: ldc2_w        #473                // double 1.25d
+       164: goto          181
+       167: aload_2
+       168: invokevirtual #463                // Method com/inigmasgames/hytalerpg/domain/DotModifiers.virulence:()Z
+       171: ifeq          180
+       174: ldc2_w        #324                // double 1.3d
+       177: goto          181
+       180: dconst_1
+       181: dstore        4
+       183: aload_0
+       184: invokevirtual #257                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+       187: ifnull        228
+       190: aload_0
+       191: invokevirtual #257                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+       194: invokevirtual #475                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.status:()Ljava/lang/String;
+       197: aload_3
+       198: invokevirtual #35                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       201: ifeq          228
+       204: aload_1
+       205: ldc           #253                // String area
+       207: dload         4
+       209: iconst_2
+       210: anewarray     #36                 // class java/lang/String
+       213: dup
+       214: iconst_0
+       215: ldc_w         #450                // String statusSeconds
+       218: aastore
+       219: dup
+       220: iconst_1
+       221: ldc_w         #478                // String statusInnerSeconds
+       224: aastore
+       225: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       228: aload_0
+       229: invokevirtual #399                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.projectile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile;
+       232: ifnull        313
+       235: aload_0
+       236: invokevirtual #399                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.projectile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile;
+       239: invokevirtual #480                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile.statusId:()Ljava/lang/String;
+       242: aload_3
+       243: invokevirtual #35                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       246: ifeq          313
+       249: aload_1
+       250: ldc           #251                // String projectile
+       252: dload         4
+       254: iconst_1
+       255: anewarray     #36                 // class java/lang/String
+       258: dup
+       259: iconst_0
+       260: ldc_w         #450                // String statusSeconds
+       263: aastore
+       264: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       267: aload_1
+       268: ldc           #251                // String projectile
+       270: invokevirtual #346                // Method com/google/gson/JsonObject.getAsJsonObject:(Ljava/lang/String;)Lcom/google/gson/JsonObject;
+       273: astore        6
+       275: aload         6
+       277: ldc_w         #483                // String periodicTicks
+       280: aload         6
+       282: ldc_w         #450                // String statusSeconds
+       285: invokevirtual #351                // Method com/google/gson/JsonObject.get:(Ljava/lang/String;)Lcom/google/gson/JsonElement;
+       288: invokevirtual #354                // Method com/google/gson/JsonElement.getAsDouble:()D
+       291: aload         6
+       293: ldc_w         #485                // String periodicIntervalSeconds
+       296: invokevirtual #351                // Method com/google/gson/JsonObject.get:(Ljava/lang/String;)Lcom/google/gson/JsonElement;
+       299: invokevirtual #354                // Method com/google/gson/JsonElement.getAsDouble:()D
+       302: ddiv
+       303: invokestatic  #487                // Method java/lang/Math.ceil:(D)D
+       306: d2i
+       307: invokestatic  #390                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       310: invokevirtual #216                // Method com/google/gson/JsonObject.addProperty:(Ljava/lang/String;Ljava/lang/Number;)V
+       313: return
+
+  private static void rapidPulse(com.inigmasgames.hytalerpg.execution.Stage04SkillProfile, com.google.gson.JsonObject);
+    Code:
+         0: aload_0
+         1: invokestatic  #492                // Method com/inigmasgames/hytalerpg/execution/ProfileComponentPolicy.periodicPulse:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;)Z
+         4: ifne          18
+         7: new           #49                 // class java/lang/IllegalArgumentException
+        10: dup
+        11: ldc_w         #495                // String PERIODIC_PULSE_COMPONENT_REQUIRED
+        14: invokespecial #53                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        17: athrow
+        18: aload_0
+        19: invokevirtual #257                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+        22: ifnull        343
+        25: getstatic     #185                // Field JSON:Lcom/google/gson/Gson;
+        28: aload_1
+        29: ldc           #253                // String area
+        31: invokevirtual #351                // Method com/google/gson/JsonObject.get:(Ljava/lang/String;)Lcom/google/gson/JsonElement;
+        34: ldc_w         #261                // class com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile
+        37: invokevirtual #406                // Method com/google/gson/Gson.fromJson:(Lcom/google/gson/JsonElement;Ljava/lang/Class;)Ljava/lang/Object;
+        40: checkcast     #261                // class com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile
+        43: astore_2
+        44: aload_1
+        45: ldc           #253                // String area
+        47: invokevirtual #346                // Method com/google/gson/JsonObject.getAsJsonObject:(Ljava/lang/String;)Lcom/google/gson/JsonObject;
+        50: astore_3
+        51: aload_2
+        52: invokevirtual #497                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.intervalSeconds:()D
+        55: ldc2_w        #500                // double 0.7d
+        58: dmul
+        59: dstore        4
+        61: aload_2
+        62: invokevirtual #375                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.periodic:()Z
+        65: ifeq          84
+        68: aload_2
+        69: invokevirtual #502                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.lifetimeSeconds:()D
+        72: aload_2
+        73: invokevirtual #497                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.intervalSeconds:()D
+        76: ddiv
+        77: invokestatic  #487                // Method java/lang/Math.ceil:(D)D
+        80: d2i
+        81: goto          88
+        84: aload_2
+        85: invokevirtual #504                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.impactCount:()I
+        88: istore        6
+        90: aload_2
+        91: invokevirtual #375                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.periodic:()Z
+        94: ifeq          115
+        97: aload_2
+        98: invokevirtual #502                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.lifetimeSeconds:()D
+       101: dload         4
+       103: ddiv
+       104: ldc2_w        #507                // double 1.0E-9d
+       107: dadd
+       108: invokestatic  #509                // Method java/lang/Math.floor:(D)D
+       111: d2i
+       112: goto          135
+       115: aload_2
+       116: invokevirtual #502                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.lifetimeSeconds:()D
+       119: aload_2
+       120: invokevirtual #512                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.firstImpactSeconds:()D
+       123: dsub
+       124: dload         4
+       126: ddiv
+       127: ldc2_w        #507                // double 1.0E-9d
+       130: dsub
+       131: invokestatic  #487                // Method java/lang/Math.ceil:(D)D
+       134: d2i
+       135: istore        7
+       137: dload         4
+       139: ldc2_w        #515                // double 0.05d
+       142: dcmpg
+       143: iflt          172
+       146: iload         7
+       148: iconst_1
+       149: if_icmplt     172
+       152: iload         7
+       154: aload_2
+       155: invokevirtual #375                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.periodic:()Z
+       158: ifeq          167
+       161: sipush        256
+       164: goto          169
+       167: bipush        48
+       169: if_icmple     183
+       172: new           #49                 // class java/lang/IllegalArgumentException
+       175: dup
+       176: ldc_w         #517                // String RAPID_PULSE_EVENT_BUDGET
+       179: invokespecial #53                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+       182: athrow
+       183: aload_3
+       184: ldc_w         #519                // String intervalSeconds
+       187: dload         4
+       189: invokestatic  #210                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       192: invokevirtual #216                // Method com/google/gson/JsonObject.addProperty:(Ljava/lang/String;Ljava/lang/Number;)V
+       195: aload_2
+       196: invokevirtual #375                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.periodic:()Z
+       199: ifne          214
+       202: aload_3
+       203: ldc_w         #520                // String impactCount
+       206: iload         7
+       208: invokestatic  #390                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       211: invokevirtual #216                // Method com/google/gson/JsonObject.addProperty:(Ljava/lang/String;Ljava/lang/Number;)V
+       214: aload_2
+       215: invokevirtual #521                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.perTargetHitCap:()I
+       218: iload         6
+       220: if_icmpne     235
+       223: aload_3
+       224: ldc_w         #524                // String perTargetHitCap
+       227: iload         7
+       229: invokestatic  #390                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       232: invokevirtual #216                // Method com/google/gson/JsonObject.addProperty:(Ljava/lang/String;Ljava/lang/Number;)V
+       235: aload_2
+       236: invokevirtual #375                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.periodic:()Z
+       239: ifeq          267
+       242: aload_1
+       243: ldc           #253                // String area
+       245: ldc2_w        #525                // double 1.4285714285714286d
+       248: iconst_2
+       249: anewarray     #36                 // class java/lang/String
+       252: dup
+       253: iconst_0
+       254: ldc_w         #361                // String coefficient
+       257: aastore
+       258: dup
+       259: iconst_1
+       260: ldc_w         #378                // String innerCoefficient
+       263: aastore
+       264: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       267: aload_1
+       268: ldc           #253                // String area
+       270: aload_2
+       271: invokevirtual #375                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.periodic:()Z
+       274: ifeq          283
+       277: ldc2_w        #527                // double 1.142857142857143d
+       280: goto          286
+       283: ldc2_w        #529                // double 0.8d
+       286: iconst_2
+       287: anewarray     #36                 // class java/lang/String
+       290: dup
+       291: iconst_0
+       292: ldc_w         #531                // String displacement
+       295: aastore
+       296: dup
+       297: iconst_1
+       298: ldc_w         #533                // String pullSpeed
+       301: aastore
+       302: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       305: aload_2
+       306: invokevirtual #475                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.status:()Ljava/lang/String;
+       309: ldc_w         #446                // String STAGGER
+       312: invokevirtual #35                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       315: ifeq          343
+       318: aload_1
+       319: ldc           #253                // String area
+       321: ldc2_w        #529                // double 0.8d
+       324: iconst_2
+       325: anewarray     #36                 // class java/lang/String
+       328: dup
+       329: iconst_0
+       330: ldc_w         #450                // String statusSeconds
+       333: aastore
+       334: dup
+       335: iconst_1
+       336: ldc_w         #478                // String statusInnerSeconds
+       339: aastore
+       340: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       343: aload_0
+       344: invokevirtual #273                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+       347: ifnull        400
+       350: aload_1
+       351: ldc_w         #289                // String connection
+       354: ldc2_w        #500                // double 0.7d
+       357: iconst_1
+       358: anewarray     #36                 // class java/lang/String
+       361: dup
+       362: iconst_0
+       363: ldc_w         #519                // String intervalSeconds
+       366: aastore
+       367: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       370: aload_0
+       371: invokevirtual #273                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+       374: invokevirtual #535                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile.channel:()Z
+       377: ifeq          400
+       380: aload_1
+       381: ldc_w         #289                // String connection
+       384: ldc2_w        #525                // double 1.4285714285714286d
+       387: iconst_1
+       388: anewarray     #36                 // class java/lang/String
+       391: dup
+       392: iconst_0
+       393: ldc_w         #361                // String coefficient
+       396: aastore
+       397: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       400: aload_1
+       401: ldc_w         #295                // String support
+       404: ldc2_w        #500                // double 0.7d
+       407: iconst_2
+       408: anewarray     #36                 // class java/lang/String
+       411: dup
+       412: iconst_0
+       413: ldc_w         #538                // String damageInterval
+       416: aastore
+       417: dup
+       418: iconst_1
+       419: ldc_w         #540                // String chillInterval
+       422: aastore
+       423: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       426: return
+
+  private static void impact(com.inigmasgames.hytalerpg.execution.Stage04SkillProfile, com.google.gson.JsonObject, boolean);
+    Code:
+         0: aload_0
+         1: invokestatic  #542                // Method com/inigmasgames/hytalerpg/execution/ProfileComponentPolicy.impact:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;)Z
+         4: ifne          22
+         7: iload_2
+         8: ifne          22
+        11: new           #49                 // class java/lang/IllegalArgumentException
+        14: dup
+        15: ldc_w         #544                // String NO_IMPACT_COMPONENT
+        18: invokespecial #53                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        21: athrow
+        22: aload_0
+        23: invokevirtual #225                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.strike:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Strike;
+        26: ifnull        83
+        29: aload_1
+        30: ldc           #240                // String strike
+        32: ldc2_w        #373                // double 0.9d
+        35: iconst_1
+        36: anewarray     #36                 // class java/lang/String
+        39: dup
+        40: iconst_0
+        41: ldc_w         #361                // String coefficient
+        44: aastore
+        45: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+        48: aload_0
+        49: invokevirtual #225                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.strike:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Strike;
+        52: invokevirtual #443                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Strike.statusId:()Ljava/lang/String;
+        55: ldc_w         #446                // String STAGGER
+        58: invokevirtual #35                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+        61: ifeq          83
+        64: aload_1
+        65: ldc           #240                // String strike
+        67: ldc2_w        #546                // double 1.75d
+        70: iconst_1
+        71: anewarray     #36                 // class java/lang/String
+        74: dup
+        75: iconst_0
+        76: ldc_w         #450                // String statusSeconds
+        79: aastore
+        80: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+        83: aload_0
+        84: invokevirtual #399                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.projectile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile;
+        87: ifnull        163
+        90: aload_1
+        91: ldc           #251                // String projectile
+        93: ldc2_w        #373                // double 0.9d
+        96: iconst_1
+        97: anewarray     #36                 // class java/lang/String
+       100: dup
+       101: iconst_0
+       102: ldc_w         #361                // String coefficient
+       105: aastore
+       106: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       109: aload_1
+       110: ldc           #251                // String projectile
+       112: ldc2_w        #546                // double 1.75d
+       115: iconst_1
+       116: anewarray     #36                 // class java/lang/String
+       119: dup
+       120: iconst_0
+       121: ldc_w         #548                // String knockbackDistance
+       124: aastore
+       125: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       128: aload_0
+       129: invokevirtual #399                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.projectile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile;
+       132: invokevirtual #480                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile.statusId:()Ljava/lang/String;
+       135: ldc_w         #446                // String STAGGER
+       138: invokevirtual #35                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       141: ifeq          163
+       144: aload_1
+       145: ldc           #251                // String projectile
+       147: ldc2_w        #546                // double 1.75d
+       150: iconst_1
+       151: anewarray     #36                 // class java/lang/String
+       154: dup
+       155: iconst_0
+       156: ldc_w         #450                // String statusSeconds
+       159: aastore
+       160: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       163: aload_0
+       164: invokevirtual #257                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+       167: ifnull        271
+       170: aload_0
+       171: invokevirtual #257                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+       174: invokevirtual #375                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.periodic:()Z
+       177: ifne          211
+       180: aload_1
+       181: ldc           #253                // String area
+       183: ldc2_w        #373                // double 0.9d
+       186: iconst_3
+       187: anewarray     #36                 // class java/lang/String
+       190: dup
+       191: iconst_0
+       192: ldc_w         #361                // String coefficient
+       195: aastore
+       196: dup
+       197: iconst_1
+       198: ldc_w         #378                // String innerCoefficient
+       201: aastore
+       202: dup
+       203: iconst_2
+       204: ldc_w         #380                // String finalCoefficient
+       207: aastore
+       208: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       211: aload_1
+       212: ldc           #253                // String area
+       214: ldc2_w        #546                // double 1.75d
+       217: iconst_1
+       218: anewarray     #36                 // class java/lang/String
+       221: dup
+       222: iconst_0
+       223: ldc_w         #531                // String displacement
+       226: aastore
+       227: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       230: aload_0
+       231: invokevirtual #257                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+       234: invokevirtual #475                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.status:()Ljava/lang/String;
+       237: ldc_w         #446                // String STAGGER
+       240: invokevirtual #35                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       243: ifeq          271
+       246: aload_1
+       247: ldc           #253                // String area
+       249: ldc2_w        #546                // double 1.75d
+       252: iconst_2
+       253: anewarray     #36                 // class java/lang/String
+       256: dup
+       257: iconst_0
+       258: ldc_w         #450                // String statusSeconds
+       261: aastore
+       262: dup
+       263: iconst_1
+       264: ldc_w         #478                // String statusInnerSeconds
+       267: aastore
+       268: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       271: aload_0
+       272: invokevirtual #273                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+       275: ifnull        365
+       278: aload_0
+       279: invokevirtual #273                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+       282: invokevirtual #535                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile.channel:()Z
+       285: ifne          308
+       288: aload_1
+       289: ldc_w         #289                // String connection
+       292: ldc2_w        #373                // double 0.9d
+       295: iconst_1
+       296: anewarray     #36                 // class java/lang/String
+       299: dup
+       300: iconst_0
+       301: ldc_w         #361                // String coefficient
+       304: aastore
+       305: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       308: aload_0
+       309: invokevirtual #273                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+       312: invokevirtual #550                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile.details:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Details;
+       315: invokevirtual #554                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Details.status:()Ljava/lang/String;
+       318: ldc_w         #446                // String STAGGER
+       321: invokevirtual #35                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       324: ifeq          365
+       327: aload_1
+       328: ldc_w         #289                // String connection
+       331: invokevirtual #346                // Method com/google/gson/JsonObject.getAsJsonObject:(Ljava/lang/String;)Lcom/google/gson/JsonObject;
+       334: ldc_w         #557                // String details
+       337: invokevirtual #346                // Method com/google/gson/JsonObject.getAsJsonObject:(Ljava/lang/String;)Lcom/google/gson/JsonObject;
+       340: astore_3
+       341: aload_3
+       342: ldc_w         #450                // String statusSeconds
+       345: aload_3
+       346: ldc_w         #450                // String statusSeconds
+       349: invokevirtual #351                // Method com/google/gson/JsonObject.get:(Ljava/lang/String;)Lcom/google/gson/JsonElement;
+       352: invokevirtual #354                // Method com/google/gson/JsonElement.getAsDouble:()D
+       355: ldc2_w        #546                // double 1.75d
+       358: dmul
+       359: invokestatic  #210                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       362: invokevirtual #216                // Method com/google/gson/JsonObject.addProperty:(Ljava/lang/String;Ljava/lang/Number;)V
+       365: return
+
+  private static void concentrate(com.inigmasgames.hytalerpg.execution.Stage04SkillProfile, com.google.gson.JsonObject);
+    Code:
+         0: aload_0
+         1: invokevirtual #225                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.strike:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Strike;
+         4: ifnull        114
+         7: getstatic     #558                // Field com/inigmasgames/hytalerpg/execution/CompiledProfileResolver$1.$SwitchMap$com$inigmasgames$hytalerpg$execution$Stage04SkillProfile$Geometry:[I
+        10: aload_0
+        11: invokevirtual #225                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.strike:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Strike;
+        14: invokevirtual #229                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Strike.geometry:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Geometry;
+        17: invokevirtual #564                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Geometry.ordinal:()I
+        20: iaload
+        21: tableswitch   { // 1 to 4
+
+                       1: 52
+
+                       2: 52
+
+                       3: 74
+
+                       4: 96
+                 default: 114
+            }
+        52: aload_1
+        53: ldc           #240                // String strike
+        55: ldc2_w        #500                // double 0.7d
+        58: iconst_1
+        59: anewarray     #36                 // class java/lang/String
+        62: dup
+        63: iconst_0
+        64: ldc_w         #567                // String angleDegrees
+        67: aastore
+        68: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+        71: goto          114
+        74: aload_1
+        75: ldc           #240                // String strike
+        77: ldc2_w        #500                // double 0.7d
+        80: iconst_1
+        81: anewarray     #36                 // class java/lang/String
+        84: dup
+        85: iconst_0
+        86: ldc_w         #569                // String lineHalfWidth
+        89: aastore
+        90: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+        93: goto          114
+        96: aload_1
+        97: ldc           #240                // String strike
+        99: ldc2_w        #500                // double 0.7d
+       102: iconst_1
+       103: anewarray     #36                 // class java/lang/String
+       106: dup
+       107: iconst_0
+       108: ldc           #241                // String range
+       110: aastore
+       111: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       114: aload_1
+       115: ldc           #247                // String movement
+       117: ldc2_w        #500                // double 0.7d
+       120: iconst_1
+       121: anewarray     #36                 // class java/lang/String
+       124: dup
+       125: iconst_0
+       126: ldc_w         #571                // String landingRadius
+       129: aastore
+       130: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       133: aload_0
+       134: invokevirtual #257                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+       137: ifnull        274
+       140: getstatic     #573                // Field com/inigmasgames/hytalerpg/execution/CompiledProfileResolver$1.$SwitchMap$com$inigmasgames$hytalerpg$execution$area$AreaGeometry$Kind:[I
+       143: aload_0
+       144: invokevirtual #257                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+       147: invokevirtual #260                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.geometry:()Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Kind;
+       150: invokevirtual #576                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry$Kind.ordinal:()I
+       153: iaload
+       154: tableswitch   { // 1 to 3
+
+                       1: 180
+
+                       2: 233
+
+                       3: 255
+                 default: 274
+            }
+       180: aload_1
+       181: ldc           #253                // String area
+       183: ldc2_w        #500                // double 0.7d
+       186: bipush        6
+       188: anewarray     #36                 // class java/lang/String
+       191: dup
+       192: iconst_0
+       193: ldc_w         #271                // String radius
+       196: aastore
+       197: dup
+       198: iconst_1
+       199: ldc_w         #577                // String innerRadius
+       202: aastore
+       203: dup
+       204: iconst_2
+       205: ldc_w         #579                // String impactRadius
+       208: aastore
+       209: dup
+       210: iconst_3
+       211: ldc_w         #581                // String statusInnerRadius
+       214: aastore
+       215: dup
+       216: iconst_4
+       217: ldc_w         #583                // String pullCoreRadius
+       220: aastore
+       221: dup
+       222: iconst_5
+       223: ldc_w         #585                // String visualCoreRadius
+       226: aastore
+       227: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       230: goto          274
+       233: aload_1
+       234: ldc           #253                // String area
+       236: ldc2_w        #500                // double 0.7d
+       239: iconst_1
+       240: anewarray     #36                 // class java/lang/String
+       243: dup
+       244: iconst_0
+       245: ldc_w         #567                // String angleDegrees
+       248: aastore
+       249: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       252: goto          274
+       255: aload_1
+       256: ldc           #253                // String area
+       258: ldc2_w        #500                // double 0.7d
+       261: iconst_1
+       262: anewarray     #36                 // class java/lang/String
+       265: dup
+       266: iconst_0
+       267: ldc_w         #349                // String width
+       270: aastore
+       271: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       274: aload_0
+       275: invokevirtual #273                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+       278: ifnull        385
+       281: getstatic     #587                // Field com/inigmasgames/hytalerpg/execution/CompiledProfileResolver$1.$SwitchMap$com$inigmasgames$hytalerpg$execution$connection$ConnectionProfile$Kind:[I
+       284: aload_0
+       285: invokevirtual #273                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+       288: invokevirtual #277                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile.kind:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind;
+       291: invokevirtual #590                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind.ordinal:()I
+       294: iaload
+       295: lookupswitch  { // 2
+
+                       1: 320
+
+                       2: 342
+                 default: 365
+            }
+       320: aload_1
+       321: ldc_w         #289                // String connection
+       324: ldc2_w        #500                // double 0.7d
+       327: iconst_1
+       328: anewarray     #36                 // class java/lang/String
+       331: dup
+       332: iconst_0
+       333: ldc           #241                // String range
+       335: aastore
+       336: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       339: goto          385
+       342: aload_1
+       343: ldc_w         #289                // String connection
+       346: ldc2_w        #500                // double 0.7d
+       349: iconst_1
+       350: anewarray     #36                 // class java/lang/String
+       353: dup
+       354: iconst_0
+       355: ldc_w         #271                // String radius
+       358: aastore
+       359: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       362: goto          385
+       365: aload_1
+       366: ldc_w         #289                // String connection
+       369: ldc2_w        #500                // double 0.7d
+       372: iconst_1
+       373: anewarray     #36                 // class java/lang/String
+       376: dup
+       377: iconst_0
+       378: ldc_w         #349                // String width
+       381: aastore
+       382: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       385: aload_1
+       386: ldc_w         #295                // String support
+       389: ldc2_w        #500                // double 0.7d
+       392: iconst_1
+       393: anewarray     #36                 // class java/lang/String
+       396: dup
+       397: iconst_0
+       398: ldc_w         #271                // String radius
+       401: aastore
+       402: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       405: aload_1
+       406: ldc_w         #299                // String summonAction
+       409: ldc2_w        #500                // double 0.7d
+       412: iconst_1
+       413: anewarray     #36                 // class java/lang/String
+       416: dup
+       417: iconst_0
+       418: ldc_w         #271                // String radius
+       421: aastore
+       422: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       425: aload_1
+       426: ldc_w         #303                // String cage
+       429: ldc2_w        #500                // double 0.7d
+       432: iconst_1
+       433: anewarray     #36                 // class java/lang/String
+       436: dup
+       437: iconst_0
+       438: ldc_w         #271                // String radius
+       441: aastore
+       442: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       445: return
+
+  private static void linger(com.inigmasgames.hytalerpg.execution.Stage04SkillProfile, com.google.gson.JsonObject);
+    Code:
+         0: aload_0
+         1: invokestatic  #309                // Method com/inigmasgames/hytalerpg/execution/ProfileComponentPolicy.finiteDuration:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;)Z
+         4: ifne          18
+         7: new           #49                 // class java/lang/IllegalArgumentException
+        10: dup
+        11: ldc_w         #315                // String NO_FINITE_EFFECT_DURATION_COMPONENT
+        14: invokespecial #53                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        17: athrow
+        18: aload_1
+        19: ldc_w         #297                // String summon
+        22: ldc2_w        #591                // double 1.4d
+        25: iconst_1
+        26: anewarray     #36                 // class java/lang/String
+        29: dup
+        30: iconst_0
+        31: ldc_w         #593                // String lifetime
+        34: aastore
+        35: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+        38: aload_1
+        39: ldc_w         #299                // String summonAction
+        42: ldc2_w        #591                // double 1.4d
+        45: iconst_1
+        46: anewarray     #36                 // class java/lang/String
+        49: dup
+        50: iconst_0
+        51: ldc_w         #595                // String duration
+        54: aastore
+        55: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+        58: aload_1
+        59: ldc_w         #303                // String cage
+        62: ldc2_w        #591                // double 1.4d
+        65: iconst_1
+        66: anewarray     #36                 // class java/lang/String
+        69: dup
+        70: iconst_0
+        71: ldc_w         #595                // String duration
+        74: aastore
+        75: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+        78: aload_0
+        79: invokevirtual #597                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.support:()Lcom/inigmasgames/hytalerpg/execution/support/SupportProfile;
+        82: ifnull        131
+        85: aload_0
+        86: invokevirtual #597                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.support:()Lcom/inigmasgames/hytalerpg/execution/support/SupportProfile;
+        89: invokevirtual #600                // Method com/inigmasgames/hytalerpg/execution/support/SupportProfile.kind:()Lcom/inigmasgames/hytalerpg/execution/support/SupportProfile$Kind;
+        92: getstatic     #605                // Field com/inigmasgames/hytalerpg/execution/support/SupportProfile$Kind.FEAR:Lcom/inigmasgames/hytalerpg/execution/support/SupportProfile$Kind;
+        95: if_acmpeq     131
+        98: aload_0
+        99: invokevirtual #597                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.support:()Lcom/inigmasgames/hytalerpg/execution/support/SupportProfile;
+       102: invokevirtual #600                // Method com/inigmasgames/hytalerpg/execution/support/SupportProfile.kind:()Lcom/inigmasgames/hytalerpg/execution/support/SupportProfile$Kind;
+       105: getstatic     #611                // Field com/inigmasgames/hytalerpg/execution/support/SupportProfile$Kind.TAUNT:Lcom/inigmasgames/hytalerpg/execution/support/SupportProfile$Kind;
+       108: if_acmpeq     131
+       111: aload_1
+       112: ldc_w         #295                // String support
+       115: ldc2_w        #591                // double 1.4d
+       118: iconst_1
+       119: anewarray     #36                 // class java/lang/String
+       122: dup
+       123: iconst_0
+       124: ldc_w         #614                // String durationSeconds
+       127: aastore
+       128: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       131: aload_0
+       132: invokevirtual #273                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+       135: ifnull        182
+       138: getstatic     #616                // Field com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind.ORB:Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind;
+       141: getstatic     #283                // Field com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind.ORBIT:Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind;
+       144: invokestatic  #619                // InterfaceMethod java/util/Set.of:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Set;
+       147: aload_0
+       148: invokevirtual #273                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.connection:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile;
+       151: invokevirtual #277                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionProfile.kind:()Lcom/inigmasgames/hytalerpg/execution/connection/ConnectionProfile$Kind;
+       154: invokeinterface #623,  2          // InterfaceMethod java/util/Set.contains:(Ljava/lang/Object;)Z
+       159: ifeq          182
+       162: aload_1
+       163: ldc_w         #289                // String connection
+       166: ldc2_w        #591                // double 1.4d
+       169: iconst_1
+       170: anewarray     #36                 // class java/lang/String
+       173: dup
+       174: iconst_0
+       175: ldc_w         #293                // String lifetimeSeconds
+       178: aastore
+       179: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       182: aload_0
+       183: invokevirtual #225                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.strike:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Strike;
+       186: ifnull        221
+       189: aload_0
+       190: invokevirtual #225                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.strike:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Strike;
+       193: invokevirtual #443                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Strike.statusId:()Ljava/lang/String;
+       196: invokestatic  #626                // Method com/inigmasgames/hytalerpg/execution/ProfileComponentPolicy.periodicStatus:(Ljava/lang/String;)Z
+       199: ifeq          221
+       202: aload_1
+       203: ldc           #240                // String strike
+       205: ldc2_w        #591                // double 1.4d
+       208: iconst_1
+       209: anewarray     #36                 // class java/lang/String
+       212: dup
+       213: iconst_0
+       214: ldc_w         #450                // String statusSeconds
+       217: aastore
+       218: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       221: aload_0
+       222: invokevirtual #399                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.projectile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile;
+       225: ifnull        295
+       228: aload_0
+       229: invokevirtual #399                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.projectile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile;
+       232: invokevirtual #629                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile.hasPeriodicStatus:()Z
+       235: ifeq          295
+       238: aload_1
+       239: ldc           #251                // String projectile
+       241: ldc2_w        #591                // double 1.4d
+       244: iconst_1
+       245: anewarray     #36                 // class java/lang/String
+       248: dup
+       249: iconst_0
+       250: ldc_w         #450                // String statusSeconds
+       253: aastore
+       254: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       257: aload_1
+       258: ldc           #251                // String projectile
+       260: invokevirtual #346                // Method com/google/gson/JsonObject.getAsJsonObject:(Ljava/lang/String;)Lcom/google/gson/JsonObject;
+       263: ldc_w         #483                // String periodicTicks
+       266: aload_0
+       267: invokevirtual #399                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.projectile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile;
+       270: invokevirtual #632                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile.statusSeconds:()D
+       273: ldc2_w        #591                // double 1.4d
+       276: dmul
+       277: aload_0
+       278: invokevirtual #399                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.projectile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile;
+       281: invokevirtual #634                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile.periodicIntervalSeconds:()D
+       284: ddiv
+       285: invokestatic  #487                // Method java/lang/Math.ceil:(D)D
+       288: d2i
+       289: invokestatic  #390                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       292: invokevirtual #216                // Method com/google/gson/JsonObject.addProperty:(Ljava/lang/String;Ljava/lang/Number;)V
+       295: aload_0
+       296: invokevirtual #257                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+       299: ifnull        552
+       302: aload_0
+       303: invokevirtual #257                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+       306: astore_2
+       307: aload_1
+       308: ldc           #253                // String area
+       310: invokevirtual #346                // Method com/google/gson/JsonObject.getAsJsonObject:(Ljava/lang/String;)Lcom/google/gson/JsonObject;
+       313: astore_3
+       314: aload_2
+       315: invokevirtual #475                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.status:()Ljava/lang/String;
+       318: invokestatic  #626                // Method com/inigmasgames/hytalerpg/execution/ProfileComponentPolicy.periodicStatus:(Ljava/lang/String;)Z
+       321: ifeq          349
+       324: aload_1
+       325: ldc           #253                // String area
+       327: ldc2_w        #591                // double 1.4d
+       330: iconst_2
+       331: anewarray     #36                 // class java/lang/String
+       334: dup
+       335: iconst_0
+       336: ldc_w         #450                // String statusSeconds
+       339: aastore
+       340: dup
+       341: iconst_1
+       342: ldc_w         #478                // String statusInnerSeconds
+       345: aastore
+       346: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       349: aload_2
+       350: invokevirtual #502                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.lifetimeSeconds:()D
+       353: dconst_0
+       354: dcmpl
+       355: ifle          552
+       358: aload_1
+       359: ldc           #253                // String area
+       361: ldc2_w        #591                // double 1.4d
+       364: iconst_1
+       365: anewarray     #36                 // class java/lang/String
+       368: dup
+       369: iconst_0
+       370: ldc_w         #293                // String lifetimeSeconds
+       373: aastore
+       374: invokestatic  #243                // Method scale:(Lcom/google/gson/JsonObject;Ljava/lang/String;D[Ljava/lang/String;)V
+       377: aload_2
+       378: invokevirtual #375                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.periodic:()Z
+       381: ifeq          400
+       384: aload_2
+       385: invokevirtual #502                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.lifetimeSeconds:()D
+       388: aload_2
+       389: invokevirtual #497                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.intervalSeconds:()D
+       392: ddiv
+       393: invokestatic  #487                // Method java/lang/Math.ceil:(D)D
+       396: d2i
+       397: goto          404
+       400: aload_2
+       401: invokevirtual #504                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.impactCount:()I
+       404: istore        4
+       406: aload_2
+       407: invokevirtual #375                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.periodic:()Z
+       410: ifeq          433
+       413: aload_2
+       414: invokevirtual #502                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.lifetimeSeconds:()D
+       417: ldc2_w        #591                // double 1.4d
+       420: dmul
+       421: aload_2
+       422: invokevirtual #497                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.intervalSeconds:()D
+       425: ddiv
+       426: invokestatic  #487                // Method java/lang/Math.ceil:(D)D
+       429: d2i
+       430: goto          437
+       433: aload_2
+       434: invokevirtual #504                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.impactCount:()I
+       437: istore        5
+       439: aload_2
+       440: invokevirtual #504                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.impactCount:()I
+       443: iconst_1
+       444: if_icmple     505
+       447: aload_2
+       448: invokevirtual #502                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.lifetimeSeconds:()D
+       451: ldc2_w        #591                // double 1.4d
+       454: dmul
+       455: aload_2
+       456: invokevirtual #512                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.firstImpactSeconds:()D
+       459: dsub
+       460: aload_2
+       461: invokevirtual #497                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.intervalSeconds:()D
+       464: ddiv
+       465: ldc2_w        #507                // double 1.0E-9d
+       468: dsub
+       469: invokestatic  #487                // Method java/lang/Math.ceil:(D)D
+       472: d2i
+       473: istore        5
+       475: iload         5
+       477: bipush        48
+       479: if_icmple     493
+       482: new           #49                 // class java/lang/IllegalArgumentException
+       485: dup
+       486: ldc_w         #636                // String LINGERING_IMPACT_BUDGET
+       489: invokespecial #53                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+       492: athrow
+       493: aload_3
+       494: ldc_w         #520                // String impactCount
+       497: iload         5
+       499: invokestatic  #390                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       502: invokevirtual #216                // Method com/google/gson/JsonObject.addProperty:(Ljava/lang/String;Ljava/lang/Number;)V
+       505: iload         5
+       507: sipush        256
+       510: if_icmple     524
+       513: new           #49                 // class java/lang/IllegalArgumentException
+       516: dup
+       517: ldc_w         #638                // String LINGERING_TICK_BUDGET
+       520: invokespecial #53                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+       523: athrow
+       524: aload_2
+       525: invokevirtual #640                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.trap:()Z
+       528: ifne          552
+       531: aload_2
+       532: invokevirtual #521                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.perTargetHitCap:()I
+       535: iload         4
+       537: if_icmpne     552
+       540: aload_3
+       541: ldc_w         #524                // String perTargetHitCap
+       544: iload         5
+       546: invokestatic  #390                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       549: invokevirtual #216                // Method com/google/gson/JsonObject.addProperty:(Ljava/lang/String;Ljava/lang/Number;)V
+       552: return
+
+  static {};
+    Code:
+         0: new           #190                // class com/google/gson/Gson
+         3: dup
+         4: invokespecial #643                // Method com/google/gson/Gson."<init>":()V
+         7: putstatic     #185                // Field JSON:Lcom/google/gson/Gson;
+        10: return
+}

@@ -1,0 +1,41 @@
+{
+  "capturedAtUtc": "2026-09-08T02:00:52.5362554Z",
+  "revision": "R028",
+  "version": "0.0.21",
+  "stage": "09",
+  "cohort": "c",
+  "playerSchema": 4,
+  "branch": "RPG",
+  "sourceHead": "ff261e561ba46a476b765446bd46e7044c3d7788",
+  "worktreeDirty": true,
+  "stageStatus": "IMPLEMENTATION_IN_PROGRESS",
+  "completeStageGate": false,
+  "gateScope": "LOCAL_ENGINEERING_ONLY",
+  "cohortSkills": [
+    "pack_howl",
+    "reflective_hide",
+    "flame_weapon",
+    "spirit_shield"
+  ],
+  "capabilityGates": {
+    "flame_weapon": "NATIVE_ROOT_WEAPON_CONTACT_ID_UNAVAILABLE; no native hit callback is wired; rejects before cost/cooldown"
+  },
+  "tests": 428,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "connectedVerification": "UNVERIFIED",
+  "nativeCastingFixed": false,
+  "nativeSupportBehaviorVerified": false,
+  "liveDeploymentPerformed": false,
+  "protectedPathsChanged": [],
+  "zeroNativeCostTriggerAssets": 47,
+  "reservationAuthority": "Existing ReservationService; 03.3 transactional debit; actual native static spendable capacity",
+  "regenerationAuthority": "Original native RegeneratingValue clock and conditions; positive Mana entry decorator",
+  "allyPolicy": "SELF_OR_NATIVE_FRIENDLY_OR_REVERED; affirmative player-party provider pending Stage 12",
+  "jarSha256": "68FEA006666F288E01D2E38E6772DA3CF11F165EA549E087BAE2868A727940F7",
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "assetsSha256": "46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39",
+  "rollbackSha256": "16F580BE625AD71CE254807EDF4966B8BDAC52096DBCB6F949ED88BF80FADB5F",
+  "rollbackStateRequirement": "Before eventual live upgrade back up the full schema-3 player directory; .20 cannot read schema 4. No live state was migrated."
+}

@@ -1,0 +1,48 @@
+{
+  "capturedAtUtc": "2026-09-08T23:49:47.4378782Z",
+  "stage": 12,
+  "cohort": "g",
+  "revision": "R031",
+  "version": "0.0.24",
+  "playerSchema": 8,
+  "compiledPlanSchema": 35,
+  "sourceHead": "8fe4ff8c3d01823d9cb18e7a1eb2093b3066cf77",
+  "branch": "RPG",
+  "status": "IMPLEMENTATION_IN_PROGRESS",
+  "cohortStatus": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+  "localGate": "PASS",
+  "connectedGate": "UNVERIFIED",
+  "cohortSkills": [],
+  "cohortPassives": [],
+  "tests": 530,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "regressionScope": "TARGETED_INTERMEDIATE_NOT_STAGE_CLOSURE",
+  "jarSha256": "3DBB0CFC764CC68C1D29ABA20915C48286D6E8B640738466C6263FA333AAEF78",
+  "rollbackSha256": "2964B5D9FA94A903D7BC7B77F9543B2FA5B9932FF8EA6023B560B1F4289289A5",
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "assetsSha256": "46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39",
+  "normalThreeModSmoke": true,
+  "zeroNativeCostTriggers": 60,
+  "nativeCastingFixed": false,
+  "liveDeploymentPerformed": false,
+  "liveArtifacts": [
+    {
+      "name": "CanvasUI-0.1.0.jar",
+      "sha256": "218DFFD40ABBCD57629EC57FC20436169C4AFCCC18B9B5A9F94D67835CBA07B6"
+    },
+    {
+      "name": "HYTALEDEVLIB-0.5.0.jar",
+      "sha256": "DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230"
+    },
+    {
+      "name": "HytaleRPG-0.0.16.jar",
+      "sha256": "D3CEEA9CEEA5995F515451317452AB9A9CBB62F3E6CF56953B5F707A1BF7FA42"
+    }
+  ],
+  "protectedPathsChanged": [],
+  "canonicalSkillCount": 87,
+  "canonicalPassiveCount": 66,
+  "rollbackStateRequirement": "Player schema8 adds earned-reward checkpoint. Full rollback requires coordinated players + earned-rewards directory backup, never one side. To run cohortA restore pre-migration .schema-v7.bak with its matching pre-award ledger checkpoint; do not downgrade schema8. Live R023 remains untouched."
+}

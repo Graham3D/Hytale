@@ -1,0 +1,1239 @@
+Compiled from "StandardPhysicsTickSystem.java"
+public class com.hypixel.hytale.server.core.modules.projectile.system.StandardPhysicsTickSystem extends com.hypixel.hytale.component.system.tick.EntityTickingSystem<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> {
+  private static final org.joml.Vector3f PIERCE_DEBUG_COLOR;
+
+  private static final java.time.Duration PIERCE_END_DESPAWN_GRACE;
+
+  private final com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> query;
+
+  private final java.util.Set<com.hypixel.hytale.component.dependency.Dependency<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>> dependencies;
+
+  static final boolean $assertionsDisabled;
+
+  public com.hypixel.hytale.server.core.modules.projectile.system.StandardPhysicsTickSystem();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/component/system/tick/EntityTickingSystem."<init>":()V
+         4: aload_0
+         5: iconst_5
+         6: anewarray     #7                  // class com/hypixel/hytale/component/query/Query
+         9: dup
+        10: iconst_0
+        11: invokestatic  #9                  // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        14: aastore
+        15: dup
+        16: iconst_1
+        17: invokestatic  #15                 // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        20: aastore
+        21: dup
+        22: iconst_2
+        23: invokestatic  #18                 // Method com/hypixel/hytale/server/core/modules/entity/component/HeadRotation.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        26: aastore
+        27: dup
+        28: iconst_3
+        29: invokestatic  #21                 // Method com/hypixel/hytale/server/core/modules/physics/component/Velocity.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        32: aastore
+        33: dup
+        34: iconst_4
+        35: invokestatic  #24                 // Method com/hypixel/hytale/server/core/modules/entity/component/BoundingBox.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        38: aastore
+        39: invokestatic  #27                 // InterfaceMethod com/hypixel/hytale/component/query/Query.and:([Lcom/hypixel/hytale/component/query/Query;)Lcom/hypixel/hytale/component/query/AndQuery;
+        42: putfield      #31                 // Field query:Lcom/hypixel/hytale/component/query/Query;
+        45: aload_0
+        46: new           #37                 // class com/hypixel/hytale/component/dependency/SystemDependency
+        49: dup
+        50: getstatic     #39                 // Field com/hypixel/hytale/component/dependency/Order.AFTER:Lcom/hypixel/hytale/component/dependency/Order;
+        53: ldc           #45                 // class com/hypixel/hytale/server/core/modules/collision/TangiableEntitySpatialSystem
+        55: getstatic     #47                 // Field com/hypixel/hytale/component/dependency/OrderPriority.CLOSEST:Lcom/hypixel/hytale/component/dependency/OrderPriority;
+        58: invokespecial #53                 // Method com/hypixel/hytale/component/dependency/SystemDependency."<init>":(Lcom/hypixel/hytale/component/dependency/Order;Ljava/lang/Class;Lcom/hypixel/hytale/component/dependency/OrderPriority;)V
+        61: new           #37                 // class com/hypixel/hytale/component/dependency/SystemDependency
+        64: dup
+        65: getstatic     #56                 // Field com/hypixel/hytale/component/dependency/Order.BEFORE:Lcom/hypixel/hytale/component/dependency/Order;
+        68: ldc           #59                 // class com/hypixel/hytale/server/core/modules/entity/system/TransformSystems$EntityTrackerUpdate
+        70: invokespecial #61                 // Method com/hypixel/hytale/component/dependency/SystemDependency."<init>":(Lcom/hypixel/hytale/component/dependency/Order;Ljava/lang/Class;)V
+        73: invokestatic  #64                 // InterfaceMethod java/util/Set.of:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Set;
+        76: putfield      #70                 // Field dependencies:Ljava/util/Set;
+        79: return
+
+  public java.util.Set<com.hypixel.hytale.component.dependency.Dependency<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>> getDependencies();
+    Code:
+         0: aload_0
+         1: getfield      #70                 // Field dependencies:Ljava/util/Set;
+         4: areturn
+
+  public com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getQuery();
+    Code:
+         0: aload_0
+         1: getfield      #31                 // Field query:Lcom/hypixel/hytale/component/query/Query;
+         4: areturn
+
+  public void tick(float, int, com.hypixel.hytale.component.ArchetypeChunk<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload         4
+         2: invokestatic  #74                 // Method com/hypixel/hytale/server/core/modules/time/TimeResource.getResourceType:()Lcom/hypixel/hytale/component/ResourceType;
+         5: invokevirtual #80                 // Method com/hypixel/hytale/component/Store.getResource:(Lcom/hypixel/hytale/component/ResourceType;)Lcom/hypixel/hytale/component/Resource;
+         8: checkcast     #75                 // class com/hypixel/hytale/server/core/modules/time/TimeResource
+        11: astore        6
+        13: aload         6
+        15: invokevirtual #86                 // Method com/hypixel/hytale/server/core/modules/time/TimeResource.getTimeDilationModifier:()F
+        18: fstore        7
+        20: aload         4
+        22: invokevirtual #90                 // Method com/hypixel/hytale/component/Store.getExternalData:()Ljava/lang/Object;
+        25: checkcast     #94                 // class com/hypixel/hytale/server/core/universe/world/storage/EntityStore
+        28: invokevirtual #96                 // Method com/hypixel/hytale/server/core/universe/world/storage/EntityStore.getWorld:()Lcom/hypixel/hytale/server/core/universe/world/World;
+        31: astore        8
+        33: fconst_1
+        34: aload         8
+        36: invokevirtual #100                // Method com/hypixel/hytale/server/core/universe/world/World.getTps:()I
+        39: i2f
+        40: fdiv
+        41: fstore_1
+        42: fload_1
+        43: fload         7
+        45: fmul
+        46: fstore_1
+        47: aload_3
+        48: iload_2
+        49: invokestatic  #9                  // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        52: invokevirtual #106                // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        55: checkcast     #10                 // class com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider
+        58: astore        9
+        60: getstatic     #112                // Field $assertionsDisabled:Z
+        63: ifne          79
+        66: aload         9
+        68: ifnonnull     79
+        71: new           #116                // class java/lang/AssertionError
+        74: dup
+        75: invokespecial #118                // Method java/lang/AssertionError."<init>":()V
+        78: athrow
+        79: aload_3
+        80: iload_2
+        81: invokestatic  #21                 // Method com/hypixel/hytale/server/core/modules/physics/component/Velocity.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        84: invokevirtual #106                // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        87: checkcast     #22                 // class com/hypixel/hytale/server/core/modules/physics/component/Velocity
+        90: astore        10
+        92: getstatic     #112                // Field $assertionsDisabled:Z
+        95: ifne          111
+        98: aload         10
+       100: ifnonnull     111
+       103: new           #116                // class java/lang/AssertionError
+       106: dup
+       107: invokespecial #118                // Method java/lang/AssertionError."<init>":()V
+       110: athrow
+       111: aload_3
+       112: iload_2
+       113: invokestatic  #15                 // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       116: invokevirtual #106                // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       119: checkcast     #16                 // class com/hypixel/hytale/server/core/modules/entity/component/TransformComponent
+       122: astore        11
+       124: getstatic     #112                // Field $assertionsDisabled:Z
+       127: ifne          143
+       130: aload         11
+       132: ifnonnull     143
+       135: new           #116                // class java/lang/AssertionError
+       138: dup
+       139: invokespecial #118                // Method java/lang/AssertionError."<init>":()V
+       142: athrow
+       143: aload_3
+       144: iload_2
+       145: invokestatic  #24                 // Method com/hypixel/hytale/server/core/modules/entity/component/BoundingBox.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       148: invokevirtual #106                // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       151: checkcast     #25                 // class com/hypixel/hytale/server/core/modules/entity/component/BoundingBox
+       154: astore        12
+       156: getstatic     #112                // Field $assertionsDisabled:Z
+       159: ifne          175
+       162: aload         12
+       164: ifnonnull     175
+       167: new           #116                // class java/lang/AssertionError
+       170: dup
+       171: invokespecial #118                // Method java/lang/AssertionError."<init>":()V
+       174: athrow
+       175: aload         9
+       177: invokevirtual #119                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getPhysicsConfig:()Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsConfig;
+       180: astore        13
+       182: aload_3
+       183: iload_2
+       184: invokevirtual #123                // Method com/hypixel/hytale/component/ArchetypeChunk.getReferenceTo:(I)Lcom/hypixel/hytale/component/Ref;
+       187: astore        14
+       189: aload         9
+       191: invokevirtual #127                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getState:()Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;
+       194: getstatic     #131                // Field com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE.INACTIVE:Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;
+       197: if_acmpne     206
+       200: aload         10
+       202: invokevirtual #137                // Method com/hypixel/hytale/server/core/modules/physics/component/Velocity.setZero:()V
+       205: return
+       206: aload         9
+       208: invokevirtual #140                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getForceProviderStandardState:()Lcom/hypixel/hytale/server/core/modules/physics/util/ForceProviderStandardState;
+       211: astore        15
+       213: aload         9
+       215: invokevirtual #144                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getRestingSupport:()Lcom/hypixel/hytale/server/core/modules/physics/RestingSupport;
+       218: astore        16
+       220: aload         9
+       222: invokevirtual #127                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getState:()Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;
+       225: getstatic     #148                // Field com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE.RESTING:Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;
+       228: if_acmpne     276
+       231: aload         8
+       233: invokevirtual #151                // Method com/hypixel/hytale/server/core/universe/world/World.getChunkStore:()Lcom/hypixel/hytale/server/core/universe/world/storage/ChunkStore;
+       236: astore        17
+       238: aload         15
+       240: getfield      #155                // Field com/hypixel/hytale/server/core/modules/physics/util/ForceProviderStandardState.externalForce:Lorg/joml/Vector3d;
+       243: invokevirtual #161                // Method org/joml/Vector3d.lengthSquared:()D
+       246: dconst_0
+       247: dcmpl
+       248: ifne          262
+       251: aload         16
+       253: aload         17
+       255: invokevirtual #167                // Method com/hypixel/hytale/server/core/modules/physics/RestingSupport.hasChanged:(Lcom/hypixel/hytale/server/core/universe/world/storage/ChunkStore;)Z
+       258: ifne          262
+       261: return
+       262: aload         9
+       264: getstatic     #173                // Field com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE.ACTIVE:Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;
+       267: invokevirtual #176                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setState:(Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;)V
+       270: aload         9
+       272: iconst_1
+       273: invokevirtual #180                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setFallingAfterBreak:(Z)V
+       276: aload         9
+       278: invokevirtual #184                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getPosition:()Lorg/joml/Vector3d;
+       281: astore        17
+       283: aload         9
+       285: invokevirtual #188                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getVelocity:()Lorg/joml/Vector3d;
+       288: astore        18
+       290: aload         9
+       292: invokevirtual #191                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getMovement:()Lorg/joml/Vector3d;
+       295: astore        19
+       297: aload         12
+       299: invokevirtual #194                // Method com/hypixel/hytale/server/core/modules/entity/component/BoundingBox.getBoundingBox:()Lcom/hypixel/hytale/math/shape/Box;
+       302: astore        20
+       304: aload         9
+       306: invokevirtual #198                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getStateBefore:()Lcom/hypixel/hytale/server/core/modules/physics/util/PhysicsBodyState;
+       309: astore        21
+       311: aload         9
+       313: invokevirtual #202                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getStateAfter:()Lcom/hypixel/hytale/server/core/modules/physics/util/PhysicsBodyState;
+       316: astore        22
+       318: aload         9
+       320: invokevirtual #205                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getForceProviderEntity:()Lcom/hypixel/hytale/server/core/modules/physics/util/ForceProviderEntity;
+       323: astore        23
+       325: aload         9
+       327: invokevirtual #209                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getStateUpdater:()Lcom/hypixel/hytale/server/core/modules/physics/util/PhysicsBodyStateUpdater;
+       330: astore        24
+       332: aload         9
+       334: invokevirtual #213                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getForceProviders:()[Lcom/hypixel/hytale/server/core/modules/physics/util/ForceProvider;
+       337: astore        25
+       339: aload         9
+       341: invokevirtual #217                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getMoveOutOfSolidVelocity:()Lorg/joml/Vector3d;
+       344: astore        26
+       346: aload         13
+       348: invokevirtual #220                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsConfig.getGravity:()D
+       351: dstore        27
+       353: aload         13
+       355: invokevirtual #225                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsConfig.getBounceCount:()I
+       358: istore        29
+       360: aload         13
+       362: invokevirtual #228                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsConfig.isAllowRolling:()Z
+       365: istore        30
+       367: aload         9
+       369: aload         8
+       371: invokevirtual #232                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setWorld:(Lcom/hypixel/hytale/server/core/universe/world/World;)V
+       374: aload         17
+       376: aload         11
+       378: invokevirtual #236                // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getPosition:()Lorg/joml/Vector3d;
+       381: invokevirtual #237                // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+       384: pop
+       385: aload         10
+       387: aload         18
+       389: invokevirtual #241                // Method com/hypixel/hytale/server/core/modules/physics/component/Velocity.assignVelocityTo:(Lorg/joml/Vector3d;)Lorg/joml/Vector3d;
+       392: pop
+       393: aload         23
+       395: aload         20
+       397: invokevirtual #245                // Method com/hypixel/hytale/math/shape/Box.getVolume:()D
+       400: invokevirtual #250                // Method com/hypixel/hytale/server/core/modules/physics/util/ForceProviderEntity.getMass:(D)D
+       403: dstore        31
+       405: aload         15
+       407: fload_1
+       408: f2d
+       409: dload         31
+       411: invokevirtual #256                // Method com/hypixel/hytale/server/core/modules/physics/util/ForceProviderStandardState.convertToForces:(DD)V
+       414: aload         15
+       416: aload         18
+       418: invokevirtual #260                // Method com/hypixel/hytale/server/core/modules/physics/util/ForceProviderStandardState.updateVelocity:(Lorg/joml/Vector3d;)V
+       421: aload         18
+       423: invokevirtual #161                // Method org/joml/Vector3d.lengthSquared:()D
+       426: fload_1
+       427: f2d
+       428: dmul
+       429: fload_1
+       430: f2d
+       431: dmul
+       432: ldc2_w        #266                // double 1.0000000000000002E-10d
+       435: dcmpl
+       436: ifge          452
+       439: aload         15
+       441: getfield      #155                // Field com/hypixel/hytale/server/core/modules/physics/util/ForceProviderStandardState.externalForce:Lorg/joml/Vector3d;
+       444: invokevirtual #161                // Method org/joml/Vector3d.lengthSquared:()D
+       447: dconst_0
+       448: dcmpl
+       449: ifle          463
+       452: aload         9
+       454: getstatic     #173                // Field com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE.ACTIVE:Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;
+       457: invokevirtual #176                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setState:(Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;)V
+       460: goto          469
+       463: aload         18
+       465: invokevirtual #268                // Method org/joml/Vector3d.zero:()Lorg/joml/Vector3d;
+       468: pop
+       469: aload         8
+       471: invokevirtual #151                // Method com/hypixel/hytale/server/core/universe/world/World.getChunkStore:()Lcom/hypixel/hytale/server/core/universe/world/storage/ChunkStore;
+       474: astore        33
+       476: aload         9
+       478: invokevirtual #127                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getState:()Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;
+       481: getstatic     #148                // Field com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE.RESTING:Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;
+       484: if_acmpne     511
+       487: aload         16
+       489: aload         33
+       491: invokevirtual #167                // Method com/hypixel/hytale/server/core/modules/physics/RestingSupport.hasChanged:(Lcom/hypixel/hytale/server/core/universe/world/storage/ChunkStore;)Z
+       494: ifeq          511
+       497: aload         9
+       499: getstatic     #173                // Field com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE.ACTIVE:Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;
+       502: invokevirtual #176                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setState:(Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;)V
+       505: aload         9
+       507: iconst_1
+       508: invokevirtual #180                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setFallingAfterBreak:(Z)V
+       511: aload         21
+       513: getfield      #271                // Field com/hypixel/hytale/server/core/modules/physics/util/PhysicsBodyState.position:Lorg/joml/Vector3d;
+       516: aload         17
+       518: invokevirtual #237                // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+       521: pop
+       522: aload         21
+       524: getfield      #276                // Field com/hypixel/hytale/server/core/modules/physics/util/PhysicsBodyState.velocity:Lorg/joml/Vector3d;
+       527: aload         18
+       529: invokevirtual #237                // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+       532: pop
+       533: aload         23
+       535: aload         15
+       537: invokevirtual #279                // Method com/hypixel/hytale/server/core/modules/physics/util/ForceProviderEntity.setForceProviderStandardState:(Lcom/hypixel/hytale/server/core/modules/physics/util/ForceProviderStandardState;)V
+       540: aload         24
+       542: aload         21
+       544: aload         22
+       546: dload         31
+       548: fload_1
+       549: f2d
+       550: aload         9
+       552: invokevirtual #283                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.isOnGround:()Z
+       555: aload         25
+       557: invokevirtual #286                // Method com/hypixel/hytale/server/core/modules/physics/util/PhysicsBodyStateUpdater.update:(Lcom/hypixel/hytale/server/core/modules/physics/util/PhysicsBodyState;Lcom/hypixel/hytale/server/core/modules/physics/util/PhysicsBodyState;DDZ[Lcom/hypixel/hytale/server/core/modules/physics/util/ForceProvider;)V
+       560: aload         18
+       562: aload         22
+       564: getfield      #276                // Field com/hypixel/hytale/server/core/modules/physics/util/PhysicsBodyState.velocity:Lorg/joml/Vector3d;
+       567: invokevirtual #237                // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+       570: pop
+       571: aload         19
+       573: aload         18
+       575: invokevirtual #237                // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+       578: fload_1
+       579: f2d
+       580: invokevirtual #292                // Method org/joml/Vector3d.mul:(D)Lorg/joml/Vector3d;
+       583: pop
+       584: aload         15
+       586: invokevirtual #296                // Method com/hypixel/hytale/server/core/modules/physics/util/ForceProviderStandardState.clear:()V
+       589: aload         18
+       591: invokevirtual #161                // Method org/joml/Vector3d.lengthSquared:()D
+       594: fload_1
+       595: f2d
+       596: dmul
+       597: fload_1
+       598: f2d
+       599: dmul
+       600: ldc2_w        #266                // double 1.0000000000000002E-10d
+       603: dcmpl
+       604: iflt          618
+       607: aload         9
+       609: getstatic     #173                // Field com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE.ACTIVE:Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;
+       612: invokevirtual #176                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setState:(Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;)V
+       615: goto          624
+       618: aload         18
+       620: invokevirtual #268                // Method org/joml/Vector3d.zero:()Lorg/joml/Vector3d;
+       623: pop
+       624: aload         9
+       626: invokevirtual #299                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getEntityCollisionProvider:()Lcom/hypixel/hytale/server/core/modules/collision/EntityRefCollisionProvider;
+       629: astore        34
+       631: aload         9
+       633: invokevirtual #303                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getBlockCollisionProvider:()Lcom/hypixel/hytale/server/core/modules/collision/BlockCollisionProvider;
+       636: astore        35
+       638: aload         9
+       640: invokevirtual #307                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getTriggerTracker:()Lcom/hypixel/hytale/server/core/modules/collision/BlockTracker;
+       643: astore        36
+       645: aload         9
+       647: invokevirtual #311                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getContactPosition:()Lorg/joml/Vector3d;
+       650: astore        37
+       652: aload         9
+       654: invokevirtual #314                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getContactNormal:()Lorg/joml/Vector3d;
+       657: astore        38
+       659: aload         9
+       661: invokevirtual #317                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getNextMovement:()Lorg/joml/Vector3d;
+       664: astore        39
+       666: dconst_1
+       667: dstore        40
+       669: aload         5
+       671: aload         14
+       673: invokestatic  #320                // Method com/hypixel/hytale/server/core/modules/projectile/component/PierceProjectile.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       676: invokevirtual #323                // Method com/hypixel/hytale/component/CommandBuffer.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       679: checkcast     #321                // class com/hypixel/hytale/server/core/modules/projectile/component/PierceProjectile
+       682: astore        42
+       684: aload         5
+       686: aload         14
+       688: invokestatic  #328                // Method com/hypixel/hytale/server/core/modules/projectile/component/SpectralProjectile.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       691: invokevirtual #323                // Method com/hypixel/hytale/component/CommandBuffer.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       694: checkcast     #329                // class com/hypixel/hytale/server/core/modules/projectile/component/SpectralProjectile
+       697: astore        43
+       699: aload         5
+       701: aload         14
+       703: invokestatic  #331                // Method com/hypixel/hytale/server/core/modules/projectile/component/GroundFollowProjectile.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       706: invokevirtual #323                // Method com/hypixel/hytale/component/CommandBuffer.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       709: checkcast     #332                // class com/hypixel/hytale/server/core/modules/projectile/component/GroundFollowProjectile
+       712: astore        44
+       714: aload         9
+       716: invokevirtual #334                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.isProvidesCharacterCollisions:()Z
+       719: ifeq          795
+       722: aconst_null
+       723: astore        45
+       725: aload         9
+       727: invokevirtual #337                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getCreatorUuid:()Ljava/util/UUID;
+       730: ifnull        751
+       733: aload         4
+       735: invokevirtual #90                 // Method com/hypixel/hytale/component/Store.getExternalData:()Ljava/lang/Object;
+       738: checkcast     #94                 // class com/hypixel/hytale/server/core/universe/world/storage/EntityStore
+       741: aload         9
+       743: invokevirtual #337                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getCreatorUuid:()Ljava/util/UUID;
+       746: invokevirtual #341                // Method com/hypixel/hytale/server/core/universe/world/storage/EntityStore.getRefFromUUID:(Ljava/util/UUID;)Lcom/hypixel/hytale/component/Ref;
+       749: astore        45
+       751: aload         34
+       753: aload         5
+       755: aload         20
+       757: aload         17
+       759: aload         19
+       761: aload         14
+       763: aload         45
+       765: invokevirtual #345                // Method com/hypixel/hytale/server/core/modules/collision/EntityRefCollisionProvider.computeNearest:(Lcom/hypixel/hytale/component/CommandBuffer;Lcom/hypixel/hytale/math/shape/Box;Lorg/joml/Vector3d;Lorg/joml/Vector3d;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/Ref;)D
+       768: dstore        40
+       770: dload         40
+       772: dconst_0
+       773: dcmpg
+       774: iflt          784
+       777: dload         40
+       779: dconst_1
+       780: dcmpl
+       781: ifle          787
+       784: dconst_1
+       785: dstore        40
+       787: aload         42
+       789: ifnull        795
+       792: dconst_1
+       793: dstore        40
+       795: aload         9
+       797: iconst_0
+       798: invokevirtual #351                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setBounced:(Z)V
+       801: aload         9
+       803: iconst_0
+       804: invokevirtual #354                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setOnGround:(Z)V
+       807: aload         26
+       809: invokevirtual #268                // Method org/joml/Vector3d.zero:()Lorg/joml/Vector3d;
+       812: pop
+       813: aload         9
+       815: iconst_0
+       816: invokevirtual #357                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setMovedInsideSolid:(Z)V
+       819: aload         9
+       821: dconst_0
+       822: invokevirtual #360                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setDisplacedMass:(D)V
+       825: aload         9
+       827: dconst_0
+       828: invokevirtual #364                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setSubSurfaceVolume:(D)V
+       831: aload         9
+       833: ldc2_w        #369                // double 1.7976931348623157E308d
+       836: invokevirtual #371                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setEnterFluid:(D)V
+       839: aload         9
+       841: ldc2_w        #374                // double -1.7976931348623157E308d
+       844: invokevirtual #376                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setLeaveFluid:(D)V
+       847: aload         9
+       849: dload         40
+       851: invokevirtual #379                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setCollisionStart:(D)V
+       854: aload         37
+       856: aload         17
+       858: invokevirtual #237                // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+       861: aload         9
+       863: invokevirtual #382                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getCollisionStart:()D
+       866: aload         19
+       868: invokevirtual #385                // Method org/joml/Vector3d.fma:(DLorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+       871: pop
+       872: aload         38
+       874: invokevirtual #268                // Method org/joml/Vector3d.zero:()Lorg/joml/Vector3d;
+       877: pop
+       878: aload         43
+       880: ifnonnull     1010
+       883: aload         44
+       885: ifnonnull     1010
+       888: aload         9
+       890: iconst_1
+       891: invokevirtual #389                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setSliding:(Z)V
+       894: new           #162                // class org/joml/Vector3d
+       897: dup
+       898: aload         17
+       900: invokespecial #392                // Method org/joml/Vector3d."<init>":(Lorg/joml/Vector3dc;)V
+       903: astore        45
+       905: aload         39
+       907: invokevirtual #268                // Method org/joml/Vector3d.zero:()Lorg/joml/Vector3d;
+       910: pop
+       911: aload         9
+       913: invokevirtual #395                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.isSliding:()Z
+       916: ifeq          992
+       919: aload         19
+       921: getstatic     #398                // Field com/hypixel/hytale/math/vector/Vector3dUtil.ZERO:Lorg/joml/Vector3dc;
+       924: invokevirtual #404                // Method org/joml/Vector3d.equals:(Ljava/lang/Object;)Z
+       927: ifne          992
+       930: aload         37
+       932: aload         45
+       934: invokevirtual #237                // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+       937: aload         9
+       939: invokevirtual #382                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getCollisionStart:()D
+       942: aload         19
+       944: invokevirtual #385                // Method org/joml/Vector3d.fma:(DLorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+       947: pop
+       948: aload         9
+       950: iconst_0
+       951: invokevirtual #389                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setSliding:(Z)V
+       954: aload         35
+       956: aload         8
+       958: aload         20
+       960: aload         45
+       962: aload         19
+       964: aload         9
+       966: aload         36
+       968: dload         40
+       970: invokevirtual #408                // Method com/hypixel/hytale/server/core/modules/collision/BlockCollisionProvider.cast:(Lcom/hypixel/hytale/server/core/universe/world/World;Lcom/hypixel/hytale/math/shape/Box;Lorg/joml/Vector3d;Lorg/joml/Vector3d;Lcom/hypixel/hytale/server/core/modules/collision/IBlockCollisionConsumer;Lcom/hypixel/hytale/server/core/modules/collision/IBlockTracker;D)V
+       973: aload         19
+       975: aload         39
+       977: invokevirtual #237                // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+       980: pop
+       981: aload         45
+       983: aload         37
+       985: invokevirtual #237                // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+       988: pop
+       989: goto          911
+       992: aload         19
+       994: aload         45
+       996: invokevirtual #237                // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+       999: aload         39
+      1001: invokevirtual #414                // Method org/joml/Vector3d.add:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+      1004: aload         17
+      1006: invokevirtual #417                // Method org/joml/Vector3d.sub:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+      1009: pop
+      1010: aload         9
+      1012: invokevirtual #420                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getFluidTracker:()Lcom/hypixel/hytale/server/core/modules/collision/BlockTracker;
+      1015: invokevirtual #423                // Method com/hypixel/hytale/server/core/modules/collision/BlockTracker.reset:()V
+      1018: aload         9
+      1020: invokevirtual #428                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getDisplacedMass:()D
+      1023: dconst_0
+      1024: dcmpl
+      1025: ifle          1042
+      1028: aload         9
+      1030: invokevirtual #428                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getDisplacedMass:()D
+      1033: aload         9
+      1035: invokevirtual #431                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getSubSurfaceVolume:()D
+      1038: ddiv
+      1039: goto          1045
+      1042: ldc2_w        #436                // double 1.2d
+      1045: dstore        45
+      1047: aload         9
+      1049: invokevirtual #438                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.isMovedInsideSolid:()Z
+      1052: ifeq          1112
+      1055: aload         17
+      1057: fload_1
+      1058: f2d
+      1059: aload         26
+      1061: invokevirtual #385                // Method org/joml/Vector3d.fma:(DLorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+      1064: pop
+      1065: aload         18
+      1067: aload         26
+      1069: invokevirtual #237                // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+      1072: pop
+      1073: aload         15
+      1075: aload         9
+      1077: dload         45
+      1079: invokevirtual #441                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getDragCoefficient:(D)D
+      1082: putfield      #444                // Field com/hypixel/hytale/server/core/modules/physics/util/ForceProviderStandardState.dragCoefficient:D
+      1085: aload         15
+      1087: aload         9
+      1089: invokevirtual #428                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getDisplacedMass:()D
+      1092: putfield      #448                // Field com/hypixel/hytale/server/core/modules/physics/util/ForceProviderStandardState.displacedMass:D
+      1095: aload         15
+      1097: dload         27
+      1099: putfield      #451                // Field com/hypixel/hytale/server/core/modules/physics/util/ForceProviderStandardState.gravity:D
+      1102: aload         9
+      1104: aload         11
+      1106: aload         10
+      1108: invokevirtual #454                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.finishTick:(Lcom/hypixel/hytale/server/core/modules/entity/component/TransformComponent;Lcom/hypixel/hytale/server/core/modules/physics/component/Velocity;)V
+      1111: return
+      1112: aload         9
+      1114: invokevirtual #458                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.isBounced:()Z
+      1117: ifeq          1128
+      1120: aload         9
+      1122: invokevirtual #382                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getCollisionStart:()D
+      1125: goto          1129
+      1128: dconst_1
+      1129: dstore        47
+      1131: iconst_0
+      1132: istore        49
+      1134: aload         9
+      1136: invokevirtual #461                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.isInFluid:()Z
+      1139: ifne          1181
+      1142: aload         9
+      1144: invokevirtual #464                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getEnterFluid:()D
+      1147: aload         9
+      1149: invokevirtual #382                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getCollisionStart:()D
+      1152: dcmpg
+      1153: ifge          1181
+      1156: aload         9
+      1158: iconst_1
+      1159: invokevirtual #467                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setInFluid:(Z)V
+      1162: aload         9
+      1164: invokevirtual #464                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getEnterFluid:()D
+      1167: dstore        47
+      1169: aload         9
+      1171: iconst_2
+      1172: invokevirtual #470                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setVelocityExtremaCount:(I)V
+      1175: iconst_1
+      1176: istore        49
+      1178: goto          1222
+      1181: aload         9
+      1183: invokevirtual #461                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.isInFluid:()Z
+      1186: ifeq          1222
+      1189: aload         9
+      1191: invokevirtual #474                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getLeaveFluid:()D
+      1194: aload         9
+      1196: invokevirtual #382                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getCollisionStart:()D
+      1199: dcmpg
+      1200: ifge          1222
+      1203: aload         9
+      1205: iconst_0
+      1206: invokevirtual #467                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setInFluid:(Z)V
+      1209: aload         9
+      1211: invokevirtual #474                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getLeaveFluid:()D
+      1214: dstore        47
+      1216: aload         9
+      1218: iconst_2
+      1219: invokevirtual #470                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setVelocityExtremaCount:(I)V
+      1222: dload         47
+      1224: dconst_0
+      1225: dcmpl
+      1226: ifle          1270
+      1229: dload         47
+      1231: dconst_1
+      1232: dcmpg
+      1233: ifge          1270
+      1236: aload         24
+      1238: aload         21
+      1240: aload         22
+      1242: dload         31
+      1244: fload_1
+      1245: f2d
+      1246: dload         47
+      1248: dmul
+      1249: aload         9
+      1251: invokevirtual #283                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.isOnGround:()Z
+      1254: aload         25
+      1256: invokevirtual #286                // Method com/hypixel/hytale/server/core/modules/physics/util/PhysicsBodyStateUpdater.update:(Lcom/hypixel/hytale/server/core/modules/physics/util/PhysicsBodyState;Lcom/hypixel/hytale/server/core/modules/physics/util/PhysicsBodyState;DDZ[Lcom/hypixel/hytale/server/core/modules/physics/util/ForceProvider;)V
+      1259: aload         18
+      1261: aload         22
+      1263: getfield      #276                // Field com/hypixel/hytale/server/core/modules/physics/util/PhysicsBodyState.velocity:Lorg/joml/Vector3d;
+      1266: invokevirtual #237                // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+      1269: pop
+      1270: aload         9
+      1272: invokevirtual #461                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.isInFluid:()Z
+      1275: ifeq          1335
+      1278: aload         9
+      1280: invokevirtual #431                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getSubSurfaceVolume:()D
+      1283: aload         20
+      1285: invokevirtual #245                // Method com/hypixel/hytale/math/shape/Box.getVolume:()D
+      1288: dcmpg
+      1289: ifge          1335
+      1292: aload         9
+      1294: invokevirtual #477                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getVelocityExtremaCount:()I
+      1297: ifle          1335
+      1300: aload         21
+      1302: getfield      #276                // Field com/hypixel/hytale/server/core/modules/physics/util/PhysicsBodyState.velocity:Lorg/joml/Vector3d;
+      1305: getfield      #480                // Field org/joml/Vector3d.y:D
+      1308: dstore        50
+      1310: aload         22
+      1312: getfield      #276                // Field com/hypixel/hytale/server/core/modules/physics/util/PhysicsBodyState.velocity:Lorg/joml/Vector3d;
+      1315: getfield      #480                // Field org/joml/Vector3d.y:D
+      1318: dstore        52
+      1320: dload         50
+      1322: dload         52
+      1324: dmul
+      1325: dconst_0
+      1326: dcmpg
+      1327: ifgt          1335
+      1330: aload         9
+      1332: invokevirtual #483                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.decrementVelocityExtremaCount:()V
+      1335: aload         9
+      1337: invokevirtual #486                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.isSwimming:()Z
+      1340: ifeq          1373
+      1343: aload         15
+      1345: getfield      #155                // Field com/hypixel/hytale/server/core/modules/physics/util/ForceProviderStandardState.externalForce:Lorg/joml/Vector3d;
+      1348: dup
+      1349: getfield      #480                // Field org/joml/Vector3d.y:D
+      1352: aload         22
+      1354: getfield      #276                // Field com/hypixel/hytale/server/core/modules/physics/util/PhysicsBodyState.velocity:Lorg/joml/Vector3d;
+      1357: getfield      #480                // Field org/joml/Vector3d.y:D
+      1360: aload         13
+      1362: invokevirtual #489                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsConfig.getSwimmingDampingFactor:()D
+      1365: dload         31
+      1367: ddiv
+      1368: dmul
+      1369: dsub
+      1370: putfield      #480                // Field org/joml/Vector3d.y:D
+      1373: iload         49
+      1375: ifeq          1401
+      1378: aload         15
+      1380: getfield      #492                // Field com/hypixel/hytale/server/core/modules/physics/util/ForceProviderStandardState.externalImpulse:Lorg/joml/Vector3d;
+      1383: aload         13
+      1385: invokevirtual #495                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsConfig.getHitWaterImpulseLoss:()D
+      1388: dneg
+      1389: dload         31
+      1391: dmul
+      1392: aload         22
+      1394: getfield      #276                // Field com/hypixel/hytale/server/core/modules/physics/util/PhysicsBodyState.velocity:Lorg/joml/Vector3d;
+      1397: invokevirtual #385                // Method org/joml/Vector3d.fma:(DLorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+      1400: pop
+      1401: aload         15
+      1403: aload         9
+      1405: invokevirtual #428                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getDisplacedMass:()D
+      1408: putfield      #448                // Field com/hypixel/hytale/server/core/modules/physics/util/ForceProviderStandardState.displacedMass:D
+      1411: aload         15
+      1413: aload         9
+      1415: dload         45
+      1417: invokevirtual #441                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getDragCoefficient:(D)D
+      1420: putfield      #444                // Field com/hypixel/hytale/server/core/modules/physics/util/ForceProviderStandardState.dragCoefficient:D
+      1423: aload         15
+      1425: dload         27
+      1427: putfield      #451                // Field com/hypixel/hytale/server/core/modules/physics/util/ForceProviderStandardState.gravity:D
+      1430: aload         42
+      1432: ifnull        1558
+      1435: getstatic     #498                // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction.SHOW_VISUAL_DEBUG:Z
+      1438: ifeq          1558
+      1441: aload         20
+      1443: invokevirtual #503                // Method com/hypixel/hytale/math/shape/Box.getMin:()Lorg/joml/Vector3d;
+      1446: astore        50
+      1448: new           #506                // class org/joml/Matrix4d
+      1451: dup
+      1452: invokespecial #508                // Method org/joml/Matrix4d."<init>":()V
+      1455: aload         17
+      1457: invokevirtual #509                // Method org/joml/Vector3d.x:()D
+      1460: aload         50
+      1462: invokevirtual #509                // Method org/joml/Vector3d.x:()D
+      1465: dadd
+      1466: aload         20
+      1468: invokevirtual #512                // Method com/hypixel/hytale/math/shape/Box.width:()D
+      1471: ldc2_w        #515                // double 0.5d
+      1474: dmul
+      1475: dadd
+      1476: aload         17
+      1478: invokevirtual #517                // Method org/joml/Vector3d.y:()D
+      1481: aload         50
+      1483: invokevirtual #517                // Method org/joml/Vector3d.y:()D
+      1486: dadd
+      1487: aload         20
+      1489: invokevirtual #519                // Method com/hypixel/hytale/math/shape/Box.height:()D
+      1492: ldc2_w        #515                // double 0.5d
+      1495: dmul
+      1496: dadd
+      1497: aload         17
+      1499: invokevirtual #522                // Method org/joml/Vector3d.z:()D
+      1502: aload         50
+      1504: invokevirtual #522                // Method org/joml/Vector3d.z:()D
+      1507: dadd
+      1508: aload         20
+      1510: invokevirtual #525                // Method com/hypixel/hytale/math/shape/Box.depth:()D
+      1513: ldc2_w        #515                // double 0.5d
+      1516: dmul
+      1517: dadd
+      1518: invokevirtual #528                // Method org/joml/Matrix4d.translate:(DDD)Lorg/joml/Matrix4d;
+      1521: aload         20
+      1523: invokevirtual #512                // Method com/hypixel/hytale/math/shape/Box.width:()D
+      1526: aload         20
+      1528: invokevirtual #519                // Method com/hypixel/hytale/math/shape/Box.height:()D
+      1531: aload         20
+      1533: invokevirtual #525                // Method com/hypixel/hytale/math/shape/Box.depth:()D
+      1536: invokevirtual #532                // Method org/joml/Matrix4d.scale:(DDD)Lorg/joml/Matrix4d;
+      1539: astore        51
+      1541: aload         8
+      1543: getstatic     #535                // Field com/hypixel/hytale/protocol/DebugShape.Cube:Lcom/hypixel/hytale/protocol/DebugShape;
+      1546: aload         51
+      1548: getstatic     #541                // Field PIERCE_DEBUG_COLOR:Lorg/joml/Vector3f;
+      1551: ldc_w         #545                // float 0.5f
+      1554: iconst_1
+      1555: invokestatic  #548                // Method com/hypixel/hytale/server/core/modules/debug/DebugUtils.add:(Lcom/hypixel/hytale/server/core/universe/world/World;Lcom/hypixel/hytale/protocol/DebugShape;Lorg/joml/Matrix4dc;Lorg/joml/Vector3fc;FI)V
+      1558: aload         42
+      1560: ifnull        1611
+      1563: aload         42
+      1565: fload_1
+      1566: invokevirtual #551                // Method com/hypixel/hytale/server/core/modules/projectile/component/PierceProjectile.advanceAndCheckExpired:(F)Z
+      1569: ifne          1594
+      1572: aload         42
+      1574: aload         17
+      1576: invokevirtual #555                // Method com/hypixel/hytale/server/core/modules/projectile/component/PierceProjectile.isBeyondMaxDistance:(Lorg/joml/Vector3dc;)Z
+      1579: ifne          1594
+      1582: aload         18
+      1584: invokevirtual #161                // Method org/joml/Vector3d.lengthSquared:()D
+      1587: ldc2_w        #559                // double 1.0E-4d
+      1590: dcmpg
+      1591: ifge          1611
+      1594: aload         14
+      1596: aload         9
+      1598: aload         17
+      1600: aload         11
+      1602: aload         10
+      1604: aload         5
+      1606: fload_1
+      1607: invokestatic  #561                // Method endCourse:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider;Lorg/joml/Vector3d;Lcom/hypixel/hytale/server/core/modules/entity/component/TransformComponent;Lcom/hypixel/hytale/server/core/modules/physics/component/Velocity;Lcom/hypixel/hytale/component/CommandBuffer;F)V
+      1610: return
+      1611: aload         34
+      1613: invokevirtual #565                // Method com/hypixel/hytale/server/core/modules/collision/EntityRefCollisionProvider.getCount:()I
+      1616: ifle          1793
+      1619: aload         34
+      1621: iconst_0
+      1622: invokevirtual #568                // Method com/hypixel/hytale/server/core/modules/collision/EntityRefCollisionProvider.getContact:(I)Lcom/hypixel/hytale/server/core/modules/collision/EntityContactData;
+      1625: astore        50
+      1627: aload         50
+      1629: invokevirtual #572                // Method com/hypixel/hytale/server/core/modules/collision/EntityContactData.getEntityReference:()Lcom/hypixel/hytale/component/Ref;
+      1632: astore        51
+      1634: aload         42
+      1636: ifnull        1707
+      1639: aload         14
+      1641: aload         51
+      1643: aload         17
+      1645: aload         11
+      1647: aload         5
+      1649: invokestatic  #578                // Method isInsideDirectionalHitBox:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/Ref;Lorg/joml/Vector3d;Lcom/hypixel/hytale/server/core/modules/entity/component/TransformComponent;Lcom/hypixel/hytale/component/CommandBuffer;)Z
+      1652: ifeq          1793
+      1655: aload         42
+      1657: aload         51
+      1659: invokevirtual #582                // Method com/hypixel/hytale/server/core/modules/projectile/component/PierceProjectile.markHit:(Lcom/hypixel/hytale/component/Ref;)Z
+      1662: ifeq          1793
+      1665: aload         9
+      1667: invokevirtual #586                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getImpactConsumer:()Lcom/hypixel/hytale/server/core/modules/projectile/config/ImpactConsumer;
+      1670: ifnull        1793
+      1673: aload         9
+      1675: invokevirtual #586                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getImpactConsumer:()Lcom/hypixel/hytale/server/core/modules/projectile/config/ImpactConsumer;
+      1678: aload         14
+      1680: aload         50
+      1682: invokevirtual #590                // Method com/hypixel/hytale/server/core/modules/collision/EntityContactData.getCollisionPoint:()Lorg/joml/Vector3d;
+      1685: aload         9
+      1687: invokevirtual #593                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.bounceBlockPosition:()Lorg/joml/Vector3i;
+      1690: aload         51
+      1692: aload         50
+      1694: invokevirtual #597                // Method com/hypixel/hytale/server/core/modules/collision/EntityContactData.getCollisionDetailName:()Ljava/lang/String;
+      1697: aload         5
+      1699: invokeinterface #601,  7          // InterfaceMethod com/hypixel/hytale/server/core/modules/projectile/config/ImpactConsumer.onImpact:(Lcom/hypixel/hytale/component/Ref;Lorg/joml/Vector3d;Lorg/joml/Vector3i;Lcom/hypixel/hytale/component/Ref;Ljava/lang/String;Lcom/hypixel/hytale/component/CommandBuffer;)V
+      1704: goto          1793
+      1707: aload         9
+      1709: invokevirtual #593                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.bounceBlockPosition:()Lorg/joml/Vector3i;
+      1712: astore        52
+      1714: aload         17
+      1716: aload         50
+      1718: invokevirtual #590                // Method com/hypixel/hytale/server/core/modules/collision/EntityContactData.getCollisionPoint:()Lorg/joml/Vector3d;
+      1721: invokevirtual #237                // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+      1724: pop
+      1725: aload         9
+      1727: getstatic     #131                // Field com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE.INACTIVE:Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;
+      1730: invokevirtual #176                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setState:(Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;)V
+      1733: aload         9
+      1735: invokevirtual #586                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getImpactConsumer:()Lcom/hypixel/hytale/server/core/modules/projectile/config/ImpactConsumer;
+      1738: ifnull        1766
+      1741: aload         9
+      1743: invokevirtual #586                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getImpactConsumer:()Lcom/hypixel/hytale/server/core/modules/projectile/config/ImpactConsumer;
+      1746: aload         14
+      1748: aload         17
+      1750: aload         52
+      1752: aload         51
+      1754: aload         50
+      1756: invokevirtual #597                // Method com/hypixel/hytale/server/core/modules/collision/EntityContactData.getCollisionDetailName:()Ljava/lang/String;
+      1759: aload         5
+      1761: invokeinterface #601,  7          // InterfaceMethod com/hypixel/hytale/server/core/modules/projectile/config/ImpactConsumer.onImpact:(Lcom/hypixel/hytale/component/Ref;Lorg/joml/Vector3d;Lorg/joml/Vector3i;Lcom/hypixel/hytale/component/Ref;Ljava/lang/String;Lcom/hypixel/hytale/component/CommandBuffer;)V
+      1766: aload         9
+      1768: fload_1
+      1769: f2d
+      1770: aload         11
+      1772: invokevirtual #607                // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getRotation:()Lcom/hypixel/hytale/math/vector/Rotation3f;
+      1775: invokevirtual #611                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.rotateBody:(DLcom/hypixel/hytale/math/vector/Rotation3f;)V
+      1778: aload         9
+      1780: invokevirtual #615                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.clearBounced:()V
+      1783: aload         9
+      1785: aload         11
+      1787: aload         10
+      1789: invokevirtual #454                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.finishTick:(Lcom/hypixel/hytale/server/core/modules/entity/component/TransformComponent;Lcom/hypixel/hytale/server/core/modules/physics/component/Velocity;)V
+      1792: return
+      1793: aload         9
+      1795: invokevirtual #458                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.isBounced:()Z
+      1798: ifeq          2093
+      1801: aload         17
+      1803: aload         37
+      1805: invokevirtual #237                // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+      1808: pop
+      1809: aload         9
+      1811: invokevirtual #618                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.incrementBounces:()V
+      1814: aload         18
+      1816: aload         38
+      1818: aload         18
+      1820: invokestatic  #621                // Method com/hypixel/hytale/server/core/modules/physics/SimplePhysicsProvider.computeReflectedVector:(Lorg/joml/Vector3d;Lorg/joml/Vector3d;Lorg/joml/Vector3d;)V
+      1823: iload         29
+      1825: iconst_m1
+      1826: if_icmpeq     1839
+      1829: aload         9
+      1831: invokevirtual #627                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getBounces:()I
+      1834: iload         29
+      1836: if_icmpgt     1850
+      1839: aload         18
+      1841: aload         13
+      1843: invokevirtual #630                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsConfig.getBounciness:()D
+      1846: invokevirtual #292                // Method org/joml/Vector3d.mul:(D)Lorg/joml/Vector3d;
+      1849: pop
+      1850: iload         29
+      1852: iconst_m1
+      1853: if_icmpeq     1866
+      1856: aload         9
+      1858: invokevirtual #627                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getBounces:()I
+      1861: iload         29
+      1863: if_icmpgt     1892
+      1866: aload         18
+      1868: invokevirtual #161                // Method org/joml/Vector3d.lengthSquared:()D
+      1871: fload_1
+      1872: f2d
+      1873: dmul
+      1874: fload_1
+      1875: f2d
+      1876: dmul
+      1877: aload         13
+      1879: invokevirtual #633                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsConfig.getBounceLimit:()D
+      1882: aload         13
+      1884: invokevirtual #633                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsConfig.getBounceLimit:()D
+      1887: dmul
+      1888: dcmpg
+      1889: ifge          2047
+      1892: aload         42
+      1894: ifnull        1914
+      1897: aload         14
+      1899: aload         9
+      1901: aload         17
+      1903: aload         11
+      1905: aload         10
+      1907: aload         5
+      1909: fload_1
+      1910: invokestatic  #561                // Method endCourse:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider;Lorg/joml/Vector3d;Lcom/hypixel/hytale/server/core/modules/entity/component/TransformComponent;Lcom/hypixel/hytale/server/core/modules/physics/component/Velocity;Lcom/hypixel/hytale/component/CommandBuffer;F)V
+      1913: return
+      1914: aload         38
+      1916: getstatic     #636                // Field com/hypixel/hytale/math/vector/Vector3dUtil.UP:Lorg/joml/Vector3dc;
+      1919: invokevirtual #404                // Method org/joml/Vector3d.equals:(Ljava/lang/Object;)Z
+      1922: istore        50
+      1924: iload         30
+      1926: ifne          2006
+      1929: aload         13
+      1931: invokevirtual #639                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsConfig.isSticksVertically:()Z
+      1934: ifne          1942
+      1937: iload         50
+      1939: ifeq          2006
+      1942: aload         9
+      1944: invokevirtual #593                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.bounceBlockPosition:()Lorg/joml/Vector3i;
+      1947: astore        51
+      1949: aload         9
+      1951: getstatic     #148                // Field com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE.RESTING:Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;
+      1954: invokevirtual #176                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setState:(Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;)V
+      1957: aload         16
+      1959: aload         33
+      1961: aload         51
+      1963: invokevirtual #642                // Method com/hypixel/hytale/server/core/modules/physics/RestingSupport.rest:(Lcom/hypixel/hytale/server/core/universe/world/storage/ChunkStore;Lorg/joml/Vector3i;)V
+      1966: aload         9
+      1968: iload         50
+      1970: invokevirtual #354                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setOnGround:(Z)V
+      1973: aload         9
+      1975: invokevirtual #586                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getImpactConsumer:()Lcom/hypixel/hytale/server/core/modules/projectile/config/ImpactConsumer;
+      1978: ifnull        2001
+      1981: aload         9
+      1983: invokevirtual #586                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getImpactConsumer:()Lcom/hypixel/hytale/server/core/modules/projectile/config/ImpactConsumer;
+      1986: aload         14
+      1988: aload         17
+      1990: aload         51
+      1992: aconst_null
+      1993: aconst_null
+      1994: aload         5
+      1996: invokeinterface #601,  7          // InterfaceMethod com/hypixel/hytale/server/core/modules/projectile/config/ImpactConsumer.onImpact:(Lcom/hypixel/hytale/component/Ref;Lorg/joml/Vector3d;Lorg/joml/Vector3i;Lcom/hypixel/hytale/component/Ref;Ljava/lang/String;Lcom/hypixel/hytale/component/CommandBuffer;)V
+      2001: aload         9
+      2003: invokevirtual #615                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.clearBounced:()V
+      2006: iload         30
+      2008: ifeq          2038
+      2011: aload         18
+      2013: dconst_0
+      2014: putfield      #480                // Field org/joml/Vector3d.y:D
+      2017: aload         18
+      2019: aload         13
+      2021: invokevirtual #646                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsConfig.getRollingFrictionFactor:()D
+      2024: invokevirtual #292                // Method org/joml/Vector3d.mul:(D)Lorg/joml/Vector3d;
+      2027: pop
+      2028: aload         9
+      2030: iload         50
+      2032: invokevirtual #354                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setOnGround:(Z)V
+      2035: goto          2044
+      2038: aload         18
+      2040: invokevirtual #268                // Method org/joml/Vector3d.zero:()Lorg/joml/Vector3d;
+      2043: pop
+      2044: goto          2071
+      2047: aload         9
+      2049: invokevirtual #649                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getBounceConsumer:()Lcom/hypixel/hytale/server/core/modules/projectile/config/BounceConsumer;
+      2052: ifnull        2071
+      2055: aload         9
+      2057: invokevirtual #649                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getBounceConsumer:()Lcom/hypixel/hytale/server/core/modules/projectile/config/BounceConsumer;
+      2060: aload         14
+      2062: aload         17
+      2064: aload         5
+      2066: invokeinterface #653,  4          // InterfaceMethod com/hypixel/hytale/server/core/modules/projectile/config/BounceConsumer.onBounce:(Lcom/hypixel/hytale/component/Ref;Lorg/joml/Vector3d;Lcom/hypixel/hytale/component/CommandBuffer;)V
+      2071: aload         9
+      2073: fload_1
+      2074: f2d
+      2075: aload         11
+      2077: invokevirtual #607                // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getRotation:()Lcom/hypixel/hytale/math/vector/Rotation3f;
+      2080: invokevirtual #611                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.rotateBody:(DLcom/hypixel/hytale/math/vector/Rotation3f;)V
+      2083: aload         9
+      2085: aload         11
+      2087: aload         10
+      2089: invokevirtual #454                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.finishTick:(Lcom/hypixel/hytale/server/core/modules/entity/component/TransformComponent;Lcom/hypixel/hytale/server/core/modules/physics/component/Velocity;)V
+      2092: return
+      2093: aload         44
+      2095: ifnull        2303
+      2098: aload         19
+      2100: invokevirtual #509                // Method org/joml/Vector3d.x:()D
+      2103: dconst_0
+      2104: dcmpl
+      2105: ifne          2118
+      2108: aload         19
+      2110: invokevirtual #522                // Method org/joml/Vector3d.z:()D
+      2113: dconst_0
+      2114: dcmpl
+      2115: ifeq          2303
+      2118: aload         44
+      2120: invokevirtual #659                // Method com/hypixel/hytale/server/core/modules/projectile/component/GroundFollowProjectile.consumeSpawnSnap:()Z
+      2123: ifeq          2196
+      2126: aload         17
+      2128: invokevirtual #517                // Method org/joml/Vector3d.y:()D
+      2131: aload         20
+      2133: invokevirtual #503                // Method com/hypixel/hytale/math/shape/Box.getMin:()Lorg/joml/Vector3d;
+      2136: invokevirtual #517                // Method org/joml/Vector3d.y:()D
+      2139: dadd
+      2140: invokestatic  #662                // Method com/hypixel/hytale/math/util/MathUtil.floor:(D)I
+      2143: istore        50
+      2145: aload         44
+      2147: aload         8
+      2149: aload         17
+      2151: invokevirtual #509                // Method org/joml/Vector3d.x:()D
+      2154: invokestatic  #662                // Method com/hypixel/hytale/math/util/MathUtil.floor:(D)I
+      2157: iload         50
+      2159: aload         17
+      2161: invokevirtual #522                // Method org/joml/Vector3d.z:()D
+      2164: invokestatic  #662                // Method com/hypixel/hytale/math/util/MathUtil.floor:(D)I
+      2167: invokevirtual #668                // Method com/hypixel/hytale/server/core/modules/projectile/component/GroundFollowProjectile.snapToGroundAtSpawn:(Lcom/hypixel/hytale/server/core/universe/world/World;III)I
+      2170: istore        51
+      2172: iload         51
+      2174: ldc_w         #672                // int -2147483648
+      2177: if_icmpeq     2196
+      2180: aload         17
+      2182: dup
+      2183: getfield      #480                // Field org/joml/Vector3d.y:D
+      2186: iload         51
+      2188: iload         50
+      2190: isub
+      2191: i2d
+      2192: dadd
+      2193: putfield      #480                // Field org/joml/Vector3d.y:D
+      2196: aload         17
+      2198: invokevirtual #517                // Method org/joml/Vector3d.y:()D
+      2201: aload         20
+      2203: invokevirtual #503                // Method com/hypixel/hytale/math/shape/Box.getMin:()Lorg/joml/Vector3d;
+      2206: invokevirtual #517                // Method org/joml/Vector3d.y:()D
+      2209: dadd
+      2210: invokestatic  #662                // Method com/hypixel/hytale/math/util/MathUtil.floor:(D)I
+      2213: istore        50
+      2215: aload         17
+      2217: invokevirtual #509                // Method org/joml/Vector3d.x:()D
+      2220: aload         19
+      2222: invokevirtual #509                // Method org/joml/Vector3d.x:()D
+      2225: dadd
+      2226: invokestatic  #662                // Method com/hypixel/hytale/math/util/MathUtil.floor:(D)I
+      2229: istore        51
+      2231: aload         17
+      2233: invokevirtual #522                // Method org/joml/Vector3d.z:()D
+      2236: aload         19
+      2238: invokevirtual #522                // Method org/joml/Vector3d.z:()D
+      2241: dadd
+      2242: invokestatic  #662                // Method com/hypixel/hytale/math/util/MathUtil.floor:(D)I
+      2245: istore        52
+      2247: aload         44
+      2249: aload         8
+      2251: iload         51
+      2253: iload         50
+      2255: iload         52
+      2257: invokevirtual #673                // Method com/hypixel/hytale/server/core/modules/projectile/component/GroundFollowProjectile.findGroundAhead:(Lcom/hypixel/hytale/server/core/universe/world/World;III)I
+      2260: istore        53
+      2262: iload         53
+      2264: ldc_w         #672                // int -2147483648
+      2267: if_icmpne     2287
+      2270: aload         14
+      2272: aload         9
+      2274: aload         17
+      2276: aload         11
+      2278: aload         10
+      2280: aload         5
+      2282: fload_1
+      2283: invokestatic  #561                // Method endCourse:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider;Lorg/joml/Vector3d;Lcom/hypixel/hytale/server/core/modules/entity/component/TransformComponent;Lcom/hypixel/hytale/server/core/modules/physics/component/Velocity;Lcom/hypixel/hytale/component/CommandBuffer;F)V
+      2286: return
+      2287: aload         17
+      2289: dup
+      2290: getfield      #480                // Field org/joml/Vector3d.y:D
+      2293: iload         53
+      2295: iload         50
+      2297: isub
+      2298: i2d
+      2299: dadd
+      2300: putfield      #480                // Field org/joml/Vector3d.y:D
+      2303: aload         17
+      2305: aload         19
+      2307: invokevirtual #414                // Method org/joml/Vector3d.add:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+      2310: pop
+      2311: aload         9
+      2313: fload_1
+      2314: f2d
+      2315: aload         11
+      2317: invokevirtual #607                // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getRotation:()Lcom/hypixel/hytale/math/vector/Rotation3f;
+      2320: invokevirtual #611                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.rotateBody:(DLcom/hypixel/hytale/math/vector/Rotation3f;)V
+      2323: aload         9
+      2325: aload         11
+      2327: aload         10
+      2329: invokevirtual #454                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.finishTick:(Lcom/hypixel/hytale/server/core/modules/entity/component/TransformComponent;Lcom/hypixel/hytale/server/core/modules/physics/component/Velocity;)V
+      2332: return
+
+  private static void endCourse(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsProvider, org.joml.Vector3d, com.hypixel.hytale.server.core.modules.entity.component.TransformComponent, com.hypixel.hytale.server.core.modules.physics.component.Velocity, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, float);
+    Code:
+         0: aload_1
+         1: getstatic     #131                // Field com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE.INACTIVE:Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;
+         4: invokevirtual #176                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.setState:(Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider$STATE;)V
+         7: aload_1
+         8: invokevirtual #586                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getImpactConsumer:()Lcom/hypixel/hytale/server/core/modules/projectile/config/ImpactConsumer;
+        11: ifnull        30
+        14: aload_1
+        15: invokevirtual #586                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getImpactConsumer:()Lcom/hypixel/hytale/server/core/modules/projectile/config/ImpactConsumer;
+        18: aload_0
+        19: aload_2
+        20: aconst_null
+        21: aconst_null
+        22: aconst_null
+        23: aload         5
+        25: invokeinterface #601,  7          // InterfaceMethod com/hypixel/hytale/server/core/modules/projectile/config/ImpactConsumer.onImpact:(Lcom/hypixel/hytale/component/Ref;Lorg/joml/Vector3d;Lorg/joml/Vector3i;Lcom/hypixel/hytale/component/Ref;Ljava/lang/String;Lcom/hypixel/hytale/component/CommandBuffer;)V
+        30: aload         5
+        32: aload_0
+        33: invokestatic  #676                // Method com/hypixel/hytale/server/core/modules/entity/DespawnComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        36: new           #677                // class com/hypixel/hytale/server/core/modules/entity/DespawnComponent
+        39: dup
+        40: aload         5
+        42: invokestatic  #74                 // Method com/hypixel/hytale/server/core/modules/time/TimeResource.getResourceType:()Lcom/hypixel/hytale/component/ResourceType;
+        45: invokevirtual #679                // Method com/hypixel/hytale/component/CommandBuffer.getResource:(Lcom/hypixel/hytale/component/ResourceType;)Lcom/hypixel/hytale/component/Resource;
+        48: checkcast     #75                 // class com/hypixel/hytale/server/core/modules/time/TimeResource
+        51: invokevirtual #680                // Method com/hypixel/hytale/server/core/modules/time/TimeResource.getNow:()Ljava/time/Instant;
+        54: getstatic     #684                // Field PIERCE_END_DESPAWN_GRACE:Ljava/time/Duration;
+        57: invokevirtual #688                // Method java/time/Instant.plus:(Ljava/time/temporal/TemporalAmount;)Ljava/time/Instant;
+        60: invokespecial #694                // Method com/hypixel/hytale/server/core/modules/entity/DespawnComponent."<init>":(Ljava/time/Instant;)V
+        63: invokevirtual #697                // Method com/hypixel/hytale/component/CommandBuffer.putComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;Lcom/hypixel/hytale/component/Component;)V
+        66: aload_1
+        67: fload         6
+        69: f2d
+        70: aload_3
+        71: invokevirtual #607                // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getRotation:()Lcom/hypixel/hytale/math/vector/Rotation3f;
+        74: invokevirtual #611                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.rotateBody:(DLcom/hypixel/hytale/math/vector/Rotation3f;)V
+        77: aload_1
+        78: invokevirtual #615                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.clearBounced:()V
+        81: aload_1
+        82: aload_3
+        83: aload         4
+        85: invokevirtual #454                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.finishTick:(Lcom/hypixel/hytale/server/core/modules/entity/component/TransformComponent;Lcom/hypixel/hytale/server/core/modules/physics/component/Velocity;)V
+        88: return
+
+  private static boolean isInsideDirectionalHitBox(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, org.joml.Vector3d, com.hypixel.hytale.server.core.modules.entity.component.TransformComponent, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload         4
+         2: aload_0
+         3: invokestatic  #701                // Method com/hypixel/hytale/server/core/modules/projectile/component/DirectionalHitBox.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         6: invokevirtual #323                // Method com/hypixel/hytale/component/CommandBuffer.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+         9: checkcast     #702                // class com/hypixel/hytale/server/core/modules/projectile/component/DirectionalHitBox
+        12: astore        5
+        14: aload         5
+        16: ifnonnull     21
+        19: iconst_1
+        20: ireturn
+        21: aload         4
+        23: aload_1
+        24: invokestatic  #15                 // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        27: invokevirtual #323                // Method com/hypixel/hytale/component/CommandBuffer.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        30: checkcast     #16                 // class com/hypixel/hytale/server/core/modules/entity/component/TransformComponent
+        33: astore        6
+        35: aload         6
+        37: ifnonnull     42
+        40: iconst_1
+        41: ireturn
+        42: dconst_0
+        43: dstore        7
+        45: aload         4
+        47: aload_1
+        48: invokestatic  #24                 // Method com/hypixel/hytale/server/core/modules/entity/component/BoundingBox.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        51: invokevirtual #323                // Method com/hypixel/hytale/component/CommandBuffer.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        54: checkcast     #25                 // class com/hypixel/hytale/server/core/modules/entity/component/BoundingBox
+        57: astore        9
+        59: aload         9
+        61: ifnull        90
+        64: aload         9
+        66: invokevirtual #194                // Method com/hypixel/hytale/server/core/modules/entity/component/BoundingBox.getBoundingBox:()Lcom/hypixel/hytale/math/shape/Box;
+        69: astore        10
+        71: aload         10
+        73: invokevirtual #512                // Method com/hypixel/hytale/math/shape/Box.width:()D
+        76: aload         10
+        78: invokevirtual #525                // Method com/hypixel/hytale/math/shape/Box.depth:()D
+        81: invokestatic  #704                // Method java/lang/Math.max:(DD)D
+        84: ldc2_w        #515                // double 0.5d
+        87: dmul
+        88: dstore        7
+        90: aload         5
+        92: aload_3
+        93: invokevirtual #607                // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getRotation:()Lcom/hypixel/hytale/math/vector/Rotation3f;
+        96: invokevirtual #710                // Method com/hypixel/hytale/math/vector/Rotation3f.yaw:()F
+        99: aload_2
+       100: aload         6
+       102: invokevirtual #236                // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getPosition:()Lorg/joml/Vector3d;
+       105: dload         7
+       107: invokevirtual #715                // Method com/hypixel/hytale/server/core/modules/projectile/component/DirectionalHitBox.contains:(FLorg/joml/Vector3d;Lorg/joml/Vector3d;D)Z
+       110: ireturn
+
+  static {};
+    Code:
+         0: ldc           #32                 // class com/hypixel/hytale/server/core/modules/projectile/system/StandardPhysicsTickSystem
+         2: invokevirtual #719                // Method java/lang/Class.desiredAssertionStatus:()Z
+         5: ifne          12
+         8: iconst_1
+         9: goto          13
+        12: iconst_0
+        13: putstatic     #112                // Field $assertionsDisabled:Z
+        16: new           #724                // class org/joml/Vector3f
+        19: dup
+        20: ldc_w         #726                // float 0.3f
+        23: fconst_1
+        24: ldc_w         #727                // float 0.6f
+        27: invokespecial #728                // Method org/joml/Vector3f."<init>":(FFF)V
+        30: putstatic     #541                // Field PIERCE_DEBUG_COLOR:Lorg/joml/Vector3f;
+        33: ldc2_w        #731                // long 300l
+        36: invokestatic  #733                // Method java/time/Duration.ofMillis:(J)Ljava/time/Duration;
+        39: putstatic     #684                // Field PIERCE_END_DESPAWN_GRACE:Ljava/time/Duration;
+        42: return
+}

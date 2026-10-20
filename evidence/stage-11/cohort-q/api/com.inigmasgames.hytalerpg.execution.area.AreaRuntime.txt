@@ -1,0 +1,2326 @@
+Compiled from "AreaRuntime.java"
+public final class com.inigmasgames.hytalerpg.execution.area.AreaRuntime {
+  public static final int OWNER_CAP;
+
+  public static final int GLOBAL_CAP;
+
+  private final com.inigmasgames.hytalerpg.execution.OwnedFieldBudget capacity;
+
+  private final java.util.Map<java.lang.String, com.inigmasgames.hytalerpg.execution.area.AreaRuntime$Field> fields;
+
+  private final java.util.Map<java.lang.String, java.util.Map<java.lang.String, com.inigmasgames.hytalerpg.execution.area.AreaRuntime$Ledger>> rootLedgers;
+
+  private final java.util.Map<java.lang.String, java.lang.Integer> rootSpawned;
+
+  public com.inigmasgames.hytalerpg.execution.area.AreaRuntime();
+    Code:
+         0: aload_0
+         1: new           #1                  // class com/inigmasgames/hytalerpg/execution/OwnedFieldBudget
+         4: dup
+         5: invokespecial #3                  // Method com/inigmasgames/hytalerpg/execution/OwnedFieldBudget."<init>":()V
+         8: invokespecial #7                  // Method "<init>":(Lcom/inigmasgames/hytalerpg/execution/OwnedFieldBudget;)V
+        11: return
+
+  public com.inigmasgames.hytalerpg.execution.area.AreaRuntime(com.inigmasgames.hytalerpg.execution.OwnedFieldBudget);
+    Code:
+         0: aload_0
+         1: invokespecial #12                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #15                 // class java/util/LinkedHashMap
+         8: dup
+         9: invokespecial #17                 // Method java/util/LinkedHashMap."<init>":()V
+        12: putfield      #18                 // Field fields:Ljava/util/Map;
+        15: aload_0
+        16: new           #22                 // class java/util/HashMap
+        19: dup
+        20: invokespecial #24                 // Method java/util/HashMap."<init>":()V
+        23: putfield      #25                 // Field rootLedgers:Ljava/util/Map;
+        26: aload_0
+        27: new           #22                 // class java/util/HashMap
+        30: dup
+        31: invokespecial #24                 // Method java/util/HashMap."<init>":()V
+        34: putfield      #28                 // Field rootSpawned:Ljava/util/Map;
+        37: aload_0
+        38: aload_1
+        39: invokestatic  #31                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+        42: checkcast     #1                  // class com/inigmasgames/hytalerpg/execution/OwnedFieldBudget
+        45: putfield      #37                 // Field capacity:Lcom/inigmasgames/hytalerpg/execution/OwnedFieldBudget;
+        48: return
+
+  public synchronized java.lang.String admission(java.util.UUID, java.lang.String, boolean);
+    Code:
+         0: aload_0
+         1: getfield      #37                 // Field capacity:Lcom/inigmasgames/hytalerpg/execution/OwnedFieldBudget;
+         4: aload_1
+         5: invokevirtual #41                 // Method com/inigmasgames/hytalerpg/execution/OwnedFieldBudget.admission:(Ljava/util/UUID;)Ljava/lang/String;
+         8: astore        4
+        10: aload         4
+        12: ldc           #45                 // String PASS
+        14: invokevirtual #47                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+        17: ifne          23
+        20: aload         4
+        22: areturn
+        23: iload_3
+        24: ifeq          59
+        27: aload_0
+        28: getfield      #18                 // Field fields:Ljava/util/Map;
+        31: invokeinterface #53,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+        36: invokeinterface #59,  1           // InterfaceMethod java/util/Collection.stream:()Ljava/util/stream/Stream;
+        41: aload_1
+        42: aload_2
+        43: invokedynamic #65,  0             // InvokeDynamic #0:test:(Ljava/util/UUID;Ljava/lang/String;)Ljava/util/function/Predicate;
+        48: invokeinterface #69,  2           // InterfaceMethod java/util/stream/Stream.anyMatch:(Ljava/util/function/Predicate;)Z
+        53: ifeq          59
+        56: ldc           #75                 // String TRAP_ALREADY_DEPLOYED
+        58: areturn
+        59: ldc           #45                 // String PASS
+        61: areturn
+
+  public synchronized void start(com.inigmasgames.hytalerpg.execution.SkillExecutionContext, com.inigmasgames.hytalerpg.execution.math.Vec3, com.inigmasgames.hytalerpg.execution.math.Vec3, double, double, com.inigmasgames.hytalerpg.execution.area.AreaWorldPort);
+    Code:
+         0: aload_1
+         1: invokevirtual #77                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+         4: invokevirtual #83                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+         7: astore        9
+         9: aload         9
+        11: ifnull        37
+        14: dload         4
+        16: invokestatic  #89                 // Method java/lang/Double.isFinite:(D)Z
+        19: ifeq          37
+        22: dload         6
+        24: invokestatic  #89                 // Method java/lang/Double.isFinite:(D)Z
+        27: ifeq          37
+        30: dload         6
+        32: dconst_0
+        33: dcmpg
+        34: ifgt          47
+        37: new           #95                 // class java/lang/IllegalArgumentException
+        40: dup
+        41: ldc           #97                 // String Invalid area start
+        43: invokespecial #99                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        46: athrow
+        47: aload_1
+        48: invokevirtual #102                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+        51: invokevirtual #106                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.zones:()Lcom/inigmasgames/hytalerpg/domain/ZoneModifiers;
+        54: invokevirtual #112                // Method com/inigmasgames/hytalerpg/domain/ZoneModifiers.mobileDomain:()Z
+        57: istore        10
+        59: aload_1
+        60: invokevirtual #102                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+        63: invokevirtual #106                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.zones:()Lcom/inigmasgames/hytalerpg/domain/ZoneModifiers;
+        66: invokevirtual #118                // Method com/inigmasgames/hytalerpg/domain/ZoneModifiers.cascade:()Z
+        69: istore        11
+        71: iload         11
+        73: ifeq          96
+        76: aload_1
+        77: invokevirtual #77                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+        80: invokestatic  #121                // Method com/inigmasgames/hytalerpg/execution/ProfileComponentPolicy.cascade:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;)Z
+        83: ifne          96
+        86: new           #126                // class java/lang/IllegalStateException
+        89: dup
+        90: ldc           #128                // String CASCADE_AREA_COMPONENT_REQUIRED
+        92: invokespecial #130                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+        95: athrow
+        96: aload_1
+        97: invokevirtual #102                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+       100: invokevirtual #131                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.pulses:()Lcom/inigmasgames/hytalerpg/domain/PulseModifiers;
+       103: invokevirtual #135                // Method com/inigmasgames/hytalerpg/domain/PulseModifiers.rapidPulse:()Z
+       106: ifeq          129
+       109: aload_1
+       110: invokevirtual #77                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+       113: invokestatic  #140                // Method com/inigmasgames/hytalerpg/execution/ProfileComponentPolicy.periodicPulse:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;)Z
+       116: ifne          129
+       119: new           #126                // class java/lang/IllegalStateException
+       122: dup
+       123: ldc           #143                // String PERIODIC_PULSE_COMPONENT_REQUIRED
+       125: invokespecial #130                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       128: athrow
+       129: iload         10
+       131: ifeq          154
+       134: aload_1
+       135: invokevirtual #77                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+       138: invokestatic  #145                // Method com/inigmasgames/hytalerpg/execution/ProfileComponentPolicy.mobileZone:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;)Z
+       141: ifne          154
+       144: new           #126                // class java/lang/IllegalStateException
+       147: dup
+       148: ldc           #148                // String MOBILE_FINITE_ZONE_COMPONENT_REQUIRED
+       150: invokespecial #130                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       153: athrow
+       154: iload         10
+       156: ifeq          179
+       159: aload_1
+       160: aload         8
+       162: invokestatic  #150                // Method mobileOrigin:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)Ljava/util/Optional;
+       165: invokedynamic #154,  0            // InvokeDynamic #1:get:()Ljava/util/function/Supplier;
+       170: invokevirtual #158                // Method java/util/Optional.orElseThrow:(Ljava/util/function/Supplier;)Ljava/lang/Object;
+       173: checkcast     #164                // class com/inigmasgames/hytalerpg/execution/math/Vec3
+       176: goto          180
+       179: aload_2
+       180: astore        12
+       182: iload         10
+       184: ifeq          204
+       187: aload_1
+       188: invokevirtual #166                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.secondaryKind:()Ljava/lang/String;
+       191: ldc           #170                // String cascade
+       193: invokevirtual #47                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       196: ifne          204
+       199: aload         12
+       201: goto          205
+       204: aload_2
+       205: astore        13
+       207: aload_0
+       208: aload_1
+       209: invokevirtual #171                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.request:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;
+       212: invokevirtual #175                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionRequest.actorId:()Ljava/util/UUID;
+       215: aload_1
+       216: invokevirtual #77                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+       219: invokevirtual #181                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.skillId:()Ljava/lang/String;
+       222: aload         9
+       224: invokevirtual #184                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.trap:()Z
+       227: invokevirtual #189                // Method admission:(Ljava/util/UUID;Ljava/lang/String;Z)Ljava/lang/String;
+       230: astore        14
+       232: aload         14
+       234: ldc           #45                 // String PASS
+       236: invokevirtual #47                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       239: ifne          252
+       242: new           #126                // class java/lang/IllegalStateException
+       245: dup
+       246: aload         14
+       248: invokespecial #130                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       251: athrow
+       252: aload_0
+       253: getfield      #18                 // Field fields:Ljava/util/Map;
+       256: aload_1
+       257: invokevirtual #192                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.skillInstanceId:()Ljava/lang/String;
+       260: invokeinterface #195,  2          // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+       265: ifeq          278
+       268: new           #126                // class java/lang/IllegalStateException
+       271: dup
+       272: ldc           #198                // String DUPLICATE_FIELD_INSTANCE
+       274: invokespecial #130                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       277: athrow
+       278: iconst_1
+       279: aload         9
+       281: invokevirtual #200                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.stratified:()Z
+       284: ifeq          300
+       287: iload         11
+       289: ifne          300
+       292: aload         9
+       294: invokevirtual #203                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.impactCount:()I
+       297: goto          301
+       300: iconst_0
+       301: iadd
+       302: istore        15
+       304: aload_0
+       305: getfield      #28                 // Field rootSpawned:Ljava/util/Map;
+       308: aload_1
+       309: invokestatic  #207                // Method rootKey:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;)Ljava/lang/String;
+       312: iconst_0
+       313: invokestatic  #211                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       316: invokeinterface #217,  3          // InterfaceMethod java/util/Map.getOrDefault:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       321: checkcast     #212                // class java/lang/Integer
+       324: invokevirtual #221                // Method java/lang/Integer.intValue:()I
+       327: istore        16
+       329: iload         16
+       331: iload         15
+       333: iadd
+       334: aload_1
+       335: invokevirtual #102                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+       338: invokevirtual #224                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.safetyBudgets:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan$SafetyBudgets;
+       341: invokevirtual #228                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan$SafetyBudgets.maxSpawnedEffects:()I
+       344: if_icmple     357
+       347: new           #126                // class java/lang/IllegalStateException
+       350: dup
+       351: ldc           #233                // String ROOT_SPAWN_EFFECT_BUDGET
+       353: invokespecial #130                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       356: athrow
+       357: new           #235                // class com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field
+       360: dup
+       361: aload_1
+       362: aload         9
+       364: aload         13
+       366: aload_3
+       367: dload         6
+       369: invokevirtual #237                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.footprint:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;D)Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       372: dload         4
+       374: dload         6
+       376: invokespecial #241                // Method com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field."<init>":(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;DD)V
+       379: astore        17
+       381: iload         10
+       383: ifeq          398
+       386: aload         17
+       388: aload         13
+       390: aload         12
+       392: invokevirtual #244                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.subtract:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       395: putfield      #248                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.mobileOffset:Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       398: iload         11
+       400: ifeq          453
+       403: aload_1
+       404: invokevirtual #252                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.derivedRelease:()Z
+       407: ifeq          453
+       410: aload_1
+       411: invokevirtual #255                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.effects:()Lcom/inigmasgames/hytalerpg/execution/RootEffectBudget;
+       414: aload_1
+       415: invokevirtual #192                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.skillInstanceId:()Ljava/lang/String;
+       418: iconst_1
+       419: aload_1
+       420: invokevirtual #166                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.secondaryKind:()Ljava/lang/String;
+       423: ldc           #170                // String cascade
+       425: invokevirtual #47                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       428: invokevirtual #259                // Method com/inigmasgames/hytalerpg/execution/RootEffectBudget.claim:(Ljava/lang/String;IZ)Ljava/lang/String;
+       431: astore        18
+       433: aload         18
+       435: ldc           #45                 // String PASS
+       437: invokevirtual #47                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       440: ifne          453
+       443: new           #126                // class java/lang/IllegalStateException
+       446: dup
+       447: aload         18
+       449: invokespecial #130                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       452: athrow
+       453: aload_0
+       454: getfield      #37                 // Field capacity:Lcom/inigmasgames/hytalerpg/execution/OwnedFieldBudget;
+       457: aload_1
+       458: invokevirtual #171                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.request:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;
+       461: invokevirtual #175                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionRequest.actorId:()Ljava/util/UUID;
+       464: aload_1
+       465: invokevirtual #192                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.skillInstanceId:()Ljava/lang/String;
+       468: invokevirtual #265                // Method com/inigmasgames/hytalerpg/execution/OwnedFieldBudget.reserve:(Ljava/util/UUID;Ljava/lang/String;)V
+       471: aload_0
+       472: getfield      #28                 // Field rootSpawned:Ljava/util/Map;
+       475: aload_1
+       476: invokestatic  #207                // Method rootKey:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;)Ljava/lang/String;
+       479: iload         16
+       481: iload         15
+       483: iadd
+       484: invokestatic  #211                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       487: invokeinterface #269,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       492: pop
+       493: aload_0
+       494: getfield      #18                 // Field fields:Ljava/util/Map;
+       497: aload_1
+       498: invokevirtual #192                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.skillInstanceId:()Ljava/lang/String;
+       501: aload         17
+       503: invokeinterface #269,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       508: pop
+       509: aload         8
+       511: aload_1
+       512: ldc_w         #272                // String AREA_STARTED
+       515: ldc_w         #274                // String origin
+       518: aload         13
+       520: invokevirtual #276                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.toString:()Ljava/lang/String;
+       523: ldc_w         #279                // String radius
+       526: aload         17
+       528: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       531: invokevirtual #285                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.radius:()D
+       534: invokestatic  #290                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       537: ldc_w         #293                // String height
+       540: aload         17
+       542: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       545: invokevirtual #295                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.height:()D
+       548: invokestatic  #290                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       551: ldc_w         #297                // String lifetimeSeconds
+       554: aload         9
+       556: invokevirtual #299                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.lifetimeSeconds:()D
+       559: invokestatic  #290                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       562: ldc_w         #301                // String mobileDomain
+       565: iload         10
+       567: invokestatic  #302                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+       570: invokestatic  #307                // InterfaceMethod java/util/Map.of:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;
+       573: invokeinterface #311,  4          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.trace:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Ljava/lang/String;Ljava/util/Map;)V
+       578: aload_0
+       579: aload         17
+       581: dload         4
+       583: aload         8
+       585: invokevirtual #317                // Method tickField:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;DLcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+       588: iload         11
+       590: ifeq          623
+       593: aload_1
+       594: invokevirtual #252                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.derivedRelease:()Z
+       597: ifne          623
+       600: aload_1
+       601: invokevirtual #255                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.effects:()Lcom/inigmasgames/hytalerpg/execution/RootEffectBudget;
+       604: ldc_w         #321                // String CASCADE
+       607: invokevirtual #323                // Method com/inigmasgames/hytalerpg/execution/RootEffectBudget.once:(Ljava/lang/String;)Z
+       610: ifeq          623
+       613: aload_0
+       614: aload         17
+       616: dload         4
+       618: aload         8
+       620: invokevirtual #327                // Method startCascade:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;DLcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+       623: aload         17
+       625: getfield      #330                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.done:Z
+       628: ifeq          685
+       631: aload_0
+       632: aload         17
+       634: invokevirtual #334                // Method removeField:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;)V
+       637: goto          685
+       640: astore        18
+       642: aload_0
+       643: aload         17
+       645: aload         18
+       647: invokevirtual #340                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+       650: invokevirtual #344                // Method java/lang/Class.getSimpleName:()Ljava/lang/String;
+       653: invokedynamic #349,  0            // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+       658: aload         8
+       660: invokevirtual #353                // Method finish:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+       663: aload         18
+       665: athrow
+       666: astore        19
+       668: aload         17
+       670: getfield      #330                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.done:Z
+       673: ifeq          682
+       676: aload_0
+       677: aload         17
+       679: invokevirtual #334                // Method removeField:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;)V
+       682: aload         19
+       684: athrow
+       685: return
+      Exception table:
+         from    to  target type
+           509   623   640   Class java/lang/RuntimeException
+           509   623   666   any
+           640   668   666   any
+
+  private void startCascade(com.inigmasgames.hytalerpg.execution.area.AreaRuntime$Field, double, com.inigmasgames.hytalerpg.execution.area.AreaWorldPort);
+    Code:
+         0: aload_1
+         1: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+         4: astore        5
+         6: aload_1
+         7: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+        10: invokevirtual #361                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.direction:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+        13: astore        6
+        15: new           #164                // class com/inigmasgames/hytalerpg/execution/math/Vec3
+        18: dup
+        19: aload         6
+        21: invokevirtual #365                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.z:()D
+        24: dconst_0
+        25: aload         6
+        27: invokevirtual #368                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.x:()D
+        30: dneg
+        31: invokespecial #371                // Method com/inigmasgames/hytalerpg/execution/math/Vec3."<init>":(DDD)V
+        34: invokevirtual #374                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.horizontalNormalized:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+        37: astore        7
+        39: ldc2_w        #377                // double 1.2d
+        42: aload         5
+        44: invokevirtual #77                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+        47: invokevirtual #181                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.skillId:()Ljava/lang/String;
+        50: invokestatic  #379                // Method com/inigmasgames/hytalerpg/execution/ProfileComponentPolicy.baseAreaRadius:(Ljava/lang/String;)D
+        53: dmul
+        54: dstore        8
+        56: iconst_1
+        57: istore        10
+        59: iload         10
+        61: iconst_2
+        62: if_icmpgt     273
+        65: aload         5
+        67: iload         10
+        69: invokevirtual #383                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.cascadeCopy:(I)Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        72: astore        11
+        74: aload_1
+        75: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+        78: invokevirtual #387                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.origin:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+        81: aload         7
+        83: iload         10
+        85: iconst_1
+        86: if_icmpne     95
+        89: dload         8
+        91: dneg
+        92: goto          97
+        95: dload         8
+        97: invokevirtual #389                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.multiply:(D)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       100: invokevirtual #393                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.add:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       103: astore        12
+       105: aload         5
+       107: invokevirtual #77                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+       110: invokevirtual #83                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+       113: aload         12
+       115: aload         6
+       117: aload_1
+       118: getfield      #396                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.radiusFactor:D
+       121: ldc2_w        #400                // double 0.6d
+       124: dmul
+       125: invokevirtual #237                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.footprint:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;D)Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       128: astore        13
+       130: aload         4
+       132: aload_1
+       133: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       136: invokevirtual #387                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.origin:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       139: aload         13
+       141: invokeinterface #402,  3          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.prepareImpact:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;)Ljava/util/Optional;
+       146: astore        14
+       148: aload         14
+       150: invokevirtual #406                // Method java/util/Optional.isEmpty:()Z
+       153: ifeq          188
+       156: aload         4
+       158: aload         11
+       160: ldc_w         #409                // String AREA_QUERY_REJECTED
+       163: ldc_w         #411                // String reason
+       166: ldc_w         #413                // String CASCADE_NO_LEGAL_TERRAIN
+       169: ldc_w         #415                // String ordinal
+       172: iload         10
+       174: invokestatic  #211                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       177: invokestatic  #417                // InterfaceMethod java/util/Map.of:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;
+       180: invokeinterface #311,  4          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.trace:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Ljava/lang/String;Ljava/util/Map;)V
+       185: goto          267
+       188: aload_0
+       189: aload         11
+       191: aload         14
+       193: invokevirtual #420                // Method java/util/Optional.get:()Ljava/lang/Object;
+       196: checkcast     #286                // class com/inigmasgames/hytalerpg/execution/area/AreaGeometry
+       199: invokevirtual #387                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.origin:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       202: aload         6
+       204: dload_2
+       205: aload_1
+       206: getfield      #396                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.radiusFactor:D
+       209: ldc2_w        #400                // double 0.6d
+       212: dmul
+       213: aload         4
+       215: invokevirtual #423                // Method start:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;DDLcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+       218: goto          267
+       221: astore        13
+       223: aload         4
+       225: aload         11
+       227: ldc_w         #409                // String AREA_QUERY_REJECTED
+       230: ldc_w         #411                // String reason
+       233: ldc_w         #427                // String CASCADE_CHILD_REJECTED
+       236: ldc_w         #429                // String boundary
+       239: aload         13
+       241: invokevirtual #431                // Method java/lang/RuntimeException.getMessage:()Ljava/lang/String;
+       244: invokestatic  #434                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+       247: ldc_w         #437                // String paidRootRetained
+       250: iconst_1
+       251: invokestatic  #302                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+       254: invokestatic  #439                // InterfaceMethod java/util/Map.of:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;
+       257: invokeinterface #311,  4          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.trace:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Ljava/lang/String;Ljava/util/Map;)V
+       262: goto          267
+       265: astore        14
+       267: iinc          10, 1
+       270: goto          59
+       273: return
+      Exception table:
+         from    to  target type
+           105   185   221   Class java/lang/RuntimeException
+           188   218   221   Class java/lang/RuntimeException
+           223   262   265   Class java/lang/RuntimeException
+
+  public synchronized void tick(java.util.UUID, double, com.inigmasgames.hytalerpg.execution.area.AreaWorldPort);
+    Code:
+         0: dload_2
+         1: invokestatic  #89                 // Method java/lang/Double.isFinite:(D)Z
+         4: ifne          18
+         7: new           #95                 // class java/lang/IllegalArgumentException
+        10: dup
+        11: ldc_w         #442                // String Invalid clock
+        14: invokespecial #99                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        17: athrow
+        18: new           #444                // class java/util/ArrayList
+        21: dup
+        22: aload_0
+        23: getfield      #18                 // Field fields:Ljava/util/Map;
+        26: invokeinterface #53,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+        31: invokespecial #446                // Method java/util/ArrayList."<init>":(Ljava/util/Collection;)V
+        34: invokevirtual #449                // Method java/util/ArrayList.iterator:()Ljava/util/Iterator;
+        37: astore        5
+        39: aload         5
+        41: invokeinterface #453,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+        46: ifeq          170
+        49: aload         5
+        51: invokeinterface #458,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+        56: checkcast     #235                // class com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field
+        59: astore        6
+        61: aload         6
+        63: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        66: invokevirtual #171                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.request:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;
+        69: invokevirtual #175                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionRequest.actorId:()Ljava/util/UUID;
+        72: aload_1
+        73: invokevirtual #461                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+        76: ifne          82
+        79: goto          39
+        82: aload_0
+        83: aload         6
+        85: dload_2
+        86: aload         4
+        88: invokevirtual #317                // Method tickField:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;DLcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+        91: aload         6
+        93: getfield      #330                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.done:Z
+        96: ifeq          167
+        99: aload_0
+       100: aload         6
+       102: invokevirtual #334                // Method removeField:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;)V
+       105: goto          167
+       108: astore        7
+       110: aload_0
+       111: aload         6
+       113: aload         7
+       115: invokevirtual #340                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+       118: invokevirtual #344                // Method java/lang/Class.getSimpleName:()Ljava/lang/String;
+       121: invokedynamic #349,  0            // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+       126: aload         4
+       128: invokevirtual #353                // Method finish:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+       131: aload         6
+       133: getfield      #330                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.done:Z
+       136: ifeq          167
+       139: aload_0
+       140: aload         6
+       142: invokevirtual #334                // Method removeField:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;)V
+       145: goto          167
+       148: astore        8
+       150: aload         6
+       152: getfield      #330                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.done:Z
+       155: ifeq          164
+       158: aload_0
+       159: aload         6
+       161: invokevirtual #334                // Method removeField:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;)V
+       164: aload         8
+       166: athrow
+       167: goto          39
+       170: return
+      Exception table:
+         from    to  target type
+            82    91   108   Class java/lang/RuntimeException
+            82    91   148   any
+           108   131   148   any
+           148   150   148   any
+
+  public synchronized java.util.List<com.inigmasgames.hytalerpg.execution.SkillExecutionContext> cancel(java.util.UUID);
+    Code:
+         0: new           #444                // class java/util/ArrayList
+         3: dup
+         4: invokespecial #464                // Method java/util/ArrayList."<init>":()V
+         7: astore_2
+         8: aload_0
+         9: getfield      #18                 // Field fields:Ljava/util/Map;
+        12: invokeinterface #53,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+        17: aload_0
+        18: aload_1
+        19: aload_2
+        20: invokedynamic #465,  0            // InvokeDynamic #3:test:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime;Ljava/util/UUID;Ljava/util/List;)Ljava/util/function/Predicate;
+        25: invokeinterface #468,  2          // InterfaceMethod java/util/Collection.removeIf:(Ljava/util/function/Predicate;)Z
+        30: pop
+        31: aload_2
+        32: aload_0
+        33: invokedynamic #471,  0            // InvokeDynamic #4:accept:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime;)Ljava/util/function/Consumer;
+        38: invokeinterface #475,  2          // InterfaceMethod java/util/List.forEach:(Ljava/util/function/Consumer;)V
+        43: aload_2
+        44: invokestatic  #481                // InterfaceMethod java/util/List.copyOf:(Ljava/util/Collection;)Ljava/util/List;
+        47: areturn
+
+  public synchronized int size();
+    Code:
+         0: aload_0
+         1: getfield      #18                 // Field fields:Ljava/util/Map;
+         4: invokeinterface #485,  1          // InterfaceMethod java/util/Map.size:()I
+         9: ireturn
+
+  private void tickField(com.inigmasgames.hytalerpg.execution.area.AreaRuntime$Field, double, com.inigmasgames.hytalerpg.execution.area.AreaWorldPort);
+    Code:
+         0: aload_1
+         1: getfield      #330                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.done:Z
+         4: ifne          16
+         7: dload_2
+         8: aload_1
+         9: getfield      #488                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.lastTick:D
+        12: dcmpg
+        13: ifge          17
+        16: return
+        17: aload_1
+        18: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        21: invokevirtual #102                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+        24: invokevirtual #106                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.zones:()Lcom/inigmasgames/hytalerpg/domain/ZoneModifiers;
+        27: invokevirtual #112                // Method com/inigmasgames/hytalerpg/domain/ZoneModifiers.mobileDomain:()Z
+        30: ifeq          96
+        33: aload_1
+        34: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        37: aload         4
+        39: invokestatic  #150                // Method mobileOrigin:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)Ljava/util/Optional;
+        42: astore        5
+        44: aload         5
+        46: invokevirtual #406                // Method java/util/Optional.isEmpty:()Z
+        49: ifeq          63
+        52: aload_0
+        53: aload_1
+        54: ldc_w         #491                // String MOBILE_OWNER_ANCHOR_UNAVAILABLE
+        57: aload         4
+        59: invokevirtual #353                // Method finish:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+        62: return
+        63: aload_1
+        64: aload_1
+        65: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+        68: aload         5
+        70: invokevirtual #420                // Method java/util/Optional.get:()Ljava/lang/Object;
+        73: checkcast     #164                // class com/inigmasgames/hytalerpg/execution/math/Vec3
+        76: aload_1
+        77: getfield      #248                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.mobileOffset:Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+        80: invokevirtual #393                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.add:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+        83: aload_1
+        84: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+        87: invokevirtual #285                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.radius:()D
+        90: invokevirtual #493                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.at:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;D)Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+        93: putfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+        96: dload_2
+        97: aload_1
+        98: getfield      #488                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.lastTick:D
+       101: dsub
+       102: dstore        5
+       104: aload_1
+       105: dload_2
+       106: putfield      #488                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.lastTick:D
+       109: aload_1
+       110: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       113: invokevirtual #77                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+       116: invokevirtual #83                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+       119: astore        7
+       121: dload_2
+       122: aload_1
+       123: getfield      #497                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.started:D
+       126: dsub
+       127: dstore        8
+       129: aload         7
+       131: invokevirtual #184                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.trap:()Z
+       134: ifeq          380
+       137: dload         8
+       139: aload         7
+       141: invokevirtual #299                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.lifetimeSeconds:()D
+       144: dcmpl
+       145: iflt          159
+       148: aload_0
+       149: aload_1
+       150: ldc_w         #500                // String TRAP_EXPIRED
+       153: aload         4
+       155: invokevirtual #353                // Method finish:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+       158: return
+       159: dload_2
+       160: aload_1
+       161: getfield      #502                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.nextScan:D
+       164: dcmpg
+       165: ifge          169
+       168: return
+       169: aload_1
+       170: dload_2
+       171: ldc2_w        #505                // double 0.25d
+       174: dadd
+       175: putfield      #502                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.nextScan:D
+       178: aload         4
+       180: aload_1
+       181: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       184: aload_1
+       185: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       188: dload         8
+       190: aload         7
+       192: invokevirtual #507                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.armingSeconds:()D
+       195: dcmpg
+       196: ifge          205
+       199: ldc_w         #510                // String ARMING
+       202: goto          208
+       205: ldc_w         #512                // String ARMED
+       208: ldc2_w        #514                // double 0.3d
+       211: invokeinterface #516,  6          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.present:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;Ljava/lang/String;D)V
+       216: dload         8
+       218: aload         7
+       220: invokevirtual #507                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.armingSeconds:()D
+       223: dcmpg
+       224: ifge          228
+       227: return
+       228: aload_0
+       229: aload_1
+       230: aload_1
+       231: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       234: aload         4
+       236: invokevirtual #520                // Method targets:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)Ljava/util/List;
+       239: astore        10
+       241: aload         10
+       243: ifnull        256
+       246: aload         10
+       248: invokeinterface #524,  1          // InterfaceMethod java/util/List.isEmpty:()Z
+       253: ifeq          257
+       256: return
+       257: aload         7
+       259: invokevirtual #525                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.impactRadius:()D
+       262: dconst_0
+       263: dcmpl
+       264: ifle          294
+       267: aload_1
+       268: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       271: aload_1
+       272: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       275: invokevirtual #387                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.origin:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       278: aload         7
+       280: invokevirtual #525                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.impactRadius:()D
+       283: aload_1
+       284: getfield      #396                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.radiusFactor:D
+       287: dmul
+       288: invokevirtual #493                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.at:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;D)Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       291: goto          298
+       294: aload_1
+       295: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       298: astore        11
+       300: aload         7
+       302: invokevirtual #528                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.firstTargetOnly:()Z
+       305: ifeq          313
+       308: aload         10
+       310: goto          322
+       313: aload_0
+       314: aload_1
+       315: aload         11
+       317: aload         4
+       319: invokevirtual #520                // Method targets:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)Ljava/util/List;
+       322: astore        12
+       324: aload         12
+       326: ifnonnull     330
+       329: return
+       330: aload_0
+       331: aload_1
+       332: aload         11
+       334: aload         12
+       336: iconst_0
+       337: dload_2
+       338: aload         4
+       340: invokevirtual #531                // Method hit:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;Ljava/util/List;IDLcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)I
+       343: istore        13
+       345: iload         13
+       347: ifle          379
+       350: aload         4
+       352: aload_1
+       353: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       356: aload         11
+       358: ldc_w         #535                // String IMPACT
+       361: ldc2_w        #514                // double 0.3d
+       364: invokeinterface #516,  6          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.present:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;Ljava/lang/String;D)V
+       369: aload_0
+       370: aload_1
+       371: ldc_w         #537                // String TRAP_TRIGGERED
+       374: aload         4
+       376: invokevirtual #353                // Method finish:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+       379: return
+       380: aload         7
+       382: invokevirtual #539                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.periodic:()Z
+       385: ifne          397
+       388: aload         7
+       390: invokevirtual #203                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.impactCount:()I
+       393: iconst_1
+       394: if_icmple     417
+       397: dload         5
+       399: ldc2_w        #542                // double 1.000000001d
+       402: dcmpl
+       403: ifle          417
+       406: aload_0
+       407: aload_1
+       408: ldc_w         #544                // String SIMULATION_GAP_EXCEEDS_ONE_SECOND
+       411: aload         4
+       413: invokevirtual #353                // Method finish:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+       416: return
+       417: aload         7
+       419: invokevirtual #539                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.periodic:()Z
+       422: ifeq          434
+       425: aload_0
+       426: aload_1
+       427: dload_2
+       428: aload         4
+       430: invokevirtual #546                // Method tickPeriodic:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;DLcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+       433: return
+       434: aload         7
+       436: invokevirtual #203                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.impactCount:()I
+       439: iconst_1
+       440: if_icmple     452
+       443: aload_0
+       444: aload_1
+       445: dload_2
+       446: aload         4
+       448: invokevirtual #549                // Method tickImpacts:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;DLcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+       451: return
+       452: aload         7
+       454: invokevirtual #552                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.overheadHeight:()D
+       457: dconst_0
+       458: dcmpl
+       459: ifle          600
+       462: aload         4
+       464: aload_1
+       465: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       468: aload         7
+       470: invokevirtual #552                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.overheadHeight:()D
+       473: invokeinterface #555,  4          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.overheadClear:(Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;D)Z
+       478: ifne          492
+       481: aload_0
+       482: aload_1
+       483: ldc_w         #559                // String OVERHEAD_ROOF_BLOCKED
+       486: aload         4
+       488: invokevirtual #353                // Method finish:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+       491: return
+       492: dload         8
+       494: aload         7
+       496: invokevirtual #561                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.warningSeconds:()D
+       499: aload         7
+       501: invokevirtual #564                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.descentSeconds:()D
+       504: dsub
+       505: dcmpl
+       506: iflt          600
+       509: dload         8
+       511: aload         7
+       513: invokevirtual #561                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.warningSeconds:()D
+       516: dcmpg
+       517: ifge          600
+       520: dload_2
+       521: aload_1
+       522: getfield      #567                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.nextDescent:D
+       525: dcmpl
+       526: iflt          600
+       529: aload_1
+       530: dload_2
+       531: ldc2_w        #570                // double 0.05d
+       534: dadd
+       535: putfield      #567                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.nextDescent:D
+       538: aload         7
+       540: invokevirtual #552                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.overheadHeight:()D
+       543: aload         7
+       545: invokevirtual #561                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.warningSeconds:()D
+       548: dload         8
+       550: dsub
+       551: aload         7
+       553: invokevirtual #564                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.descentSeconds:()D
+       556: ddiv
+       557: dconst_0
+       558: dconst_1
+       559: invokestatic  #572                // Method java/lang/Math.clamp:(DDD)D
+       562: dmul
+       563: dstore        10
+       565: aload         4
+       567: aload_1
+       568: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       571: aload_1
+       572: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       575: invokevirtual #387                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.origin:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       578: new           #164                // class com/inigmasgames/hytalerpg/execution/math/Vec3
+       581: dup
+       582: dconst_0
+       583: dload         10
+       585: dconst_0
+       586: invokespecial #371                // Method com/inigmasgames/hytalerpg/execution/math/Vec3."<init>":(DDD)V
+       589: invokevirtual #393                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.add:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       592: ldc2_w        #578                // double 0.08d
+       595: invokeinterface #580,  5          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.descendingVisual:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;D)V
+       600: dload         8
+       602: aload         7
+       604: invokevirtual #561                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.warningSeconds:()D
+       607: dcmpg
+       608: ifge          654
+       611: dload_2
+       612: aload_1
+       613: getfield      #502                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.nextScan:D
+       616: dcmpl
+       617: iflt          653
+       620: aload_1
+       621: dload_2
+       622: ldc2_w        #505                // double 0.25d
+       625: dadd
+       626: putfield      #502                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.nextScan:D
+       629: aload_0
+       630: aload_1
+       631: ldc_w         #584                // String WARNING
+       634: ldc2_w        #514                // double 0.3d
+       637: aload         7
+       639: invokevirtual #561                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.warningSeconds:()D
+       642: dload         8
+       644: dsub
+       645: invokestatic  #586                // Method java/lang/Math.min:(DD)D
+       648: aload         4
+       650: invokevirtual #590                // Method presentField:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Ljava/lang/String;DLcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+       653: return
+       654: aload         7
+       656: invokevirtual #552                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.overheadHeight:()D
+       659: dconst_0
+       660: dcmpl
+       661: ifle          695
+       664: aload_0
+       665: aload_1
+       666: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       669: aload_1
+       670: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       673: invokevirtual #387                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.origin:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       676: aload         4
+       678: invokevirtual #594                // Method sameSurface:(Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)Z
+       681: ifne          695
+       684: aload_0
+       685: aload_1
+       686: ldc_w         #598                // String WARNED_SURFACE_CHANGED
+       689: aload         4
+       691: invokevirtual #353                // Method finish:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+       694: return
+       695: aload_0
+       696: aload_1
+       697: aload_1
+       698: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       701: aload         4
+       703: invokevirtual #520                // Method targets:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)Ljava/util/List;
+       706: astore        10
+       708: aload         10
+       710: ifnonnull     724
+       713: aload_0
+       714: aload_1
+       715: ldc_w         #600                // String CANDIDATE_BUDGET_REJECTED
+       718: aload         4
+       720: invokevirtual #353                // Method finish:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+       723: return
+       724: aload_0
+       725: aload_1
+       726: aload_1
+       727: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       730: aload         10
+       732: iconst_0
+       733: dload_2
+       734: aload         4
+       736: invokevirtual #531                // Method hit:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;Ljava/util/List;IDLcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)I
+       739: pop
+       740: aload_0
+       741: aload_1
+       742: ldc_w         #535                // String IMPACT
+       745: ldc2_w        #514                // double 0.3d
+       748: aload         4
+       750: invokevirtual #590                // Method presentField:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Ljava/lang/String;DLcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+       753: aload_0
+       754: aload_1
+       755: ldc_w         #602                // String AREA_COMPLETE
+       758: aload         4
+       760: invokevirtual #353                // Method finish:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+       763: return
+
+  private void tickPeriodic(com.inigmasgames.hytalerpg.execution.area.AreaRuntime$Field, double, com.inigmasgames.hytalerpg.execution.area.AreaWorldPort);
+    Code:
+         0: aload_1
+         1: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+         4: invokevirtual #77                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+         7: invokevirtual #83                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+        10: astore        5
+        12: dload_2
+        13: aload_1
+        14: getfield      #497                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.started:D
+        17: dsub
+        18: dstore        6
+        20: dload_2
+        21: aload_1
+        22: getfield      #502                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.nextScan:D
+        25: dcmpl
+        26: iflt          62
+        29: dload         6
+        31: aload         5
+        33: invokevirtual #299                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.lifetimeSeconds:()D
+        36: dcmpg
+        37: ifge          62
+        40: aload_1
+        41: dload_2
+        42: ldc2_w        #505                // double 0.25d
+        45: dadd
+        46: putfield      #502                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.nextScan:D
+        49: aload_0
+        50: aload_1
+        51: ldc_w         #604                // String ACTIVE
+        54: ldc2_w        #514                // double 0.3d
+        57: aload         4
+        59: invokevirtual #590                // Method presentField:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Ljava/lang/String;DLcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+        62: dload         6
+        64: aload         5
+        66: invokevirtual #299                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.lifetimeSeconds:()D
+        69: invokestatic  #586                // Method java/lang/Math.min:(DD)D
+        72: dstore        8
+        74: aload_1
+        75: getfield      #606                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.nextImpact:I
+        78: istore        10
+        80: aload_1
+        81: getfield      #610                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.integrated:D
+        84: dload         8
+        86: ldc2_w        #613                // double 1.0E-9d
+        89: dsub
+        90: dcmpg
+        91: ifge          247
+        94: aload_1
+        95: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        98: invokevirtual #102                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+       101: invokevirtual #131                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.pulses:()Lcom/inigmasgames/hytalerpg/domain/PulseModifiers;
+       104: invokevirtual #135                // Method com/inigmasgames/hytalerpg/domain/PulseModifiers.rapidPulse:()Z
+       107: ifeq          136
+       110: aload_1
+       111: getfield      #610                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.integrated:D
+       114: aload         5
+       116: invokevirtual #615                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.intervalSeconds:()D
+       119: dadd
+       120: aload         5
+       122: invokevirtual #299                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.lifetimeSeconds:()D
+       125: ldc2_w        #613                // double 1.0E-9d
+       128: dadd
+       129: dcmpl
+       130: ifle          136
+       133: goto          247
+       136: aload_1
+       137: getfield      #610                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.integrated:D
+       140: aload         5
+       142: invokevirtual #615                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.intervalSeconds:()D
+       145: dadd
+       146: aload         5
+       148: invokevirtual #299                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.lifetimeSeconds:()D
+       151: invokestatic  #586                // Method java/lang/Math.min:(DD)D
+       154: dstore        11
+       156: dload         6
+       158: dload         11
+       160: ldc2_w        #613                // double 1.0E-9d
+       163: dsub
+       164: dcmpg
+       165: ifge          171
+       168: goto          247
+       171: aload_0
+       172: aload_1
+       173: aload_1
+       174: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       177: aload         4
+       179: invokevirtual #520                // Method targets:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)Ljava/util/List;
+       182: astore        13
+       184: aload         13
+       186: ifnonnull     200
+       189: aload_0
+       190: aload_1
+       191: ldc_w         #600                // String CANDIDATE_BUDGET_REJECTED
+       194: aload         4
+       196: invokevirtual #353                // Method finish:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+       199: return
+       200: dload         11
+       202: aload_1
+       203: getfield      #610                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.integrated:D
+       206: dsub
+       207: dstore        14
+       209: aload_0
+       210: aload_1
+       211: aload_1
+       212: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       215: aload         13
+       217: iload         10
+       219: iinc          10, 1
+       222: aload_1
+       223: getfield      #497                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.started:D
+       226: dload         11
+       228: dadd
+       229: aload         4
+       231: dload         14
+       233: iconst_1
+       234: invokevirtual #618                // Method hit:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;Ljava/util/List;IDLcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;DZ)I
+       237: pop
+       238: aload_1
+       239: dload         11
+       241: putfield      #610                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.integrated:D
+       244: goto          80
+       247: aload_1
+       248: iload         10
+       250: putfield      #606                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.nextImpact:I
+       253: dload         6
+       255: aload         5
+       257: invokevirtual #299                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.lifetimeSeconds:()D
+       260: dcmpl
+       261: iflt          274
+       264: aload_0
+       265: aload_1
+       266: ldc_w         #621                // String AREA_EXPIRED
+       269: aload         4
+       271: invokevirtual #353                // Method finish:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+       274: return
+
+  private void tickImpacts(com.inigmasgames.hytalerpg.execution.area.AreaRuntime$Field, double, com.inigmasgames.hytalerpg.execution.area.AreaWorldPort);
+    Code:
+         0: aload_1
+         1: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+         4: invokevirtual #77                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+         7: invokevirtual #83                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+        10: astore        5
+        12: aload_1
+        13: getfield      #497                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.started:D
+        16: aload         5
+        18: invokevirtual #200                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.stratified:()Z
+        21: ifeq          42
+        24: dconst_0
+        25: aload         5
+        27: invokevirtual #561                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.warningSeconds:()D
+        30: aload         5
+        32: invokevirtual #623                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.firstImpactSeconds:()D
+        35: dsub
+        36: invokestatic  #626                // Method java/lang/Math.max:(DD)D
+        39: goto          43
+        42: dconst_0
+        43: dadd
+        44: dstore        6
+        46: dload_2
+        47: aload_1
+        48: getfield      #502                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.nextScan:D
+        51: dcmpl
+        52: iflt          90
+        55: dload_2
+        56: dload         6
+        58: aload         5
+        60: invokevirtual #299                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.lifetimeSeconds:()D
+        63: dadd
+        64: dcmpg
+        65: ifge          90
+        68: aload_1
+        69: dload_2
+        70: ldc2_w        #505                // double 0.25d
+        73: dadd
+        74: putfield      #502                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.nextScan:D
+        77: aload_0
+        78: aload_1
+        79: ldc_w         #604                // String ACTIVE
+        82: ldc2_w        #514                // double 0.3d
+        85: aload         4
+        87: invokevirtual #590                // Method presentField:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Ljava/lang/String;DLcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+        90: iconst_0
+        91: istore        8
+        93: iload         8
+        95: aload         5
+        97: invokevirtual #203                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.impactCount:()I
+       100: if_icmpge     742
+       103: aload_1
+       104: getfield      #629                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.impacted:[Z
+       107: iload         8
+       109: baload
+       110: ifeq          116
+       113: goto          736
+       116: dload         6
+       118: aload         5
+       120: invokevirtual #623                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.firstImpactSeconds:()D
+       123: dadd
+       124: iload         8
+       126: i2d
+       127: aload         5
+       129: invokevirtual #615                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.intervalSeconds:()D
+       132: dmul
+       133: dadd
+       134: dstore        9
+       136: dload_2
+       137: dload         9
+       139: aload         5
+       141: invokevirtual #561                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.warningSeconds:()D
+       144: dsub
+       145: ldc2_w        #613                // double 1.0E-9d
+       148: dsub
+       149: dcmpg
+       150: ifge          156
+       153: goto          736
+       156: aload         5
+       158: invokevirtual #200                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.stratified:()Z
+       161: ifeq          208
+       164: aload_1
+       165: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       168: aload_1
+       169: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       172: invokevirtual #387                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.origin:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       175: aload_1
+       176: getfield      #633                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.offsets:Ljava/util/List;
+       179: iload         8
+       181: invokeinterface #637,  2          // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+       186: checkcast     #164                // class com/inigmasgames/hytalerpg/execution/math/Vec3
+       189: invokevirtual #393                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.add:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       192: aload         5
+       194: invokevirtual #525                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.impactRadius:()D
+       197: aload_1
+       198: getfield      #396                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.radiusFactor:D
+       201: dmul
+       202: invokevirtual #493                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.at:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;D)Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       205: goto          212
+       208: aload_1
+       209: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       212: astore        11
+       214: aload         5
+       216: invokevirtual #200                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.stratified:()Z
+       219: ifeq          455
+       222: aload_1
+       223: getfield      #640                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.prepared:[Z
+       226: iload         8
+       228: baload
+       229: ifne          389
+       232: aload_1
+       233: getfield      #640                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.prepared:[Z
+       236: iload         8
+       238: iconst_1
+       239: bastore
+       240: aload_1
+       241: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       244: invokevirtual #102                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+       247: invokevirtual #106                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.zones:()Lcom/inigmasgames/hytalerpg/domain/ZoneModifiers;
+       250: invokevirtual #118                // Method com/inigmasgames/hytalerpg/domain/ZoneModifiers.cascade:()Z
+       253: ifeq          359
+       256: aload_1
+       257: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       260: invokevirtual #255                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.effects:()Lcom/inigmasgames/hytalerpg/execution/RootEffectBudget;
+       263: aload_1
+       264: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       267: invokevirtual #192                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.skillInstanceId:()Ljava/lang/String;
+       270: iload         8
+       272: invokedynamic #643,  0            // InvokeDynamic #5:makeConcatWithConstants:(Ljava/lang/String;I)Ljava/lang/String;
+       277: aload_1
+       278: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       281: invokevirtual #252                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.derivedRelease:()Z
+       284: ifeq          291
+       287: iconst_2
+       288: goto          292
+       291: iconst_1
+       292: iconst_0
+       293: invokevirtual #259                // Method com/inigmasgames/hytalerpg/execution/RootEffectBudget.claim:(Ljava/lang/String;IZ)Ljava/lang/String;
+       296: astore        12
+       298: aload         12
+       300: ldc           #45                 // String PASS
+       302: invokevirtual #47                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       305: ifne          359
+       308: aload_1
+       309: getfield      #629                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.impacted:[Z
+       312: iload         8
+       314: iconst_1
+       315: bastore
+       316: aload_1
+       317: dup
+       318: getfield      #606                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.nextImpact:I
+       321: iconst_1
+       322: iadd
+       323: putfield      #606                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.nextImpact:I
+       326: aload         4
+       328: aload_1
+       329: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       332: ldc_w         #409                // String AREA_QUERY_REJECTED
+       335: ldc_w         #411                // String reason
+       338: aload         12
+       340: ldc_w         #646                // String impactIndex
+       343: iload         8
+       345: invokestatic  #211                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       348: invokestatic  #417                // InterfaceMethod java/util/Map.of:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;
+       351: invokeinterface #311,  4          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.trace:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Ljava/lang/String;Ljava/util/Map;)V
+       356: goto          736
+       359: aload_1
+       360: getfield      #648                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.impactGeometry:[Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       363: iload         8
+       365: aload         4
+       367: aload_1
+       368: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       371: invokevirtual #387                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.origin:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       374: aload         11
+       376: invokeinterface #402,  3          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.prepareImpact:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;)Ljava/util/Optional;
+       381: aconst_null
+       382: invokevirtual #652                // Method java/util/Optional.orElse:(Ljava/lang/Object;)Ljava/lang/Object;
+       385: checkcast     #286                // class com/inigmasgames/hytalerpg/execution/area/AreaGeometry
+       388: aastore
+       389: aload_1
+       390: getfield      #648                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.impactGeometry:[Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       393: iload         8
+       395: aaload
+       396: astore        11
+       398: aload         11
+       400: ifnonnull     455
+       403: aload_1
+       404: getfield      #629                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.impacted:[Z
+       407: iload         8
+       409: iconst_1
+       410: bastore
+       411: aload_1
+       412: dup
+       413: getfield      #606                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.nextImpact:I
+       416: iconst_1
+       417: iadd
+       418: putfield      #606                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.nextImpact:I
+       421: aload         4
+       423: aload_1
+       424: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       427: ldc_w         #409                // String AREA_QUERY_REJECTED
+       430: ldc_w         #411                // String reason
+       433: ldc_w         #655                // String NO_LEGAL_IMPACT_SURFACE
+       436: ldc_w         #646                // String impactIndex
+       439: iload         8
+       441: invokestatic  #211                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       444: invokestatic  #417                // InterfaceMethod java/util/Map.of:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;
+       447: invokeinterface #311,  4          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.trace:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Ljava/lang/String;Ljava/util/Map;)V
+       452: goto          736
+       455: aload         5
+       457: invokevirtual #200                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.stratified:()Z
+       460: ifeq          522
+       463: aload_1
+       464: getfield      #657                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.warnedAt:[D
+       467: iload         8
+       469: daload
+       470: invokestatic  #661                // Method java/lang/Double.isNaN:(D)Z
+       473: ifeq          522
+       476: dload_2
+       477: dload         9
+       479: aload         5
+       481: invokevirtual #561                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.warningSeconds:()D
+       484: dsub
+       485: ldc2_w        #613                // double 1.0E-9d
+       488: dsub
+       489: dcmpl
+       490: iflt          522
+       493: aload_1
+       494: getfield      #657                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.warnedAt:[D
+       497: iload         8
+       499: dload_2
+       500: dastore
+       501: aload         4
+       503: aload_1
+       504: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       507: aload         11
+       509: ldc_w         #584                // String WARNING
+       512: aload         5
+       514: invokevirtual #561                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.warningSeconds:()D
+       517: invokeinterface #516,  6          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.present:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;Ljava/lang/String;D)V
+       522: dload_2
+       523: dload         9
+       525: ldc2_w        #613                // double 1.0E-9d
+       528: dsub
+       529: dcmpg
+       530: iflt          736
+       533: aload         5
+       535: invokevirtual #200                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.stratified:()Z
+       538: ifeq          579
+       541: aload_1
+       542: getfield      #657                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.warnedAt:[D
+       545: iload         8
+       547: daload
+       548: invokestatic  #661                // Method java/lang/Double.isNaN:(D)Z
+       551: ifne          736
+       554: dload_2
+       555: aload_1
+       556: getfield      #657                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.warnedAt:[D
+       559: iload         8
+       561: daload
+       562: dsub
+       563: aload         5
+       565: invokevirtual #561                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.warningSeconds:()D
+       568: ldc2_w        #613                // double 1.0E-9d
+       571: dsub
+       572: dcmpg
+       573: ifge          579
+       576: goto          736
+       579: aload         5
+       581: invokevirtual #200                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.stratified:()Z
+       584: ifeq          657
+       587: aload_0
+       588: aload         11
+       590: aload_1
+       591: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       594: invokevirtual #387                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.origin:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       597: aload         4
+       599: invokevirtual #594                // Method sameSurface:(Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)Z
+       602: ifne          657
+       605: aload_1
+       606: getfield      #629                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.impacted:[Z
+       609: iload         8
+       611: iconst_1
+       612: bastore
+       613: aload_1
+       614: dup
+       615: getfield      #606                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.nextImpact:I
+       618: iconst_1
+       619: iadd
+       620: putfield      #606                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.nextImpact:I
+       623: aload         4
+       625: aload_1
+       626: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       629: ldc_w         #409                // String AREA_QUERY_REJECTED
+       632: ldc_w         #411                // String reason
+       635: ldc_w         #598                // String WARNED_SURFACE_CHANGED
+       638: ldc_w         #646                // String impactIndex
+       641: iload         8
+       643: invokestatic  #211                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       646: invokestatic  #417                // InterfaceMethod java/util/Map.of:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;
+       649: invokeinterface #311,  4          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.trace:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Ljava/lang/String;Ljava/util/Map;)V
+       654: goto          736
+       657: aload_0
+       658: aload_1
+       659: aload         11
+       661: aload         4
+       663: invokevirtual #520                // Method targets:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)Ljava/util/List;
+       666: astore        12
+       668: aload         12
+       670: ifnonnull     684
+       673: aload_0
+       674: aload_1
+       675: ldc_w         #600                // String CANDIDATE_BUDGET_REJECTED
+       678: aload         4
+       680: invokevirtual #353                // Method finish:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+       683: return
+       684: aload_0
+       685: aload_1
+       686: aload         11
+       688: aload         12
+       690: iload         8
+       692: dload_2
+       693: aload         4
+       695: invokevirtual #531                // Method hit:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;Ljava/util/List;IDLcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)I
+       698: pop
+       699: aload         4
+       701: aload_1
+       702: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       705: aload         11
+       707: ldc_w         #535                // String IMPACT
+       710: ldc2_w        #514                // double 0.3d
+       713: invokeinterface #516,  6          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.present:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;Ljava/lang/String;D)V
+       718: aload_1
+       719: getfield      #629                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.impacted:[Z
+       722: iload         8
+       724: iconst_1
+       725: bastore
+       726: aload_1
+       727: dup
+       728: getfield      #606                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.nextImpact:I
+       731: iconst_1
+       732: iadd
+       733: putfield      #606                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.nextImpact:I
+       736: iinc          8, 1
+       739: goto          93
+       742: dload_2
+       743: dload         6
+       745: aload         5
+       747: invokevirtual #299                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.lifetimeSeconds:()D
+       750: dadd
+       751: dcmpl
+       752: iflt          852
+       755: aload         5
+       757: invokevirtual #664                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.finalCoefficient:()D
+       760: dconst_0
+       761: dcmpl
+       762: ifle          842
+       765: aload_1
+       766: getfield      #667                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.finalHit:Z
+       769: ifne          842
+       772: aload_1
+       773: iconst_1
+       774: putfield      #667                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.finalHit:Z
+       777: aload_0
+       778: aload_1
+       779: aload_1
+       780: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       783: aload         4
+       785: invokevirtual #520                // Method targets:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)Ljava/util/List;
+       788: astore        8
+       790: aload         8
+       792: ifnonnull     806
+       795: aload_0
+       796: aload_1
+       797: ldc_w         #670                // String FINAL_CANDIDATE_BUDGET_REJECTED
+       800: aload         4
+       802: invokevirtual #353                // Method finish:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+       805: return
+       806: aload_0
+       807: aload_1
+       808: aload_1
+       809: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+       812: aload         8
+       814: aload         5
+       816: invokevirtual #203                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.impactCount:()I
+       819: dload_2
+       820: aload         4
+       822: dconst_1
+       823: iconst_0
+       824: iconst_1
+       825: invokevirtual #672                // Method hit:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;Ljava/util/List;IDLcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;DZZ)I
+       828: pop
+       829: aload_0
+       830: aload_1
+       831: ldc_w         #535                // String IMPACT
+       834: ldc2_w        #514                // double 0.3d
+       837: aload         4
+       839: invokevirtual #590                // Method presentField:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Ljava/lang/String;DLcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+       842: aload_0
+       843: aload_1
+       844: ldc_w         #602                // String AREA_COMPLETE
+       847: aload         4
+       849: invokevirtual #353                // Method finish:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;)V
+       852: return
+
+  private boolean sameSurface(com.inigmasgames.hytalerpg.execution.area.AreaGeometry, com.inigmasgames.hytalerpg.execution.math.Vec3, com.inigmasgames.hytalerpg.execution.area.AreaWorldPort);
+    Code:
+         0: aload_3
+         1: aload_2
+         2: aload_1
+         3: invokeinterface #402,  3          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.prepareImpact:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;)Ljava/util/Optional;
+         8: astore        4
+        10: aload         4
+        12: invokevirtual #675                // Method java/util/Optional.isPresent:()Z
+        15: ifeq          47
+        18: aload         4
+        20: invokevirtual #420                // Method java/util/Optional.get:()Ljava/lang/Object;
+        23: checkcast     #286                // class com/inigmasgames/hytalerpg/execution/area/AreaGeometry
+        26: invokevirtual #387                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.origin:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+        29: aload_1
+        30: invokevirtual #387                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.origin:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+        33: invokevirtual #678                // Method com/inigmasgames/hytalerpg/execution/math/Vec3.distanceSquared:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)D
+        36: ldc2_w        #682                // double 1.0E-4d
+        39: dcmpg
+        40: ifgt          47
+        43: iconst_1
+        44: goto          48
+        47: iconst_0
+        48: ireturn
+
+  private void presentField(com.inigmasgames.hytalerpg.execution.area.AreaRuntime$Field, java.lang.String, double, com.inigmasgames.hytalerpg.execution.area.AreaWorldPort);
+    Code:
+         0: aload         5
+         2: aload_1
+         3: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+         6: aload_1
+         7: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+        10: aload_2
+        11: dload_3
+        12: invokeinterface #516,  6          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.present:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;Ljava/lang/String;D)V
+        17: aload_1
+        18: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        21: invokevirtual #77                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+        24: invokevirtual #83                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+        27: astore        6
+        29: aload         6
+        31: invokevirtual #684                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.visualCoreRadius:()D
+        34: dconst_0
+        35: dcmpl
+        36: ifle          47
+        39: aload         6
+        41: invokevirtual #684                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.visualCoreRadius:()D
+        44: goto          52
+        47: aload         6
+        49: invokevirtual #687                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.innerRadius:()D
+        52: dstore        7
+        54: dload         7
+        56: dconst_0
+        57: dcmpl
+        58: ifle          100
+        61: aload         5
+        63: aload_1
+        64: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        67: aload_1
+        68: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+        71: aload_1
+        72: getfield      #281                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.geometry:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+        75: invokevirtual #387                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.origin:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+        78: dload         7
+        80: aload_1
+        81: getfield      #396                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.radiusFactor:D
+        84: dmul
+        85: invokevirtual #493                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.at:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;D)Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;
+        88: aload_2
+        89: invokedynamic #690,  0            // InvokeDynamic #6:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+        94: dload_3
+        95: invokeinterface #516,  6          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.present:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;Ljava/lang/String;D)V
+       100: return
+
+  private java.util.List<com.inigmasgames.hytalerpg.execution.area.AreaWorldPort$Target> targets(com.inigmasgames.hytalerpg.execution.area.AreaRuntime$Field, com.inigmasgames.hytalerpg.execution.area.AreaGeometry, com.inigmasgames.hytalerpg.execution.area.AreaWorldPort);
+    Code:
+         0: aload_1
+         1: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+         4: invokevirtual #77                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+         7: invokevirtual #83                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+        10: invokevirtual #691                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.candidateBudget:()I
+        13: istore        4
+        15: aload_3
+        16: aload_2
+        17: iload         4
+        19: invokeinterface #694,  3          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.query:(Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;I)Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort$Query;
+        24: astore        5
+        26: aload         5
+        28: invokevirtual #698                // Method com/inigmasgames/hytalerpg/execution/area/AreaWorldPort$Query.overflow:()Z
+        31: ifne          49
+        34: aload         5
+        36: invokevirtual #703                // Method com/inigmasgames/hytalerpg/execution/area/AreaWorldPort$Query.targets:()Ljava/util/List;
+        39: invokeinterface #706,  1          // InterfaceMethod java/util/List.size:()I
+        44: iload         4
+        46: if_icmple     81
+        49: aload_3
+        50: aload_1
+        51: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        54: ldc_w         #409                // String AREA_QUERY_REJECTED
+        57: ldc_w         #411                // String reason
+        60: ldc_w         #707                // String CANDIDATE_BUDGET
+        63: ldc_w         #709                // String budget
+        66: iload         4
+        68: invokestatic  #211                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        71: invokestatic  #417                // InterfaceMethod java/util/Map.of:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;
+        74: invokeinterface #311,  4          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.trace:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Ljava/lang/String;Ljava/util/Map;)V
+        79: aconst_null
+        80: areturn
+        81: aload         5
+        83: invokevirtual #703                // Method com/inigmasgames/hytalerpg/execution/area/AreaWorldPort$Query.targets:()Ljava/util/List;
+        86: invokeinterface #711,  1          // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+        91: aload_2
+        92: invokedynamic #712,  0            // InvokeDynamic #7:test:(Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;)Ljava/util/function/Predicate;
+        97: invokeinterface #715,  2          // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+       102: aload_3
+       103: aload_2
+       104: invokedynamic #719,  0            // InvokeDynamic #8:test:(Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;)Ljava/util/function/Predicate;
+       109: invokeinterface #715,  2          // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+       114: aload_2
+       115: invokedynamic #722,  0            // InvokeDynamic #9:applyAsDouble:(Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;)Ljava/util/function/ToDoubleFunction;
+       120: invokestatic  #726                // InterfaceMethod java/util/Comparator.comparingDouble:(Ljava/util/function/ToDoubleFunction;)Ljava/util/Comparator;
+       123: invokedynamic #732,  0            // InvokeDynamic #10:apply:()Ljava/util/function/Function;
+       128: invokeinterface #736,  2          // InterfaceMethod java/util/Comparator.thenComparing:(Ljava/util/function/Function;)Ljava/util/Comparator;
+       133: invokeinterface #740,  2          // InterfaceMethod java/util/stream/Stream.sorted:(Ljava/util/Comparator;)Ljava/util/stream/Stream;
+       138: invokeinterface #744,  1          // InterfaceMethod java/util/stream/Stream.toList:()Ljava/util/List;
+       143: areturn
+
+  private int hit(com.inigmasgames.hytalerpg.execution.area.AreaRuntime$Field, com.inigmasgames.hytalerpg.execution.area.AreaGeometry, java.util.List<com.inigmasgames.hytalerpg.execution.area.AreaWorldPort$Target>, int, double, com.inigmasgames.hytalerpg.execution.area.AreaWorldPort);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: aload_3
+         4: iload         4
+         6: dload         5
+         8: aload         7
+        10: dconst_1
+        11: iconst_0
+        12: invokevirtual #618                // Method hit:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;Ljava/util/List;IDLcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;DZ)I
+        15: ireturn
+
+  private int hit(com.inigmasgames.hytalerpg.execution.area.AreaRuntime$Field, com.inigmasgames.hytalerpg.execution.area.AreaGeometry, java.util.List<com.inigmasgames.hytalerpg.execution.area.AreaWorldPort$Target>, int, double, com.inigmasgames.hytalerpg.execution.area.AreaWorldPort, double, boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: aload_3
+         4: iload         4
+         6: dload         5
+         8: aload         7
+        10: dload         8
+        12: iload         10
+        14: iconst_0
+        15: invokevirtual #672                // Method hit:(Lcom/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;Ljava/util/List;IDLcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort;DZZ)I
+        18: ireturn
+
+  private int hit(com.inigmasgames.hytalerpg.execution.area.AreaRuntime$Field, com.inigmasgames.hytalerpg.execution.area.AreaGeometry, java.util.List<com.inigmasgames.hytalerpg.execution.area.AreaWorldPort$Target>, int, double, com.inigmasgames.hytalerpg.execution.area.AreaWorldPort, double, boolean, boolean);
+    Code:
+         0: aload_1
+         1: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+         4: invokevirtual #77                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+         7: invokevirtual #83                 // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.area:()Lcom/inigmasgames/hytalerpg/execution/area/AreaSkillProfile;
+        10: astore        12
+        12: iconst_0
+        13: istore        13
+        15: aload         12
+        17: invokevirtual #200                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.stratified:()Z
+        20: ifeq          55
+        23: iload         11
+        25: ifne          55
+        28: aload_0
+        29: getfield      #25                 // Field rootLedgers:Ljava/util/Map;
+        32: aload_1
+        33: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        36: invokestatic  #207                // Method rootKey:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;)Ljava/lang/String;
+        39: invokedynamic #747,  0            // InvokeDynamic #11:apply:()Ljava/util/function/Function;
+        44: invokeinterface #748,  3          // InterfaceMethod java/util/Map.computeIfAbsent:(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+        49: checkcast     #54                 // class java/util/Map
+        52: goto          59
+        55: aload_1
+        56: getfield      #752                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.ledger:Ljava/util/Map;
+        59: astore        14
+        61: aload_1
+        62: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        65: invokevirtual #192                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.skillInstanceId:()Ljava/lang/String;
+        68: iload         4
+        70: invokedynamic #755,  0            // InvokeDynamic #12:makeConcatWithConstants:(Ljava/lang/String;I)Ljava/lang/String;
+        75: astore        15
+        77: aload_3
+        78: invokeinterface #756,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+        83: astore        16
+        85: aload         16
+        87: invokeinterface #453,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+        92: ifeq          946
+        95: aload         16
+        97: invokeinterface #458,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       102: checkcast     #757                // class com/inigmasgames/hytalerpg/execution/area/AreaWorldPort$Target
+       105: astore        17
+       107: aload         14
+       109: aload         17
+       111: invokevirtual #759                // Method com/inigmasgames/hytalerpg/execution/area/AreaWorldPort$Target.id:()Ljava/lang/String;
+       114: invokeinterface #762,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       119: checkcast     #764                // class com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Ledger
+       122: astore        18
+       124: iload         11
+       126: ifne          184
+       129: aload         18
+       131: ifnull        184
+       134: aload         18
+       136: getfield      #766                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Ledger.hits:I
+       139: aload         12
+       141: invokevirtual #769                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.perTargetHitCap:()I
+       144: if_icmpge     85
+       147: dload         5
+       149: aload         18
+       151: getfield      #772                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Ledger.lastHit:D
+       154: dsub
+       155: aload         12
+       157: invokevirtual #775                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.targetIntervalSeconds:()D
+       160: ldc2_w        #613                // double 1.0E-9d
+       163: dsub
+       164: dcmpg
+       165: iflt          85
+       168: aload         18
+       170: getfield      #778                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Ledger.lastImpact:Ljava/lang/String;
+       173: aload         15
+       175: invokevirtual #47                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       178: ifeq          184
+       181: goto          85
+       184: aload_2
+       185: aload         17
+       187: invokevirtual #782                // Method com/inigmasgames/hytalerpg/execution/area/AreaWorldPort$Target.bounds:()Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;
+       190: invokevirtual #786                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.horizontalDistance:(Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;)D
+       193: dstore        19
+       195: aload         12
+       197: invokevirtual #687                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.innerRadius:()D
+       200: dconst_0
+       201: dcmpl
+       202: ifle          225
+       205: dload         19
+       207: aload         12
+       209: invokevirtual #687                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.innerRadius:()D
+       212: aload_1
+       213: getfield      #396                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.radiusFactor:D
+       216: dmul
+       217: dcmpg
+       218: ifgt          225
+       221: iconst_1
+       222: goto          226
+       225: iconst_0
+       226: istore        21
+       228: iload         21
+       230: ifeq          251
+       233: aload         12
+       235: invokevirtual #790                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.innerCoefficient:()D
+       238: dconst_0
+       239: dcmpl
+       240: ifle          251
+       243: aload         12
+       245: invokevirtual #790                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.innerCoefficient:()D
+       248: goto          256
+       251: aload         12
+       253: invokevirtual #793                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.coefficient:()D
+       256: dstore        22
+       258: iload         11
+       260: ifeq          270
+       263: aload         12
+       265: invokevirtual #664                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.finalCoefficient:()D
+       268: dstore        22
+       270: dload         22
+       272: dconst_1
+       273: aload         12
+       275: invokevirtual #796                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.edgeFalloff:()D
+       278: dload         19
+       280: ldc2_w        #799                // double 0.001d
+       283: aload_2
+       284: invokevirtual #285                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.radius:()D
+       287: invokestatic  #626                // Method java/lang/Math.max:(DD)D
+       290: ddiv
+       291: dconst_0
+       292: dconst_1
+       293: invokestatic  #572                // Method java/lang/Math.clamp:(DDD)D
+       296: dmul
+       297: dsub
+       298: dmul
+       299: dstore        22
+       301: aload         12
+       303: invokevirtual #801                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.statusInnerRadius:()D
+       306: dconst_0
+       307: dcmpl
+       308: ifle          335
+       311: dload         19
+       313: aload         12
+       315: invokevirtual #801                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.statusInnerRadius:()D
+       318: aload_1
+       319: getfield      #396                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.radiusFactor:D
+       322: dmul
+       323: dcmpg
+       324: ifgt          335
+       327: aload         12
+       329: invokevirtual #804                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.statusInnerSeconds:()D
+       332: goto          340
+       335: aload         12
+       337: invokevirtual #807                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.statusSeconds:()D
+       340: dstore        24
+       342: iload         21
+       344: ifeq          363
+       347: aload         12
+       349: invokevirtual #810                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.innerChillStacks:()I
+       352: ifle          363
+       355: aload         12
+       357: invokevirtual #810                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.innerChillStacks:()I
+       360: goto          368
+       363: aload         12
+       365: invokevirtual #813                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.chillStacks:()I
+       368: istore        26
+       370: iload         11
+       372: ifeq          381
+       375: ldc_w         #816                // String
+       378: goto          386
+       381: aload         12
+       383: invokevirtual #818                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.status:()Ljava/lang/String;
+       386: astore        27
+       388: aload         12
+       390: invokevirtual #821                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.element:()Ljava/lang/String;
+       393: astore        28
+       395: aload         12
+       397: invokevirtual #824                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.alternatingIceStone:()Z
+       400: ifeq          461
+       403: iload         4
+       405: iconst_2
+       406: irem
+       407: ifne          414
+       410: iconst_1
+       411: goto          415
+       414: iconst_0
+       415: istore        29
+       417: iload         29
+       419: ifeq          428
+       422: ldc_w         #827                // String CHILL
+       425: goto          431
+       428: ldc_w         #829                // String STAGGER
+       431: astore        27
+       433: iload         29
+       435: ifeq          444
+       438: ldc_w         #831                // String COLD
+       441: goto          447
+       444: ldc_w         #833                // String EARTH
+       447: astore        28
+       449: iload         29
+       451: ifeq          458
+       454: iconst_1
+       455: goto          459
+       458: iconst_0
+       459: istore        26
+       461: dload         5
+       463: aload_1
+       464: getfield      #835                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.statusLastHit:Ljava/util/Map;
+       467: aload         17
+       469: invokevirtual #759                // Method com/inigmasgames/hytalerpg/execution/area/AreaWorldPort$Target.id:()Ljava/lang/String;
+       472: ldc2_w        #838                // double -Infinityd
+       475: invokestatic  #290                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       478: invokeinterface #217,  3          // InterfaceMethod java/util/Map.getOrDefault:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       483: checkcast     #90                 // class java/lang/Double
+       486: invokevirtual #840                // Method java/lang/Double.doubleValue:()D
+       489: dsub
+       490: aload         12
+       492: invokevirtual #843                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.statusIntervalSeconds:()D
+       495: ldc2_w        #613                // double 1.0E-9d
+       498: dsub
+       499: dcmpl
+       500: iflt          507
+       503: iconst_1
+       504: goto          508
+       507: iconst_0
+       508: istore        29
+       510: aload         17
+       512: invokevirtual #759                // Method com/inigmasgames/hytalerpg/execution/area/AreaWorldPort$Target.id:()Ljava/lang/String;
+       515: aload         27
+       517: invokedynamic #846,  0            // InvokeDynamic #12:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+       522: astore        30
+       524: aload_1
+       525: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       528: invokevirtual #102                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+       531: invokevirtual #106                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.zones:()Lcom/inigmasgames/hytalerpg/domain/ZoneModifiers;
+       534: invokevirtual #118                // Method com/inigmasgames/hytalerpg/domain/ZoneModifiers.cascade:()Z
+       537: ifeq          572
+       540: iload         29
+       542: aload_1
+       543: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       546: invokevirtual #255                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.effects:()Lcom/inigmasgames/hytalerpg/execution/RootEffectBudget;
+       549: aload         30
+       551: dload         5
+       553: aload         12
+       555: invokevirtual #843                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.statusIntervalSeconds:()D
+       558: aload         12
+       560: invokevirtual #775                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.targetIntervalSeconds:()D
+       563: invokestatic  #626                // Method java/lang/Math.max:(DD)D
+       566: invokevirtual #849                // Method com/inigmasgames/hytalerpg/execution/RootEffectBudget.statusReady:(Ljava/lang/String;DD)Z
+       569: iand
+       570: istore        29
+       572: iload         29
+       574: ifeq          632
+       577: aload         27
+       579: ldc_w         #827                // String CHILL
+       582: invokevirtual #47                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       585: ifeq          632
+       588: aload_1
+       589: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       592: invokevirtual #102                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+       595: invokevirtual #131                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.pulses:()Lcom/inigmasgames/hytalerpg/domain/PulseModifiers;
+       598: invokevirtual #135                // Method com/inigmasgames/hytalerpg/domain/PulseModifiers.rapidPulse:()Z
+       601: ifeq          632
+       604: aload_1
+       605: getfield      #853                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.chill:Lcom/inigmasgames/hytalerpg/execution/ChillPulseLedger;
+       608: aload         17
+       610: invokevirtual #759                // Method com/inigmasgames/hytalerpg/execution/area/AreaWorldPort$Target.id:()Ljava/lang/String;
+       613: iload         4
+       615: iload         26
+       617: invokevirtual #857                // Method com/inigmasgames/hytalerpg/execution/ChillPulseLedger.grant:(Ljava/lang/String;II)I
+       620: istore        26
+       622: iload         26
+       624: ifne          632
+       627: ldc_w         #816                // String
+       630: astore        27
+       632: new           #863                // class com/inigmasgames/hytalerpg/execution/area/AreaWorldPort$Payload
+       635: dup
+       636: iload         4
+       638: dload         22
+       640: dload         8
+       642: dmul
+       643: iload         29
+       645: ifeq          653
+       648: aload         27
+       650: goto          656
+       653: ldc_w         #816                // String
+       656: dload         24
+       658: iload         26
+       660: aload         12
+       662: invokevirtual #865                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.displacement:()D
+       665: dload         8
+       667: dmul
+       668: iload         10
+       670: aload         28
+       672: aload_2
+       673: invokevirtual #387                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.origin:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       676: iload         11
+       678: ifeq          689
+       681: aload         12
+       683: invokevirtual #868                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.finalPull:()D
+       686: goto          697
+       689: aload         12
+       691: invokevirtual #871                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.pullSpeed:()D
+       694: dload         8
+       696: dmul
+       697: iload         11
+       699: ifeq          706
+       702: dconst_0
+       703: goto          716
+       706: aload         12
+       708: invokevirtual #874                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.pullCoreRadius:()D
+       711: aload_1
+       712: getfield      #396                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.radiusFactor:D
+       715: dmul
+       716: iload         11
+       718: invokespecial #877                // Method com/inigmasgames/hytalerpg/execution/area/AreaWorldPort$Payload."<init>":(IDLjava/lang/String;DIDZLjava/lang/String;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;DDZ)V
+       721: astore        31
+       723: aload         7
+       725: iload         11
+       727: ifeq          737
+       730: aload_1
+       731: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       734: goto          741
+       737: aload_1
+       738: getfield      #880                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.pulseContext:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       741: aload         17
+       743: aload         31
+       745: invokeinterface #883,  4          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.apply:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort$Target;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort$Payload;)Z
+       750: ifne          756
+       753: goto          85
+       756: iload         29
+       758: ifeq          819
+       761: aload         27
+       763: invokevirtual #886                // Method java/lang/String.isBlank:()Z
+       766: ifne          819
+       769: aload_1
+       770: getfield      #835                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.statusLastHit:Ljava/util/Map;
+       773: aload         17
+       775: invokevirtual #759                // Method com/inigmasgames/hytalerpg/execution/area/AreaWorldPort$Target.id:()Ljava/lang/String;
+       778: dload         5
+       780: invokestatic  #290                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       783: invokeinterface #269,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       788: pop
+       789: aload_1
+       790: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       793: invokevirtual #102                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+       796: invokevirtual #106                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.zones:()Lcom/inigmasgames/hytalerpg/domain/ZoneModifiers;
+       799: invokevirtual #118                // Method com/inigmasgames/hytalerpg/domain/ZoneModifiers.cascade:()Z
+       802: ifeq          819
+       805: aload_1
+       806: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       809: invokevirtual #255                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.effects:()Lcom/inigmasgames/hytalerpg/execution/RootEffectBudget;
+       812: aload         30
+       814: dload         5
+       816: invokevirtual #889                // Method com/inigmasgames/hytalerpg/execution/RootEffectBudget.statusApplied:(Ljava/lang/String;D)V
+       819: new           #764                // class com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Ledger
+       822: dup
+       823: aload         18
+       825: ifnonnull     832
+       828: iconst_1
+       829: goto          839
+       832: aload         18
+       834: getfield      #766                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Ledger.hits:I
+       837: iconst_1
+       838: iadd
+       839: dload         5
+       841: aload         15
+       843: invokespecial #893                // Method com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Ledger."<init>":(IDLjava/lang/String;)V
+       846: astore        32
+       848: aload         14
+       850: aload         17
+       852: invokevirtual #759                // Method com/inigmasgames/hytalerpg/execution/area/AreaWorldPort$Target.id:()Ljava/lang/String;
+       855: aload         32
+       857: invokeinterface #269,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       862: pop
+       863: aload_1
+       864: getfield      #752                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.ledger:Ljava/util/Map;
+       867: aload         17
+       869: invokevirtual #759                // Method com/inigmasgames/hytalerpg/execution/area/AreaWorldPort$Target.id:()Ljava/lang/String;
+       872: aload         32
+       874: invokeinterface #269,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       879: pop
+       880: iinc          13, 1
+       883: aload         7
+       885: aload_1
+       886: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       889: ldc_w         #896                // String AREA_HIT
+       892: ldc_w         #898                // String target
+       895: aload         17
+       897: invokevirtual #759                // Method com/inigmasgames/hytalerpg/execution/area/AreaWorldPort$Target.id:()Ljava/lang/String;
+       900: ldc_w         #646                // String impactIndex
+       903: iload         4
+       905: invokestatic  #211                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       908: ldc_w         #900                // String coefficient
+       911: dload         22
+       913: invokestatic  #290                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       916: ldc_w         #901                // String distance
+       919: dload         19
+       921: invokestatic  #290                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       924: invokestatic  #903                // InterfaceMethod java/util/Map.of:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;
+       927: invokeinterface #311,  4          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.trace:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Ljava/lang/String;Ljava/util/Map;)V
+       932: aload         12
+       934: invokevirtual #528                // Method com/inigmasgames/hytalerpg/execution/area/AreaSkillProfile.firstTargetOnly:()Z
+       937: ifeq          943
+       940: goto          946
+       943: goto          85
+       946: iload         13
+       948: ireturn
+
+  private void finish(com.inigmasgames.hytalerpg.execution.area.AreaRuntime$Field, java.lang.String, com.inigmasgames.hytalerpg.execution.area.AreaWorldPort);
+    Code:
+         0: aload_1
+         1: iconst_1
+         2: putfield      #330                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.done:Z
+         5: aload_3
+         6: aload_1
+         7: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        10: ldc_w         #906                // String AREA_TERMINATED
+        13: ldc_w         #411                // String reason
+        16: aload_2
+        17: ldc_w         #908                // String hitTargets
+        20: aload_1
+        21: getfield      #752                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.ledger:Ljava/util/Map;
+        24: invokeinterface #485,  1          // InterfaceMethod java/util/Map.size:()I
+        29: invokestatic  #211                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        32: invokestatic  #417                // InterfaceMethod java/util/Map.of:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;
+        35: invokeinterface #311,  4          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.trace:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Ljava/lang/String;Ljava/util/Map;)V
+        40: goto          45
+        43: astore        4
+        45: return
+      Exception table:
+         from    to  target type
+             5    40    43   Class java/lang/RuntimeException
+
+  private void removeField(com.inigmasgames.hytalerpg.execution.area.AreaRuntime$Field);
+    Code:
+         0: aload_0
+         1: getfield      #18                 // Field fields:Ljava/util/Map;
+         4: aload_1
+         5: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+         8: invokevirtual #192                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.skillInstanceId:()Ljava/lang/String;
+        11: invokeinterface #910,  2          // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+        16: pop
+        17: aload_0
+        18: getfield      #37                 // Field capacity:Lcom/inigmasgames/hytalerpg/execution/OwnedFieldBudget;
+        21: aload_1
+        22: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        25: invokevirtual #171                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.request:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;
+        28: invokevirtual #175                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionRequest.actorId:()Ljava/util/UUID;
+        31: aload_1
+        32: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        35: invokevirtual #192                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.skillInstanceId:()Ljava/lang/String;
+        38: invokevirtual #913                // Method com/inigmasgames/hytalerpg/execution/OwnedFieldBudget.release:(Ljava/util/UUID;Ljava/lang/String;)Z
+        41: pop
+        42: aload_0
+        43: aload_1
+        44: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        47: invokestatic  #207                // Method rootKey:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;)Ljava/lang/String;
+        50: invokevirtual #917                // Method cleanupRoot:(Ljava/lang/String;)V
+        53: return
+
+  private void cleanupRoot(java.lang.String);
+    Code:
+         0: aload_0
+         1: getfield      #18                 // Field fields:Ljava/util/Map;
+         4: invokeinterface #53,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+         9: invokeinterface #59,  1           // InterfaceMethod java/util/Collection.stream:()Ljava/util/stream/Stream;
+        14: aload_1
+        15: invokedynamic #920,  0            // InvokeDynamic #13:test:(Ljava/lang/String;)Ljava/util/function/Predicate;
+        20: invokeinterface #923,  2          // InterfaceMethod java/util/stream/Stream.noneMatch:(Ljava/util/function/Predicate;)Z
+        25: ifeq          50
+        28: aload_0
+        29: getfield      #25                 // Field rootLedgers:Ljava/util/Map;
+        32: aload_1
+        33: invokeinterface #910,  2          // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+        38: pop
+        39: aload_0
+        40: getfield      #28                 // Field rootSpawned:Ljava/util/Map;
+        43: aload_1
+        44: invokeinterface #910,  2          // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+        49: pop
+        50: return
+
+  public synchronized int retainedRootCount();
+    Code:
+         0: aload_0
+         1: getfield      #28                 // Field rootSpawned:Ljava/util/Map;
+         4: invokeinterface #485,  1          // InterfaceMethod java/util/Map.size:()I
+         9: ireturn
+
+  private static java.util.Optional<com.inigmasgames.hytalerpg.execution.math.Vec3> mobileOrigin(com.inigmasgames.hytalerpg.execution.SkillExecutionContext, com.inigmasgames.hytalerpg.execution.area.AreaWorldPort);
+    Code:
+         0: aload_0
+         1: invokevirtual #926                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.target:()Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;
+         4: ifnonnull     11
+         7: invokestatic  #929                // Method java/util/Optional.empty:()Ljava/util/Optional;
+        10: areturn
+        11: aload_1
+        12: aload_0
+        13: invokeinterface #933,  2          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.ownerAnchor:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;)Ljava/util/Optional;
+        18: aload_0
+        19: invokedynamic #937,  0            // InvokeDynamic #14:test:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;)Ljava/util/function/Predicate;
+        24: invokevirtual #940                // Method java/util/Optional.filter:(Ljava/util/function/Predicate;)Ljava/util/Optional;
+        27: invokedynamic #943,  0            // InvokeDynamic #15:apply:()Ljava/util/function/Function;
+        32: invokevirtual #944                // Method java/util/Optional.map:(Ljava/util/function/Function;)Ljava/util/Optional;
+        35: areturn
+
+  private static java.lang.String rootKey(com.inigmasgames.hytalerpg.execution.SkillExecutionContext);
+    Code:
+         0: aload_0
+         1: invokevirtual #171                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.request:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;
+         4: invokevirtual #175                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionRequest.actorId:()Ljava/util/UUID;
+         7: invokestatic  #434                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+        10: aload_0
+        11: invokevirtual #948                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.rootCastId:()Ljava/lang/String;
+        14: invokedynamic #846,  0            // InvokeDynamic #12:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+        19: areturn
+
+  private static boolean lambda$mobileOrigin$0(com.inigmasgames.hytalerpg.execution.SkillExecutionContext, com.inigmasgames.hytalerpg.execution.area.AreaWorldPort$OwnerAnchor);
+    Code:
+         0: aload_1
+         1: invokevirtual #951                // Method com/inigmasgames/hytalerpg/execution/area/AreaWorldPort$OwnerAnchor.actorId:()Ljava/util/UUID;
+         4: aload_0
+         5: invokevirtual #171                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.request:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;
+         8: invokevirtual #175                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionRequest.actorId:()Ljava/util/UUID;
+        11: invokevirtual #461                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+        14: ifeq          38
+        17: aload_1
+        18: invokevirtual #954                // Method com/inigmasgames/hytalerpg/execution/area/AreaWorldPort$OwnerAnchor.worldId:()Ljava/util/UUID;
+        21: aload_0
+        22: invokevirtual #926                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.target:()Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;
+        25: invokevirtual #957                // Method com/inigmasgames/hytalerpg/execution/CommittedTarget.worldId:()Ljava/util/UUID;
+        28: invokevirtual #461                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+        31: ifeq          38
+        34: iconst_1
+        35: goto          39
+        38: iconst_0
+        39: ireturn
+
+  private static boolean lambda$cleanupRoot$0(java.lang.String, com.inigmasgames.hytalerpg.execution.area.AreaRuntime$Field);
+    Code:
+         0: aload_1
+         1: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+         4: invokestatic  #207                // Method rootKey:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;)Ljava/lang/String;
+         7: aload_0
+         8: invokevirtual #47                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+        11: ireturn
+
+  private static java.util.Map lambda$hit$0(java.lang.String);
+    Code:
+         0: new           #22                 // class java/util/HashMap
+         3: dup
+         4: invokespecial #24                 // Method java/util/HashMap."<init>":()V
+         7: areturn
+
+  private static double lambda$targets$2(com.inigmasgames.hytalerpg.execution.area.AreaGeometry, com.inigmasgames.hytalerpg.execution.area.AreaWorldPort$Target);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #782                // Method com/inigmasgames/hytalerpg/execution/area/AreaWorldPort$Target.bounds:()Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;
+         5: invokevirtual #786                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.horizontalDistance:(Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;)D
+         8: dreturn
+
+  private static boolean lambda$targets$1(com.inigmasgames.hytalerpg.execution.area.AreaWorldPort, com.inigmasgames.hytalerpg.execution.area.AreaGeometry, com.inigmasgames.hytalerpg.execution.area.AreaWorldPort$Target);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #387                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.origin:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+         5: aload_2
+         6: invokeinterface #960,  3          // InterfaceMethod com/inigmasgames/hytalerpg/execution/area/AreaWorldPort.lineOfSight:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/area/AreaWorldPort$Target;)Z
+        11: ireturn
+
+  private static boolean lambda$targets$0(com.inigmasgames.hytalerpg.execution.area.AreaGeometry, com.inigmasgames.hytalerpg.execution.area.AreaWorldPort$Target);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #782                // Method com/inigmasgames/hytalerpg/execution/area/AreaWorldPort$Target.bounds:()Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;
+         5: invokevirtual #964                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.intersects:(Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;)Z
+         8: ireturn
+
+  private void lambda$cancel$1(com.inigmasgames.hytalerpg.execution.SkillExecutionContext);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokestatic  #207                // Method rootKey:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;)Ljava/lang/String;
+         5: invokevirtual #917                // Method cleanupRoot:(Ljava/lang/String;)V
+         8: return
+
+  private boolean lambda$cancel$0(java.util.UUID, java.util.List, com.inigmasgames.hytalerpg.execution.area.AreaRuntime$Field);
+    Code:
+         0: aload_3
+         1: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+         4: invokevirtual #171                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.request:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;
+         7: invokevirtual #175                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionRequest.actorId:()Ljava/util/UUID;
+        10: aload_1
+        11: invokevirtual #461                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+        14: ifne          19
+        17: iconst_0
+        18: ireturn
+        19: aload_3
+        20: iconst_1
+        21: putfield      #330                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.done:Z
+        24: aload_2
+        25: aload_3
+        26: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        29: invokeinterface #968,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        34: pop
+        35: aload_0
+        36: getfield      #37                 // Field capacity:Lcom/inigmasgames/hytalerpg/execution/OwnedFieldBudget;
+        39: aload_1
+        40: aload_3
+        41: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        44: invokevirtual #192                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.skillInstanceId:()Ljava/lang/String;
+        47: invokevirtual #913                // Method com/inigmasgames/hytalerpg/execution/OwnedFieldBudget.release:(Ljava/util/UUID;Ljava/lang/String;)Z
+        50: pop
+        51: iconst_1
+        52: ireturn
+
+  private static java.lang.IllegalStateException lambda$start$0();
+    Code:
+         0: new           #126                // class java/lang/IllegalStateException
+         3: dup
+         4: ldc_w         #491                // String MOBILE_OWNER_ANCHOR_UNAVAILABLE
+         7: invokespecial #130                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+        10: areturn
+
+  private static boolean lambda$admission$0(java.util.UUID, java.lang.String, com.inigmasgames.hytalerpg.execution.area.AreaRuntime$Field);
+    Code:
+         0: aload_2
+         1: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+         4: invokevirtual #171                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.request:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;
+         7: invokevirtual #175                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionRequest.actorId:()Ljava/util/UUID;
+        10: aload_0
+        11: invokevirtual #461                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+        14: ifeq          38
+        17: aload_2
+        18: getfield      #357                // Field com/inigmasgames/hytalerpg/execution/area/AreaRuntime$Field.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        21: invokevirtual #77                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+        24: invokevirtual #181                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.skillId:()Ljava/lang/String;
+        27: aload_1
+        28: invokevirtual #47                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+        31: ifeq          38
+        34: iconst_1
+        35: goto          39
+        38: iconst_0
+        39: ireturn
+}

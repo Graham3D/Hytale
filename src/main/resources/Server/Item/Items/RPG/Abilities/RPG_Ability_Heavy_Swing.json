@@ -1,0 +1,7 @@
+{
+  "TranslationProperties": { "Name": "server.items.RPG_Ability_Heavy_Swing.name", "Description": "server.items.RPG_Ability_Heavy_Swing.description" },
+  "Icon": "Icons/ItemsGenerated/Rune_GroundSlam.png", "Quality": "Rare", "Categories": ["Items.Ingredients"],
+  "Model": "Items/Runes/Rune_Ability.blockymodel", "Texture": "Items/Runes/Rune_Textures/Rune_Ability_GroundSlam.png",
+  "PlayerAnimationsId": "Item", "MaxStack": 1, "Scale": 0.8, "ItemSoundSetId": "ISS_Items_Gems",
+  "Ability": { "Slot": "Primary", "Cooldown": 0, "Cost": 0, "CostType": "None", "Tags": ["rpg.native.bridge"], "Cast": "Root_RPG_Ability_Bridge" }
+}

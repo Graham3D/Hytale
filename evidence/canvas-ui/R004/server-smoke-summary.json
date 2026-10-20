@@ -1,0 +1,11 @@
+{
+  "capturedAtUtc": "2026-09-06T15:55:07.7488980Z",
+  "processExitCode": 9,
+  "hytale070pre1": true,
+  "canvasDiscovered": true,
+  "canvasSetup": true,
+  "canvasEnabled": true,
+  "demoBundled": true,
+  "pluginScopedError": false,
+  "note": "Bare stop can return non-zero with unrelated core shutdown noise; named markers and scoped errors are authoritative."
+}

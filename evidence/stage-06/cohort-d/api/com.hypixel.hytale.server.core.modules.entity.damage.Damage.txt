@@ -1,0 +1,228 @@
+Compiled from "Damage.java"
+public class com.hypixel.hytale.server.core.modules.entity.damage.Damage extends com.hypixel.hytale.component.system.CancellableEcsEvent implements com.hypixel.hytale.server.core.meta.IMetaStore<com.hypixel.hytale.server.core.modules.entity.damage.Damage> {
+  private static final com.hypixel.hytale.server.core.Message MESSAGE_GENERAL_DAMAGE_CAUSE_UNKNOWN;
+
+  public static final com.hypixel.hytale.server.core.meta.MetaRegistry<com.hypixel.hytale.server.core.modules.entity.damage.Damage> META_REGISTRY;
+
+  public static final com.hypixel.hytale.server.core.meta.MetaKey<org.joml.Vector4d> HIT_LOCATION;
+
+  public static final com.hypixel.hytale.server.core.meta.MetaKey<java.lang.Float> HIT_ANGLE;
+
+  public static final com.hypixel.hytale.server.core.meta.MetaKey<com.hypixel.hytale.server.core.modules.entity.damage.Damage$Particles> IMPACT_PARTICLES;
+
+  public static final com.hypixel.hytale.server.core.meta.MetaKey<com.hypixel.hytale.server.core.modules.entity.damage.Damage$SoundEffect> IMPACT_SOUND_EFFECT;
+
+  public static final com.hypixel.hytale.server.core.meta.MetaKey<com.hypixel.hytale.server.core.modules.entity.damage.Damage$SoundEffect> PLAYER_IMPACT_SOUND_EFFECT;
+
+  public static final com.hypixel.hytale.server.core.meta.MetaKey<com.hypixel.hytale.server.core.modules.entity.damage.Damage$CameraEffect> CAMERA_EFFECT;
+
+  public static final com.hypixel.hytale.server.core.meta.MetaKey<java.lang.String> DEATH_ICON;
+
+  public static final com.hypixel.hytale.server.core.meta.MetaKey<java.lang.Boolean> BLOCKED;
+
+  public static final com.hypixel.hytale.server.core.meta.MetaKey<java.lang.Float> STAMINA_DRAIN_MULTIPLIER;
+
+  public static final com.hypixel.hytale.server.core.meta.MetaKey<java.lang.Boolean> CAN_BE_PREDICTED;
+
+  public static final com.hypixel.hytale.server.core.meta.MetaKey<com.hypixel.hytale.protocol.InteractionType> INTERACTION_TYPE;
+
+  public static final com.hypixel.hytale.server.core.meta.MetaKey<com.hypixel.hytale.server.core.entity.knockback.KnockbackComponent> KNOCKBACK_COMPONENT;
+
+  public static final com.hypixel.hytale.server.core.modules.entity.damage.Damage$Source NULL_SOURCE;
+
+  private final com.hypixel.hytale.server.core.meta.IMetaStoreImpl<com.hypixel.hytale.server.core.modules.entity.damage.Damage> metaStore;
+
+  private final float initialAmount;
+
+  private int damageCauseIndex;
+
+  private com.hypixel.hytale.server.core.modules.entity.damage.Damage$Source source;
+
+  private float amount;
+
+  public com.hypixel.hytale.server.core.modules.entity.damage.Damage(com.hypixel.hytale.server.core.modules.entity.damage.Damage$Source, com.hypixel.hytale.server.core.modules.entity.damage.DamageCause, float);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/component/system/CancellableEcsEvent."<init>":()V
+         4: aload_0
+         5: new           #7                  // class com/hypixel/hytale/server/core/meta/DynamicMetaStore
+         8: dup
+         9: aload_0
+        10: getstatic     #9                  // Field META_REGISTRY:Lcom/hypixel/hytale/server/core/meta/MetaRegistry;
+        13: invokespecial #15                 // Method com/hypixel/hytale/server/core/meta/DynamicMetaStore."<init>":(Ljava/lang/Object;Lcom/hypixel/hytale/server/core/meta/IMetaRegistry;)V
+        16: putfield      #18                 // Field metaStore:Lcom/hypixel/hytale/server/core/meta/IMetaStoreImpl;
+        19: aload_0
+        20: aload_1
+        21: putfield      #22                 // Field source:Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage$Source;
+        24: aload_0
+        25: invokestatic  #26                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageCause.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+        28: aload_2
+        29: invokevirtual #32                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageCause.getId:()Ljava/lang/String;
+        32: invokevirtual #36                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getIndex:(Ljava/lang/Object;)I
+        35: putfield      #42                 // Field damageCauseIndex:I
+        38: aload_0
+        39: aload_0
+        40: fload_3
+        41: dup_x1
+        42: putfield      #46                 // Field amount:F
+        45: putfield      #50                 // Field initialAmount:F
+        48: return
+
+  public com.hypixel.hytale.server.core.modules.entity.damage.Damage(com.hypixel.hytale.server.core.modules.entity.damage.Damage$Source, int, float);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/component/system/CancellableEcsEvent."<init>":()V
+         4: aload_0
+         5: new           #7                  // class com/hypixel/hytale/server/core/meta/DynamicMetaStore
+         8: dup
+         9: aload_0
+        10: getstatic     #9                  // Field META_REGISTRY:Lcom/hypixel/hytale/server/core/meta/MetaRegistry;
+        13: invokespecial #15                 // Method com/hypixel/hytale/server/core/meta/DynamicMetaStore."<init>":(Ljava/lang/Object;Lcom/hypixel/hytale/server/core/meta/IMetaRegistry;)V
+        16: putfield      #18                 // Field metaStore:Lcom/hypixel/hytale/server/core/meta/IMetaStoreImpl;
+        19: aload_0
+        20: aload_1
+        21: putfield      #22                 // Field source:Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage$Source;
+        24: aload_0
+        25: iload_2
+        26: putfield      #42                 // Field damageCauseIndex:I
+        29: aload_0
+        30: aload_0
+        31: fload_3
+        32: dup_x1
+        33: putfield      #46                 // Field amount:F
+        36: putfield      #50                 // Field initialAmount:F
+        39: return
+
+  public int getDamageCauseIndex();
+    Code:
+         0: aload_0
+         1: getfield      #42                 // Field damageCauseIndex:I
+         4: ireturn
+
+  public void setDamageCauseIndex(int);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: putfield      #42                 // Field damageCauseIndex:I
+         5: return
+
+  public com.hypixel.hytale.server.core.modules.entity.damage.DamageCause getCause();
+    Code:
+         0: invokestatic  #26                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageCause.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+         3: aload_0
+         4: getfield      #42                 // Field damageCauseIndex:I
+         7: invokevirtual #53                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(I)Lcom/hypixel/hytale/assetstore/map/JsonAssetWithMap;
+        10: checkcast     #27                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageCause
+        13: areturn
+
+  public com.hypixel.hytale.server.core.modules.entity.damage.Damage$Source getSource();
+    Code:
+         0: aload_0
+         1: getfield      #22                 // Field source:Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage$Source;
+         4: areturn
+
+  public void setSource(com.hypixel.hytale.server.core.modules.entity.damage.Damage$Source);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #22                 // Field source:Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage$Source;
+         5: return
+
+  public float getAmount();
+    Code:
+         0: aload_0
+         1: getfield      #46                 // Field amount:F
+         4: freturn
+
+  public void setAmount(float);
+    Code:
+         0: aload_0
+         1: fload_1
+         2: putfield      #46                 // Field amount:F
+         5: return
+
+  public float getInitialAmount();
+    Code:
+         0: aload_0
+         1: getfield      #50                 // Field initialAmount:F
+         4: freturn
+
+  public com.hypixel.hytale.server.core.Message getDeathMessage(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_0
+         1: getfield      #22                 // Field source:Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage$Source;
+         4: aload_0
+         5: aload_1
+         6: aload_2
+         7: invokeinterface #57,  4           // InterfaceMethod com/hypixel/hytale/server/core/modules/entity/damage/Damage$Source.getDeathMessage:(Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentAccessor;)Lcom/hypixel/hytale/server/core/Message;
+        12: areturn
+
+  public com.hypixel.hytale.server.core.meta.IMetaStoreImpl<com.hypixel.hytale.server.core.modules.entity.damage.Damage> getMetaStore();
+    Code:
+         0: aload_0
+         1: getfield      #18                 // Field metaStore:Lcom/hypixel/hytale/server/core/meta/IMetaStoreImpl;
+         4: areturn
+
+  private static java.lang.Boolean lambda$static$1(com.hypixel.hytale.server.core.modules.entity.damage.Damage);
+    Code:
+         0: getstatic     #63                 // Field java/lang/Boolean.FALSE:Ljava/lang/Boolean;
+         3: areturn
+
+  private static java.lang.Boolean lambda$static$0(com.hypixel.hytale.server.core.modules.entity.damage.Damage);
+    Code:
+         0: getstatic     #63                 // Field java/lang/Boolean.FALSE:Ljava/lang/Boolean;
+         3: areturn
+
+  static {};
+    Code:
+         0: ldc           #69                 // String server.general.damageCauses.unknown
+         2: invokestatic  #71                 // Method com/hypixel/hytale/server/core/Message.translation:(Ljava/lang/String;)Lcom/hypixel/hytale/server/core/Message;
+         5: putstatic     #77                 // Field MESSAGE_GENERAL_DAMAGE_CAUSE_UNKNOWN:Lcom/hypixel/hytale/server/core/Message;
+         8: new           #81                 // class com/hypixel/hytale/server/core/meta/MetaRegistry
+        11: dup
+        12: invokespecial #83                 // Method com/hypixel/hytale/server/core/meta/MetaRegistry."<init>":()V
+        15: putstatic     #9                  // Field META_REGISTRY:Lcom/hypixel/hytale/server/core/meta/MetaRegistry;
+        18: getstatic     #9                  // Field META_REGISTRY:Lcom/hypixel/hytale/server/core/meta/MetaRegistry;
+        21: invokevirtual #84                 // Method com/hypixel/hytale/server/core/meta/MetaRegistry.registerMetaObject:()Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        24: putstatic     #88                 // Field HIT_LOCATION:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        27: getstatic     #9                  // Field META_REGISTRY:Lcom/hypixel/hytale/server/core/meta/MetaRegistry;
+        30: invokevirtual #84                 // Method com/hypixel/hytale/server/core/meta/MetaRegistry.registerMetaObject:()Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        33: putstatic     #92                 // Field HIT_ANGLE:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        36: getstatic     #9                  // Field META_REGISTRY:Lcom/hypixel/hytale/server/core/meta/MetaRegistry;
+        39: invokevirtual #84                 // Method com/hypixel/hytale/server/core/meta/MetaRegistry.registerMetaObject:()Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        42: putstatic     #95                 // Field IMPACT_PARTICLES:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        45: getstatic     #9                  // Field META_REGISTRY:Lcom/hypixel/hytale/server/core/meta/MetaRegistry;
+        48: invokevirtual #84                 // Method com/hypixel/hytale/server/core/meta/MetaRegistry.registerMetaObject:()Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        51: putstatic     #98                 // Field IMPACT_SOUND_EFFECT:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        54: getstatic     #9                  // Field META_REGISTRY:Lcom/hypixel/hytale/server/core/meta/MetaRegistry;
+        57: invokevirtual #84                 // Method com/hypixel/hytale/server/core/meta/MetaRegistry.registerMetaObject:()Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        60: putstatic     #101                // Field PLAYER_IMPACT_SOUND_EFFECT:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        63: getstatic     #9                  // Field META_REGISTRY:Lcom/hypixel/hytale/server/core/meta/MetaRegistry;
+        66: invokevirtual #84                 // Method com/hypixel/hytale/server/core/meta/MetaRegistry.registerMetaObject:()Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        69: putstatic     #104                // Field CAMERA_EFFECT:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        72: getstatic     #9                  // Field META_REGISTRY:Lcom/hypixel/hytale/server/core/meta/MetaRegistry;
+        75: invokevirtual #84                 // Method com/hypixel/hytale/server/core/meta/MetaRegistry.registerMetaObject:()Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        78: putstatic     #107                // Field DEATH_ICON:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        81: getstatic     #9                  // Field META_REGISTRY:Lcom/hypixel/hytale/server/core/meta/MetaRegistry;
+        84: invokedynamic #110,  0            // InvokeDynamic #0:apply:()Ljava/util/function/Function;
+        89: invokevirtual #114                // Method com/hypixel/hytale/server/core/meta/MetaRegistry.registerMetaObject:(Ljava/util/function/Function;)Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        92: putstatic     #117                // Field BLOCKED:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        95: getstatic     #9                  // Field META_REGISTRY:Lcom/hypixel/hytale/server/core/meta/MetaRegistry;
+        98: invokevirtual #84                 // Method com/hypixel/hytale/server/core/meta/MetaRegistry.registerMetaObject:()Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       101: putstatic     #120                // Field STAMINA_DRAIN_MULTIPLIER:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       104: getstatic     #9                  // Field META_REGISTRY:Lcom/hypixel/hytale/server/core/meta/MetaRegistry;
+       107: invokedynamic #123,  0            // InvokeDynamic #1:apply:()Ljava/util/function/Function;
+       112: invokevirtual #114                // Method com/hypixel/hytale/server/core/meta/MetaRegistry.registerMetaObject:(Ljava/util/function/Function;)Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       115: putstatic     #124                // Field CAN_BE_PREDICTED:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       118: getstatic     #9                  // Field META_REGISTRY:Lcom/hypixel/hytale/server/core/meta/MetaRegistry;
+       121: invokevirtual #84                 // Method com/hypixel/hytale/server/core/meta/MetaRegistry.registerMetaObject:()Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       124: putstatic     #127                // Field INTERACTION_TYPE:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       127: getstatic     #9                  // Field META_REGISTRY:Lcom/hypixel/hytale/server/core/meta/MetaRegistry;
+       130: invokevirtual #84                 // Method com/hypixel/hytale/server/core/meta/MetaRegistry.registerMetaObject:()Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       133: putstatic     #130                // Field KNOCKBACK_COMPONENT:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       136: new           #133                // class com/hypixel/hytale/server/core/modules/entity/damage/Damage$1
+       139: dup
+       140: invokespecial #135                // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage$1."<init>":()V
+       143: putstatic     #136                // Field NULL_SOURCE:Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage$Source;
+       146: return
+}

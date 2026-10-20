@@ -1,0 +1,13 @@
+{
+  "Group": "InigmasGames",
+  "Name": "CanvasUI",
+  "Version": "${version}",
+  "Description": "Generic fixed-zoom node canvas library for Hytale Custom UI consumers.",
+  "Authors": [{ "Name": "Inigmas Games" }],
+  "ServerVersion": "=0.7.0-pre.1",
+  "Dependencies": {},
+  "DisabledByDefault": false,
+  "Main": "com.inigmasgames.canvasui.CanvasUIPlugin",
+  "IncludesAssetPack": true,
+  "Metadata": { "DevelopmentRevision": "${rpgRevision}", "FixedZoom": "1.0" }
+}

@@ -1,0 +1,40 @@
+{
+  "profile": "STAGE13_J_NATIVE_PERSISTENCE_HANDOFF",
+  "status": "NOT_RUN",
+  "eligibility": "ELIGIBLE_FOR_ISOLATED_CONNECTED_QA",
+  "jarSha256": "529F7601D69F9DBDA54ABAD87FBF2C674A31C3944E641602AE1BC79225A696AC",
+  "procedure": "docs/stage-13/native-persistence-isolated-qa.md",
+  "scope": "ISOLATED_COPY_ONLY_REQUIRES_SUBSEQUENT_OPERATOR_AUTHORIZATION",
+  "masterScenario": {
+    "players": 4,
+    "hostileTargets": 16,
+    "projectilesPerCaster": 24,
+    "fieldsPerCaster": 8,
+    "summonsPerCaster": 8,
+    "intendedDeploymentScaling": "SEPARATE_UNVERIFIED_GATE"
+  },
+  "proposedMeasurementMinutes": 15,
+  "durationIsMasterQuote": false,
+  "nativeTick": {
+    "identifier": "WORLD_UUID_AND_World.getTick()",
+    "measurement": "EXCLUSIVE_OWNER_CALLBACK_WALL_TIME",
+    "p95LimitMs": 4,
+    "p99LimitMs": 8,
+    "status": "NOT_MEASURED",
+    "separateBaselineRequired": true,
+    "nonRpgRemainderIsPureVanillaBaseline": false
+  },
+  "requiredCapture": [
+    "NATIVE_RPG_TICK_SAMPLE",
+    "PERSISTENCE_HANDOFF_METRICS",
+    "PROGRESSION_OWNER_PUBLISHED",
+    "ALL_TRACE_ROTATIONS_WITH_GAP_AND_DROP_ACCOUNTING",
+    "NATIVE_SERVER_AND_CLIENT_EVIDENCE",
+    "WHOLE_SERVER_CPU_GC_DISK_AND_TICK_HEALTH",
+    "CURRENT_POPULATIONS_AND_MAINTENANCE",
+    "COORDINATED_NATIVE_WORLD_RESTART_AND_ROLLBACK"
+  ],
+  "releaseReady": false,
+  "liveDeploymentPerformed": false,
+  "connectedQaPerformed": false
+}

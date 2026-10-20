@@ -1,0 +1,7 @@
+{
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "jarSha256": "A28C6D8269E3425C638B2ACD1F29E8BB461D3939DC97BF6BA584A3EE267BDD71",
+  "scope": "Component-scoped modifiers reuse unchanged native damage, periodic, area and collision APIs audited in cohorts P/T; no new engine API",
+  "evidence": "Packaged bytecode and call-site structure only, not connected damage, displacement or visual proof",
+  "connected": "UNVERIFIED"
+}

@@ -1,0 +1,887 @@
+Compiled from "WorldSpawnTrackingSystem.java"
+public class com.hypixel.hytale.server.spawning.world.system.WorldSpawnTrackingSystem extends com.hypixel.hytale.component.system.RefSystem<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> {
+  private static final com.hypixel.hytale.logger.HytaleLogger LOGGER;
+
+  private static final int COUNT_SPREAD_RADIUS;
+
+  private final com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.npc.entities.NPCEntity> npcComponentType;
+
+  private final com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.modules.entity.component.TransformComponent> transformComponentType;
+
+  private final com.hypixel.hytale.component.ResourceType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.spawning.world.component.WorldSpawnData> worldSpawnDataResourceType;
+
+  private final com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore, com.hypixel.hytale.server.spawning.world.component.ChunkSpawnData> chunkSpawnDataComponentType;
+
+  private final com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore, com.hypixel.hytale.server.spawning.world.component.ChunkSpawnedNPCData> chunkSpawnedNPCDataComponentType;
+
+  private final com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> query;
+
+  static final boolean $assertionsDisabled;
+
+  public com.hypixel.hytale.server.spawning.world.system.WorldSpawnTrackingSystem(com.hypixel.hytale.component.ResourceType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.spawning.world.component.WorldSpawnData>, com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore, com.hypixel.hytale.server.spawning.world.component.ChunkSpawnData>, com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore, com.hypixel.hytale.server.spawning.world.component.ChunkSpawnedNPCData>);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/component/system/RefSystem."<init>":()V
+         4: aload_0
+         5: invokestatic  #7                  // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         8: putfield      #13                 // Field npcComponentType:Lcom/hypixel/hytale/component/ComponentType;
+        11: aload_0
+        12: invokestatic  #19                 // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        15: putfield      #22                 // Field transformComponentType:Lcom/hypixel/hytale/component/ComponentType;
+        18: aload_0
+        19: aload_1
+        20: putfield      #25                 // Field worldSpawnDataResourceType:Lcom/hypixel/hytale/component/ResourceType;
+        23: aload_0
+        24: aload_2
+        25: putfield      #29                 // Field chunkSpawnDataComponentType:Lcom/hypixel/hytale/component/ComponentType;
+        28: aload_0
+        29: aload_3
+        30: putfield      #32                 // Field chunkSpawnedNPCDataComponentType:Lcom/hypixel/hytale/component/ComponentType;
+        33: aload_0
+        34: iconst_2
+        35: anewarray     #35                 // class com/hypixel/hytale/component/query/Query
+        38: dup
+        39: iconst_0
+        40: aload_0
+        41: getfield      #13                 // Field npcComponentType:Lcom/hypixel/hytale/component/ComponentType;
+        44: aastore
+        45: dup
+        46: iconst_1
+        47: aload_0
+        48: getfield      #22                 // Field transformComponentType:Lcom/hypixel/hytale/component/ComponentType;
+        51: aastore
+        52: invokestatic  #37                 // InterfaceMethod com/hypixel/hytale/component/query/Query.and:([Lcom/hypixel/hytale/component/query/Query;)Lcom/hypixel/hytale/component/query/AndQuery;
+        55: putfield      #41                 // Field query:Lcom/hypixel/hytale/component/query/Query;
+        58: return
+
+  public com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getQuery();
+    Code:
+         0: aload_0
+         1: getfield      #41                 // Field query:Lcom/hypixel/hytale/component/query/Query;
+         4: areturn
+
+  public void onEntityAdded(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.AddReason, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_3
+         1: aload_1
+         2: aload_0
+         3: getfield      #13                 // Field npcComponentType:Lcom/hypixel/hytale/component/ComponentType;
+         6: invokevirtual #45                 // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+         9: checkcast     #8                  // class com/hypixel/hytale/server/npc/entities/NPCEntity
+        12: astore        5
+        14: getstatic     #51                 // Field $assertionsDisabled:Z
+        17: ifne          33
+        20: aload         5
+        22: ifnonnull     33
+        25: new           #55                 // class java/lang/AssertionError
+        28: dup
+        29: invokespecial #57                 // Method java/lang/AssertionError."<init>":()V
+        32: athrow
+        33: aload         5
+        35: iconst_1
+        36: invokevirtual #58                 // Method com/hypixel/hytale/server/npc/entities/NPCEntity.updateSpawnTrackingState:(Z)Z
+        39: istore        6
+        41: iload         6
+        43: ifeq          47
+        46: return
+        47: aload_3
+        48: invokevirtual #62                 // Method com/hypixel/hytale/component/Store.getExternalData:()Ljava/lang/Object;
+        51: checkcast     #66                 // class com/hypixel/hytale/server/core/universe/world/storage/EntityStore
+        54: invokevirtual #68                 // Method com/hypixel/hytale/server/core/universe/world/storage/EntityStore.getWorld:()Lcom/hypixel/hytale/server/core/universe/world/World;
+        57: astore        7
+        59: aload_3
+        60: aload_0
+        61: getfield      #25                 // Field worldSpawnDataResourceType:Lcom/hypixel/hytale/component/ResourceType;
+        64: invokevirtual #72                 // Method com/hypixel/hytale/component/Store.getResource:(Lcom/hypixel/hytale/component/ResourceType;)Lcom/hypixel/hytale/component/Resource;
+        67: checkcast     #76                 // class com/hypixel/hytale/server/spawning/world/component/WorldSpawnData
+        70: astore        8
+        72: getstatic     #78                 // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnTrackingSystem$1.$SwitchMap$com$hypixel$hytale$component$AddReason:[I
+        75: aload_2
+        76: invokevirtual #84                 // Method com/hypixel/hytale/component/AddReason.ordinal:()I
+        79: iaload
+        80: lookupswitch  { // 2
+
+                       1: 108
+
+                       2: 601
+                 default: 621
+            }
+       108: aload         5
+       110: invokevirtual #90                 // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getEnvironment:()I
+       113: istore        9
+       115: iload         9
+       117: aload         5
+       119: invokevirtual #93                 // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getSpawnRoleIndex:()I
+       122: aload         8
+       124: aload         7
+       126: aload         4
+       128: invokestatic  #96                 // Method trackNPC:(IILcom/hypixel/hytale/server/spawning/world/component/WorldSpawnData;Lcom/hypixel/hytale/server/core/universe/world/World;Lcom/hypixel/hytale/component/ComponentAccessor;)Z
+       131: ifne          135
+       134: return
+       135: aload         7
+       137: invokevirtual #100                // Method com/hypixel/hytale/server/core/universe/world/World.getChunkStore:()Lcom/hypixel/hytale/server/core/universe/world/storage/ChunkStore;
+       140: astore        10
+       142: aload         10
+       144: invokevirtual #106                // Method com/hypixel/hytale/server/core/universe/world/storage/ChunkStore.getStore:()Lcom/hypixel/hytale/component/Store;
+       147: astore        11
+       149: aload_3
+       150: aload_1
+       151: aload_0
+       152: getfield      #22                 // Field transformComponentType:Lcom/hypixel/hytale/component/ComponentType;
+       155: invokevirtual #45                 // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       158: checkcast     #20                 // class com/hypixel/hytale/server/core/modules/entity/component/TransformComponent
+       161: invokevirtual #112                // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getPosition:()Lorg/joml/Vector3d;
+       164: astore        12
+       166: aload         12
+       168: invokevirtual #116                // Method org/joml/Vector3d.x:()D
+       171: invokestatic  #122                // Method com/hypixel/hytale/math/util/ChunkUtil.chunkCoordinate:(D)I
+       174: istore        13
+       176: aload         12
+       178: invokevirtual #128                // Method org/joml/Vector3d.z:()D
+       181: invokestatic  #122                // Method com/hypixel/hytale/math/util/ChunkUtil.chunkCoordinate:(D)I
+       184: istore        14
+       186: aload         10
+       188: iload         13
+       190: iload         14
+       192: invokestatic  #131                // Method com/hypixel/hytale/math/util/ChunkUtil.indexChunk:(II)J
+       195: invokevirtual #135                // Method com/hypixel/hytale/server/core/universe/world/storage/ChunkStore.getChunkReference:(J)Lcom/hypixel/hytale/component/Ref;
+       198: astore        15
+       200: aload         15
+       202: ifnull        226
+       205: aload         15
+       207: iload         9
+       209: dconst_1
+       210: aload_0
+       211: getfield      #29                 // Field chunkSpawnDataComponentType:Lcom/hypixel/hytale/component/ComponentType;
+       214: aload_0
+       215: getfield      #32                 // Field chunkSpawnedNPCDataComponentType:Lcom/hypixel/hytale/component/ComponentType;
+       218: aload         11
+       220: invokestatic  #139                // Method trackNewNPC:(Lcom/hypixel/hytale/component/Ref;IDLcom/hypixel/hytale/component/ComponentType;Lcom/hypixel/hytale/component/ComponentType;Lcom/hypixel/hytale/component/Store;)D
+       223: goto          227
+       226: dconst_1
+       227: dstore        16
+       229: dload         16
+       231: dconst_0
+       232: dcmpg
+       233: ifgt          237
+       236: return
+       237: aload         8
+       239: invokevirtual #143                // Method com/hypixel/hytale/server/spawning/world/component/WorldSpawnData.getSpiralIterator:()Lcom/hypixel/hytale/math/iterator/SpiralIterator;
+       242: astore        18
+       244: aload         18
+       246: iload         13
+       248: iload         14
+       250: iconst_3
+       251: invokevirtual #147                // Method com/hypixel/hytale/math/iterator/SpiralIterator.init:(III)V
+       254: aload         18
+       256: invokevirtual #153                // Method com/hypixel/hytale/math/iterator/SpiralIterator.hasNext:()Z
+       259: ifne          263
+       262: return
+       263: aload         18
+       265: invokevirtual #157                // Method com/hypixel/hytale/math/iterator/SpiralIterator.next:()J
+       268: pop2
+       269: iconst_0
+       270: istore        19
+       272: iconst_0
+       273: istore        20
+       275: aload         18
+       277: invokevirtual #153                // Method com/hypixel/hytale/math/iterator/SpiralIterator.hasNext:()Z
+       280: ifeq          344
+       283: dload         16
+       285: dconst_0
+       286: dcmpl
+       287: ifle          344
+       290: iinc          19, 1
+       293: aload         18
+       295: invokevirtual #157                // Method com/hypixel/hytale/math/iterator/SpiralIterator.next:()J
+       298: lstore        21
+       300: aload         10
+       302: lload         21
+       304: invokevirtual #135                // Method com/hypixel/hytale/server/core/universe/world/storage/ChunkStore.getChunkReference:(J)Lcom/hypixel/hytale/component/Ref;
+       307: astore        15
+       309: aload         15
+       311: ifnonnull     320
+       314: iinc          20, 1
+       317: goto          275
+       320: aload         15
+       322: iload         9
+       324: dload         16
+       326: aload_0
+       327: getfield      #29                 // Field chunkSpawnDataComponentType:Lcom/hypixel/hytale/component/ComponentType;
+       330: aload_0
+       331: getfield      #32                 // Field chunkSpawnedNPCDataComponentType:Lcom/hypixel/hytale/component/ComponentType;
+       334: aload         11
+       336: invokestatic  #139                // Method trackNewNPC:(Lcom/hypixel/hytale/component/Ref;IDLcom/hypixel/hytale/component/ComponentType;Lcom/hypixel/hytale/component/ComponentType;Lcom/hypixel/hytale/component/Store;)D
+       339: dstore        16
+       341: goto          275
+       344: dload         16
+       346: dconst_0
+       347: dcmpl
+       348: ifle          593
+       351: getstatic     #161                // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+       354: getstatic     #165                // Field java/util/logging/Level.FINE:Ljava/util/logging/Level;
+       357: invokevirtual #171                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+       360: astore        21
+       362: aload         21
+       364: invokeinterface #177,  1          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.isEnabled:()Z
+       369: ifeq          406
+       372: aload         21
+       374: ldc           #182                // String Failed to spread %s of an NPC spawn to neighbouring chunks. Checked %s chunks, %s not in memory. Centered on chunk (%s, %s), spreading to other chunks with matching environment
+       376: dload         16
+       378: invokestatic  #184                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       381: iload         19
+       383: invokestatic  #190                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       386: iload         20
+       388: invokestatic  #190                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       391: iload         13
+       393: invokestatic  #190                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       396: iload         14
+       398: invokestatic  #190                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       401: invokeinterface #195,  7          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+       406: aload         8
+       408: iload         9
+       410: invokevirtual #199                // Method com/hypixel/hytale/server/spawning/world/component/WorldSpawnData.getWorldEnvironmentSpawnData:(I)Lcom/hypixel/hytale/server/spawning/world/WorldEnvironmentSpawnData;
+       413: invokevirtual #203                // Method com/hypixel/hytale/server/spawning/world/WorldEnvironmentSpawnData.getChunkRefList:()Ljava/util/List;
+       416: astore        22
+       418: aload         22
+       420: invokeinterface #209,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       425: astore        23
+       427: aload         23
+       429: invokeinterface #215,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+       434: ifeq          476
+       437: dload         16
+       439: dconst_0
+       440: dcmpl
+       441: ifle          476
+       444: aload         23
+       446: invokeinterface #218,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       451: checkcast     #220                // class com/hypixel/hytale/component/Ref
+       454: iload         9
+       456: dload         16
+       458: aload_0
+       459: getfield      #29                 // Field chunkSpawnDataComponentType:Lcom/hypixel/hytale/component/ComponentType;
+       462: aload_0
+       463: getfield      #32                 // Field chunkSpawnedNPCDataComponentType:Lcom/hypixel/hytale/component/ComponentType;
+       466: aload         11
+       468: invokestatic  #139                // Method trackNewNPC:(Lcom/hypixel/hytale/component/Ref;IDLcom/hypixel/hytale/component/ComponentType;Lcom/hypixel/hytale/component/ComponentType;Lcom/hypixel/hytale/component/Store;)D
+       471: dstore        16
+       473: goto          427
+       476: dload         16
+       478: dconst_0
+       479: dcmpl
+       480: ifle          593
+       483: aload         21
+       485: invokeinterface #177,  1          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.isEnabled:()Z
+       490: ifeq          593
+       493: aload         8
+       495: iload         9
+       497: invokevirtual #199                // Method com/hypixel/hytale/server/spawning/world/component/WorldSpawnData.getWorldEnvironmentSpawnData:(I)Lcom/hypixel/hytale/server/spawning/world/WorldEnvironmentSpawnData;
+       500: astore        24
+       502: aload         24
+       504: invokevirtual #222                // Method com/hypixel/hytale/server/spawning/world/WorldEnvironmentSpawnData.getNpcStatMap:()Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+       507: aload         5
+       509: invokevirtual #226                // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getRoleIndex:()I
+       512: invokeinterface #229,  2          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.get:(I)Ljava/lang/Object;
+       517: checkcast     #235                // class com/hypixel/hytale/server/spawning/world/WorldNPCSpawnStat
+       520: astore        25
+       522: aload         21
+       524: ldc           #237                // String Failed to spread %s of an NPC spawn across random chunks with matching environments (%s). NPC Type: %s. World environment exp: %s act: %s. Stat exp: %s act: %s
+       526: dload         16
+       528: invokestatic  #184                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       531: invokestatic  #239                // Method com/hypixel/hytale/server/core/asset/type/environment/config/Environment.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+       534: iload         9
+       536: invokevirtual #245                // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(I)Lcom/hypixel/hytale/assetstore/map/JsonAssetWithMap;
+       539: checkcast     #240                // class com/hypixel/hytale/server/core/asset/type/environment/config/Environment
+       542: invokevirtual #251                // Method com/hypixel/hytale/server/core/asset/type/environment/config/Environment.getId:()Ljava/lang/String;
+       545: invokestatic  #255                // Method com/hypixel/hytale/server/npc/NPCPlugin.get:()Lcom/hypixel/hytale/server/npc/NPCPlugin;
+       548: aload         5
+       550: invokevirtual #226                // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getRoleIndex:()I
+       553: invokevirtual #260                // Method com/hypixel/hytale/server/npc/NPCPlugin.getName:(I)Ljava/lang/String;
+       556: aload         24
+       558: invokevirtual #264                // Method com/hypixel/hytale/server/spawning/world/WorldEnvironmentSpawnData.getExpectedNPCs:()D
+       561: invokestatic  #184                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       564: aload         24
+       566: invokevirtual #267                // Method com/hypixel/hytale/server/spawning/world/WorldEnvironmentSpawnData.getActualNPCs:()I
+       569: invokestatic  #190                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       572: aload         25
+       574: invokevirtual #270                // Method com/hypixel/hytale/server/spawning/world/WorldNPCSpawnStat.getExpected:()D
+       577: invokestatic  #184                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       580: aload         25
+       582: invokevirtual #273                // Method com/hypixel/hytale/server/spawning/world/WorldNPCSpawnStat.getActual:()I
+       585: invokestatic  #190                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       588: invokeinterface #276,  9          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+       593: aload         18
+       595: invokevirtual #279                // Method com/hypixel/hytale/math/iterator/SpiralIterator.reset:()V
+       598: goto          621
+       601: aload         5
+       603: invokevirtual #90                 // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getEnvironment:()I
+       606: aload         5
+       608: invokevirtual #93                 // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getSpawnRoleIndex:()I
+       611: aload         8
+       613: aload         7
+       615: aload         4
+       617: invokestatic  #96                 // Method trackNPC:(IILcom/hypixel/hytale/server/spawning/world/component/WorldSpawnData;Lcom/hypixel/hytale/server/core/universe/world/World;Lcom/hypixel/hytale/component/ComponentAccessor;)Z
+       620: pop
+       621: return
+
+  public void onEntityRemove(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.RemoveReason, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_3
+         1: aload_1
+         2: aload_0
+         3: getfield      #13                 // Field npcComponentType:Lcom/hypixel/hytale/component/ComponentType;
+         6: invokevirtual #45                 // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+         9: checkcast     #8                  // class com/hypixel/hytale/server/npc/entities/NPCEntity
+        12: astore        5
+        14: getstatic     #51                 // Field $assertionsDisabled:Z
+        17: ifne          33
+        20: aload         5
+        22: ifnonnull     33
+        25: new           #55                 // class java/lang/AssertionError
+        28: dup
+        29: invokespecial #57                 // Method java/lang/AssertionError."<init>":()V
+        32: athrow
+        33: aload         5
+        35: iconst_0
+        36: invokevirtual #58                 // Method com/hypixel/hytale/server/npc/entities/NPCEntity.updateSpawnTrackingState:(Z)Z
+        39: istore        6
+        41: iload         6
+        43: ifne          47
+        46: return
+        47: aload_3
+        48: aload_0
+        49: getfield      #25                 // Field worldSpawnDataResourceType:Lcom/hypixel/hytale/component/ResourceType;
+        52: invokevirtual #72                 // Method com/hypixel/hytale/component/Store.getResource:(Lcom/hypixel/hytale/component/ResourceType;)Lcom/hypixel/hytale/component/Resource;
+        55: checkcast     #76                 // class com/hypixel/hytale/server/spawning/world/component/WorldSpawnData
+        58: astore        7
+        60: getstatic     #282                // Field com/hypixel/hytale/server/spawning/world/system/WorldSpawnTrackingSystem$1.$SwitchMap$com$hypixel$hytale$component$RemoveReason:[I
+        63: aload_2
+        64: invokevirtual #285                // Method com/hypixel/hytale/component/RemoveReason.ordinal:()I
+        67: iaload
+        68: tableswitch   { // 1 to 3
+
+                       1: 96
+
+                       2: 96
+
+                       3: 504
+                 default: 520
+            }
+        96: aload         5
+        98: invokevirtual #90                 // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getEnvironment:()I
+       101: istore        8
+       103: iload         8
+       105: aload         5
+       107: invokevirtual #93                 // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getSpawnRoleIndex:()I
+       110: aload         7
+       112: invokestatic  #288                // Method untrackNPC:(IILcom/hypixel/hytale/server/spawning/world/component/WorldSpawnData;)Z
+       115: ifne          119
+       118: return
+       119: aload_3
+       120: invokevirtual #62                 // Method com/hypixel/hytale/component/Store.getExternalData:()Ljava/lang/Object;
+       123: checkcast     #66                 // class com/hypixel/hytale/server/core/universe/world/storage/EntityStore
+       126: invokevirtual #68                 // Method com/hypixel/hytale/server/core/universe/world/storage/EntityStore.getWorld:()Lcom/hypixel/hytale/server/core/universe/world/World;
+       129: astore        9
+       131: aload         9
+       133: invokevirtual #100                // Method com/hypixel/hytale/server/core/universe/world/World.getChunkStore:()Lcom/hypixel/hytale/server/core/universe/world/storage/ChunkStore;
+       136: astore        10
+       138: aload         10
+       140: invokevirtual #106                // Method com/hypixel/hytale/server/core/universe/world/storage/ChunkStore.getStore:()Lcom/hypixel/hytale/component/Store;
+       143: astore        11
+       145: aload_3
+       146: aload_1
+       147: aload_0
+       148: getfield      #22                 // Field transformComponentType:Lcom/hypixel/hytale/component/ComponentType;
+       151: invokevirtual #45                 // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       154: checkcast     #20                 // class com/hypixel/hytale/server/core/modules/entity/component/TransformComponent
+       157: astore        12
+       159: getstatic     #51                 // Field $assertionsDisabled:Z
+       162: ifne          178
+       165: aload         12
+       167: ifnonnull     178
+       170: new           #55                 // class java/lang/AssertionError
+       173: dup
+       174: invokespecial #57                 // Method java/lang/AssertionError."<init>":()V
+       177: athrow
+       178: aload         12
+       180: invokevirtual #112                // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getPosition:()Lorg/joml/Vector3d;
+       183: astore        13
+       185: aload         13
+       187: invokevirtual #116                // Method org/joml/Vector3d.x:()D
+       190: invokestatic  #122                // Method com/hypixel/hytale/math/util/ChunkUtil.chunkCoordinate:(D)I
+       193: istore        14
+       195: aload         13
+       197: invokevirtual #128                // Method org/joml/Vector3d.z:()D
+       200: invokestatic  #122                // Method com/hypixel/hytale/math/util/ChunkUtil.chunkCoordinate:(D)I
+       203: istore        15
+       205: aload         10
+       207: iload         14
+       209: iload         15
+       211: invokestatic  #131                // Method com/hypixel/hytale/math/util/ChunkUtil.indexChunk:(II)J
+       214: invokevirtual #135                // Method com/hypixel/hytale/server/core/universe/world/storage/ChunkStore.getChunkReference:(J)Lcom/hypixel/hytale/component/Ref;
+       217: astore        16
+       219: aload         16
+       221: ifnull        245
+       224: aload         16
+       226: iload         8
+       228: dconst_1
+       229: aload_0
+       230: getfield      #29                 // Field chunkSpawnDataComponentType:Lcom/hypixel/hytale/component/ComponentType;
+       233: aload_0
+       234: getfield      #32                 // Field chunkSpawnedNPCDataComponentType:Lcom/hypixel/hytale/component/ComponentType;
+       237: aload         11
+       239: invokestatic  #292                // Method untrackRemovedNPC:(Lcom/hypixel/hytale/component/Ref;IDLcom/hypixel/hytale/component/ComponentType;Lcom/hypixel/hytale/component/ComponentType;Lcom/hypixel/hytale/component/Store;)D
+       242: goto          246
+       245: dconst_1
+       246: dstore        17
+       248: dload         17
+       250: dconst_0
+       251: dcmpg
+       252: ifgt          256
+       255: return
+       256: aload         7
+       258: invokevirtual #143                // Method com/hypixel/hytale/server/spawning/world/component/WorldSpawnData.getSpiralIterator:()Lcom/hypixel/hytale/math/iterator/SpiralIterator;
+       261: astore        19
+       263: aload         19
+       265: iload         14
+       267: iload         15
+       269: iconst_3
+       270: invokevirtual #147                // Method com/hypixel/hytale/math/iterator/SpiralIterator.init:(III)V
+       273: aload         19
+       275: invokevirtual #153                // Method com/hypixel/hytale/math/iterator/SpiralIterator.hasNext:()Z
+       278: ifne          282
+       281: return
+       282: aload         19
+       284: invokevirtual #157                // Method com/hypixel/hytale/math/iterator/SpiralIterator.next:()J
+       287: pop2
+       288: aload         19
+       290: invokevirtual #153                // Method com/hypixel/hytale/math/iterator/SpiralIterator.hasNext:()Z
+       293: ifeq          351
+       296: dload         17
+       298: dconst_0
+       299: dcmpl
+       300: ifle          351
+       303: aload         19
+       305: invokevirtual #157                // Method com/hypixel/hytale/math/iterator/SpiralIterator.next:()J
+       308: lstore        20
+       310: aload         10
+       312: lload         20
+       314: invokevirtual #135                // Method com/hypixel/hytale/server/core/universe/world/storage/ChunkStore.getChunkReference:(J)Lcom/hypixel/hytale/component/Ref;
+       317: astore        16
+       319: aload         16
+       321: ifnonnull     327
+       324: goto          288
+       327: aload         16
+       329: iload         8
+       331: dload         17
+       333: aload_0
+       334: getfield      #29                 // Field chunkSpawnDataComponentType:Lcom/hypixel/hytale/component/ComponentType;
+       337: aload_0
+       338: getfield      #32                 // Field chunkSpawnedNPCDataComponentType:Lcom/hypixel/hytale/component/ComponentType;
+       341: aload         11
+       343: invokestatic  #292                // Method untrackRemovedNPC:(Lcom/hypixel/hytale/component/Ref;IDLcom/hypixel/hytale/component/ComponentType;Lcom/hypixel/hytale/component/ComponentType;Lcom/hypixel/hytale/component/Store;)D
+       346: dstore        17
+       348: goto          288
+       351: dload         17
+       353: dconst_0
+       354: dcmpl
+       355: ifle          496
+       358: getstatic     #161                // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+       361: getstatic     #165                // Field java/util/logging/Level.FINE:Ljava/util/logging/Level;
+       364: invokevirtual #171                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+       367: astore        20
+       369: aload         20
+       371: invokeinterface #177,  1          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.isEnabled:()Z
+       376: ifeq          394
+       379: aload         20
+       381: ldc_w         #295                // String Failed to remove %s of a spread NPC spawn from neighbouring chunks, spreading to other chunks with matching environment
+       384: dload         17
+       386: invokestatic  #184                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       389: invokeinterface #297,  3          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;)V
+       394: aload         7
+       396: iload         8
+       398: invokevirtual #199                // Method com/hypixel/hytale/server/spawning/world/component/WorldSpawnData.getWorldEnvironmentSpawnData:(I)Lcom/hypixel/hytale/server/spawning/world/WorldEnvironmentSpawnData;
+       401: invokevirtual #203                // Method com/hypixel/hytale/server/spawning/world/WorldEnvironmentSpawnData.getChunkRefList:()Ljava/util/List;
+       404: astore        21
+       406: aload         21
+       408: invokeinterface #209,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       413: astore        22
+       415: aload         22
+       417: invokeinterface #215,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+       422: ifeq          464
+       425: dload         17
+       427: dconst_0
+       428: dcmpl
+       429: ifle          464
+       432: aload         22
+       434: invokeinterface #218,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       439: checkcast     #220                // class com/hypixel/hytale/component/Ref
+       442: iload         8
+       444: dload         17
+       446: aload_0
+       447: getfield      #29                 // Field chunkSpawnDataComponentType:Lcom/hypixel/hytale/component/ComponentType;
+       450: aload_0
+       451: getfield      #32                 // Field chunkSpawnedNPCDataComponentType:Lcom/hypixel/hytale/component/ComponentType;
+       454: aload         11
+       456: invokestatic  #292                // Method untrackRemovedNPC:(Lcom/hypixel/hytale/component/Ref;IDLcom/hypixel/hytale/component/ComponentType;Lcom/hypixel/hytale/component/ComponentType;Lcom/hypixel/hytale/component/Store;)D
+       459: dstore        17
+       461: goto          415
+       464: dload         17
+       466: dconst_0
+       467: dcmpl
+       468: ifle          496
+       471: aload         20
+       473: invokeinterface #177,  1          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.isEnabled:()Z
+       478: ifeq          496
+       481: aload         20
+       483: ldc_w         #300                // String Failed to remove %s of an NPC spawn from random chunks with matching environments
+       486: dload         17
+       488: invokestatic  #184                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       491: invokeinterface #297,  3          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;)V
+       496: aload         19
+       498: invokevirtual #279                // Method com/hypixel/hytale/math/iterator/SpiralIterator.reset:()V
+       501: goto          520
+       504: aload         5
+       506: invokevirtual #90                 // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getEnvironment:()I
+       509: aload         5
+       511: invokevirtual #93                 // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getSpawnRoleIndex:()I
+       514: aload         7
+       516: invokestatic  #288                // Method untrackNPC:(IILcom/hypixel/hytale/server/spawning/world/component/WorldSpawnData;)Z
+       519: pop
+       520: return
+
+  private static boolean trackNPC(int, int, com.hypixel.hytale.server.spawning.world.component.WorldSpawnData, com.hypixel.hytale.server.core.universe.world.World, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_2
+         1: iload_0
+         2: iload_1
+         3: iconst_1
+         4: aload_3
+         5: aload         4
+         7: invokevirtual #302                // Method com/hypixel/hytale/server/spawning/world/component/WorldSpawnData.trackNPC:(IIILcom/hypixel/hytale/server/core/universe/world/World;Lcom/hypixel/hytale/component/ComponentAccessor;)Z
+        10: ifne          15
+        13: iconst_0
+        14: ireturn
+        15: getstatic     #161                // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+        18: getstatic     #305                // Field java/util/logging/Level.FINER:Ljava/util/logging/Level;
+        21: invokevirtual #171                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+        24: astore        5
+        26: aload         5
+        28: invokeinterface #177,  1          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.isEnabled:()Z
+        33: ifeq          57
+        36: aload         5
+        38: ldc_w         #308                // String Track Spawn env=%s role=%s
+        41: iload_0
+        42: invokestatic  #310                // Method getEnvironmentName:(I)Ljava/lang/String;
+        45: invokestatic  #255                // Method com/hypixel/hytale/server/npc/NPCPlugin.get:()Lcom/hypixel/hytale/server/npc/NPCPlugin;
+        48: iload_1
+        49: invokevirtual #260                // Method com/hypixel/hytale/server/npc/NPCPlugin.getName:(I)Ljava/lang/String;
+        52: invokeinterface #313,  4          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V
+        57: iconst_1
+        58: ireturn
+
+  private static boolean untrackNPC(int, int, com.hypixel.hytale.server.spawning.world.component.WorldSpawnData);
+    Code:
+         0: aload_2
+         1: iload_0
+         2: iload_1
+         3: iconst_1
+         4: invokevirtual #316                // Method com/hypixel/hytale/server/spawning/world/component/WorldSpawnData.untrackNPC:(III)Z
+         7: ifne          12
+        10: iconst_0
+        11: ireturn
+        12: getstatic     #161                // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+        15: getstatic     #305                // Field java/util/logging/Level.FINER:Ljava/util/logging/Level;
+        18: invokevirtual #171                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+        21: astore_3
+        22: aload_3
+        23: invokeinterface #177,  1          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.isEnabled:()Z
+        28: ifeq          51
+        31: aload_3
+        32: ldc_w         #319                // String Despawn env=%s role=%s
+        35: iload_0
+        36: invokestatic  #310                // Method getEnvironmentName:(I)Ljava/lang/String;
+        39: invokestatic  #255                // Method com/hypixel/hytale/server/npc/NPCPlugin.get:()Lcom/hypixel/hytale/server/npc/NPCPlugin;
+        42: iload_1
+        43: invokevirtual #260                // Method com/hypixel/hytale/server/npc/NPCPlugin.getName:(I)Ljava/lang/String;
+        46: invokeinterface #313,  4          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V
+        51: iconst_1
+        52: ireturn
+
+  private static double trackNewNPC(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore>, int, double, com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore, com.hypixel.hytale.server.spawning.world.component.ChunkSpawnData>, com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore, com.hypixel.hytale.server.spawning.world.component.ChunkSpawnedNPCData>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore>);
+    Code:
+         0: aload         6
+         2: aload_0
+         3: aload         4
+         5: invokevirtual #45                 // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+         8: checkcast     #321                // class com/hypixel/hytale/server/spawning/world/component/ChunkSpawnData
+        11: astore        7
+        13: aload         7
+        15: ifnonnull     20
+        18: dload_2
+        19: dreturn
+        20: aload         7
+        22: invokevirtual #323                // Method com/hypixel/hytale/server/spawning/world/component/ChunkSpawnData.getChunkEnvironmentSpawnDataMap:()Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        25: iload_1
+        26: invokeinterface #229,  2          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.get:(I)Ljava/lang/Object;
+        31: checkcast     #326                // class com/hypixel/hytale/server/spawning/world/ChunkEnvironmentSpawnData
+        34: astore        8
+        36: aload         8
+        38: ifnonnull     43
+        41: dload_2
+        42: dreturn
+        43: aload         6
+        45: aload_0
+        46: aload         5
+        48: invokevirtual #45                 // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        51: checkcast     #328                // class com/hypixel/hytale/server/spawning/world/component/ChunkSpawnedNPCData
+        54: astore        9
+        56: getstatic     #51                 // Field $assertionsDisabled:Z
+        59: ifne          75
+        62: aload         9
+        64: ifnonnull     75
+        67: new           #55                 // class java/lang/AssertionError
+        70: dup
+        71: invokespecial #57                 // Method java/lang/AssertionError."<init>":()V
+        74: athrow
+        75: aload         9
+        77: iload_1
+        78: invokevirtual #330                // Method com/hypixel/hytale/server/spawning/world/component/ChunkSpawnedNPCData.getEnvironmentSpawnCount:(I)D
+        81: dstore        10
+        83: aload         8
+        85: dload         10
+        87: invokevirtual #334                // Method com/hypixel/hytale/server/spawning/world/ChunkEnvironmentSpawnData.isFullyPopulated:(D)Z
+        90: ifeq          95
+        93: dload_2
+        94: dreturn
+        95: aload         6
+        97: aload_0
+        98: invokestatic  #338                // Method com/hypixel/hytale/server/core/universe/world/chunk/WorldChunk.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       101: invokevirtual #45                 // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       104: checkcast     #339                // class com/hypixel/hytale/server/core/universe/world/chunk/WorldChunk
+       107: astore        12
+       109: getstatic     #51                 // Field $assertionsDisabled:Z
+       112: ifne          128
+       115: aload         12
+       117: ifnonnull     128
+       120: new           #55                 // class java/lang/AssertionError
+       123: dup
+       124: invokespecial #57                 // Method java/lang/AssertionError."<init>":()V
+       127: athrow
+       128: aload         12
+       130: invokevirtual #341                // Method com/hypixel/hytale/server/core/universe/world/chunk/WorldChunk.markNeedsSaving:()V
+       133: aload         8
+       135: invokevirtual #344                // Method com/hypixel/hytale/server/spawning/world/ChunkEnvironmentSpawnData.getExpectedNPCs:()D
+       138: dstore        13
+       140: dload         13
+       142: dload         10
+       144: dsub
+       145: dstore        15
+       147: dload_2
+       148: dload         15
+       150: dcmpl
+       151: ifle          218
+       154: getstatic     #161                // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+       157: getstatic     #345                // Field java/util/logging/Level.FINEST:Ljava/util/logging/Level;
+       160: invokevirtual #171                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+       163: astore        17
+       165: aload         17
+       167: invokeinterface #177,  1          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.isEnabled:()Z
+       172: ifeq          203
+       175: aload         17
+       177: ldc_w         #348                // String Spreading %g to chunk %d with total capacity %g
+       180: dload         15
+       182: invokestatic  #184                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       185: aload         12
+       187: invokevirtual #350                // Method com/hypixel/hytale/server/core/universe/world/chunk/WorldChunk.getIndex:()J
+       190: invokestatic  #353                // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+       193: dload         13
+       195: invokestatic  #184                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       198: invokeinterface #358,  5          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+       203: dload_2
+       204: dload         15
+       206: dsub
+       207: dstore_2
+       208: aload         9
+       210: iload_1
+       211: dload         13
+       213: invokevirtual #361                // Method com/hypixel/hytale/server/spawning/world/component/ChunkSpawnedNPCData.setEnvironmentSpawnCount:(ID)V
+       216: dload_2
+       217: dreturn
+       218: getstatic     #161                // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+       221: getstatic     #345                // Field java/util/logging/Level.FINEST:Ljava/util/logging/Level;
+       224: invokevirtual #171                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+       227: astore        17
+       229: aload         17
+       231: invokeinterface #177,  1          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.isEnabled:()Z
+       236: ifeq          266
+       239: aload         17
+       241: ldc_w         #348                // String Spreading %g to chunk %d with total capacity %g
+       244: dload_2
+       245: invokestatic  #184                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       248: aload         12
+       250: invokevirtual #350                // Method com/hypixel/hytale/server/core/universe/world/chunk/WorldChunk.getIndex:()J
+       253: invokestatic  #353                // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+       256: dload         13
+       258: invokestatic  #184                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       261: invokeinterface #358,  5          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+       266: aload         9
+       268: iload_1
+       269: dload         10
+       271: dload_2
+       272: dadd
+       273: invokevirtual #361                // Method com/hypixel/hytale/server/spawning/world/component/ChunkSpawnedNPCData.setEnvironmentSpawnCount:(ID)V
+       276: dconst_0
+       277: dreturn
+
+  private static double untrackRemovedNPC(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore>, int, double, com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore, com.hypixel.hytale.server.spawning.world.component.ChunkSpawnData>, com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore, com.hypixel.hytale.server.spawning.world.component.ChunkSpawnedNPCData>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore>);
+    Code:
+         0: aload         6
+         2: aload_0
+         3: aload         4
+         5: invokevirtual #45                 // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+         8: checkcast     #321                // class com/hypixel/hytale/server/spawning/world/component/ChunkSpawnData
+        11: astore        7
+        13: aload         7
+        15: ifnonnull     20
+        18: dload_2
+        19: dreturn
+        20: aload         7
+        22: invokevirtual #323                // Method com/hypixel/hytale/server/spawning/world/component/ChunkSpawnData.getChunkEnvironmentSpawnDataMap:()Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        25: iload_1
+        26: invokeinterface #229,  2          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.get:(I)Ljava/lang/Object;
+        31: checkcast     #326                // class com/hypixel/hytale/server/spawning/world/ChunkEnvironmentSpawnData
+        34: astore        8
+        36: aload         8
+        38: ifnonnull     43
+        41: dload_2
+        42: dreturn
+        43: aload         6
+        45: aload_0
+        46: aload         5
+        48: invokevirtual #45                 // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        51: checkcast     #328                // class com/hypixel/hytale/server/spawning/world/component/ChunkSpawnedNPCData
+        54: astore        9
+        56: getstatic     #51                 // Field $assertionsDisabled:Z
+        59: ifne          75
+        62: aload         9
+        64: ifnonnull     75
+        67: new           #55                 // class java/lang/AssertionError
+        70: dup
+        71: invokespecial #57                 // Method java/lang/AssertionError."<init>":()V
+        74: athrow
+        75: aload         9
+        77: iload_1
+        78: invokevirtual #330                // Method com/hypixel/hytale/server/spawning/world/component/ChunkSpawnedNPCData.getEnvironmentSpawnCount:(I)D
+        81: dstore        10
+        83: dload         10
+        85: dconst_0
+        86: dcmpg
+        87: ifgt          92
+        90: dload_2
+        91: dreturn
+        92: aload         6
+        94: aload_0
+        95: invokestatic  #338                // Method com/hypixel/hytale/server/core/universe/world/chunk/WorldChunk.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        98: invokevirtual #45                 // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       101: checkcast     #339                // class com/hypixel/hytale/server/core/universe/world/chunk/WorldChunk
+       104: astore        12
+       106: getstatic     #51                 // Field $assertionsDisabled:Z
+       109: ifne          125
+       112: aload         12
+       114: ifnonnull     125
+       117: new           #55                 // class java/lang/AssertionError
+       120: dup
+       121: invokespecial #57                 // Method java/lang/AssertionError."<init>":()V
+       124: athrow
+       125: aload         12
+       127: invokevirtual #341                // Method com/hypixel/hytale/server/core/universe/world/chunk/WorldChunk.markNeedsSaving:()V
+       130: aload         8
+       132: invokevirtual #344                // Method com/hypixel/hytale/server/spawning/world/ChunkEnvironmentSpawnData.getExpectedNPCs:()D
+       135: dstore        13
+       137: dload         10
+       139: dload_2
+       140: dcmpg
+       141: ifge          207
+       144: getstatic     #161                // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+       147: getstatic     #345                // Field java/util/logging/Level.FINEST:Ljava/util/logging/Level;
+       150: invokevirtual #171                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+       153: astore        15
+       155: aload         15
+       157: invokeinterface #177,  1          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.isEnabled:()Z
+       162: ifeq          193
+       165: aload         15
+       167: ldc_w         #365                // String Spreading removal of %g to chunk %d with total capacity %g
+       170: dload         10
+       172: invokestatic  #184                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       175: aload         12
+       177: invokevirtual #350                // Method com/hypixel/hytale/server/core/universe/world/chunk/WorldChunk.getIndex:()J
+       180: invokestatic  #353                // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+       183: dload         13
+       185: invokestatic  #184                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       188: invokeinterface #358,  5          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+       193: dload_2
+       194: dload         10
+       196: dsub
+       197: dstore_2
+       198: aload         9
+       200: iload_1
+       201: dconst_0
+       202: invokevirtual #361                // Method com/hypixel/hytale/server/spawning/world/component/ChunkSpawnedNPCData.setEnvironmentSpawnCount:(ID)V
+       205: dload_2
+       206: dreturn
+       207: getstatic     #161                // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+       210: getstatic     #345                // Field java/util/logging/Level.FINEST:Ljava/util/logging/Level;
+       213: invokevirtual #171                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+       216: astore        15
+       218: aload         15
+       220: invokeinterface #177,  1          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.isEnabled:()Z
+       225: ifeq          255
+       228: aload         15
+       230: ldc_w         #365                // String Spreading removal of %g to chunk %d with total capacity %g
+       233: dload_2
+       234: invokestatic  #184                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       237: aload         12
+       239: invokevirtual #350                // Method com/hypixel/hytale/server/core/universe/world/chunk/WorldChunk.getIndex:()J
+       242: invokestatic  #353                // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+       245: dload         13
+       247: invokestatic  #184                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       250: invokeinterface #358,  5          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V
+       255: aload         9
+       257: iload_1
+       258: dload         10
+       260: dload_2
+       261: dsub
+       262: invokevirtual #361                // Method com/hypixel/hytale/server/spawning/world/component/ChunkSpawnedNPCData.setEnvironmentSpawnCount:(ID)V
+       265: dconst_0
+       266: dreturn
+
+  private static java.lang.String getEnvironmentName(int);
+    Code:
+         0: invokestatic  #239                // Method com/hypixel/hytale/server/core/asset/type/environment/config/Environment.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+         3: iload_0
+         4: invokevirtual #245                // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(I)Lcom/hypixel/hytale/assetstore/map/JsonAssetWithMap;
+         7: checkcast     #240                // class com/hypixel/hytale/server/core/asset/type/environment/config/Environment
+        10: astore_1
+        11: aload_1
+        12: ifnull        22
+        15: aload_1
+        16: invokevirtual #251                // Method com/hypixel/hytale/server/core/asset/type/environment/config/Environment.getId:()Ljava/lang/String;
+        19: goto          28
+        22: iload_0
+        23: invokedynamic #367,  0            // InvokeDynamic #0:makeConcatWithConstants:(I)Ljava/lang/String;
+        28: areturn
+
+  static {};
+    Code:
+         0: ldc           #14                 // class com/hypixel/hytale/server/spawning/world/system/WorldSpawnTrackingSystem
+         2: invokevirtual #370                // Method java/lang/Class.desiredAssertionStatus:()Z
+         5: ifne          12
+         8: iconst_1
+         9: goto          13
+        12: iconst_0
+        13: putstatic     #51                 // Field $assertionsDisabled:Z
+        16: invokestatic  #375                // Method com/hypixel/hytale/logger/HytaleLogger.forEnclosingClass:()Lcom/hypixel/hytale/logger/HytaleLogger;
+        19: putstatic     #161                // Field LOGGER:Lcom/hypixel/hytale/logger/HytaleLogger;
+        22: return
+}

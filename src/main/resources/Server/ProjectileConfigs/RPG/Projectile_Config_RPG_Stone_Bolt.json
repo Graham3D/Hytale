@@ -1,0 +1,5 @@
+{
+  "Model": "RPG_Stone_Bolt", "UseModelScale": true,
+  "Physics": { "Type": "Standard", "Gravity": 0, "TerminalVelocityAir": 17, "TerminalVelocityWater": 17, "RotationMode": "Velocity", "Bounciness": 0.0 },
+  "LaunchForce": 17, "SpawnOffset": { "X": 0, "Y": 0, "Z": 0 }, "Interactions": {}
+}

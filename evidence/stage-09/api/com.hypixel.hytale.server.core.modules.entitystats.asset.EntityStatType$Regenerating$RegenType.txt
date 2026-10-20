@@ -1,0 +1,63 @@
+Compiled from "EntityStatType.java"
+public final class com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating$RegenType extends java.lang.Enum<com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating$RegenType> {
+  public static final com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating$RegenType ADDITIVE;
+
+  public static final com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating$RegenType PERCENTAGE;
+
+  private static final com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating$RegenType[] $VALUES;
+
+  public static com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating$RegenType[] values();
+    Code:
+         0: getstatic     #10                 // Field $VALUES:[Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating$RegenType;
+         3: invokevirtual #14                 // Method "[Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating$RegenType;".clone:()Ljava/lang/Object;
+         6: checkcast     #15                 // class "[Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating$RegenType;"
+         9: areturn
+
+  public static com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating$RegenType valueOf(java.lang.String);
+    Code:
+         0: ldc           #1                  // class com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating$RegenType
+         2: aload_0
+         3: invokestatic  #19                 // Method java/lang/Enum.valueOf:(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;
+         6: checkcast     #1                  // class com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating$RegenType
+         9: areturn
+
+  private com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating$RegenType();
+    Code:
+         0: aload_0
+         1: aload_1
+         2: iload_2
+         3: invokespecial #25                 // Method java/lang/Enum."<init>":(Ljava/lang/String;I)V
+         6: return
+
+  private static com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating$RegenType[] $values();
+    Code:
+         0: iconst_2
+         1: anewarray     #1                  // class com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating$RegenType
+         4: dup
+         5: iconst_0
+         6: getstatic     #3                  // Field ADDITIVE:Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating$RegenType;
+         9: aastore
+        10: dup
+        11: iconst_1
+        12: getstatic     #7                  // Field PERCENTAGE:Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating$RegenType;
+        15: aastore
+        16: areturn
+
+  static {};
+    Code:
+         0: new           #1                  // class com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating$RegenType
+         3: dup
+         4: ldc           #29                 // String ADDITIVE
+         6: iconst_0
+         7: invokespecial #30                 // Method "<init>":(Ljava/lang/String;I)V
+        10: putstatic     #3                  // Field ADDITIVE:Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating$RegenType;
+        13: new           #1                  // class com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating$RegenType
+        16: dup
+        17: ldc           #31                 // String PERCENTAGE
+        19: iconst_1
+        20: invokespecial #30                 // Method "<init>":(Ljava/lang/String;I)V
+        23: putstatic     #7                  // Field PERCENTAGE:Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating$RegenType;
+        26: invokestatic  #32                 // Method $values:()[Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating$RegenType;
+        29: putstatic     #10                 // Field $VALUES:[Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating$RegenType;
+        32: return
+}

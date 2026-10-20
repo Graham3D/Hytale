@@ -1,0 +1,305 @@
+Compiled from "AvoidanceSystem.java"
+public class com.hypixel.hytale.server.npc.systems.AvoidanceSystem extends com.hypixel.hytale.server.npc.systems.SteppableTickingSystem {
+  private final com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.npc.entities.NPCEntity> componentType;
+
+  private final com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.modules.entity.component.TransformComponent> transformComponentType;
+
+  private final com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> query;
+
+  private final java.util.Set<com.hypixel.hytale.component.dependency.Dependency<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>> dependencies;
+
+  static final boolean $assertionsDisabled;
+
+  public com.hypixel.hytale.server.npc.systems.AvoidanceSystem(com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.npc.entities.NPCEntity>);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/server/npc/systems/SteppableTickingSystem."<init>":()V
+         4: aload_0
+         5: new           #7                  // class com/hypixel/hytale/component/dependency/SystemDependency
+         8: dup
+         9: getstatic     #9                  // Field com/hypixel/hytale/component/dependency/Order.AFTER:Lcom/hypixel/hytale/component/dependency/Order;
+        12: ldc           #15                 // class com/hypixel/hytale/server/npc/systems/RoleSystems$BehaviourTickSystem
+        14: invokespecial #17                 // Method com/hypixel/hytale/component/dependency/SystemDependency."<init>":(Lcom/hypixel/hytale/component/dependency/Order;Ljava/lang/Class;)V
+        17: invokestatic  #20                 // InterfaceMethod java/util/Set.of:(Ljava/lang/Object;)Ljava/util/Set;
+        20: putfield      #26                 // Field dependencies:Ljava/util/Set;
+        23: aload_0
+        24: aload_1
+        25: putfield      #32                 // Field componentType:Lcom/hypixel/hytale/component/ComponentType;
+        28: aload_0
+        29: invokestatic  #36                 // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        32: putfield      #42                 // Field transformComponentType:Lcom/hypixel/hytale/component/ComponentType;
+        35: aload_0
+        36: iconst_2
+        37: anewarray     #45                 // class com/hypixel/hytale/component/query/Query
+        40: dup
+        41: iconst_0
+        42: aload_1
+        43: aastore
+        44: dup
+        45: iconst_1
+        46: aload_0
+        47: getfield      #42                 // Field transformComponentType:Lcom/hypixel/hytale/component/ComponentType;
+        50: aastore
+        51: invokestatic  #47                 // InterfaceMethod com/hypixel/hytale/component/query/Query.and:([Lcom/hypixel/hytale/component/query/Query;)Lcom/hypixel/hytale/component/query/AndQuery;
+        54: putfield      #51                 // Field query:Lcom/hypixel/hytale/component/query/Query;
+        57: return
+
+  public java.util.Set<com.hypixel.hytale.component.dependency.Dependency<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>> getDependencies();
+    Code:
+         0: aload_0
+         1: getfield      #26                 // Field dependencies:Ljava/util/Set;
+         4: areturn
+
+  public boolean isParallel(int, int);
+    Code:
+         0: iload_1
+         1: iload_2
+         2: invokestatic  #55                 // Method com/hypixel/hytale/component/system/tick/EntityTickingSystem.maybeUseParallel:(II)Z
+         5: ireturn
+
+  public com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getQuery();
+    Code:
+         0: aload_0
+         1: getfield      #51                 // Field query:Lcom/hypixel/hytale/component/query/Query;
+         4: areturn
+
+  public void steppedTick(float, int, com.hypixel.hytale.component.ArchetypeChunk<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_3
+         1: iload_2
+         2: invokevirtual #61                 // Method com/hypixel/hytale/component/ArchetypeChunk.getReferenceTo:(I)Lcom/hypixel/hytale/component/Ref;
+         5: astore        6
+         7: aload_3
+         8: iload_2
+         9: aload_0
+        10: getfield      #32                 // Field componentType:Lcom/hypixel/hytale/component/ComponentType;
+        13: invokevirtual #67                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        16: checkcast     #71                 // class com/hypixel/hytale/server/npc/entities/NPCEntity
+        19: astore        7
+        21: getstatic     #73                 // Field $assertionsDisabled:Z
+        24: ifne          40
+        27: aload         7
+        29: ifnonnull     40
+        32: new           #77                 // class java/lang/AssertionError
+        35: dup
+        36: invokespecial #79                 // Method java/lang/AssertionError."<init>":()V
+        39: athrow
+        40: aload         7
+        42: invokevirtual #80                 // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getRole:()Lcom/hypixel/hytale/server/npc/role/Role;
+        45: astore        8
+        47: aload         8
+        49: ifnonnull     53
+        52: return
+        53: aload         8
+        55: invokevirtual #84                 // Method com/hypixel/hytale/server/npc/role/Role.isAvoidingEntities:()Z
+        58: ifne          69
+        61: aload         8
+        63: invokevirtual #90                 // Method com/hypixel/hytale/server/npc/role/Role.isApplySeparation:()Z
+        66: ifeq          134
+        69: aload_3
+        70: iload_2
+        71: invokestatic  #93                 // Method com/hypixel/hytale/server/npc/role/support/MarkedEntitySupport.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        74: invokevirtual #67                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        77: checkcast     #94                 // class com/hypixel/hytale/server/npc/role/support/MarkedEntitySupport
+        80: astore        9
+        82: getstatic     #73                 // Field $assertionsDisabled:Z
+        85: ifne          101
+        88: aload         9
+        90: ifnonnull     101
+        93: new           #77                 // class java/lang/AssertionError
+        96: dup
+        97: invokespecial #79                 // Method java/lang/AssertionError."<init>":()V
+       100: athrow
+       101: aload         9
+       103: invokevirtual #96                 // Method com/hypixel/hytale/server/npc/role/support/MarkedEntitySupport.getTargetReferenceToIgnoreForAvoidance:()Lcom/hypixel/hytale/component/Ref;
+       106: astore        10
+       108: aload         10
+       110: ifnull        134
+       113: aload         10
+       115: invokevirtual #100                // Method com/hypixel/hytale/component/Ref.isValid:()Z
+       118: ifeq          134
+       121: aload         8
+       123: invokevirtual #105                // Method com/hypixel/hytale/server/npc/role/Role.getIgnoredEntitiesForAvoidance:()Ljava/util/Set;
+       126: aload         10
+       128: invokeinterface #109,  2          // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+       133: pop
+       134: aload_3
+       135: iload_2
+       136: invokestatic  #113                // Method com/hypixel/hytale/server/npc/role/support/DebugSupport.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       139: invokevirtual #67                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       142: checkcast     #114                // class com/hypixel/hytale/server/npc/role/support/DebugSupport
+       145: astore        9
+       147: getstatic     #73                 // Field $assertionsDisabled:Z
+       150: ifne          166
+       153: aload         9
+       155: ifnonnull     166
+       158: new           #77                 // class java/lang/AssertionError
+       161: dup
+       162: invokespecial #79                 // Method java/lang/AssertionError."<init>":()V
+       165: athrow
+       166: aload         9
+       168: getstatic     #116                // Field com/hypixel/hytale/server/npc/role/RoleDebugFlags.VisSteeringPre:Lcom/hypixel/hytale/server/npc/role/RoleDebugFlags;
+       171: invokevirtual #122                // Method com/hypixel/hytale/server/npc/role/support/DebugSupport.isDebugFlagSet:(Lcom/hypixel/hytale/server/npc/role/RoleDebugFlags;)Z
+       174: istore        10
+       176: iload         10
+       178: ifeq          199
+       181: new           #126                // class org/joml/Vector3d
+       184: dup
+       185: aload         8
+       187: invokevirtual #128                // Method com/hypixel/hytale/server/npc/role/Role.getBodySteering:()Lcom/hypixel/hytale/server/npc/movement/Steering;
+       190: invokevirtual #132                // Method com/hypixel/hytale/server/npc/movement/Steering.getTranslation:()Lorg/joml/Vector3d;
+       193: invokespecial #138                // Method org/joml/Vector3d."<init>":(Lorg/joml/Vector3dc;)V
+       196: goto          200
+       199: aconst_null
+       200: astore        11
+       202: aload         8
+       204: invokevirtual #141                // Method com/hypixel/hytale/server/npc/role/Role.getActiveMotionController:()Lcom/hypixel/hytale/server/npc/movement/controllers/MotionController;
+       207: invokeinterface #145,  1          // InterfaceMethod com/hypixel/hytale/server/npc/movement/controllers/MotionController.isObstructed:()Z
+       212: ifne          539
+       215: aload_3
+       216: iload_2
+       217: aload_0
+       218: getfield      #42                 // Field transformComponentType:Lcom/hypixel/hytale/component/ComponentType;
+       221: invokevirtual #67                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       224: checkcast     #37                 // class com/hypixel/hytale/server/core/modules/entity/component/TransformComponent
+       227: astore        12
+       229: getstatic     #73                 // Field $assertionsDisabled:Z
+       232: ifne          248
+       235: aload         12
+       237: ifnonnull     248
+       240: new           #77                 // class java/lang/AssertionError
+       243: dup
+       244: invokespecial #79                 // Method java/lang/AssertionError."<init>":()V
+       247: athrow
+       248: aload         12
+       250: invokevirtual #150                // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getPosition:()Lorg/joml/Vector3d;
+       253: astore        13
+       255: aload         5
+       257: invokevirtual #153                // Method com/hypixel/hytale/component/CommandBuffer.getExternalData:()Ljava/lang/Object;
+       260: checkcast     #159                // class com/hypixel/hytale/server/core/universe/world/storage/EntityStore
+       263: invokevirtual #161                // Method com/hypixel/hytale/server/core/universe/world/storage/EntityStore.getWorld:()Lcom/hypixel/hytale/server/core/universe/world/World;
+       266: astore        14
+       268: aload         12
+       270: invokevirtual #165                // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getRotation:()Lcom/hypixel/hytale/math/vector/Rotation3f;
+       273: astore        15
+       275: aload         9
+       277: getstatic     #169                // Field com/hypixel/hytale/server/npc/role/RoleDebugFlags.VisAvoidance:Lcom/hypixel/hytale/server/npc/role/RoleDebugFlags;
+       280: invokevirtual #122                // Method com/hypixel/hytale/server/npc/role/support/DebugSupport.isDebugFlagSet:(Lcom/hypixel/hytale/server/npc/role/RoleDebugFlags;)Z
+       283: istore        16
+       285: aload         9
+       287: getstatic     #172                // Field com/hypixel/hytale/server/npc/role/RoleDebugFlags.VisSeparation:Lcom/hypixel/hytale/server/npc/role/RoleDebugFlags;
+       290: invokevirtual #122                // Method com/hypixel/hytale/server/npc/role/support/DebugSupport.isDebugFlagSet:(Lcom/hypixel/hytale/server/npc/role/RoleDebugFlags;)Z
+       293: istore        17
+       295: aload         9
+       297: getstatic     #175                // Field com/hypixel/hytale/server/npc/role/RoleDebugFlags.VisOrientation:Lcom/hypixel/hytale/server/npc/role/RoleDebugFlags;
+       300: invokevirtual #122                // Method com/hypixel/hytale/server/npc/role/support/DebugSupport.isDebugFlagSet:(Lcom/hypixel/hytale/server/npc/role/RoleDebugFlags;)Z
+       303: ifeq          320
+       306: iload         16
+       308: ifne          316
+       311: iload         17
+       313: ifeq          320
+       316: iconst_1
+       317: goto          321
+       320: iconst_0
+       321: istore        18
+       323: aload         8
+       325: invokevirtual #84                 // Method com/hypixel/hytale/server/npc/role/Role.isAvoidingEntities:()Z
+       328: ifeq          369
+       331: aload         8
+       333: aload         6
+       335: aload         13
+       337: aload         15
+       339: aload         8
+       341: invokevirtual #128                // Method com/hypixel/hytale/server/npc/role/Role.getBodySteering:()Lcom/hypixel/hytale/server/npc/movement/Steering;
+       344: aload         5
+       346: invokevirtual #178                // Method com/hypixel/hytale/server/npc/role/Role.blendAvoidance:(Lcom/hypixel/hytale/component/Ref;Lorg/joml/Vector3d;Lcom/hypixel/hytale/math/vector/Rotation3f;Lcom/hypixel/hytale/server/npc/movement/Steering;Lcom/hypixel/hytale/component/CommandBuffer;)V
+       349: iload         16
+       351: ifeq          369
+       354: aload         13
+       356: aload         8
+       358: invokevirtual #182                // Method com/hypixel/hytale/server/npc/role/Role.getLastAvoidanceSteering:()Lorg/joml/Vector3d;
+       361: getstatic     #185                // Field com/hypixel/hytale/server/npc/util/VisHelper.DEBUG_COLOR_AVOIDANCE:Lorg/joml/Vector3f;
+       364: aload         14
+       366: invokestatic  #191                // Method com/hypixel/hytale/server/npc/util/VisHelper.renderDebugVector:(Lorg/joml/Vector3d;Lorg/joml/Vector3d;Lorg/joml/Vector3f;Lcom/hypixel/hytale/server/core/universe/world/World;)V
+       369: aload         8
+       371: invokevirtual #90                 // Method com/hypixel/hytale/server/npc/role/Role.isApplySeparation:()Z
+       374: ifeq          419
+       377: aload         8
+       379: aload         6
+       381: aload         13
+       383: aload         15
+       385: aload         8
+       387: invokevirtual #128                // Method com/hypixel/hytale/server/npc/role/Role.getBodySteering:()Lcom/hypixel/hytale/server/npc/movement/Steering;
+       390: aload_0
+       391: getfield      #42                 // Field transformComponentType:Lcom/hypixel/hytale/component/ComponentType;
+       394: aload         5
+       396: invokevirtual #195                // Method com/hypixel/hytale/server/npc/role/Role.blendSeparation:(Lcom/hypixel/hytale/component/Ref;Lorg/joml/Vector3d;Lcom/hypixel/hytale/math/vector/Rotation3f;Lcom/hypixel/hytale/server/npc/movement/Steering;Lcom/hypixel/hytale/component/ComponentType;Lcom/hypixel/hytale/component/CommandBuffer;)V
+       399: iload         17
+       401: ifeq          419
+       404: aload         13
+       406: aload         8
+       408: invokevirtual #199                // Method com/hypixel/hytale/server/npc/role/Role.getLastSeparationSteering:()Lorg/joml/Vector3d;
+       411: getstatic     #202                // Field com/hypixel/hytale/server/npc/util/VisHelper.DEBUG_COLOR_SEPARATION:Lorg/joml/Vector3f;
+       414: aload         14
+       416: invokestatic  #191                // Method com/hypixel/hytale/server/npc/util/VisHelper.renderDebugVector:(Lorg/joml/Vector3d;Lorg/joml/Vector3d;Lorg/joml/Vector3f;Lcom/hypixel/hytale/server/core/universe/world/World;)V
+       419: iload         18
+       421: ifeq          493
+       424: aload         8
+       426: invokevirtual #128                // Method com/hypixel/hytale/server/npc/role/Role.getBodySteering:()Lcom/hypixel/hytale/server/npc/movement/Steering;
+       429: invokevirtual #205                // Method com/hypixel/hytale/server/npc/movement/Steering.hasDirectionHint:()Z
+       432: ifeq          493
+       435: new           #126                // class org/joml/Vector3d
+       438: dup
+       439: invokespecial #208                // Method org/joml/Vector3d."<init>":()V
+       442: astore        19
+       444: aload         8
+       446: invokevirtual #128                // Method com/hypixel/hytale/server/npc/role/Role.getBodySteering:()Lcom/hypixel/hytale/server/npc/movement/Steering;
+       449: invokevirtual #209                // Method com/hypixel/hytale/server/npc/movement/Steering.getDirectionHint:()Lcom/hypixel/hytale/math/vector/Rotation3f;
+       452: invokevirtual #212                // Method com/hypixel/hytale/math/vector/Rotation3f.yaw:()F
+       455: aload         8
+       457: invokevirtual #128                // Method com/hypixel/hytale/server/npc/role/Role.getBodySteering:()Lcom/hypixel/hytale/server/npc/movement/Steering;
+       460: invokevirtual #209                // Method com/hypixel/hytale/server/npc/movement/Steering.getDirectionHint:()Lcom/hypixel/hytale/math/vector/Rotation3f;
+       463: invokevirtual #218                // Method com/hypixel/hytale/math/vector/Rotation3f.pitch:()F
+       466: aload         19
+       468: invokestatic  #221                // Method com/hypixel/hytale/server/core/modules/physics/util/PhysicsMath.vectorFromAngles:(FFLorg/joml/Vector3d;)Lorg/joml/Vector3d;
+       471: pop
+       472: aload         19
+       474: ldc2_w        #227                // double 0.25d
+       477: invokevirtual #229                // Method org/joml/Vector3d.mul:(D)Lorg/joml/Vector3d;
+       480: pop
+       481: aload         13
+       483: aload         19
+       485: getstatic     #233                // Field com/hypixel/hytale/server/core/modules/debug/DebugUtils.COLOR_CYAN:Lorg/joml/Vector3f;
+       488: aload         14
+       490: invokestatic  #191                // Method com/hypixel/hytale/server/npc/util/VisHelper.renderDebugVector:(Lorg/joml/Vector3d;Lorg/joml/Vector3d;Lorg/joml/Vector3f;Lcom/hypixel/hytale/server/core/universe/world/World;)V
+       493: iload         10
+       495: ifeq          510
+       498: aload         13
+       500: aload         11
+       502: getstatic     #238                // Field com/hypixel/hytale/server/npc/util/VisHelper.DEBUG_COLOR_STEERING_PRE:Lorg/joml/Vector3f;
+       505: aload         14
+       507: invokestatic  #241                // Method com/hypixel/hytale/server/npc/util/VisHelper.renderDebugVectorTo:(Lorg/joml/Vector3d;Lorg/joml/Vector3d;Lorg/joml/Vector3f;Lcom/hypixel/hytale/server/core/universe/world/World;)V
+       510: aload         9
+       512: getstatic     #244                // Field com/hypixel/hytale/server/npc/role/RoleDebugFlags.VisSteeringPost:Lcom/hypixel/hytale/server/npc/role/RoleDebugFlags;
+       515: invokevirtual #122                // Method com/hypixel/hytale/server/npc/role/support/DebugSupport.isDebugFlagSet:(Lcom/hypixel/hytale/server/npc/role/RoleDebugFlags;)Z
+       518: ifeq          539
+       521: aload         13
+       523: aload         8
+       525: invokevirtual #128                // Method com/hypixel/hytale/server/npc/role/Role.getBodySteering:()Lcom/hypixel/hytale/server/npc/movement/Steering;
+       528: invokevirtual #132                // Method com/hypixel/hytale/server/npc/movement/Steering.getTranslation:()Lorg/joml/Vector3d;
+       531: getstatic     #247                // Field com/hypixel/hytale/server/npc/util/VisHelper.DEBUG_COLOR_STEERING_POST:Lorg/joml/Vector3f;
+       534: aload         14
+       536: invokestatic  #191                // Method com/hypixel/hytale/server/npc/util/VisHelper.renderDebugVector:(Lorg/joml/Vector3d;Lorg/joml/Vector3d;Lorg/joml/Vector3f;Lcom/hypixel/hytale/server/core/universe/world/World;)V
+       539: return
+
+  static {};
+    Code:
+         0: ldc           #27                 // class com/hypixel/hytale/server/npc/systems/AvoidanceSystem
+         2: invokevirtual #250                // Method java/lang/Class.desiredAssertionStatus:()Z
+         5: ifne          12
+         8: iconst_1
+         9: goto          13
+        12: iconst_0
+        13: putstatic     #73                 // Field $assertionsDisabled:Z
+        16: return
+}

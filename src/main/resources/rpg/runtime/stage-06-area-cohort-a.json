@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {
+      "skillId": "ground_slam", "family": "BURST", "secondaryFamilies": ["STRIKE"],
+      "allowedMainHandKinds": ["MACE", "BATTLEAXE"], "requiredOffHandKinds": [],
+      "resourceType": "STAMINA", "resourceCost": 18, "cooldownSeconds": 9, "windupSeconds": 0,
+      "basePowerSource": "WEAPON", "scaling": "HEAVY",
+      "area": {"geometry": "DISC", "radius": 5, "height": 3, "impactCount": 1,
+        "perTargetHitCap": 1, "coefficient": 1.55, "edgeFalloff": 0.3,
+        "displacement": 2, "element": "EARTH", "status": "", "candidateBudget": 64}
+    },
+    {
+      "skillId": "frost_nova", "family": "BURST", "secondaryFamilies": [],
+      "allowedMainHandKinds": ["STAFF", "SPELLBOOK"], "requiredOffHandKinds": [],
+      "resourceType": "MANA", "resourceCost": 18, "cooldownSeconds": 10, "windupSeconds": 0,
+      "basePowerSource": "MAGIC_WEAPON", "scaling": "MAGIC",
+      "area": {"geometry": "DISC", "radius": 5.5, "height": 3, "impactCount": 1,
+        "perTargetHitCap": 1, "coefficient": 1.1, "chillStacks": 2,
+        "element": "COLD", "status": "CHILL", "candidateBudget": 64}
+    },
+    {
+      "skillId": "root_snare", "family": "TRAP", "secondaryFamilies": [],
+      "allowedMainHandKinds": ["STAFF", "SPELLBOOK"], "requiredOffHandKinds": [],
+      "resourceType": "MANA", "resourceCost": 16, "cooldownSeconds": 10, "windupSeconds": 0,
+      "basePowerSource": "MAGIC_WEAPON", "scaling": "MAGIC",
+      "area": {"geometry": "DISC", "radius": 2.5, "height": 3, "placementRange": 16,
+        "lifetimeSeconds": 15, "armingSeconds": 0.5, "impactCount": 1, "perTargetHitCap": 1,
+        "coefficient": 0.4, "firstTargetOnly": true, "status": "ROOT", "statusSeconds": 3,
+        "element": "NATURE", "candidateBudget": 64}
+    }
+  ]
+}

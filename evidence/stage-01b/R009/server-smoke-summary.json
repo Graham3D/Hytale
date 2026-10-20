@@ -1,0 +1,11 @@
+{
+  "capturedAtUtc": "2026-09-06T18:07:51.3968942Z",
+  "processExitCode": 9,
+  "targetVersion": "0.7.0-pre.1",
+  "serverVersionObserved": true,
+  "rpgDiscovered": true,
+  "rpgSetup": true,
+  "stageReady": true,
+  "rpgEnabled": true,
+  "pluginExceptionObserved": false
+}

@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 2,
+  "capturedAtUtc": "2026-09-06T12:30:10.3389970Z",
+  "patchline": "pre-release",
+  "settingsPath": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Settings.json",
+  "settingsSha256": "5E05637771F2BB927A4E2CD7DDAE07308B2F68D9A18E68B349FE97B5C137A563",
+  "settingsMutated": false,
+  "serializedOverrides": [
+    {
+      "Name": "PushToTalk",
+      "Id": 49,
+      "Bindings": [
+        {
+          "SourceType": 0,
+          "Scancode": 8
+        }
+      ]
+    }
+  ],
+  "targetBindings": {
+    "C": {
+      "sdlScancode": 6,
+      "serializedConsumers": [],
+      "exactDefaultOwner": "CLIENT_SETTINGS_UI_TEST_REQUIRED"
+    },
+    "K": {
+      "sdlScancode": 14,
+      "serializedConsumers": [],
+      "exactDefaultOwner": "CLIENT_SETTINGS_UI_TEST_REQUIRED"
+    }
+  },
+  "binaryArchitectureMarkers": {
+    "Ability1ItemAction": true,
+    "Ability2ItemAction": true,
+    "Ability3ItemAction": true,
+    "Ability4ItemAction": true,
+    "InputActionManager": true,
+    "InputActionContext": true,
+    "GeneralContext": true,
+    "UiContext": true,
+    "MachinimaContext": true,
+    "SwitchCameraMode": true,
+    "OpenInventory": true,
+    "ReverseCamera": false,
+    "FrontCamera": false
+  },
+  "conclusion": "The client has four built-in Ability item actions and contextual input architecture. No supported server/API registration or settings-category surface for third-party global C/K actions was found. Serialized overrides have no C/K consumer, but un-serialized defaults require real-client Settings UI verification."
+}

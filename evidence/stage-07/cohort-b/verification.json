@@ -1,0 +1,33 @@
+{
+  "capturedAtUtc": "2026-09-07T22:00:38.1809268Z",
+  "revision": "R026",
+  "version": "0.0.19",
+  "stage": "07",
+  "cohort": "b",
+  "branch": "RPG",
+  "sourceHead": "bbf35108f04fab26d3c0a6fcd07f1df9d7eaa088",
+  "worktreeDirty": true,
+  "stageStatus": "IMPLEMENTATION_IN_PROGRESS",
+  "completeStageGate": false,
+  "gateScope": "LOCAL_ENGINEERING_ONLY",
+  "cohortPassives": [
+    "ricochet",
+    "volley",
+    "barrage",
+    "homing"
+  ],
+  "tests": 255,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "connectedVerification": "UNVERIFIED",
+  "nativeCastingFixed": false,
+  "nativeProjectileBehaviorVerified": false,
+  "liveDeploymentPerformed": false,
+  "protectedPathsChanged": [],
+  "projectileConfigsWithNoNativeGameplay": 7,
+  "jarSha256": "E901FB2AE9B34C2739CA83022A728D28C1065CCD4BDECBD63B157303E85809F9",
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "assetsSha256": "46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39",
+  "rollbackSha256": "B45CD1502D29D7ADE8E46F17000081A5CCDCA6858A19FC867CB4339438235766"
+}

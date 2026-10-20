@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {
+      "skillId": "minor_heal",
+      "family": "DIRECT_TARGET",
+      "allowedMainHandKinds": [
+        "STAFF",
+        "SPELLBOOK"
+      ],
+      "resourceType": "MANA",
+      "resourceCost": 12,
+      "cooldownSeconds": 4,
+      "basePowerSource": "INNATE",
+      "innateBasePower": 20,
+      "scaling": "UTILITY",
+      "support": {
+        "kind": "HEAL",
+        "range": 18,
+        "radius": 0,
+        "coefficient": 1,
+        "reservationFraction": 0,
+        "toggleLockSeconds": 0
+      },
+      "secondaryFamilies": [],
+      "requiredOffHandKinds": [],
+      "windupSeconds": 0
+    },
+    {
+      "skillId": "managuard",
+      "family": "AURA",
+      "allowedMainHandKinds": [],
+      "resourceType": "NONE",
+      "resourceCost": 0,
+      "cooldownSeconds": 3,
+      "basePowerSource": "NONE",
+      "innateBasePower": 0,
+      "scaling": "UTILITY",
+      "support": {
+        "kind": "MANAGUARD",
+        "range": 0,
+        "radius": 0,
+        "coefficient": 1,
+        "reservationFraction": 0.5,
+        "toggleLockSeconds": 3
+      },
+      "secondaryFamilies": [],
+      "requiredOffHandKinds": [],
+      "windupSeconds": 0
+    },
+    {
+      "skillId": "emanatism",
+      "family": "AURA",
+      "allowedMainHandKinds": [],
+      "resourceType": "NONE",
+      "resourceCost": 0,
+      "cooldownSeconds": 2,
+      "basePowerSource": "NONE",
+      "innateBasePower": 0,
+      "scaling": "UTILITY",
+      "support": {
+        "kind": "MANA_REGEN",
+        "range": 0,
+        "radius": 8,
+        "coefficient": 0.25,
+        "reservationFraction": 0.1,
+        "toggleLockSeconds": 2
+      },
+      "secondaryFamilies": [],
+      "requiredOffHandKinds": [],
+      "windupSeconds": 0
+    }
+  ]
+}

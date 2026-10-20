@@ -1,0 +1,101 @@
+Compiled from "AttitudeMap.java"
+public class com.hypixel.hytale.server.npc.blackboard.view.attitude.AttitudeMap {
+  private static final com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.npc.entities.NPCEntity> NPC_COMPONENT_TYPE;
+
+  private static final com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.entity.entities.Player> PLAYER_COMPONENT_TYPE;
+
+  private final it.unimi.dsi.fastutil.ints.Int2ObjectMap<com.hypixel.hytale.server.core.asset.type.attitude.Attitude>[] map;
+
+  private com.hypixel.hytale.server.npc.blackboard.view.attitude.AttitudeMap(it.unimi.dsi.fastutil.ints.Int2ObjectMap<com.hypixel.hytale.server.core.asset.type.attitude.Attitude>[]);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: aload_1
+         6: putfield      #7                  // Field map:[Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+         9: return
+
+  public com.hypixel.hytale.server.core.asset.type.attitude.Attitude getAttitude(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, int, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_1
+         1: aload         4
+         3: invokestatic  #13                 // Method com/hypixel/hytale/server/npc/role/support/WorldSupport.get:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentAccessor;)Lcom/hypixel/hytale/server/npc/role/support/WorldSupport;
+         6: invokevirtual #19                 // Method com/hypixel/hytale/server/npc/role/support/WorldSupport.getAttitudeGroup:()I
+         9: istore        5
+        11: iload         5
+        13: ldc           #25                 // int -2147483648
+        15: if_icmpne     20
+        18: aconst_null
+        19: areturn
+        20: aload_0
+        21: getfield      #7                  // Field map:[Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        24: iload         5
+        26: aaload
+        27: astore        6
+        29: aload         6
+        31: ifnonnull     36
+        34: aconst_null
+        35: areturn
+        36: aload         4
+        38: aload_3
+        39: getstatic     #26                 // Field NPC_COMPONENT_TYPE:Lcom/hypixel/hytale/component/ComponentType;
+        42: invokeinterface #30,  3           // InterfaceMethod com/hypixel/hytale/component/ComponentAccessor.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        47: checkcast     #36                 // class com/hypixel/hytale/server/npc/entities/NPCEntity
+        50: astore        8
+        52: aload         8
+        54: ifnull        67
+        57: aload         8
+        59: invokevirtual #38                 // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getRoleIndex:()I
+        62: istore        7
+        64: goto          91
+        67: aload         4
+        69: aload_3
+        70: invokeinterface #41,  2           // InterfaceMethod com/hypixel/hytale/component/ComponentAccessor.getArchetype:(Lcom/hypixel/hytale/component/Ref;)Lcom/hypixel/hytale/component/Archetype;
+        75: getstatic     #45                 // Field PLAYER_COMPONENT_TYPE:Lcom/hypixel/hytale/component/ComponentType;
+        78: invokevirtual #48                 // Method com/hypixel/hytale/component/Archetype.contains:(Lcom/hypixel/hytale/component/ComponentType;)Z
+        81: ifne          86
+        84: aconst_null
+        85: areturn
+        86: invokestatic  #54                 // Method com/hypixel/hytale/server/npc/asset/builder/BuilderManager.getPlayerGroupID:()I
+        89: istore        7
+        91: iload         7
+        93: iload_2
+        94: if_icmpne     111
+        97: aload         6
+        99: invokestatic  #59                 // Method com/hypixel/hytale/server/npc/asset/builder/BuilderManager.getSelfGroupID:()I
+       102: invokeinterface #62,  2           // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.get:(I)Ljava/lang/Object;
+       107: checkcast     #67                 // class com/hypixel/hytale/server/core/asset/type/attitude/Attitude
+       110: areturn
+       111: aload         6
+       113: iload         7
+       115: invokeinterface #62,  2           // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.get:(I)Ljava/lang/Object;
+       120: checkcast     #67                 // class com/hypixel/hytale/server/core/asset/type/attitude/Attitude
+       123: areturn
+
+  public int getAttitudeGroupCount();
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field map:[Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+         4: arraylength
+         5: ireturn
+
+  public void updateAttitudeGroup(int, com.hypixel.hytale.server.npc.config.AttitudeGroup);
+    Code:
+         0: aload_2
+         1: invokestatic  #69                 // Method com/hypixel/hytale/server/npc/blackboard/view/attitude/AttitudeMap$Builder.createGroupMap:(Lcom/hypixel/hytale/server/npc/config/AttitudeGroup;)Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+         4: astore_3
+         5: aload_0
+         6: getfield      #7                  // Field map:[Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+         9: iload_1
+        10: aload_3
+        11: aastore
+        12: return
+
+  static {};
+    Code:
+         0: invokestatic  #75                 // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         3: putstatic     #26                 // Field NPC_COMPONENT_TYPE:Lcom/hypixel/hytale/component/ComponentType;
+         6: invokestatic  #79                 // Method com/hypixel/hytale/server/core/entity/entities/Player.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         9: putstatic     #45                 // Field PLAYER_COMPONENT_TYPE:Lcom/hypixel/hytale/component/ComponentType;
+        12: return
+}

@@ -1,0 +1,356 @@
+Compiled from "MotionController.java"
+public interface com.hypixel.hytale.server.npc.movement.controllers.MotionController extends com.hypixel.hytale.server.npc.role.support.DebugSupport$DebugFlagsChangeListener {
+  public abstract java.lang.String getType();
+
+  public abstract java.util.Set<com.hypixel.hytale.server.npc.movement.MovementMode> getSupportedMovementModes();
+
+  public abstract java.util.Set<com.hypixel.hytale.server.npc.movement.MovementMode> getDefaultSpawnMovementModes();
+
+  public abstract com.hypixel.hytale.server.npc.role.Role getRole();
+
+  public abstract void setRole(com.hypixel.hytale.server.npc.role.Role);
+
+  public default void setDebugEntityId(int);
+    Code:
+         0: return
+
+  public abstract void setInertia(double);
+
+  public abstract void setKnockbackScale(double);
+
+  public abstract void setUseFixedKnockback(boolean);
+
+  public abstract double getGravity();
+
+  public abstract void setHeadPitchAngleRange(float[]);
+
+  public abstract void spawned();
+
+  public abstract void activate();
+
+  public abstract void deactivate();
+
+  public abstract void updateModelParameters(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.asset.type.model.config.Model, com.hypixel.hytale.math.shape.Box, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+
+  public abstract double steer(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.npc.role.Role, com.hypixel.hytale.server.npc.movement.Steering, com.hypixel.hytale.server.npc.movement.Steering, double, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+
+  public abstract double probeMove(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, org.joml.Vector3dc, org.joml.Vector3dc, com.hypixel.hytale.server.npc.movement.controllers.ProbeMoveData, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+
+  public abstract double probeMove(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.npc.movement.controllers.ProbeMoveData, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+
+  public default void applyRailStep(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.npc.role.Role, org.joml.Vector3dc, com.hypixel.hytale.server.npc.movement.controllers.RailStepConfig, com.hypixel.hytale.server.npc.movement.controllers.RailStepResult, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: new           #1                  // class java/lang/UnsupportedOperationException
+         3: dup
+         4: aload_0
+         5: invokeinterface #3,  1            // InterfaceMethod getType:()Ljava/lang/String;
+        10: invokedynamic #9,  0              // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+        15: invokespecial #13                 // Method java/lang/UnsupportedOperationException."<init>":(Ljava/lang/String;)V
+        18: athrow
+
+  public abstract void constrainRotations(com.hypixel.hytale.server.npc.role.Role, com.hypixel.hytale.server.core.modules.entity.component.TransformComponent);
+
+  public abstract double getCurrentMaxBodyRotationSpeed();
+
+  public abstract void updateMovementState(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.protocol.MovementStates, com.hypixel.hytale.server.npc.movement.Steering, org.joml.Vector3d, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+
+  public abstract boolean isValidPosition(org.joml.Vector3dc, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+
+  public abstract boolean canSteer(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+
+  public abstract boolean isForcePushed();
+
+  public abstract java.lang.String canSteerFailReason(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+
+  public abstract boolean isInProgress();
+
+  public abstract boolean isObstructed();
+
+  public abstract boolean inAir();
+
+  public abstract boolean inWater();
+
+  public abstract boolean onGround();
+
+  public abstract boolean standingOnBlockOfType(int);
+
+  public abstract double getMaximumSpeed();
+
+  public abstract double getCurrentSpeed();
+
+  public abstract boolean estimateVelocity(com.hypixel.hytale.server.npc.movement.Steering, org.joml.Vector3d);
+
+  public abstract double getCurrentTurnRadius();
+
+  public abstract double waypointDistance(org.joml.Vector3dc, org.joml.Vector3dc);
+
+  public abstract double waypointDistanceSquared(org.joml.Vector3dc, org.joml.Vector3dc);
+
+  public abstract double waypointDistance(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, org.joml.Vector3d, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+
+  public abstract double waypointDistanceSquared(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, org.joml.Vector3d, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+
+  public abstract float getMaxClimbAngle();
+
+  public abstract float getMaxSinkAngle();
+
+  public default double getMaxClimbHeight();
+    Code:
+         0: dconst_0
+         1: dreturn
+
+  public default double getMaxDropHeight();
+    Code:
+         0: dconst_0
+         1: dreturn
+
+  public abstract boolean translateToAccessiblePosition(org.joml.Vector3d, com.hypixel.hytale.math.shape.Box, double, double, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+
+  public abstract com.hypixel.hytale.math.shape.Box getCollisionBoundingBox();
+
+  public abstract org.joml.Vector3d getComponentSelector();
+
+  public abstract org.joml.Vector3d getPlanarComponentSelector();
+
+  public abstract void setComponentSelector(org.joml.Vector3d);
+
+  public abstract boolean is2D();
+
+  public abstract org.joml.Vector3dc getWorldNormal();
+
+  public abstract org.joml.Vector3dc getWorldAntiNormal();
+
+  public default void addVelocity(org.joml.Vector3d, com.hypixel.hytale.server.core.modules.splitvelocity.VelocityConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: fconst_1
+         4: invokeinterface #17,  4           // InterfaceMethod addVelocity:(Lorg/joml/Vector3d;Lcom/hypixel/hytale/server/core/modules/splitvelocity/VelocityConfig;F)V
+         9: return
+
+  public abstract void addVelocity(org.joml.Vector3d, com.hypixel.hytale.server.core.modules.splitvelocity.VelocityConfig, float);
+
+  public abstract org.joml.Vector3d preScaleKnockback(org.joml.Vector3dc);
+
+  public abstract org.joml.Vector3d getExternalVelocity();
+
+  public abstract double getCombinedExternalVelocityLength();
+
+  public abstract void clearExternalForces();
+
+  public abstract void setVelocity(org.joml.Vector3dc, com.hypixel.hytale.server.core.modules.splitvelocity.VelocityConfig, boolean);
+
+  public default void setVelocity(org.joml.Vector3dc, com.hypixel.hytale.server.core.modules.splitvelocity.VelocityConfig, boolean, float);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: iload_3
+         4: invokeinterface #21,  4           // InterfaceMethod setVelocity:(Lorg/joml/Vector3dc;Lcom/hypixel/hytale/server/core/modules/splitvelocity/VelocityConfig;Z)V
+         9: return
+
+  public abstract com.hypixel.hytale.server.npc.movement.controllers.MotionController$VerticalRange getDesiredVerticalRange(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+
+  public abstract double getWanderVerticalMovementRatio();
+
+  public abstract boolean isAvoidingBlockDamage();
+
+  public abstract boolean willReceiveBlockDamage();
+
+  public abstract void requirePreciseMovement(org.joml.Vector3d);
+
+  public abstract void enableHeadingBlending(double, org.joml.Vector3d, double);
+
+  public abstract void enableHeadingBlending();
+
+  public abstract void setRelaxedMoveConstraints(java.util.EnumSet<com.hypixel.hytale.server.npc.movement.constraints.RelaxedConstraint>);
+
+  public abstract java.util.EnumSet<com.hypixel.hytale.server.npc.movement.constraints.RelaxedConstraint> getRelaxedConstraints();
+
+  public abstract com.hypixel.hytale.server.npc.movement.NavState getNavState();
+
+  public abstract double getThrottleDuration();
+
+  public abstract double getTargetDeltaSquared();
+
+  public abstract void setNavState(com.hypixel.hytale.server.npc.movement.NavState, double, double);
+
+  public abstract void setForceRecomputePath(boolean);
+
+  public abstract boolean isForceRecomputePath();
+
+  public abstract boolean canRestAtPlace();
+
+  public abstract void beforeInstructionSensorsAndActions(double);
+
+  public abstract void beforeInstructionMotion(double);
+
+  public default boolean matchesType(java.lang.Class<? extends com.hypixel.hytale.server.npc.movement.controllers.MotionController>);
+    Code:
+         0: aload_1
+         1: aload_0
+         2: invokevirtual #25                 // Method java/lang/Class.isInstance:(Ljava/lang/Object;)Z
+         5: ireturn
+
+  public abstract double getDesiredAltitudeWeight();
+
+  public abstract double getHeightOverGround();
+
+  public default void clearOverrides();
+    Code:
+         0: return
+
+  public default double getSquaredDistance(org.joml.Vector3d, org.joml.Vector3d, boolean);
+    Code:
+         0: iload_3
+         1: ifeq          15
+         4: aload_0
+         5: aload_1
+         6: aload_2
+         7: invokeinterface #31,  3           // InterfaceMethod waypointDistanceSquared:(Lorg/joml/Vector3dc;Lorg/joml/Vector3dc;)D
+        12: goto          20
+        15: aload_1
+        16: aload_2
+        17: invokevirtual #35                 // Method org/joml/Vector3d.distanceSquared:(Lorg/joml/Vector3dc;)D
+        20: dreturn
+
+  public abstract void updatePhysicsValues(com.hypixel.hytale.server.core.modules.physics.component.PhysicsValues);
+
+  public static boolean isInMovementState(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.npc.movement.MovementState, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_2
+         1: aload_0
+         2: invokestatic  #41                 // Method com/hypixel/hytale/server/core/entity/movement/MovementStatesComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         5: invokeinterface #47,  3           // InterfaceMethod com/hypixel/hytale/component/ComponentAccessor.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        10: checkcast     #42                 // class com/hypixel/hytale/server/core/entity/movement/MovementStatesComponent
+        13: astore_3
+        14: getstatic     #53                 // Field com/hypixel/hytale/server/npc/movement/controllers/MotionController$1.$assertionsDisabled:Z
+        17: ifne          32
+        20: aload_3
+        21: ifnonnull     32
+        24: new           #59                 // class java/lang/AssertionError
+        27: dup
+        28: invokespecial #61                 // Method java/lang/AssertionError."<init>":()V
+        31: athrow
+        32: aload_3
+        33: invokevirtual #64                 // Method com/hypixel/hytale/server/core/entity/movement/MovementStatesComponent.getMovementStates:()Lcom/hypixel/hytale/protocol/MovementStates;
+        36: astore        4
+        38: getstatic     #68                 // Field com/hypixel/hytale/server/npc/movement/controllers/MotionController$1.$SwitchMap$com$hypixel$hytale$server$npc$movement$MovementState:[I
+        41: aload_1
+        42: invokevirtual #72                 // Method com/hypixel/hytale/server/npc/movement/MovementState.ordinal:()I
+        45: iaload
+        46: tableswitch   { // 1 to 10
+
+                       1: 110
+
+                       2: 118
+
+                       3: 126
+
+                       4: 134
+
+                       5: 142
+
+                       6: 150
+
+                       7: 158
+
+                       8: 166
+
+                       9: 166
+
+                      10: 294
+                 default: 100
+            }
+       100: new           #78                 // class java/lang/MatchException
+       103: dup
+       104: aconst_null
+       105: aconst_null
+       106: invokespecial #80                 // Method java/lang/MatchException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+       109: athrow
+       110: aload         4
+       112: getfield      #83                 // Field com/hypixel/hytale/protocol/MovementStates.climbing:Z
+       115: goto          295
+       118: aload         4
+       120: getfield      #88                 // Field com/hypixel/hytale/protocol/MovementStates.falling:Z
+       123: goto          295
+       126: aload         4
+       128: getfield      #91                 // Field com/hypixel/hytale/protocol/MovementStates.crouching:Z
+       131: goto          295
+       134: aload         4
+       136: getfield      #94                 // Field com/hypixel/hytale/protocol/MovementStates.flying:Z
+       139: goto          295
+       142: aload         4
+       144: getfield      #97                 // Field com/hypixel/hytale/protocol/MovementStates.jumping:Z
+       147: goto          295
+       150: aload         4
+       152: getfield      #100                // Field com/hypixel/hytale/protocol/MovementStates.sprinting:Z
+       155: goto          295
+       158: aload         4
+       160: getfield      #103                // Field com/hypixel/hytale/protocol/MovementStates.running:Z
+       163: goto          295
+       166: aload_2
+       167: aload_0
+       168: invokestatic  #106                // Method com/hypixel/hytale/server/core/modules/physics/component/Velocity.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       171: invokeinterface #47,  3           // InterfaceMethod com/hypixel/hytale/component/ComponentAccessor.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       176: checkcast     #107                // class com/hypixel/hytale/server/core/modules/physics/component/Velocity
+       179: astore        5
+       181: getstatic     #53                 // Field com/hypixel/hytale/server/npc/movement/controllers/MotionController$1.$assertionsDisabled:Z
+       184: ifne          200
+       187: aload         5
+       189: ifnonnull     200
+       192: new           #59                 // class java/lang/AssertionError
+       195: dup
+       196: invokespecial #61                 // Method java/lang/AssertionError."<init>":()V
+       199: athrow
+       200: aload         5
+       202: invokevirtual #109                // Method com/hypixel/hytale/server/core/modules/physics/component/Velocity.getVelocity:()Lorg/joml/Vector3d;
+       205: ldc2_w        #113                // double 0.001d
+       208: invokestatic  #115                // Method com/hypixel/hytale/math/vector/Vector3dUtil.closeToZero:(Lorg/joml/Vector3d;D)Z
+       211: istore        6
+       213: aload_1
+       214: getstatic     #121                // Field com/hypixel/hytale/server/npc/movement/MovementState.IDLE:Lcom/hypixel/hytale/server/npc/movement/MovementState;
+       217: if_acmpne     225
+       220: iload         6
+       222: goto          295
+       225: iload         6
+       227: ifne          290
+       230: aload         4
+       232: getfield      #88                 // Field com/hypixel/hytale/protocol/MovementStates.falling:Z
+       235: ifne          290
+       238: aload         4
+       240: getfield      #83                 // Field com/hypixel/hytale/protocol/MovementStates.climbing:Z
+       243: ifne          290
+       246: aload         4
+       248: getfield      #94                 // Field com/hypixel/hytale/protocol/MovementStates.flying:Z
+       251: ifne          290
+       254: aload         4
+       256: getfield      #103                // Field com/hypixel/hytale/protocol/MovementStates.running:Z
+       259: ifne          290
+       262: aload         4
+       264: getfield      #100                // Field com/hypixel/hytale/protocol/MovementStates.sprinting:Z
+       267: ifne          290
+       270: aload         4
+       272: getfield      #97                 // Field com/hypixel/hytale/protocol/MovementStates.jumping:Z
+       275: ifne          290
+       278: aload         4
+       280: getfield      #91                 // Field com/hypixel/hytale/protocol/MovementStates.crouching:Z
+       283: ifne          290
+       286: iconst_1
+       287: goto          295
+       290: iconst_0
+       291: goto          295
+       294: iconst_1
+       295: ireturn
+
+  public default void onDebugFlagsChanged(java.util.EnumSet<com.hypixel.hytale.server.npc.role.RoleDebugFlags>);
+    Code:
+         0: return
+
+  static {};
+    Code:
+         0: getstatic     #53                 // Field com/hypixel/hytale/server/npc/movement/controllers/MotionController$1.$assertionsDisabled:Z
+         3: ifeq          6
+         6: return
+}

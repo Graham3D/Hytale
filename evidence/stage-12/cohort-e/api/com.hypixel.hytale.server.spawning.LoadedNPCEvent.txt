@@ -1,0 +1,40 @@
+Compiled from "LoadedNPCEvent.java"
+public class com.hypixel.hytale.server.spawning.LoadedNPCEvent implements com.hypixel.hytale.event.IEvent<java.lang.Void> {
+  private com.hypixel.hytale.server.npc.asset.builder.BuilderInfo builderInfo;
+
+  public com.hypixel.hytale.server.spawning.LoadedNPCEvent(com.hypixel.hytale.server.npc.asset.builder.BuilderInfo);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_1
+         5: ldc           #7                  // String builderInfo can\'t be null for event
+         7: invokestatic  #9                  // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;
+        10: pop
+        11: aload_1
+        12: invokevirtual #15                 // Method com/hypixel/hytale/server/npc/asset/builder/BuilderInfo.getBuilder:()Lcom/hypixel/hytale/server/npc/asset/builder/Builder;
+        15: instanceof    #21                 // class com/hypixel/hytale/server/spawning/ISpawnableWithModel
+        18: ifne          31
+        21: new           #23                 // class java/lang/IllegalArgumentException
+        24: dup
+        25: ldc           #25                 // String BuilderInfo builder must be spawnable for event
+        27: invokespecial #27                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        30: athrow
+        31: aload_0
+        32: aload_1
+        33: putfield      #30                 // Field builderInfo:Lcom/hypixel/hytale/server/npc/asset/builder/BuilderInfo;
+        36: return
+
+  public com.hypixel.hytale.server.npc.asset.builder.BuilderInfo getBuilderInfo();
+    Code:
+         0: aload_0
+         1: getfield      #30                 // Field builderInfo:Lcom/hypixel/hytale/server/npc/asset/builder/BuilderInfo;
+         4: areturn
+
+  public java.lang.String toString();
+    Code:
+         0: aload_0
+         1: getfield      #30                 // Field builderInfo:Lcom/hypixel/hytale/server/npc/asset/builder/BuilderInfo;
+         4: invokestatic  #36                 // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+         7: invokedynamic #42,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+        12: areturn
+}

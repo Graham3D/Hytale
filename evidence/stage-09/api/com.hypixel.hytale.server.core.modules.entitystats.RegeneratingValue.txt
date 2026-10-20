@@ -1,0 +1,144 @@
+Compiled from "RegeneratingValue.java"
+public class com.hypixel.hytale.server.core.modules.entitystats.RegeneratingValue {
+  private final com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating regenerating;
+
+  private float remainingUntilRegen;
+
+  public com.hypixel.hytale.server.core.modules.entitystats.RegeneratingValue(com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: aload_1
+         6: putfield      #7                  // Field regenerating:Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating;
+         9: return
+
+  public boolean shouldRegenerate(com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, java.time.Instant, float, com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating);
+    Code:
+         0: aload_0
+         1: dup
+         2: getfield      #13                 // Field remainingUntilRegen:F
+         5: fload         4
+         7: fsub
+         8: putfield      #13                 // Field remainingUntilRegen:F
+        11: aload_0
+        12: getfield      #13                 // Field remainingUntilRegen:F
+        15: fconst_0
+        16: fcmpg
+        17: ifge          43
+        20: aload_0
+        21: dup
+        22: getfield      #13                 // Field remainingUntilRegen:F
+        25: aload         5
+        27: invokevirtual #17                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating.getInterval:()F
+        30: fadd
+        31: putfield      #13                 // Field remainingUntilRegen:F
+        34: aload_1
+        35: aload_2
+        36: aload_3
+        37: aload         5
+        39: invokestatic  #23                 // Method com/hypixel/hytale/server/core/modules/entity/condition/Condition.allConditionsMet:(Lcom/hypixel/hytale/component/ComponentAccessor;Lcom/hypixel/hytale/component/Ref;Ljava/time/Instant;Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating;)Z
+        42: ireturn
+        43: iconst_0
+        44: ireturn
+
+  public float regenerate(com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, java.time.Instant, float, com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue, float);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: aload_3
+         4: fload         4
+         6: aload_0
+         7: getfield      #7                  // Field regenerating:Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating;
+        10: invokevirtual #29                 // Method shouldRegenerate:(Lcom/hypixel/hytale/component/ComponentAccessor;Lcom/hypixel/hytale/component/Ref;Ljava/time/Instant;FLcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating;)Z
+        13: ifne          18
+        16: fconst_0
+        17: freturn
+        18: getstatic     #33                 // Field com/hypixel/hytale/server/core/modules/entitystats/RegeneratingValue$1.$SwitchMap$com$hypixel$hytale$server$core$modules$entitystats$asset$EntityStatType$Regenerating$RegenType:[I
+        21: aload_0
+        22: getfield      #7                  // Field regenerating:Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating;
+        25: invokevirtual #39                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating.getRegenType:()Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating$RegenType;
+        28: invokevirtual #43                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating$RegenType.ordinal:()I
+        31: iaload
+        32: lookupswitch  { // 2
+
+                       1: 70
+
+                       2: 80
+                 default: 60
+            }
+        60: new           #49                 // class java/lang/MatchException
+        63: dup
+        64: aconst_null
+        65: aconst_null
+        66: invokespecial #51                 // Method java/lang/MatchException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+        69: athrow
+        70: aload_0
+        71: getfield      #7                  // Field regenerating:Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating;
+        74: invokevirtual #54                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating.getAmount:()F
+        77: goto          99
+        80: aload_0
+        81: getfield      #7                  // Field regenerating:Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating;
+        84: invokevirtual #54                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating.getAmount:()F
+        87: aload         5
+        89: invokevirtual #57                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMax:()F
+        92: aload         5
+        94: invokevirtual #62                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMin:()F
+        97: fsub
+        98: fmul
+        99: fstore        7
+       101: aload_0
+       102: getfield      #7                  // Field regenerating:Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating;
+       105: invokevirtual #65                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating.getModifiers:()[Lcom/hypixel/hytale/server/core/modules/entitystats/asset/modifier/RegeneratingModifier;
+       108: ifnull        161
+       111: aload_0
+       112: getfield      #7                  // Field regenerating:Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating;
+       115: invokevirtual #65                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating.getModifiers:()[Lcom/hypixel/hytale/server/core/modules/entitystats/asset/modifier/RegeneratingModifier;
+       118: astore        8
+       120: aload         8
+       122: arraylength
+       123: istore        9
+       125: iconst_0
+       126: istore        10
+       128: iload         10
+       130: iload         9
+       132: if_icmpge     161
+       135: aload         8
+       137: iload         10
+       139: aaload
+       140: astore        11
+       142: fload         7
+       144: aload         11
+       146: aload_1
+       147: aload_2
+       148: aload_3
+       149: invokevirtual #69                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/modifier/RegeneratingModifier.getModifier:(Lcom/hypixel/hytale/component/ComponentAccessor;Lcom/hypixel/hytale/component/Ref;Ljava/time/Instant;)F
+       152: fmul
+       153: fstore        7
+       155: iinc          10, 1
+       158: goto          128
+       161: aload_0
+       162: getfield      #7                  // Field regenerating:Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating;
+       165: fload         7
+       167: fload         6
+       169: aload         5
+       171: invokevirtual #75                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating.clampAmount:(FFLcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;)F
+       174: freturn
+
+  public com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType$Regenerating getRegenerating();
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field regenerating:Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating;
+         4: areturn
+
+  public java.lang.String toString();
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field regenerating:Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating;
+         4: invokestatic  #79                 // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+         7: aload_0
+         8: getfield      #13                 // Field remainingUntilRegen:F
+        11: invokedynamic #85,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;F)Ljava/lang/String;
+        16: areturn
+}

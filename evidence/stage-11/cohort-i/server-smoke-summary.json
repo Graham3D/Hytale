@@ -1,0 +1,23 @@
+{
+  "capturedAtUtc": "2026-09-08T16:08:48.2367394Z",
+  "processExitCode": 0,
+  "jarSha256": "417D1F13F829A61F6A2B158C127C1DEE744A9EF8BB2468387EE1127E77C6C60B",
+  "exactlyThreeMods": true,
+  "rpgDiscovered": true,
+  "rpgSetup": true,
+  "ready": true,
+  "packagedRootResolved": true,
+  "shippedRuneResolved": true,
+  "nativeAbilityAssetsRejected": false,
+  "pluginEnabled": true,
+  "managerStarted": true,
+  "networkBooted": true,
+  "cleanShutdown": true,
+  "areaAssetsResolved": true,
+  "connectionAssetsResolved": true,
+  "supportConfigured": true,
+  "summonAssetsResolved": true,
+  "batchRolesResolved": true,
+  "decoyRoleResolved": true,
+  "failure": false
+}

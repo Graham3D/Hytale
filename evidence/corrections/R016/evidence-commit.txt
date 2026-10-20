@@ -1,0 +1,5 @@
+Primary R016 evidence/deployment commit:
+252ad6acab4d37e166e6bcf2124ff382b7427395
+
+The report pointer that records this hash is necessarily committed immediately after
+the primary evidence bundle.

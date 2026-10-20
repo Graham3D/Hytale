@@ -1,0 +1,37 @@
+{
+  "stage": 13,
+  "revision": "R032",
+  "version": "0.0.25",
+  "status": "BLOCKED",
+  "releaseCandidate": false,
+  "jarSha256": "F7F55FCF05AFEA2A985AC2801CB4F78D346389C2E135E2DCEA22E1F193BCFA83",
+  "earliestFailingBoundary": "SYNCHRONOUS_DURABLE_ENCOUNTER_CONTRIBUTION_EXCEEDS_RPG_TICK_BUDGET",
+  "blockers": [
+    "SYNCHRONOUS_DURABLE_ENCOUNTER_CONTRIBUTION_EXCEEDS_RPG_TICK_BUDGET",
+    "NATIVE_INTEGRATION_EXCEPTIONS_NOT_PROVEN_CAPABILITY_IMPOSSIBILITIES",
+    "COMBINED_FOUR_PLAYER_NATIVE_LOAD_AND_200_PLAYER_SCALING_NOT_VERIFIED",
+    "REMAINING_MASTER_FAULT_INJECTION_MATRIX_NOT_CLOSED",
+    "FINAL_STAGE13_REGRESSION_SMOKE_ARCHIVE_ROLLBACK_RERUN_NOT_PERFORMED"
+  ],
+  "connectedGate": "UNVERIFIED",
+  "functionalRegressionPass": true,
+  "performanceIsSeparateGate": true,
+  "durableAcknowledgementWeakened": false,
+  "testsOrExpectedBehaviorWeakened": false,
+  "measuredScope": "REAL_FILE_ENCOUNTER_CONTRIBUTIONS_ONLY_NOT_NATIVE_TICK_PROOF",
+  "p95Ms": 731.5307,
+  "p99Ms": 4053.5935,
+  "requiredP95Ms": 4,
+  "requiredP99Ms": 8,
+  "cpu": [
+    {
+      "model": "AMD Ryzen 9 7900X 12-Core Processor            ",
+      "logicalProcessors": 24,
+      "physicalCores": 12
+    }
+  ],
+  "physicalMemoryGiB": 63.15,
+  "os": "Microsoft Windows 11 Home",
+  "storagePath": "JUnit @TempDir on the Java system temporary C: directory; not the live RPG save",
+  "capturedAtUtc": "2026-09-09T11:55:08.4569868Z"
+}

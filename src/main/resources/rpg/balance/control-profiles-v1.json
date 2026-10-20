@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "defaultRank": "COMMON",
+  "defaultPolicy": "Project-authored COMMON control policy; not a claim of native enemy rank or XP eligibility. Native invulnerability and observed boss identity take precedence.",
+  "roles": {
+    "Skeleton_Elite": "ELITE",
+    "Skeleton_Elite_Phase_2": "ELITE",
+    "Test_Boss_Basic": "BOSS",
+    "Test_Boss_Basic_Intro": "BOSS",
+    "Test_Boss_Basic_Wander": "BOSS"
+  },
+  "evidence": [
+    "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Elite.json",
+    "Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Elite_Phase_2.json",
+    "Server/EncounterManager/Encounter_Skeleton_Elite.json",
+    "Server/EncounterManager/Example_Boss.json"
+  ]
+}

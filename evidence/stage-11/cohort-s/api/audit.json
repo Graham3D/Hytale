@@ -1,0 +1,8 @@
+{
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "jarSha256": "771E6A1596D543F3642C6BD64D06593B79F169520B4C2859052CB59F47FD6CB6",
+  "configSha256": "3101D61592D2B2EAE2ADE803BCDAF1C3FE3EB588CE36D4C781BC313B7DE98144",
+  "scope": "Converted immutable payload -> existing finite connection runtime -> swept native bounds/LOS -> existing native damage/status/ammunition authorities",
+  "evidence": "Bytecode/call-site structure only; not connected collision, damage, NPC state or presentation proof",
+  "connected": "UNVERIFIED"
+}

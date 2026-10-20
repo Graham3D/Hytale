@@ -1,0 +1,397 @@
+{
+  "capturedAtUtc": "2026-09-08T12:12:37.5132150Z",
+  "workspace": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale",
+  "sourceHead": "837ed802a824d98c2394493fca18122fab6e0eb6",
+  "branch": "RPG",
+  "preservedPreviousBranch": "recovered-main-before-stage10-20260908",
+  "previousHead": "9033cbf",
+  "oldDriveWritten": false,
+  "liveDeploymentPerformed": false,
+  "connectedEvidence": "NOT_RUN",
+  "recoveredFiles": [
+    {
+      "path": "art\\ExperienceBackground.png",
+      "bytes": 15572,
+      "sha256": "E22902155B9C8BDFE96AD9CF7F279A8D44B2DEF45AEFBBB37E8FBE2C0716CFCF",
+      "modifiedUtc": "2026-09-07T16:04:30.0239541Z"
+    },
+    {
+      "path": "art\\ExperienceBar.png",
+      "bytes": 15506,
+      "sha256": "38009C33C6C28F15E58CF44936FE6B6B0BD9EA79CEB5D5C5FE59571A833B505D",
+      "modifiedUtc": "2026-09-07T16:05:34.2859889Z"
+    },
+    {
+      "path": "art\\ExperienceFrame.png",
+      "bytes": 18676,
+      "sha256": "F61332232A1A0A65C31F4C24F533DC002209A062890A94C8A8678B0B3A0F3216",
+      "modifiedUtc": "2026-09-07T16:28:30.1801484Z"
+    },
+    {
+      "path": "art\\ExperienceFrame.psd",
+      "bytes": 31804,
+      "sha256": "79B7516D1873EC1A7A82C7BF8DB6A982BEBB0B3FD4200469C40971189D4FAB33",
+      "modifiedUtc": "2026-09-07T22:56:43.2184374Z"
+    },
+    {
+      "path": "art\\Status_Chill.psd",
+      "bytes": 644646,
+      "sha256": "B34754FA284E7640D3C0811A63B96E794C7DB7E21D11F9E9A37FC1F01E820C7C",
+      "modifiedUtc": "2026-09-07T23:35:22.1207658Z"
+    },
+    {
+      "path": "art\\StatusChill01.png",
+      "bytes": 136077,
+      "sha256": "625EA57899B82863197D5D48ABC82ABAD5136FCF01560747F533BF2D9A26EA39",
+      "modifiedUtc": "2026-09-07T23:33:53.6702885Z"
+    },
+    {
+      "path": "art\\StatusChill02.png",
+      "bytes": 136763,
+      "sha256": "578B0247F2EF803555D7577D4BE488083463338B1E949E0BCE25950F5F3C240A",
+      "modifiedUtc": "2026-09-07T23:34:10.8291950Z"
+    },
+    {
+      "path": "art\\StatusChill03.png",
+      "bytes": 136920,
+      "sha256": "4360493FF7482DF78EFD2D98A00D2C597051B930CCD741E32DE0E3B69AD9886A",
+      "modifiedUtc": "2026-09-07T23:34:30.1058890Z"
+    },
+    {
+      "path": "art\\StatusChill04.png",
+      "bytes": 135055,
+      "sha256": "93317D08889B6846A1D9D4C6CD33C38138967A44F428C0B25259E3542C2EBECA",
+      "modifiedUtc": "2026-09-07T23:34:52.1472057Z"
+    },
+    {
+      "path": "art\\StatusChill05.png",
+      "bytes": 135696,
+      "sha256": "21774008FFDB3D0C7087F38D157341DA15D3B5E0CE1FEF00123836EFEDA92CE7",
+      "modifiedUtc": "2026-09-07T23:35:11.1222800Z"
+    },
+    {
+      "path": "art\\lost and found\\PeriodicStatusRuntime$Kind.class",
+      "bytes": 1452,
+      "sha256": "D87BB99A3513296E692A9C9C31316D5C1410D28114266DB6718E63259DDD9DFF",
+      "modifiedUtc": "2026-09-07T20:06:08.7661146Z"
+    },
+    {
+      "path": "art\\lost and found\\Phase00Plugin (1788809811504).class",
+      "bytes": 29755,
+      "sha256": "9A3BAF1AB61EB99D6F56AA9D8E5B0E4E5F35B5E5D760F071550228CC6F12F3C2",
+      "modifiedUtc": "2026-09-07T19:36:51.5060047Z"
+    },
+    {
+      "path": "art\\lost and found\\Phase00Plugin (1788812042356).class",
+      "bytes": 29757,
+      "sha256": "F767BC268B62C22F469C6AEBAD055F6A10C911F568A583B2C4694DE7BE4C0092",
+      "modifiedUtc": "2026-09-07T20:14:02.3579634Z"
+    },
+    {
+      "path": "art\\lost and found\\Phase00Plugin (1788812958279).class",
+      "bytes": 29757,
+      "sha256": "F767BC268B62C22F469C6AEBAD055F6A10C911F568A583B2C4694DE7BE4C0092",
+      "modifiedUtc": "2026-09-07T20:29:18.2806239Z"
+    },
+    {
+      "path": "art\\lost and found\\Phase00Plugin (1788815626280).class",
+      "bytes": 29757,
+      "sha256": "F767BC268B62C22F469C6AEBAD055F6A10C911F568A583B2C4694DE7BE4C0092",
+      "modifiedUtc": "2026-09-07T21:13:46.2808575Z"
+    },
+    {
+      "path": "art\\lost and found\\Phase00Plugin (1788820955240).class",
+      "bytes": 29757,
+      "sha256": "F767BC268B62C22F469C6AEBAD055F6A10C911F568A583B2C4694DE7BE4C0092",
+      "modifiedUtc": "2026-09-07T22:42:35.2420846Z"
+    },
+    {
+      "path": "art\\lost and found\\Phase00Plugin (1788825584614).class",
+      "bytes": 31064,
+      "sha256": "0966132D90BC1C19AFE43B53C004B3721F32C2AD9D76360028BF4ADA67FD3BE9",
+      "modifiedUtc": "2026-09-07T23:59:44.6157702Z"
+    },
+    {
+      "path": "art\\lost and found\\Phase00Plugin (1788833485467).class",
+      "bytes": 33916,
+      "sha256": "0F1D3F51E3D27C9491924C35527005296F01C3F209793F2692C34B74E6C7EB5D",
+      "modifiedUtc": "2026-09-08T02:11:25.4682118Z"
+    },
+    {
+      "path": "art\\lost and found\\Phase00Plugin.class",
+      "bytes": 29556,
+      "sha256": "76CC23459EBC1E113DF15CF7F253483306E39C88D1DB89E14FBA487C3CA87247",
+      "modifiedUtc": "2026-09-07T18:57:16.2338327Z"
+    },
+    {
+      "path": "art\\lost and found\\R020HudCorrectionTest (1788797838531).class",
+      "bytes": 8972,
+      "sha256": "4E0105E3ED5C0CC9B7C33C4F883A970482DAAF7F7D2161FD1FD3E543BD1F104B",
+      "modifiedUtc": "2026-09-07T16:17:18.5320898Z"
+    },
+    {
+      "path": "art\\lost and found\\R020HudCorrectionTest.class",
+      "bytes": 8814,
+      "sha256": "53BB97DB54911C22CF087677330D7E690041CBA1A0F95519318887A0B9B682D7",
+      "modifiedUtc": "2026-09-07T15:15:27.0599101Z"
+    },
+    {
+      "path": "art\\lost and found\\Stage01BTestSupport$Bundle.class",
+      "bytes": 3342,
+      "sha256": "31F9682F21EE16C8EE78DD553DF08C69EC24CA6791504E5CC09D8B8FA4F3F59C",
+      "modifiedUtc": "2026-09-07T21:51:18.7791485Z"
+    },
+    {
+      "path": "art\\lost and found\\Stage02CombatKernelTest$FakeResources.class",
+      "bytes": 1821,
+      "sha256": "954C59D9C68FA6FF6E761556B65C3B57A4BBCBAF935870624011AB2624B3A626",
+      "modifiedUtc": "2026-09-07T23:59:51.4146037Z"
+    },
+    {
+      "path": "art\\lost and found\\Stage03PresentationTest.class",
+      "bytes": 19563,
+      "sha256": "885F94B7EE1FD6D36203F3DA5AA6CDE067E5D58857F927E2C5B157D263F3CACB",
+      "modifiedUtc": "2026-09-07T18:16:58.0723742Z"
+    },
+    {
+      "path": "art\\lost and found\\Stage04ExecutionTest$1.class",
+      "bytes": 2080,
+      "sha256": "63EDB2F9065F633275E4F43BED5BA876CC9E511498020A189FAB429C33E27E8E",
+      "modifiedUtc": "2026-09-07T18:37:52.7523384Z"
+    },
+    {
+      "path": "art\\lost and found\\Stage07SecondaryTest$Fixture.class",
+      "bytes": 4323,
+      "sha256": "B85BCFD8BEC100230D1683E339B370AB3A994CD5C4FA453B70A0F43A3C3D2DD0",
+      "modifiedUtc": "2026-09-07T22:30:12.6765494Z"
+    },
+    {
+      "path": "art\\lost and found\\Stage09SupportPresentationTest.class",
+      "bytes": 5473,
+      "sha256": "7EC11CB0122C017606C0327D1A81EB300CC1D44FD3BDADED51140AFB7A8F346B",
+      "modifiedUtc": "2026-09-08T02:00:12.6184621Z"
+    },
+    {
+      "path": "art\\lost and found\\Stage09SupportRuntimeTest$Harness$1.class",
+      "bytes": 1883,
+      "sha256": "8BEE77424FF3E276DA59D4FBC9813C293B931019A39D248BCA899967E5106C74",
+      "modifiedUtc": "2026-09-08T00:34:33.9290871Z"
+    }
+  ],
+  "retainedTests": 516,
+  "testSuites": [
+    {
+      "name": "com.inigmasgames.hytalerpg.CatalogAndSlotTest",
+      "tests": 2
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.CompilerAndTransactionTest",
+      "tests": 6
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.GraphAndCompatibilityTest",
+      "tests": 5
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.PersistenceAndMigrationTest",
+      "tests": 5
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.R016CorrectionTest",
+      "tests": 6
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.R021NativeAbilityCorrectionTest",
+      "tests": 4
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.R022NativeAbilitySynchronizationTest",
+      "tests": 2
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.R024NativeExecutionInputTest",
+      "tests": 5
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage02CombatKernelTest",
+      "tests": 27
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage03PresentationTest",
+      "tests": 12
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage04ExecutionTest",
+      "tests": 16
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage04HytaleApiTest",
+      "tests": 5
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage05NativeApiTest",
+      "tests": 2
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage05ProjectileTest",
+      "tests": 17
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage06AreaGeometryTest",
+      "tests": 3
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage06AreaRuntimeTest",
+      "tests": 6
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage06CohortBTest",
+      "tests": 10
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage06CohortCTest",
+      "tests": 9
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage06ControlRegistryTest",
+      "tests": 2
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage06HardeningTest",
+      "tests": 6
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage06LinksTest",
+      "tests": 12
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage06NativeControlPolicyTest",
+      "tests": 2
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage06PeriodicStatusTest",
+      "tests": 9
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage06PipelineTest",
+      "tests": 8
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage07ContinuationTest",
+      "tests": 8
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage07LoadTest",
+      "tests": 1
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage07MultiplicityTest",
+      "tests": 10
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage07SafetyTest",
+      "tests": 11
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage07SecondaryTest",
+      "tests": 18
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage07SteeringTest",
+      "tests": 9
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage08ConnectionCohortBTest",
+      "tests": 20
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage08ConnectionTest",
+      "tests": 24
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage08LoadTest",
+      "tests": 2
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage09AuraRuntimeTest",
+      "tests": 23
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage09BarrierSupportTest",
+      "tests": 26
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage09CooldownPersistenceTest",
+      "tests": 10
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage09FinalSupportPassivesTest",
+      "tests": 27
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage09FiniteSupportTest",
+      "tests": 21
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage09GuardLedgerTest",
+      "tests": 11
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage09LoadTest",
+      "tests": 3
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage09NativeRetreatTest",
+      "tests": 4
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage09ReservationTest",
+      "tests": 14
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage09SupportPassivesTest",
+      "tests": 25
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage09SupportPresentationTest",
+      "tests": 3
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage09SupportRuntimeTest",
+      "tests": 22
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.ui.hud.R020HudCorrectionTest",
+      "tests": 6
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.R023NativeRuneControlTest",
+      "tests": 7
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.R024NativeInteractionAssetTest",
+      "tests": 2
+    },
+    {
+      "name": "com.inigmasgames.hytalerpg.Stage09NativeManaTest",
+      "tests": 7
+    },
+    {
+      "name": "com.inigmasgames.canvasui.api.CanvasGraphTest",
+      "tests": 8
+    },
+    {
+      "name": "com.inigmasgames.canvasui.api.CanvasViewportAndSearchTest",
+      "tests": 4
+    },
+    {
+      "name": "com.inigmasgames.canvasui.runtime.CoordinateAndDragTest",
+      "tests": 6
+    },
+    {
+      "name": "com.inigmasgames.canvasui.runtime.SessionRegistryTest",
+      "tests": 3
+    }
+  ],
+  "stage09RollbackSha256": "50ED7ACA31BFD78125B1762D9A80FDC463C747A84C3C09DBEFC04BE933B8FE3A"
+}

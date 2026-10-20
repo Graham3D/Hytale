@@ -1,0 +1,197 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "BOMB"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "STAMINA",
+      "windupSeconds": 0,
+      "basePowerSource": "WEAPON",
+      "scaling": "LIGHT",
+      "skillId": "powder_mine",
+      "family": "TRAP",
+      "resourceCost": 10,
+      "cooldownSeconds": 12,
+      "area": {
+        "geometry": "DISC",
+        "radius": 2.5,
+        "height": 3,
+        "placementRange": 4,
+        "lifetimeSeconds": 20,
+        "armingSeconds": 0.5,
+        "impactCount": 1,
+        "impactRadius": 4,
+        "perTargetHitCap": 1,
+        "coefficient": 1.7,
+        "element": "PHYSICAL",
+        "status": "",
+        "candidateBudget": 64
+      }
+    },
+    {
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "STAFF",
+        "WAND"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "windupSeconds": 0,
+      "basePowerSource": "MAGIC_WEAPON",
+      "scaling": "MAGIC",
+      "skillId": "cold_wave",
+      "family": "CONE",
+      "resourceCost": 16,
+      "cooldownSeconds": 9,
+      "area": {
+        "geometry": "SECTOR",
+        "radius": 12,
+        "angleDegrees": 70,
+        "height": 2.5,
+        "impactCount": 1,
+        "perTargetHitCap": 1,
+        "coefficient": 1.25,
+        "innerRadius": 6,
+        "chillStacks": 2,
+        "innerChillStacks": 3,
+        "element": "COLD",
+        "status": "CHILL",
+        "candidateBudget": 64
+      }
+    },
+    {
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [],
+      "requiredOffHandKinds": [],
+      "resourceType": "STAMINA",
+      "windupSeconds": 0,
+      "basePowerSource": "INNATE",
+      "scaling": "LIGHT",
+      "skillId": "venom_spray",
+      "family": "CONE",
+      "resourceCost": 12,
+      "cooldownSeconds": 7,
+      "innateBasePower": 20,
+      "area": {
+        "geometry": "SECTOR",
+        "radius": 8,
+        "angleDegrees": 65,
+        "height": 2.5,
+        "impactCount": 1,
+        "perTargetHitCap": 1,
+        "coefficient": 0.9,
+        "element": "POISON",
+        "status": "POISON",
+        "statusSeconds": 7,
+        "candidateBudget": 64
+      }
+    },
+    {
+      "secondaryFamilies": [
+        "BOMBARDMENT"
+      ],
+      "allowedMainHandKinds": [
+        "STAFF",
+        "SPELLBOOK"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "windupSeconds": 0,
+      "basePowerSource": "MAGIC_WEAPON",
+      "scaling": "MAGIC",
+      "skillId": "blizzard",
+      "family": "GROUND_ZONE",
+      "resourceCost": 28,
+      "cooldownSeconds": 18,
+      "area": {
+        "geometry": "DISC",
+        "radius": 6,
+        "height": 3,
+        "placementRange": 24,
+        "lifetimeSeconds": 8,
+        "impactCount": 16,
+        "intervalSeconds": 0.5,
+        "impactRadius": 2,
+        "warningSeconds": 0.25,
+        "stratified": true,
+        "perTargetHitCap": 16,
+        "targetIntervalSeconds": 0.75,
+        "coefficient": 0.38,
+        "chillStacks": 1,
+        "element": "COLD",
+        "status": "CHILL",
+        "candidateBudget": 64
+      }
+    },
+    {
+      "secondaryFamilies": [
+        "GROUND_ZONE"
+      ],
+      "allowedMainHandKinds": [
+        "STAFF",
+        "SPELLBOOK"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "windupSeconds": 0,
+      "basePowerSource": "MAGIC_WEAPON",
+      "scaling": "MAGIC",
+      "skillId": "wall_of_fire",
+      "family": "WALL",
+      "resourceCost": 24,
+      "cooldownSeconds": 16,
+      "area": {
+        "geometry": "RECTANGLE",
+        "length": 10,
+        "width": 2,
+        "height": 3,
+        "placementRange": 18,
+        "lifetimeSeconds": 8,
+        "intervalSeconds": 0.25,
+        "periodic": true,
+        "perTargetHitCap": 32,
+        "coefficient": 0.45,
+        "element": "FIRE",
+        "status": "BURN",
+        "statusSeconds": 5,
+        "statusIntervalSeconds": 1,
+        "candidateBudget": 64
+      }
+    },
+    {
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "STAFF",
+        "SPELLBOOK"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "windupSeconds": 0,
+      "basePowerSource": "MAGIC_WEAPON",
+      "scaling": "MAGIC",
+      "skillId": "poison_cloud",
+      "family": "GROUND_ZONE",
+      "resourceCost": 24,
+      "cooldownSeconds": 16,
+      "area": {
+        "geometry": "DISC",
+        "radius": 5,
+        "height": 3,
+        "placementRange": 20,
+        "lifetimeSeconds": 8,
+        "intervalSeconds": 0.25,
+        "periodic": true,
+        "perTargetHitCap": 32,
+        "coefficient": 0.3,
+        "element": "POISON",
+        "status": "POISON",
+        "statusSeconds": 8,
+        "statusIntervalSeconds": 1,
+        "candidateBudget": 64
+      }
+    }
+  ]
+}

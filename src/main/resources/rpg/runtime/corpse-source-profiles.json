@@ -1,0 +1,4 @@
+[
+  {"role":"Wolf_Black","projectionRole":"RPG_Summon_Wolf","rank":"COMMON","basePower":27,"attackInterval":3,
+   "evidence":"0.7.0-pre.1 Wolf_Black Modify._InteractionVars.Bite_Damage BaseDamage.Physical=27; Template_Predator AttackPauseRange=[2,3]. Upper bound 3 seconds is the conservative authored source interval, not a claimed constant native attack cadence"}
+]

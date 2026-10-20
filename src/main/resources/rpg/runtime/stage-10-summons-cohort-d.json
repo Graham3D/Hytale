@@ -1,0 +1,11 @@
+{
+  "schemaVersion":1,
+  "skills":[
+    {"skillId":"consume_minion","family":"SUMMON","secondaryFamilies":["BUFF"],"allowedMainHandKinds":["SPELLBOOK"],"requiredOffHandKinds":[],
+      "resourceType":"MANA","resourceCost":15,"cooldownSeconds":12,"windupSeconds":0,"basePowerSource":"NONE","innateBasePower":0,"scaling":"MAGIC",
+      "summonAction":{"kind":"CONSUME_MINION","range":12,"radius":0,"coefficient":0,"duration":8,"damageIncreased":0.20,"shieldFraction":0.10}},
+    {"skillId":"corpse_burst","family":"CORPSE","secondaryFamilies":["BURST"],"allowedMainHandKinds":["SPELLBOOK"],"requiredOffHandKinds":[],
+      "resourceType":"MANA","resourceCost":18,"cooldownSeconds":6,"windupSeconds":0,"basePowerSource":"MAGIC_WEAPON","innateBasePower":0,"scaling":"MAGIC",
+      "summonAction":{"kind":"CORPSE_BURST","range":20,"radius":4,"coefficient":1.60,"duration":0,"damageIncreased":0,"shieldFraction":0}}
+  ]
+}

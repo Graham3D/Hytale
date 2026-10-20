@@ -1,0 +1,51 @@
+{
+  "capturedAtUtc": "2026-09-06T02:47:10Z",
+  "patchline": "release",
+  "hytale": {
+    "version": "0.6.3",
+    "revision": "ff802bf5a538f7e4b1df43a575c72f9d2bebb504",
+    "serverJar": {
+      "path": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\install\\release\\package\\game\\latest\\Server\\HytaleServer.jar",
+      "bytes": 110438908,
+      "sha256": "BB4ECBE2D1BC189C22E63491EB4078C95B42EF6CBE6650CCFA3E6160AAED7102"
+    },
+    "sdk": {
+      "source": "installed HytaleServer.jar public Java API",
+      "sha256": "BB4ECBE2D1BC189C22E63491EB4078C95B42EF6CBE6650CCFA3E6160AAED7102"
+    },
+    "assets": {
+      "path": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\install\\release\\package\\game\\latest\\Assets.zip",
+      "bytes": 3476304064,
+      "sha256": "A9F21C8136304937E85C134B60EDFC460B77D208AFB016B2F60DF48F14C4148A"
+    },
+    "client": {
+      "path": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\install\\release\\package\\game\\latest\\Client\\HytaleClient.exe",
+      "bytes": 58636136,
+      "sha256": "4947649CCFF38F37847F78250FC56226B4634FB9D1C4D362E14FCD18F93C55A5"
+    }
+  },
+  "java": {
+    "runtime": "Temurin OpenJDK 25.0.4+7 LTS",
+    "compiler": "javac 25.0.4"
+  },
+  "masterSpecification": {
+    "path": "C:\\Users\\Zemio\\Downloads\\Hytale RPG Master Implementation Specification v1.1.docx.md",
+    "bytes": 2638326,
+    "sha256": "B58760111545585395178C5811E4506A8B9C18BF5A67630C431F4BCCC5967B14"
+  },
+  "htDevLib": {
+    "installedJar": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\UserData\\Saves\\RPG\\mods\\HYTALEDEVLIB-0.5.0.jar",
+    "version": "0.5.0",
+    "declaredServerVersion": "2026.02.17-255364b8e",
+    "bytes": 265646,
+    "sha256": "DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230",
+    "sourceCommit": "ac955f742da4fc174985ef7b36eac2f49a97b6ef",
+    "runtimeLoadOn063": true,
+    "compatibilityWarning": "pre-semver server target is treated as wildcard by 0.6.3"
+  },
+  "referenceSourceCommits": {
+    "HytaleExampleProject": "032072c5fc9cc25054747cf43c435b60e3463016",
+    "HytaleSandboxPluginUiBranch": "927b8756106c6e12b33a33edafb322d8a629153b"
+  }
+}
+

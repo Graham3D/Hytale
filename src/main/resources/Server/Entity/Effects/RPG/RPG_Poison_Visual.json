@@ -1,0 +1,11 @@
+{
+  "Duration": 6,
+  "OverlapBehavior": "Overwrite",
+  "Infinite": false,
+  "Debuff": true,
+  "ApplicationEffects": {
+    "EntityBottomTint": "#153315",
+    "EntityTopTint": "#70ad45",
+    "Particles": [ { "SystemId": "Effect_Poison" } ]
+  }
+}

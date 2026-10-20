@@ -1,0 +1,349 @@
+Compiled from "FileIO.java"
+public interface com.hypixel.hytale.procedurallib.file.FileIO {
+  public static final it.unimi.dsi.fastutil.Hash$Strategy<java.nio.file.Path> PATH_STRATEGY;
+
+  public static void setDefaultRoot(java.nio.file.Path);
+    Code:
+         0: aload_0
+         1: invokestatic  #1                  // Method com/hypixel/hytale/procedurallib/file/FileIOSystem$Provider.setRoot:(Ljava/nio/file/Path;)V
+         4: return
+
+  public static <FS extends com.hypixel.hytale.procedurallib.file.FileIOSystem> FS openFileIOSystem(FS);
+    Code:
+         0: aload_0
+         1: invokestatic  #7                  // Method com/hypixel/hytale/procedurallib/file/FileIOSystem$Provider.set:(Lcom/hypixel/hytale/procedurallib/file/FileIOSystem;)V
+         4: aload_0
+         5: areturn
+
+  public static void closeFileIOSystem(com.hypixel.hytale.procedurallib.file.FileIOSystem);
+    Code:
+         0: invokestatic  #11                 // Method com/hypixel/hytale/procedurallib/file/FileIOSystem$Provider.unset:()V
+         3: return
+
+  public static boolean exists(com.hypixel.hytale.procedurallib.file.AssetPath);
+    Code:
+         0: aload_0
+         1: invokevirtual #15                 // Method com/hypixel/hytale/procedurallib/file/AssetPath.filepath:()Ljava/nio/file/Path;
+         4: iconst_0
+         5: anewarray     #21                 // class java/nio/file/LinkOption
+         8: invokestatic  #23                 // Method java/nio/file/Files.exists:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+        11: ireturn
+
+  public static boolean exists(java.nio.file.Path, java.nio.file.Path);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokestatic  #29                 // InterfaceMethod append:(Ljava/nio/file/Path;Ljava/nio/file/Path;)Ljava/nio/file/Path;
+         5: iconst_0
+         6: anewarray     #21                 // class java/nio/file/LinkOption
+         9: invokestatic  #23                 // Method java/nio/file/Files.exists:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+        12: ireturn
+
+  public static com.hypixel.hytale.procedurallib.file.AssetPath resolve(java.nio.file.Path);
+    Code:
+         0: invokestatic  #35                 // Method com/hypixel/hytale/procedurallib/file/FileIOSystem$Provider.get:()Lcom/hypixel/hytale/procedurallib/file/FileIOSystem;
+         3: astore_1
+         4: aload_1
+         5: aload_0
+         6: invokeinterface #39,  2           // InterfaceMethod com/hypixel/hytale/procedurallib/file/FileIOSystem.resolve:(Ljava/nio/file/Path;)Lcom/hypixel/hytale/procedurallib/file/AssetPath;
+        11: areturn
+
+  public static <T> T load(com.hypixel.hytale.procedurallib.file.AssetPath, com.hypixel.hytale.procedurallib.file.AssetLoader<T>) throws java.io.IOException;
+    Code:
+         0: invokestatic  #35                 // Method com/hypixel/hytale/procedurallib/file/FileIOSystem$Provider.get:()Lcom/hypixel/hytale/procedurallib/file/FileIOSystem;
+         3: astore_2
+         4: aload_2
+         5: aload_0
+         6: aload_1
+         7: invokeinterface #45,  3           // InterfaceMethod com/hypixel/hytale/procedurallib/file/FileIOSystem.load:(Lcom/hypixel/hytale/procedurallib/file/AssetPath;Lcom/hypixel/hytale/procedurallib/file/AssetLoader;)Ljava/lang/Object;
+        12: areturn
+
+  public static <T> T load(java.nio.file.Path, com.hypixel.hytale.procedurallib.file.AssetLoader<T>) throws java.io.IOException;
+    Code:
+         0: invokestatic  #35                 // Method com/hypixel/hytale/procedurallib/file/FileIOSystem$Provider.get:()Lcom/hypixel/hytale/procedurallib/file/FileIOSystem;
+         3: astore_2
+         4: aload_2
+         5: aload_0
+         6: invokeinterface #39,  2           // InterfaceMethod com/hypixel/hytale/procedurallib/file/FileIOSystem.resolve:(Ljava/nio/file/Path;)Lcom/hypixel/hytale/procedurallib/file/AssetPath;
+        11: astore_3
+        12: aload_2
+        13: aload_3
+        14: aload_1
+        15: invokeinterface #45,  3           // InterfaceMethod com/hypixel/hytale/procedurallib/file/FileIOSystem.load:(Lcom/hypixel/hytale/procedurallib/file/AssetPath;Lcom/hypixel/hytale/procedurallib/file/AssetLoader;)Ljava/lang/Object;
+        20: areturn
+
+  public static java.util.List<com.hypixel.hytale.procedurallib.file.AssetPath> list(java.nio.file.Path, java.util.function.Predicate<com.hypixel.hytale.procedurallib.file.AssetPath>, java.util.function.UnaryOperator<com.hypixel.hytale.procedurallib.file.AssetPath>) throws java.io.IOException;
+    Code:
+         0: invokestatic  #35                 // Method com/hypixel/hytale/procedurallib/file/FileIOSystem$Provider.get:()Lcom/hypixel/hytale/procedurallib/file/FileIOSystem;
+         3: astore_3
+         4: aload_0
+         5: aload_3
+         6: invokeinterface #49,  1           // InterfaceMethod com/hypixel/hytale/procedurallib/file/FileIOSystem.baseRoot:()Ljava/nio/file/Path;
+        11: invokestatic  #52                 // InterfaceMethod relativize:(Ljava/nio/file/Path;Ljava/nio/file/Path;)Ljava/nio/file/Path;
+        14: astore        4
+        16: new           #55                 // class it/unimi/dsi/fastutil/objects/ObjectArrayList
+        19: dup
+        20: invokespecial #57                 // Method it/unimi/dsi/fastutil/objects/ObjectArrayList."<init>":()V
+        23: astore        5
+        25: new           #60                 // class it/unimi/dsi/fastutil/objects/ObjectOpenHashSet
+        28: dup
+        29: invokespecial #62                 // Method it/unimi/dsi/fastutil/objects/ObjectOpenHashSet."<init>":()V
+        32: astore        6
+        34: new           #60                 // class it/unimi/dsi/fastutil/objects/ObjectOpenHashSet
+        37: dup
+        38: invokespecial #62                 // Method it/unimi/dsi/fastutil/objects/ObjectOpenHashSet."<init>":()V
+        41: astore        7
+        43: aload_3
+        44: invokeinterface #63,  1           // InterfaceMethod com/hypixel/hytale/procedurallib/file/FileIOSystem.roots:()Lcom/hypixel/hytale/procedurallib/file/FileIOSystem$PathArray;
+        49: getfield      #67                 // Field com/hypixel/hytale/procedurallib/file/FileIOSystem$PathArray.paths:[Ljava/nio/file/Path;
+        52: astore        8
+        54: aload         8
+        56: arraylength
+        57: istore        9
+        59: iconst_0
+        60: istore        10
+        62: iload         10
+        64: iload         9
+        66: if_icmpge     285
+        69: aload         8
+        71: iload         10
+        73: aaload
+        74: astore        11
+        76: aload         11
+        78: aload         4
+        80: invokestatic  #29                 // InterfaceMethod append:(Ljava/nio/file/Path;Ljava/nio/file/Path;)Ljava/nio/file/Path;
+        83: astore        12
+        85: aload         12
+        87: iconst_0
+        88: anewarray     #21                 // class java/nio/file/LinkOption
+        91: invokestatic  #23                 // Method java/nio/file/Files.exists:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+        94: ifeq          279
+        97: aload         12
+        99: iconst_0
+       100: anewarray     #21                 // class java/nio/file/LinkOption
+       103: invokestatic  #73                 // Method java/nio/file/Files.isDirectory:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+       106: ifne          112
+       109: goto          279
+       112: aload         12
+       114: invokestatic  #76                 // Method java/nio/file/Files.newDirectoryStream:(Ljava/nio/file/Path;)Ljava/nio/file/DirectoryStream;
+       117: astore        13
+       119: aload         6
+       121: aload         7
+       123: invokevirtual #80                 // Method it/unimi/dsi/fastutil/objects/ObjectOpenHashSet.addAll:(Ljava/util/Collection;)Z
+       126: pop
+       127: aload         7
+       129: invokevirtual #84                 // Method it/unimi/dsi/fastutil/objects/ObjectOpenHashSet.clear:()V
+       132: aload         13
+       134: invokeinterface #87,  1           // InterfaceMethod java/nio/file/DirectoryStream.iterator:()Ljava/util/Iterator;
+       139: astore        14
+       141: aload         14
+       143: invokeinterface #93,  1           // InterfaceMethod java/util/Iterator.hasNext:()Z
+       148: ifeq          235
+       151: aload         14
+       153: invokeinterface #99,  1           // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       158: checkcast     #103                // class java/nio/file/Path
+       161: astore        15
+       163: aload         11
+       165: aload         15
+       167: invokestatic  #105                // Method com/hypixel/hytale/procedurallib/file/AssetPath.fromAbsolute:(Ljava/nio/file/Path;Ljava/nio/file/Path;)Lcom/hypixel/hytale/procedurallib/file/AssetPath;
+       170: astore        16
+       172: aload_2
+       173: aload         16
+       175: invokeinterface #109,  2          // InterfaceMethod java/util/function/UnaryOperator.apply:(Ljava/lang/Object;)Ljava/lang/Object;
+       180: checkcast     #16                 // class com/hypixel/hytale/procedurallib/file/AssetPath
+       183: astore        17
+       185: aload         17
+       187: aload         16
+       189: if_acmpeq     203
+       192: aload         7
+       194: aload         17
+       196: invokevirtual #115                // Method it/unimi/dsi/fastutil/objects/ObjectOpenHashSet.add:(Ljava/lang/Object;)Z
+       199: pop
+       200: goto          141
+       203: aload_1
+       204: aload         16
+       206: invokeinterface #119,  2          // InterfaceMethod java/util/function/Predicate.test:(Ljava/lang/Object;)Z
+       211: ifeq          232
+       214: aload         6
+       216: aload         16
+       218: invokevirtual #115                // Method it/unimi/dsi/fastutil/objects/ObjectOpenHashSet.add:(Ljava/lang/Object;)Z
+       221: ifeq          232
+       224: aload         5
+       226: aload         16
+       228: invokevirtual #124                // Method it/unimi/dsi/fastutil/objects/ObjectArrayList.add:(Ljava/lang/Object;)Z
+       231: pop
+       232: goto          141
+       235: aload         13
+       237: ifnull        279
+       240: aload         13
+       242: invokeinterface #125,  1          // InterfaceMethod java/nio/file/DirectoryStream.close:()V
+       247: goto          279
+       250: astore        14
+       252: aload         13
+       254: ifnull        276
+       257: aload         13
+       259: invokeinterface #125,  1          // InterfaceMethod java/nio/file/DirectoryStream.close:()V
+       264: goto          276
+       267: astore        15
+       269: aload         14
+       271: aload         15
+       273: invokevirtual #130                // Method java/lang/Throwable.addSuppressed:(Ljava/lang/Throwable;)V
+       276: aload         14
+       278: athrow
+       279: iinc          10, 1
+       282: goto          62
+       285: aload         5
+       287: areturn
+      Exception table:
+         from    to  target type
+           119   235   250   Class java/lang/Throwable
+           257   264   267   Class java/lang/Throwable
+
+  public static boolean startsWith(java.nio.file.Path, java.nio.file.Path);
+    Code:
+         0: aload_1
+         1: invokeinterface #134,  1          // InterfaceMethod java/nio/file/Path.getNameCount:()I
+         6: aload_0
+         7: invokeinterface #134,  1          // InterfaceMethod java/nio/file/Path.getNameCount:()I
+        12: if_icmple     17
+        15: iconst_0
+        16: ireturn
+        17: iconst_1
+        18: istore_2
+        19: iconst_0
+        20: istore_3
+        21: iload_2
+        22: ifeq          69
+        25: iload_3
+        26: aload_1
+        27: invokeinterface #134,  1          // InterfaceMethod java/nio/file/Path.getNameCount:()I
+        32: if_icmpge     69
+        35: aload_0
+        36: iload_3
+        37: invokeinterface #138,  2          // InterfaceMethod java/nio/file/Path.getName:(I)Ljava/nio/file/Path;
+        42: invokeinterface #142,  1          // InterfaceMethod java/nio/file/Path.toString:()Ljava/lang/String;
+        47: aload_1
+        48: iload_3
+        49: invokeinterface #138,  2          // InterfaceMethod java/nio/file/Path.getName:(I)Ljava/nio/file/Path;
+        54: invokeinterface #142,  1          // InterfaceMethod java/nio/file/Path.toString:()Ljava/lang/String;
+        59: invokevirtual #146                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+        62: istore_2
+        63: iinc          3, 1
+        66: goto          21
+        69: iload_2
+        70: ireturn
+
+  public static java.nio.file.Path relativize(java.nio.file.Path, java.nio.file.Path);
+    Code:
+         0: aload_0
+         1: invokeinterface #134,  1          // InterfaceMethod java/nio/file/Path.getNameCount:()I
+         6: aload_1
+         7: invokeinterface #134,  1          // InterfaceMethod java/nio/file/Path.getNameCount:()I
+        12: if_icmpge     17
+        15: aload_0
+        16: areturn
+        17: aload_0
+        18: aload_1
+        19: invokestatic  #151                // InterfaceMethod startsWith:(Ljava/nio/file/Path;Ljava/nio/file/Path;)Z
+        22: ifne          27
+        25: aload_0
+        26: areturn
+        27: aload_0
+        28: aload_1
+        29: invokeinterface #134,  1          // InterfaceMethod java/nio/file/Path.getNameCount:()I
+        34: aload_0
+        35: invokeinterface #134,  1          // InterfaceMethod java/nio/file/Path.getNameCount:()I
+        40: invokeinterface #155,  3          // InterfaceMethod java/nio/file/Path.subpath:(II)Ljava/nio/file/Path;
+        45: areturn
+
+  public static java.nio.file.Path append(java.nio.file.Path, java.nio.file.Path);
+    Code:
+         0: aload_1
+         1: invokeinterface #159,  1          // InterfaceMethod java/nio/file/Path.getFileSystem:()Ljava/nio/file/FileSystem;
+         6: aload_0
+         7: invokeinterface #159,  1          // InterfaceMethod java/nio/file/Path.getFileSystem:()Ljava/nio/file/FileSystem;
+        12: if_acmpne     23
+        15: aload_0
+        16: aload_1
+        17: invokeinterface #163,  2          // InterfaceMethod java/nio/file/Path.resolve:(Ljava/nio/file/Path;)Ljava/nio/file/Path;
+        22: areturn
+        23: aload_0
+        24: astore_2
+        25: iconst_0
+        26: istore_3
+        27: iload_3
+        28: aload_1
+        29: invokeinterface #134,  1          // InterfaceMethod java/nio/file/Path.getNameCount:()I
+        34: if_icmpge     62
+        37: aload_2
+        38: aload_1
+        39: iload_3
+        40: invokeinterface #138,  2          // InterfaceMethod java/nio/file/Path.getName:(I)Ljava/nio/file/Path;
+        45: invokeinterface #142,  1          // InterfaceMethod java/nio/file/Path.toString:()Ljava/lang/String;
+        50: invokeinterface #166,  2          // InterfaceMethod java/nio/file/Path.resolve:(Ljava/lang/String;)Ljava/nio/file/Path;
+        55: astore_2
+        56: iinc          3, 1
+        59: goto          27
+        62: aload_2
+        63: areturn
+
+  public static boolean equals(java.nio.file.Path, java.nio.file.Path);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: if_acmpeq     36
+         5: aload_0
+         6: ifnull        40
+         9: aload_1
+        10: ifnull        40
+        13: aload_0
+        14: invokeinterface #134,  1          // InterfaceMethod java/nio/file/Path.getNameCount:()I
+        19: aload_1
+        20: invokeinterface #134,  1          // InterfaceMethod java/nio/file/Path.getNameCount:()I
+        25: if_icmpne     40
+        28: aload_0
+        29: aload_1
+        30: invokestatic  #151                // InterfaceMethod startsWith:(Ljava/nio/file/Path;Ljava/nio/file/Path;)Z
+        33: ifeq          40
+        36: iconst_1
+        37: goto          41
+        40: iconst_0
+        41: ireturn
+
+  public static int hashCode(java.nio.file.Path);
+    Code:
+         0: aload_0
+         1: ifnonnull     6
+         4: iconst_0
+         5: ireturn
+         6: iconst_1
+         7: istore_1
+         8: iconst_0
+         9: istore_2
+        10: iload_2
+        11: aload_0
+        12: invokeinterface #134,  1          // InterfaceMethod java/nio/file/Path.getNameCount:()I
+        17: if_icmpge     47
+        20: iload_1
+        21: bipush        31
+        23: imul
+        24: aload_0
+        25: iload_2
+        26: invokeinterface #138,  2          // InterfaceMethod java/nio/file/Path.getName:(I)Ljava/nio/file/Path;
+        31: invokeinterface #142,  1          // InterfaceMethod java/nio/file/Path.toString:()Ljava/lang/String;
+        36: invokevirtual #169                // Method java/lang/String.hashCode:()I
+        39: iadd
+        40: istore_1
+        41: iinc          2, 1
+        44: goto          10
+        47: iload_1
+        48: ireturn
+
+  static {};
+    Code:
+         0: new           #172                // class com/hypixel/hytale/procedurallib/file/FileIO$1
+         3: dup
+         4: invokespecial #174                // Method com/hypixel/hytale/procedurallib/file/FileIO$1."<init>":()V
+         7: putstatic     #175                // Field PATH_STRATEGY:Lit/unimi/dsi/fastutil/Hash$Strategy;
+        10: return
+}

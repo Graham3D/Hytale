@@ -1,0 +1,62 @@
+{
+  "capturedAtUtc": "2026-09-07T18:19:57.0890624Z",
+  "revision": "R023",
+  "serverLog": "2026-09-07_14-02-02_server.log",
+  "serverLogSha256": "07FFAD4164ECB4DD37860935E619B8D39425328EB14FE869AB9556C40AEF6E06",
+  "traceSha256": "34D737B34BB759DCE3AE4F50023C828C0E3DC8557D9CC37692B5D3D7B9EDBFE6",
+  "masterV12Sha256": "750483855846FF6DB2564B4D6D626C2A12F1AC6EBBBBF12232B2C3ECCF667010",
+  "eventCounts": {
+    "NATIVE_ABILITY_SLOT_PROJECTED": 4,
+    "NATIVE_ABILITY_INPUT_OBSERVED": 0,
+    "SKILL_ACTIVATION_REQUEST": 0,
+    "SKILL_COMMITTED": 0,
+    "EXECUTOR_DISPATCH": 0,
+    "PROJECTILE_SPAWNED": 0
+  },
+  "controlSummaries": [
+    {
+      "timestamp": "2026-09-07T18:02:50.209230300Z",
+      "correlationId": "78efdf3c-aa6e-4d78-b8db-a3b1111be2b0",
+      "details": {
+        "reason": "COMMAND_STOP",
+        "initialAbility2or3Updates": 0,
+        "chainTypes": {},
+        "chainDetailsSeen": 0,
+        "syncPackets": 0,
+        "elapsedSeconds": 28,
+        "detailLimit": 64,
+        "ability2or3Updates": 0,
+        "packetTypes": {}
+      }
+    },
+    {
+      "timestamp": "2026-09-07T18:04:58.118087100Z",
+      "correlationId": "10d5d71b-51fb-48c1-beb5-f759f327df92",
+      "details": {
+        "reason": "DETACHED_RECOVERY_REQUIRED",
+        "initialAbility2or3Updates": 0,
+        "chainTypes": {},
+        "chainDetailsSeen": 0,
+        "syncPackets": 0,
+        "elapsedSeconds": 105,
+        "detailLimit": 64,
+        "ability2or3Updates": 0,
+        "packetTypes": {}
+      }
+    }
+  ],
+  "controlRestorations": [
+    {
+      "timestamp": "2026-09-07T18:02:50.214739700Z",
+      "correlationId": "78efdf3c-aa6e-4d78-b8db-a3b1111be2b0",
+      "details": {
+        "result": "RESTORED",
+        "reason": "COMMAND_STOP"
+      }
+    }
+  ],
+  "ownerConnectedObservation": "Yes, native Fireball cast",
+  "ownerObservationSource": "Owner reply in this task on 2026-09-07; not inferred from tests or smoke",
+  "connectedTransport": "QuicheConnection / QuicheListener in the connected server log",
+  "conclusion": "Vanilla Rune visibly cast while PacketAdapters inbound watcher was wholly silent. Observation boundary invalid for this connected transport. RPG casting remains unverified."
+}

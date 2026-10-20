@@ -1,0 +1,237 @@
+Compiled from "NPCDamageSystems.java"
+public class com.hypixel.hytale.server.npc.systems.NPCDamageSystems$DropDeathItems extends com.hypixel.hytale.component.system.tick.EntityTickingSystem<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> {
+  private static final com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> QUERY;
+
+  private static final java.util.Set<com.hypixel.hytale.component.dependency.Dependency<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>> DEPENDENCIES;
+
+  static final boolean $assertionsDisabled;
+
+  public com.hypixel.hytale.server.npc.systems.NPCDamageSystems$DropDeathItems();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/component/system/tick/EntityTickingSystem."<init>":()V
+         4: return
+
+  public com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getQuery();
+    Code:
+         0: getstatic     #7                  // Field QUERY:Lcom/hypixel/hytale/component/query/Query;
+         3: areturn
+
+  public java.util.Set<com.hypixel.hytale.component.dependency.Dependency<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>> getDependencies();
+    Code:
+         0: getstatic     #13                 // Field DEPENDENCIES:Ljava/util/Set;
+         3: areturn
+
+  public void tick(float, int, com.hypixel.hytale.component.ArchetypeChunk<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_3
+         1: iload_2
+         2: invokestatic  #17                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         5: invokevirtual #23                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+         8: checkcast     #18                 // class com/hypixel/hytale/server/core/modules/entity/damage/DeathComponent
+        11: astore        6
+        13: getstatic     #29                 // Field $assertionsDisabled:Z
+        16: ifne          32
+        19: aload         6
+        21: ifnonnull     32
+        24: new           #33                 // class java/lang/AssertionError
+        27: dup
+        28: invokespecial #35                 // Method java/lang/AssertionError."<init>":()V
+        31: athrow
+        32: aload         6
+        34: invokevirtual #36                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathComponent.getItemsLossMode:()Lcom/hypixel/hytale/server/core/asset/type/gameplay/DeathConfig$ItemsLossMode;
+        37: getstatic     #40                 // Field com/hypixel/hytale/server/core/asset/type/gameplay/DeathConfig$ItemsLossMode.ALL:Lcom/hypixel/hytale/server/core/asset/type/gameplay/DeathConfig$ItemsLossMode;
+        40: if_acmpeq     44
+        43: return
+        44: aload_3
+        45: iload_2
+        46: invokestatic  #46                 // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        49: invokevirtual #23                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        52: checkcast     #47                 // class com/hypixel/hytale/server/npc/entities/NPCEntity
+        55: astore        7
+        57: getstatic     #29                 // Field $assertionsDisabled:Z
+        60: ifne          76
+        63: aload         7
+        65: ifnonnull     76
+        68: new           #33                 // class java/lang/AssertionError
+        71: dup
+        72: invokespecial #35                 // Method java/lang/AssertionError."<init>":()V
+        75: athrow
+        76: aload         7
+        78: invokevirtual #49                 // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getRole:()Lcom/hypixel/hytale/server/npc/role/Role;
+        81: astore        8
+        83: aload         8
+        85: ifnonnull     89
+        88: return
+        89: aload         8
+        91: invokevirtual #53                 // Method com/hypixel/hytale/server/npc/role/Role.hasDroppedDeathItems:()Z
+        94: ifeq          98
+        97: return
+        98: aload         8
+       100: invokevirtual #59                 // Method com/hypixel/hytale/server/npc/role/Role.isDropDeathItemsInstantly:()Z
+       103: ifne          133
+       106: aload_3
+       107: iload_2
+       108: invokestatic  #62                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DeferredCorpseRemoval.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       111: invokevirtual #23                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       114: checkcast     #63                 // class com/hypixel/hytale/server/core/modules/entity/damage/DeferredCorpseRemoval
+       117: astore        9
+       119: aload         9
+       121: ifnull        133
+       124: aload         9
+       126: invokevirtual #65                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DeferredCorpseRemoval.shouldRemove:()Z
+       129: ifne          133
+       132: return
+       133: aload         8
+       135: invokevirtual #68                 // Method com/hypixel/hytale/server/npc/role/Role.setDeathItemsDropped:()V
+       138: new           #71                 // class it/unimi/dsi/fastutil/objects/ObjectArrayList
+       141: dup
+       142: invokespecial #73                 // Method it/unimi/dsi/fastutil/objects/ObjectArrayList."<init>":()V
+       145: astore        9
+       147: aload         8
+       149: invokevirtual #74                 // Method com/hypixel/hytale/server/npc/role/Role.isPickupDropOnDeath:()Z
+       152: ifeq          193
+       155: aload_3
+       156: iload_2
+       157: invokestatic  #77                 // Method com/hypixel/hytale/server/core/inventory/InventoryComponent$Storage.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       160: invokevirtual #23                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       163: checkcast     #78                 // class com/hypixel/hytale/server/core/inventory/InventoryComponent$Storage
+       166: astore        10
+       168: aload         10
+       170: ifnull        193
+       173: aload         10
+       175: invokevirtual #80                 // Method com/hypixel/hytale/server/core/inventory/InventoryComponent$Storage.getInventory:()Lcom/hypixel/hytale/server/core/inventory/container/ItemContainer;
+       178: astore        11
+       180: aload         9
+       182: aload         11
+       184: invokevirtual #84                 // Method com/hypixel/hytale/server/core/inventory/container/ItemContainer.dropAllItemStacks:()Ljava/util/List;
+       187: invokeinterface #90,  2           // InterfaceMethod java/util/List.addAll:(Ljava/util/Collection;)Z
+       192: pop
+       193: aload         8
+       195: invokevirtual #96                 // Method com/hypixel/hytale/server/npc/role/Role.getDropListId:()Ljava/lang/String;
+       198: astore        10
+       200: aload         10
+       202: ifnull        237
+       205: invokestatic  #100                // Method com/hypixel/hytale/server/core/modules/item/ItemModule.get:()Lcom/hypixel/hytale/server/core/modules/item/ItemModule;
+       208: astore        11
+       210: aload         11
+       212: invokevirtual #106                // Method com/hypixel/hytale/server/core/modules/item/ItemModule.isEnabled:()Z
+       215: ifeq          237
+       218: aload         11
+       220: aload         10
+       222: invokevirtual #109                // Method com/hypixel/hytale/server/core/modules/item/ItemModule.getRandomItemDrops:(Ljava/lang/String;)Ljava/util/List;
+       225: astore        12
+       227: aload         9
+       229: aload         12
+       231: invokeinterface #90,  2           // InterfaceMethod java/util/List.addAll:(Ljava/util/Collection;)Z
+       236: pop
+       237: aload         9
+       239: invokeinterface #113,  1          // InterfaceMethod java/util/List.isEmpty:()Z
+       244: ifne          373
+       247: aload_3
+       248: iload_2
+       249: invokestatic  #116                // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       252: invokevirtual #23                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       255: checkcast     #117                // class com/hypixel/hytale/server/core/modules/entity/component/TransformComponent
+       258: astore        11
+       260: getstatic     #29                 // Field $assertionsDisabled:Z
+       263: ifne          279
+       266: aload         11
+       268: ifnonnull     279
+       271: new           #33                 // class java/lang/AssertionError
+       274: dup
+       275: invokespecial #35                 // Method java/lang/AssertionError."<init>":()V
+       278: athrow
+       279: aload         11
+       281: invokevirtual #119                // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getPosition:()Lorg/joml/Vector3d;
+       284: astore        12
+       286: aload_3
+       287: iload_2
+       288: invokestatic  #123                // Method com/hypixel/hytale/server/core/modules/entity/component/HeadRotation.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       291: invokevirtual #23                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       294: checkcast     #124                // class com/hypixel/hytale/server/core/modules/entity/component/HeadRotation
+       297: astore        13
+       299: getstatic     #29                 // Field $assertionsDisabled:Z
+       302: ifne          318
+       305: aload         13
+       307: ifnonnull     318
+       310: new           #33                 // class java/lang/AssertionError
+       313: dup
+       314: invokespecial #35                 // Method java/lang/AssertionError."<init>":()V
+       317: athrow
+       318: aload         13
+       320: invokevirtual #126                // Method com/hypixel/hytale/server/core/modules/entity/component/HeadRotation.getRotation:()Lcom/hypixel/hytale/math/vector/Rotation3f;
+       323: astore        14
+       325: new           #130                // class org/joml/Vector3d
+       328: dup
+       329: aload         12
+       331: invokespecial #132                // Method org/joml/Vector3d."<init>":(Lorg/joml/Vector3dc;)V
+       334: dconst_0
+       335: dconst_1
+       336: dconst_0
+       337: invokevirtual #135                // Method org/joml/Vector3d.add:(DDD)Lorg/joml/Vector3d;
+       340: astore        15
+       342: aload         4
+       344: aload         9
+       346: aload         15
+       348: new           #139                // class com/hypixel/hytale/math/vector/Rotation3f
+       351: dup
+       352: aload         14
+       354: invokespecial #141                // Method com/hypixel/hytale/math/vector/Rotation3f."<init>":(Lcom/hypixel/hytale/math/vector/Rotation3fc;)V
+       357: invokestatic  #144                // Method com/hypixel/hytale/server/core/modules/entity/item/ItemComponent.generateItemDrops:(Lcom/hypixel/hytale/component/ComponentAccessor;Ljava/util/List;Lorg/joml/Vector3d;Lcom/hypixel/hytale/math/vector/Rotation3fc;)[Lcom/hypixel/hytale/component/Holder;
+       360: astore        16
+       362: aload         5
+       364: aload         16
+       366: getstatic     #150                // Field com/hypixel/hytale/component/AddReason.SPAWN:Lcom/hypixel/hytale/component/AddReason;
+       369: invokevirtual #156                // Method com/hypixel/hytale/component/CommandBuffer.addEntities:([Lcom/hypixel/hytale/component/Holder;Lcom/hypixel/hytale/component/AddReason;)[Lcom/hypixel/hytale/component/Ref;
+       372: pop
+       373: return
+
+  static {};
+    Code:
+         0: ldc           #162                // class com/hypixel/hytale/server/npc/systems/NPCDamageSystems
+         2: invokevirtual #164                // Method java/lang/Class.desiredAssertionStatus:()Z
+         5: ifne          12
+         8: iconst_1
+         9: goto          13
+        12: iconst_0
+        13: putstatic     #29                 // Field $assertionsDisabled:Z
+        16: iconst_5
+        17: anewarray     #169                // class com/hypixel/hytale/component/query/Query
+        20: dup
+        21: iconst_0
+        22: invokestatic  #46                 // Method com/hypixel/hytale/server/npc/entities/NPCEntity.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        25: aastore
+        26: dup
+        27: iconst_1
+        28: invokestatic  #116                // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        31: aastore
+        32: dup
+        33: iconst_2
+        34: invokestatic  #123                // Method com/hypixel/hytale/server/core/modules/entity/component/HeadRotation.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        37: aastore
+        38: dup
+        39: iconst_3
+        40: invokestatic  #171                // Method com/hypixel/hytale/server/core/entity/entities/Player.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        43: invokestatic  #174                // InterfaceMethod com/hypixel/hytale/component/query/Query.not:(Lcom/hypixel/hytale/component/query/Query;)Lcom/hypixel/hytale/component/query/NotQuery;
+        46: aastore
+        47: dup
+        48: iconst_4
+        49: invokestatic  #17                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        52: aastore
+        53: invokestatic  #178                // InterfaceMethod com/hypixel/hytale/component/query/Query.and:([Lcom/hypixel/hytale/component/query/Query;)Lcom/hypixel/hytale/component/query/AndQuery;
+        56: putstatic     #7                  // Field QUERY:Lcom/hypixel/hytale/component/query/Query;
+        59: new           #182                // class com/hypixel/hytale/component/dependency/SystemDependency
+        62: dup
+        63: getstatic     #184                // Field com/hypixel/hytale/component/dependency/Order.AFTER:Lcom/hypixel/hytale/component/dependency/Order;
+        66: ldc           #190                // class com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$TickCorpseRemoval
+        68: invokespecial #192                // Method com/hypixel/hytale/component/dependency/SystemDependency."<init>":(Lcom/hypixel/hytale/component/dependency/Order;Ljava/lang/Class;)V
+        71: new           #182                // class com/hypixel/hytale/component/dependency/SystemDependency
+        74: dup
+        75: getstatic     #195                // Field com/hypixel/hytale/component/dependency/Order.BEFORE:Lcom/hypixel/hytale/component/dependency/Order;
+        78: ldc           #198                // class com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$CorpseRemoval
+        80: invokespecial #192                // Method com/hypixel/hytale/component/dependency/SystemDependency."<init>":(Lcom/hypixel/hytale/component/dependency/Order;Ljava/lang/Class;)V
+        83: invokestatic  #200                // InterfaceMethod java/util/Set.of:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Set;
+        86: putstatic     #13                 // Field DEPENDENCIES:Ljava/util/Set;
+        89: return
+}

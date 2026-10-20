@@ -1,0 +1,780 @@
+Compiled from "ProjectileLifecycleRegistry.java"
+public final class com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry {
+  public static final int OWNER_CAP;
+
+  public static final int GLOBAL_CAP;
+
+  private final java.util.Map<java.lang.String, com.inigmasgames.hytalerpg.execution.projectile.ProjectileInstance> active;
+
+  private final java.util.Map<com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry$RootKey, com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry$Root> roots;
+
+  public com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #7                  // class java/util/LinkedHashMap
+         8: dup
+         9: invokespecial #9                  // Method java/util/LinkedHashMap."<init>":()V
+        12: putfield      #10                 // Field active:Ljava/util/Map;
+        15: aload_0
+        16: new           #7                  // class java/util/LinkedHashMap
+        19: dup
+        20: invokespecial #9                  // Method java/util/LinkedHashMap."<init>":()V
+        23: putfield      #16                 // Field roots:Ljava/util/Map;
+        26: return
+
+  private static com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry$RootKey key(com.inigmasgames.hytalerpg.execution.projectile.ProjectileExecutionPlan);
+    Code:
+         0: new           #19                 // class com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey
+         3: dup
+         4: aload_0
+         5: invokevirtual #21                 // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan.ownerId:()Ljava/util/UUID;
+         8: aload_0
+         9: invokevirtual #27                 // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan.rootCastId:()Ljava/lang/String;
+        12: invokespecial #31                 // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey."<init>":(Ljava/util/UUID;Ljava/lang/String;)V
+        15: areturn
+
+  public synchronized java.lang.String admission(java.util.UUID, int);
+    Code:
+         0: iload_2
+         1: iconst_1
+         2: if_icmplt     11
+         5: iload_2
+         6: bipush        48
+         8: if_icmple     14
+        11: ldc           #34                 // String INVALID_PROJECTILE_BATCH
+        13: areturn
+        14: aload_0
+        15: getfield      #16                 // Field roots:Ljava/util/Map;
+        18: invokeinterface #36,  1           // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+        23: invokeinterface #42,  1           // InterfaceMethod java/util/Set.stream:()Ljava/util/stream/Stream;
+        28: aload_1
+        29: invokedynamic #48,  0             // InvokeDynamic #0:test:(Ljava/util/UUID;)Ljava/util/function/Predicate;
+        34: invokeinterface #52,  2           // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+        39: invokedynamic #58,  0             // InvokeDynamic #1:applyAsInt:()Ljava/util/function/ToIntFunction;
+        44: invokeinterface #62,  2           // InterfaceMethod java/util/stream/Stream.mapToInt:(Ljava/util/function/ToIntFunction;)Ljava/util/stream/IntStream;
+        49: invokeinterface #66,  1           // InterfaceMethod java/util/stream/IntStream.sum:()I
+        54: i2l
+        55: lstore_3
+        56: aload_0
+        57: aload_1
+        58: invokevirtual #72                 // Method ownedBy:(Ljava/util/UUID;)Ljava/util/List;
+        61: invokeinterface #76,  1           // InterfaceMethod java/util/List.size:()I
+        66: i2l
+        67: lload_3
+        68: ladd
+        69: iload_2
+        70: i2l
+        71: ladd
+        72: ldc2_w        #81                 // long 24l
+        75: lcmp
+        76: ifle          82
+        79: ldc           #83                 // String OWNER_PROJECTILE_BUDGET
+        81: areturn
+        82: aload_0
+        83: getfield      #10                 // Field active:Ljava/util/Map;
+        86: invokeinterface #85,  1           // InterfaceMethod java/util/Map.size:()I
+        91: aload_0
+        92: getfield      #16                 // Field roots:Ljava/util/Map;
+        95: invokeinterface #86,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+       100: invokeinterface #90,  1           // InterfaceMethod java/util/Collection.stream:()Ljava/util/stream/Stream;
+       105: invokedynamic #93,  0             // InvokeDynamic #2:applyAsInt:()Ljava/util/function/ToIntFunction;
+       110: invokeinterface #62,  2           // InterfaceMethod java/util/stream/Stream.mapToInt:(Ljava/util/function/ToIntFunction;)Ljava/util/stream/IntStream;
+       115: invokeinterface #66,  1           // InterfaceMethod java/util/stream/IntStream.sum:()I
+       120: iadd
+       121: iload_2
+       122: iadd
+       123: sipush        512
+       126: if_icmple     132
+       129: ldc           #94                 // String GLOBAL_PROJECTILE_BUDGET
+       131: areturn
+       132: ldc           #96                 // String PASS
+       134: areturn
+
+  public synchronized void register(com.inigmasgames.hytalerpg.execution.projectile.ProjectileInstance);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokestatic  #98                 // InterfaceMethod java/util/List.of:(Ljava/lang/Object;)Ljava/util/List;
+         5: invokevirtual #102                // Method registerAll:(Ljava/util/List;)V
+         8: return
+
+  public synchronized void registerAll(java.util.List<com.inigmasgames.hytalerpg.execution.projectile.ProjectileInstance>);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: iconst_0
+         3: invokevirtual #106                // Method registerAll:(Ljava/util/List;I)V
+         6: return
+
+  public synchronized void registerAll(java.util.List<com.inigmasgames.hytalerpg.execution.projectile.ProjectileInstance>, com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry$Lifetime);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: iconst_0
+         3: aload_2
+         4: iconst_0
+         5: invokevirtual #109                // Method registerAll:(Ljava/util/List;ILcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Lifetime;Z)V
+         8: return
+
+  public synchronized void registerConditionalAll(java.util.List<com.inigmasgames.hytalerpg.execution.projectile.ProjectileInstance>, com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry$Lifetime);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_1
+         3: invokeinterface #76,  1           // InterfaceMethod java/util/List.size:()I
+         8: aload_2
+         9: iconst_1
+        10: invokevirtual #109                // Method registerAll:(Ljava/util/List;ILcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Lifetime;Z)V
+        13: return
+
+  public synchronized void registerTriggeredAll(java.util.List<com.inigmasgames.hytalerpg.execution.projectile.ProjectileInstance>);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_1
+         3: invokeinterface #76,  1           // InterfaceMethod java/util/List.size:()I
+         8: invokevirtual #106                // Method registerAll:(Ljava/util/List;I)V
+        11: return
+
+  private void registerAll(java.util.List<com.inigmasgames.hytalerpg.execution.projectile.ProjectileInstance>, int);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: iload_2
+         3: aconst_null
+         4: iconst_0
+         5: invokevirtual #109                // Method registerAll:(Ljava/util/List;ILcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Lifetime;Z)V
+         8: return
+
+  private void registerAll(java.util.List<com.inigmasgames.hytalerpg.execution.projectile.ProjectileInstance>, int, com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry$Lifetime, boolean);
+    Code:
+         0: aload_1
+         1: invokeinterface #112,  1          // InterfaceMethod java/util/List.isEmpty:()Z
+         6: ifeq          10
+         9: return
+        10: aload_1
+        11: invokeinterface #116,  1          // InterfaceMethod java/util/List.getFirst:()Ljava/lang/Object;
+        16: checkcast     #120                // class com/inigmasgames/hytalerpg/execution/projectile/ProjectileInstance
+        19: invokevirtual #122                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileInstance.plan:()Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan;
+        22: astore        5
+        24: aload         5
+        26: invokestatic  #126                // Method key:(Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan;)Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey;
+        29: astore        6
+        31: aload_0
+        32: getfield      #16                 // Field roots:Ljava/util/Map;
+        35: aload         6
+        37: invokeinterface #130,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+        42: checkcast     #134                // class com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root
+        45: astore        7
+        47: aload_3
+        48: ifnull        80
+        51: aload_3
+        52: getfield      #136                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Lifetime.key:Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey;
+        55: ifnull        80
+        58: aload_3
+        59: getfield      #136                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Lifetime.key:Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey;
+        62: aload         6
+        64: invokevirtual #141                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey.equals:(Ljava/lang/Object;)Z
+        67: ifne          80
+        70: new           #145                // class java/lang/IllegalStateException
+        73: dup
+        74: ldc           #147                // String FOREIGN_PROJECTILE_LIFETIME
+        76: invokespecial #149                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+        79: athrow
+        80: aload         7
+        82: ifnull        108
+        85: aload_3
+        86: ifnull        108
+        89: aload         7
+        91: getfield      #152                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.lifetime:Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Lifetime;
+        94: aload_3
+        95: if_acmpeq     108
+        98: new           #145                // class java/lang/IllegalStateException
+       101: dup
+       102: ldc           #156                // String PROJECTILE_LIFETIME_CHANGED
+       104: invokespecial #149                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       107: athrow
+       108: iconst_0
+       109: istore        8
+       111: iload         4
+       113: ifeq          154
+       116: aload_3
+       117: ifnull        127
+       120: aload_3
+       121: getfield      #158                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Lifetime.state:Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root;
+       124: ifnonnull     137
+       127: new           #145                // class java/lang/IllegalStateException
+       130: dup
+       131: ldc           #162                // String CONDITIONAL_PROJECTILE_ROOT_MISSING
+       133: invokespecial #149                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       136: athrow
+       137: aload         7
+       139: ifnonnull     180
+       142: aload_3
+       143: getfield      #158                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Lifetime.state:Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root;
+       146: astore        7
+       148: iconst_1
+       149: istore        8
+       151: goto          180
+       154: aload         7
+       156: ifnonnull     180
+       159: aload_3
+       160: ifnull        180
+       163: aload_3
+       164: getfield      #158                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Lifetime.state:Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root;
+       167: ifnull        180
+       170: new           #145                // class java/lang/IllegalStateException
+       173: dup
+       174: ldc           #164                // String PROJECTILE_ROOT_ALREADY_STARTED
+       176: invokespecial #149                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       179: athrow
+       180: aload         7
+       182: ifnonnull     220
+       185: aload         5
+       187: invokevirtual #166                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan.remainingContinuationBudgets:()Ljava/util/Map;
+       190: ldc           #170                // String IS_LAUNCH
+       192: iconst_1
+       193: invokestatic  #172                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       196: invokeinterface #178,  3          // InterfaceMethod java/util/Map.getOrDefault:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       201: checkcast     #173                // class java/lang/Integer
+       204: invokevirtual #182                // Method java/lang/Integer.intValue:()I
+       207: ifne          220
+       210: new           #145                // class java/lang/IllegalStateException
+       213: dup
+       214: ldc           #185                // String UNKNOWN_PROJECTILE_ROOT
+       216: invokespecial #149                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       219: athrow
+       220: aload         5
+       222: invokevirtual #166                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan.remainingContinuationBudgets:()Ljava/util/Map;
+       225: ldc           #187                // String ROOT_LAUNCHES
+       227: iconst_1
+       228: invokestatic  #172                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       231: invokeinterface #178,  3          // InterfaceMethod java/util/Map.getOrDefault:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       236: checkcast     #173                // class java/lang/Integer
+       239: invokevirtual #182                // Method java/lang/Integer.intValue:()I
+       242: istore        9
+       244: iload         9
+       246: iconst_1
+       247: if_icmplt     257
+       250: iload         9
+       252: bipush        48
+       254: if_icmple     267
+       257: new           #145                // class java/lang/IllegalStateException
+       260: dup
+       261: ldc           #189                // String INVALID_ROOT_LAUNCH_COUNT
+       263: invokespecial #149                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       266: athrow
+       267: aload         7
+       269: ifnonnull     285
+       272: new           #134                // class com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root
+       275: dup
+       276: iload         9
+       278: aload_3
+       279: invokespecial #191                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root."<init>":(ILcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Lifetime;)V
+       282: goto          294
+       285: new           #134                // class com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root
+       288: dup
+       289: aload         7
+       291: invokespecial #194                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root."<init>":(Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root;)V
+       294: astore        10
+       296: iload         4
+       298: ifeq          333
+       301: aload         10
+       303: dup
+       304: getfield      #197                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.pending:I
+       307: aload_1
+       308: invokeinterface #76,  1           // InterfaceMethod java/util/List.size:()I
+       313: iadd
+       314: putfield      #197                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.pending:I
+       317: aload         10
+       319: dup
+       320: getfield      #201                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.spent:I
+       323: aload_1
+       324: invokeinterface #76,  1           // InterfaceMethod java/util/List.size:()I
+       329: iadd
+       330: putfield      #201                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.spent:I
+       333: aload         10
+       335: getfield      #204                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.triggered:I
+       338: iload_2
+       339: iadd
+       340: bipush        16
+       342: if_icmple     355
+       345: new           #145                // class java/lang/IllegalStateException
+       348: dup
+       349: ldc           #207                // String ROOT_TRIGGERED_SECONDARY_BUDGET
+       351: invokespecial #149                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       354: athrow
+       355: aload         10
+       357: dup
+       358: getfield      #204                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.triggered:I
+       361: iload_2
+       362: iadd
+       363: putfield      #204                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.triggered:I
+       366: iload         4
+       368: ifeq          380
+       371: aload_1
+       372: invokeinterface #76,  1           // InterfaceMethod java/util/List.size:()I
+       377: goto          391
+       380: aload         7
+       382: ifnonnull     390
+       385: iload         9
+       387: goto          391
+       390: iconst_0
+       391: istore        11
+       393: iload         8
+       395: ifeq          422
+       398: aload         10
+       400: getfield      #197                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.pending:I
+       403: aload_1
+       404: invokeinterface #76,  1           // InterfaceMethod java/util/List.size:()I
+       409: if_icmpeq     422
+       412: new           #145                // class java/lang/IllegalStateException
+       415: dup
+       416: ldc           #209                // String ORPHANED_PROJECTILE_PROMISE
+       418: invokespecial #149                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       421: athrow
+       422: aload_1
+       423: invokeinterface #211,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       428: astore        12
+       430: aload         12
+       432: invokeinterface #215,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+       437: ifeq          630
+       440: aload         12
+       442: invokeinterface #220,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       447: checkcast     #120                // class com/inigmasgames/hytalerpg/execution/projectile/ProjectileInstance
+       450: astore        13
+       452: aload         13
+       454: invokevirtual #122                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileInstance.plan:()Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan;
+       457: astore        14
+       459: aload         14
+       461: invokestatic  #126                // Method key:(Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan;)Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey;
+       464: aload         6
+       466: invokevirtual #141                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey.equals:(Ljava/lang/Object;)Z
+       469: ifeq          501
+       472: aload         14
+       474: invokevirtual #223                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan.generation:()I
+       477: iconst_3
+       478: if_icmpgt     501
+       481: aload         14
+       483: invokevirtual #226                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan.remainingSpawnedEffects:()I
+       486: bipush        48
+       488: if_icmpge     501
+       491: aload         14
+       493: invokevirtual #229                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan.remainingTriggeredSecondaries:()I
+       496: bipush        16
+       498: if_icmple     511
+       501: new           #145                // class java/lang/IllegalStateException
+       504: dup
+       505: ldc           #232                // String Projectile recursion budget exceeds canonical bounds
+       507: invokespecial #149                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       510: athrow
+       511: aload_0
+       512: getfield      #10                 // Field active:Ljava/util/Map;
+       515: aload         14
+       517: invokevirtual #234                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan.projectileInstanceId:()Ljava/lang/String;
+       520: invokeinterface #237,  2          // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+       525: ifne          546
+       528: aload         10
+       530: getfield      #240                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.seen:Ljava/util/Set;
+       533: aload         14
+       535: invokevirtual #234                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan.projectileInstanceId:()Ljava/lang/String;
+       538: invokeinterface #244,  2          // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+       543: ifne          556
+       546: new           #145                // class java/lang/IllegalStateException
+       549: dup
+       550: ldc           #247                // String Duplicate projectile instance ID
+       552: invokespecial #149                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       555: athrow
+       556: aload         14
+       558: invokevirtual #166                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan.remainingContinuationBudgets:()Ljava/util/Map;
+       561: ldc           #170                // String IS_LAUNCH
+       563: iconst_1
+       564: invokestatic  #172                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       567: invokeinterface #178,  3          // InterfaceMethod java/util/Map.getOrDefault:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       572: checkcast     #173                // class java/lang/Integer
+       575: invokevirtual #182                // Method java/lang/Integer.intValue:()I
+       578: ifle          613
+       581: aload         10
+       583: getfield      #197                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.pending:I
+       586: ifgt          599
+       589: new           #145                // class java/lang/IllegalStateException
+       592: dup
+       593: ldc           #249                // String ROOT_LAUNCH_RESERVATION_EXHAUSTED
+       595: invokespecial #149                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       598: athrow
+       599: aload         10
+       601: dup
+       602: getfield      #197                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.pending:I
+       605: iconst_1
+       606: isub
+       607: putfield      #197                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.pending:I
+       610: goto          627
+       613: aload         10
+       615: dup
+       616: getfield      #201                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.spent:I
+       619: iconst_1
+       620: iadd
+       621: putfield      #201                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.spent:I
+       624: iinc          11, 1
+       627: goto          430
+       630: aload         10
+       632: getfield      #201                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.spent:I
+       635: bipush        48
+       637: if_icmple     650
+       640: new           #145                // class java/lang/IllegalStateException
+       643: dup
+       644: ldc           #251                // String ROOT_SPAWN_EFFECT_BUDGET
+       646: invokespecial #149                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       649: athrow
+       650: iload         11
+       652: ifle          688
+       655: aload_0
+       656: aload         5
+       658: invokevirtual #21                 // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan.ownerId:()Ljava/util/UUID;
+       661: iload         11
+       663: invokevirtual #253                // Method admission:(Ljava/util/UUID;I)Ljava/lang/String;
+       666: astore        12
+       668: aload         12
+       670: ldc           #96                 // String PASS
+       672: invokevirtual #257                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       675: ifne          688
+       678: new           #145                // class java/lang/IllegalStateException
+       681: dup
+       682: aload         12
+       684: invokespecial #149                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+       687: athrow
+       688: aload_0
+       689: getfield      #16                 // Field roots:Ljava/util/Map;
+       692: aload         6
+       694: aload         10
+       696: invokeinterface #260,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       701: pop
+       702: aload         10
+       704: getfield      #152                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.lifetime:Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Lifetime;
+       707: ifnull        730
+       710: aload         10
+       712: getfield      #152                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.lifetime:Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Lifetime;
+       715: aload         6
+       717: putfield      #136                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Lifetime.key:Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey;
+       720: aload         10
+       722: getfield      #152                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.lifetime:Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Lifetime;
+       725: aload         10
+       727: putfield      #158                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Lifetime.state:Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root;
+       730: aload_1
+       731: invokeinterface #211,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       736: astore        12
+       738: aload         12
+       740: invokeinterface #215,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+       745: ifeq          783
+       748: aload         12
+       750: invokeinterface #220,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       755: checkcast     #120                // class com/inigmasgames/hytalerpg/execution/projectile/ProjectileInstance
+       758: astore        13
+       760: aload_0
+       761: getfield      #10                 // Field active:Ljava/util/Map;
+       764: aload         13
+       766: invokevirtual #122                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileInstance.plan:()Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan;
+       769: invokevirtual #234                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan.projectileInstanceId:()Ljava/lang/String;
+       772: aload         13
+       774: invokeinterface #260,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       779: pop
+       780: goto          738
+       783: return
+
+  public synchronized java.lang.String reserveSecondary(com.inigmasgames.hytalerpg.execution.projectile.ProjectileInstance, java.lang.String);
+    Code:
+         0: aload_0
+         1: getfield      #16                 // Field roots:Ljava/util/Map;
+         4: aload_1
+         5: invokevirtual #122                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileInstance.plan:()Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan;
+         8: invokestatic  #126                // Method key:(Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan;)Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey;
+        11: invokeinterface #130,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+        16: checkcast     #134                // class com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root
+        19: astore_3
+        20: aload_3
+        21: ifnull        44
+        24: aload_0
+        25: getfield      #10                 // Field active:Ljava/util/Map;
+        28: aload_1
+        29: invokevirtual #122                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileInstance.plan:()Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan;
+        32: invokevirtual #234                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan.projectileInstanceId:()Ljava/lang/String;
+        35: invokeinterface #130,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+        40: aload_1
+        41: if_acmpeq     47
+        44: ldc           #185                // String UNKNOWN_PROJECTILE_ROOT
+        46: areturn
+        47: aload_3
+        48: getfield      #240                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.seen:Ljava/util/Set;
+        51: aload_2
+        52: invokeinterface #263,  2          // InterfaceMethod java/util/Set.contains:(Ljava/lang/Object;)Z
+        57: ifeq          64
+        60: ldc_w         #266                // String DUPLICATE_SECONDARY
+        63: areturn
+        64: aload_1
+        65: invokevirtual #122                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileInstance.plan:()Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan;
+        68: invokevirtual #223                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan.generation:()I
+        71: iconst_3
+        72: if_icmplt     79
+        75: ldc_w         #268                // String MAX_GENERATION
+        78: areturn
+        79: aload_3
+        80: getfield      #204                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.triggered:I
+        83: bipush        16
+        85: if_icmplt     91
+        88: ldc           #207                // String ROOT_TRIGGERED_SECONDARY_BUDGET
+        90: areturn
+        91: aload_3
+        92: getfield      #201                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.spent:I
+        95: bipush        48
+        97: if_icmplt     103
+       100: ldc           #251                // String ROOT_SPAWN_EFFECT_BUDGET
+       102: areturn
+       103: aload_3
+       104: getfield      #240                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.seen:Ljava/util/Set;
+       107: aload_2
+       108: invokeinterface #244,  2          // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+       113: pop
+       114: aload_3
+       115: dup
+       116: getfield      #201                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.spent:I
+       119: iconst_1
+       120: iadd
+       121: putfield      #201                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.spent:I
+       124: aload_3
+       125: dup
+       126: getfield      #204                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.triggered:I
+       129: iconst_1
+       130: iadd
+       131: putfield      #204                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.triggered:I
+       134: ldc           #96                 // String PASS
+       136: areturn
+
+  public synchronized java.util.Optional<com.inigmasgames.hytalerpg.execution.projectile.ProjectileInstance> get(java.lang.String);
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field active:Ljava/util/Map;
+         4: aload_1
+         5: invokeinterface #130,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+        10: checkcast     #120                // class com/inigmasgames/hytalerpg/execution/projectile/ProjectileInstance
+        13: invokestatic  #270                // Method java/util/Optional.ofNullable:(Ljava/lang/Object;)Ljava/util/Optional;
+        16: areturn
+
+  public synchronized boolean remove(com.inigmasgames.hytalerpg.execution.projectile.ProjectileInstance);
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field active:Ljava/util/Map;
+         4: aload_1
+         5: invokevirtual #122                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileInstance.plan:()Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan;
+         8: invokevirtual #234                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan.projectileInstanceId:()Ljava/lang/String;
+        11: aload_1
+        12: invokeinterface #276,  3          // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;Ljava/lang/Object;)Z
+        17: istore_2
+        18: aload_0
+        19: aload_1
+        20: invokevirtual #122                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileInstance.plan:()Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan;
+        23: invokestatic  #126                // Method key:(Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan;)Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey;
+        26: invokevirtual #280                // Method cleanup:(Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey;)V
+        29: iload_2
+        30: ireturn
+
+  public synchronized void abandonLaunch(java.util.UUID, java.lang.String);
+    Code:
+         0: new           #19                 // class com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey
+         3: dup
+         4: aload_1
+         5: aload_2
+         6: invokespecial #31                 // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey."<init>":(Ljava/util/UUID;Ljava/lang/String;)V
+         9: astore_3
+        10: aload_0
+        11: getfield      #16                 // Field roots:Ljava/util/Map;
+        14: aload_3
+        15: invokeinterface #130,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+        20: checkcast     #134                // class com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root
+        23: astore        4
+        25: aload         4
+        27: ifnull        36
+        30: aload         4
+        32: iconst_0
+        33: putfield      #197                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.pending:I
+        36: aload_0
+        37: aload_3
+        38: invokevirtual #280                // Method cleanup:(Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey;)V
+        41: return
+
+  private void cleanup(com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry$RootKey);
+    Code:
+         0: aload_0
+         1: getfield      #16                 // Field roots:Ljava/util/Map;
+         4: aload_1
+         5: invokeinterface #130,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+        10: checkcast     #134                // class com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root
+        13: astore_2
+        14: aload_2
+        15: ifnull        64
+        18: aload_2
+        19: getfield      #197                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.pending:I
+        22: ifne          64
+        25: aload_0
+        26: getfield      #10                 // Field active:Ljava/util/Map;
+        29: invokeinterface #86,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+        34: invokeinterface #90,  1           // InterfaceMethod java/util/Collection.stream:()Ljava/util/stream/Stream;
+        39: aload_1
+        40: invokedynamic #284,  0            // InvokeDynamic #3:test:(Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey;)Ljava/util/function/Predicate;
+        45: invokeinterface #287,  2          // InterfaceMethod java/util/stream/Stream.noneMatch:(Ljava/util/function/Predicate;)Z
+        50: ifeq          64
+        53: aload_0
+        54: getfield      #16                 // Field roots:Ljava/util/Map;
+        57: aload_1
+        58: invokeinterface #291,  2          // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+        63: pop
+        64: return
+
+  public synchronized java.util.List<com.inigmasgames.hytalerpg.execution.projectile.ProjectileInstance> ownedBy(java.util.UUID);
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field active:Ljava/util/Map;
+         4: invokeinterface #86,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+         9: invokeinterface #90,  1           // InterfaceMethod java/util/Collection.stream:()Ljava/util/stream/Stream;
+        14: aload_1
+        15: invokedynamic #293,  0            // InvokeDynamic #4:test:(Ljava/util/UUID;)Ljava/util/function/Predicate;
+        20: invokeinterface #52,  2           // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+        25: invokeinterface #294,  1          // InterfaceMethod java/util/stream/Stream.toList:()Ljava/util/List;
+        30: areturn
+
+  public synchronized java.util.List<com.inigmasgames.hytalerpg.execution.projectile.ProjectileInstance> removeOwnedBy(java.util.UUID);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #72                 // Method ownedBy:(Ljava/util/UUID;)Ljava/util/List;
+         5: astore_2
+         6: aload_2
+         7: aload_0
+         8: invokedynamic #298,  0            // InvokeDynamic #5:accept:(Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry;)Ljava/util/function/Consumer;
+        13: invokeinterface #302,  2          // InterfaceMethod java/util/List.forEach:(Ljava/util/function/Consumer;)V
+        18: aload_0
+        19: getfield      #16                 // Field roots:Ljava/util/Map;
+        22: invokeinterface #306,  1          // InterfaceMethod java/util/Map.keySet:()Ljava/util/Set;
+        27: aload_1
+        28: invokedynamic #309,  0            // InvokeDynamic #6:test:(Ljava/util/UUID;)Ljava/util/function/Predicate;
+        33: invokeinterface #310,  2          // InterfaceMethod java/util/Set.removeIf:(Ljava/util/function/Predicate;)Z
+        38: pop
+        39: aload_2
+        40: areturn
+
+  public synchronized int size();
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field active:Ljava/util/Map;
+         4: invokeinterface #85,  1           // InterfaceMethod java/util/Map.size:()I
+         9: ireturn
+
+  public synchronized int rootCount();
+    Code:
+         0: aload_0
+         1: getfield      #16                 // Field roots:Ljava/util/Map;
+         4: invokeinterface #85,  1           // InterfaceMethod java/util/Map.size:()I
+         9: ireturn
+
+  public synchronized int triggered(java.util.UUID, java.lang.String);
+    Code:
+         0: aload_0
+         1: getfield      #16                 // Field roots:Ljava/util/Map;
+         4: new           #19                 // class com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey
+         7: dup
+         8: aload_1
+         9: aload_2
+        10: invokespecial #31                 // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey."<init>":(Ljava/util/UUID;Ljava/lang/String;)V
+        13: invokeinterface #130,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+        18: checkcast     #134                // class com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root
+        21: astore_3
+        22: aload_3
+        23: ifnonnull     30
+        26: iconst_0
+        27: goto          34
+        30: aload_3
+        31: getfield      #204                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.triggered:I
+        34: ireturn
+
+  public synchronized int spent(java.util.UUID, java.lang.String);
+    Code:
+         0: aload_0
+         1: getfield      #16                 // Field roots:Ljava/util/Map;
+         4: new           #19                 // class com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey
+         7: dup
+         8: aload_1
+         9: aload_2
+        10: invokespecial #31                 // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey."<init>":(Ljava/util/UUID;Ljava/lang/String;)V
+        13: invokeinterface #130,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+        18: checkcast     #134                // class com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root
+        21: astore_3
+        22: aload_3
+        23: ifnonnull     30
+        26: iconst_0
+        27: goto          34
+        30: aload_3
+        31: getfield      #201                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.spent:I
+        34: ireturn
+
+  private static boolean lambda$removeOwnedBy$1(java.util.UUID, com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry$RootKey);
+    Code:
+         0: aload_1
+         1: getfield      #313                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey.owner:Ljava/util/UUID;
+         4: aload_0
+         5: invokevirtual #317                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+         8: ireturn
+
+  private void lambda$removeOwnedBy$0(com.inigmasgames.hytalerpg.execution.projectile.ProjectileInstance);
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field active:Ljava/util/Map;
+         4: aload_1
+         5: invokevirtual #122                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileInstance.plan:()Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan;
+         8: invokevirtual #234                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan.projectileInstanceId:()Ljava/lang/String;
+        11: invokeinterface #291,  2          // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+        16: pop
+        17: return
+
+  private static boolean lambda$ownedBy$0(java.util.UUID, com.inigmasgames.hytalerpg.execution.projectile.ProjectileInstance);
+    Code:
+         0: aload_1
+         1: invokevirtual #122                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileInstance.plan:()Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan;
+         4: invokevirtual #21                 // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan.ownerId:()Ljava/util/UUID;
+         7: aload_0
+         8: invokevirtual #317                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+        11: ireturn
+
+  private static boolean lambda$cleanup$0(com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry$RootKey, com.inigmasgames.hytalerpg.execution.projectile.ProjectileInstance);
+    Code:
+         0: aload_1
+         1: invokevirtual #122                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileInstance.plan:()Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan;
+         4: invokestatic  #126                // Method key:(Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileExecutionPlan;)Lcom/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey;
+         7: aload_0
+         8: invokevirtual #141                // Method com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey.equals:(Ljava/lang/Object;)Z
+        11: ireturn
+
+  private static int lambda$admission$2(com.inigmasgames.hytalerpg.execution.projectile.ProjectileLifecycleRegistry$Root);
+    Code:
+         0: aload_0
+         1: getfield      #197                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.pending:I
+         4: ireturn
+
+  private static int lambda$admission$1(java.util.Map$Entry);
+    Code:
+         0: aload_0
+         1: invokeinterface #320,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+         6: checkcast     #134                // class com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root
+         9: getfield      #197                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$Root.pending:I
+        12: ireturn
+
+  private static boolean lambda$admission$0(java.util.UUID, java.util.Map$Entry);
+    Code:
+         0: aload_1
+         1: invokeinterface #325,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+         6: checkcast     #19                 // class com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey
+         9: getfield      #313                // Field com/inigmasgames/hytalerpg/execution/projectile/ProjectileLifecycleRegistry$RootKey.owner:Ljava/util/UUID;
+        12: aload_0
+        13: invokevirtual #317                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+        16: ireturn
+}

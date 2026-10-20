@@ -1,0 +1,25 @@
+{
+  "scope": "LOCAL_INSTALLED_BYTECODE_AND_SOURCE_ROUTING_NOT_CONNECTED_PROOF",
+  "hytaleVersion": "0.7.0-pre.1",
+  "build": "e8b4d191fc98a977bf5546a951a7b25473d323e3",
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "assetsSha256": "46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39",
+  "masterSha256": "750483855846FF6DB2564B4D6D626C2A12F1AC6EBBBBF12232B2C3ECCF667010",
+  "correctionDocumentSha256": "79D48F6CA7460C71C5DACA77A550A13C7CADCE945B8A7B0712DA5CFDFD27E83F",
+  "verifiedMethods": [
+    "World.getTick()",
+    "World.isInThread() via TickingThread",
+    "World.getBufferedTickLengthMetricSet().getLastValue()",
+    "World.getPlayerRefs()"
+  ],
+  "ordering": [
+    "World.tick executes owner work then increments the real tick counter",
+    "TickingThread.run records elapsed native tick duration after tick returns",
+    "The first RPG callback on the next adjacent tick pairs the prior counter with the prior whole-world duration"
+  ],
+  "unknownPairing": "NONADJACENT_TICKS_REPORT_MINUS_ONE_AND_FALSE_NOT_ZERO",
+  "nestedSpans": "EXCLUSIVE_PHASE_ACCUMULATION",
+  "nonRpgRemainderIsVanillaControl": false,
+  "connectedProof": false,
+  "nativeTickGate": "NOT_MEASURED"
+}

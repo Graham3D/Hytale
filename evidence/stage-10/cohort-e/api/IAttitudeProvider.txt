@@ -1,0 +1,6 @@
+Compiled from "IAttitudeProvider.java"
+public interface com.hypixel.hytale.server.npc.blackboard.view.attitude.IAttitudeProvider {
+  public static final int OVERRIDE_PRIORITY;
+
+  public abstract com.hypixel.hytale.server.core.asset.type.attitude.Attitude getAttitude(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, int, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+}

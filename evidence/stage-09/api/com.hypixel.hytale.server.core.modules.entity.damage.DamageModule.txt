@@ -1,0 +1,401 @@
+Compiled from "DamageModule.java"
+public class com.hypixel.hytale.server.core.modules.entity.damage.DamageModule extends com.hypixel.hytale.server.core.plugin.JavaPlugin {
+  public static final com.hypixel.hytale.common.plugin.PluginManifest MANIFEST;
+
+  private static com.hypixel.hytale.server.core.modules.entity.damage.DamageModule instance;
+
+  private com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent> deathComponentType;
+
+  private com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.modules.entity.damage.DeferredCorpseRemoval> deferredCorpseRemovalComponentType;
+
+  private com.hypixel.hytale.component.SystemGroup<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> gatherDamageGroup;
+
+  private com.hypixel.hytale.component.SystemGroup<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> filterDamageGroup;
+
+  private com.hypixel.hytale.component.SystemGroup<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> inspectDamageGroup;
+
+  public static com.hypixel.hytale.server.core.modules.entity.damage.DamageModule get();
+    Code:
+         0: getstatic     #1                  // Field instance:Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageModule;
+         3: areturn
+
+  public com.hypixel.hytale.server.core.modules.entity.damage.DamageModule(com.hypixel.hytale.server.core.plugin.JavaPluginInit);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokespecial #7                  // Method com/hypixel/hytale/server/core/plugin/JavaPlugin."<init>":(Lcom/hypixel/hytale/server/core/plugin/JavaPluginInit;)V
+         5: aload_0
+         6: putstatic     #1                  // Field instance:Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageModule;
+         9: return
+
+  protected void setup();
+    Code:
+         0: aload_0
+         1: invokevirtual #13                 // Method getEntityStoreRegistry:()Lcom/hypixel/hytale/component/ComponentRegistryProxy;
+         4: astore_1
+         5: aload_0
+         6: aload_1
+         7: ldc           #17                 // class com/hypixel/hytale/server/core/modules/entity/damage/DeathComponent
+         9: ldc           #19                 // String Death
+        11: getstatic     #21                 // Field com/hypixel/hytale/server/core/modules/entity/damage/DeathComponent.CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+        14: invokevirtual #25                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerComponent:(Ljava/lang/Class;Ljava/lang/String;Lcom/hypixel/hytale/codec/builder/BuilderCodec;)Lcom/hypixel/hytale/component/ComponentType;
+        17: putfield      #31                 // Field deathComponentType:Lcom/hypixel/hytale/component/ComponentType;
+        20: aload_0
+        21: aload_1
+        22: ldc           #35                 // class com/hypixel/hytale/server/core/modules/entity/damage/DeferredCorpseRemoval
+        24: invokedynamic #37,  0             // InvokeDynamic #0:get:()Ljava/util/function/Supplier;
+        29: invokevirtual #41                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerComponent:(Ljava/lang/Class;Ljava/util/function/Supplier;)Lcom/hypixel/hytale/component/ComponentType;
+        32: putfield      #44                 // Field deferredCorpseRemovalComponentType:Lcom/hypixel/hytale/component/ComponentType;
+        35: aload_0
+        36: aload_1
+        37: invokevirtual #47                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystemGroup:()Lcom/hypixel/hytale/component/SystemGroup;
+        40: putfield      #51                 // Field gatherDamageGroup:Lcom/hypixel/hytale/component/SystemGroup;
+        43: aload_0
+        44: aload_1
+        45: invokevirtual #47                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystemGroup:()Lcom/hypixel/hytale/component/SystemGroup;
+        48: putfield      #55                 // Field filterDamageGroup:Lcom/hypixel/hytale/component/SystemGroup;
+        51: aload_0
+        52: aload_1
+        53: invokevirtual #47                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystemGroup:()Lcom/hypixel/hytale/component/SystemGroup;
+        56: putfield      #58                 // Field inspectDamageGroup:Lcom/hypixel/hytale/component/SystemGroup;
+        59: aload_1
+        60: new           #61                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageModule$OrderGatherFilter
+        63: dup
+        64: invokespecial #63                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule$OrderGatherFilter."<init>":()V
+        67: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+        70: aload_1
+        71: new           #70                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ApplyDamage
+        74: dup
+        75: invokespecial #72                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ApplyDamage."<init>":()V
+        78: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+        81: aload_1
+        82: new           #73                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$BreathingSystem
+        85: dup
+        86: invokespecial #75                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$BreathingSystem."<init>":()V
+        89: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+        92: aload_1
+        93: new           #76                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$CanBreathe
+        96: dup
+        97: invokespecial #78                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$CanBreathe."<init>":()V
+       100: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       103: aload_1
+       104: new           #79                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$OutOfWorldDamage
+       107: dup
+       108: invokespecial #81                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$OutOfWorldDamage."<init>":()V
+       111: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       114: aload_1
+       115: new           #82                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$FallDamagePlayers
+       118: dup
+       119: invokespecial #84                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$FallDamagePlayers."<init>":()V
+       122: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       125: aload_1
+       126: new           #85                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$FallDamageNPCs
+       129: dup
+       130: invokespecial #87                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$FallDamageNPCs."<init>":()V
+       133: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       136: aload_1
+       137: new           #88                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$FilterPlayerWorldConfig
+       140: dup
+       141: invokespecial #90                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$FilterPlayerWorldConfig."<init>":()V
+       144: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       147: aload_1
+       148: new           #91                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$FilterNPCWorldConfig
+       151: dup
+       152: invokespecial #93                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$FilterNPCWorldConfig."<init>":()V
+       155: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       158: aload_1
+       159: new           #94                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$FilterUnkillable
+       162: dup
+       163: invokespecial #96                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$FilterUnkillable."<init>":()V
+       166: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       169: aload_1
+       170: new           #97                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$PlayerDamageFilterSystem
+       173: dup
+       174: invokespecial #99                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$PlayerDamageFilterSystem."<init>":()V
+       177: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       180: aload_1
+       181: new           #100                // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$WieldingDamageReduction
+       184: dup
+       185: invokespecial #102                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$WieldingDamageReduction."<init>":()V
+       188: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       191: aload_1
+       192: new           #103                // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$WieldingKnockbackReduction
+       195: dup
+       196: invokespecial #105                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$WieldingKnockbackReduction."<init>":()V
+       199: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       202: aload_1
+       203: new           #106                // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorKnockbackReduction
+       206: dup
+       207: invokespecial #108                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorKnockbackReduction."<init>":()V
+       210: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       213: aload_1
+       214: new           #109                // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction
+       217: dup
+       218: invokespecial #111                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction."<init>":()V
+       221: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       224: aload_1
+       225: new           #112                // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ScaleOutgoingDamageFromEntityEffects
+       228: dup
+       229: invokespecial #114                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ScaleOutgoingDamageFromEntityEffects."<init>":()V
+       232: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       235: aload_1
+       236: new           #115                // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$HackKnockbackValues
+       239: dup
+       240: invokespecial #117                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$HackKnockbackValues."<init>":()V
+       243: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       246: aload_1
+       247: new           #118                // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$RecordLastCombat
+       250: dup
+       251: invokespecial #120                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$RecordLastCombat."<init>":()V
+       254: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       257: aload_1
+       258: new           #121                // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ApplyParticles
+       261: dup
+       262: invokespecial #123                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ApplyParticles."<init>":()V
+       265: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       268: aload_1
+       269: new           #124                // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ApplySoundEffects
+       272: dup
+       273: invokespecial #126                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ApplySoundEffects."<init>":()V
+       276: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       279: aload_1
+       280: new           #127                // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$HitAnimation
+       283: dup
+       284: invokespecial #129                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$HitAnimation."<init>":()V
+       287: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       290: aload_1
+       291: new           #130                // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$TrackLastDamage
+       294: dup
+       295: invokespecial #132                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$TrackLastDamage."<init>":()V
+       298: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       301: aload_1
+       302: new           #133                // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$DamageArmor
+       305: dup
+       306: invokespecial #135                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$DamageArmor."<init>":()V
+       309: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       312: aload_1
+       313: new           #136                // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$DamageStamina
+       316: dup
+       317: invokespecial #138                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$DamageStamina."<init>":()V
+       320: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       323: aload_1
+       324: new           #139                // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$DamageAttackerTool
+       327: dup
+       328: invokespecial #141                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$DamageAttackerTool."<init>":()V
+       331: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       334: aload_1
+       335: new           #142                // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$PlayerHitIndicators
+       338: dup
+       339: invokespecial #144                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$PlayerHitIndicators."<init>":()V
+       342: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       345: aload_1
+       346: new           #145                // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ReticleEvents
+       349: dup
+       350: invokespecial #147                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ReticleEvents."<init>":()V
+       353: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       356: aload_1
+       357: new           #148                // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$EntityUIEvents
+       360: dup
+       361: invokespecial #150                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$EntityUIEvents."<init>":()V
+       364: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       367: aload_1
+       368: new           #151                // class com/hypixel/hytale/server/core/entity/knockback/KnockbackSystems$ApplyKnockback
+       371: dup
+       372: invokespecial #153                // Method com/hypixel/hytale/server/core/entity/knockback/KnockbackSystems$ApplyKnockback."<init>":()V
+       375: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       378: aload_1
+       379: new           #154                // class com/hypixel/hytale/server/core/entity/knockback/KnockbackSystems$ApplyPlayerKnockback
+       382: dup
+       383: invokespecial #156                // Method com/hypixel/hytale/server/core/entity/knockback/KnockbackSystems$ApplyPlayerKnockback."<init>":()V
+       386: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       389: aload_1
+       390: new           #157                // class com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$ClearHealth
+       393: dup
+       394: invokespecial #159                // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$ClearHealth."<init>":()V
+       397: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       400: aload_1
+       401: new           #160                // class com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$ClearInteractions
+       404: dup
+       405: invokespecial #162                // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$ClearInteractions."<init>":()V
+       408: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       411: aload_1
+       412: new           #163                // class com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$ClearEntityEffects
+       415: dup
+       416: invokespecial #165                // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$ClearEntityEffects."<init>":()V
+       419: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       422: aload_1
+       423: new           #166                // class com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$PlayerKilledPlayer
+       426: dup
+       427: invokespecial #168                // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$PlayerKilledPlayer."<init>":()V
+       430: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       433: aload_1
+       434: new           #169                // class com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$DropPlayerDeathItems
+       437: dup
+       438: invokespecial #171                // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$DropPlayerDeathItems."<init>":()V
+       441: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       444: aload_1
+       445: new           #172                // class com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$PlayerDropItemsConfig
+       448: dup
+       449: invokespecial #174                // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$PlayerDropItemsConfig."<init>":()V
+       452: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       455: aload_1
+       456: new           #175                // class com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$RunDeathInteractions
+       459: dup
+       460: invokespecial #177                // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$RunDeathInteractions."<init>":()V
+       463: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       466: aload_1
+       467: new           #178                // class com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$KillFeed
+       470: dup
+       471: invokespecial #180                // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$KillFeed."<init>":()V
+       474: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       477: aload_1
+       478: new           #181                // class com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$PlayerDeathScreen
+       481: dup
+       482: invokespecial #183                // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$PlayerDeathScreen."<init>":()V
+       485: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       488: aload_1
+       489: new           #184                // class com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$PlayerDeathMarker
+       492: dup
+       493: invokespecial #186                // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$PlayerDeathMarker."<init>":()V
+       496: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       499: aload_1
+       500: new           #187                // class com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$StopVoiceOnDeath
+       503: dup
+       504: invokespecial #189                // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$StopVoiceOnDeath."<init>":()V
+       507: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       510: aload_1
+       511: new           #190                // class com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$TickCorpseRemoval
+       514: dup
+       515: invokespecial #192                // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$TickCorpseRemoval."<init>":()V
+       518: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       521: aload_1
+       522: new           #193                // class com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$CorpseRemoval
+       525: dup
+       526: invokespecial #195                // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$CorpseRemoval."<init>":()V
+       529: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       532: aload_1
+       533: new           #196                // class com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$DeathAnimation
+       536: dup
+       537: invokespecial #198                // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$DeathAnimation."<init>":()V
+       540: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       543: aload_1
+       544: new           #199                // class com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$SpawnedDeathAnimation
+       547: dup
+       548: invokespecial #201                // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathSystems$SpawnedDeathAnimation."<init>":()V
+       551: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       554: aload_1
+       555: new           #202                // class com/hypixel/hytale/server/core/modules/entity/damage/RespawnSystems$ResetStatsRespawnSystem
+       558: dup
+       559: invokespecial #204                // Method com/hypixel/hytale/server/core/modules/entity/damage/RespawnSystems$ResetStatsRespawnSystem."<init>":()V
+       562: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       565: aload_1
+       566: new           #205                // class com/hypixel/hytale/server/core/modules/entity/damage/RespawnSystems$ResetPlayerRespawnSystem
+       569: dup
+       570: invokespecial #207                // Method com/hypixel/hytale/server/core/modules/entity/damage/RespawnSystems$ResetPlayerRespawnSystem."<init>":()V
+       573: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       576: aload_1
+       577: new           #208                // class com/hypixel/hytale/server/core/modules/entity/damage/RespawnSystems$ClearEntityEffectsRespawnSystem
+       580: dup
+       581: invokespecial #210                // Method com/hypixel/hytale/server/core/modules/entity/damage/RespawnSystems$ClearEntityEffectsRespawnSystem."<init>":()V
+       584: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       587: aload_1
+       588: new           #211                // class com/hypixel/hytale/server/core/modules/entity/damage/RespawnSystems$ClearInteractionsRespawnSystem
+       591: dup
+       592: invokespecial #213                // Method com/hypixel/hytale/server/core/modules/entity/damage/RespawnSystems$ClearInteractionsRespawnSystem."<init>":()V
+       595: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       598: aload_1
+       599: new           #214                // class com/hypixel/hytale/server/core/modules/entity/damage/RespawnSystems$CheckBrokenItemsRespawnSystem
+       602: dup
+       603: invokespecial #216                // Method com/hypixel/hytale/server/core/modules/entity/damage/RespawnSystems$CheckBrokenItemsRespawnSystem."<init>":()V
+       606: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       609: aload_1
+       610: new           #217                // class com/hypixel/hytale/server/core/modules/entity/damage/RespawnSystems$ClearRespawnUI
+       613: dup
+       614: invokespecial #219                // Method com/hypixel/hytale/server/core/modules/entity/damage/RespawnSystems$ClearRespawnUI."<init>":()V
+       617: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       620: aload_1
+       621: new           #220                // class com/hypixel/hytale/server/core/modules/entity/damage/RespawnSystems$ReenableVoiceOnRespawn
+       624: dup
+       625: invokespecial #222                // Method com/hypixel/hytale/server/core/modules/entity/damage/RespawnSystems$ReenableVoiceOnRespawn."<init>":()V
+       628: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       631: aload_1
+       632: new           #223                // class com/hypixel/hytale/server/core/modules/entity/damage/DamageCalculatorSystems$SequenceModifier
+       635: dup
+       636: invokespecial #225                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageCalculatorSystems$SequenceModifier."<init>":()V
+       639: invokevirtual #66                 // Method com/hypixel/hytale/component/ComponentRegistryProxy.registerSystem:(Lcom/hypixel/hytale/component/system/ISystem;)V
+       642: aload_0
+       643: invokevirtual #226                // Method getCommandRegistry:()Lcom/hypixel/hytale/server/core/command/system/CommandRegistry;
+       646: new           #230                // class com/hypixel/hytale/server/core/modules/entity/damage/commands/DesyncDamageCommand
+       649: dup
+       650: invokespecial #232                // Method com/hypixel/hytale/server/core/modules/entity/damage/commands/DesyncDamageCommand."<init>":()V
+       653: invokevirtual #233                // Method com/hypixel/hytale/server/core/command/system/CommandRegistry.registerCommand:(Lcom/hypixel/hytale/server/core/command/system/AbstractCommand;)Lcom/hypixel/hytale/server/core/command/system/CommandRegistration;
+       656: pop
+       657: return
+
+  public com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.modules.entity.damage.DeathComponent> getDeathComponentType();
+    Code:
+         0: aload_0
+         1: getfield      #31                 // Field deathComponentType:Lcom/hypixel/hytale/component/ComponentType;
+         4: areturn
+
+  public com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.modules.entity.damage.DeferredCorpseRemoval> getDeferredCorpseRemovalComponentType();
+    Code:
+         0: aload_0
+         1: getfield      #44                 // Field deferredCorpseRemovalComponentType:Lcom/hypixel/hytale/component/ComponentType;
+         4: areturn
+
+  public com.hypixel.hytale.component.SystemGroup<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getGatherDamageGroup();
+    Code:
+         0: aload_0
+         1: getfield      #51                 // Field gatherDamageGroup:Lcom/hypixel/hytale/component/SystemGroup;
+         4: areturn
+
+  public com.hypixel.hytale.component.SystemGroup<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getFilterDamageGroup();
+    Code:
+         0: aload_0
+         1: getfield      #55                 // Field filterDamageGroup:Lcom/hypixel/hytale/component/SystemGroup;
+         4: areturn
+
+  public com.hypixel.hytale.component.SystemGroup<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getInspectDamageGroup();
+    Code:
+         0: aload_0
+         1: getfield      #58                 // Field inspectDamageGroup:Lcom/hypixel/hytale/component/SystemGroup;
+         4: areturn
+
+  private static com.hypixel.hytale.server.core.modules.entity.damage.DeferredCorpseRemoval lambda$setup$0();
+    Code:
+         0: new           #239                // class java/lang/UnsupportedOperationException
+         3: dup
+         4: ldc           #241                // String not supported
+         6: invokespecial #243                // Method java/lang/UnsupportedOperationException."<init>":(Ljava/lang/String;)V
+         9: athrow
+
+  static {};
+    Code:
+         0: ldc           #2                  // class com/hypixel/hytale/server/core/modules/entity/damage/DamageModule
+         2: invokestatic  #246                // Method com/hypixel/hytale/common/plugin/PluginManifest.corePlugin:(Ljava/lang/Class;)Lcom/hypixel/hytale/common/plugin/PluginManifest$CoreBuilder;
+         5: iconst_1
+         6: anewarray     #252                // class java/lang/Class
+         9: dup
+        10: iconst_0
+        11: ldc           #254                // class com/hypixel/hytale/server/core/modules/entity/EntityModule
+        13: aastore
+        14: invokevirtual #256                // Method com/hypixel/hytale/common/plugin/PluginManifest$CoreBuilder.depends:([Ljava/lang/Class;)Lcom/hypixel/hytale/common/plugin/PluginManifest$CoreBuilder;
+        17: iconst_1
+        18: anewarray     #252                // class java/lang/Class
+        21: dup
+        22: iconst_0
+        23: ldc_w         #262                // class com/hypixel/hytale/server/core/modules/entitystats/EntityStatsModule
+        26: aastore
+        27: invokevirtual #256                // Method com/hypixel/hytale/common/plugin/PluginManifest$CoreBuilder.depends:([Ljava/lang/Class;)Lcom/hypixel/hytale/common/plugin/PluginManifest$CoreBuilder;
+        30: iconst_1
+        31: anewarray     #252                // class java/lang/Class
+        34: dup
+        35: iconst_0
+        36: ldc_w         #264                // class com/hypixel/hytale/server/core/modules/entityui/EntityUIModule
+        39: aastore
+        40: invokevirtual #256                // Method com/hypixel/hytale/common/plugin/PluginManifest$CoreBuilder.depends:([Ljava/lang/Class;)Lcom/hypixel/hytale/common/plugin/PluginManifest$CoreBuilder;
+        43: invokevirtual #266                // Method com/hypixel/hytale/common/plugin/PluginManifest$CoreBuilder.build:()Lcom/hypixel/hytale/common/plugin/PluginManifest;
+        46: putstatic     #270                // Field MANIFEST:Lcom/hypixel/hytale/common/plugin/PluginManifest;
+        49: return
+}

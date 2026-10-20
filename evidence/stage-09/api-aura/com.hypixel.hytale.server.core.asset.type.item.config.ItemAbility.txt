@@ -1,0 +1,867 @@
+Compiled from "ItemAbility.java"
+public class com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility implements com.hypixel.hytale.server.core.io.NetworkSerializable<com.hypixel.hytale.protocol.ItemAbility> {
+  public static final com.hypixel.hytale.codec.builder.BuilderCodec<com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility> CODEC;
+
+  private static final java.lang.String ABILITY_TAG_PREFIX;
+
+  protected com.hypixel.hytale.protocol.AbilitySlot slot;
+
+  protected float cooldownS;
+
+  protected float cost;
+
+  protected com.hypixel.hytale.protocol.AbilityCostType costType;
+
+  protected java.lang.String[] weapons;
+
+  protected transient int[] weaponTagIndexes;
+
+  protected java.lang.String[] tags;
+
+  protected transient int[] expandedTagIndexes;
+
+  protected java.lang.String[] appliesTo;
+
+  protected transient int[] appliesToIndexes;
+
+  protected java.util.Map<java.lang.String, java.lang.Float> attributes;
+
+  protected java.util.Map<java.lang.String, com.hypixel.hytale.server.core.modules.entitystats.modifier.StaticModifier[]> attributeModifiers;
+
+  protected java.lang.String[] onHitEffects;
+
+  protected java.lang.String convertElement;
+
+  protected java.lang.String castRootId;
+
+  public com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: getstatic     #7                  // Field com/hypixel/hytale/protocol/AbilityCostType.Mana:Lcom/hypixel/hytale/protocol/AbilityCostType;
+         8: putfield      #13                 // Field costType:Lcom/hypixel/hytale/protocol/AbilityCostType;
+        11: return
+
+  private void resolveTags();
+    Code:
+         0: aload_0
+         1: invokevirtual #18                 // Method resolveWeaponTags:()V
+         4: aload_0
+         5: aload_0
+         6: getfield      #21                 // Field tags:[Ljava/lang/String;
+         9: invokestatic  #25                 // Method expandAbilityTags:([Ljava/lang/String;)[I
+        12: putfield      #29                 // Field expandedTagIndexes:[I
+        15: aload_0
+        16: aload_0
+        17: getfield      #33                 // Field appliesTo:[Ljava/lang/String;
+        20: invokestatic  #36                 // Method resolveAbilityTags:([Ljava/lang/String;)[I
+        23: putfield      #39                 // Field appliesToIndexes:[I
+        26: return
+
+  private void resolveWeaponTags();
+    Code:
+         0: aload_0
+         1: getfield      #42                 // Field weapons:[Ljava/lang/String;
+         4: ifnull        15
+         7: aload_0
+         8: getfield      #42                 // Field weapons:[Ljava/lang/String;
+        11: arraylength
+        12: ifne          21
+        15: aload_0
+        16: aconst_null
+        17: putfield      #45                 // Field weaponTagIndexes:[I
+        20: return
+        21: aload_0
+        22: aload_0
+        23: getfield      #42                 // Field weapons:[Ljava/lang/String;
+        26: arraylength
+        27: newarray       int
+        29: putfield      #45                 // Field weaponTagIndexes:[I
+        32: iconst_0
+        33: istore_1
+        34: iload_1
+        35: aload_0
+        36: getfield      #42                 // Field weapons:[Ljava/lang/String;
+        39: arraylength
+        40: if_icmpge     72
+        43: aload_0
+        44: getfield      #45                 // Field weaponTagIndexes:[I
+        47: iload_1
+        48: aload_0
+        49: getfield      #42                 // Field weapons:[Ljava/lang/String;
+        52: iload_1
+        53: aaload
+        54: invokevirtual #48                 // Method java/lang/String.trim:()Ljava/lang/String;
+        57: invokedynamic #54,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+        62: invokestatic  #58                 // Method com/hypixel/hytale/assetstore/AssetRegistry.getOrCreateTagIndex:(Ljava/lang/String;)I
+        65: iastore
+        66: iinc          1, 1
+        69: goto          34
+        72: return
+
+  private static int[] expandAbilityTags(java.lang.String[]);
+    Code:
+         0: aload_0
+         1: ifnull        9
+         4: aload_0
+         5: arraylength
+         6: ifne          11
+         9: aconst_null
+        10: areturn
+        11: new           #64                 // class it/unimi/dsi/fastutil/ints/IntOpenHashSet
+        14: dup
+        15: invokespecial #66                 // Method it/unimi/dsi/fastutil/ints/IntOpenHashSet."<init>":()V
+        18: astore_1
+        19: aload_0
+        20: astore_2
+        21: aload_2
+        22: arraylength
+        23: istore_3
+        24: iconst_0
+        25: istore        4
+        27: iload         4
+        29: iload_3
+        30: if_icmpge     118
+        33: aload_2
+        34: iload         4
+        36: aaload
+        37: astore        5
+        39: aload         5
+        41: invokevirtual #48                 // Method java/lang/String.trim:()Ljava/lang/String;
+        44: astore        6
+        46: aload_1
+        47: aload         6
+        49: invokedynamic #67,  0             // InvokeDynamic #1:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+        54: invokestatic  #58                 // Method com/hypixel/hytale/assetstore/AssetRegistry.getOrCreateTagIndex:(Ljava/lang/String;)I
+        57: invokevirtual #68                 // Method it/unimi/dsi/fastutil/ints/IntOpenHashSet.add:(I)Z
+        60: pop
+        61: aload         6
+        63: bipush        46
+        65: invokevirtual #72                 // Method java/lang/String.indexOf:(I)I
+        68: istore        7
+        70: iload         7
+        72: iflt          112
+        75: aload_1
+        76: aload         6
+        78: iconst_0
+        79: iload         7
+        81: invokevirtual #76                 // Method java/lang/String.substring:(II)Ljava/lang/String;
+        84: invokedynamic #67,  0             // InvokeDynamic #1:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+        89: invokestatic  #58                 // Method com/hypixel/hytale/assetstore/AssetRegistry.getOrCreateTagIndex:(Ljava/lang/String;)I
+        92: invokevirtual #68                 // Method it/unimi/dsi/fastutil/ints/IntOpenHashSet.add:(I)Z
+        95: pop
+        96: aload         6
+        98: bipush        46
+       100: iload         7
+       102: iconst_1
+       103: iadd
+       104: invokevirtual #80                 // Method java/lang/String.indexOf:(II)I
+       107: istore        7
+       109: goto          70
+       112: iinc          4, 1
+       115: goto          27
+       118: aload_1
+       119: invokevirtual #83                 // Method it/unimi/dsi/fastutil/ints/IntOpenHashSet.toIntArray:()[I
+       122: areturn
+
+  private static int[] resolveAbilityTags(java.lang.String[]);
+    Code:
+         0: aload_0
+         1: ifnull        9
+         4: aload_0
+         5: arraylength
+         6: ifne          11
+         9: aconst_null
+        10: areturn
+        11: aload_0
+        12: arraylength
+        13: newarray       int
+        15: astore_1
+        16: iconst_0
+        17: istore_2
+        18: iload_2
+        19: aload_0
+        20: arraylength
+        21: if_icmpge     47
+        24: aload_1
+        25: iload_2
+        26: aload_0
+        27: iload_2
+        28: aaload
+        29: invokevirtual #48                 // Method java/lang/String.trim:()Ljava/lang/String;
+        32: invokedynamic #67,  0             // InvokeDynamic #1:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+        37: invokestatic  #58                 // Method com/hypixel/hytale/assetstore/AssetRegistry.getOrCreateTagIndex:(Ljava/lang/String;)I
+        40: iastore
+        41: iinc          2, 1
+        44: goto          18
+        47: aload_1
+        48: areturn
+
+  public boolean appliesToAbility(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility);
+    Code:
+         0: aload_0
+         1: getfield      #39                 // Field appliesToIndexes:[I
+         4: ifnull        15
+         7: aload_0
+         8: getfield      #39                 // Field appliesToIndexes:[I
+        11: arraylength
+        12: ifne          17
+        15: iconst_1
+        16: ireturn
+        17: aload_1
+        18: getfield      #29                 // Field expandedTagIndexes:[I
+        21: ifnonnull     26
+        24: iconst_0
+        25: ireturn
+        26: aload_0
+        27: getfield      #39                 // Field appliesToIndexes:[I
+        30: astore_2
+        31: aload_2
+        32: arraylength
+        33: istore_3
+        34: iconst_0
+        35: istore        4
+        37: iload         4
+        39: iload_3
+        40: if_icmpge     98
+        43: aload_2
+        44: iload         4
+        46: iaload
+        47: istore        5
+        49: aload_1
+        50: getfield      #29                 // Field expandedTagIndexes:[I
+        53: astore        6
+        55: aload         6
+        57: arraylength
+        58: istore        7
+        60: iconst_0
+        61: istore        8
+        63: iload         8
+        65: iload         7
+        67: if_icmpge     92
+        70: aload         6
+        72: iload         8
+        74: iaload
+        75: istore        9
+        77: iload         9
+        79: iload         5
+        81: if_icmpne     86
+        84: iconst_1
+        85: ireturn
+        86: iinc          8, 1
+        89: goto          63
+        92: iinc          4, 1
+        95: goto          37
+        98: iconst_0
+        99: ireturn
+
+  public boolean canUseWith(com.hypixel.hytale.server.core.inventory.ItemStack);
+    Code:
+         0: aload_1
+         1: ifnonnull     6
+         4: iconst_0
+         5: ireturn
+         6: aload_1
+         7: invokevirtual #87                 // Method com/hypixel/hytale/server/core/inventory/ItemStack.getItem:()Lcom/hypixel/hytale/server/core/asset/type/item/config/Item;
+        10: astore_2
+        11: aload_2
+        12: invokevirtual #93                 // Method com/hypixel/hytale/server/core/asset/type/item/config/Item.getWeapon:()Lcom/hypixel/hytale/server/core/asset/type/item/config/ItemWeapon;
+        15: ifnonnull     20
+        18: iconst_0
+        19: ireturn
+        20: aload_0
+        21: getfield      #45                 // Field weaponTagIndexes:[I
+        24: ifnull        35
+        27: aload_0
+        28: getfield      #45                 // Field weaponTagIndexes:[I
+        31: arraylength
+        32: ifne          37
+        35: iconst_1
+        36: ireturn
+        37: aload_2
+        38: invokevirtual #99                 // Method com/hypixel/hytale/server/core/asset/type/item/config/Item.getData:()Lcom/hypixel/hytale/assetstore/AssetExtraInfo$Data;
+        41: astore_3
+        42: aload_3
+        43: ifnonnull     48
+        46: iconst_0
+        47: ireturn
+        48: aload_3
+        49: invokevirtual #103                // Method com/hypixel/hytale/assetstore/AssetExtraInfo$Data.getExpandedTagIndexes:()Lit/unimi/dsi/fastutil/ints/IntSet;
+        52: astore        4
+        54: aload_0
+        55: getfield      #45                 // Field weaponTagIndexes:[I
+        58: astore        5
+        60: aload         5
+        62: arraylength
+        63: istore        6
+        65: iconst_0
+        66: istore        7
+        68: iload         7
+        70: iload         6
+        72: if_icmpge     102
+        75: aload         5
+        77: iload         7
+        79: iaload
+        80: istore        8
+        82: aload         4
+        84: iload         8
+        86: invokeinterface #109,  2          // InterfaceMethod it/unimi/dsi/fastutil/ints/IntSet.contains:(I)Z
+        91: ifeq          96
+        94: iconst_1
+        95: ireturn
+        96: iinc          7, 1
+        99: goto          68
+       102: iconst_0
+       103: ireturn
+
+  public com.hypixel.hytale.protocol.AbilitySlot getSlot();
+    Code:
+         0: aload_0
+         1: getfield      #114                // Field slot:Lcom/hypixel/hytale/protocol/AbilitySlot;
+         4: areturn
+
+  public float getCooldownS();
+    Code:
+         0: aload_0
+         1: getfield      #118                // Field cooldownS:F
+         4: freturn
+
+  public float getCost();
+    Code:
+         0: aload_0
+         1: getfield      #122                // Field cost:F
+         4: freturn
+
+  public com.hypixel.hytale.protocol.AbilityCostType getCostType();
+    Code:
+         0: aload_0
+         1: getfield      #13                 // Field costType:Lcom/hypixel/hytale/protocol/AbilityCostType;
+         4: areturn
+
+  public java.lang.String[] getTags();
+    Code:
+         0: aload_0
+         1: getfield      #21                 // Field tags:[Ljava/lang/String;
+         4: areturn
+
+  public int[] getExpandedTagIndexes();
+    Code:
+         0: aload_0
+         1: getfield      #29                 // Field expandedTagIndexes:[I
+         4: areturn
+
+  public java.util.Map<java.lang.String, java.lang.Float> getAttributes();
+    Code:
+         0: aload_0
+         1: getfield      #125                // Field attributes:Ljava/util/Map;
+         4: areturn
+
+  public java.util.Map<java.lang.String, com.hypixel.hytale.server.core.modules.entitystats.modifier.StaticModifier[]> getAttributeModifiers();
+    Code:
+         0: aload_0
+         1: getfield      #129                // Field attributeModifiers:Ljava/util/Map;
+         4: areturn
+
+  public java.lang.String[] getOnHitEffects();
+    Code:
+         0: aload_0
+         1: getfield      #132                // Field onHitEffects:[Ljava/lang/String;
+         4: areturn
+
+  public java.lang.String getConvertElement();
+    Code:
+         0: aload_0
+         1: getfield      #135                // Field convertElement:Ljava/lang/String;
+         4: areturn
+
+  public java.lang.String getCastRootId();
+    Code:
+         0: aload_0
+         1: getfield      #139                // Field castRootId:Ljava/lang/String;
+         4: areturn
+
+  private static java.util.Map<java.lang.String, com.hypixel.hytale.protocol.Modifier[]> toModifierPackets(java.util.Map<java.lang.String, com.hypixel.hytale.server.core.modules.entitystats.modifier.StaticModifier[]>);
+    Code:
+         0: aload_0
+         1: ifnull        13
+         4: aload_0
+         5: invokeinterface #142,  1          // InterfaceMethod java/util/Map.isEmpty:()Z
+        10: ifeq          15
+        13: aconst_null
+        14: areturn
+        15: new           #148                // class java/util/HashMap
+        18: dup
+        19: invokespecial #150                // Method java/util/HashMap."<init>":()V
+        22: astore_1
+        23: aload_0
+        24: invokeinterface #151,  1          // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+        29: invokeinterface #155,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+        34: astore_2
+        35: aload_2
+        36: invokeinterface #161,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+        41: ifeq          125
+        44: aload_2
+        45: invokeinterface #166,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+        50: checkcast     #170                // class java/util/Map$Entry
+        53: astore_3
+        54: aload_3
+        55: invokeinterface #172,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+        60: checkcast     #175                // class "[Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier;"
+        63: arraylength
+        64: anewarray     #177                // class com/hypixel/hytale/protocol/Modifier
+        67: astore        4
+        69: iconst_0
+        70: istore        5
+        72: iload         5
+        74: aload         4
+        76: arraylength
+        77: if_icmpge     106
+        80: aload         4
+        82: iload         5
+        84: aload_3
+        85: invokeinterface #172,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+        90: checkcast     #175                // class "[Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier;"
+        93: iload         5
+        95: aaload
+        96: invokevirtual #179                // Method com/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier.toPacket:()Lcom/hypixel/hytale/protocol/Modifier;
+        99: aastore
+       100: iinc          5, 1
+       103: goto          72
+       106: aload_1
+       107: aload_3
+       108: invokeinterface #185,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+       113: checkcast     #49                 // class java/lang/String
+       116: aload         4
+       118: invokevirtual #188                // Method java/util/HashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       121: pop
+       122: goto          35
+       125: aload_1
+       126: areturn
+
+  public com.hypixel.hytale.protocol.ItemAbility toPacket();
+    Code:
+         0: new           #192                // class com/hypixel/hytale/protocol/ItemAbility
+         3: dup
+         4: aload_0
+         5: getfield      #114                // Field slot:Lcom/hypixel/hytale/protocol/AbilitySlot;
+         8: aload_0
+         9: getfield      #118                // Field cooldownS:F
+        12: aload_0
+        13: getfield      #122                // Field cost:F
+        16: aload_0
+        17: getfield      #13                 // Field costType:Lcom/hypixel/hytale/protocol/AbilityCostType;
+        20: aload_0
+        21: getfield      #42                 // Field weapons:[Ljava/lang/String;
+        24: aload_0
+        25: getfield      #45                 // Field weaponTagIndexes:[I
+        28: aload_0
+        29: getfield      #21                 // Field tags:[Ljava/lang/String;
+        32: aload_0
+        33: getfield      #29                 // Field expandedTagIndexes:[I
+        36: aload_0
+        37: getfield      #33                 // Field appliesTo:[Ljava/lang/String;
+        40: aload_0
+        41: getfield      #39                 // Field appliesToIndexes:[I
+        44: aload_0
+        45: getfield      #132                // Field onHitEffects:[Ljava/lang/String;
+        48: aload_0
+        49: getfield      #125                // Field attributes:Ljava/util/Map;
+        52: aload_0
+        53: getfield      #129                // Field attributeModifiers:Ljava/util/Map;
+        56: invokestatic  #194                // Method toModifierPackets:(Ljava/util/Map;)Ljava/util/Map;
+        59: aload_0
+        60: getfield      #139                // Field castRootId:Ljava/lang/String;
+        63: invokestatic  #198                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction.getRootInteractionIdOrUnknown:(Ljava/lang/String;)I
+        66: invokespecial #203                // Method com/hypixel/hytale/protocol/ItemAbility."<init>":(Lcom/hypixel/hytale/protocol/AbilitySlot;FFLcom/hypixel/hytale/protocol/AbilityCostType;[Ljava/lang/String;[I[Ljava/lang/String;[I[Ljava/lang/String;[I[Ljava/lang/String;Ljava/util/Map;Ljava/util/Map;I)V
+        69: areturn
+
+  public java.lang.String toString();
+    Code:
+         0: aload_0
+         1: getfield      #114                // Field slot:Lcom/hypixel/hytale/protocol/AbilitySlot;
+         4: invokestatic  #206                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+         7: aload_0
+         8: getfield      #118                // Field cooldownS:F
+        11: aload_0
+        12: getfield      #122                // Field cost:F
+        15: aload_0
+        16: getfield      #13                 // Field costType:Lcom/hypixel/hytale/protocol/AbilityCostType;
+        19: invokestatic  #206                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+        22: aload_0
+        23: getfield      #42                 // Field weapons:[Ljava/lang/String;
+        26: invokestatic  #210                // Method java/util/Arrays.toString:([Ljava/lang/Object;)Ljava/lang/String;
+        29: invokedynamic #216,  0            // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;FFLjava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+        34: areturn
+
+  public java.lang.Object toPacket();
+    Code:
+         0: aload_0
+         1: invokevirtual #219                // Method toPacket:()Lcom/hypixel/hytale/protocol/ItemAbility;
+         4: areturn
+
+  private static com.hypixel.hytale.codec.validation.LateValidator lambda$static$26();
+    Code:
+         0: getstatic     #222                // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction.VALIDATOR_CACHE:Lcom/hypixel/hytale/codec/validation/ValidatorCache;
+         3: invokevirtual #226                // Method com/hypixel/hytale/codec/validation/ValidatorCache.getValidator:()Lcom/hypixel/hytale/codec/validation/Validator;
+         6: invokeinterface #232,  1          // InterfaceMethod com/hypixel/hytale/codec/validation/Validator.late:()Lcom/hypixel/hytale/codec/validation/LateValidator;
+        11: areturn
+
+  private static java.lang.String lambda$static$25(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility);
+    Code:
+         0: aload_0
+         1: getfield      #139                // Field castRootId:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$24(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #139                // Field castRootId:Ljava/lang/String;
+         5: return
+
+  private static com.hypixel.hytale.codec.validation.LateValidator lambda$static$23();
+    Code:
+         0: getstatic     #238                // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageCause.VALIDATOR_CACHE:Lcom/hypixel/hytale/codec/validation/ValidatorCache;
+         3: invokevirtual #226                // Method com/hypixel/hytale/codec/validation/ValidatorCache.getValidator:()Lcom/hypixel/hytale/codec/validation/Validator;
+         6: invokeinterface #232,  1          // InterfaceMethod com/hypixel/hytale/codec/validation/Validator.late:()Lcom/hypixel/hytale/codec/validation/LateValidator;
+        11: areturn
+
+  private static java.lang.String lambda$static$22(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility);
+    Code:
+         0: aload_0
+         1: getfield      #135                // Field convertElement:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$21(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #135                // Field convertElement:Ljava/lang/String;
+         5: return
+
+  private static com.hypixel.hytale.codec.validation.LateValidator lambda$static$20();
+    Code:
+         0: getstatic     #241                // Field com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect.VALIDATOR_CACHE:Lcom/hypixel/hytale/codec/validation/ValidatorCache;
+         3: invokevirtual #244                // Method com/hypixel/hytale/codec/validation/ValidatorCache.getArrayValidator:()Lcom/hypixel/hytale/codec/validation/validator/ArrayValidator;
+         6: invokevirtual #248                // Method com/hypixel/hytale/codec/validation/validator/ArrayValidator.late:()Lcom/hypixel/hytale/codec/validation/LateValidator;
+         9: areturn
+
+  private static java.lang.String[] lambda$static$19(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility);
+    Code:
+         0: aload_0
+         1: getfield      #132                // Field onHitEffects:[Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$18(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility, java.lang.String[]);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #132                // Field onHitEffects:[Ljava/lang/String;
+         5: return
+
+  private static java.util.Map lambda$static$17(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility);
+    Code:
+         0: aload_0
+         1: getfield      #129                // Field attributeModifiers:Ljava/util/Map;
+         4: areturn
+
+  private static void lambda$static$16(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility, java.util.Map);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #129                // Field attributeModifiers:Ljava/util/Map;
+         5: return
+
+  private static com.hypixel.hytale.server.core.modules.entitystats.modifier.StaticModifier[] lambda$CODEC$0(int);
+    Code:
+         0: iload_0
+         1: anewarray     #180                // class com/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier
+         4: areturn
+
+  private static java.util.Map lambda$static$15(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility);
+    Code:
+         0: aload_0
+         1: getfield      #125                // Field attributes:Ljava/util/Map;
+         4: areturn
+
+  private static void lambda$static$14(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility, java.util.Map);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #125                // Field attributes:Ljava/util/Map;
+         5: return
+
+  private static java.lang.String[] lambda$static$13(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility);
+    Code:
+         0: aload_0
+         1: getfield      #33                 // Field appliesTo:[Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$12(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility, java.lang.String[]);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #33                 // Field appliesTo:[Ljava/lang/String;
+         5: return
+
+  private static java.lang.String[] lambda$static$11(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility);
+    Code:
+         0: aload_0
+         1: getfield      #21                 // Field tags:[Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$10(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility, java.lang.String[]);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #21                 // Field tags:[Ljava/lang/String;
+         5: return
+
+  private static java.lang.String[] lambda$static$9(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility);
+    Code:
+         0: aload_0
+         1: getfield      #42                 // Field weapons:[Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$8(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility, java.lang.String[]);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #42                 // Field weapons:[Ljava/lang/String;
+         5: return
+
+  private static com.hypixel.hytale.protocol.AbilityCostType lambda$static$7(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility);
+    Code:
+         0: aload_0
+         1: getfield      #13                 // Field costType:Lcom/hypixel/hytale/protocol/AbilityCostType;
+         4: areturn
+
+  private static void lambda$static$6(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility, com.hypixel.hytale.protocol.AbilityCostType);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #13                 // Field costType:Lcom/hypixel/hytale/protocol/AbilityCostType;
+         5: return
+
+  private static java.lang.Float lambda$static$5(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility);
+    Code:
+         0: aload_0
+         1: getfield      #122                // Field cost:F
+         4: invokestatic  #251                // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+         7: areturn
+
+  private static void lambda$static$4(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility, java.lang.Float);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #256                // Method java/lang/Float.floatValue:()F
+         5: putfield      #122                // Field cost:F
+         8: return
+
+  private static java.lang.Float lambda$static$3(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility);
+    Code:
+         0: aload_0
+         1: getfield      #118                // Field cooldownS:F
+         4: invokestatic  #251                // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+         7: areturn
+
+  private static void lambda$static$2(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility, java.lang.Float);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #256                // Method java/lang/Float.floatValue:()F
+         5: putfield      #118                // Field cooldownS:F
+         8: return
+
+  private static com.hypixel.hytale.protocol.AbilitySlot lambda$static$1(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility);
+    Code:
+         0: aload_0
+         1: getfield      #114                // Field slot:Lcom/hypixel/hytale/protocol/AbilitySlot;
+         4: areturn
+
+  private static void lambda$static$0(com.hypixel.hytale.server.core.asset.type.item.config.ItemAbility, com.hypixel.hytale.protocol.AbilitySlot);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #114                // Field slot:Lcom/hypixel/hytale/protocol/AbilitySlot;
+         5: return
+
+  static {};
+    Code:
+         0: ldc           #14                 // class com/hypixel/hytale/server/core/asset/type/item/config/ItemAbility
+         2: invokedynamic #260,  0            // InvokeDynamic #3:get:()Ljava/util/function/Supplier;
+         7: invokestatic  #264                // Method com/hypixel/hytale/codec/builder/BuilderCodec.builder:(Ljava/lang/Class;Ljava/util/function/Supplier;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$Builder;
+        10: new           #270                // class com/hypixel/hytale/codec/KeyedCodec
+        13: dup
+        14: ldc_w         #272                // String Slot
+        17: new           #274                // class com/hypixel/hytale/codec/codecs/EnumCodec
+        20: dup
+        21: ldc_w         #276                // class com/hypixel/hytale/protocol/AbilitySlot
+        24: invokespecial #278                // Method com/hypixel/hytale/codec/codecs/EnumCodec."<init>":(Ljava/lang/Class;)V
+        27: invokespecial #281                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        30: invokedynamic #284,  0            // InvokeDynamic #4:accept:()Ljava/util/function/BiConsumer;
+        35: invokedynamic #288,  0            // InvokeDynamic #5:apply:()Ljava/util/function/Function;
+        40: invokevirtual #292                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        43: invokestatic  #298                // Method com/hypixel/hytale/codec/validation/Validators.nonNull:()Lcom/hypixel/hytale/codec/validation/Validator;
+        46: invokevirtual #303                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidator:(Lcom/hypixel/hytale/codec/validation/Validator;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        49: invokevirtual #309                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        52: checkcast     #293                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        55: new           #270                // class com/hypixel/hytale/codec/KeyedCodec
+        58: dup
+        59: ldc_w         #312                // String Cooldown
+        62: getstatic     #314                // Field com/hypixel/hytale/codec/Codec.FLOAT:Lcom/hypixel/hytale/codec/codecs/simple/FloatCodec;
+        65: invokespecial #281                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        68: invokedynamic #320,  0            // InvokeDynamic #6:accept:()Ljava/util/function/BiConsumer;
+        73: invokedynamic #321,  0            // InvokeDynamic #7:apply:()Ljava/util/function/Function;
+        78: invokevirtual #292                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        81: ldc_w         #322                // String Cooldown in seconds between casts. The single source: the cast chain arms it with TriggerCooldown { UseAbilityCooldown: true }.
+        84: invokevirtual #324                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        87: invokevirtual #309                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        90: checkcast     #293                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        93: new           #270                // class com/hypixel/hytale/codec/KeyedCodec
+        96: dup
+        97: ldc_w         #328                // String Cost
+       100: getstatic     #314                // Field com/hypixel/hytale/codec/Codec.FLOAT:Lcom/hypixel/hytale/codec/codecs/simple/FloatCodec;
+       103: invokespecial #281                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       106: invokedynamic #330,  0            // InvokeDynamic #8:accept:()Ljava/util/function/BiConsumer;
+       111: invokedynamic #331,  0            // InvokeDynamic #9:apply:()Ljava/util/function/Function;
+       116: invokevirtual #292                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       119: ldc_w         #332                // String Resource cost per cast. The single source: the cast chain gates and spends it with StatsCondition/ChangeStat { UseAbilityCost: true }.
+       122: invokevirtual #324                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       125: invokevirtual #309                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       128: checkcast     #293                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       131: new           #270                // class com/hypixel/hytale/codec/KeyedCodec
+       134: dup
+       135: ldc_w         #334                // String CostType
+       138: new           #274                // class com/hypixel/hytale/codec/codecs/EnumCodec
+       141: dup
+       142: ldc           #8                  // class com/hypixel/hytale/protocol/AbilityCostType
+       144: invokespecial #278                // Method com/hypixel/hytale/codec/codecs/EnumCodec."<init>":(Ljava/lang/Class;)V
+       147: invokespecial #281                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       150: invokedynamic #336,  0            // InvokeDynamic #10:accept:()Ljava/util/function/BiConsumer;
+       155: invokedynamic #337,  0            // InvokeDynamic #11:apply:()Ljava/util/function/Function;
+       160: invokevirtual #292                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       163: invokevirtual #309                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       166: checkcast     #293                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       169: new           #270                // class com/hypixel/hytale/codec/KeyedCodec
+       172: dup
+       173: ldc_w         #338                // String Weapons
+       176: getstatic     #340                // Field com/hypixel/hytale/codec/Codec.STRING_ARRAY:Lcom/hypixel/hytale/codec/codecs/array/ArrayCodec;
+       179: invokespecial #281                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       182: invokedynamic #344,  0            // InvokeDynamic #12:accept:()Ljava/util/function/BiConsumer;
+       187: invokedynamic #345,  0            // InvokeDynamic #13:apply:()Ljava/util/function/Function;
+       192: invokevirtual #292                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       195: ldc_w         #346                // String Weapon families (Family item tags, e.g. Staff, Sword) the caster must hold to cast this ability. Empty or absent means no restriction.
+       198: invokevirtual #324                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       201: invokevirtual #309                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       204: checkcast     #293                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       207: new           #270                // class com/hypixel/hytale/codec/KeyedCodec
+       210: dup
+       211: ldc_w         #348                // String Tags
+       214: getstatic     #340                // Field com/hypixel/hytale/codec/Codec.STRING_ARRAY:Lcom/hypixel/hytale/codec/codecs/array/ArrayCodec;
+       217: invokespecial #281                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       220: invokedynamic #350,  0            // InvokeDynamic #14:accept:()Ljava/util/function/BiConsumer;
+       225: invokedynamic #351,  0            // InvokeDynamic #15:apply:()Ljava/util/function/Function;
+       230: invokevirtual #292                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       233: ldc_w         #352                // String Dotted ability tags describing damage type and mechanics, e.g. damage.elemental.fire, projectile, aoe. Each dotted prefix also matches (damage.elemental.fire is matched by damage.elemental and damage).
+       236: invokevirtual #324                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       239: invokevirtual #309                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       242: checkcast     #293                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       245: new           #270                // class com/hypixel/hytale/codec/KeyedCodec
+       248: dup
+       249: ldc_w         #354                // String AppliesTo
+       252: getstatic     #340                // Field com/hypixel/hytale/codec/Codec.STRING_ARRAY:Lcom/hypixel/hytale/codec/codecs/array/ArrayCodec;
+       255: invokespecial #281                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       258: invokedynamic #356,  0            // InvokeDynamic #16:accept:()Ljava/util/function/BiConsumer;
+       263: invokedynamic #357,  0            // InvokeDynamic #17:apply:()Ljava/util/function/Function;
+       268: invokevirtual #292                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       271: ldc_w         #358                // String Support runes only: ability tags the primary ability must have for this support to apply, e.g. aoe or damage.elemental.fire. Empty or absent means the support applies to any ability.
+       274: invokevirtual #324                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       277: invokevirtual #309                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       280: checkcast     #293                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       283: new           #270                // class com/hypixel/hytale/codec/KeyedCodec
+       286: dup
+       287: ldc_w         #360                // String Attributes
+       290: new           #362                // class com/hypixel/hytale/codec/codecs/map/MapCodec
+       293: dup
+       294: getstatic     #314                // Field com/hypixel/hytale/codec/Codec.FLOAT:Lcom/hypixel/hytale/codec/codecs/simple/FloatCodec;
+       297: invokedynamic #364,  0            // InvokeDynamic #18:get:()Ljava/util/function/Supplier;
+       302: invokespecial #365                // Method com/hypixel/hytale/codec/codecs/map/MapCodec."<init>":(Lcom/hypixel/hytale/codec/Codec;Ljava/util/function/Supplier;)V
+       305: invokespecial #281                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       308: invokedynamic #368,  0            // InvokeDynamic #19:accept:()Ljava/util/function/BiConsumer;
+       313: invokedynamic #369,  0            // InvokeDynamic #20:apply:()Ljava/util/function/Function;
+       318: invokevirtual #292                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       321: ldc_w         #370                // String Primary abilities: named tunable values (e.g. AoeScale, Duration) that the ability\'s interactions bind to and support runes modify.
+       324: invokevirtual #324                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       327: invokevirtual #309                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       330: checkcast     #293                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       333: new           #270                // class com/hypixel/hytale/codec/KeyedCodec
+       336: dup
+       337: ldc_w         #372                // String AttributeModifiers
+       340: new           #362                // class com/hypixel/hytale/codec/codecs/map/MapCodec
+       343: dup
+       344: new           #374                // class com/hypixel/hytale/codec/codecs/array/ArrayCodec
+       347: dup
+       348: getstatic     #376                // Field com/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier.CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       351: invokedynamic #380,  0            // InvokeDynamic #21:apply:()Ljava/util/function/IntFunction;
+       356: invokespecial #383                // Method com/hypixel/hytale/codec/codecs/array/ArrayCodec."<init>":(Lcom/hypixel/hytale/codec/Codec;Ljava/util/function/IntFunction;)V
+       359: invokedynamic #364,  0            // InvokeDynamic #18:get:()Ljava/util/function/Supplier;
+       364: invokespecial #365                // Method com/hypixel/hytale/codec/codecs/map/MapCodec."<init>":(Lcom/hypixel/hytale/codec/Codec;Ljava/util/function/Supplier;)V
+       367: invokespecial #281                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       370: invokedynamic #386,  0            // InvokeDynamic #22:accept:()Ljava/util/function/BiConsumer;
+       375: invokedynamic #387,  0            // InvokeDynamic #23:apply:()Ljava/util/function/Function;
+       380: invokevirtual #292                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       383: ldc_w         #388                // String Support runes only: modifiers applied to the supported ability\'s attributes by name, left to right across the line.
+       386: invokevirtual #324                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       389: invokevirtual #309                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       392: checkcast     #293                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       395: new           #270                // class com/hypixel/hytale/codec/KeyedCodec
+       398: dup
+       399: ldc_w         #390                // String OnHitEffects
+       402: getstatic     #340                // Field com/hypixel/hytale/codec/Codec.STRING_ARRAY:Lcom/hypixel/hytale/codec/codecs/array/ArrayCodec;
+       405: invokespecial #281                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       408: invokedynamic #392,  0            // InvokeDynamic #24:accept:()Ljava/util/function/BiConsumer;
+       413: invokedynamic #393,  0            // InvokeDynamic #25:apply:()Ljava/util/function/Function;
+       418: invokevirtual #292                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       421: ldc_w         #394                // String Support runes only: EntityEffect ids applied to every entity damaged by the supported ability\'s impact.
+       424: invokevirtual #324                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       427: invokedynamic #396,  0            // InvokeDynamic #26:get:()Ljava/util/function/Supplier;
+       432: invokevirtual #397                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidatorLate:(Ljava/util/function/Supplier;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       435: invokevirtual #309                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       438: checkcast     #293                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       441: new           #270                // class com/hypixel/hytale/codec/KeyedCodec
+       444: dup
+       445: ldc_w         #401                // String ConvertElement
+       448: getstatic     #403                // Field com/hypixel/hytale/codec/Codec.STRING:Lcom/hypixel/hytale/codec/codecs/simple/StringCodec;
+       451: invokespecial #281                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       454: invokedynamic #407,  0            // InvokeDynamic #27:accept:()Ljava/util/function/BiConsumer;
+       459: invokedynamic #408,  0            // InvokeDynamic #28:apply:()Ljava/util/function/Function;
+       464: invokevirtual #292                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       467: ldc_w         #409                // String Support runes only: the elemental DamageCause the supported ability\'s elemental damage converts to (e.g. Wind). Damage numbers and ability visuals recolor to match. The rightmost conversion in the line wins.
+       470: invokevirtual #324                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       473: invokedynamic #411,  0            // InvokeDynamic #29:get:()Ljava/util/function/Supplier;
+       478: invokevirtual #397                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidatorLate:(Ljava/util/function/Supplier;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       481: invokevirtual #309                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       484: checkcast     #293                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       487: new           #270                // class com/hypixel/hytale/codec/KeyedCodec
+       490: dup
+       491: ldc_w         #412                // String Cast
+       494: getstatic     #414                // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction.CHILD_ASSET_CODEC:Lcom/hypixel/hytale/assetstore/codec/ContainedAssetCodec;
+       497: invokespecial #281                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       500: invokedynamic #418,  0            // InvokeDynamic #30:accept:()Ljava/util/function/BiConsumer;
+       505: invokedynamic #419,  0            // InvokeDynamic #31:apply:()Ljava/util/function/Function;
+       510: invokevirtual #292                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       513: ldc_w         #420                // String Primary abilities: the root interaction cast when the ability fires from its bench slot (Ability2/Ability3). Abilities cast only from the bench; an ability item held in the hand exposes no interactions.
+       516: invokevirtual #324                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       519: invokedynamic #422,  0            // InvokeDynamic #32:get:()Ljava/util/function/Supplier;
+       524: invokevirtual #397                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidatorLate:(Ljava/util/function/Supplier;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       527: invokevirtual #309                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       530: checkcast     #293                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       533: invokedynamic #423,  0            // InvokeDynamic #33:accept:()Ljava/util/function/Consumer;
+       538: invokevirtual #426                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.afterDecode:(Ljava/util/function/Consumer;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       541: checkcast     #293                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       544: invokevirtual #430                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.build:()Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       547: putstatic     #434                // Field CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       550: return
+}

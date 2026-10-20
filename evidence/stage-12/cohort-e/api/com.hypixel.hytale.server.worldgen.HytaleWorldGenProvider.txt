@@ -1,0 +1,227 @@
+Compiled from "HytaleWorldGenProvider.java"
+public class com.hypixel.hytale.server.worldgen.HytaleWorldGenProvider implements com.hypixel.hytale.server.core.universe.world.worldgen.provider.IWorldGenProvider {
+  public static final java.lang.String ID;
+
+  public static final java.lang.String DEFAULT_NAME;
+
+  public static final com.hypixel.hytale.common.semver.Semver MIN_VERSION;
+
+  public static final com.hypixel.hytale.server.worldgen.HytaleWorldGenProvider$WorldGenBuilderCodec CODEC;
+
+  private java.lang.String name;
+
+  private com.hypixel.hytale.common.semver.Semver version;
+
+  private java.lang.String path;
+
+  public com.hypixel.hytale.server.worldgen.HytaleWorldGenProvider();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: ldc           #9                  // String Default
+         7: putfield      #11                 // Field name:Ljava/lang/String;
+        10: aload_0
+        11: getstatic     #15                 // Field MIN_VERSION:Lcom/hypixel/hytale/common/semver/Semver;
+        14: putfield      #19                 // Field version:Lcom/hypixel/hytale/common/semver/Semver;
+        17: return
+
+  public com.hypixel.hytale.common.semver.Semver getVersion();
+    Code:
+         0: aload_0
+         1: getfield      #19                 // Field version:Lcom/hypixel/hytale/common/semver/Semver;
+         4: areturn
+
+  public com.hypixel.hytale.server.core.universe.world.worldgen.IWorldGen getGenerator() throws com.hypixel.hytale.server.core.universe.world.worldgen.WorldGenLoadException;
+    Code:
+         0: aload_0
+         1: getfield      #22                 // Field path:Ljava/lang/String;
+         4: ifnull        43
+         7: aload_0
+         8: getfield      #22                 // Field path:Ljava/lang/String;
+        11: iconst_0
+        12: anewarray     #25                 // class java/lang/String
+        15: invokestatic  #27                 // InterfaceMethod java/nio/file/Path.of:(Ljava/lang/String;[Ljava/lang/String;)Ljava/nio/file/Path;
+        18: astore_1
+        19: aload_1
+        20: invokestatic  #33                 // Method com/hypixel/hytale/common/util/PathUtil.isInTrustedRoot:(Ljava/nio/file/Path;)Z
+        23: ifne          47
+        26: new           #39                 // class com/hypixel/hytale/server/core/universe/world/worldgen/WorldGenLoadException
+        29: dup
+        30: aload_0
+        31: getfield      #22                 // Field path:Ljava/lang/String;
+        34: invokedynamic #41,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+        39: invokespecial #45                 // Method com/hypixel/hytale/server/core/universe/world/worldgen/WorldGenLoadException."<init>":(Ljava/lang/String;)V
+        42: athrow
+        43: invokestatic  #48                 // Method com/hypixel/hytale/server/core/universe/Universe.getWorldGenPath:()Ljava/nio/file/Path;
+        46: astore_1
+        47: ldc           #9                  // String Default
+        49: aload_0
+        50: getfield      #11                 // Field name:Ljava/lang/String;
+        53: invokevirtual #54                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+        56: ifeq          77
+        59: aload_1
+        60: ldc           #60                 // String World.json
+        62: invokeinterface #62,  2           // InterfaceMethod java/nio/file/Path.resolve:(Ljava/lang/String;)Ljava/nio/file/Path;
+        67: iconst_0
+        68: anewarray     #66                 // class java/nio/file/LinkOption
+        71: invokestatic  #68                 // Method java/nio/file/Files.exists:(Ljava/nio/file/Path;[Ljava/nio/file/LinkOption;)Z
+        74: ifne          109
+        77: aload_1
+        78: aload_0
+        79: getfield      #11                 // Field name:Ljava/lang/String;
+        82: invokestatic  #74                 // Method com/hypixel/hytale/common/util/PathUtil.resolvePathWithinDir:(Ljava/nio/file/Path;Ljava/lang/String;)Ljava/nio/file/Path;
+        85: astore_2
+        86: aload_2
+        87: ifnonnull     107
+        90: new           #39                 // class com/hypixel/hytale/server/core/universe/world/worldgen/WorldGenLoadException
+        93: dup
+        94: aload_0
+        95: getfield      #11                 // Field name:Ljava/lang/String;
+        98: invokedynamic #78,  0             // InvokeDynamic #1:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+       103: invokespecial #45                 // Method com/hypixel/hytale/server/core/universe/world/worldgen/WorldGenLoadException."<init>":(Ljava/lang/String;)V
+       106: athrow
+       107: aload_2
+       108: astore_1
+       109: new           #79                 // class com/hypixel/hytale/server/worldgen/WorldGenConfig
+       112: dup
+       113: aload_1
+       114: aload_0
+       115: getfield      #11                 // Field name:Ljava/lang/String;
+       118: aload_0
+       119: getfield      #19                 // Field version:Lcom/hypixel/hytale/common/semver/Semver;
+       122: invokespecial #81                 // Method com/hypixel/hytale/server/worldgen/WorldGenConfig."<init>":(Ljava/nio/file/Path;Ljava/lang/String;Lcom/hypixel/hytale/common/semver/Semver;)V
+       125: astore_2
+       126: new           #84                 // class com/hypixel/hytale/server/worldgen/loader/ChunkGeneratorJsonLoader
+       129: dup
+       130: new           #86                 // class com/hypixel/hytale/procedurallib/json/SeedString
+       133: dup
+       134: ldc           #88                 // String ChunkGenerator
+       136: new           #90                 // class com/hypixel/hytale/server/worldgen/SeedStringResource
+       139: dup
+       140: getstatic     #92                 // Field com/hypixel/hytale/server/worldgen/prefab/PrefabStoreRoot.DEFAULT:Lcom/hypixel/hytale/server/worldgen/prefab/PrefabStoreRoot;
+       143: aload_2
+       144: invokespecial #98                 // Method com/hypixel/hytale/server/worldgen/SeedStringResource."<init>":(Lcom/hypixel/hytale/server/worldgen/prefab/PrefabStoreRoot;Lcom/hypixel/hytale/server/worldgen/WorldGenConfig;)V
+       147: invokespecial #101                // Method com/hypixel/hytale/procedurallib/json/SeedString."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/procedurallib/json/SeedResource;)V
+       150: aload_2
+       151: invokespecial #104                // Method com/hypixel/hytale/server/worldgen/loader/ChunkGeneratorJsonLoader."<init>":(Lcom/hypixel/hytale/procedurallib/json/SeedString;Lcom/hypixel/hytale/server/worldgen/WorldGenConfig;)V
+       154: invokevirtual #107                // Method com/hypixel/hytale/server/worldgen/loader/ChunkGeneratorJsonLoader.load:()Lcom/hypixel/hytale/server/worldgen/chunk/ChunkGenerator;
+       157: areturn
+       158: astore_2
+       159: new           #39                 // class com/hypixel/hytale/server/core/universe/world/worldgen/WorldGenLoadException
+       162: dup
+       163: ldc           #113                // String Failed to load world gen!
+       165: aload_2
+       166: invokespecial #115                // Method com/hypixel/hytale/server/core/universe/world/worldgen/WorldGenLoadException."<init>":(Ljava/lang/String;Ljava/lang/Throwable;)V
+       169: athrow
+      Exception table:
+         from    to  target type
+           109   157   158   Class java/lang/Error
+
+  public java.lang.String toString();
+    Code:
+         0: aload_0
+         1: getfield      #11                 // Field name:Ljava/lang/String;
+         4: aload_0
+         5: getfield      #19                 // Field version:Lcom/hypixel/hytale/common/semver/Semver;
+         8: invokestatic  #118                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+        11: aload_0
+        12: getfield      #22                 // Field path:Ljava/lang/String;
+        15: invokedynamic #122,  0            // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+        20: areturn
+
+  private static java.lang.String lambda$static$5(com.hypixel.hytale.server.worldgen.HytaleWorldGenProvider);
+    Code:
+         0: aload_0
+         1: getfield      #22                 // Field path:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$4(com.hypixel.hytale.server.worldgen.HytaleWorldGenProvider, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #22                 // Field path:Ljava/lang/String;
+         5: return
+
+  private static com.hypixel.hytale.common.semver.Semver lambda$static$3(com.hypixel.hytale.server.worldgen.HytaleWorldGenProvider);
+    Code:
+         0: aload_0
+         1: getfield      #19                 // Field version:Lcom/hypixel/hytale/common/semver/Semver;
+         4: areturn
+
+  private static void lambda$static$2(com.hypixel.hytale.server.worldgen.HytaleWorldGenProvider, com.hypixel.hytale.common.semver.Semver);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #19                 // Field version:Lcom/hypixel/hytale/common/semver/Semver;
+         5: return
+
+  private static java.lang.String lambda$static$1(com.hypixel.hytale.server.worldgen.HytaleWorldGenProvider);
+    Code:
+         0: aload_0
+         1: getfield      #11                 // Field name:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$0(com.hypixel.hytale.server.worldgen.HytaleWorldGenProvider, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #11                 // Field name:Ljava/lang/String;
+         5: return
+
+  static {};
+    Code:
+         0: new           #125                // class com/hypixel/hytale/common/semver/Semver
+         3: dup
+         4: lconst_0
+         5: lconst_0
+         6: lconst_0
+         7: invokespecial #127                // Method com/hypixel/hytale/common/semver/Semver."<init>":(JJJ)V
+        10: putstatic     #15                 // Field MIN_VERSION:Lcom/hypixel/hytale/common/semver/Semver;
+        13: new           #130                // class com/hypixel/hytale/server/worldgen/HytaleWorldGenProvider$WorldGenBuilderCodec
+        16: dup
+        17: ldc           #7                  // class com/hypixel/hytale/server/worldgen/HytaleWorldGenProvider
+        19: invokedynamic #132,  0            // InvokeDynamic #3:get:()Ljava/util/function/Supplier;
+        24: invokestatic  #136                // Method com/hypixel/hytale/codec/builder/BuilderCodec.builder:(Ljava/lang/Class;Ljava/util/function/Supplier;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$Builder;
+        27: ldc           #142                // String The standard generator for Hytale.
+        29: invokevirtual #144                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        32: checkcast     #145                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        35: new           #150                // class com/hypixel/hytale/codec/KeyedCodec
+        38: dup
+        39: ldc           #152                // String Name
+        41: getstatic     #154                // Field com/hypixel/hytale/codec/Codec.STRING:Lcom/hypixel/hytale/codec/codecs/simple/StringCodec;
+        44: invokespecial #160                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        47: invokedynamic #163,  0            // InvokeDynamic #4:accept:()Ljava/util/function/BiConsumer;
+        52: invokedynamic #167,  0            // InvokeDynamic #5:apply:()Ljava/util/function/Function;
+        57: invokevirtual #171                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        60: ldc           #175                // String The name of the generator to use. \"*Default*\" if not provided.
+        62: invokevirtual #177                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        65: invokevirtual #182                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        68: checkcast     #145                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        71: new           #150                // class com/hypixel/hytale/codec/KeyedCodec
+        74: dup
+        75: ldc           #186                // String Version
+        77: getstatic     #188                // Field com/hypixel/hytale/common/semver/Semver.CODEC:Lcom/hypixel/hytale/codec/Codec;
+        80: invokespecial #160                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        83: invokedynamic #192,  0            // InvokeDynamic #6:accept:()Ljava/util/function/BiConsumer;
+        88: invokedynamic #193,  0            // InvokeDynamic #7:apply:()Ljava/util/function/Function;
+        93: invokevirtual #171                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        96: ldc           #194                // String The version of the generator to use. \"0.0.0\" if not provided.
+        98: invokevirtual #177                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       101: invokevirtual #182                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       104: checkcast     #145                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       107: new           #150                // class com/hypixel/hytale/codec/KeyedCodec
+       110: dup
+       111: ldc           #196                // String Path
+       113: getstatic     #154                // Field com/hypixel/hytale/codec/Codec.STRING:Lcom/hypixel/hytale/codec/codecs/simple/StringCodec;
+       116: invokespecial #160                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       119: invokedynamic #198,  0            // InvokeDynamic #8:accept:()Ljava/util/function/BiConsumer;
+       124: invokedynamic #199,  0            // InvokeDynamic #9:apply:()Ljava/util/function/Function;
+       129: invokevirtual #171                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       132: ldc           #200                // String The path to the world generation configuration. \n\nDefaults to the server provided world generation folder if not set.
+       134: invokevirtual #177                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       137: invokevirtual #182                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       140: invokespecial #202                // Method com/hypixel/hytale/server/worldgen/HytaleWorldGenProvider$WorldGenBuilderCodec."<init>":(Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;)V
+       143: putstatic     #205                // Field CODEC:Lcom/hypixel/hytale/server/worldgen/HytaleWorldGenProvider$WorldGenBuilderCodec;
+       146: return
+}

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {
+      "skillId": "finishing_strike", "family": "STRIKE", "secondaryFamilies": [],
+      "allowedMainHandKinds": ["SWORD", "LONGSWORD", "DAGGER"], "requiredOffHandKinds": [],
+      "resourceType": "STAMINA", "resourceCost": 12, "cooldownSeconds": 5, "windupSeconds": 0,
+      "basePowerSource": "WEAPON", "innateBasePower": 0, "scaling": "WEAPON_CLASS",
+      "strike": {
+        "geometry": "ARC", "range": 2.8, "angleDegrees": 100, "lineHalfWidth": 0,
+        "repeats": 1, "repeatIntervalSeconds": 0, "targetCap": 64, "coefficient": 1.2,
+        "statusId": "", "statusSeconds": 0,
+        "details": {"element": "PHYSICAL", "height": 2.5, "actionLockSeconds": 0,
+          "movementFactor": 1, "finisher": true}
+      }
+    },
+    {
+      "skillId": "execution_strike", "family": "STRIKE", "secondaryFamilies": [],
+      "allowedMainHandKinds": ["LONGSWORD", "BATTLEAXE"], "requiredOffHandKinds": [],
+      "resourceType": "STAMINA", "resourceCost": 18, "cooldownSeconds": 10, "windupSeconds": 0,
+      "basePowerSource": "WEAPON", "innateBasePower": 0, "scaling": "HEAVY",
+      "strike": {
+        "geometry": "ARC", "range": 3, "angleDegrees": 110, "lineHalfWidth": 0,
+        "repeats": 1, "repeatIntervalSeconds": 0, "targetCap": 64, "coefficient": 1.4,
+        "statusId": "", "statusSeconds": 0,
+        "details": {"element": "PHYSICAL", "height": 2.5, "actionLockSeconds": 0,
+          "movementFactor": 1, "victimCoefficient": "EXECUTION_STRIKE"}
+      }
+    },
+    {
+      "skillId": "backstab", "family": "STRIKE", "secondaryFamilies": [],
+      "allowedMainHandKinds": ["DAGGER"], "requiredOffHandKinds": [],
+      "resourceType": "STAMINA", "resourceCost": 10, "cooldownSeconds": 6, "windupSeconds": 0,
+      "basePowerSource": "WEAPON", "innateBasePower": 0, "scaling": "LIGHT",
+      "strike": {
+        "geometry": "ASSIST_CONE", "range": 2.4, "angleDegrees": 60, "lineHalfWidth": 0,
+        "repeats": 1, "repeatIntervalSeconds": 0, "targetCap": 1, "coefficient": 0.9,
+        "statusId": "", "statusSeconds": 0,
+        "details": {"element": "PHYSICAL", "height": 2.5, "actionLockSeconds": 0,
+          "movementFactor": 1, "victimCoefficient": "BACKSTAB"}
+      }
+    }
+  ]
+}

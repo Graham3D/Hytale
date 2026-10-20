@@ -1,0 +1,12 @@
+﻿{
+    "installedAtUtc":  "2026-09-06T17:19:42.7266786Z",
+    "revision":  "R008",
+    "save":  "pre-release/RPG",
+    "commit":  "82cf726c393e54541b193503f758038b9515345e",
+    "library":  {
+                    "path":  "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\CanvasUI-0.1.0.jar",
+                    "sha256":  "218DFFD40ABBCD57629EC57FC20436169C4AFCCC18B9B5A9F94D67835CBA07B6"
+                },
+    "demoBundledInLibraryJar":  true,
+    "rollback":  "Run tools/Uninstall-CanvasUIDemo.ps1; it removes only CanvasUI-0.1.0.jar."
+}

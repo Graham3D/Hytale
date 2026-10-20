@@ -1,0 +1,21 @@
+{
+  "capturedAtUtc": "2026-09-07T12:18:46.1175296Z",
+  "serverJarSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "abilitiesHudSha256": "EFB5AB7961320F6F07300454A3F5A6EE5406AD02C6B4C0F6D179F2A897E6555F",
+  "nativeHudAnchor": "Right:52-StructurePadding Bottom:40 Width:329 Height:136",
+  "nativeSignaturePresent": true,
+  "nativeOptionalSlots": [
+    "Ability1Slot",
+    "Ability2Slot"
+  ],
+  "nativeOptionalSlotsInitiallyHidden": true,
+  "hudAbilitiesComponent": true,
+  "nativeAbilityInventoryIsItemContainer": true,
+  "protocolAbilitySlots": [
+    "Primary",
+    "Support"
+  ],
+  "arbitraryThreeSlotProjectionApi": false,
+  "configuredPhysicalInputLabelApi": false,
+  "decision": "Preserve native Abilities/Signature; add three state-authoritative RPG cells immediately left. Display logical Ability2/3/4 labels because configured physical labels are not exposed to server CustomUI."
+}

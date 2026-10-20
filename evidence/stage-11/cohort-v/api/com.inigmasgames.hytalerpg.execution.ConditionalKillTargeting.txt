@@ -1,0 +1,114 @@
+Compiled from "ConditionalKillTargeting.java"
+public final class com.inigmasgames.hytalerpg.execution.ConditionalKillTargeting {
+  private com.inigmasgames.hytalerpg.execution.ConditionalKillTargeting();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+
+  public static com.inigmasgames.hytalerpg.execution.CommittedTarget nearest(java.util.UUID, com.inigmasgames.hytalerpg.execution.math.Vec3, java.util.List<com.inigmasgames.hytalerpg.execution.ConditionalKillTargeting$Target>, boolean);
+    Code:
+         0: iload_3
+         1: ifne          16
+         4: aload_2
+         5: invokeinterface #7,  1            // InterfaceMethod java/util/List.size:()I
+        10: sipush        256
+        13: if_icmple     26
+        16: new           #13                 // class java/lang/IllegalStateException
+        19: dup
+        20: ldc           #15                 // String KILL_TRIGGER_CANDIDATE_BUDGET
+        22: invokespecial #17                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+        25: athrow
+        26: new           #20                 // class java/util/HashSet
+        29: dup
+        30: invokespecial #22                 // Method java/util/HashSet."<init>":()V
+        33: astore        4
+        35: aload_2
+        36: invokeinterface #23,  1           // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+        41: aload_0
+        42: aload         4
+        44: invokedynamic #27,  0             // InvokeDynamic #0:test:(Ljava/util/UUID;Ljava/util/HashSet;)Ljava/util/function/Predicate;
+        49: invokeinterface #31,  2           // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+        54: aload_1
+        55: invokedynamic #37,  0             // InvokeDynamic #1:test:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Ljava/util/function/Predicate;
+        60: invokeinterface #31,  2           // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+        65: aload_1
+        66: invokedynamic #40,  0             // InvokeDynamic #2:applyAsDouble:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)Ljava/util/function/ToDoubleFunction;
+        71: invokestatic  #44                 // InterfaceMethod java/util/Comparator.comparingDouble:(Ljava/util/function/ToDoubleFunction;)Ljava/util/Comparator;
+        74: invokedynamic #50,  0             // InvokeDynamic #3:apply:()Ljava/util/function/Function;
+        79: invokeinterface #54,  2           // InterfaceMethod java/util/Comparator.thenComparing:(Ljava/util/function/Function;)Ljava/util/Comparator;
+        84: invokeinterface #58,  2           // InterfaceMethod java/util/stream/Stream.min:(Ljava/util/Comparator;)Ljava/util/Optional;
+        89: invokedynamic #62,  0             // InvokeDynamic #4:apply:()Ljava/util/function/Function;
+        94: invokevirtual #63                 // Method java/util/Optional.map:(Ljava/util/function/Function;)Ljava/util/Optional;
+        97: aconst_null
+        98: invokevirtual #69                 // Method java/util/Optional.orElse:(Ljava/lang/Object;)Ljava/lang/Object;
+       101: checkcast     #73                 // class com/inigmasgames/hytalerpg/execution/CommittedTarget
+       104: areturn
+
+  private static java.lang.String lambda$nearest$3(com.inigmasgames.hytalerpg.execution.ConditionalKillTargeting$Target);
+    Code:
+         0: aload_0
+         1: invokevirtual #75                 // Method com/inigmasgames/hytalerpg/execution/ConditionalKillTargeting$Target.id:()Ljava/util/UUID;
+         4: invokevirtual #81                 // Method java/util/UUID.toString:()Ljava/lang/String;
+         7: areturn
+
+  private static double lambda$nearest$2(com.inigmasgames.hytalerpg.execution.math.Vec3, com.inigmasgames.hytalerpg.execution.ConditionalKillTargeting$Target);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #87                 // Method com/inigmasgames/hytalerpg/execution/ConditionalKillTargeting$Target.bounds:()Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;
+         5: invokestatic  #91                 // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionShape.pointDistanceSquared:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;)D
+         8: dreturn
+
+  private static boolean lambda$nearest$1(com.inigmasgames.hytalerpg.execution.math.Vec3, com.inigmasgames.hytalerpg.execution.ConditionalKillTargeting$Target);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #87                 // Method com/inigmasgames/hytalerpg/execution/ConditionalKillTargeting$Target.bounds:()Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;
+         5: invokestatic  #91                 // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionShape.pointDistanceSquared:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;)D
+         8: ldc2_w        #97                 // double 144.000000001d
+        11: dcmpg
+        12: ifgt          19
+        15: iconst_1
+        16: goto          20
+        19: iconst_0
+        20: ireturn
+
+  private static boolean lambda$nearest$0(java.util.UUID, java.util.HashSet, com.inigmasgames.hytalerpg.execution.ConditionalKillTargeting$Target);
+    Code:
+         0: aload_2
+         1: invokevirtual #75                 // Method com/inigmasgames/hytalerpg/execution/ConditionalKillTargeting$Target.id:()Ljava/util/UUID;
+         4: ifnull        75
+         7: aload_2
+         8: invokevirtual #75                 // Method com/inigmasgames/hytalerpg/execution/ConditionalKillTargeting$Target.id:()Ljava/util/UUID;
+        11: aload_0
+        12: invokevirtual #99                 // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+        15: ifne          75
+        18: aload_1
+        19: aload_2
+        20: invokevirtual #75                 // Method com/inigmasgames/hytalerpg/execution/ConditionalKillTargeting$Target.id:()Ljava/util/UUID;
+        23: invokevirtual #103                // Method java/util/HashSet.add:(Ljava/lang/Object;)Z
+        26: ifeq          75
+        29: aload_2
+        30: invokevirtual #106                // Method com/inigmasgames/hytalerpg/execution/ConditionalKillTargeting$Target.solution:()Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;
+        33: ifnull        75
+        36: aload_2
+        37: invokevirtual #110                // Method com/inigmasgames/hytalerpg/execution/ConditionalKillTargeting$Target.alive:()Z
+        40: ifeq          75
+        43: aload_2
+        44: invokevirtual #114                // Method com/inigmasgames/hytalerpg/execution/ConditionalKillTargeting$Target.hostile:()Z
+        47: ifeq          75
+        50: aload_2
+        51: invokevirtual #117                // Method com/inigmasgames/hytalerpg/execution/ConditionalKillTargeting$Target.protectedTarget:()Z
+        54: ifne          75
+        57: aload_2
+        58: invokevirtual #120                // Method com/inigmasgames/hytalerpg/execution/ConditionalKillTargeting$Target.lineOfSight:()Z
+        61: ifeq          75
+        64: aload_2
+        65: invokevirtual #123                // Method com/inigmasgames/hytalerpg/execution/ConditionalKillTargeting$Target.legalReach:()Z
+        68: ifeq          75
+        71: iconst_1
+        72: goto          76
+        75: iconst_0
+        76: ireturn
+}

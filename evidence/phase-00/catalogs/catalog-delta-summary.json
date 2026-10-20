@@ -1,0 +1,18 @@
+[
+  {
+    "status": "ADDED",
+    "count": 1048
+  },
+  {
+    "status": "CHANGED",
+    "count": 221
+  },
+  {
+    "status": "REMOVED",
+    "count": 301
+  },
+  {
+    "status": "UNCHANGED",
+    "count": 10844
+  }
+]

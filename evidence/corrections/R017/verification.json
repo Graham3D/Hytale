@@ -1,0 +1,23 @@
+﻿{
+    "verifiedAtUtc":  "2026-09-07T01:57:14.9350732Z",
+    "revision":  "R017",
+    "version":  "0.0.10",
+    "stage":  "pre-Stage06 CustomUI load correction",
+    "schema":  3,
+    "hytaleVersion":  "0.7.0-pre.1",
+    "branch":  "RPG",
+    "sourceCommit":  "f374e7c1efd8a48b3a7a5439b4f97da09e5e5a50",
+    "jarPath":  "G:\\My Drive\\Inigmas Games\\Hytale Taverns\\HytaleRPG\\build\\libs\\HytaleRPG-0.0.10.jar",
+    "jarSha256":  "03ED36A06AD143FBB74CD591052E56CC035E9B295BEFE89BE2A05D224772BA89",
+    "requiredJarEntriesPresent":  true,
+    "missingJarEntries":  [
+
+                          ],
+    "tests":  125,
+    "failures":  0,
+    "errors":  0,
+    "skipped":  0,
+    "customUiValidated":  true,
+    "lateImportedControlMacroArguments":  0,
+    "canvasUiSourceChanged":  false
+}

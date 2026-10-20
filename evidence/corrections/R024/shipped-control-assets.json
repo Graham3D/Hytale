@@ -1,0 +1,123 @@
+[
+  {
+    "path": "Server/Item/Items/Rune/Ability/Rune_Fireball.json",
+    "document": {
+      "TranslationProperties": {
+        "Name": "server.items.Rune_Fireball.name",
+        "Description": "server.items.Rune_Fireball.description"
+      },
+      "Icon": "Icons/ItemsGenerated/Rune_Fireball.png",
+      "Quality": "Rare",
+      "Categories": [
+        "Items.Ingredients"
+      ],
+      "Model": "Items/Runes/Rune_Ability.blockymodel",
+      "Texture": "Items/Runes/Rune_Textures/Rune_Ability_Fireball.png",
+      "PlayerAnimationsId": "Item",
+      "IconProperties": {
+        "Scale": 0.75,
+        "Rotation": [
+          0,
+          30,
+          15
+        ],
+        "Translation": [
+          4,
+          -18
+        ]
+      },
+      "MaxStack": 1,
+      "Scale": 0.8,
+      "ItemSoundSetId": "ISS_Items_Gems",
+      "Ability": {
+        "Slot": "Primary",
+        "Cooldown": 12,
+        "Cost": 25,
+        "CostType": "Mana",
+        "Tags": [
+          "damage.elemental.fire",
+          "mechanic.projectile",
+          "mechanic.aoe"
+        ],
+        "Cast": "Root_Ability_Fireball"
+      }
+    }
+  },
+  {
+    "path": "Server/Item/RootInteractions/Abilities/Root_Ability_Fireball.json",
+    "document": {
+      "Interactions": [
+        "Ability_Fireball_Cast"
+      ],
+      "RequireNewClick": true,
+      "Tags": {
+        "Attack": [
+          "Ranged"
+        ]
+      }
+    }
+  },
+  {
+    "path": "Server/Item/Interactions/Abilities/Fireball/Ability_Fireball_Cast.json",
+    "document": {
+      "Type": "StatsCondition",
+      "UseAbilityCost": true,
+      "Failed": "Ability_Cast_Fail",
+      "Next": {
+        "Type": "Parallel",
+        "Interactions": [
+          {
+            "Interactions": [
+              {
+                "Type": "TriggerCooldown",
+                "UseAbilityCooldown": true
+              }
+            ]
+          },
+          {
+            "Interactions": [
+              {
+                "Type": "ChangeStat",
+                "UseAbilityCost": true
+              }
+            ]
+          },
+          {
+            "Interactions": [
+              {
+                "$Comment": "Cast time. WaitForAnimationToFinish holds the step until Cast_Magic ends, so the projectile leaves as the gesture stops instead of cutting it short. RunTime matches the 100 frame animation at 60fps, which keeps the cast length if the animation ever fails to resolve. Fireball_Cast_Charge grows the ball across the same span, so changing either needs its stage timings changed to match. The origin of R-Hand is the wrist joint, where R-Attachment would be the grip. The first person model holds only the arm and leg subtrees, so the node must come from those.",
+                "Type": "Simple",
+                "RunTime": 1,
+                "Effects": {
+                  "ItemPlayerAnimationsId": "Sword",
+                  "ItemAnimationId": "StabDashCharging",
+                  "WaitForAnimationToFinish": true,
+                  "ClearAnimationOnFinish": true,
+                  "Particles": [
+                    {
+                      "SystemId": "Fireball_Cast_Charge",
+                      "TargetEntityPart": "Entity",
+                      "TargetNodeName": "R-Hand",
+                      "Scale": 0.4
+                    }
+                  ]
+                }
+              },
+              {
+                "Type": "LaunchAbilityProjectile",
+                "Projectile": "Projectile_Config_Ability_Fireball",
+                "Scale": 1.5,
+                "Effects": {
+                  "ItemPlayerAnimationsId": "Sword",
+                  "ItemAnimationId": "StabDashCharged",
+                  "WorldSoundEventId": "SFX_Staff_Flame_Fireball_Launch",
+                  "LocalSoundEventId": "SFX_Staff_Flame_Fireball_Launch_Local"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+]

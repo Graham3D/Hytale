@@ -1,0 +1,392 @@
+Compiled from "InteractionType.java"
+public final class com.hypixel.hytale.protocol.InteractionType extends java.lang.Enum<com.hypixel.hytale.protocol.InteractionType> {
+  public static final com.hypixel.hytale.protocol.InteractionType Primary;
+  public static final com.hypixel.hytale.protocol.InteractionType Secondary;
+  public static final com.hypixel.hytale.protocol.InteractionType Ability1;
+  public static final com.hypixel.hytale.protocol.InteractionType Ability2;
+  public static final com.hypixel.hytale.protocol.InteractionType Ability3;
+  public static final com.hypixel.hytale.protocol.InteractionType Use;
+  public static final com.hypixel.hytale.protocol.InteractionType Pick;
+  public static final com.hypixel.hytale.protocol.InteractionType Pickup;
+  public static final com.hypixel.hytale.protocol.InteractionType CollisionEnter;
+  public static final com.hypixel.hytale.protocol.InteractionType CollisionLeave;
+  public static final com.hypixel.hytale.protocol.InteractionType Collision;
+  public static final com.hypixel.hytale.protocol.InteractionType EntityStatEffect;
+  public static final com.hypixel.hytale.protocol.InteractionType SwapTo;
+  public static final com.hypixel.hytale.protocol.InteractionType SwapFrom;
+  public static final com.hypixel.hytale.protocol.InteractionType Death;
+  public static final com.hypixel.hytale.protocol.InteractionType Wielding;
+  public static final com.hypixel.hytale.protocol.InteractionType ProjectileSpawn;
+  public static final com.hypixel.hytale.protocol.InteractionType ProjectileHit;
+  public static final com.hypixel.hytale.protocol.InteractionType ProjectileMiss;
+  public static final com.hypixel.hytale.protocol.InteractionType ProjectileBounce;
+  public static final com.hypixel.hytale.protocol.InteractionType Held;
+  public static final com.hypixel.hytale.protocol.InteractionType HeldOffhand;
+  public static final com.hypixel.hytale.protocol.InteractionType Equipped;
+  public static final com.hypixel.hytale.protocol.InteractionType Dodge;
+  public static final com.hypixel.hytale.protocol.InteractionType GameModeSwap;
+  public static final com.hypixel.hytale.protocol.InteractionType OnBreak;
+  public static final com.hypixel.hytale.protocol.InteractionType OnBreakImpact;
+  public static final com.hypixel.hytale.protocol.InteractionType[] VALUES;
+  public static com.hypixel.hytale.protocol.InteractionType[] values();
+  public static com.hypixel.hytale.protocol.InteractionType valueOf(java.lang.String);
+  public int getValue();
+  public static com.hypixel.hytale.protocol.InteractionType fromValue(int);
+}
+Compiled from "CustomUIEventBindingType.java"
+public final class com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType extends java.lang.Enum<com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType> {
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType Activating;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType RightClicking;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType DoubleClicking;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType MouseEntered;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType MouseExited;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType ValueChanged;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType ElementReordered;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType Validating;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType Dismissing;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType FocusGained;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType FocusLost;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType KeyDown;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType MouseButtonReleased;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType SlotClicking;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType SlotDoubleClicking;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType SlotMouseEntered;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType SlotMouseExited;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType DragCancelled;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType Dropped;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType SlotMouseDragCompleted;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType SlotMouseDragExited;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType SlotClickReleaseWhileDragging;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType SlotClickPressWhileDragging;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType SelectedTabChanged;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType[] VALUES;
+  public static com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType[] values();
+  public static com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType valueOf(java.lang.String);
+  public int getValue();
+  public static com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType fromValue(int);
+}
+Compiled from "CustomPageLifetime.java"
+public final class com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime extends java.lang.Enum<com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime> {
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime CantClose;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime CanDismiss;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime CanDismissOrCloseThroughInteraction;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime[] VALUES;
+  public static com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime[] values();
+  public static com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime valueOf(java.lang.String);
+  public int getValue();
+  public static com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime fromValue(int);
+}
+Compiled from "HudComponent.java"
+public final class com.hypixel.hytale.protocol.packets.interface_.HudComponent extends java.lang.Enum<com.hypixel.hytale.protocol.packets.interface_.HudComponent> {
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent Hotbar;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent StatusIcons;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent Reticle;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent Chat;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent Requests;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent Notifications;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent KillFeed;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent InputBindings;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent PlayerList;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent EventTitle;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent Compass;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent ObjectivePanel;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent PortalPanel;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent BuilderToolsLegend;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent Speedometer;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent UtilitySlotSelector;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent BlockVariantSelector;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent BuilderToolsMaterialSlotSelector;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent Stamina;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent AmmoIndicator;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent Health;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent Mana;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent Oxygen;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent Sleep;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent Abilities;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent BossBar;
+  public static final com.hypixel.hytale.protocol.packets.interface_.HudComponent[] VALUES;
+  public static com.hypixel.hytale.protocol.packets.interface_.HudComponent[] values();
+  public static com.hypixel.hytale.protocol.packets.interface_.HudComponent valueOf(java.lang.String);
+  public int getValue();
+  public static com.hypixel.hytale.protocol.packets.interface_.HudComponent fromValue(int);
+}
+Compiled from "Page.java"
+public final class com.hypixel.hytale.protocol.packets.interface_.Page extends java.lang.Enum<com.hypixel.hytale.protocol.packets.interface_.Page> {
+  public static final com.hypixel.hytale.protocol.packets.interface_.Page None;
+  public static final com.hypixel.hytale.protocol.packets.interface_.Page Bench;
+  public static final com.hypixel.hytale.protocol.packets.interface_.Page Inventory;
+  public static final com.hypixel.hytale.protocol.packets.interface_.Page ToolsSettings;
+  public static final com.hypixel.hytale.protocol.packets.interface_.Page Map;
+  public static final com.hypixel.hytale.protocol.packets.interface_.Page MachinimaEditor;
+  public static final com.hypixel.hytale.protocol.packets.interface_.Page ContentCreation;
+  public static final com.hypixel.hytale.protocol.packets.interface_.Page Custom;
+  public static final com.hypixel.hytale.protocol.packets.interface_.Page Serverside;
+  public static final com.hypixel.hytale.protocol.packets.interface_.Page[] VALUES;
+  public static com.hypixel.hytale.protocol.packets.interface_.Page[] values();
+  public static com.hypixel.hytale.protocol.packets.interface_.Page valueOf(java.lang.String);
+  public int getValue();
+  public static com.hypixel.hytale.protocol.packets.interface_.Page fromValue(int);
+}
+Compiled from "Player.java"
+public class com.hypixel.hytale.server.core.entity.entities.Player extends com.hypixel.hytale.server.core.entity.LivingEntity implements com.hypixel.hytale.metrics.MetricProvider {
+  public static final com.hypixel.hytale.metrics.MetricsRegistry<com.hypixel.hytale.server.core.entity.entities.Player> METRICS_REGISTRY;
+  public static final com.hypixel.hytale.codec.KeyedCodec<com.hypixel.hytale.server.core.entity.entities.player.data.PlayerConfigData> PLAYER_CONFIG_DATA;
+  public static final com.hypixel.hytale.codec.builder.BuilderCodec<com.hypixel.hytale.server.core.entity.entities.Player> CODEC;
+  public static final int DEFAULT_VIEW_RADIUS_CHUNKS;
+  public static final long RESPAWN_INVULNERABILITY_TIME_NANOS;
+  public static final long MAX_TELEPORT_INVULNERABILITY_MILLIS;
+  public boolean executeTriggers;
+  public boolean executeBlockDamage;
+  public static com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.entity.entities.Player> getComponentType();
+  public com.hypixel.hytale.server.core.entity.entities.Player();
+  public void copyFrom(com.hypixel.hytale.server.core.entity.entities.Player);
+  public void init(java.util.UUID, com.hypixel.hytale.server.core.universe.PlayerRef);
+  public void setNetworkId(int);
+  public boolean remove();
+  public void moveTo(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, double, double, double, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+  public com.hypixel.hytale.server.core.entity.entities.player.data.PlayerConfigData getPlayerConfigData();
+  public void markNeedsSave();
+  public static void applyMovementStates(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.protocol.SavedMovementStates, com.hypixel.hytale.protocol.MovementStates, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+  public void startClientReadyTimeout();
+  public void handleClientReady(boolean);
+  public java.util.concurrent.CompletableFuture<java.lang.Void> saveConfig(com.hypixel.hytale.server.core.universe.world.World, com.hypixel.hytale.component.Holder<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, boolean);
+  public com.hypixel.hytale.server.core.io.PacketHandler getPlayerConnection();
+  public com.hypixel.hytale.server.core.universe.world.WorldMapTracker getWorldMapTracker();
+  public com.hypixel.hytale.server.core.entity.entities.player.windows.WindowManager getWindowManager();
+  public com.hypixel.hytale.server.core.entity.entities.player.pages.PageManager getPageManager();
+  public com.hypixel.hytale.server.core.entity.entities.player.hud.HudManager getHudManager();
+  public com.hypixel.hytale.server.core.entity.entities.player.HotbarManager getHotbarManager();
+  public boolean isFirstSpawn();
+  public void setFirstSpawn(boolean);
+  public void resetManagers(com.hypixel.hytale.component.Holder<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+  public static void notifyPickupItem(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.inventory.ItemStack, org.joml.Vector3d, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+  public boolean isOverrideBlockPlacementRestrictions();
+  public void setOverrideBlockPlacementRestrictions(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, boolean, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+  public boolean isNoClip();
+  public void setNoClip(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, boolean, boolean, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+  public boolean isFlying(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+  public void setFlying(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, boolean, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+  public static void addLocationChange(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, double, double, double, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+  public void configTriggerBlockProcessing(boolean, boolean, com.hypixel.hytale.server.core.modules.entity.component.CollisionResultComponent);
+  public void resetVelocity(com.hypixel.hytale.server.core.modules.physics.component.Velocity);
+  public void processVelocitySample(double, org.joml.Vector3d, com.hypixel.hytale.server.core.modules.physics.component.Velocity);
+  public static java.util.concurrent.CompletableFuture<com.hypixel.hytale.math.vector.Transform> getRespawnPosition(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, java.lang.String, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+  public boolean hasSpawnProtection();
+  public boolean isWaitingForClientReady();
+  public boolean isHiddenFromLivingEntity(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+  public void setClientViewRadius(int);
+  public int getClientViewRadius();
+  public int getViewRadius();
+  public com.hypixel.hytale.metrics.MetricResults toMetricResults();
+  public void setLastSpawnTimeNanos(long);
+  public long getSinceLastSpawnNanos();
+  public com.hypixel.hytale.server.core.universe.PlayerRef getPlayerRef();
+  public int getMountEntityId();
+  public void setMountEntityId(int);
+  public com.hypixel.hytale.protocol.GameMode getGameMode();
+  public static void setGameMode(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.protocol.GameMode, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+  public static void initGameMode(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+  public static com.hypixel.hytale.server.core.inventory.transaction.ItemStackTransaction giveItem(com.hypixel.hytale.server.core.inventory.ItemStack, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+  public int hashCode();
+  public boolean equals(java.lang.Object);
+  public java.lang.String toString();
+}
+Compiled from "CustomUIHud.java"
+public abstract class com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud {
+  public com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud(com.hypixel.hytale.server.core.universe.PlayerRef, java.lang.String);
+  public com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud(com.hypixel.hytale.server.core.universe.PlayerRef, java.lang.String, int);
+  public void show();
+  public void update(boolean, com.hypixel.hytale.server.core.ui.builder.UICommandBuilder);
+  public com.hypixel.hytale.server.core.universe.PlayerRef getPlayerRef();
+  public java.lang.String getKey();
+  public int getZOrder();
+  public void setZOrder(int);
+}
+Compiled from "HudManager.java"
+public class com.hypixel.hytale.server.core.entity.entities.player.hud.HudManager {
+  public com.hypixel.hytale.server.core.entity.entities.player.hud.HudManager();
+  public com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud getCustomHud(java.lang.String);
+  public java.util.Map<java.lang.String, com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud> getCustomHuds();
+  public java.util.Set<com.hypixel.hytale.protocol.packets.interface_.HudComponent> getVisibleHudComponents();
+  public void setVisibleHudComponents(com.hypixel.hytale.server.core.universe.PlayerRef, com.hypixel.hytale.protocol.packets.interface_.HudComponent...);
+  public void setVisibleHudComponents(com.hypixel.hytale.server.core.universe.PlayerRef, java.util.Set<com.hypixel.hytale.protocol.packets.interface_.HudComponent>);
+  public void showHudComponents(com.hypixel.hytale.server.core.universe.PlayerRef, com.hypixel.hytale.protocol.packets.interface_.HudComponent...);
+  public void showHudComponents(com.hypixel.hytale.server.core.universe.PlayerRef, java.util.Set<com.hypixel.hytale.protocol.packets.interface_.HudComponent>);
+  public void hideHudComponents(com.hypixel.hytale.server.core.universe.PlayerRef, com.hypixel.hytale.protocol.packets.interface_.HudComponent...);
+  public void addCustomHud(com.hypixel.hytale.server.core.universe.PlayerRef, com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud);
+  public void removeCustomHud(com.hypixel.hytale.server.core.universe.PlayerRef, java.lang.String);
+  public void resetVisibleHudComponents(com.hypixel.hytale.server.core.universe.PlayerRef);
+  public void resetHud(com.hypixel.hytale.server.core.universe.PlayerRef);
+  public void resetUserInterface(com.hypixel.hytale.server.core.universe.PlayerRef);
+  public void sendVisibleHudComponents(com.hypixel.hytale.server.core.io.PacketHandler);
+  public java.lang.String toString();
+}
+Compiled from "CustomUIPage.java"
+public abstract class com.hypixel.hytale.server.core.entity.entities.player.pages.CustomUIPage {
+  public com.hypixel.hytale.server.core.entity.entities.player.pages.CustomUIPage(com.hypixel.hytale.server.core.universe.PlayerRef, com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime);
+  public void setLifetime(com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime);
+  public com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime getLifetime();
+  public void handleDataEvent(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, java.lang.String);
+  public abstract void build(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.ui.builder.UICommandBuilder, com.hypixel.hytale.server.core.ui.builder.UIEventBuilder, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+  public void onDismiss(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+}
+Compiled from "InteractiveCustomUIPage.java"
+public abstract class com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage<T> extends com.hypixel.hytale.server.core.entity.entities.player.pages.CustomUIPage {
+  public com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage(com.hypixel.hytale.server.core.universe.PlayerRef, com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime, com.hypixel.hytale.codec.builder.BuilderCodec<T>);
+  public void handleDataEvent(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, T);
+  public void handleDataEvent(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, java.lang.String);
+}
+Compiled from "PageManager.java"
+public class com.hypixel.hytale.server.core.entity.entities.player.pages.PageManager {
+  public com.hypixel.hytale.server.core.entity.entities.player.pages.PageManager();
+  public void init(com.hypixel.hytale.server.core.universe.PlayerRef, com.hypixel.hytale.server.core.entity.entities.player.windows.WindowManager);
+  public void clearCustomPageAcknowledgements();
+  public com.hypixel.hytale.server.core.entity.entities.player.pages.CustomUIPage getCustomPage();
+  public void setPage(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.protocol.packets.interface_.Page);
+  public void setPage(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.protocol.packets.interface_.Page, boolean);
+  public void openCustomPage(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.entity.entities.player.pages.CustomUIPage);
+  public boolean setPageWithWindows(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.protocol.packets.interface_.Page, boolean, com.hypixel.hytale.server.core.entity.entities.player.windows.Window...);
+  public boolean openCustomPageWithWindows(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.entity.entities.player.pages.CustomUIPage, com.hypixel.hytale.server.core.entity.entities.player.windows.Window...);
+  public void updateCustomPage(com.hypixel.hytale.protocol.packets.interface_.CustomPage);
+  public void handleEvent(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.protocol.packets.interface_.CustomPageEvent);
+}
+Compiled from "PlayerMouseButtonEvent.java"
+public class com.hypixel.hytale.server.core.event.events.player.PlayerMouseButtonEvent extends com.hypixel.hytale.server.core.event.events.player.PlayerEvent<java.lang.Void> implements com.hypixel.hytale.event.ICancellable {
+  public com.hypixel.hytale.server.core.event.events.player.PlayerMouseButtonEvent(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.entity.entities.Player, com.hypixel.hytale.server.core.universe.PlayerRef, long, com.hypixel.hytale.server.core.asset.type.item.config.Item, org.joml.Vector3i, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, org.joml.Vector2fc, com.hypixel.hytale.protocol.MouseButtonEvent);
+  public com.hypixel.hytale.server.core.universe.PlayerRef getPlayerRefComponent();
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public long getClientUseTime();
+  public com.hypixel.hytale.server.core.asset.type.item.config.Item getItemInHand();
+  public org.joml.Vector3i getTargetBlock();
+  public com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getTargetEntityRef();
+  public org.joml.Vector2fc getScreenPoint();
+  public com.hypixel.hytale.protocol.MouseButtonEvent getMouseButton();
+  public java.lang.String toString();
+}
+Compiled from "PlayerMouseMotionEvent.java"
+public class com.hypixel.hytale.server.core.event.events.player.PlayerMouseMotionEvent extends com.hypixel.hytale.server.core.event.events.player.PlayerEvent<java.lang.Void> implements com.hypixel.hytale.event.ICancellable {
+  public com.hypixel.hytale.server.core.event.events.player.PlayerMouseMotionEvent(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.entity.entities.Player, long, com.hypixel.hytale.server.core.asset.type.item.config.Item, org.joml.Vector3i, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, org.joml.Vector2fc, com.hypixel.hytale.protocol.MouseMotionEvent);
+  public boolean isCancelled();
+  public void setCancelled(boolean);
+  public long getClientUseTime();
+  public com.hypixel.hytale.server.core.asset.type.item.config.Item getItemInHand();
+  public org.joml.Vector3i getTargetBlock();
+  public com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getTargetEntityRef();
+  public org.joml.Vector2fc getScreenPoint();
+  public com.hypixel.hytale.protocol.MouseMotionEvent getMouseMotion();
+  public java.lang.String toString();
+}
+Compiled from "EntityStatMap.java"
+public class com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap implements com.hypixel.hytale.component.Component<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> {
+  public static final int VERSION;
+  public static final com.hypixel.hytale.codec.builder.BuilderCodec<com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap> CODEC;
+  public final it.unimi.dsi.fastutil.ints.Int2ObjectMap<java.util.List<com.hypixel.hytale.protocol.EntityStatUpdate>> selfUpdates;
+  public final it.unimi.dsi.fastutil.ints.Int2ObjectMap<it.unimi.dsi.fastutil.floats.FloatList> selfStatValues;
+  public final it.unimi.dsi.fastutil.ints.Int2ObjectMap<java.util.List<com.hypixel.hytale.protocol.EntityStatUpdate>> otherUpdates;
+  public static com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap> getComponentType();
+  public com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap();
+  public com.hypixel.hytale.server.core.entity.StatModifiersManager getStatModifiersManager();
+  public int size();
+  public com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue get(int);
+  public com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue get(java.lang.String);
+  public void update();
+  public com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier getModifier(int, java.lang.String);
+  public com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier putModifier(int, java.lang.String, com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier);
+  public com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier putModifier(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, int, java.lang.String, com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier);
+  public com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier removeModifier(int, java.lang.String);
+  public com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier removeModifier(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, int, java.lang.String);
+  public float setStatValue(int, float);
+  public float setStatValue(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, int, float);
+  public float addStatValue(int, float);
+  public float addStatValue(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, int, float);
+  public float subtractStatValue(int, float);
+  public float subtractStatValue(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, int, float);
+  public float minStatValue(int, float);
+  public float minStatValue(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, int, float);
+  public float maxStatValue(int, float);
+  public float maxStatValue(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, int, float);
+  public float minimizeStatValue(int);
+  public float minimizeStatValue(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, int);
+  public float maximizeStatValue(int);
+  public float maximizeStatValue(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, int);
+  public float resetStatValue(int);
+  public float resetStatValue(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, int);
+  public it.unimi.dsi.fastutil.ints.Int2ObjectMap<java.util.List<com.hypixel.hytale.protocol.EntityStatUpdate>> getSelfUpdates();
+  public it.unimi.dsi.fastutil.ints.Int2ObjectMap<it.unimi.dsi.fastutil.floats.FloatList> getSelfStatValues();
+  public it.unimi.dsi.fastutil.ints.Int2ObjectMap<com.hypixel.hytale.protocol.EntityStatUpdate[]> consumeSelfUpdates();
+  public void clearUpdates();
+  public it.unimi.dsi.fastutil.ints.Int2ObjectMap<com.hypixel.hytale.protocol.EntityStatUpdate[]> consumeOtherUpdates();
+  public it.unimi.dsi.fastutil.ints.Int2ObjectMap<com.hypixel.hytale.protocol.EntityStatUpdate[]> createInitUpdate(boolean);
+  public boolean isStatChangeSuppressed(int, com.hypixel.hytale.server.core.modules.entitystats.StatChangeDirection);
+  public void setStatChangeSuppressed(int, com.hypixel.hytale.server.core.modules.entitystats.StatChangeDirection, boolean);
+  public boolean consumeSelfNetworkOutdated();
+  public boolean consumeNetworkOutdated();
+  public void processStatChanges(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, it.unimi.dsi.fastutil.ints.Int2FloatMap, com.hypixel.hytale.protocol.ValueType, com.hypixel.hytale.protocol.ChangeStatBehaviour);
+  public java.lang.String toString();
+  public com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap clone();
+  public static it.unimi.dsi.fastutil.ints.Int2ObjectMap<com.hypixel.hytale.protocol.Modifier[]> toPacket(it.unimi.dsi.fastutil.ints.Int2ObjectMap<com.hypixel.hytale.server.core.modules.entitystats.modifier.StaticModifier[]>);
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+  public com.hypixel.hytale.component.Component clone();
+}
+Compiled from "EntityStatValue.java"
+public class com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue {
+  public static final com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue[] EMPTY_ARRAY;
+  public static final com.hypixel.hytale.codec.builder.BuilderCodec<com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue> CODEC;
+  public com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue(int, com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType);
+  public java.lang.String getId();
+  public int getIndex();
+  public float get();
+  public float asPercentage();
+  public float getMin();
+  public float getMax();
+  public com.hypixel.hytale.server.core.modules.entitystats.RegeneratingValue[] getRegeneratingValues();
+  public com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier getModifier(java.lang.String);
+  public boolean getIgnoreInvulnerability();
+  public java.util.Map<java.lang.String, com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier> getModifiers();
+  public boolean synchronizeAsset(int, com.hypixel.hytale.server.core.modules.entitystats.asset.EntityStatType);
+  public java.lang.String toString();
+}
+Compiled from "DamageSystems.java"
+public class com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems {
+  public static final float DEFAULT_DAMAGE_DELAY;
+  public com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems();
+  public static void executeDamage(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.modules.entity.damage.Damage);
+  public static void executeDamage(int, com.hypixel.hytale.component.ArchetypeChunk<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.modules.entity.damage.Damage);
+  public static void executeDamage(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.modules.entity.damage.Damage);
+}
+Compiled from "UICommandBuilder.java"
+public class com.hypixel.hytale.server.core.ui.builder.UICommandBuilder {
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUICommand[] EMPTY_COMMAND_ARRAY;
+  public com.hypixel.hytale.server.core.ui.builder.UICommandBuilder();
+  public com.hypixel.hytale.server.core.ui.builder.UICommandBuilder clear(java.lang.String);
+  public com.hypixel.hytale.server.core.ui.builder.UICommandBuilder remove(java.lang.String);
+  public com.hypixel.hytale.server.core.ui.builder.UICommandBuilder append(java.lang.String);
+  public com.hypixel.hytale.server.core.ui.builder.UICommandBuilder append(java.lang.String, java.lang.String);
+  public com.hypixel.hytale.server.core.ui.builder.UICommandBuilder appendInline(java.lang.String, java.lang.String);
+  public com.hypixel.hytale.server.core.ui.builder.UICommandBuilder insertBefore(java.lang.String, java.lang.String);
+  public com.hypixel.hytale.server.core.ui.builder.UICommandBuilder insertBeforeInline(java.lang.String, java.lang.String);
+  public <T> com.hypixel.hytale.server.core.ui.builder.UICommandBuilder set(java.lang.String, com.hypixel.hytale.server.core.ui.Value<T>);
+  public com.hypixel.hytale.server.core.ui.builder.UICommandBuilder setNull(java.lang.String);
+  public com.hypixel.hytale.server.core.ui.builder.UICommandBuilder set(java.lang.String, java.lang.String);
+  public com.hypixel.hytale.server.core.ui.builder.UICommandBuilder set(java.lang.String, com.hypixel.hytale.server.core.Message);
+  public com.hypixel.hytale.server.core.ui.builder.UICommandBuilder set(java.lang.String, boolean);
+  public com.hypixel.hytale.server.core.ui.builder.UICommandBuilder set(java.lang.String, float);
+  public com.hypixel.hytale.server.core.ui.builder.UICommandBuilder set(java.lang.String, int);
+  public com.hypixel.hytale.server.core.ui.builder.UICommandBuilder set(java.lang.String, double);
+  public com.hypixel.hytale.server.core.ui.builder.UICommandBuilder setObject(java.lang.String, java.lang.Object);
+  public <T> com.hypixel.hytale.server.core.ui.builder.UICommandBuilder set(java.lang.String, T[]);
+  public <T> com.hypixel.hytale.server.core.ui.builder.UICommandBuilder set(java.lang.String, java.util.List<T>);
+  public com.hypixel.hytale.protocol.packets.interface_.CustomUICommand[] getCommands();
+}
+Compiled from "UIEventBuilder.java"
+public class com.hypixel.hytale.server.core.ui.builder.UIEventBuilder {
+  public static final com.hypixel.hytale.logger.HytaleLogger LOGGER;
+  public static final com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBinding[] EMPTY_EVENT_BINDING_ARRAY;
+  public com.hypixel.hytale.server.core.ui.builder.UIEventBuilder();
+  public com.hypixel.hytale.server.core.ui.builder.UIEventBuilder addEventBinding(com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType, java.lang.String);
+  public com.hypixel.hytale.server.core.ui.builder.UIEventBuilder addEventBinding(com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType, java.lang.String, boolean);
+  public com.hypixel.hytale.server.core.ui.builder.UIEventBuilder addEventBinding(com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType, java.lang.String, com.hypixel.hytale.server.core.ui.builder.EventData);
+  public com.hypixel.hytale.server.core.ui.builder.UIEventBuilder addEventBinding(com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType, java.lang.String, com.hypixel.hytale.server.core.ui.builder.EventData, boolean);
+  public com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBinding[] getEvents();
+}

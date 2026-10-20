@@ -1,0 +1,19 @@
+{
+  "capturedAtUtc": "2026-09-06T21:25:47.1199384Z",
+  "serverJar": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\install\\pre-release\\package\\game\\latest\\Server\\HytaleServer.jar",
+  "serverJarSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "damageBlockedMetadata": true,
+  "sweptCollision": true,
+  "authoritativeMoveTo": true,
+  "clientWishMovement": true,
+  "durationOverrideEntityEffect": true,
+  "entityEffectAssetMap": true,
+  "authoritativeOffhand": true,
+  "npcProtectionFlag": true,
+  "nativeBossBarEntityIdentity": true,
+  "outboundBossBarObservation": true,
+  "networkIdLookup": true,
+  "verifiedStunAsset": true,
+  "stunAssetPath": "Server/Entity/Effects/Status/Stun.json",
+  "bossClassification": "World-scoped UpdateBossBar.entityNetworkId matched to the target NetworkId; hidden bars and player/world teardown remove the identity. No role-name heuristic."
+}

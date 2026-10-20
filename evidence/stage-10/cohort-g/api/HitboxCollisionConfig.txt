@@ -1,0 +1,385 @@
+Compiled from "HitboxCollisionConfig.java"
+public class com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig implements com.hypixel.hytale.assetstore.map.JsonAssetWithMap<java.lang.String, com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap<java.lang.String, com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig>>, com.hypixel.hytale.server.core.io.NetworkSerializable<com.hypixel.hytale.protocol.HitboxCollisionConfig> {
+  public static final com.hypixel.hytale.assetstore.codec.AssetBuilderCodec<java.lang.String, com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig> CODEC;
+
+  public static final com.hypixel.hytale.codec.validation.ValidatorCache<java.lang.String> VALIDATOR_CACHE;
+
+  private static com.hypixel.hytale.assetstore.AssetStore<java.lang.String, com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig, com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap<java.lang.String, com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig>> ASSET_STORE;
+
+  public static final int NO_HITBOX;
+
+  protected com.hypixel.hytale.assetstore.AssetExtraInfo$Data data;
+
+  protected java.lang.String id;
+
+  protected com.hypixel.hytale.protocol.CollisionType collisionType;
+
+  protected float softOffsetRatio;
+
+  protected boolean rotateHitbox;
+
+  private boolean allowEntityAnchoring;
+
+  private boolean rotateAnchoredEntities;
+
+  public static com.hypixel.hytale.assetstore.AssetStore<java.lang.String, com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig, com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap<java.lang.String, com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig>> getAssetStore();
+    Code:
+         0: getstatic     #1                  // Field ASSET_STORE:Lcom/hypixel/hytale/assetstore/AssetStore;
+         3: ifnonnull     14
+         6: ldc           #2                  // class com/hypixel/hytale/server/core/modules/entity/hitboxcollision/HitboxCollisionConfig
+         8: invokestatic  #7                  // Method com/hypixel/hytale/assetstore/AssetRegistry.getAssetStore:(Ljava/lang/Class;)Lcom/hypixel/hytale/assetstore/AssetStore;
+        11: putstatic     #1                  // Field ASSET_STORE:Lcom/hypixel/hytale/assetstore/AssetStore;
+        14: getstatic     #1                  // Field ASSET_STORE:Lcom/hypixel/hytale/assetstore/AssetStore;
+        17: areturn
+
+  public static com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap<java.lang.String, com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig> getAssetMap();
+    Code:
+         0: invokestatic  #13                 // Method getAssetStore:()Lcom/hypixel/hytale/assetstore/AssetStore;
+         3: invokevirtual #16                 // Method com/hypixel/hytale/assetstore/AssetStore.getAssetMap:()Lcom/hypixel/hytale/assetstore/AssetMap;
+         6: checkcast     #22                 // class com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap
+         9: areturn
+
+  public com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig(java.lang.String);
+    Code:
+         0: aload_0
+         1: invokespecial #24                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: fconst_1
+         6: putfield      #30                 // Field softOffsetRatio:F
+         9: aload_0
+        10: iconst_1
+        11: putfield      #34                 // Field allowEntityAnchoring:Z
+        14: aload_0
+        15: aload_1
+        16: putfield      #38                 // Field id:Ljava/lang/String;
+        19: return
+
+  public com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig();
+    Code:
+         0: aload_0
+         1: invokespecial #24                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: fconst_1
+         6: putfield      #30                 // Field softOffsetRatio:F
+         9: aload_0
+        10: iconst_1
+        11: putfield      #34                 // Field allowEntityAnchoring:Z
+        14: return
+
+  public java.lang.String getId();
+    Code:
+         0: aload_0
+         1: getfield      #38                 // Field id:Ljava/lang/String;
+         4: areturn
+
+  public com.hypixel.hytale.protocol.CollisionType getCollisionType();
+    Code:
+         0: aload_0
+         1: getfield      #42                 // Field collisionType:Lcom/hypixel/hytale/protocol/CollisionType;
+         4: areturn
+
+  public float getSoftOffsetRatio();
+    Code:
+         0: aload_0
+         1: getfield      #30                 // Field softOffsetRatio:F
+         4: freturn
+
+  public boolean getRotateHitbox();
+    Code:
+         0: aload_0
+         1: getfield      #46                 // Field rotateHitbox:Z
+         4: ireturn
+
+  public boolean getAllowEntityAnchoring();
+    Code:
+         0: aload_0
+         1: getfield      #34                 // Field allowEntityAnchoring:Z
+         4: ireturn
+
+  public com.hypixel.hytale.protocol.HitboxCollisionConfig toPacket();
+    Code:
+         0: new           #49                 // class com/hypixel/hytale/protocol/HitboxCollisionConfig
+         3: dup
+         4: invokespecial #51                 // Method com/hypixel/hytale/protocol/HitboxCollisionConfig."<init>":()V
+         7: astore_1
+         8: aload_1
+         9: aload_0
+        10: getfield      #42                 // Field collisionType:Lcom/hypixel/hytale/protocol/CollisionType;
+        13: putfield      #52                 // Field com/hypixel/hytale/protocol/HitboxCollisionConfig.collisionType:Lcom/hypixel/hytale/protocol/CollisionType;
+        16: aload_1
+        17: aload_0
+        18: getfield      #30                 // Field softOffsetRatio:F
+        21: putfield      #53                 // Field com/hypixel/hytale/protocol/HitboxCollisionConfig.softCollisionOffsetRatio:F
+        24: aload_1
+        25: aload_0
+        26: getfield      #46                 // Field rotateHitbox:Z
+        29: putfield      #56                 // Field com/hypixel/hytale/protocol/HitboxCollisionConfig.rotateHitbox:Z
+        32: aload_1
+        33: aload_0
+        34: getfield      #34                 // Field allowEntityAnchoring:Z
+        37: putfield      #57                 // Field com/hypixel/hytale/protocol/HitboxCollisionConfig.allowEntityAnchoring:Z
+        40: aload_1
+        41: aload_0
+        42: getfield      #58                 // Field rotateAnchoredEntities:Z
+        45: putfield      #61                 // Field com/hypixel/hytale/protocol/HitboxCollisionConfig.rotateAnchoredEntities:Z
+        48: aload_1
+        49: areturn
+
+  public java.lang.String toString();
+    Code:
+         0: aload_0
+         1: getfield      #62                 // Field data:Lcom/hypixel/hytale/assetstore/AssetExtraInfo$Data;
+         4: invokestatic  #66                 // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+         7: aload_0
+         8: getfield      #38                 // Field id:Ljava/lang/String;
+        11: aload_0
+        12: getfield      #42                 // Field collisionType:Lcom/hypixel/hytale/protocol/CollisionType;
+        15: invokestatic  #66                 // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+        18: aload_0
+        19: getfield      #30                 // Field softOffsetRatio:F
+        22: invokedynamic #72,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;F)Ljava/lang/String;
+        27: areturn
+
+  public java.lang.Object getId();
+    Code:
+         0: aload_0
+         1: invokevirtual #76                 // Method getId:()Ljava/lang/String;
+         4: areturn
+
+  public java.lang.Object toPacket();
+    Code:
+         0: aload_0
+         1: invokevirtual #80                 // Method toPacket:()Lcom/hypixel/hytale/protocol/HitboxCollisionConfig;
+         4: areturn
+
+  private static void lambda$static$18(com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig, com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #58                 // Field rotateAnchoredEntities:Z
+         5: putfield      #58                 // Field rotateAnchoredEntities:Z
+         8: return
+
+  private static java.lang.Boolean lambda$static$17(com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig);
+    Code:
+         0: aload_0
+         1: getfield      #58                 // Field rotateAnchoredEntities:Z
+         4: invokestatic  #84                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         7: areturn
+
+  private static void lambda$static$16(com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig, java.lang.Boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #89                 // Method java/lang/Boolean.booleanValue:()Z
+         5: putfield      #58                 // Field rotateAnchoredEntities:Z
+         8: return
+
+  private static void lambda$static$15(com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig, com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #34                 // Field allowEntityAnchoring:Z
+         5: putfield      #34                 // Field allowEntityAnchoring:Z
+         8: return
+
+  private static java.lang.Boolean lambda$static$14(com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig);
+    Code:
+         0: aload_0
+         1: getfield      #34                 // Field allowEntityAnchoring:Z
+         4: invokestatic  #84                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         7: areturn
+
+  private static void lambda$static$13(com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig, java.lang.Boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #89                 // Method java/lang/Boolean.booleanValue:()Z
+         5: putfield      #34                 // Field allowEntityAnchoring:Z
+         8: return
+
+  private static void lambda$static$12(com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig, com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #46                 // Field rotateHitbox:Z
+         5: putfield      #46                 // Field rotateHitbox:Z
+         8: return
+
+  private static java.lang.Boolean lambda$static$11(com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig);
+    Code:
+         0: aload_0
+         1: getfield      #46                 // Field rotateHitbox:Z
+         4: invokestatic  #84                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         7: areturn
+
+  private static void lambda$static$10(com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig, java.lang.Boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #89                 // Method java/lang/Boolean.booleanValue:()Z
+         5: putfield      #46                 // Field rotateHitbox:Z
+         8: return
+
+  private static void lambda$static$9(com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig, com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #30                 // Field softOffsetRatio:F
+         5: putfield      #30                 // Field softOffsetRatio:F
+         8: return
+
+  private static java.lang.Float lambda$static$8(com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig);
+    Code:
+         0: aload_0
+         1: getfield      #30                 // Field softOffsetRatio:F
+         4: invokestatic  #93                 // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+         7: areturn
+
+  private static void lambda$static$7(com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig, java.lang.Float);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #98                 // Method java/lang/Float.floatValue:()F
+         5: putfield      #30                 // Field softOffsetRatio:F
+         8: return
+
+  private static void lambda$static$6(com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig, com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #42                 // Field collisionType:Lcom/hypixel/hytale/protocol/CollisionType;
+         5: putfield      #42                 // Field collisionType:Lcom/hypixel/hytale/protocol/CollisionType;
+         8: return
+
+  private static com.hypixel.hytale.protocol.CollisionType lambda$static$5(com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig);
+    Code:
+         0: aload_0
+         1: getfield      #42                 // Field collisionType:Lcom/hypixel/hytale/protocol/CollisionType;
+         4: areturn
+
+  private static void lambda$static$4(com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig, com.hypixel.hytale.protocol.CollisionType);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #42                 // Field collisionType:Lcom/hypixel/hytale/protocol/CollisionType;
+         5: return
+
+  private static com.hypixel.hytale.assetstore.AssetExtraInfo$Data lambda$static$3(com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig);
+    Code:
+         0: aload_0
+         1: getfield      #62                 // Field data:Lcom/hypixel/hytale/assetstore/AssetExtraInfo$Data;
+         4: areturn
+
+  private static void lambda$static$2(com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig, com.hypixel.hytale.assetstore.AssetExtraInfo$Data);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #62                 // Field data:Lcom/hypixel/hytale/assetstore/AssetExtraInfo$Data;
+         5: return
+
+  private static java.lang.String lambda$static$1(com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig);
+    Code:
+         0: aload_0
+         1: getfield      #38                 // Field id:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$0(com.hypixel.hytale.server.core.modules.entity.hitboxcollision.HitboxCollisionConfig, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #38                 // Field id:Ljava/lang/String;
+         5: return
+
+  static {};
+    Code:
+         0: ldc           #2                  // class com/hypixel/hytale/server/core/modules/entity/hitboxcollision/HitboxCollisionConfig
+         2: invokedynamic #102,  0            // InvokeDynamic #1:get:()Ljava/util/function/Supplier;
+         7: getstatic     #106                // Field com/hypixel/hytale/codec/Codec.STRING:Lcom/hypixel/hytale/codec/codecs/simple/StringCodec;
+        10: invokedynamic #112,  0            // InvokeDynamic #2:accept:()Ljava/util/function/BiConsumer;
+        15: invokedynamic #116,  0            // InvokeDynamic #3:apply:()Ljava/util/function/Function;
+        20: invokedynamic #120,  0            // InvokeDynamic #4:accept:()Ljava/util/function/BiConsumer;
+        25: invokedynamic #121,  0            // InvokeDynamic #5:apply:()Ljava/util/function/Function;
+        30: invokestatic  #122                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec.builder:(Ljava/lang/Class;Ljava/util/function/Supplier;Lcom/hypixel/hytale/codec/Codec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder;
+        33: new           #128                // class com/hypixel/hytale/codec/KeyedCodec
+        36: dup
+        37: ldc           #130                // String CollisionType
+        39: new           #132                // class com/hypixel/hytale/codec/codecs/EnumCodec
+        42: dup
+        43: ldc           #134                // class com/hypixel/hytale/protocol/CollisionType
+        45: invokespecial #136                // Method com/hypixel/hytale/codec/codecs/EnumCodec."<init>":(Ljava/lang/Class;)V
+        48: invokespecial #139                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        51: invokedynamic #142,  0            // InvokeDynamic #6:accept:()Ljava/util/function/BiConsumer;
+        56: invokedynamic #143,  0            // InvokeDynamic #7:apply:()Ljava/util/function/Function;
+        61: invokedynamic #144,  0            // InvokeDynamic #8:accept:()Ljava/util/function/BiConsumer;
+        66: invokevirtual #145                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        69: invokestatic  #151                // Method com/hypixel/hytale/codec/validation/Validators.nonNull:()Lcom/hypixel/hytale/codec/validation/Validator;
+        72: invokevirtual #157                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidator:(Lcom/hypixel/hytale/codec/validation/Validator;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        75: ldc           #163                // String The type of collision, possible values are: Hard, Soft
+        77: invokevirtual #165                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        80: invokevirtual #169                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        83: checkcast     #146                // class com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder
+        86: new           #128                // class com/hypixel/hytale/codec/KeyedCodec
+        89: dup
+        90: ldc           #173                // String SoftCollisionOffsetRatio
+        92: getstatic     #175                // Field com/hypixel/hytale/codec/Codec.FLOAT:Lcom/hypixel/hytale/codec/codecs/simple/FloatCodec;
+        95: invokespecial #139                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        98: invokedynamic #179,  0            // InvokeDynamic #9:accept:()Ljava/util/function/BiConsumer;
+       103: invokedynamic #180,  0            // InvokeDynamic #10:apply:()Ljava/util/function/Function;
+       108: invokedynamic #181,  0            // InvokeDynamic #11:accept:()Ljava/util/function/BiConsumer;
+       113: invokevirtual #145                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       116: ldc           #182                // String The ratio for how much of the client move offset should be applied when going through a Soft HitboxCollision
+       118: invokevirtual #165                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       121: invokevirtual #169                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       124: checkcast     #146                // class com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder
+       127: new           #128                // class com/hypixel/hytale/codec/KeyedCodec
+       130: dup
+       131: ldc           #184                // String RotateHitbox
+       133: getstatic     #186                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+       136: invokespecial #139                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       139: invokedynamic #190,  0            // InvokeDynamic #12:accept:()Ljava/util/function/BiConsumer;
+       144: invokedynamic #191,  0            // InvokeDynamic #13:apply:()Ljava/util/function/Function;
+       149: invokedynamic #192,  0            // InvokeDynamic #14:accept:()Ljava/util/function/BiConsumer;
+       154: invokevirtual #145                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       157: ldc           #193                // String If the hitbox of the entity should be rotated by the body orientation around the entity position for Hard collision.
+       159: invokevirtual #165                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       162: invokevirtual #169                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       165: checkcast     #146                // class com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder
+       168: new           #128                // class com/hypixel/hytale/codec/KeyedCodec
+       171: dup
+       172: ldc           #195                // String AllowEntityAnchoring
+       174: getstatic     #186                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+       177: invokespecial #139                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       180: invokedynamic #197,  0            // InvokeDynamic #15:accept:()Ljava/util/function/BiConsumer;
+       185: invokedynamic #198,  0            // InvokeDynamic #16:apply:()Ljava/util/function/Function;
+       190: invokedynamic #199,  0            // InvokeDynamic #17:accept:()Ljava/util/function/BiConsumer;
+       195: invokevirtual #145                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       198: ldc           #200                // String If other entities should be allowed to anchor themselves to the entity when standing on it with Hard collision.
+       200: invokevirtual #165                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       203: invokevirtual #169                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       206: checkcast     #146                // class com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder
+       209: new           #128                // class com/hypixel/hytale/codec/KeyedCodec
+       212: dup
+       213: ldc           #202                // String RotateAnchoredEntities
+       215: getstatic     #186                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+       218: invokespecial #139                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       221: invokedynamic #204,  0            // InvokeDynamic #18:accept:()Ljava/util/function/BiConsumer;
+       226: invokedynamic #205,  0            // InvokeDynamic #19:apply:()Ljava/util/function/Function;
+       231: invokedynamic #206,  0            // InvokeDynamic #20:accept:()Ljava/util/function/BiConsumer;
+       236: invokevirtual #145                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       239: ldc           #207                // String If anchored entities should have their yaw track with the entity.
+       241: invokevirtual #165                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       244: invokevirtual #169                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       247: checkcast     #146                // class com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder
+       250: invokevirtual #209                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.build:()Lcom/hypixel/hytale/assetstore/codec/AssetBuilderCodec;
+       253: putstatic     #213                // Field CODEC:Lcom/hypixel/hytale/assetstore/codec/AssetBuilderCodec;
+       256: new           #217                // class com/hypixel/hytale/codec/validation/ValidatorCache
+       259: dup
+       260: new           #219                // class com/hypixel/hytale/assetstore/AssetKeyValidator
+       263: dup
+       264: invokedynamic #221,  0            // InvokeDynamic #21:get:()Ljava/util/function/Supplier;
+       269: invokespecial #222                // Method com/hypixel/hytale/assetstore/AssetKeyValidator."<init>":(Ljava/util/function/Supplier;)V
+       272: invokespecial #225                // Method com/hypixel/hytale/codec/validation/ValidatorCache."<init>":(Lcom/hypixel/hytale/codec/validation/Validator;)V
+       275: putstatic     #228                // Field VALIDATOR_CACHE:Lcom/hypixel/hytale/codec/validation/ValidatorCache;
+       278: return
+}

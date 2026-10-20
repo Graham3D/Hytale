@@ -1,0 +1,765 @@
+[2026/09/06 21:25:47   INFO] [Hytale] Logger Initialized
+[2026/09/06 21:25:48   INFO]           [HytaleServer] Starting HytaleServer
+[2026/09/06 21:25:48   INFO]           [HytaleServer] Loading config...
+[2026/09/06 21:25:48   INFO]           [HytaleServer] Authentication mode: OFFLINE
+[2026/09/06 21:25:48   INFO]      [ServerAuthManager] No server tokens configured. Use /auth login to authenticate, or provide tokens via CLI/environment.
+[2026/09/06 21:25:48   INFO]      [ServerAuthManager] Server session ID: eb739e7e-5a44-429c-aa0e-73b721f15f59
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by com.hypixel.fastutil.ints.Int2ObjectConcurrentHashMap (file:/C:/Users/Zemio/AppData/Roaming/Hytale/install/pre-release/package/game/latest/Server/HytaleServer.jar)
+WARNING: Please consider reporting this to the maintainers of class com.hypixel.fastutil.ints.Int2ObjectConcurrentHashMap
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[2026/09/06 21:25:48   INFO]           [HytaleServer] Booting up HytaleServer - Version: 0.7.0-pre.1, Revision: e8b4d191fc98a977bf5546a951a7b25473d323e3
+[2026/09/06 21:25:48   INFO]           [HytaleServer] Setup phase...
+[2026/09/06 21:25:48   INFO]          [PluginManager] Loading pending core plugins!
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:ConsoleModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:PermissionsModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:UpdateModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:LiveConfigModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:FlyCameraModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:AssetModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:CommonAssetModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:CosmeticsModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:ServerManager
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:I18nModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:ItemModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:BlockTypeModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:LegacyModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:BlockModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:BlockAnimationModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:CollisionModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:BlockSetModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:MigrationModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:BlockHealthModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:PrefabSpawnerModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:TimeModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:AnchorActionModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:InteractionModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:EntityModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:EntityStatsModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:EntityUIModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:DamageModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:SplitVelocity
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:StaminaModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:DebugPlugin
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:ProjectileModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:ServerPlayerListModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:VoiceModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:AccessControlModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:SingleplayerModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Universe
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:TelemetryModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:ConnectedBlocksModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:DiscoveryModule
+[2026/09/06 21:25:48   INFO]          [PluginManager] Loading pending classpath plugins!
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:AssetEditor
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:BlockSpawner
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:BlockTick
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:BlockPhysics
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:BuilderTools
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Crafting
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:CommandMacro
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:CompanionBlockSpawner
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:AugmentBlocks
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:GameFlags
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Instances
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:LANDiscovery
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:NPC
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:NPCObjectives
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:ObjectiveReputation
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Objectives
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:ObjectiveShop
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Path
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Reputation
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:NPCReputation
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Shop
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:ShopReputation
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:NPCShop
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:NPCEditor
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Stash
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Beam
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:TagSet
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Teleport
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Fluid
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Weather
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:WorldGen
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Farming
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Camera
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Wilderness
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:WorldLocationCondition
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:NPCCombatActionEvaluator
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Model
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Mantling
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:SafetyRoll
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:SprintForce
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:CrouchSlide
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:FallingBlocks
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Parkour
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Mounts
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:HytaleGenerator
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Teleporter
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Memories
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:GoblinLab
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Deployables
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Portals
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Beds
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:WorldEvents
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Ambience
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Audio
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:CreativeHub
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:RandomTick
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:ReactiveBlocks
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:TriggerVolumes
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Points
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Locate
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:EncounterManager
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:NPCKnockbackDebug
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Abilities
+[2026/09/06 21:25:48   INFO]          [PluginManager] - Hytale:Rewards
+[2026/09/06 21:25:48   INFO]          [PluginManager] Loading pending plugins from directory: mods
+[2026/09/06 21:25:48   INFO]          [PluginManager] - InigmasGames:HytaleRPGPhase00Audit from path HytaleRPG-0.0.6.jar
+[2026/09/06 21:25:48   WARN]         [PluginManifest] Manifest ServerVersion '2026.02.17-255364b8e' is in the pre-semver YYYY.MM.DD-<sha> format. Treated as wildcard for backward compatibility. Update to a SemverRange.
+[2026/09/06 21:25:48   INFO]          [PluginManager] - HytaleDevLib:HytaleDevLib from path HYTALEDEVLIB-0.5.0.jar
+[2026/09/06 21:25:48   INFO]          [PluginManager] - InigmasGames:CanvasUI from path CanvasUI-0.1.0.jar
+[2026/09/06 21:25:48   INFO]       [TelemetryStorage] Opened telemetry session file: telemetry\2026-09-06_21-25-48_3c7fdf5e.jsonl
+[2026/09/06 21:25:48   INFO]       [TelemetryService] Telemetry service initialized with session ID: 3c7fdf5e-dc7e-4193-852d-920d1ac8616f
+[2026/09/06 21:25:48   INFO]          [AssetModule|P] Asset monitor enabled!
+[2026/09/06 21:25:49   INFO]          [AssetModule|P] Loaded pack: Hytale:Hytale from Assets.zip
+[2026/09/06 21:25:49   INFO]          [AssetModule|P] Loading packs from directory: mods
+[2026/09/06 21:25:49   INFO]          [AssetModule|P] Loaded pack: InigmasGames:HytaleRPGPhase00Audit from HytaleRPG-0.0.6.jar
+[2026/09/06 21:25:49   WARN]         [PluginManifest] Manifest ServerVersion '2026.02.17-255364b8e' is in the pre-semver YYYY.MM.DD-<sha> format. Treated as wildcard for backward compatibility. Update to a SemverRange.
+[2026/09/06 21:25:49   INFO]          [AssetModule|P] Loaded pack: HytaleDevLib:HytaleDevLib from HYTALEDEVLIB-0.5.0.jar
+[2026/09/06 21:25:49   INFO]          [AssetModule|P] Loaded pack: InigmasGames:CanvasUI from CanvasUI-0.1.0.jar
+[2026/09/06 21:25:49   WARN]          [AssetModule|P] Skipping pack at Hytale_HytaleGenerator: missing or invalid manifest.json
+[2026/09/06 21:25:49   WARN]          [AssetModule|P] Skipping pack at Hytale_Shop: missing or invalid manifest.json
+[2026/09/06 21:25:49   INFO]        [ConsoleModule|P] Setup console with type: dumb-color
+[2026/09/06 21:25:49   INFO]           [I18nModule|P] Loaded 11377 bundled default translations from /bundledDefaults/server.lang
+[2026/09/06 21:25:49   INFO]       [TelemetryService] Telemetry enabled
+[2026/09/06 21:25:49   INFO]        [TelemetryModule] Server telemetry is enabled
+[2026/09/06 21:25:49   INFO]          [VoiceModule|P] [Voice] Registered voice stream handler
+[2026/09/06 21:25:49   INFO]          [VoiceModule|P] [Voice] VoiceModule initialized (maxDistance=32.0, refDistance=4.0, enabled=true, voiceStreamSupported=true)
+[2026/09/06 21:25:50   INFO]     [HytaleDevLibPlugin] HytaleDevLib v0.5.0 loaded - Helper library ready!
+[2026/09/06 21:25:50   INFO]         [CanvasUIPlugin] CANVASUI_SETUP revision=R008 version=0.1.0 hytale=0.7.0-pre.1 inputBackend=hytale-customui-0.7.0-pre.1 capabilities=CanvasInputCapabilities[supportsPointerMove=false, supportsPointerCapture=false, supportsPrimaryDrag=false, supportsMiddleDrag=false, supportsWheel=false, supportsRightClick=true, supportsModifierKeys=false, supportsTextInput=true]
+[2026/09/06 21:25:50   INFO]         [CanvasUIPlugin] CANVASUI_DEMO_SETUP revision=R008 bundled=true commands=/canvasui-demo,/canvasui-topology-proof,/canvasui-input-probe
+[2026/09/06 21:25:50   INFO]          [Phase00Plugin] HYTALE_RPG_SETUP revision=R013 version=0.0.6 hytale=0.7.0-pre.1 stage=04 combatEnabled=true
+[2026/09/06 21:25:50   INFO]          [Phase00Plugin] RPG_STAGE04_READY revision=R013 skills=87 passives=66 pilots=6 schema=2 balance=rpg.combat-kernel.r011 skillTrace=mods\InigmasGames_HytaleRPGPhase00Audit\logs\rpg\skill-trace.jsonl uiTrace=mods\InigmasGames_HytaleRPGPhase00Audit\logs\rpg\ui-trace.jsonl abilityInput=Ability1..Ability4 uiOpen=COMMAND_ONLY entitlementMode=DEVELOPMENT
+[2026/09/06 21:25:50   INFO]      [ServerAuthManager] Auth credential store: Encrypted
+[2026/09/06 21:25:50   INFO]           [HytaleServer] Setup phase completed! Boot time 2sec 512ms 355us 200ns
+[2026/09/06 21:25:50   INFO]                 [Hytale] Loading common assets from: /
+[2026/09/06 21:25:50   INFO]    [CommonAssetModule|P] Took 136ms 50us 100ns to load 27568 assets from CommonAssetsIndex.hashes file.
+[2026/09/06 21:25:50   WARN]    [CommonAssetModule|P] Duplicated Asset Count: 961
+[2026/09/06 21:25:50   INFO]                 [Hytale] Loading common assets phase completed! Boot time 2sec 649ms 32us 500ns, Took 136ms 545us 100ns
+[2026/09/06 21:25:50   INFO]                 [Hytale] Loading common assets from: /
+[2026/09/06 21:25:50   INFO]    [CommonAssetModule|P] Took 4ms 424us 300ns to walk file tree and load 7 assets.
+[2026/09/06 21:25:50   WARN]    [CommonAssetModule|P] Duplicated Asset Count: 961
+[2026/09/06 21:25:50   INFO]                 [Hytale] Loading common assets phase completed! Boot time 2sec 653ms 899us 900ns, Took 4ms 698us 400ns
+[2026/09/06 21:25:50   INFO]                 [Hytale] Loading common assets from: /
+[2026/09/06 21:25:50   WARN]    [CommonAssetModule|P] Duplicated Asset Count: 961
+[2026/09/06 21:25:50   INFO]                 [Hytale] Loading common assets phase completed! Boot time 2sec 654ms 255us 600ns, Took 172us 400ns
+[2026/09/06 21:25:50   INFO]                 [Hytale] Loading common assets from: /
+[2026/09/06 21:25:50   INFO]    [CommonAssetModule|P] Took 1ms 415us 700ns to walk file tree and load 6 assets.
+[2026/09/06 21:25:50   WARN]    [CommonAssetModule|P] Duplicated Asset Count: 961
+[2026/09/06 21:25:50   INFO]                 [Hytale] Loading common assets phase completed! Boot time 2sec 655ms 962us 900ns, Took 1ms 626us 700ns
+[2026/09/06 21:25:50   INFO]           [I18nModule|P] Loaded 10293 entries for 'zh-CN' from /Server/Languages
+[2026/09/06 21:25:50   INFO]           [I18nModule|P] Loaded 10487 entries for 'uk-UA' from /Server/Languages
+[2026/09/06 21:25:50   INFO]           [I18nModule|P] Loaded 9677 entries for 'ru-RU' from /Server/Languages
+[2026/09/06 21:25:50   INFO]           [I18nModule|P] Loaded 10487 entries for 'pt-BR' from /Server/Languages
+[2026/09/06 21:25:50   INFO]           [I18nModule|P] Loaded 11401 entries for 'en-US' from /Server/Languages
+[2026/09/06 21:25:50   INFO]           [I18nModule|P] Loaded 51 entries from /Server/Languages/fallback.lang
+[2026/09/06 21:25:50   INFO]    [AssetRegistryLoader] Loading 113 asset stores...
+[2026/09/06 21:25:50   INFO]    [AssetRegistryLoader] Pre-adding assets...
+[2026/09/06 21:25:50   INFO]      [CollisionModule|P] Block extents for CollisionSystem is Max=0.00000, Min=0.00000
+[2026/09/06 21:25:50   INFO]           [ItemModule|P] Computed damage data for 0 of 0 weapon items
+[2026/09/06 21:25:50   INFO]                 [Hytale] Loading assets from: /Server
+[2026/09/06 21:25:50   INFO]    [AssetRegistryLoader] Loading assets from /Server
+[2026/09/06 21:25:50   WARN] [AssetStore|TriggerEffectAsset] Unused key(s) in 'Objective_Outpost_Undead' file /Server/TriggerVolumes/Effects/Objective_Outpost_Undead.json: Effects.0.Type, Effects.1.Type, Effects.2.Type, Effects.3.Type
+[2026/09/06 21:25:50   WARN] [AssetStore|TriggerEffectAsset] Asset key 'sample_bounce_pad' for file '/Server/TriggerVolumes/Effects/sample_bounce_pad.json' has incorrect format! Expected: 'Sample_Bounce_Pad'
+[2026/09/06 21:25:50   WARN] [AssetStore|TriggerEffectAsset] Unused key(s) in 'Undead_Encounter_Spawner' file /Server/TriggerVolumes/Effects/Undead_Encounter_Spawner.json: Effects.0.Type, Effects.1.Type, Effects.2.Type, Effects.3.Type
+[2026/09/06 21:25:50   WARN] [AssetStore|TriggerEffectAsset] Unused key(s) in 'sample_bounce_pad' file /Server/TriggerVolumes/Effects/sample_bounce_pad.json: Effects.0.Type, Effects.1.Type, Effects.2.Type
+[2026/09/06 21:25:50   WARN] [AssetStore|TriggerEffectAsset] Unused key(s) in 'Health_Pack_Volume' file /Server/TriggerVolumes/Effects/Health_Pack_Volume.json: Effects.0.Type, Effects.1.Type, Effects.2.Type, Effects.3.Type, Effects.4.Type, Effects.5.Type, Effects.6.Type, Effects.7.Type
+[2026/09/06 21:25:50   WARN]              [MacroCommandBase] Could not parse default argument value for argument: 'world' on Macro Command: 'settimeandgohome'.
+No such world "Default".
+No such world "Default".
+[2026/09/06 21:25:50   WARN]               [HytaleGenerator] Duplicate export name for asset: Spawns
+[2026/09/06 21:25:50   WARN]               [HytaleGenerator] Duplicate export name for asset: Spawns
+[2026/09/06 21:25:50   WARN] [AssetStore|ScriptedBrushAsset] Asset key 'templeFloor' for file '/Server/ScriptedBrushes/Archive/templeFloor.json' has incorrect format! Expected: 'TempleFloor'
+[2026/09/06 21:25:50   WARN] [AssetStore|ScriptedBrushAsset] Asset key 'templeWalls' for file '/Server/ScriptedBrushes/Archive/templeWalls.json' has incorrect format! Expected: 'TempleWalls'
+[2026/09/06 21:25:50   WARN] [AssetStore|ScriptedBrushAsset] Asset key 'keepDestruction' for file '/Server/ScriptedBrushes/Archive/keepDestruction.json' has incorrect format! Expected: 'KeepDestruction'
+[2026/09/06 21:25:50   WARN] [AssetStore|ScriptedBrushAsset] Asset key 'templeRandom' for file '/Server/ScriptedBrushes/Archive/templeRandom.json' has incorrect format! Expected: 'TempleRandom'
+[2026/09/06 21:25:50   WARN] [AssetStore|ScriptedBrushAsset] Asset key 'templeDestruction' for file '/Server/ScriptedBrushes/Archive/templeDestruction.json' has incorrect format! Expected: 'TempleDestruction'
+[2026/09/06 21:25:50   WARN] [AssetStore|ScriptedBrushAsset] Asset key 'MountainBrush_old' for file '/Server/ScriptedBrushes/Archive/MountainBrush_old.json' has incorrect format! Expected: 'MountainBrush_Old'
+[2026/09/06 21:25:50   WARN] [AssetStore|ScriptedBrushAsset] Asset key 'templePillars' for file '/Server/ScriptedBrushes/Archive/templePillars.json' has incorrect format! Expected: 'TemplePillars'
+[2026/09/06 21:25:50   WARN] [AssetStore|ScriptedBrushAsset] Asset key 'BoulderBrush_old' for file '/Server/ScriptedBrushes/Archive/BoulderBrush_old.json' has incorrect format! Expected: 'BoulderBrush_Old'
+[2026/09/06 21:25:50   WARN] [AssetStore|ScriptedBrushAsset] Asset key 'moltenBall' for file '/Server/ScriptedBrushes/Archive/moltenBall.json' has incorrect format! Expected: 'MoltenBall'
+[2026/09/06 21:25:50   WARN]               [HytaleGenerator] Duplicate export name for asset: Volcanic1_Swamp_Bushes_Jungles_Pattern
+[2026/09/06 21:25:50   WARN]               [HytaleGenerator] Duplicate export name for asset: Plains1_OakPattern_Floor_Grass
+[2026/09/06 21:25:50   WARN]               [HytaleGenerator] Duplicate export name for asset: Plains1_OakPattern_Floor_Grass
+[2026/09/06 21:25:50   INFO]               [HytaleGenerator] Exported Scanner asset with name 'Plains1_Gorges_Tree_Scanner' with asset id 'null
+[2026/09/06 21:25:50   INFO]               [HytaleGenerator] Exported Scanner asset with name 'Plains1_Gorges_Boulder_Scanner' with asset id 'null
+[2026/09/06 21:25:50   WARN]               [HytaleGenerator] Duplicate export name for asset: Plains1_Sticks
+[2026/09/06 21:25:50   WARN]               [HytaleGenerator] Duplicate export name for asset: Plains1_OakPattern_Floor_Grass
+[2026/09/06 21:25:50   INFO]               [HytaleGenerator] Exported Scanner asset with name 'Desert1_Dry_Scanner' with asset id 'null
+[2026/09/06 21:25:50   INFO]               [HytaleGenerator] Exported Scanner asset with name 'Desert1_Palm_Scanner' with asset id 'null
+[2026/09/06 21:25:50   INFO]               [HytaleGenerator] Exported Scanner asset with name 'Desert1_Boab_Scanner' with asset id 'null
+[2026/09/06 21:25:50   INFO]               [HytaleGenerator] Exported Scanner asset with name 'Desert1_Oasis_Grasses_Scanner' with asset id 'null
+[2026/09/06 21:25:50   INFO]               [HytaleGenerator] Exported Scanner asset with name 'Desert1_Oasis_Plants_2_Scanner' with asset id 'null
+[2026/09/06 21:25:50   INFO]               [HytaleGenerator] Exported Scanner asset with name 'Desert1_Boulders_Scanner' with asset id 'null
+[2026/09/06 21:25:50   WARN]               [HytaleGenerator] Duplicate export name for asset: Desert1_Boulders_Scanner
+[2026/09/06 21:25:50   INFO]               [HytaleGenerator] Exported Scanner asset with name 'Desert1_Boulders_Scanner' with asset id 'null
+[2026/09/06 21:25:50   WARN]           [AssetStore|ModelVFX] Asset key 'test' for file '/Server/Entity/ModelVFX/test.json' has incorrect format! Expected: 'Test'
+[2026/09/06 21:25:50   INFO]             [HytaleGenerator|P] Loaded Settings asset.
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Furniture_Temple_Light_Statue'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Ingredient_Hay'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Deco_Spider_Cocoon'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Wood_Softwood_Planks'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Furniture_Feran_Bed'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Furniture_Goblin_Window'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Coop_Chicken'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find hitbox name 'Fence'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find hitbox name 'Fence_Gate'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find hitbox name 'Fence_Gate_Open_In'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find hitbox name 'Fence_Gate_Open_Out'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find hitbox name 'Fence_Thin'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find hitbox name 'Fence_Thick'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find hitbox name 'Fence_Corner'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find hitbox name 'Fence_Corner_Thin'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find hitbox name 'Fence_Corner_Thick'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Rock_Stone'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Furniture_Crude_Bed'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Rock_Crystal_Void_Block'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Furniture_Goblin_Brazier'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Soil_Grass'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Soil_Dirt'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Soil_Dirt_Poisoned'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Soil_Mud'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Deco_Bone_Pile'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Deco_Bone_Skulls'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Soil_Gravel_Sand'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Soil_Dirt'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Soil_Clay'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Rock_Stone'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Rock_Marble'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Rock_Chalk'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Furniture_Goblin_Window'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Furniture_Goblin_Brazier'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Ingredient_Hay'
+[2026/09/06 21:25:50   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Bench_Trough'
+[2026/09/06 21:25:50   INFO]             [CollisionModule|P] Block extents for CollisionSystem is Max=3.00000, Min=0.00000
+[2026/09/06 21:25:50   WARN]               [HytaleGenerator] Duplicate export name for asset: River-Boulders-Mask
+[2026/09/06 21:25:50   WARN]               [HytaleGenerator] Duplicate export name for asset: River-Boulders-Mask
+[2026/09/06 21:25:50   WARN]               [HytaleGenerator] Duplicate export name for asset: River-Boulders-Mask
+[2026/09/06 21:25:50   WARN]               [HytaleGenerator] Duplicate export name for asset: River-Boulders-Mask
+[2026/09/06 21:25:50   WARN]               [HytaleGenerator] Duplicate export name for asset: River-Boulders-Mask
+[2026/09/06 21:25:50   INFO]               [HytaleGenerator] Exported Scanner asset with name 'BasicForestTreeScanner' with asset id 'null
+[2026/09/06 21:25:50   WARN]               [HytaleGenerator] Duplicate export name for asset: werstjrtydkm,
+[2026/09/06 21:25:50   WARN]               [HytaleGenerator] Duplicate export name for asset: werstjrtydkm,
+[2026/09/06 21:25:50 SEVERE]                          [SERR] Reallocate: 131072 to 1179648
+[2026/09/06 21:25:51   WARN]               [HytaleGenerator] Duplicate export name for asset: River-Boulders-Mask
+[2026/09/06 21:25:51   WARN]               [HytaleGenerator] Duplicate export name for asset: River-Boulders-Mask
+[2026/09/06 21:25:51   WARN]               [HytaleGenerator] Duplicate export name for asset: abc
+[2026/09/06 21:25:51   WARN]               [HytaleGenerator] Duplicate export name for asset: Plains1-Gorges-BaseTerrain
+[2026/09/06 21:25:51   WARN]               [HytaleGenerator] Duplicate export name for asset: Taiga1_Rewood_Trees_Mask
+[2026/09/06 21:25:51 SEVERE]                          [SERR] Reallocate: 131072 to 1179648
+[2026/09/06 21:25:51 SEVERE]                          [SERR] Reallocate: 131072 to 1179648
+[2026/09/06 21:25:51 SEVERE]                          [SERR] Reallocate: 131072 to 1179648
+[2026/09/06 21:25:51 SEVERE]                          [SERR] Reallocate: 131072 to 1179648
+[2026/09/06 21:25:51   WARN]               [HytaleGenerator] Duplicate export name for asset: BasicForestTreeScanner
+[2026/09/06 21:25:51   INFO]               [HytaleGenerator] Exported Scanner asset with name 'BasicForestTreeScanner' with asset id 'null
+[2026/09/06 21:25:51   WARN]               [HytaleGenerator] Duplicate export name for asset: Peak
+[2026/09/06 21:25:51   WARN]               [HytaleGenerator] Duplicate export name for asset: pattern1
+[2026/09/06 21:25:51   WARN]         [AssetStore|BiomeAsset] Unused key(s) in 'Test_Graph' file /Server/HytaleGenerator/Biomes/Experimental/Test_Graph.json: Terrain.Density.GraphGenerator.IsSingleInstance, MaterialProvider.Queue.0.GraphGenerator.IsSingleInstance, Props.0.PropDistribution.GraphGenerator.IsSingleInstance
+[2026/09/06 21:25:51   WARN]         [AssetStore|BiomeAsset] Unused key(s) in 'Example_Graph_Selective_Tags' file /Server/HytaleGenerator/Biomes/Examples/Example_Graph_Selective_Tags.json: Terrain.Density.GraphGenerator.IsSingleInstance
+[2026/09/06 21:25:51   WARN]         [AssetStore|BiomeAsset] Unused key(s) in 'Example_Graph_Roots' file /Server/HytaleGenerator/Biomes/Examples/Example_Graph_Roots.json: Terrain.Density.Inputs.0.GraphGenerator.IsSingleInstance
+[2026/09/06 21:25:51 SEVERE]                          [SERR] Reallocate: 131072 to 1179648
+[2026/09/06 21:25:51   WARN]         [AssetStore|BiomeAsset] Unused key(s) in 'Example_Graph_River' file /Server/HytaleGenerator/Biomes/Examples/Example_Graph_River.json: Terrain.Density.Inputs.0.Inputs.0.Inputs.0.Inputs.0.Inputs.0.Inputs.0.TransitionSteepness, Terrain.Density.Inputs.0.Inputs.0.Inputs.0.Inputs.0.Inputs.0.Inputs.0.TransitionPoint, Terrain.Density.Inputs.0.Inputs.0.Inputs.0.Inputs.0.Inputs.0.Inputs.0.PrintStats, Terrain.Density.Inputs.0.Inputs.0.Inputs.0.Inputs.0.Inputs.0.Inputs.0.StatsPrintInterval, Terrain.Density.Inputs.0.Inputs.0.Inputs.0.Inputs.0.Inputs.0.Inputs.0.StatsLabel, Terrain.Density.Inputs.0.Inputs.0.Inputs.0.Inputs.0.Inputs.0.Inputs.0.CacheCellSize, Terrain.Density.Inputs.0.Inputs.0.Inputs.0.Inputs.0.Inputs.0.Inputs.0.CacheCapacity
+[2026/09/06 21:25:51 SEVERE]                          [SERR] Reallocate: 131072 to 1179648
+[2026/09/06 21:25:51 SEVERE]                          [SERR] Reallocate: 131072 to 1179648
+[2026/09/06 21:25:51   WARN]         [AssetStore|BiomeAsset] Unused key(s) in 'Example_Graph_Erosion' file /Server/HytaleGenerator/Biomes/Examples/Example_Graph_Erosion.json: Terrain.Density.Inputs.0.Inputs.0.Inputs.0.Inputs.0.Inputs.0.GraphGenerator.IsSingleInstance
+[2026/09/06 21:25:51   WARN]         [AssetStore|BiomeAsset] Unused key(s) in 'Example_Graph_Road_Layout' file /Server/HytaleGenerator/Biomes/Examples/Example_Graph_Road_Layout.json: MaterialProvider.Solid.Queue.0.FieldFunction.Inputs.0.Inputs.0.Inputs.0.GraphGenerator.IsSingleInstance
+[2026/09/06 21:25:51   WARN]               [HytaleGenerator] Duplicate export name for asset: Desert1_Rivers_Cliffs
+[2026/09/06 21:25:51   WARN]               [HytaleGenerator] Duplicate export name for asset: River-Boulders-Mask
+[2026/09/06 21:25:51   WARN]         [AssetStore|BiomeAsset] Unused key(s) in 'Desert1_Oasis' file /Server/HytaleGenerator/Biomes/Desert1/Desert1_Oasis.json: Props.2.Positions.Positions.OffsetX, Props.2.Positions.Positions.OffsetY, Props.2.Positions.Positions.OffsetZ, Props.3.Positions.Positions.OffsetX, Props.3.Positions.Positions.OffsetY, Props.3.Positions.Positions.OffsetZ, Props.4.Positions.Positions.OffsetX, Props.4.Positions.Positions.OffsetY, Props.4.Positions.Positions.OffsetZ, Props.5.Positions.Positions.OffsetX, Props.5.Positions.Positions.OffsetY, Props.5.Positions.Positions.OffsetZ, Props.6.Positions.Positions.OffsetX, Props.6.Positions.Positions.OffsetY, Props.6.Positions.Positions.OffsetZ
+[2026/09/06 21:25:51   INFO]               [HytaleGenerator] Exported Scanner asset with name 'Desert1_Rocky_Trees_Dry_Scanner' with asset id 'null
+[2026/09/06 21:25:51   INFO]               [HytaleGenerator] Exported Scanner asset with name 'Desert1_Rocky_Trees_Palm_Scanner' with asset id 'null
+[2026/09/06 21:25:51   WARN]    [AssetStore|PrefabListAsset] Asset key 'Trees_Ash_twisted_Giant' for file '/Server/PrefabList/Trees_Ash_twisted_Giant.json' has incorrect format! Expected: 'Trees_Ash_Twisted_Giant'
+[2026/09/06 21:25:51   WARN]    [AssetStore|PrefabListAsset] Asset key 'Trees_Ash_swamp_dead' for file '/Server/PrefabList/Trees_Ash_swamp_dead.json' has incorrect format! Expected: 'Trees_Ash_Swamp_Dead'
+[2026/09/06 21:25:51   WARN]    [AssetStore|PrefabListAsset] Asset key 'Trees_Ash_twisted_Large' for file '/Server/PrefabList/Trees_Ash_twisted_Large.json' has incorrect format! Expected: 'Trees_Ash_Twisted_Large'
+[2026/09/06 21:25:51   WARN]    [AssetStore|PrefabListAsset] Asset key 'Trees_Ash_twisted' for file '/Server/PrefabList/Trees_Ash_twisted.json' has incorrect format! Expected: 'Trees_Ash_Twisted'
+[2026/09/06 21:25:51   WARN]    [AssetStore|PrefabListAsset] Asset key 'Trees_Fir_red' for file '/Server/PrefabList/Trees_Fir_red.json' has incorrect format! Expected: 'Trees_Fir_Red'
+[2026/09/06 21:25:51   WARN]    [AssetStore|PrefabListAsset] Asset key 'Trees_Ash_swamp' for file '/Server/PrefabList/Trees_Ash_swamp.json' has incorrect format! Expected: 'Trees_Ash_Swamp'
+[2026/09/06 21:25:51   WARN]    [AssetStore|PrefabListAsset] Asset key 'Trees_Burnt_dead' for file '/Server/PrefabList/Trees_Burnt_dead.json' has incorrect format! Expected: 'Trees_Burnt_Dead'
+[2026/09/06 21:25:52   WARN]        [AssetStore|Interaction] Unused key(s) in '*Weapon_Sword_Signature_Vortexstrike_Spin_Selector_Next': Next
+[2026/09/06 21:25:52   WARN]        [AssetStore|Interaction] Unused key(s) in '*Weapon_Daggers_Primary_Pounce_Stab_Selector_Next': Next
+[2026/09/06 21:25:52   WARN]                        [Hytale] Missing interaction ***Weapon_Mace_Primary_Swing_Right_Charged_Next_2.0_Interactions_2_Next
+[2026/09/06 21:25:52   WARN]                        [Hytale] Missing interaction ***Weapon_Mace_Primary_Swing_Up_Left_Charged_Next_2.0_Interactions_2_Next
+[2026/09/06 21:25:52   WARN]                        [Hytale] Missing interaction ***Weapon_Mace_Primary_Swing_Left_Charged_Next_2.0_Interactions_2_Next
+[2026/09/06 21:25:52   WARN]                        [Hytale] Missing interaction ***Weapon_Battleaxe_Primary_Downstrike_Next_0.65_Interactions_2_Next
+[2026/09/06 21:25:52   WARN]                        [Hytale] Missing interaction ***Weapon_Daggers_Primary_Pounce_Next_0.4_Interactions_1_Next
+[2026/09/06 21:25:52   WARN]                        [Hytale] Missing interaction ***Weapon_Sword_Primary_Thrust_Next_0.65_Interactions_2_Next
+[2026/09/06 21:25:52   WARN]    [AssetStore|RootInteraction] Unused key(s) in '*Projectile_Config_Hookshot_Interactions_ProjectileHit': Interrupting
+[2026/09/06 21:25:52   WARN]        [AssetStore|Interaction] Unused key(s) in '**Projectile_Config_Scarak_Seeker_Spitball_Interactions_ProjectileMiss_Interactions_0': Effects.WorldParticles
+[2026/09/06 21:25:52   WARN]        [AssetStore|Interaction] Unused key(s) in '**Projectile_Config_Ice_Bolt_Interactions_ProjectileMiss_Interactions_0': Effects.WorldParticles
+[2026/09/06 21:25:52   WARN]        [AssetStore|Interaction] Unused key(s) in '**Projectile_Config_Scarak_Seeker_Spitball_Interactions_ProjectileHit_Interactions_0': Entity
+[2026/09/06 21:25:52   WARN]        [AssetStore|Interaction] Unused key(s) in '**Projectile_Config_Ice_Ball_Interactions_ProjectileMiss_Interactions_0': Effects.WorldParticles
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Furniture_Temple_Light_Statue'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Ingredient_Hay'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Deco_Spider_Cocoon'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Wood_Softwood_Planks'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Furniture_Feran_Bed'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Furniture_Goblin_Window'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Coop_Chicken'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find hitbox name 'Fence'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find hitbox name 'Fence_Gate'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find hitbox name 'Fence_Gate_Open_In'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find hitbox name 'Fence_Gate_Open_Out'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find hitbox name 'Fence_Thin'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find hitbox name 'Fence_Thick'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find hitbox name 'Fence_Corner'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find hitbox name 'Fence_Corner_Thin'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find hitbox name 'Fence_Corner_Thick'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Rock_Stone'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Furniture_Crude_Bed'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Rock_Crystal_Void_Block'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Furniture_Goblin_Brazier'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Soil_Grass'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Soil_Dirt'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Soil_Dirt_Poisoned'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Soil_Mud'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Deco_Bone_Pile'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Deco_Bone_Skulls'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Soil_Gravel_Sand'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Soil_Dirt'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Soil_Clay'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Rock_Stone'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Rock_Marble'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Rock_Chalk'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Furniture_Goblin_Window'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Furniture_Goblin_Brazier'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Ingredient_Hay'
+[2026/09/06 21:25:52   WARN]              [BlockSetModule|P] Creating block sets: Failed to find block name 'Bench_Trough'
+[2026/09/06 21:25:52   WARN]          [AssetStore|BlockType] Unused key(s) in 'Plant_Crop_Mushroom_Boomshroom_Small': ExplosionConfig.Particles.0.ParticleColor
+[2026/09/06 21:25:52   WARN]          [AssetStore|BlockType] Unused key(s) in '*Metal_Orbis_Copper_Roof_Shallow_State_Definitions_Inverted_Corner_Left': Textures.0.Texture
+[2026/09/06 21:25:52   WARN]          [AssetStore|BlockType] Unused key(s) in '*Metal_Orbis_Copper_Roof_Shallow_State_Definitions_Inverted_Corner_Right': Textures.0.Texture
+[2026/09/06 21:25:52   WARN]        [AssetStore|Interaction] Unused key(s) in '**Weapon_Staff_Scrap_Lightbulb_InteractionVars_Staff_Cast_Summon_Charged_Interactions_0': Costs
+[2026/09/06 21:25:52   WARN]        [AssetStore|Interaction] Unused key(s) in '**Weapon_Staff_Crystal_Flame_InteractionVars_Fireball_Impact_2_Interactions_0': EntityStatsOnHit
+[2026/09/06 21:25:52   WARN]        [AssetStore|Interaction] Unused key(s) in '**Weapon_Shield_Copper_InteractionVars_Guard_Bash_Interactions_0': Effects, StatModifiers
+[2026/09/06 21:25:52   WARN]        [AssetStore|Interaction] Unused key(s) in '**Weapon_Staff_Crystal_Flame_InteractionVars_Fireball_Impact_3_Interactions_0': EntityStatsOnHit
+[2026/09/06 21:25:52   INFO]                  [ItemModule|P] Computed damage data for 0 of 0 weapon items
+[2026/09/06 21:25:52   INFO]                  [ItemModule|P] Computed damage data for 227 of 273 weapon items
+[2026/09/06 21:25:52   INFO]           [AssetRegistryLoader] Took 2sec 135ms 405us to load all assets
+[2026/09/06 21:25:52   INFO]                        [Hytale] Loading assets from: /Server
+[2026/09/06 21:25:52   INFO]           [AssetRegistryLoader] Loading assets from /Server
+[2026/09/06 21:25:52   INFO]           [AssetRegistryLoader] Took 864us 700ns to load all assets
+[2026/09/06 21:25:52   INFO]                        [Hytale] Loading assets from: /Server
+[2026/09/06 21:25:52   INFO]           [AssetRegistryLoader] Loading assets from /Server
+[2026/09/06 21:25:52   INFO]           [AssetRegistryLoader] Took 682us 800ns to load all assets
+[2026/09/06 21:25:52   INFO]                        [Hytale] Loading assets from: /Server
+[2026/09/06 21:25:52   INFO]           [AssetRegistryLoader] Loading assets from /Server
+[2026/09/06 21:25:52   INFO]           [AssetRegistryLoader] Took 11ms 117us 700ns to load all assets
+[2026/09/06 21:25:52   INFO]                        [Hytale] Loading NPC assets phase...
+[2026/09/06 21:25:53   INFO]                         [NPC|P] Starting to load builders!
+[2026/09/06 21:25:53   WARN]                         [NPC|P] Replacing asset 'Test_Patrol_Path' of file '/Server/NPC/Roles/_Core/Tests_Development/Test_Patrol_Path.json' with other file '/Server/NPC/Roles/_Core/Tests/Paths/Test_Patrol_Path.json'
+[2026/09/06 21:25:53   WARN]                         [NPC|P] Unknown JSON attribute 'ChargeAcceleration' found in Role|Abstract|Instructions|???|Instructions|???|Instructions|???|Instructions|???|Instructions|???|Instructions|???|BodyMotion|Charge: /Server/NPC/Roles/_Core/Templates/Template_Intelligent.json (JSON: uteSpeed":20,"ChargeAcceleration":1000,"ChargeDistanceRange":{"Compute":"CombatChargeDistance"},"ChargeRelativeSpeed":0,"ClearOnceOnStateChange":true,"ClimbSlope":2,"DropSlope":2,"EntityStopsCharge":false,"HorizontalSkipGapWidth":1.2,"IgnoredBlockSet":"Skeleton_Burnt_Praetorian_Charge","IgnoredBlockSetTriggers":false,"LockedOnDurationRange":[1,1],"LockedOnToleranceAngle":15,"NPCCollisionInteraction":{"Compute":"CombatChargeHitEntityInteraction"},"PlayerCollisionInteraction":{"Compute":"CombatChargeHitEntityInteraction"},"PostChargeDurationRange":[1,1],"RelativeTurnSpeed":1,"RepeatCollisionIgnoreDuration":0.1,"WindingUpDurationRange":[2,2],"WindingUpRelativeTurnSpeed":1,"WindingUpUninterruptable":true}...)
+[2026/09/06 21:25:53   WARN]                         [NPC|P] Unknown JSON attribute 'ChargeAcceleration' found in Role|Abstract|Instructions|???|Instructions|???|Instructions|???|Instructions|???|Instructions|???|BodyMotion|Charge: /Server/NPC/Roles/Undead/Skeleton/Templates/Template_Skeleton_Elite_Phase_2.json (JSON: uteSpeed":4,"ChargeAcceleration":100,"ChargeDistanceRange":[50,50],"ChargeRelativeSpeed":0,"ClearOnceOnStateChange":false,"ClimbSlope":2,"DropSlope":2,"EntityStopsCharge":false,"HorizontalSkipGapWidth":2.5,"IgnoredBlockSet":"Skeleton_Burnt_Praetorian_Charge","IgnoredBlockSetTriggers":false,"KnockbackThreshold":10,"LockedOnDurationRange":[0,0],"LockedOnToleranceAngle":360,"NPCCollisionInteraction":"","PlayerCollisionInteraction":"","PostChargeDurationRange":[0,0],"ProbeChargeRecomputeDistance":0,"RelativeTurnSpeed":0,"WindingUpDurationRange":[0,0],"WindingUpRelativeTurnSpeed":0,"WindingUpUninterruptable":true}...)
+[2026/09/06 21:25:53   WARN]                         [NPC|P] Unknown JSON attribute 'ChargeAcceleration' found in Role|Abstract|Instructions|???|Instructions|???|Instructions|???|Instructions|???|Instructions|???|BodyMotion|Charge: /Server/NPC/Roles/Intelligent/Faction/Goblin/Templates/Template_Goblin_Feastmaster.json (JSON: uteSpeed":20,"ChargeAcceleration":100,"ChargeDistanceRange":{"Compute":"CombatChargeDistance"},"ChargeRelativeSpeed":0,"ClearOnceOnStateChange":true,"ClimbSlope":2,"DropSlope":2,"EntityStopsCharge":false,"HorizontalSkipGapWidth":2.5,"IgnoredBlockSet":"Goblin_Feastmaster_Charge","IgnoredBlockSetTriggers":false,"KnockbackThreshold":10,"LockedOnDurationRange":[1.5,1.5],"LockedOnToleranceAngle":10,"NPCCollisionInteraction":{"Compute":"CombatChargeHitEntityInteraction"},"PlayerCollisionInteraction":{"Compute":"CombatChargeHitEntityInteraction"},"PostChargeDurationRange":[0,0],"RelativeTurnSpeed":1,"WindingUpDurationRange":[2,2],"WindingUpRelativeTurnSpeed":1,"WindingUpUninterruptable":true}...)
+[2026/09/06 21:25:53   WARN]                         [NPC|P] Unknown JSON attribute 'ChargeAcceleration' found in Role|Abstract|Instructions|???|Instructions|???|Instructions|???|Instructions|???|Instructions|???|BodyMotion|Charge: /Server/NPC/Roles/Creature/Hunt/Template_Bear_Voidtaken_Boss.json (JSON: Speed":1,"LockedOnToleranceAngle":15,"LockedOnDurationRange":[0.6,0.6],"WindingUpDurationRange":[0,0],"PostChargeDurationRange":[0,0],"WindingUpUninterruptable":true,"WindingUpRelativeTurnSpeed":1,"ChargeRelativeSpeed":0,"ChargeDistanceRange":[10,16],"ChargeAbsoluteSpeed":11,"ChargeAcceleration":80,"IgnoredBlockSetTriggers":false,"EntityStopsCharge":false,"ClimbSlope":1.25,"DropSlope":1.25,"HorizontalSkipGapWidth":2,"BlockCollisionInteraction":"","NPCCollisionInteraction":"Root_Bear_Voidtaken_Charge_Damage","PlayerCollisionInteraction":"Root_Bear_Voidtaken_Charge_Contact"}...)
+[2026/09/06 21:25:53   INFO]                         [NPC|P] Validating loaded configurations...
+[2026/09/06 21:25:53   WARN]                         [NPC|P] Animation Alerted does not exist for model Kweebec_Rootling!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Goblin_Duke!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Eat does not exist for model Trillodon!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Alerted does not exist for model Scarak_Broodmother!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Skeleton_Elite!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Eat does not exist for model Lizard_Sand!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Hedera!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Alerted does not exist for model Scarak_Broodmother!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Moo does not exist for model Bison_Calf!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Skeleton_Burnt_Praetorian!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Skeleton_Burnt_Praetorian!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Eat does not exist for model Hatworm!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Eat does not exist for model Spark_Living!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Idle does not exist for model Tuluk_Fisherman!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Sleep does not exist for model Wraith_Lantern!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Alerted does not exist for model Wraith_Lantern!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Laydown does not exist for model Wraith_Lantern!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Wake does not exist for model Wraith_Lantern!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Alerted does not exist for model Scarak_Broodmother!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Sleep does not exist for model Slug_Magma!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Alerted does not exist for model Slug_Magma!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Laydown does not exist for model Slug_Magma!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Wake does not exist for model Slug_Magma!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Skeleton_Burnt_Praetorian!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Yawn does not exist for model Skeleton_Archer!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation ScratchButt does not exist for model Skeleton_Archer!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation KickGround does not exist for model Skeleton_Archer!
+[2026/09/06 21:25:54   INFO]                         [NPC|P] Validation complete.
+[2026/09/06 21:25:54   WARN]                      [TagSet|P] Tag Set 'Goblin_Burner' references 'Dungeon_Goblin_Burner' which is not a pattern and does not otherwise exist
+[2026/09/06 21:25:54   WARN]                      [TagSet|P] Tag Set 'Goblin_Burner' references 'Dungeon_Goblin_Burner_Patrol' which is not a pattern and does not otherwise exist
+[2026/09/06 21:25:54   INFO]                         [NPC|P] Loaded 1045 NPC configurations, Test: 271, Component: 144, Abstract: 71, Variant: 490, Generic: 77
+[2026/09/06 21:25:54   INFO]                         [NPC|P] Loaded 39 EncounterManager configurations, Component: 10, Abstract: 4, Variant: 9, Generic: 16
+[2026/09/06 21:25:54   INFO]                         [NPC|P] Starting to load builders!
+[2026/09/06 21:25:54   INFO]                         [NPC|P] Validating loaded configurations...
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Alerted does not exist for model Kweebec_Rootling!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Goblin_Duke!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Eat does not exist for model Trillodon!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Alerted does not exist for model Scarak_Broodmother!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Skeleton_Elite!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Eat does not exist for model Lizard_Sand!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Hedera!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Alerted does not exist for model Scarak_Broodmother!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Moo does not exist for model Bison_Calf!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Skeleton_Burnt_Praetorian!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Skeleton_Burnt_Praetorian!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Eat does not exist for model Hatworm!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Eat does not exist for model Spark_Living!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Idle does not exist for model Tuluk_Fisherman!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Sleep does not exist for model Wraith_Lantern!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Alerted does not exist for model Wraith_Lantern!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Laydown does not exist for model Wraith_Lantern!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Wake does not exist for model Wraith_Lantern!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Alerted does not exist for model Scarak_Broodmother!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Sleep does not exist for model Slug_Magma!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Alerted does not exist for model Slug_Magma!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Laydown does not exist for model Slug_Magma!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Wake does not exist for model Slug_Magma!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Skeleton_Burnt_Praetorian!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Yawn does not exist for model Skeleton_Archer!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation ScratchButt does not exist for model Skeleton_Archer!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation KickGround does not exist for model Skeleton_Archer!
+[2026/09/06 21:25:54   INFO]                         [NPC|P] Validation complete.
+[2026/09/06 21:25:54   WARN]                      [TagSet|P] Tag Set 'Goblin_Burner' references 'Dungeon_Goblin_Burner' which is not a pattern and does not otherwise exist
+[2026/09/06 21:25:54   WARN]                      [TagSet|P] Tag Set 'Goblin_Burner' references 'Dungeon_Goblin_Burner_Patrol' which is not a pattern and does not otherwise exist
+[2026/09/06 21:25:54   INFO]                         [NPC|P] Starting to load builders!
+[2026/09/06 21:25:54   INFO]                         [NPC|P] Validating loaded configurations...
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Alerted does not exist for model Kweebec_Rootling!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Goblin_Duke!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Eat does not exist for model Trillodon!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Alerted does not exist for model Scarak_Broodmother!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Skeleton_Elite!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Eat does not exist for model Lizard_Sand!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Hedera!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Alerted does not exist for model Scarak_Broodmother!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Moo does not exist for model Bison_Calf!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Skeleton_Burnt_Praetorian!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Skeleton_Burnt_Praetorian!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Eat does not exist for model Hatworm!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Eat does not exist for model Spark_Living!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Idle does not exist for model Tuluk_Fisherman!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Sleep does not exist for model Wraith_Lantern!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Alerted does not exist for model Wraith_Lantern!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Laydown does not exist for model Wraith_Lantern!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Wake does not exist for model Wraith_Lantern!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Alerted does not exist for model Scarak_Broodmother!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Sleep does not exist for model Slug_Magma!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Alerted does not exist for model Slug_Magma!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Laydown does not exist for model Slug_Magma!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Wake does not exist for model Slug_Magma!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Skeleton_Burnt_Praetorian!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Yawn does not exist for model Skeleton_Archer!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation ScratchButt does not exist for model Skeleton_Archer!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation KickGround does not exist for model Skeleton_Archer!
+[2026/09/06 21:25:54   INFO]                         [NPC|P] Validation complete.
+[2026/09/06 21:25:54   WARN]                      [TagSet|P] Tag Set 'Goblin_Burner' references 'Dungeon_Goblin_Burner' which is not a pattern and does not otherwise exist
+[2026/09/06 21:25:54   WARN]                      [TagSet|P] Tag Set 'Goblin_Burner' references 'Dungeon_Goblin_Burner_Patrol' which is not a pattern and does not otherwise exist
+[2026/09/06 21:25:54   INFO]                         [NPC|P] Starting to load builders!
+[2026/09/06 21:25:54   INFO]                         [NPC|P] Validating loaded configurations...
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Alerted does not exist for model Kweebec_Rootling!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Goblin_Duke!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Eat does not exist for model Trillodon!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Alerted does not exist for model Scarak_Broodmother!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Skeleton_Elite!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Eat does not exist for model Lizard_Sand!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Hedera!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Alerted does not exist for model Scarak_Broodmother!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Moo does not exist for model Bison_Calf!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Skeleton_Burnt_Praetorian!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Skeleton_Burnt_Praetorian!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Eat does not exist for model Hatworm!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Eat does not exist for model Spark_Living!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Idle does not exist for model Tuluk_Fisherman!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Sleep does not exist for model Wraith_Lantern!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Alerted does not exist for model Wraith_Lantern!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Laydown does not exist for model Wraith_Lantern!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Wake does not exist for model Wraith_Lantern!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Alerted does not exist for model Scarak_Broodmother!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Sleep does not exist for model Slug_Magma!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Alerted does not exist for model Slug_Magma!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Laydown does not exist for model Slug_Magma!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Wake does not exist for model Slug_Magma!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Angry does not exist for model Skeleton_Burnt_Praetorian!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation Yawn does not exist for model Skeleton_Archer!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation ScratchButt does not exist for model Skeleton_Archer!
+[2026/09/06 21:25:54   WARN]                         [NPC|P] Animation KickGround does not exist for model Skeleton_Archer!
+[2026/09/06 21:25:54   INFO]                         [NPC|P] Validation complete.
+[2026/09/06 21:25:54   WARN]                      [TagSet|P] Tag Set 'Goblin_Burner' references 'Dungeon_Goblin_Burner' which is not a pattern and does not otherwise exist
+[2026/09/06 21:25:54   WARN]                      [TagSet|P] Tag Set 'Goblin_Burner' references 'Dungeon_Goblin_Burner_Patrol' which is not a pattern and does not otherwise exist
+[2026/09/06 21:25:54   INFO]                        [Hytale] Loading NPC assets phase completed! Boot time 6sec 164ms 446us 600ns, Took 1sec 266ms 139us 600ns
+[2026/09/06 21:25:54   INFO]                        [Hytale] Validating Spawn assets phase...
+[2026/09/06 21:25:54   INFO]                        [Hytale] Spawn assets validation phase completed! Boot time 6sec 165ms 410us 700ns, Took 884us 700ns
+[2026/09/06 21:25:54   INFO]                  [HytaleServer] Starting plugin manager...
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:AnchorActionModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:AssetModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:BlockSetModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:CollisionModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:CommandMacro
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:ConsoleModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:CosmeticsModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:CrouchSlide
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:DebugPlugin
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:DiscoveryModule
+[2026/09/06 21:25:54   INFO]               [HytaleGenerator] Concurrency report:
+	Low Priority: 3 / 24 threads
+	Normal Priority: 21 / 24 threads
+	High Priority: 23 / 24 threads
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:HytaleGenerator
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:ItemModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:LANDiscovery
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:LegacyModule
+[2026/09/06 21:25:54   INFO]              [LiveConfigModule] LiveConfig starting (patchline=pre-release, os=windows, arch=amd64)
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:LiveConfigModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Mantling
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:MigrationModule
+[2026/09/06 21:25:54 SEVERE]           [PermissionsModule|P] Failed to start Hytale:PermissionsModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Rewards
+java.lang.RuntimeException: Failed to syncLoad() G:\My Drive\Inigmas Games\Hytale Taverns\HytaleRPG\run\stage-04-smoke\permissions.json
+	at com.hypixel.hytale.server.core.util.io.BlockingDiskFile.syncLoad(BlockingDiskFile.java:72)
+	at com.hypixel.hytale.server.core.permissions.PermissionsModule.start(PermissionsModule.java:120)
+	at com.hypixel.hytale.server.core.plugin.PluginBase.start0(PluginBase.java:418)
+	at com.hypixel.hytale.server.core.plugin.PluginManager.start(PluginManager.java:1131)
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:SafetyRoll
+	at com.hypixel.hytale.server.core.plugin.PluginManager.start(PluginManager.java:348)
+	at com.hypixel.hytale.server.core.HytaleServer.boot(HytaleServer.java:451)
+	at com.hypixel.hytale.server.core.HytaleServer.<init>(HytaleServer.java:355)
+	at com.hypixel.hytale.LateMain.lateMain(LateMain.java:58)
+	at com.hypixel.hytale.Main.main(Main.java:47)
+Caused by: java.io.IOException: Stream closed
+	at java.base/java.io.BufferedWriter.ensureOpen(BufferedWriter.java:137)
+	at java.base/java.io.BufferedWriter.flushBuffer(BufferedWriter.java:165)
+	at java.base/java.io.BufferedWriter.flush(BufferedWriter.java:305)
+	at com.hypixel.hytale.server.core.util.io.BlockingDiskFile.syncLoad(BlockingDiskFile.java:54)
+	... 8 more
+
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:ServerManager
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:SplitVelocity
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:SprintForce
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:TagSet
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:TimeModule
+[2026/09/06 21:25:54   INFO]                    [Teleport|P] Loaded 0 warps (No warps.json found)
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Universe
+[2026/09/06 21:25:54   WARN]                  [UpdateModule] Update checker disabled: invalid folder layout. Expected to run from Server/ with Assets.zip and start.sh/bat in parent directory.
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:UpdateModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:WorldLocationCondition
+[2026/09/06 21:25:54 SEVERE]                 [PluginManager] Hytale:AccessControlModule is lacking dependency PermissionsModule at stage START
+[2026/09/06 21:25:54 SEVERE]                 [PluginManager] Hytale:AccessControlModule DISABLED!
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:BlockAnimationModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:BlockHealthModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:BlockModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:BlockTick
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:BlockTypeModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:CommonAssetModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:EntityModule
+[2026/09/06 21:25:54 SEVERE]                 [PluginManager] Hytale:FlyCameraModule is lacking dependency PermissionsModule at stage START
+[2026/09/06 21:25:54 SEVERE]                 [PluginManager] Hytale:FlyCameraModule DISABLED!
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:I18nModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Model
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:RandomTick
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:ServerPlayerListModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:TelemetryModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Ambience
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:AssetEditor
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Audio
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Beam
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:FallingBlocks
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Fluid
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:InteractionModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Parkour
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:PrefabSpawnerModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:ProjectileModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:ReactiveBlocks
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Reputation
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Stash
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Teleport
+[2026/09/06 21:25:54   INFO]                 [VoiceModule|P] [Voice] Started position cache update task (100ms interval)
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:VoiceModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Weather
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:WorldGen
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:BlockPhysics
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:BuilderTools
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:ConnectedBlocksModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Crafting
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Deployables
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:EntityStatsModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Locate
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Objectives
+[2026/09/06 21:25:54   INFO]               [BarterShopState] Loaded barter shop state with 0 shops
+[2026/09/06 21:25:54   INFO]                        [Shop|P] Barter shop state initialized
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Shop
+[2026/09/06 21:25:54 SEVERE]                 [PluginManager] Hytale:SingleplayerModule is lacking dependency AccessControlModule at stage START
+[2026/09/06 21:25:54 SEVERE]                 [PluginManager] Hytale:SingleplayerModule DISABLED!
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Teleporter
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:WorldEvents
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:BlockSpawner
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:EntityUIModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Farming
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:GameFlags
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Instances
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:ObjectiveReputation
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:ObjectiveShop
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Path
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Points
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:ShopReputation
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:StaminaModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Wilderness
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:AugmentBlocks
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:CreativeHub
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:DamageModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Camera
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:NPC
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Abilities
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:EncounterManager
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Flock
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Memories
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Mounts
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:NPCCombatActionEvaluator
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:NPCEditor
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:NPCKnockbackDebug
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:NPCReputation
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:NPCShop
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Portals
+[2026/09/06 21:25:54   INFO]                    [Spawning|P] Successfully set up 94 world spawn configurations
+[2026/09/06 21:25:54   INFO]                    [Spawning|P] Successfully set up 88 beacon spawn configurations
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Spawning
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:TriggerVolumes
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:Beds
+[2026/09/06 21:25:54   INFO]       [CompanionBlockSpawner|P] Companion block spawner: loaded 2 recipe(s)
+[2026/09/06 21:25:54   INFO]       [CompanionBlockSpawner|P] Injected CompanionBlockSpawnerBlock into 4 block types
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:CompanionBlockSpawner
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:GoblinLab
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin Hytale:NPCObjectives
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin HytaleDevLib:HytaleDevLib
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin InigmasGames:CanvasUI
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Enabled plugin InigmasGames:HytaleRPGPhase00Audit
+[2026/09/06 21:25:54   INFO]                  [HytaleServer] Plugin manager started! Startup time so far: 6sec 199ms 341us
+[2026/09/06 21:25:54   INFO]                  [HytaleServer] Shutdown triggered!!!
+[2026/09/06 21:25:54   INFO]                  [HytaleServer] Shutting down... 9  'client.disconnection.shutdownReason.pluginError.detail'
+[2026/09/06 21:25:54   INFO]               [TelemetryModule] Sending server stop telemetry (reason: mod_error)...
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Saving plugins config...
+[2026/09/06 21:25:54   INFO]                 [Phase00Plugin] HYTALE_RPG_SHUTDOWN revision=R013 stage=04
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin InigmasGames:HytaleRPGPhase00Audit
+[2026/09/06 21:25:54   INFO]                [CanvasUIPlugin] CANVASUI_SHUTDOWN revision=R008
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin InigmasGames:CanvasUI
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin HytaleDevLib:HytaleDevLib
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:NPCObjectives
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:GoblinLab
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:CompanionBlockSpawner
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Beds
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:TriggerVolumes
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Spawning
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Portals
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:NPCShop
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:NPCReputation
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:NPCKnockbackDebug
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:NPCEditor
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:NPCCombatActionEvaluator
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Mounts
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Memories
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Flock
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:EncounterManager
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Abilities
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:NPC
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Camera
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:DamageModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:CreativeHub
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:AugmentBlocks
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Wilderness
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:StaminaModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:ShopReputation
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Points
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Path
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:ObjectiveShop
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:ObjectiveReputation
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Instances
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:GameFlags
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Farming
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:EntityUIModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:BlockSpawner
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:WorldEvents
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Teleporter
+[2026/09/06 21:25:54   INFO]                        [Shop|P] Barter shop state saved
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Shop
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Objectives
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Locate
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:EntityStatsModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Deployables
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Crafting
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:ConnectedBlocksModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:BuilderTools
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:BlockPhysics
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:WorldGen
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Weather
+[2026/09/06 21:25:54   INFO]                 [VoiceModule|P] [Voice] VoiceModule shutting down
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:VoiceModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Teleport
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Stash
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Reputation
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:ReactiveBlocks
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:ProjectileModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:PrefabSpawnerModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Parkour
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:InteractionModule
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Fluid
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:FallingBlocks
+[2026/09/06 21:25:54   INFO]                 [PluginManager] Shut down plugin Hytale:Beam
+[2026/09/06 21:25:54   INFO] [PluginManager] Shut down plugin Hytale:Audio
+[2026/09/06 21:25:54   INFO] [PluginManager] Shut down plugin Hytale:AssetEditor
+[2026/09/06 21:25:54   INFO] [PluginManager] Shut down plugin Hytale:Ambience
+[2026/09/06 21:25:54   INFO] [PluginManager] Shut down plugin Hytale:TelemetryModule
+[2026/09/06 21:25:54   INFO] [PluginManager] Shut down plugin Hytale:ServerPlayerListModule
+[2026/09/06 21:25:54   INFO] [PluginManager] Shut down plugin Hytale:RandomTick
+[2026/09/06 21:25:54   INFO] [PluginManager] Shut down plugin Hytale:Model
+[2026/09/06 21:25:54   INFO] [PluginManager] Shut down plugin Hytale:I18nModule
+[2026/09/06 21:25:54   INFO] [PluginManager] Shut down plugin Hytale:EntityModule
+[2026/09/06 21:25:54   INFO] [PluginManager] Shut down plugin Hytale:CommonAssetModule
+[2026/09/06 21:25:54   INFO] [PluginManager] Shut down plugin Hytale:BlockTypeModule
+[2026/09/06 21:25:54   INFO] [PluginManager] Shut down plugin Hytale:BlockTick
+[2026/09/06 21:25:54   INFO] [PluginManager] Shut down plugin Hytale:BlockModule
+[2026/09/06 21:25:54   INFO] [PluginManager] Shut down plugin Hytale:BlockHealthModule
+[2026/09/06 21:25:54   INFO] [PluginManager] Shut down plugin Hytale:BlockAnimationModule
+[2026/09/06 21:25:54   INFO] [PluginManager] Shut down plugin Hytale:WorldLocationCondition
+[2026/09/06 21:25:54   INFO] [PluginManager] Shut down plugin Hytale:UpdateModule
+[2026/09/06 21:25:54   INFO] [PluginManager] Shut down plugin Hytale:Universe
+[2026/09/06 21:25:54   INFO] [PluginManager] Shut down plugin Hytale:TimeModule
+[2026/09/06 21:25:54   INFO] [PluginManager] Shut down plugin Hytale:TagSet
+[2026/09/06 21:25:54   INFO] [PluginManager] Shut down plugin Hytale:SprintForce
+[2026/09/06 21:25:54   INFO] [PluginManager] Shut down plugin Hytale:SplitVelocity
+[2026/09/06 21:25:54   INFO]   [PluginManager] Shut down plugin Hytale:ServerManager
+[2026/09/06 21:25:54   INFO]   [PluginManager] Shut down plugin Hytale:SafetyRoll
+[2026/09/06 21:25:54   INFO]   [PluginManager] Shut down plugin Hytale:Rewards
+[2026/09/06 21:25:54 SEVERE] [ServerManager|P] Failed to shutdown Hytale:ServerManager
+java.lang.NullPointerException: Cannot invoke "com.hypixel.hytale.server.core.io.transport.Transport.shutdown()" because "this.transport" is null
+	at com.hypixel.hytale.server.core.io.ServerManager.shutdown(ServerManager.java:159)
+	at com.hypixel.hytale.server.core.plugin.PluginBase.shutdown0(PluginBase.java:441)
+	at com.hypixel.hytale.server.core.plugin.PluginManager.shutdown(PluginManager.java:451)
+	at com.hypixel.hytale.server.core.HytaleServer.shutdown0(HytaleServer.java:571)
+	at com.hypixel.hytale.server.core.HytaleServer.lambda$shutdownServer$0(HytaleServer.java:554)
+	at java.base/java.lang.Thread.run(Thread.java:1474)
+
+[2026/09/06 21:25:54   INFO]   [PluginManager] Shut down plugin Hytale:MigrationModule
+[2026/09/06 21:25:54   INFO]   [PluginManager] Shut down plugin Hytale:Mantling
+[2026/09/06 21:25:54   INFO]   [PluginManager] Shut down plugin Hytale:LiveConfigModule
+[2026/09/06 21:25:54   INFO]   [PluginManager] Shut down plugin Hytale:LegacyModule
+[2026/09/06 21:25:54   INFO]   [PluginManager] Shut down plugin Hytale:LANDiscovery
+[2026/09/06 21:25:54   INFO]   [PluginManager] Shut down plugin Hytale:ItemModule
+[2026/09/06 21:25:54   INFO]   [PluginManager] Shut down plugin Hytale:HytaleGenerator
+[2026/09/06 21:25:54   INFO]   [PluginManager] Shut down plugin Hytale:DiscoveryModule
+[2026/09/06 21:25:54   INFO]   [PluginManager] Shut down plugin Hytale:DebugPlugin
+[2026/09/06 21:25:54   INFO]   [PluginManager] Shut down plugin Hytale:CrouchSlide
+[2026/09/06 21:25:54   INFO]   [PluginManager] Shut down plugin Hytale:CosmeticsModule
+[2026/09/06 21:25:54   INFO] [ConsoleModule|P] Restoring terminal...
+[2026/09/06 21:25:54   INFO]   [PluginManager] Shut down plugin Hytale:ConsoleModule
+[2026/09/06 21:25:54   INFO]   [PluginManager] Shut down plugin Hytale:CommandMacro
+[2026/09/06 21:25:54   INFO]   [PluginManager] Shut down plugin Hytale:CollisionModule
+[2026/09/06 21:25:54   INFO]   [PluginManager] Shut down plugin Hytale:BlockSetModule
+[2026/09/06 21:25:54   INFO] [PathWatcherThread] Stopped polling for changes in assets. Server will need to be rebooted to load changes!
+[2026/09/06 21:25:54   INFO]     [PluginManager] Shut down plugin Hytale:AssetModule
+[2026/09/06 21:25:54   INFO]     [PluginManager] Shut down plugin Hytale:AnchorActionModule
+[2026/09/06 21:25:54   INFO]      [HytaleServer] Saving config...
+[2026/09/06 21:25:54   INFO]      [HytaleServer] Shutdown completed!

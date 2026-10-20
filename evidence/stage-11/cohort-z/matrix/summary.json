@@ -1,0 +1,54 @@
+{
+  "stage": 11,
+  "revision": "R030",
+  "compiledPlanSchema": 35,
+  "playerSchema": 7,
+  "skillPassiveCells": 5742,
+  "passivePairs": 2145,
+  "pairSkillAssessments": 186615,
+  "validSixLinkGraphs": 1000,
+  "propertySeed": 110033,
+  "profilesWithSixLinkFixtures": 57,
+  "singlesByGate": [
+    {
+      "gate": "CATALOG_ELIGIBLE_RUNTIME_NOT_IMPLEMENTED",
+      "count": 643
+    },
+    {
+      "gate": "COMPILED_PROFILE_RESOLVED_CONNECTED_UNVERIFIED",
+      "count": 1041
+    },
+    {
+      "gate": "REJECTED",
+      "count": 4058
+    }
+  ],
+  "pairsByClassification": [
+    {
+      "classification": "CATALOG_ONLY_PENDING_LEGACY_RUNTIME",
+      "count": 57
+    },
+    {
+      "classification": "NO_VALID_IMPLEMENTED_SKILL",
+      "count": 876
+    },
+    {
+      "classification": "VALID_ON_LISTED_PROFILES",
+      "count": 1212
+    }
+  ],
+  "testsSeconds": "3.444",
+  "scope": "Compiler and numeric profile resolution. Not execution, native capability availability, rendering or client input proof.",
+  "runtimeProfiles": 60,
+  "remainingStage04And05Profiles": 27,
+  "allCatalogRuntimeComplete": false,
+  "connectedGate": "UNVERIFIED",
+  "inputSha256": {
+    "src\\test\\java\\com\\inigmasgames\\hytalerpg\\Stage11CompatibilityMatrixTest.java": "E3183018A36BDDE33CAC148E209BA603618209458308F944FD42528D4442521A",
+    "src\\main\\resources\\rpg\\catalog\\passives.json": "9965F1890A572263A11C75DCB6918B2B0DEBE09D8791962813FAB95F1FBDBFE0",
+    "src\\main\\java\\com\\inigmasgames\\hytalerpg\\links\\LinkCompiler.java": "2C3E70D981C68F782BF2B1BD332F7752CBB3503576868C0F970EA94962A8804B",
+    "src\\main\\java\\com\\inigmasgames\\hytalerpg\\links\\CompatibilityService.java": "8ED3A2E035BAE2FE7AD3B11E3577CB8351BBA02BF1A9818230BE244258C7FE57",
+    "src\\main\\resources\\rpg\\catalog\\skills.json": "59B454D02CD27443415472B0C66B6DC8E262A88AF279A19D47E780582AD9070D"
+  },
+  "jarSha256": "57A8688729BB33ABE1C76711B3777C98AF35351F98FEDA74365E6912811D9378"
+}

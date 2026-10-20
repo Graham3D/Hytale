@@ -1,0 +1,19 @@
+{
+  "installedAtUtc": "2026-09-07T12:19:43.1968694Z",
+  "revision": "R018",
+  "version": "0.0.11",
+  "schema": 3,
+  "hytaleVersion": "0.7.0-pre.1",
+  "sourceCommit": "434f2dcea265a176952eedadfcc1e75f49ef7aec",
+  "installed": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\HytaleRPG-0.0.11.jar",
+  "sha256": "A7453A4F15AB57C3972F463E622310282E2DF71ED0170176334F74C3934751AA",
+  "deployedJars": [
+    "CanvasUI-0.1.0.jar",
+    "HYTALEDEVLIB-0.5.0.jar",
+    "HytaleRPG-0.0.11.jar"
+  ],
+  "rollbackJars": [
+    "HytaleRPG-0.0.10.jar"
+  ],
+  "rollback": "Stop the RPG world, remove HytaleRPG-0.0.11.jar, and restore HytaleRPG-0.0.10.jar from this rollback directory."
+}

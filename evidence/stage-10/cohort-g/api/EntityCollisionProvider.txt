@@ -1,0 +1,473 @@
+Compiled from "EntityCollisionProvider.java"
+public class com.hypixel.hytale.server.core.modules.collision.EntityCollisionProvider {
+  protected static final int ALLOC_SIZE;
+
+  protected static final double EXTRA_DISTANCE;
+
+  protected com.hypixel.hytale.server.core.modules.collision.EntityContactData[] contacts;
+
+  protected com.hypixel.hytale.server.core.modules.collision.EntityContactData[] sortBuffer;
+
+  protected int count;
+
+  protected final org.joml.Vector2d minMax;
+
+  protected final org.joml.Vector3d collisionPosition;
+
+  protected final com.hypixel.hytale.math.shape.Box tempBox;
+
+  protected double nearestCollisionStart;
+
+  protected org.joml.Vector3d position;
+
+  protected org.joml.Vector3d direction;
+
+  protected com.hypixel.hytale.math.shape.Box boundingBox;
+
+  protected java.util.function.BiPredicate<com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>> entityFilter;
+
+  protected com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> ignoreSelf;
+
+  protected com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> ignoreOther;
+
+  static final boolean $assertionsDisabled;
+
+  public com.hypixel.hytale.server.core.modules.collision.EntityCollisionProvider();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #7                  // class org/joml/Vector2d
+         8: dup
+         9: invokespecial #9                  // Method org/joml/Vector2d."<init>":()V
+        12: putfield      #10                 // Field minMax:Lorg/joml/Vector2d;
+        15: aload_0
+        16: new           #16                 // class org/joml/Vector3d
+        19: dup
+        20: invokespecial #18                 // Method org/joml/Vector3d."<init>":()V
+        23: putfield      #19                 // Field collisionPosition:Lorg/joml/Vector3d;
+        26: aload_0
+        27: new           #23                 // class com/hypixel/hytale/math/shape/Box
+        30: dup
+        31: invokespecial #25                 // Method com/hypixel/hytale/math/shape/Box."<init>":()V
+        34: putfield      #26                 // Field tempBox:Lcom/hypixel/hytale/math/shape/Box;
+        37: aload_0
+        38: iconst_4
+        39: anewarray     #30                 // class com/hypixel/hytale/server/core/modules/collision/EntityContactData
+        42: putfield      #32                 // Field contacts:[Lcom/hypixel/hytale/server/core/modules/collision/EntityContactData;
+        45: aload_0
+        46: iconst_4
+        47: anewarray     #30                 // class com/hypixel/hytale/server/core/modules/collision/EntityContactData
+        50: putfield      #36                 // Field sortBuffer:[Lcom/hypixel/hytale/server/core/modules/collision/EntityContactData;
+        53: iconst_0
+        54: istore_1
+        55: iload_1
+        56: aload_0
+        57: getfield      #32                 // Field contacts:[Lcom/hypixel/hytale/server/core/modules/collision/EntityContactData;
+        60: arraylength
+        61: if_icmpge     83
+        64: aload_0
+        65: getfield      #32                 // Field contacts:[Lcom/hypixel/hytale/server/core/modules/collision/EntityContactData;
+        68: iload_1
+        69: new           #30                 // class com/hypixel/hytale/server/core/modules/collision/EntityContactData
+        72: dup
+        73: invokespecial #39                 // Method com/hypixel/hytale/server/core/modules/collision/EntityContactData."<init>":()V
+        76: aastore
+        77: iinc          1, 1
+        80: goto          55
+        83: return
+
+  public int getCount();
+    Code:
+         0: aload_0
+         1: getfield      #40                 // Field count:I
+         4: ireturn
+
+  public com.hypixel.hytale.server.core.modules.collision.EntityContactData getContact(int);
+    Code:
+         0: aload_0
+         1: getfield      #32                 // Field contacts:[Lcom/hypixel/hytale/server/core/modules/collision/EntityContactData;
+         4: iload_1
+         5: aaload
+         6: areturn
+
+  public void clear();
+    Code:
+         0: iconst_0
+         1: istore_1
+         2: iload_1
+         3: aload_0
+         4: getfield      #40                 // Field count:I
+         7: if_icmpge     25
+        10: aload_0
+        11: getfield      #32                 // Field contacts:[Lcom/hypixel/hytale/server/core/modules/collision/EntityContactData;
+        14: iload_1
+        15: aaload
+        16: invokevirtual #44                 // Method com/hypixel/hytale/server/core/modules/collision/EntityContactData.clear:()V
+        19: iinc          1, 1
+        22: goto          2
+        25: aload_0
+        26: iconst_0
+        27: putfield      #40                 // Field count:I
+        30: return
+
+  public double computeNearest(com.hypixel.hytale.math.shape.Box, org.joml.Vector3d, org.joml.Vector3d, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_0
+         1: aload_2
+         2: aload_3
+         3: aload_1
+         4: aload_3
+         5: invokevirtual #47                 // Method org/joml/Vector3d.length:()D
+         8: ldc2_w        #51                 // double 8.0d
+        11: dadd
+        12: invokedynamic #53,  0             // InvokeDynamic #0:test:()Ljava/util/function/BiPredicate;
+        17: aload         4
+        19: aload         5
+        21: aload         6
+        23: invokevirtual #57                 // Method computeNearest:(Lorg/joml/Vector3d;Lorg/joml/Vector3d;Lcom/hypixel/hytale/math/shape/Box;DLjava/util/function/BiPredicate;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentAccessor;)D
+        26: dreturn
+
+  public double computeNearest(org.joml.Vector3d, org.joml.Vector3d, com.hypixel.hytale.math.shape.Box, double, java.util.function.BiPredicate<com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>>, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_0
+         1: aload         7
+         3: putfield      #61                 // Field ignoreSelf:Lcom/hypixel/hytale/component/Ref;
+         6: aload_0
+         7: aload         8
+         9: putfield      #65                 // Field ignoreOther:Lcom/hypixel/hytale/component/Ref;
+        12: aload_0
+        13: ldc2_w        #70                 // double 1.7976931348623157E308d
+        16: putfield      #72                 // Field nearestCollisionStart:D
+        19: aload_0
+        20: aload         6
+        22: putfield      #76                 // Field entityFilter:Ljava/util/function/BiPredicate;
+        25: aload_0
+        26: aload_1
+        27: aload_2
+        28: aload_3
+        29: dload         4
+        31: aload         9
+        33: invokedynamic #80,  0             // InvokeDynamic #1:accept:(Lcom/hypixel/hytale/component/ComponentAccessor;)Ljava/util/function/BiConsumer;
+        38: aload         9
+        40: invokedynamic #84,  0             // InvokeDynamic #2:accept:(Lcom/hypixel/hytale/component/ComponentAccessor;)Ljava/util/function/BiConsumer;
+        45: aload         9
+        47: invokevirtual #85                 // Method iterateEntitiesInSphere:(Lorg/joml/Vector3d;Lorg/joml/Vector3d;Lcom/hypixel/hytale/math/shape/Box;DLjava/util/function/BiConsumer;Ljava/util/function/BiConsumer;Lcom/hypixel/hytale/component/ComponentAccessor;)V
+        50: aload_0
+        51: getfield      #40                 // Field count:I
+        54: ifne          64
+        57: aload_0
+        58: ldc2_w        #89                 // double -1.7976931348623157E308d
+        61: putfield      #72                 // Field nearestCollisionStart:D
+        64: aload_0
+        65: invokevirtual #91                 // Method clearRefs:()V
+        68: aload_0
+        69: aconst_null
+        70: putfield      #61                 // Field ignoreSelf:Lcom/hypixel/hytale/component/Ref;
+        73: aload_0
+        74: aconst_null
+        75: putfield      #65                 // Field ignoreOther:Lcom/hypixel/hytale/component/Ref;
+        78: aload_0
+        79: getfield      #72                 // Field nearestCollisionStart:D
+        82: dreturn
+
+  protected void iterateEntitiesInSphere(org.joml.Vector3d, org.joml.Vector3d, com.hypixel.hytale.math.shape.Box, double, java.util.function.BiConsumer<com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.modules.collision.EntityCollisionProvider>, java.util.function.BiConsumer<com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.modules.collision.EntityCollisionProvider>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #94                 // Field position:Lorg/joml/Vector3d;
+         5: aload_0
+         6: aload_2
+         7: putfield      #97                 // Field direction:Lorg/joml/Vector3d;
+        10: aload_0
+        11: aload_3
+        12: putfield      #100                // Field boundingBox:Lcom/hypixel/hytale/math/shape/Box;
+        15: invokestatic  #103                // Method com/hypixel/hytale/component/spatial/SpatialResource.getThreadLocalReferenceList:()Ljava/util/List;
+        18: astore        9
+        20: aload         8
+        22: invokestatic  #109                // Method com/hypixel/hytale/server/core/modules/entity/EntityModule.get:()Lcom/hypixel/hytale/server/core/modules/entity/EntityModule;
+        25: invokevirtual #115                // Method com/hypixel/hytale/server/core/modules/entity/EntityModule.getEntitySpatialResourceType:()Lcom/hypixel/hytale/component/ResourceType;
+        28: invokeinterface #119,  2          // InterfaceMethod com/hypixel/hytale/component/ComponentAccessor.getResource:(Lcom/hypixel/hytale/component/ResourceType;)Lcom/hypixel/hytale/component/Resource;
+        33: checkcast     #104                // class com/hypixel/hytale/component/spatial/SpatialResource
+        36: astore        10
+        38: aload         10
+        40: invokevirtual #125                // Method com/hypixel/hytale/component/spatial/SpatialResource.getSpatialStructure:()Lcom/hypixel/hytale/component/spatial/SpatialStructure;
+        43: aload_1
+        44: dload         4
+        46: aload         9
+        48: invokeinterface #129,  5          // InterfaceMethod com/hypixel/hytale/component/spatial/SpatialStructure.collect:(Lorg/joml/Vector3dc;DLjava/util/List;)V
+        53: aload         9
+        55: invokeinterface #135,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+        60: astore        11
+        62: aload         11
+        64: invokeinterface #141,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+        69: ifeq          108
+        72: aload         11
+        74: invokeinterface #147,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+        79: checkcast     #151                // class com/hypixel/hytale/component/Ref
+        82: astore        12
+        84: aload         12
+        86: invokevirtual #153                // Method com/hypixel/hytale/component/Ref.isValid:()Z
+        89: ifne          95
+        92: goto          62
+        95: aload         6
+        97: aload         12
+        99: aload_0
+       100: invokeinterface #156,  3          // InterfaceMethod java/util/function/BiConsumer.accept:(Ljava/lang/Object;Ljava/lang/Object;)V
+       105: goto          62
+       108: aload         9
+       110: invokeinterface #161,  1          // InterfaceMethod java/util/List.clear:()V
+       115: aload         8
+       117: invokestatic  #109                // Method com/hypixel/hytale/server/core/modules/entity/EntityModule.get:()Lcom/hypixel/hytale/server/core/modules/entity/EntityModule;
+       120: invokevirtual #162                // Method com/hypixel/hytale/server/core/modules/entity/EntityModule.getPlayerSpatialResourceType:()Lcom/hypixel/hytale/component/ResourceType;
+       123: invokeinterface #119,  2          // InterfaceMethod com/hypixel/hytale/component/ComponentAccessor.getResource:(Lcom/hypixel/hytale/component/ResourceType;)Lcom/hypixel/hytale/component/Resource;
+       128: checkcast     #104                // class com/hypixel/hytale/component/spatial/SpatialResource
+       131: astore        11
+       133: aload         11
+       135: invokevirtual #125                // Method com/hypixel/hytale/component/spatial/SpatialResource.getSpatialStructure:()Lcom/hypixel/hytale/component/spatial/SpatialStructure;
+       138: aload_1
+       139: dload         4
+       141: aload         9
+       143: invokeinterface #129,  5          // InterfaceMethod com/hypixel/hytale/component/spatial/SpatialStructure.collect:(Lorg/joml/Vector3dc;DLjava/util/List;)V
+       148: aload         9
+       150: invokeinterface #135,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       155: astore        12
+       157: aload         12
+       159: invokeinterface #141,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+       164: ifeq          203
+       167: aload         12
+       169: invokeinterface #147,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       174: checkcast     #151                // class com/hypixel/hytale/component/Ref
+       177: astore        13
+       179: aload         13
+       181: invokevirtual #153                // Method com/hypixel/hytale/component/Ref.isValid:()Z
+       184: ifne          190
+       187: goto          157
+       190: aload         7
+       192: aload         13
+       194: aload_0
+       195: invokeinterface #156,  3          // InterfaceMethod java/util/function/BiConsumer.accept:(Ljava/lang/Object;Ljava/lang/Object;)V
+       200: goto          157
+       203: return
+
+  protected void setContact(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_0
+         1: getfield      #19                 // Field collisionPosition:Lorg/joml/Vector3d;
+         4: aload_0
+         5: getfield      #94                 // Field position:Lorg/joml/Vector3d;
+         8: invokevirtual #165                // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+        11: aload_0
+        12: getfield      #10                 // Field minMax:Lorg/joml/Vector2d;
+        15: getfield      #169                // Field org/joml/Vector2d.x:D
+        18: aload_0
+        19: getfield      #97                 // Field direction:Lorg/joml/Vector3d;
+        22: invokevirtual #172                // Method org/joml/Vector3d.fma:(DLorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+        25: pop
+        26: aload_0
+        27: getfield      #32                 // Field contacts:[Lcom/hypixel/hytale/server/core/modules/collision/EntityContactData;
+        30: iconst_0
+        31: aaload
+        32: aload_0
+        33: getfield      #19                 // Field collisionPosition:Lorg/joml/Vector3d;
+        36: aload_0
+        37: getfield      #10                 // Field minMax:Lorg/joml/Vector2d;
+        40: getfield      #169                // Field org/joml/Vector2d.x:D
+        43: aload_0
+        44: getfield      #10                 // Field minMax:Lorg/joml/Vector2d;
+        47: getfield      #176                // Field org/joml/Vector2d.y:D
+        50: aload_1
+        51: aconst_null
+        52: invokevirtual #179                // Method com/hypixel/hytale/server/core/modules/collision/EntityContactData.assign:(Lorg/joml/Vector3d;DDLcom/hypixel/hytale/component/Ref;Ljava/lang/String;)V
+        55: aload_0
+        56: iconst_1
+        57: putfield      #40                 // Field count:I
+        60: return
+
+  protected boolean isColliding(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, org.joml.Vector2d, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_3
+         1: aload_1
+         2: invokestatic  #183                // Method com/hypixel/hytale/server/core/modules/entity/component/BoundingBox.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         5: invokeinterface #189,  3          // InterfaceMethod com/hypixel/hytale/component/ComponentAccessor.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        10: checkcast     #184                // class com/hypixel/hytale/server/core/modules/entity/component/BoundingBox
+        13: astore        4
+        15: aload         4
+        17: ifnonnull     22
+        20: iconst_0
+        21: ireturn
+        22: aload         4
+        24: invokevirtual #193                // Method com/hypixel/hytale/server/core/modules/entity/component/BoundingBox.getBoundingBox:()Lcom/hypixel/hytale/math/shape/Box;
+        27: astore        5
+        29: aload_3
+        30: aload_1
+        31: invokestatic  #197                // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        34: invokeinterface #189,  3          // InterfaceMethod com/hypixel/hytale/component/ComponentAccessor.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        39: checkcast     #198                // class com/hypixel/hytale/server/core/modules/entity/component/TransformComponent
+        42: astore        6
+        44: getstatic     #200                // Field $assertionsDisabled:Z
+        47: ifne          63
+        50: aload         6
+        52: ifnonnull     63
+        55: new           #204                // class java/lang/AssertionError
+        58: dup
+        59: invokespecial #206                // Method java/lang/AssertionError."<init>":()V
+        62: athrow
+        63: aload         6
+        65: invokevirtual #207                // Method com/hypixel/hytale/server/core/modules/entity/component/TransformComponent.getPosition:()Lorg/joml/Vector3d;
+        68: astore        7
+        70: aload_0
+        71: getfield      #94                 // Field position:Lorg/joml/Vector3d;
+        74: aload_0
+        75: getfield      #97                 // Field direction:Lorg/joml/Vector3d;
+        78: aload_0
+        79: getfield      #100                // Field boundingBox:Lcom/hypixel/hytale/math/shape/Box;
+        82: aload         7
+        84: aload         5
+        86: aload_2
+        87: aload_0
+        88: getfield      #26                 // Field tempBox:Lcom/hypixel/hytale/math/shape/Box;
+        91: invokestatic  #211                // Method com/hypixel/hytale/server/core/modules/collision/CollisionMath.intersectSweptAABBs:(Lorg/joml/Vector3d;Lorg/joml/Vector3d;Lcom/hypixel/hytale/math/shape/Box;Lorg/joml/Vector3d;Lcom/hypixel/hytale/math/shape/Box;Lorg/joml/Vector2d;Lcom/hypixel/hytale/math/shape/Box;)Z
+        94: ifeq          110
+        97: aload_2
+        98: getfield      #169                // Field org/joml/Vector2d.x:D
+       101: dconst_1
+       102: dcmpg
+       103: ifgt          110
+       106: iconst_1
+       107: goto          111
+       110: iconst_0
+       111: ireturn
+
+  protected void clearRefs();
+    Code:
+         0: aload_0
+         1: aconst_null
+         2: putfield      #94                 // Field position:Lorg/joml/Vector3d;
+         5: aload_0
+         6: aconst_null
+         7: putfield      #97                 // Field direction:Lorg/joml/Vector3d;
+        10: aload_0
+        11: aconst_null
+        12: putfield      #100                // Field boundingBox:Lcom/hypixel/hytale/math/shape/Box;
+        15: aload_0
+        16: aconst_null
+        17: putfield      #76                 // Field entityFilter:Ljava/util/function/BiPredicate;
+        20: return
+
+  public static boolean defaultEntityFilter(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_1
+         1: aload_0
+         2: invokeinterface #217,  2          // InterfaceMethod com/hypixel/hytale/component/ComponentAccessor.getArchetype:(Lcom/hypixel/hytale/component/Ref;)Lcom/hypixel/hytale/component/Archetype;
+         7: astore_2
+         8: aload_2
+         9: invokestatic  #221                // Method com/hypixel/hytale/server/core/modules/projectile/component/Projectile.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        12: invokevirtual #224                // Method com/hypixel/hytale/component/Archetype.contains:(Lcom/hypixel/hytale/component/ComponentType;)Z
+        15: ifne          28
+        18: aload_2
+        19: invokestatic  #230                // Method com/hypixel/hytale/server/core/entity/entities/ProjectileComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        22: invokevirtual #224                // Method com/hypixel/hytale/component/Archetype.contains:(Lcom/hypixel/hytale/component/ComponentType;)Z
+        25: ifeq          32
+        28: iconst_1
+        29: goto          33
+        32: iconst_0
+        33: istore_3
+        34: iload_3
+        35: ifeq          40
+        38: iconst_0
+        39: ireturn
+        40: aload_2
+        41: invokestatic  #233                // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        44: invokevirtual #224                // Method com/hypixel/hytale/component/Archetype.contains:(Lcom/hypixel/hytale/component/ComponentType;)Z
+        47: istore        4
+        49: iload         4
+        51: ifeq          56
+        54: iconst_0
+        55: ireturn
+        56: aload_0
+        57: invokevirtual #153                // Method com/hypixel/hytale/component/Ref.isValid:()Z
+        60: ireturn
+
+  protected static void acceptNearestIgnore(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.modules.collision.EntityCollisionProvider, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_0
+         1: aload_2
+         2: invokestatic  #236                // Method com/hypixel/hytale/server/core/entity/EntityUtils.getEntity:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentAccessor;)Lcom/hypixel/hytale/server/core/entity/Entity;
+         5: astore_3
+         6: aload_3
+         7: ifnonnull     11
+        10: return
+        11: aload_3
+        12: invokevirtual #242                // Method com/hypixel/hytale/server/core/entity/Entity.isCollidable:()Z
+        15: ifeq          105
+        18: aload_0
+        19: aload_1
+        20: getfield      #61                 // Field ignoreSelf:Lcom/hypixel/hytale/component/Ref;
+        23: invokevirtual #247                // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+        26: ifne          105
+        29: aload_0
+        30: aload_1
+        31: getfield      #65                 // Field ignoreOther:Lcom/hypixel/hytale/component/Ref;
+        34: invokevirtual #247                // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+        37: ifne          105
+        40: aload_1
+        41: getfield      #76                 // Field entityFilter:Ljava/util/function/BiPredicate;
+        44: ifnull        61
+        47: aload_1
+        48: getfield      #76                 // Field entityFilter:Ljava/util/function/BiPredicate;
+        51: aload_0
+        52: aload_2
+        53: invokeinterface #251,  3          // InterfaceMethod java/util/function/BiPredicate.test:(Ljava/lang/Object;Ljava/lang/Object;)Z
+        58: ifeq          105
+        61: aload_1
+        62: aload_0
+        63: aload_1
+        64: getfield      #10                 // Field minMax:Lorg/joml/Vector2d;
+        67: aload_2
+        68: invokevirtual #256                // Method isColliding:(Lcom/hypixel/hytale/component/Ref;Lorg/joml/Vector2d;Lcom/hypixel/hytale/component/ComponentAccessor;)Z
+        71: ifeq          105
+        74: aload_1
+        75: getfield      #10                 // Field minMax:Lorg/joml/Vector2d;
+        78: getfield      #169                // Field org/joml/Vector2d.x:D
+        81: aload_1
+        82: getfield      #72                 // Field nearestCollisionStart:D
+        85: dcmpg
+        86: ifge          105
+        89: aload_1
+        90: aload_1
+        91: getfield      #10                 // Field minMax:Lorg/joml/Vector2d;
+        94: getfield      #169                // Field org/joml/Vector2d.x:D
+        97: putfield      #72                 // Field nearestCollisionStart:D
+       100: aload_1
+       101: aload_0
+       102: invokevirtual #260                // Method setContact:(Lcom/hypixel/hytale/component/Ref;)V
+       105: return
+
+  private static void lambda$computeNearest$1(com.hypixel.hytale.component.ComponentAccessor, com.hypixel.hytale.component.Ref, com.hypixel.hytale.server.core.modules.collision.EntityCollisionProvider);
+    Code:
+         0: aload_1
+         1: aload_2
+         2: aload_0
+         3: invokestatic  #264                // Method acceptNearestIgnore:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/core/modules/collision/EntityCollisionProvider;Lcom/hypixel/hytale/component/ComponentAccessor;)V
+         6: return
+
+  private static void lambda$computeNearest$0(com.hypixel.hytale.component.ComponentAccessor, com.hypixel.hytale.component.Ref, com.hypixel.hytale.server.core.modules.collision.EntityCollisionProvider);
+    Code:
+         0: aload_1
+         1: aload_2
+         2: aload_0
+         3: invokestatic  #264                // Method acceptNearestIgnore:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/core/modules/collision/EntityCollisionProvider;Lcom/hypixel/hytale/component/ComponentAccessor;)V
+         6: return
+
+  static {};
+    Code:
+         0: ldc           #11                 // class com/hypixel/hytale/server/core/modules/collision/EntityCollisionProvider
+         2: invokevirtual #268                // Method java/lang/Class.desiredAssertionStatus:()Z
+         5: ifne          12
+         8: iconst_1
+         9: goto          13
+        12: iconst_0
+        13: putstatic     #200                // Field $assertionsDisabled:Z
+        16: return
+}

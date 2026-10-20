@@ -1,0 +1,69 @@
+{
+  "classification": "RESOLVED_CHARGING_TAG_AND_ACTUAL_ITEM_REPLACE_VARIABLES",
+  "connectedProof": false,
+  "items": {
+    "Weapon_Battleaxe_Iron": {
+      "root": "Root_Weapon_Battleaxe_Primary",
+      "damagePaths": {
+        "**Weapon_Battleaxe_Iron_InteractionVars_Downstrike_Damage_Interactions_0": "CHARGED",
+        "**Weapon_Battleaxe_Iron_InteractionVars_Swing_Down_Left_Damage_Interactions_0": "NORMAL",
+        "**Weapon_Battleaxe_Iron_InteractionVars_Swing_Down_Right_Damage_Interactions_0": "NORMAL",
+        "**Weapon_Battleaxe_Iron_InteractionVars_Swing_Down_Damage_Interactions_0": "NORMAL"
+      }
+    },
+    "Weapon_Daggers_Iron": {
+      "root": "Root_Weapon_Daggers_Primary",
+      "damagePaths": {
+        "**Weapon_Daggers_Iron_InteractionVars_Stab_Left_Damage_Interactions_0": "NORMAL",
+        "**Weapon_Daggers_Iron_InteractionVars_Stab_Right_Damage_Interactions_0": "NORMAL",
+        "**Weapon_Daggers_Iron_InteractionVars_Swing_Left_Damage_Interactions_0": "NORMAL",
+        "**Weapon_Daggers_Iron_InteractionVars_Swing_Right_Damage_Interactions_0": "NORMAL",
+        "**Weapon_Daggers_Iron_InteractionVars_Pounce_Sweep_Damage_Interactions_0": "CHARGED"
+      }
+    },
+    "Weapon_Longsword_Iron": {
+      "root": "Longsword_Attack",
+      "damagePaths": {
+        "**Weapon_Longsword_Iron_InteractionVars_Longsword_Stab_Charged_Damage_Interactions_0": "CHARGED",
+        "**Weapon_Longsword_Iron_InteractionVars_Longsword_Swing_Left_Damage_Interactions_0": "NORMAL",
+        "**Weapon_Longsword_Iron_InteractionVars_Longsword_Swing_Right_Damage_Interactions_0": "NORMAL",
+        "**Weapon_Longsword_Iron_InteractionVars_Longsword_Swing_Up_Left_Damage_Interactions_0": "NORMAL"
+      }
+    },
+    "Weapon_Mace_Iron": {
+      "root": "Root_Weapon_Mace_Primary",
+      "damagePaths": {
+        "**Weapon_Mace_Iron_InteractionVars_Swing_Right_Charged_Damage_Interactions_0": "CHARGED",
+        "**Weapon_Mace_Iron_InteractionVars_Swing_Up_Left_Damage_Interactions_0": "NORMAL",
+        "**Weapon_Mace_Iron_InteractionVars_Swing_Right_Damage_Interactions_0": "NORMAL",
+        "**Weapon_Mace_Iron_InteractionVars_Swing_Left_Damage_Interactions_0": "NORMAL",
+        "**Weapon_Mace_Iron_InteractionVars_Swing_Left_Charged_Damage_Interactions_0": "CHARGED",
+        "**Weapon_Mace_Iron_InteractionVars_Swing_Up_Left_Charged_Damage_Interactions_0": "CHARGED"
+      }
+    },
+    "Weapon_Spear_Iron": {
+      "root": "Spear_Attack",
+      "damagePaths": {
+        "**Weapon_Spear_Iron_InteractionVars_Spear_Stab_Damage_Interactions_0": "NORMAL"
+      }
+    },
+    "Weapon_Sword_Copper": {
+      "root": "Root_Weapon_Sword_Primary",
+      "damagePaths": {
+        "**Weapon_Sword_Copper_InteractionVars_Swing_Right_Damage_Interactions_0": "NORMAL",
+        "**Weapon_Sword_Copper_InteractionVars_Swing_Left_Damage_Interactions_0": "NORMAL",
+        "**Weapon_Sword_Copper_InteractionVars_Thrust_Damage_Interactions_0": "CHARGED",
+        "**Weapon_Sword_Copper_InteractionVars_Swing_Down_Damage_Interactions_0": "NORMAL"
+      }
+    },
+    "Weapon_Sword_Iron": {
+      "root": "Root_Weapon_Sword_Primary",
+      "damagePaths": {
+        "**Weapon_Sword_Iron_InteractionVars_Swing_Right_Damage_Interactions_0": "NORMAL",
+        "**Weapon_Sword_Iron_InteractionVars_Swing_Left_Damage_Interactions_0": "NORMAL",
+        "**Weapon_Sword_Iron_InteractionVars_Thrust_Damage_Interactions_0": "CHARGED",
+        "**Weapon_Sword_Iron_InteractionVars_Swing_Down_Damage_Interactions_0": "NORMAL"
+      }
+    }
+  }
+}

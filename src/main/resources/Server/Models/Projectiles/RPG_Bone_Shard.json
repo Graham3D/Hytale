@@ -1,0 +1,18 @@
+{
+  "Model": "Items/Ingredients/Fishbone.blockymodel",
+  "Texture": "Items/Ingredients/Fishbone_Texture.png",
+  "HitBox": {
+    "Max": {
+      "X": 0.25,
+      "Y": 0.25,
+      "Z": 0.25
+    },
+    "Min": {
+      "X": -0.25,
+      "Y": -0.25,
+      "Z": -0.25
+    }
+  },
+  "MinScale": 1,
+  "MaxScale": 1
+}

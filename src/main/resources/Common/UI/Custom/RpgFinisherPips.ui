@@ -1,0 +1,14 @@
+Group {
+  // Centered near the reticle, entirely separate from the native hotbar/resources and XP.
+  Group #FinisherPips { Anchor: (Width: 40, Height: 80); Visible: false;
+    Group { Anchor: (Left: 0, Top: 60, Width: 8, Height: 8); Background: (Color: #413725);
+      Group #FinisherPip1 { Anchor: (Width: 8, Height: 8); Background: (Color: #f2cf76); Visible: false; }
+    }
+    Group { Anchor: (Left: 16, Top: 60, Width: 8, Height: 8); Background: (Color: #413725);
+      Group #FinisherPip2 { Anchor: (Width: 8, Height: 8); Background: (Color: #f2cf76); Visible: false; }
+    }
+    Group { Anchor: (Left: 32, Top: 60, Width: 8, Height: 8); Background: (Color: #413725);
+      Group #FinisherPip3 { Anchor: (Width: 8, Height: 8); Background: (Color: #f2cf76); Visible: false; }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "Model": "RPG_Axe_Toss", "UseModelScale": true,
+  "Physics": { "Type": "Standard", "Gravity": 0, "TerminalVelocityAir": 18, "TerminalVelocityWater": 18, "RotationMode": "VelocityDamped", "Bounciness": 0.0 },
+  "LaunchForce": 18, "SpawnOffset": { "X": 0, "Y": 0, "Z": 0 }, "Interactions": {}
+}

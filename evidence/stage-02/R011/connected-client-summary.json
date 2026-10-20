@@ -1,0 +1,92 @@
+{
+  "revision": "R011",
+  "verifiedAtUtc": "2026-09-06T19:48:54.9712894Z",
+  "stage02Result": "PASS",
+  "damage": {
+    "correlationId": "77859ad0-851",
+    "rootCastId": "dev-damage-14bd1676-f6a",
+    "skillInstanceId": "dev-damage-14bd1676-f6a-1",
+    "phases": [
+      "DAMAGE_CALC_BEGIN",
+      "BASE_POWER_RESOLVED",
+      "SCALING_APPLIED",
+      "MODIFIERS_APPLIED",
+      "CRIT_ROLL",
+      "DAMAGE_GATHERED",
+      "DAMAGE_FILTERED",
+      "DAMAGE_APPLIED",
+      "DAMAGE_INSPECTED"
+    ],
+    "idsPreservedAcrossAllPhases": true,
+    "preMitigation": 5.15,
+    "filteredAmount": 5.0,
+    "cancelled": false,
+    "healthBefore": 124.0,
+    "healthAfter": 119.0,
+    "actualHealthLoss": 5.0
+  },
+  "resourceRecovery": {
+    "correlationId": "7b1ff158-a18",
+    "setupMana": 0.0,
+    "setupStamina": 0.0,
+    "maxMana": 100.0,
+    "maxStamina": 100.0,
+    "normal": {
+      "fraction": 0.04,
+      "manaRecovered": 4.0,
+      "staminaRecovered": 4.0,
+      "applied": true
+    },
+    "normalDuplicate": {
+      "manaRecovered": 0.0,
+      "staminaRecovered": 0.0,
+      "applied": false,
+      "deduplicated": true
+    },
+    "charged": {
+      "fraction": 0.12,
+      "manaRecovered": 12.0,
+      "staminaRecovered": 12.0,
+      "applied": true
+    },
+    "chargedDuplicate": {
+      "manaRecovered": 0.0,
+      "staminaRecovered": 0.0,
+      "applied": false,
+      "deduplicated": true
+    }
+  },
+  "potency": {
+    "correlationId": "eb9ca568-38e",
+    "skill": "fire_bolt",
+    "passive": "potency",
+    "compileResult": "PASS",
+    "scalablePayloadIncreased": 0.15,
+    "expected": 0.15,
+    "canonicalPassiveCount": 66
+  },
+  "restartRejoin": {
+    "preRestartLoadRevision": 6,
+    "postRestartLoadRevision": 6,
+    "schemaVersion": 2,
+    "validationResult": "PASS",
+    "quickSlashCompile": "PASS",
+    "fireBoltCompile": "PASS",
+    "forkRouteRetained": true
+  },
+  "rpgScopedErrorsObserved": false,
+  "artifacts": {
+    "firstServerLog": {
+      "name": "2026-09-06_15-45-13_server.log",
+      "sha256": "1FBE2642F89FF8423E511FC820581BC3B4800B6F9912E841D3667380CB8EFEF0"
+    },
+    "restartServerLog": {
+      "name": "2026-09-06_15-48-04_server.log",
+      "sha256": "E4D302D0A0E01AE96B361CCADF2F07C9D857E1453CF7E6B946EDC6001F7D9635"
+    },
+    "skillTrace": {
+      "name": "skill-trace.jsonl",
+      "sha256": "B841A87EBEB98C0DDE3BCB9B0C979AA6B97AFE477AD579C08EB7D3FEE7FE4A38"
+    }
+  }
+}

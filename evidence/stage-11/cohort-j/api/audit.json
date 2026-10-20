@@ -1,0 +1,7 @@
+{
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "jarSha256": "93252D1109F75C49B3C7C83AFD7A4AD8499258D6F4A55B7E2381BB46DB1460AC",
+  "boundary": "Area, Aura and Projectile call the same source-root Chill service; projectile uses existing native status marker/projection",
+  "evidence": "Compiled call-site and installed API structure only. No connected movement, casting, client rendering or native execution proof.",
+  "connected": "UNVERIFIED"
+}

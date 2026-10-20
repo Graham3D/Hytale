@@ -1,0 +1,198 @@
+Compiled from "HytaleRetaliationSystem.java"
+public final class com.inigmasgames.hytalerpg.execution.hytale.HytaleRetaliationSystem extends com.hypixel.hytale.server.core.modules.entity.damage.DamageEventSystem {
+  private final com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem skills;
+
+  private static final com.hypixel.hytale.server.core.meta.MetaKey<java.lang.Boolean> OBSERVED;
+
+  public com.inigmasgames.hytalerpg.execution.hytale.HytaleRetaliationSystem(com.inigmasgames.hytalerpg.execution.hytale.HytaleSkillExecutionSystem);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageEventSystem."<init>":()V
+         4: aload_0
+         5: aload_1
+         6: putfield      #7                  // Field skills:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem;
+         9: return
+
+  public com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getQuery();
+    Code:
+         0: iconst_2
+         1: anewarray     #13                 // class com/hypixel/hytale/component/query/Query
+         4: dup
+         5: iconst_0
+         6: invokestatic  #15                 // Method com/hypixel/hytale/server/core/universe/PlayerRef.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         9: aastore
+        10: dup
+        11: iconst_1
+        12: invokestatic  #21                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        15: aastore
+        16: invokestatic  #24                 // InterfaceMethod com/hypixel/hytale/component/query/Query.and:([Lcom/hypixel/hytale/component/query/Query;)Lcom/hypixel/hytale/component/query/AndQuery;
+        19: areturn
+
+  public com.hypixel.hytale.component.SystemGroup<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getGroup();
+    Code:
+         0: invokestatic  #28                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.get:()Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageModule;
+         3: invokevirtual #34                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.getInspectDamageGroup:()Lcom/hypixel/hytale/component/SystemGroup;
+         6: areturn
+
+  public java.util.Set<com.hypixel.hytale.component.dependency.Dependency<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>> getDependencies();
+    Code:
+         0: new           #38                 // class com/hypixel/hytale/component/dependency/SystemDependency
+         3: dup
+         4: getstatic     #40                 // Field com/hypixel/hytale/component/dependency/Order.AFTER:Lcom/hypixel/hytale/component/dependency/Order;
+         7: ldc           #46                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ApplyDamage
+         9: invokespecial #48                 // Method com/hypixel/hytale/component/dependency/SystemDependency."<init>":(Lcom/hypixel/hytale/component/dependency/Order;Ljava/lang/Class;)V
+        12: new           #38                 // class com/hypixel/hytale/component/dependency/SystemDependency
+        15: dup
+        16: getstatic     #51                 // Field com/hypixel/hytale/component/dependency/Order.BEFORE:Lcom/hypixel/hytale/component/dependency/Order;
+        19: ldc           #54                 // class com/inigmasgames/hytalerpg/execution/hytale/SupportDamageSystems$Reflect
+        21: invokespecial #48                 // Method com/hypixel/hytale/component/dependency/SystemDependency."<init>":(Lcom/hypixel/hytale/component/dependency/Order;Ljava/lang/Class;)V
+        24: invokestatic  #56                 // InterfaceMethod java/util/Set.of:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Set;
+        27: areturn
+
+  public void handle(int, com.hypixel.hytale.component.ArchetypeChunk<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.modules.entity.damage.Damage);
+    Code:
+         0: getstatic     #62                 // Field java/lang/Boolean.TRUE:Ljava/lang/Boolean;
+         3: aload         5
+         5: getstatic     #68                 // Field OBSERVED:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+         8: invokevirtual #72                 // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage.getIfPresentMetaObject:(Lcom/hypixel/hytale/server/core/meta/MetaKey;)Ljava/lang/Object;
+        11: invokevirtual #78                 // Method java/lang/Boolean.equals:(Ljava/lang/Object;)Z
+        14: ifeq          18
+        17: return
+        18: aload         5
+        20: getstatic     #68                 // Field OBSERVED:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        23: iconst_1
+        24: invokestatic  #82                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+        27: invokevirtual #86                 // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage.putMetaObject:(Lcom/hypixel/hytale/server/core/meta/MetaKey;Ljava/lang/Object;)Ljava/lang/Object;
+        30: pop
+        31: aload_2
+        32: iload_1
+        33: invokestatic  #21                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        36: invokevirtual #90                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        39: checkcast     #22                 // class com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap
+        42: astore        6
+        44: aload         6
+        46: invokestatic  #96                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/DefaultEntityStatTypes.getHealth:()I
+        49: invokevirtual #102                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        52: astore        7
+        54: aload         7
+        56: ifnull        81
+        59: aload         7
+        61: invokevirtual #105                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+        64: aload         7
+        66: invokevirtual #110                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMin:()F
+        69: fcmpg
+        70: ifle          81
+        73: aload         5
+        75: invokevirtual #113                // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage.isCancelled:()Z
+        78: ifeq          82
+        81: return
+        82: aload         5
+        84: invokestatic  #117                // Method com/inigmasgames/hytalerpg/execution/hytale/SupportDamageSystems.observedHealthBefore:(Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage;)D
+        87: dstore        8
+        89: dload         8
+        91: invokestatic  #123                // Method java/lang/Double.isFinite:(D)Z
+        94: ifeq          109
+        97: dload         8
+        99: aload         7
+       101: invokevirtual #105                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+       104: f2d
+       105: dcmpg
+       106: ifgt          110
+       109: return
+       110: aload_2
+       111: iload_1
+       112: invokevirtual #129                // Method com/hypixel/hytale/component/ArchetypeChunk.getReferenceTo:(I)Lcom/hypixel/hytale/component/Ref;
+       115: astore        10
+       117: aload         5
+       119: invokestatic  #133                // Method com/inigmasgames/hytalerpg/combat/hytale/HytaleDamageAdapter.metadata:(Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage;)Lcom/inigmasgames/hytalerpg/combat/hytale/HytaleDamageMetadata;
+       122: astore        11
+       124: aload         5
+       126: invokevirtual #139                // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage.getSource:()Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage$Source;
+       129: astore        14
+       131: aload         14
+       133: instanceof    #143                // class com/hypixel/hytale/server/core/modules/entity/damage/Damage$EntitySource
+       136: ifeq          196
+       139: aload         14
+       141: checkcast     #143                // class com/hypixel/hytale/server/core/modules/entity/damage/Damage$EntitySource
+       144: astore        13
+       146: aload         13
+       148: invokevirtual #145                // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage$EntitySource.getRef:()Lcom/hypixel/hytale/component/Ref;
+       151: ifnull        196
+       154: aload         13
+       156: invokevirtual #145                // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage$EntitySource.getRef:()Lcom/hypixel/hytale/component/Ref;
+       159: invokevirtual #149                // Method com/hypixel/hytale/component/Ref.isValid:()Z
+       162: ifeq          196
+       165: aload         13
+       167: invokevirtual #145                // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage$EntitySource.getRef:()Lcom/hypixel/hytale/component/Ref;
+       170: aload         10
+       172: invokevirtual #154                // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+       175: ifne          196
+       178: aload_3
+       179: aload         13
+       181: invokevirtual #145                // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage$EntitySource.getRef:()Lcom/hypixel/hytale/component/Ref;
+       184: aload         10
+       186: invokestatic  #157                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleAreaQueries.hostile:(Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/Ref;)Z
+       189: ifeq          196
+       192: iconst_1
+       193: goto          197
+       196: iconst_0
+       197: istore        12
+       199: aload_0
+       200: getfield      #7                  // Field skills:Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem;
+       203: aload_2
+       204: iload_1
+       205: invokestatic  #15                 // Method com/hypixel/hytale/server/core/universe/PlayerRef.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       208: invokevirtual #90                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       211: checkcast     #16                 // class com/hypixel/hytale/server/core/universe/PlayerRef
+       214: invokevirtual #163                // Method com/hypixel/hytale/server/core/universe/PlayerRef.getUuid:()Ljava/util/UUID;
+       217: invokestatic  #167                // Method java/util/UUID.randomUUID:()Ljava/util/UUID;
+       220: invokestatic  #172                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+       223: invokedynamic #177,  0            // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+       228: dload         8
+       230: aload         7
+       232: invokevirtual #105                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+       235: f2d
+       236: aload         7
+       238: invokevirtual #181                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMax:()F
+       241: f2d
+       242: iload         12
+       244: aload         11
+       246: ifnull        261
+       249: aload         11
+       251: invokevirtual #184                // Method com/inigmasgames/hytalerpg/combat/hytale/HytaleDamageMetadata.noRetaliation:()Z
+       254: ifeq          261
+       257: iconst_1
+       258: goto          262
+       261: iconst_0
+       262: invokevirtual #189                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.onRetaliationDamage:(Ljava/util/UUID;Ljava/lang/String;DDDZZ)V
+       265: return
+
+  public void handle(int, com.hypixel.hytale.component.ArchetypeChunk, com.hypixel.hytale.component.Store, com.hypixel.hytale.component.CommandBuffer, com.hypixel.hytale.component.system.EcsEvent);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: aload_2
+         3: aload_3
+         4: aload         4
+         6: aload         5
+         8: checkcast     #73                 // class com/hypixel/hytale/server/core/modules/entity/damage/Damage
+        11: invokevirtual #195                // Method handle:(ILcom/hypixel/hytale/component/ArchetypeChunk;Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/CommandBuffer;Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage;)V
+        14: return
+
+  private static java.lang.Boolean lambda$static$0(com.hypixel.hytale.server.core.modules.entity.damage.Damage);
+    Code:
+         0: iconst_0
+         1: invokestatic  #82                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         4: areturn
+
+  static {};
+    Code:
+         0: getstatic     #199                // Field com/hypixel/hytale/server/core/modules/entity/damage/Damage.META_REGISTRY:Lcom/hypixel/hytale/server/core/meta/MetaRegistry;
+         3: invokedynamic #203,  0            // InvokeDynamic #1:apply:()Ljava/util/function/Function;
+         8: iconst_0
+         9: ldc           #207                // String InigmasGames:RetaliationObserved
+        11: getstatic     #209                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+        14: invokevirtual #215                // Method com/hypixel/hytale/server/core/meta/MetaRegistry.registerMetaObject:(Ljava/util/function/Function;ZLjava/lang/String;Lcom/hypixel/hytale/codec/Codec;)Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        17: putstatic     #68                 // Field OBSERVED:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        20: return
+}

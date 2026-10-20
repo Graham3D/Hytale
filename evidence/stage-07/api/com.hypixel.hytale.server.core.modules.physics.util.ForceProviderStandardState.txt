@@ -1,0 +1,125 @@
+Compiled from "ForceProviderStandardState.java"
+public class com.hypixel.hytale.server.core.modules.physics.util.ForceProviderStandardState {
+  public double displacedMass;
+
+  public double dragCoefficient;
+
+  public double gravity;
+
+  public final org.joml.Vector3d nextTickVelocity;
+
+  public final org.joml.Vector3d externalVelocity;
+
+  public final org.joml.Vector3d externalAcceleration;
+
+  public final org.joml.Vector3d externalForce;
+
+  public final org.joml.Vector3d externalImpulse;
+
+  public com.hypixel.hytale.server.core.modules.physics.util.ForceProviderStandardState();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #7                  // class org/joml/Vector3d
+         8: dup
+         9: invokespecial #9                  // Method org/joml/Vector3d."<init>":()V
+        12: putfield      #10                 // Field nextTickVelocity:Lorg/joml/Vector3d;
+        15: aload_0
+        16: new           #7                  // class org/joml/Vector3d
+        19: dup
+        20: invokespecial #9                  // Method org/joml/Vector3d."<init>":()V
+        23: putfield      #16                 // Field externalVelocity:Lorg/joml/Vector3d;
+        26: aload_0
+        27: new           #7                  // class org/joml/Vector3d
+        30: dup
+        31: invokespecial #9                  // Method org/joml/Vector3d."<init>":()V
+        34: putfield      #19                 // Field externalAcceleration:Lorg/joml/Vector3d;
+        37: aload_0
+        38: new           #7                  // class org/joml/Vector3d
+        41: dup
+        42: invokespecial #9                  // Method org/joml/Vector3d."<init>":()V
+        45: putfield      #22                 // Field externalForce:Lorg/joml/Vector3d;
+        48: aload_0
+        49: new           #7                  // class org/joml/Vector3d
+        52: dup
+        53: invokespecial #9                  // Method org/joml/Vector3d."<init>":()V
+        56: putfield      #25                 // Field externalImpulse:Lorg/joml/Vector3d;
+        59: aload_0
+        60: getfield      #10                 // Field nextTickVelocity:Lorg/joml/Vector3d;
+        63: ldc2_w        #30                 // double 1.7976931348623157E308d
+        66: ldc2_w        #30                 // double 1.7976931348623157E308d
+        69: ldc2_w        #30                 // double 1.7976931348623157E308d
+        72: invokevirtual #32                 // Method org/joml/Vector3d.set:(DDD)Lorg/joml/Vector3d;
+        75: pop
+        76: return
+
+  public void convertToForces(double, double);
+    Code:
+         0: aload_0
+         1: getfield      #22                 // Field externalForce:Lorg/joml/Vector3d;
+         4: dconst_1
+         5: dload_3
+         6: ddiv
+         7: aload_0
+         8: getfield      #19                 // Field externalAcceleration:Lorg/joml/Vector3d;
+        11: invokevirtual #36                 // Method org/joml/Vector3d.fma:(DLorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+        14: pop
+        15: aload_0
+        16: getfield      #22                 // Field externalForce:Lorg/joml/Vector3d;
+        19: dconst_1
+        20: dload_1
+        21: ddiv
+        22: aload_0
+        23: getfield      #25                 // Field externalImpulse:Lorg/joml/Vector3d;
+        26: invokevirtual #36                 // Method org/joml/Vector3d.fma:(DLorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+        29: pop
+        30: aload_0
+        31: getfield      #19                 // Field externalAcceleration:Lorg/joml/Vector3d;
+        34: invokevirtual #40                 // Method org/joml/Vector3d.zero:()Lorg/joml/Vector3d;
+        37: pop
+        38: aload_0
+        39: getfield      #25                 // Field externalImpulse:Lorg/joml/Vector3d;
+        42: invokevirtual #40                 // Method org/joml/Vector3d.zero:()Lorg/joml/Vector3d;
+        45: pop
+        46: return
+
+  public void updateVelocity(org.joml.Vector3d);
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field nextTickVelocity:Lorg/joml/Vector3d;
+         4: getfield      #44                 // Field org/joml/Vector3d.x:D
+         7: ldc2_w        #30                 // double 1.7976931348623157E308d
+        10: dcmpg
+        11: ifge          40
+        14: aload_1
+        15: aload_0
+        16: getfield      #10                 // Field nextTickVelocity:Lorg/joml/Vector3d;
+        19: invokevirtual #48                 // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+        22: pop
+        23: aload_0
+        24: getfield      #10                 // Field nextTickVelocity:Lorg/joml/Vector3d;
+        27: ldc2_w        #30                 // double 1.7976931348623157E308d
+        30: ldc2_w        #30                 // double 1.7976931348623157E308d
+        33: ldc2_w        #30                 // double 1.7976931348623157E308d
+        36: invokevirtual #32                 // Method org/joml/Vector3d.set:(DDD)Lorg/joml/Vector3d;
+        39: pop
+        40: aload_1
+        41: aload_0
+        42: getfield      #16                 // Field externalVelocity:Lorg/joml/Vector3d;
+        45: invokevirtual #51                 // Method org/joml/Vector3d.add:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+        48: pop
+        49: aload_0
+        50: getfield      #16                 // Field externalVelocity:Lorg/joml/Vector3d;
+        53: invokevirtual #40                 // Method org/joml/Vector3d.zero:()Lorg/joml/Vector3d;
+        56: pop
+        57: return
+
+  public void clear();
+    Code:
+         0: aload_0
+         1: getfield      #22                 // Field externalForce:Lorg/joml/Vector3d;
+         4: invokevirtual #40                 // Method org/joml/Vector3d.zero:()Lorg/joml/Vector3d;
+         7: pop
+         8: return
+}

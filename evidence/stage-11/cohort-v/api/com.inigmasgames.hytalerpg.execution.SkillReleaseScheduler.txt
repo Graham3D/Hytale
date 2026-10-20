@@ -1,0 +1,564 @@
+Compiled from "SkillReleaseScheduler.java"
+public final class com.inigmasgames.hytalerpg.execution.SkillReleaseScheduler {
+  public static final int OWNER_CAP;
+
+  public static final int GLOBAL_CAP;
+
+  private final java.util.Map<java.lang.String, com.inigmasgames.hytalerpg.execution.SkillReleaseScheduler$Entry> entries;
+
+  public com.inigmasgames.hytalerpg.execution.SkillReleaseScheduler();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #7                  // class java/util/LinkedHashMap
+         8: dup
+         9: invokespecial #9                  // Method java/util/LinkedHashMap."<init>":()V
+        12: putfield      #10                 // Field entries:Ljava/util/Map;
+        15: return
+
+  public synchronized java.lang.String conditional(com.inigmasgames.hytalerpg.execution.SkillExecutionContext, double);
+    Code:
+         0: dload_2
+         1: invokestatic  #16                 // Method requireClock:(D)V
+         4: aload_1
+         5: invokevirtual #20                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.conditionalRepeat:()Z
+         8: ifne          14
+        11: ldc           #26                 // String NOT_CONDITIONAL_RELEASE
+        13: areturn
+        14: aload_0
+        15: getfield      #10                 // Field entries:Ljava/util/Map;
+        18: aload_1
+        19: invokevirtual #28                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.skillInstanceId:()Ljava/lang/String;
+        22: invokeinterface #32,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+        27: ifeq          33
+        30: ldc           #38                 // String DUPLICATE_RELEASE_RESERVATION
+        32: areturn
+        33: aload_0
+        34: getfield      #10                 // Field entries:Ljava/util/Map;
+        37: invokeinterface #40,  1           // InterfaceMethod java/util/Map.size:()I
+        42: sipush        256
+        45: if_icmplt     51
+        48: ldc           #44                 // String GLOBAL_RELEASE_BUDGET
+        50: areturn
+        51: aload_0
+        52: getfield      #10                 // Field entries:Ljava/util/Map;
+        55: invokeinterface #46,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+        60: invokeinterface #50,  1           // InterfaceMethod java/util/Collection.stream:()Ljava/util/stream/Stream;
+        65: aload_1
+        66: invokedynamic #56,  0             // InvokeDynamic #0:test:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;)Ljava/util/function/Predicate;
+        71: invokeinterface #60,  2           // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+        76: invokeinterface #66,  1           // InterfaceMethod java/util/stream/Stream.count:()J
+        81: ldc2_w        #70                 // long 6l
+        84: lcmp
+        85: iflt          91
+        88: ldc           #72                 // String OWNER_RELEASE_BUDGET
+        90: areturn
+        91: new           #74                 // class com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry
+        94: dup
+        95: aload_1
+        96: invokevirtual #76                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.request:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;
+        99: invokevirtual #80                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionRequest.actorId:()Ljava/util/UUID;
+       102: aload_1
+       103: invokevirtual #76                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.request:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;
+       106: invokevirtual #86                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionRequest.slot:()Lcom/inigmasgames/hytalerpg/domain/SkillSlot;
+       109: new           #90                 // class com/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers
+       112: dup
+       113: dconst_1
+       114: dconst_0
+       115: dconst_0
+       116: dconst_1
+       117: iconst_0
+       118: invokespecial #92                 // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers."<init>":(DDDDZ)V
+       121: invokespecial #95                 // Method com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry."<init>":(Ljava/util/UUID;Lcom/inigmasgames/hytalerpg/domain/SkillSlot;Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers;)V
+       124: astore        4
+       126: aload         4
+       128: aload_1
+       129: putfield      #98                 // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       132: aload         4
+       134: dload_2
+       135: putfield      #102                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.due:D
+       138: aload_0
+       139: getfield      #10                 // Field entries:Ljava/util/Map;
+       142: aload_1
+       143: invokevirtual #28                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.skillInstanceId:()Ljava/lang/String;
+       146: aload         4
+       148: invokeinterface #106,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       153: pop
+       154: ldc           #110                // String PASS
+       156: areturn
+
+  public synchronized java.util.List<com.inigmasgames.hytalerpg.execution.SkillExecutionContext> cancelConditional(java.util.UUID);
+    Code:
+         0: new           #112                // class java/util/ArrayList
+         3: dup
+         4: invokespecial #114                // Method java/util/ArrayList."<init>":()V
+         7: astore_2
+         8: aload_0
+         9: getfield      #10                 // Field entries:Ljava/util/Map;
+        12: invokeinterface #46,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+        17: aload_1
+        18: aload_2
+        19: invokedynamic #115,  0            // InvokeDynamic #1:test:(Ljava/util/UUID;Ljava/util/ArrayList;)Ljava/util/function/Predicate;
+        24: invokeinterface #118,  2          // InterfaceMethod java/util/Collection.removeIf:(Ljava/util/function/Predicate;)Z
+        29: pop
+        30: aload_2
+        31: invokestatic  #122                // InterfaceMethod java/util/List.copyOf:(Ljava/util/Collection;)Ljava/util/List;
+        34: areturn
+
+  public synchronized java.lang.String reserve(java.lang.String, java.util.UUID, com.inigmasgames.hytalerpg.domain.SkillSlot, com.inigmasgames.hytalerpg.domain.CompiledSkillPlan$ExecutionModifiers);
+    Code:
+         0: aload         4
+         2: invokevirtual #128                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers.scheduled:()Z
+         5: ifne          11
+         8: ldc           #110                // String PASS
+        10: areturn
+        11: aload_0
+        12: getfield      #10                 // Field entries:Ljava/util/Map;
+        15: aload_1
+        16: invokeinterface #32,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+        21: ifeq          27
+        24: ldc           #38                 // String DUPLICATE_RELEASE_RESERVATION
+        26: areturn
+        27: aload_0
+        28: getfield      #10                 // Field entries:Ljava/util/Map;
+        31: invokeinterface #46,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+        36: invokeinterface #50,  1           // InterfaceMethod java/util/Collection.stream:()Ljava/util/stream/Stream;
+        41: aload_2
+        42: aload_3
+        43: invokedynamic #131,  0            // InvokeDynamic #2:test:(Ljava/util/UUID;Lcom/inigmasgames/hytalerpg/domain/SkillSlot;)Ljava/util/function/Predicate;
+        48: invokeinterface #134,  2          // InterfaceMethod java/util/stream/Stream.anyMatch:(Ljava/util/function/Predicate;)Z
+        53: ifeq          59
+        56: ldc           #137                // String PENDING_PRIMARY_FOR_SLOT
+        58: areturn
+        59: aload_0
+        60: getfield      #10                 // Field entries:Ljava/util/Map;
+        63: invokeinterface #40,  1           // InterfaceMethod java/util/Map.size:()I
+        68: sipush        256
+        71: if_icmplt     77
+        74: ldc           #44                 // String GLOBAL_RELEASE_BUDGET
+        76: areturn
+        77: aload_0
+        78: getfield      #10                 // Field entries:Ljava/util/Map;
+        81: invokeinterface #46,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+        86: invokeinterface #50,  1           // InterfaceMethod java/util/Collection.stream:()Ljava/util/stream/Stream;
+        91: aload_2
+        92: invokedynamic #139,  0            // InvokeDynamic #3:test:(Ljava/util/UUID;)Ljava/util/function/Predicate;
+        97: invokeinterface #60,  2           // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+       102: invokeinterface #66,  1           // InterfaceMethod java/util/stream/Stream.count:()J
+       107: ldc2_w        #70                 // long 6l
+       110: lcmp
+       111: iflt          117
+       114: ldc           #72                 // String OWNER_RELEASE_BUDGET
+       116: areturn
+       117: aload_0
+       118: getfield      #10                 // Field entries:Ljava/util/Map;
+       121: aload_1
+       122: new           #74                 // class com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry
+       125: dup
+       126: aload_2
+       127: aload_3
+       128: aload         4
+       130: invokespecial #95                 // Method com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry."<init>":(Ljava/util/UUID;Lcom/inigmasgames/hytalerpg/domain/SkillSlot;Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers;)V
+       133: invokeinterface #106,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       138: pop
+       139: ldc           #110                // String PASS
+       141: areturn
+
+  public synchronized void arm(com.inigmasgames.hytalerpg.execution.SkillExecutionContext, double);
+    Code:
+         0: dload_2
+         1: invokestatic  #16                 // Method requireClock:(D)V
+         4: aload_0
+         5: getfield      #10                 // Field entries:Ljava/util/Map;
+         8: aload_1
+         9: invokevirtual #28                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.skillInstanceId:()Ljava/lang/String;
+        12: invokeinterface #142,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+        17: checkcast     #74                 // class com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry
+        20: astore        4
+        22: aload         4
+        24: ifnonnull     28
+        27: return
+        28: aload         4
+        30: aload_1
+        31: putfield      #98                 // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        34: aload         4
+        36: aload         4
+        38: getfield      #146                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.modifiers:Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers;
+        41: invokevirtual #150                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers.delaySeconds:()D
+        44: dconst_0
+        45: dcmpl
+        46: ifle          62
+        49: dload_2
+        50: aload         4
+        52: getfield      #146                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.modifiers:Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers;
+        55: invokevirtual #150                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers.delaySeconds:()D
+        58: dadd
+        59: goto          65
+        62: ldc2_w        #156                // double Infinityd
+        65: putfield      #102                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.due:D
+        68: return
+
+  public synchronized void primaryReleased(com.inigmasgames.hytalerpg.execution.SkillExecutionContext, double);
+    Code:
+         0: dload_2
+         1: invokestatic  #16                 // Method requireClock:(D)V
+         4: aload_0
+         5: getfield      #10                 // Field entries:Ljava/util/Map;
+         8: aload_1
+         9: invokevirtual #28                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.skillInstanceId:()Ljava/lang/String;
+        12: invokeinterface #142,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+        17: checkcast     #74                 // class com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry
+        20: astore        4
+        22: aload         4
+        24: ifnonnull     28
+        27: return
+        28: aload         4
+        30: getfield      #146                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.modifiers:Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers;
+        33: invokevirtual #158                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers.barrageBatches:()I
+        36: iconst_1
+        37: if_icmple     78
+        40: aload         4
+        42: iconst_0
+        43: putfield      #161                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.primaryPending:Z
+        46: aload         4
+        48: dload_2
+        49: putfield      #165                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.primaryReleasedAt:D
+        52: aload         4
+        54: aload_1
+        55: iconst_1
+        56: invokevirtual #168                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.barrageCopy:(I)Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        59: putfield      #98                 // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        62: aload         4
+        64: dload_2
+        65: aload         4
+        67: getfield      #146                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.modifiers:Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers;
+        70: invokevirtual #172                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers.barrageInterval:()D
+        73: dadd
+        74: putfield      #102                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.due:D
+        77: return
+        78: aload         4
+        80: getfield      #146                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.modifiers:Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers;
+        83: invokevirtual #175                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers.echoDelaySeconds:()D
+        86: dconst_0
+        87: dcmpg
+        88: ifgt          106
+        91: aload_0
+        92: getfield      #10                 // Field entries:Ljava/util/Map;
+        95: aload_1
+        96: invokevirtual #28                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.skillInstanceId:()Ljava/lang/String;
+        99: invokeinterface #178,  2          // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+       104: pop
+       105: return
+       106: aload         4
+       108: iconst_0
+       109: putfield      #161                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.primaryPending:Z
+       112: aload         4
+       114: aload_1
+       115: invokevirtual #181                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.echoCopy:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       118: putfield      #98                 // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       121: aload         4
+       123: dload_2
+       124: aload         4
+       126: getfield      #146                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.modifiers:Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers;
+       129: invokevirtual #175                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers.echoDelaySeconds:()D
+       132: dadd
+       133: putfield      #102                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.due:D
+       136: return
+
+  public synchronized void additionalReleased(com.inigmasgames.hytalerpg.execution.SkillReleaseScheduler$Release);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #185                // Method isCurrent:(Lcom/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Release;)Z
+         5: ifne          9
+         8: return
+         9: aload_0
+        10: getfield      #10                 // Field entries:Ljava/util/Map;
+        13: aload_1
+        14: invokevirtual #189                // Method com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Release.reservation:()Ljava/lang/String;
+        17: invokeinterface #142,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+        22: checkcast     #74                 // class com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry
+        25: astore_2
+        26: aload_1
+        27: invokevirtual #194                // Method com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Release.context:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        30: astore_3
+        31: aload_3
+        32: invokevirtual #196                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.barrageBatch:()I
+        35: iconst_1
+        36: iadd
+        37: istore        4
+        39: aload_3
+        40: invokevirtual #20                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.conditionalRepeat:()Z
+        43: ifne          65
+        46: aload_3
+        47: invokevirtual #199                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.echo:()Z
+        50: ifne          65
+        53: iload         4
+        55: aload_2
+        56: getfield      #146                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.modifiers:Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers;
+        59: invokevirtual #158                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers.barrageBatches:()I
+        62: if_icmplt     80
+        65: aload_0
+        66: getfield      #10                 // Field entries:Ljava/util/Map;
+        69: aload_1
+        70: invokevirtual #189                // Method com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Release.reservation:()Ljava/lang/String;
+        73: invokeinterface #178,  2          // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+        78: pop
+        79: return
+        80: aload_2
+        81: aload_3
+        82: iload         4
+        84: invokevirtual #168                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.barrageCopy:(I)Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        87: putfield      #98                 // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        90: aload_2
+        91: aload_2
+        92: getfield      #165                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.primaryReleasedAt:D
+        95: iload         4
+        97: i2d
+        98: aload_2
+        99: getfield      #146                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.modifiers:Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers;
+       102: invokevirtual #172                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers.barrageInterval:()D
+       105: dmul
+       106: dadd
+       107: putfield      #102                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.due:D
+       110: return
+
+  public synchronized java.util.List<com.inigmasgames.hytalerpg.execution.SkillReleaseScheduler$Release> due(java.util.UUID, double);
+    Code:
+         0: dload_2
+         1: invokestatic  #16                 // Method requireClock:(D)V
+         4: new           #112                // class java/util/ArrayList
+         7: dup
+         8: invokespecial #114                // Method java/util/ArrayList."<init>":()V
+        11: astore        4
+        13: aload_0
+        14: getfield      #10                 // Field entries:Ljava/util/Map;
+        17: invokeinterface #202,  1          // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+        22: invokeinterface #206,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+        27: astore        5
+        29: aload         5
+        31: invokeinterface #212,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+        36: ifeq          141
+        39: aload         5
+        41: invokeinterface #217,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+        46: checkcast     #221                // class java/util/Map$Entry
+        49: astore        6
+        51: aload         6
+        53: invokeinterface #223,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+        58: checkcast     #74                 // class com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry
+        61: astore        7
+        63: aload         7
+        65: getfield      #226                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.owner:Ljava/util/UUID;
+        68: aload_1
+        69: invokevirtual #230                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+        72: ifeq          29
+        75: aload         7
+        77: getfield      #98                 // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        80: ifnull        29
+        83: dload_2
+        84: aload         7
+        86: getfield      #102                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.due:D
+        89: ldc2_w        #235                // double 1.0E-9d
+        92: dsub
+        93: dcmpg
+        94: ifge          100
+        97: goto          29
+       100: aload         7
+       102: ldc2_w        #156                // double Infinityd
+       105: putfield      #102                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.due:D
+       108: aload         4
+       110: new           #190                // class com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Release
+       113: dup
+       114: aload         6
+       116: invokeinterface #237,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+       121: checkcast     #240                // class java/lang/String
+       124: aload         7
+       126: getfield      #98                 // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       129: invokespecial #242                // Method com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Release."<init>":(Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;)V
+       132: invokeinterface #245,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+       137: pop
+       138: goto          29
+       141: aload         4
+       143: invokestatic  #122                // InterfaceMethod java/util/List.copyOf:(Ljava/util/Collection;)Ljava/util/List;
+       146: areturn
+
+  public synchronized void finish(java.lang.String);
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field entries:Ljava/util/Map;
+         4: aload_1
+         5: invokeinterface #178,  2          // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+        10: pop
+        11: return
+
+  public synchronized boolean isCurrent(com.inigmasgames.hytalerpg.execution.SkillReleaseScheduler$Release);
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field entries:Ljava/util/Map;
+         4: aload_1
+         5: invokevirtual #189                // Method com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Release.reservation:()Ljava/lang/String;
+         8: invokeinterface #142,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+        13: checkcast     #74                 // class com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry
+        16: astore_2
+        17: aload_2
+        18: ifnull        36
+        21: aload_2
+        22: getfield      #98                 // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        25: aload_1
+        26: invokevirtual #194                // Method com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Release.context:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        29: if_acmpne     36
+        32: iconst_1
+        33: goto          37
+        36: iconst_0
+        37: ireturn
+
+  public synchronized java.util.List<com.inigmasgames.hytalerpg.execution.SkillExecutionContext> cancel(java.util.UUID);
+    Code:
+         0: new           #112                // class java/util/ArrayList
+         3: dup
+         4: invokespecial #114                // Method java/util/ArrayList."<init>":()V
+         7: astore_2
+         8: aload_0
+         9: getfield      #10                 // Field entries:Ljava/util/Map;
+        12: invokeinterface #46,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+        17: aload_1
+        18: aload_2
+        19: invokedynamic #248,  0            // InvokeDynamic #4:test:(Ljava/util/UUID;Ljava/util/List;)Ljava/util/function/Predicate;
+        24: invokeinterface #118,  2          // InterfaceMethod java/util/Collection.removeIf:(Ljava/util/function/Predicate;)Z
+        29: pop
+        30: aload_2
+        31: invokestatic  #122                // InterfaceMethod java/util/List.copyOf:(Ljava/util/Collection;)Ljava/util/List;
+        34: areturn
+
+  public synchronized boolean hasPendingPrimary(java.util.UUID, com.inigmasgames.hytalerpg.domain.SkillSlot);
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field entries:Ljava/util/Map;
+         4: invokeinterface #46,  1           // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+         9: invokeinterface #50,  1           // InterfaceMethod java/util/Collection.stream:()Ljava/util/stream/Stream;
+        14: aload_1
+        15: aload_2
+        16: invokedynamic #251,  0            // InvokeDynamic #5:test:(Ljava/util/UUID;Lcom/inigmasgames/hytalerpg/domain/SkillSlot;)Ljava/util/function/Predicate;
+        21: invokeinterface #134,  2          // InterfaceMethod java/util/stream/Stream.anyMatch:(Ljava/util/function/Predicate;)Z
+        26: ireturn
+
+  public synchronized int size();
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field entries:Ljava/util/Map;
+         4: invokeinterface #40,  1           // InterfaceMethod java/util/Map.size:()I
+         9: ireturn
+
+  private static void requireClock(double);
+    Code:
+         0: dload_0
+         1: invokestatic  #252                // Method java/lang/Double.isFinite:(D)Z
+         4: ifne          18
+         7: new           #256                // class java/lang/IllegalArgumentException
+        10: dup
+        11: ldc_w         #258                // String Invalid release clock
+        14: invokespecial #260                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        17: athrow
+        18: return
+
+  private static boolean lambda$hasPendingPrimary$0(java.util.UUID, com.inigmasgames.hytalerpg.domain.SkillSlot, com.inigmasgames.hytalerpg.execution.SkillReleaseScheduler$Entry);
+    Code:
+         0: aload_2
+         1: getfield      #226                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.owner:Ljava/util/UUID;
+         4: aload_0
+         5: invokevirtual #230                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+         8: ifeq          30
+        11: aload_2
+        12: getfield      #263                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.slot:Lcom/inigmasgames/hytalerpg/domain/SkillSlot;
+        15: aload_1
+        16: if_acmpne     30
+        19: aload_2
+        20: getfield      #161                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.primaryPending:Z
+        23: ifeq          30
+        26: iconst_1
+        27: goto          31
+        30: iconst_0
+        31: ireturn
+
+  private static boolean lambda$cancel$0(java.util.UUID, java.util.List, com.inigmasgames.hytalerpg.execution.SkillReleaseScheduler$Entry);
+    Code:
+         0: aload_2
+         1: getfield      #226                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.owner:Ljava/util/UUID;
+         4: aload_0
+         5: invokevirtual #230                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+         8: ifne          13
+        11: iconst_0
+        12: ireturn
+        13: aload_2
+        14: getfield      #98                 // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        17: ifnull        31
+        20: aload_1
+        21: aload_2
+        22: getfield      #98                 // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        25: invokeinterface #245,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        30: pop
+        31: iconst_1
+        32: ireturn
+
+  private static boolean lambda$reserve$1(java.util.UUID, com.inigmasgames.hytalerpg.execution.SkillReleaseScheduler$Entry);
+    Code:
+         0: aload_1
+         1: getfield      #226                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.owner:Ljava/util/UUID;
+         4: aload_0
+         5: invokevirtual #230                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+         8: ireturn
+
+  private static boolean lambda$reserve$0(java.util.UUID, com.inigmasgames.hytalerpg.domain.SkillSlot, com.inigmasgames.hytalerpg.execution.SkillReleaseScheduler$Entry);
+    Code:
+         0: aload_2
+         1: getfield      #226                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.owner:Ljava/util/UUID;
+         4: aload_0
+         5: invokevirtual #230                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+         8: ifeq          30
+        11: aload_2
+        12: getfield      #263                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.slot:Lcom/inigmasgames/hytalerpg/domain/SkillSlot;
+        15: aload_1
+        16: if_acmpne     30
+        19: aload_2
+        20: getfield      #161                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.primaryPending:Z
+        23: ifeq          30
+        26: iconst_1
+        27: goto          31
+        30: iconst_0
+        31: ireturn
+
+  private static boolean lambda$cancelConditional$0(java.util.UUID, java.util.ArrayList, com.inigmasgames.hytalerpg.execution.SkillReleaseScheduler$Entry);
+    Code:
+         0: aload_2
+         1: getfield      #226                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.owner:Ljava/util/UUID;
+         4: aload_0
+         5: invokevirtual #230                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+         8: ifeq          28
+        11: aload_2
+        12: getfield      #98                 // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        15: ifnull        28
+        18: aload_2
+        19: getfield      #98                 // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        22: invokevirtual #20                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.conditionalRepeat:()Z
+        25: ifne          30
+        28: iconst_0
+        29: ireturn
+        30: aload_1
+        31: aload_2
+        32: getfield      #98                 // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.context:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        35: invokevirtual #266                // Method java/util/ArrayList.add:(Ljava/lang/Object;)Z
+        38: pop
+        39: iconst_1
+        40: ireturn
+
+  private static boolean lambda$conditional$0(com.inigmasgames.hytalerpg.execution.SkillExecutionContext, com.inigmasgames.hytalerpg.execution.SkillReleaseScheduler$Entry);
+    Code:
+         0: aload_1
+         1: getfield      #226                // Field com/inigmasgames/hytalerpg/execution/SkillReleaseScheduler$Entry.owner:Ljava/util/UUID;
+         4: aload_0
+         5: invokevirtual #76                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.request:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;
+         8: invokevirtual #80                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionRequest.actorId:()Ljava/util/UUID;
+        11: invokevirtual #230                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+        14: ireturn
+}

@@ -1,0 +1,7 @@
+{
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "playerMoveTo": "delegates after addLocationChange",
+  "entityMoveTo": "TransformComponent.getPosition().set(x,y,z)",
+  "meaning": "Server-side Transform is available for post-move measurement; not connected motion or client acceptance proof",
+  "connected": "UNVERIFIED"
+}

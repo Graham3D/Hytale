@@ -1,0 +1,1132 @@
+Compiled from "RootInteraction.java"
+public class com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction implements com.hypixel.hytale.assetstore.map.JsonAssetWithMap<java.lang.String, com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap<java.lang.String, com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction>>, com.hypixel.hytale.server.core.io.NetworkSerializable<com.hypixel.hytale.protocol.RootInteraction> {
+  public static final com.hypixel.hytale.codec.builder.BuilderCodec<com.hypixel.hytale.protocol.InteractionCooldown> COOLDOWN_CODEC;
+
+  public static final com.hypixel.hytale.assetstore.codec.AssetBuilderCodec<java.lang.String, com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction> CODEC;
+
+  public static final com.hypixel.hytale.codec.validation.ValidatorCache<java.lang.String> VALIDATOR_CACHE;
+
+  public static final com.hypixel.hytale.assetstore.codec.ContainedAssetCodec<java.lang.String, com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction, ?> CHILD_ASSET_CODEC;
+
+  public static final com.hypixel.hytale.codec.Codec<java.lang.String[]> CHILD_ASSET_CODEC_ARRAY;
+
+  public static final com.hypixel.hytale.codec.codecs.map.MapCodec<java.lang.String, java.util.HashMap<java.lang.String, java.lang.String>> CHILD_ASSET_CODEC_MAP;
+
+  private static com.hypixel.hytale.assetstore.AssetStore<java.lang.String, com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction, com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap<java.lang.String, com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction>> ASSET_STORE;
+
+  protected java.lang.String id;
+
+  protected com.hypixel.hytale.assetstore.AssetExtraInfo$Data data;
+
+  protected java.lang.String[] interactionIds;
+
+  protected com.hypixel.hytale.protocol.InteractionCooldown cooldown;
+
+  protected java.util.Map<com.hypixel.hytale.protocol.GameMode, com.hypixel.hytale.protocol.RootInteractionSettings> settings;
+
+  protected boolean requireNewClick;
+
+  protected float clickQueuingTimeout;
+
+  protected java.lang.String hudInputBindingEntry;
+
+  protected com.hypixel.hytale.server.core.modules.interaction.interaction.config.InteractionRules rules;
+
+  protected com.hypixel.hytale.server.core.modules.interaction.interaction.operation.Operation[] operations;
+
+  protected boolean needsRemoteSync;
+
+  public com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: getstatic     #7                  // Field com/hypixel/hytale/common/util/ArrayUtil.EMPTY_STRING_ARRAY:[Ljava/lang/String;
+         8: putfield      #13                 // Field interactionIds:[Ljava/lang/String;
+        11: aload_0
+        12: invokestatic  #18                 // Method java/util/Collections.emptyMap:()Ljava/util/Map;
+        15: putfield      #24                 // Field settings:Ljava/util/Map;
+        18: aload_0
+        19: getstatic     #28                 // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/InteractionRules.DEFAULT_RULES:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/InteractionRules;
+        22: putfield      #34                 // Field rules:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/InteractionRules;
+        25: return
+
+  public com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction(java.lang.String, java.lang.String...);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: getstatic     #7                  // Field com/hypixel/hytale/common/util/ArrayUtil.EMPTY_STRING_ARRAY:[Ljava/lang/String;
+         8: putfield      #13                 // Field interactionIds:[Ljava/lang/String;
+        11: aload_0
+        12: invokestatic  #18                 // Method java/util/Collections.emptyMap:()Ljava/util/Map;
+        15: putfield      #24                 // Field settings:Ljava/util/Map;
+        18: aload_0
+        19: getstatic     #28                 // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/InteractionRules.DEFAULT_RULES:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/InteractionRules;
+        22: putfield      #34                 // Field rules:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/InteractionRules;
+        25: aload_0
+        26: aload_1
+        27: putfield      #37                 // Field id:Ljava/lang/String;
+        30: aload_0
+        31: aload_2
+        32: putfield      #13                 // Field interactionIds:[Ljava/lang/String;
+        35: aload_0
+        36: new           #41                 // class com/hypixel/hytale/assetstore/AssetExtraInfo$Data
+        39: dup
+        40: ldc           #14                 // class com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction
+        42: aload_1
+        43: aconst_null
+        44: invokespecial #43                 // Method com/hypixel/hytale/assetstore/AssetExtraInfo$Data."<init>":(Ljava/lang/Class;Ljava/lang/Object;Ljava/lang/Object;)V
+        47: putfield      #46                 // Field data:Lcom/hypixel/hytale/assetstore/AssetExtraInfo$Data;
+        50: return
+
+  public com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction(java.lang.String, com.hypixel.hytale.protocol.InteractionCooldown, java.lang.String...);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: getstatic     #7                  // Field com/hypixel/hytale/common/util/ArrayUtil.EMPTY_STRING_ARRAY:[Ljava/lang/String;
+         8: putfield      #13                 // Field interactionIds:[Ljava/lang/String;
+        11: aload_0
+        12: invokestatic  #18                 // Method java/util/Collections.emptyMap:()Ljava/util/Map;
+        15: putfield      #24                 // Field settings:Ljava/util/Map;
+        18: aload_0
+        19: getstatic     #28                 // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/InteractionRules.DEFAULT_RULES:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/InteractionRules;
+        22: putfield      #34                 // Field rules:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/InteractionRules;
+        25: aload_0
+        26: aload_1
+        27: putfield      #37                 // Field id:Ljava/lang/String;
+        30: aload_0
+        31: aload_2
+        32: putfield      #50                 // Field cooldown:Lcom/hypixel/hytale/protocol/InteractionCooldown;
+        35: aload_0
+        36: aload_3
+        37: putfield      #13                 // Field interactionIds:[Ljava/lang/String;
+        40: aload_0
+        41: new           #41                 // class com/hypixel/hytale/assetstore/AssetExtraInfo$Data
+        44: dup
+        45: ldc           #14                 // class com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction
+        47: aload_1
+        48: aconst_null
+        49: invokespecial #43                 // Method com/hypixel/hytale/assetstore/AssetExtraInfo$Data."<init>":(Ljava/lang/Class;Ljava/lang/Object;Ljava/lang/Object;)V
+        52: putfield      #46                 // Field data:Lcom/hypixel/hytale/assetstore/AssetExtraInfo$Data;
+        55: return
+
+  public static com.hypixel.hytale.assetstore.AssetStore<java.lang.String, com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction, com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap<java.lang.String, com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction>> getAssetStore();
+    Code:
+         0: getstatic     #54                 // Field ASSET_STORE:Lcom/hypixel/hytale/assetstore/AssetStore;
+         3: ifnonnull     14
+         6: ldc           #14                 // class com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction
+         8: invokestatic  #58                 // Method com/hypixel/hytale/assetstore/AssetRegistry.getAssetStore:(Ljava/lang/Class;)Lcom/hypixel/hytale/assetstore/AssetStore;
+        11: putstatic     #54                 // Field ASSET_STORE:Lcom/hypixel/hytale/assetstore/AssetStore;
+        14: getstatic     #54                 // Field ASSET_STORE:Lcom/hypixel/hytale/assetstore/AssetStore;
+        17: areturn
+
+  public static com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap<java.lang.String, com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction> getAssetMap();
+    Code:
+         0: invokestatic  #64                 // Method getAssetStore:()Lcom/hypixel/hytale/assetstore/AssetStore;
+         3: invokevirtual #67                 // Method com/hypixel/hytale/assetstore/AssetStore.getAssetMap:()Lcom/hypixel/hytale/assetstore/AssetMap;
+         6: checkcast     #73                 // class com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap
+         9: areturn
+
+  public java.lang.String getId();
+    Code:
+         0: aload_0
+         1: getfield      #37                 // Field id:Ljava/lang/String;
+         4: areturn
+
+  public boolean needsRemoteSync();
+    Code:
+         0: aload_0
+         1: getfield      #75                 // Field needsRemoteSync:Z
+         4: ireturn
+
+  public boolean resetCooldownOnStart();
+    Code:
+         0: aload_0
+         1: getfield      #50                 // Field cooldown:Lcom/hypixel/hytale/protocol/InteractionCooldown;
+         4: ifnull        17
+         7: aload_0
+         8: getfield      #50                 // Field cooldown:Lcom/hypixel/hytale/protocol/InteractionCooldown;
+        11: getfield      #79                 // Field com/hypixel/hytale/protocol/InteractionCooldown.skipCooldownReset:Z
+        14: ifne          21
+        17: iconst_1
+        18: goto          22
+        21: iconst_0
+        22: ireturn
+
+  public com.hypixel.hytale.server.core.modules.interaction.interaction.operation.Operation getOperation(int);
+    Code:
+         0: iload_1
+         1: aload_0
+         2: getfield      #84                 // Field operations:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/operation/Operation;
+         5: arraylength
+         6: if_icmplt     11
+         9: aconst_null
+        10: areturn
+        11: aload_0
+        12: getfield      #84                 // Field operations:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/operation/Operation;
+        15: iload_1
+        16: aaload
+        17: areturn
+
+  public int getOperationMax();
+    Code:
+         0: aload_0
+         1: getfield      #84                 // Field operations:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/operation/Operation;
+         4: arraylength
+         5: ireturn
+
+  public java.lang.String[] getInteractionIds();
+    Code:
+         0: aload_0
+         1: getfield      #13                 // Field interactionIds:[Ljava/lang/String;
+         4: areturn
+
+  public java.util.Map<com.hypixel.hytale.protocol.GameMode, com.hypixel.hytale.protocol.RootInteractionSettings> getSettings();
+    Code:
+         0: aload_0
+         1: getfield      #24                 // Field settings:Ljava/util/Map;
+         4: areturn
+
+  public float getClickQueuingTimeout();
+    Code:
+         0: aload_0
+         1: getfield      #88                 // Field clickQueuingTimeout:F
+         4: freturn
+
+  public java.lang.String getHudInputBindingEntry();
+    Code:
+         0: aload_0
+         1: getfield      #92                 // Field hudInputBindingEntry:Ljava/lang/String;
+         4: areturn
+
+  public com.hypixel.hytale.server.core.modules.interaction.interaction.config.InteractionRules getRules();
+    Code:
+         0: aload_0
+         1: getfield      #34                 // Field rules:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/InteractionRules;
+         4: areturn
+
+  public com.hypixel.hytale.protocol.InteractionCooldown getCooldown();
+    Code:
+         0: aload_0
+         1: getfield      #50                 // Field cooldown:Lcom/hypixel/hytale/protocol/InteractionCooldown;
+         4: areturn
+
+  public com.hypixel.hytale.assetstore.AssetExtraInfo$Data getData();
+    Code:
+         0: aload_0
+         1: getfield      #46                 // Field data:Lcom/hypixel/hytale/assetstore/AssetExtraInfo$Data;
+         4: areturn
+
+  public void build(java.util.Set<java.lang.String>);
+    Code:
+         0: aload_0
+         1: getfield      #84                 // Field operations:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/operation/Operation;
+         4: ifnonnull     8
+         7: return
+         8: aload_0
+         9: invokevirtual #95                 // Method build:()V
+        12: return
+
+  public void build();
+    Code:
+         0: aload_0
+         1: getfield      #13                 // Field interactionIds:[Ljava/lang/String;
+         4: ifnonnull     8
+         7: return
+         8: new           #98                 // class com/hypixel/hytale/server/core/modules/interaction/interaction/operation/OperationsBuilder
+        11: dup
+        12: invokespecial #100                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/operation/OperationsBuilder."<init>":()V
+        15: astore_1
+        16: iconst_0
+        17: istore_2
+        18: aload_0
+        19: getfield      #13                 // Field interactionIds:[Ljava/lang/String;
+        22: astore_3
+        23: aload_3
+        24: arraylength
+        25: istore        4
+        27: iconst_0
+        28: istore        5
+        30: iload         5
+        32: iload         4
+        34: if_icmpge     84
+        37: aload_3
+        38: iload         5
+        40: aaload
+        41: astore        6
+        43: invokestatic  #101                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/Interaction.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+        46: aload         6
+        48: invokevirtual #106                // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(Ljava/lang/Object;)Lcom/hypixel/hytale/assetstore/JsonAsset;
+        51: checkcast     #102                // class com/hypixel/hytale/server/core/modules/interaction/interaction/config/Interaction
+        54: astore        7
+        56: aload         7
+        58: ifnonnull     64
+        61: goto          78
+        64: aload         7
+        66: aload_1
+        67: invokevirtual #110                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/Interaction.compile:(Lcom/hypixel/hytale/server/core/modules/interaction/interaction/operation/OperationsBuilder;)V
+        70: iload_2
+        71: aload         7
+        73: invokevirtual #114                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/Interaction.needsRemoteSync:()Z
+        76: ior
+        77: istore_2
+        78: iinc          5, 1
+        81: goto          30
+        84: aload_0
+        85: aload_1
+        86: invokevirtual #117                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/operation/OperationsBuilder.build:()[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/operation/Operation;
+        89: putfield      #84                 // Field operations:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/operation/Operation;
+        92: aload_0
+        93: iload_2
+        94: putfield      #75                 // Field needsRemoteSync:Z
+        97: aload_0
+        98: getfield      #84                 // Field operations:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/operation/Operation;
+       101: astore_3
+       102: aload_3
+       103: arraylength
+       104: istore        4
+       106: iconst_0
+       107: istore        5
+       109: iload         5
+       111: iload         4
+       113: if_icmpge     189
+       116: aload_3
+       117: iload         5
+       119: aaload
+       120: astore        6
+       122: aload         6
+       124: invokeinterface #120,  1          // InterfaceMethod com/hypixel/hytale/server/core/modules/interaction/interaction/operation/Operation.getInnerOperation:()Lcom/hypixel/hytale/server/core/modules/interaction/interaction/operation/Operation;
+       129: astore        6
+       131: aload         6
+       133: instanceof    #102                // class com/hypixel/hytale/server/core/modules/interaction/interaction/config/Interaction
+       136: ifeq          183
+       139: aload         6
+       141: checkcast     #102                // class com/hypixel/hytale/server/core/modules/interaction/interaction/config/Interaction
+       144: astore        7
+       146: aload         7
+       148: invokevirtual #126                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/Interaction.getWaitForDataFrom:()Lcom/hypixel/hytale/protocol/WaitForDataFrom;
+       151: getstatic     #130                // Field com/hypixel/hytale/protocol/WaitForDataFrom.Client:Lcom/hypixel/hytale/protocol/WaitForDataFrom;
+       154: if_acmpne     183
+       157: aload         7
+       159: invokevirtual #114                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/Interaction.needsRemoteSync:()Z
+       162: ifne          183
+       165: new           #136                // class java/lang/IllegalArgumentException
+       168: dup
+       169: aload         7
+       171: invokestatic  #138                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+       174: invokedynamic #144,  0            // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+       179: invokespecial #148                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+       182: athrow
+       183: iinc          5, 1
+       186: goto          109
+       189: return
+
+  public com.hypixel.hytale.protocol.RootInteraction toPacket();
+    Code:
+         0: new           #151                // class com/hypixel/hytale/protocol/RootInteraction
+         3: dup
+         4: invokespecial #153                // Method com/hypixel/hytale/protocol/RootInteraction."<init>":()V
+         7: astore_1
+         8: aload_1
+         9: aload_0
+        10: getfield      #37                 // Field id:Ljava/lang/String;
+        13: putfield      #154                // Field com/hypixel/hytale/protocol/RootInteraction.id:Ljava/lang/String;
+        16: aload_1
+        17: aload_0
+        18: getfield      #13                 // Field interactionIds:[Ljava/lang/String;
+        21: arraylength
+        22: newarray       int
+        24: putfield      #155                // Field com/hypixel/hytale/protocol/RootInteraction.interactions:[I
+        27: iconst_0
+        28: istore_2
+        29: iload_2
+        30: aload_0
+        31: getfield      #13                 // Field interactionIds:[Ljava/lang/String;
+        34: arraylength
+        35: if_icmpge     59
+        38: aload_1
+        39: getfield      #155                // Field com/hypixel/hytale/protocol/RootInteraction.interactions:[I
+        42: iload_2
+        43: aload_0
+        44: getfield      #13                 // Field interactionIds:[Ljava/lang/String;
+        47: iload_2
+        48: aaload
+        49: invokestatic  #159                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/Interaction.getInteractionIdOrUnknown:(Ljava/lang/String;)I
+        52: iastore
+        53: iinc          2, 1
+        56: goto          29
+        59: aload_1
+        60: aload_0
+        61: getfield      #88                 // Field clickQueuingTimeout:F
+        64: putfield      #163                // Field com/hypixel/hytale/protocol/RootInteraction.clickQueuingTimeout:F
+        67: aload_1
+        68: aload_0
+        69: getfield      #164                // Field requireNewClick:Z
+        72: putfield      #167                // Field com/hypixel/hytale/protocol/RootInteraction.requireNewClick:Z
+        75: aload_1
+        76: aload_0
+        77: getfield      #92                 // Field hudInputBindingEntry:Ljava/lang/String;
+        80: putfield      #168                // Field com/hypixel/hytale/protocol/RootInteraction.hudInputBindingEntry:Ljava/lang/String;
+        83: aload_1
+        84: aload_0
+        85: getfield      #34                 // Field rules:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/InteractionRules;
+        88: invokevirtual #169                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/InteractionRules.toPacket:()Lcom/hypixel/hytale/protocol/InteractionRules;
+        91: putfield      #173                // Field com/hypixel/hytale/protocol/RootInteraction.rules:Lcom/hypixel/hytale/protocol/InteractionRules;
+        94: aload_1
+        95: aload_0
+        96: getfield      #24                 // Field settings:Ljava/util/Map;
+        99: putfield      #176                // Field com/hypixel/hytale/protocol/RootInteraction.settings:Ljava/util/Map;
+       102: aload_1
+       103: aload_0
+       104: getfield      #50                 // Field cooldown:Lcom/hypixel/hytale/protocol/InteractionCooldown;
+       107: putfield      #177                // Field com/hypixel/hytale/protocol/RootInteraction.cooldown:Lcom/hypixel/hytale/protocol/InteractionCooldown;
+       110: aload_0
+       111: getfield      #46                 // Field data:Lcom/hypixel/hytale/assetstore/AssetExtraInfo$Data;
+       114: ifnull        138
+       117: aload_1
+       118: aload_0
+       119: getfield      #46                 // Field data:Lcom/hypixel/hytale/assetstore/AssetExtraInfo$Data;
+       122: invokevirtual #178                // Method com/hypixel/hytale/assetstore/AssetExtraInfo$Data.getTags:()Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+       125: invokeinterface #182,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.keySet:()Lit/unimi/dsi/fastutil/ints/IntSet;
+       130: invokeinterface #188,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/IntSet.toIntArray:()[I
+       135: putfield      #194                // Field com/hypixel/hytale/protocol/RootInteraction.tags:[I
+       138: aload_1
+       139: areturn
+
+  public static com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction getRootInteractionOrUnknown(java.lang.String);
+    Code:
+         0: invokestatic  #197                // Method getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+         3: aload_0
+         4: invokestatic  #198                // Method getRootInteractionIdOrUnknown:(Ljava/lang/String;)I
+         7: invokevirtual #201                // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(I)Lcom/hypixel/hytale/assetstore/map/JsonAssetWithMap;
+        10: checkcast     #14                 // class com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction
+        13: areturn
+
+  public static int getRootInteractionIdOrUnknown(java.lang.String);
+    Code:
+         0: aload_0
+         1: ifnonnull     7
+         4: ldc           #206                // int -2147483648
+         6: ireturn
+         7: invokestatic  #197                // Method getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+        10: astore_1
+        11: aload_1
+        12: aload_0
+        13: invokevirtual #207                // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getIndex:(Ljava/lang/Object;)I
+        16: istore_2
+        17: iload_2
+        18: ldc           #206                // int -2147483648
+        20: if_icmpne     92
+        23: invokestatic  #211                // Method com/hypixel/hytale/logger/HytaleLogger.getLogger:()Lcom/hypixel/hytale/logger/HytaleLogger;
+        26: getstatic     #217                // Field java/util/logging/Level.WARNING:Ljava/util/logging/Level;
+        29: invokevirtual #223                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+        32: ldc           #227                // String Missing root interaction %s
+        34: aload_0
+        35: invokeinterface #229,  3          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;Ljava/lang/Object;)V
+        40: invokestatic  #64                 // Method getAssetStore:()Lcom/hypixel/hytale/assetstore/AssetStore;
+        43: ldc           #237                // String Hytale:Hytale
+        45: new           #14                 // class com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction
+        48: dup
+        49: aload_0
+        50: iconst_0
+        51: anewarray     #139                // class java/lang/String
+        54: invokespecial #239                // Method "<init>":(Ljava/lang/String;[Ljava/lang/String;)V
+        57: invokestatic  #242                // InterfaceMethod java/util/List.of:(Ljava/lang/Object;)Ljava/util/List;
+        60: invokevirtual #248                // Method com/hypixel/hytale/assetstore/AssetStore.loadAssets:(Ljava/lang/String;Ljava/util/List;)Lcom/hypixel/hytale/assetstore/AssetLoadResult;
+        63: pop
+        64: aload_1
+        65: aload_0
+        66: invokevirtual #207                // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getIndex:(Ljava/lang/Object;)I
+        69: istore_3
+        70: iload_3
+        71: ldc           #206                // int -2147483648
+        73: if_icmpne     90
+        76: new           #136                // class java/lang/IllegalArgumentException
+        79: dup
+        80: aload_0
+        81: invokedynamic #252,  0            // InvokeDynamic #1:makeConcatWithConstants:(Ljava/lang/String;)Ljava/lang/String;
+        86: invokespecial #148                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        89: athrow
+        90: iload_3
+        91: istore_2
+        92: iload_2
+        93: ireturn
+
+  public java.lang.String toString();
+    Code:
+         0: aload_0
+         1: getfield      #37                 // Field id:Ljava/lang/String;
+         4: aload_0
+         5: getfield      #13                 // Field interactionIds:[Ljava/lang/String;
+         8: invokestatic  #253                // Method java/util/Arrays.toString:([Ljava/lang/Object;)Ljava/lang/String;
+        11: aload_0
+        12: getfield      #24                 // Field settings:Ljava/util/Map;
+        15: invokestatic  #138                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+        18: aload_0
+        19: getfield      #164                // Field requireNewClick:Z
+        22: aload_0
+        23: getfield      #88                 // Field clickQueuingTimeout:F
+        26: aload_0
+        27: getfield      #92                 // Field hudInputBindingEntry:Ljava/lang/String;
+        30: aload_0
+        31: getfield      #34                 // Field rules:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/InteractionRules;
+        34: invokestatic  #138                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+        37: aload_0
+        38: getfield      #84                 // Field operations:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/operation/Operation;
+        41: invokestatic  #253                // Method java/util/Arrays.toString:([Ljava/lang/Object;)Ljava/lang/String;
+        44: aload_0
+        45: getfield      #75                 // Field needsRemoteSync:Z
+        48: invokedynamic #259,  0            // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZFLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Z)Ljava/lang/String;
+        53: areturn
+
+  public java.lang.Object getId();
+    Code:
+         0: aload_0
+         1: invokevirtual #262                // Method getId:()Ljava/lang/String;
+         4: areturn
+
+  public java.lang.Object toPacket();
+    Code:
+         0: aload_0
+         1: invokevirtual #266                // Method toPacket:()Lcom/hypixel/hytale/protocol/RootInteraction;
+         4: areturn
+
+  private static java.lang.String[] lambda$CHILD_ASSET_CODEC_ARRAY$0(int);
+    Code:
+         0: iload_0
+         1: anewarray     #139                // class java/lang/String
+         4: areturn
+
+  private static void lambda$static$49(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction, com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #92                 // Field hudInputBindingEntry:Ljava/lang/String;
+         5: putfield      #92                 // Field hudInputBindingEntry:Ljava/lang/String;
+         8: return
+
+  private static java.lang.String lambda$static$48(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction);
+    Code:
+         0: aload_0
+         1: getfield      #92                 // Field hudInputBindingEntry:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$47(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #92                 // Field hudInputBindingEntry:Ljava/lang/String;
+         5: return
+
+  private static void lambda$static$46(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction, com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #164                // Field requireNewClick:Z
+         5: putfield      #164                // Field requireNewClick:Z
+         8: return
+
+  private static java.lang.Boolean lambda$static$45(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction);
+    Code:
+         0: aload_0
+         1: getfield      #164                // Field requireNewClick:Z
+         4: invokestatic  #269                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         7: areturn
+
+  private static void lambda$static$44(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction, java.lang.Boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #274                // Method java/lang/Boolean.booleanValue:()Z
+         5: putfield      #164                // Field requireNewClick:Z
+         8: return
+
+  private static void lambda$static$43(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction, com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #88                 // Field clickQueuingTimeout:F
+         5: putfield      #88                 // Field clickQueuingTimeout:F
+         8: return
+
+  private static java.lang.Float lambda$static$42(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction);
+    Code:
+         0: aload_0
+         1: getfield      #88                 // Field clickQueuingTimeout:F
+         4: invokestatic  #277                // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+         7: areturn
+
+  private static void lambda$static$41(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction, java.lang.Float);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #282                // Method java/lang/Float.floatValue:()F
+         5: putfield      #88                 // Field clickQueuingTimeout:F
+         8: return
+
+  private static void lambda$static$40(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction, com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #24                 // Field settings:Ljava/util/Map;
+         5: putfield      #24                 // Field settings:Ljava/util/Map;
+         8: return
+
+  private static java.util.Map lambda$static$39(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction);
+    Code:
+         0: aload_0
+         1: getfield      #24                 // Field settings:Ljava/util/Map;
+         4: areturn
+
+  private static void lambda$static$38(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction, java.util.Map);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #24                 // Field settings:Ljava/util/Map;
+         5: return
+
+  private static void lambda$static$37(com.hypixel.hytale.protocol.RootInteractionSettings, com.hypixel.hytale.protocol.RootInteractionSettings);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #286                // Field com/hypixel/hytale/protocol/RootInteractionSettings.allowSkipChainOnClick:Z
+         5: putfield      #286                // Field com/hypixel/hytale/protocol/RootInteractionSettings.allowSkipChainOnClick:Z
+         8: return
+
+  private static java.lang.Boolean lambda$static$36(com.hypixel.hytale.protocol.RootInteractionSettings);
+    Code:
+         0: aload_0
+         1: getfield      #286                // Field com/hypixel/hytale/protocol/RootInteractionSettings.allowSkipChainOnClick:Z
+         4: invokestatic  #269                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         7: areturn
+
+  private static void lambda$static$35(com.hypixel.hytale.protocol.RootInteractionSettings, java.lang.Boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #274                // Method java/lang/Boolean.booleanValue:()Z
+         5: putfield      #286                // Field com/hypixel/hytale/protocol/RootInteractionSettings.allowSkipChainOnClick:Z
+         8: return
+
+  private static void lambda$static$34(com.hypixel.hytale.protocol.RootInteractionSettings, com.hypixel.hytale.protocol.RootInteractionSettings);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #291                // Field com/hypixel/hytale/protocol/RootInteractionSettings.cooldown:Lcom/hypixel/hytale/protocol/InteractionCooldown;
+         5: putfield      #291                // Field com/hypixel/hytale/protocol/RootInteractionSettings.cooldown:Lcom/hypixel/hytale/protocol/InteractionCooldown;
+         8: return
+
+  private static com.hypixel.hytale.protocol.InteractionCooldown lambda$static$33(com.hypixel.hytale.protocol.RootInteractionSettings);
+    Code:
+         0: aload_0
+         1: getfield      #291                // Field com/hypixel/hytale/protocol/RootInteractionSettings.cooldown:Lcom/hypixel/hytale/protocol/InteractionCooldown;
+         4: areturn
+
+  private static void lambda$static$32(com.hypixel.hytale.protocol.RootInteractionSettings, com.hypixel.hytale.protocol.InteractionCooldown);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #291                // Field com/hypixel/hytale/protocol/RootInteractionSettings.cooldown:Lcom/hypixel/hytale/protocol/InteractionCooldown;
+         5: return
+
+  private static void lambda$static$31(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction, com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #34                 // Field rules:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/InteractionRules;
+         5: putfield      #34                 // Field rules:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/InteractionRules;
+         8: return
+
+  private static com.hypixel.hytale.server.core.modules.interaction.interaction.config.InteractionRules lambda$static$30(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction);
+    Code:
+         0: aload_0
+         1: getfield      #34                 // Field rules:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/InteractionRules;
+         4: areturn
+
+  private static void lambda$static$29(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction, com.hypixel.hytale.server.core.modules.interaction.interaction.config.InteractionRules);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #34                 // Field rules:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/InteractionRules;
+         5: return
+
+  private static void lambda$static$28(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction, com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #50                 // Field cooldown:Lcom/hypixel/hytale/protocol/InteractionCooldown;
+         5: putfield      #50                 // Field cooldown:Lcom/hypixel/hytale/protocol/InteractionCooldown;
+         8: return
+
+  private static com.hypixel.hytale.protocol.InteractionCooldown lambda$static$27(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction);
+    Code:
+         0: aload_0
+         1: getfield      #50                 // Field cooldown:Lcom/hypixel/hytale/protocol/InteractionCooldown;
+         4: areturn
+
+  private static void lambda$static$26(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction, com.hypixel.hytale.protocol.InteractionCooldown);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #50                 // Field cooldown:Lcom/hypixel/hytale/protocol/InteractionCooldown;
+         5: return
+
+  private static com.hypixel.hytale.codec.validation.LateValidator lambda$static$25();
+    Code:
+         0: getstatic     #292                // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/Interaction.VALIDATOR_CACHE:Lcom/hypixel/hytale/codec/validation/ValidatorCache;
+         3: invokevirtual #296                // Method com/hypixel/hytale/codec/validation/ValidatorCache.getArrayValidator:()Lcom/hypixel/hytale/codec/validation/validator/ArrayValidator;
+         6: invokevirtual #302                // Method com/hypixel/hytale/codec/validation/validator/ArrayValidator.late:()Lcom/hypixel/hytale/codec/validation/LateValidator;
+         9: areturn
+
+  private static void lambda$static$24(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction, com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #13                 // Field interactionIds:[Ljava/lang/String;
+         5: putfield      #13                 // Field interactionIds:[Ljava/lang/String;
+         8: return
+
+  private static java.lang.String[] lambda$static$23(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction);
+    Code:
+         0: aload_0
+         1: getfield      #13                 // Field interactionIds:[Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$22(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction, java.lang.String[]);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #13                 // Field interactionIds:[Ljava/lang/String;
+         5: return
+
+  private static com.hypixel.hytale.assetstore.AssetExtraInfo$Data lambda$static$21(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction);
+    Code:
+         0: aload_0
+         1: getfield      #46                 // Field data:Lcom/hypixel/hytale/assetstore/AssetExtraInfo$Data;
+         4: areturn
+
+  private static void lambda$static$20(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction, com.hypixel.hytale.assetstore.AssetExtraInfo$Data);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #46                 // Field data:Lcom/hypixel/hytale/assetstore/AssetExtraInfo$Data;
+         5: return
+
+  private static java.lang.String lambda$static$19(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction);
+    Code:
+         0: aload_0
+         1: getfield      #37                 // Field id:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$18(com.hypixel.hytale.server.core.modules.interaction.interaction.config.RootInteraction, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #37                 // Field id:Ljava/lang/String;
+         5: return
+
+  private static void lambda$static$17(com.hypixel.hytale.protocol.InteractionCooldown, com.hypixel.hytale.protocol.InteractionCooldown);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #308                // Field com/hypixel/hytale/protocol/InteractionCooldown.clickBypass:Z
+         5: putfield      #308                // Field com/hypixel/hytale/protocol/InteractionCooldown.clickBypass:Z
+         8: return
+
+  private static java.lang.Boolean lambda$static$16(com.hypixel.hytale.protocol.InteractionCooldown);
+    Code:
+         0: aload_0
+         1: getfield      #308                // Field com/hypixel/hytale/protocol/InteractionCooldown.clickBypass:Z
+         4: invokestatic  #269                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         7: areturn
+
+  private static void lambda$static$15(com.hypixel.hytale.protocol.InteractionCooldown, java.lang.Boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #274                // Method java/lang/Boolean.booleanValue:()Z
+         5: putfield      #308                // Field com/hypixel/hytale/protocol/InteractionCooldown.clickBypass:Z
+         8: return
+
+  private static void lambda$static$14(com.hypixel.hytale.protocol.InteractionCooldown, com.hypixel.hytale.protocol.InteractionCooldown);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #311                // Field com/hypixel/hytale/protocol/InteractionCooldown.interruptRecharge:Z
+         5: putfield      #311                // Field com/hypixel/hytale/protocol/InteractionCooldown.interruptRecharge:Z
+         8: return
+
+  private static java.lang.Boolean lambda$static$13(com.hypixel.hytale.protocol.InteractionCooldown);
+    Code:
+         0: aload_0
+         1: getfield      #311                // Field com/hypixel/hytale/protocol/InteractionCooldown.interruptRecharge:Z
+         4: invokestatic  #269                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         7: areturn
+
+  private static void lambda$static$12(com.hypixel.hytale.protocol.InteractionCooldown, java.lang.Boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #274                // Method java/lang/Boolean.booleanValue:()Z
+         5: putfield      #311                // Field com/hypixel/hytale/protocol/InteractionCooldown.interruptRecharge:Z
+         8: return
+
+  private static void lambda$static$11(com.hypixel.hytale.protocol.InteractionCooldown, com.hypixel.hytale.protocol.InteractionCooldown);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #79                 // Field com/hypixel/hytale/protocol/InteractionCooldown.skipCooldownReset:Z
+         5: putfield      #79                 // Field com/hypixel/hytale/protocol/InteractionCooldown.skipCooldownReset:Z
+         8: return
+
+  private static java.lang.Boolean lambda$static$10(com.hypixel.hytale.protocol.InteractionCooldown);
+    Code:
+         0: aload_0
+         1: getfield      #79                 // Field com/hypixel/hytale/protocol/InteractionCooldown.skipCooldownReset:Z
+         4: invokestatic  #269                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         7: areturn
+
+  private static void lambda$static$9(com.hypixel.hytale.protocol.InteractionCooldown, java.lang.Boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #274                // Method java/lang/Boolean.booleanValue:()Z
+         5: putfield      #79                 // Field com/hypixel/hytale/protocol/InteractionCooldown.skipCooldownReset:Z
+         8: return
+
+  private static void lambda$static$8(com.hypixel.hytale.protocol.InteractionCooldown, com.hypixel.hytale.protocol.InteractionCooldown);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #314                // Field com/hypixel/hytale/protocol/InteractionCooldown.chargeTimes:[F
+         5: putfield      #314                // Field com/hypixel/hytale/protocol/InteractionCooldown.chargeTimes:[F
+         8: return
+
+  private static float[] lambda$static$7(com.hypixel.hytale.protocol.InteractionCooldown);
+    Code:
+         0: aload_0
+         1: getfield      #314                // Field com/hypixel/hytale/protocol/InteractionCooldown.chargeTimes:[F
+         4: areturn
+
+  private static void lambda$static$6(com.hypixel.hytale.protocol.InteractionCooldown, float[]);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #314                // Field com/hypixel/hytale/protocol/InteractionCooldown.chargeTimes:[F
+         5: return
+
+  private static void lambda$static$5(com.hypixel.hytale.protocol.InteractionCooldown, com.hypixel.hytale.protocol.InteractionCooldown);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #318                // Field com/hypixel/hytale/protocol/InteractionCooldown.cooldown:F
+         5: putfield      #318                // Field com/hypixel/hytale/protocol/InteractionCooldown.cooldown:F
+         8: return
+
+  private static java.lang.Float lambda$static$4(com.hypixel.hytale.protocol.InteractionCooldown);
+    Code:
+         0: aload_0
+         1: getfield      #318                // Field com/hypixel/hytale/protocol/InteractionCooldown.cooldown:F
+         4: invokestatic  #277                // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+         7: areturn
+
+  private static void lambda$static$3(com.hypixel.hytale.protocol.InteractionCooldown, java.lang.Float);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #282                // Method java/lang/Float.floatValue:()F
+         5: putfield      #318                // Field com/hypixel/hytale/protocol/InteractionCooldown.cooldown:F
+         8: return
+
+  private static void lambda$static$2(com.hypixel.hytale.protocol.InteractionCooldown, com.hypixel.hytale.protocol.InteractionCooldown);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #320                // Field com/hypixel/hytale/protocol/InteractionCooldown.cooldownId:Ljava/lang/String;
+         5: putfield      #320                // Field com/hypixel/hytale/protocol/InteractionCooldown.cooldownId:Ljava/lang/String;
+         8: return
+
+  private static java.lang.String lambda$static$1(com.hypixel.hytale.protocol.InteractionCooldown);
+    Code:
+         0: aload_0
+         1: getfield      #320                // Field com/hypixel/hytale/protocol/InteractionCooldown.cooldownId:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$0(com.hypixel.hytale.protocol.InteractionCooldown, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #320                // Field com/hypixel/hytale/protocol/InteractionCooldown.cooldownId:Ljava/lang/String;
+         5: return
+
+  static {};
+    Code:
+         0: ldc           #80                 // class com/hypixel/hytale/protocol/InteractionCooldown
+         2: invokedynamic #323,  0            // InvokeDynamic #3:get:()Ljava/util/function/Supplier;
+         7: invokestatic  #327                // Method com/hypixel/hytale/codec/builder/BuilderCodec.builder:(Ljava/lang/Class;Ljava/util/function/Supplier;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$Builder;
+        10: new           #333                // class com/hypixel/hytale/codec/KeyedCodec
+        13: dup
+        14: ldc_w         #335                // String Id
+        17: getstatic     #337                // Field com/hypixel/hytale/codec/Codec.STRING:Lcom/hypixel/hytale/codec/codecs/simple/StringCodec;
+        20: invokespecial #343                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        23: invokedynamic #346,  0            // InvokeDynamic #4:accept:()Ljava/util/function/BiConsumer;
+        28: invokedynamic #350,  0            // InvokeDynamic #5:apply:()Ljava/util/function/Function;
+        33: invokedynamic #354,  0            // InvokeDynamic #6:accept:()Ljava/util/function/BiConsumer;
+        38: invokevirtual #355                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        41: ldc_w         #361                // String The Id for the cooldown.\n\nCooldowns can be used on different interactions but share a cooldown.
+        44: invokevirtual #363                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        47: invokevirtual #369                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        50: checkcast     #356                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        53: new           #333                // class com/hypixel/hytale/codec/KeyedCodec
+        56: dup
+        57: ldc_w         #373                // String Cooldown
+        60: getstatic     #375                // Field com/hypixel/hytale/codec/Codec.FLOAT:Lcom/hypixel/hytale/codec/codecs/simple/FloatCodec;
+        63: invokespecial #343                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        66: invokedynamic #379,  0            // InvokeDynamic #7:accept:()Ljava/util/function/BiConsumer;
+        71: invokedynamic #380,  0            // InvokeDynamic #8:apply:()Ljava/util/function/Function;
+        76: invokedynamic #381,  0            // InvokeDynamic #9:accept:()Ljava/util/function/BiConsumer;
+        81: invokevirtual #355                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        84: fconst_0
+        85: invokestatic  #277                // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+        88: invokestatic  #382                // Method com/hypixel/hytale/codec/validation/Validators.greaterThanOrEqual:(Ljava/lang/Comparable;)Lcom/hypixel/hytale/codec/validation/Validator;
+        91: invokevirtual #388                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidator:(Lcom/hypixel/hytale/codec/validation/Validator;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        94: ldc_w         #392                // String The time in seconds this cooldown should last for.
+        97: invokevirtual #363                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       100: invokevirtual #369                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       103: checkcast     #356                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       106: new           #333                // class com/hypixel/hytale/codec/KeyedCodec
+       109: dup
+       110: ldc_w         #394                // String Charges
+       113: getstatic     #396                // Field com/hypixel/hytale/codec/Codec.FLOAT_ARRAY:Lcom/hypixel/hytale/codec/codecs/array/FloatArrayCodec;
+       116: invokespecial #343                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       119: invokedynamic #400,  0            // InvokeDynamic #10:accept:()Ljava/util/function/BiConsumer;
+       124: invokedynamic #401,  0            // InvokeDynamic #11:apply:()Ljava/util/function/Function;
+       129: invokedynamic #402,  0            // InvokeDynamic #12:accept:()Ljava/util/function/BiConsumer;
+       134: invokevirtual #355                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       137: new           #403                // class com/hypixel/hytale/codec/validation/validator/FloatArrayValidator
+       140: dup
+       141: fconst_0
+       142: invokestatic  #277                // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+       145: invokestatic  #382                // Method com/hypixel/hytale/codec/validation/Validators.greaterThanOrEqual:(Ljava/lang/Comparable;)Lcom/hypixel/hytale/codec/validation/Validator;
+       148: invokespecial #405                // Method com/hypixel/hytale/codec/validation/validator/FloatArrayValidator."<init>":(Lcom/hypixel/hytale/codec/validation/Validator;)V
+       151: invokevirtual #388                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidator:(Lcom/hypixel/hytale/codec/validation/Validator;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       154: ldc_w         #408                // String The charge times available for this interaction.
+       157: invokevirtual #363                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       160: invokevirtual #369                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       163: checkcast     #356                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       166: new           #333                // class com/hypixel/hytale/codec/KeyedCodec
+       169: dup
+       170: ldc_w         #410                // String SkipCooldownReset
+       173: getstatic     #412                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+       176: invokespecial #343                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       179: invokedynamic #416,  0            // InvokeDynamic #13:accept:()Ljava/util/function/BiConsumer;
+       184: invokedynamic #417,  0            // InvokeDynamic #14:apply:()Ljava/util/function/Function;
+       189: invokedynamic #418,  0            // InvokeDynamic #15:accept:()Ljava/util/function/BiConsumer;
+       194: invokevirtual #355                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       197: ldc_w         #419                // String Determines whether resetting cooldown should be skipped.
+       200: invokevirtual #363                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       203: invokevirtual #369                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       206: checkcast     #356                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       209: new           #333                // class com/hypixel/hytale/codec/KeyedCodec
+       212: dup
+       213: ldc_w         #421                // String InterruptRecharge
+       216: getstatic     #412                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+       219: invokespecial #343                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       222: invokedynamic #423,  0            // InvokeDynamic #16:accept:()Ljava/util/function/BiConsumer;
+       227: invokedynamic #424,  0            // InvokeDynamic #17:apply:()Ljava/util/function/Function;
+       232: invokedynamic #425,  0            // InvokeDynamic #18:accept:()Ljava/util/function/BiConsumer;
+       237: invokevirtual #355                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       240: ldc_w         #426                // String Determines whether recharge is interrupted by use.
+       243: invokevirtual #363                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       246: invokevirtual #369                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       249: checkcast     #356                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       252: new           #333                // class com/hypixel/hytale/codec/KeyedCodec
+       255: dup
+       256: ldc_w         #428                // String ClickBypass
+       259: getstatic     #412                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+       262: invokespecial #343                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       265: invokedynamic #430,  0            // InvokeDynamic #19:accept:()Ljava/util/function/BiConsumer;
+       270: invokedynamic #431,  0            // InvokeDynamic #20:apply:()Ljava/util/function/Function;
+       275: invokedynamic #432,  0            // InvokeDynamic #21:accept:()Ljava/util/function/BiConsumer;
+       280: invokevirtual #355                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       283: ldc_w         #433                // String Whether this cooldown can be bypassed by clicking.
+       286: invokevirtual #363                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       289: invokevirtual #369                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       292: checkcast     #356                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       295: invokevirtual #435                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.build:()Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       298: putstatic     #438                // Field COOLDOWN_CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       301: ldc           #14                 // class com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction
+       303: invokedynamic #442,  0            // InvokeDynamic #22:get:()Ljava/util/function/Supplier;
+       308: getstatic     #337                // Field com/hypixel/hytale/codec/Codec.STRING:Lcom/hypixel/hytale/codec/codecs/simple/StringCodec;
+       311: invokedynamic #443,  0            // InvokeDynamic #23:accept:()Ljava/util/function/BiConsumer;
+       316: invokedynamic #444,  0            // InvokeDynamic #24:apply:()Ljava/util/function/Function;
+       321: invokedynamic #445,  0            // InvokeDynamic #25:accept:()Ljava/util/function/BiConsumer;
+       326: invokedynamic #446,  0            // InvokeDynamic #26:apply:()Ljava/util/function/Function;
+       331: invokestatic  #447                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec.builder:(Ljava/lang/Class;Ljava/util/function/Supplier;Lcom/hypixel/hytale/codec/Codec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder;
+       334: ldc_w         #452                // String A **RootInteraction** serves as an entry point into a set of **Interaction**s.\n\nIn order to start an interaction chain a **RootInteraction** is required.\nA basic **RootInteraction** can simply contain a reference to single interaction within _Interactions_ field which will be the entire chain. More complex cases can configure the other fields.\n\nMost fields configured here apply to all **Interaction**s contained the root and any **Interaction**s they contain as well. Systems that look at tags for interactions may also check the root interaction as well reducing the need to duplicate them on all nested interactions.
+       337: invokevirtual #454                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       340: checkcast     #455                // class com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder
+       343: new           #333                // class com/hypixel/hytale/codec/KeyedCodec
+       346: dup
+       347: ldc_w         #459                // String Interactions
+       350: getstatic     #461                // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/Interaction.CHILD_ASSET_CODEC_ARRAY:Lcom/hypixel/hytale/codec/Codec;
+       353: invokespecial #343                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       356: invokedynamic #465,  0            // InvokeDynamic #27:accept:()Ljava/util/function/BiConsumer;
+       361: invokedynamic #466,  0            // InvokeDynamic #28:apply:()Ljava/util/function/Function;
+       366: invokedynamic #467,  0            // InvokeDynamic #29:accept:()Ljava/util/function/BiConsumer;
+       371: invokevirtual #468                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       374: invokestatic  #469                // Method com/hypixel/hytale/codec/validation/Validators.nonNull:()Lcom/hypixel/hytale/codec/validation/Validator;
+       377: invokevirtual #388                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidator:(Lcom/hypixel/hytale/codec/validation/Validator;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       380: invokestatic  #473                // Method com/hypixel/hytale/codec/validation/Validators.nonEmptyArray:()Lcom/hypixel/hytale/codec/validation/Validator;
+       383: invokevirtual #388                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidator:(Lcom/hypixel/hytale/codec/validation/Validator;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       386: invokedynamic #476,  0            // InvokeDynamic #30:get:()Ljava/util/function/Supplier;
+       391: invokevirtual #477                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidatorLate:(Ljava/util/function/Supplier;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       394: ldc_w         #481                // String The list of interactions that will be run when starting a chain with this root interaction. Interactions in this list will be run in sequence.
+       397: invokevirtual #363                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       400: invokevirtual #369                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       403: checkcast     #455                // class com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder
+       406: new           #333                // class com/hypixel/hytale/codec/KeyedCodec
+       409: dup
+       410: ldc_w         #373                // String Cooldown
+       413: getstatic     #438                // Field COOLDOWN_CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       416: invokespecial #343                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       419: invokedynamic #483,  0            // InvokeDynamic #31:accept:()Ljava/util/function/BiConsumer;
+       424: invokedynamic #484,  0            // InvokeDynamic #32:apply:()Ljava/util/function/Function;
+       429: invokedynamic #485,  0            // InvokeDynamic #33:accept:()Ljava/util/function/BiConsumer;
+       434: invokevirtual #468                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       437: ldc_w         #486                // String Cooldowns are used to prevent an interaction from running repeatedly too quickly.\n\nDuring a cooldown attempting to run an interaction with the same cooldown id will fail.
+       440: invokevirtual #363                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       443: invokevirtual #369                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       446: checkcast     #455                // class com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder
+       449: new           #333                // class com/hypixel/hytale/codec/KeyedCodec
+       452: dup
+       453: ldc_w         #488                // String Rules
+       456: getstatic     #490                // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/InteractionRules.CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       459: invokespecial #343                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       462: invokedynamic #493,  0            // InvokeDynamic #34:accept:()Ljava/util/function/BiConsumer;
+       467: invokedynamic #494,  0            // InvokeDynamic #35:apply:()Ljava/util/function/Function;
+       472: invokedynamic #495,  0            // InvokeDynamic #36:accept:()Ljava/util/function/BiConsumer;
+       477: invokevirtual #468                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       480: ldc_w         #496                // String A set of rules that control when this root interaction can run or what interactions this root being active prevents.
+       483: invokevirtual #363                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       486: invokestatic  #469                // Method com/hypixel/hytale/codec/validation/Validators.nonNull:()Lcom/hypixel/hytale/codec/validation/Validator;
+       489: invokevirtual #388                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidator:(Lcom/hypixel/hytale/codec/validation/Validator;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       492: invokevirtual #369                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       495: checkcast     #455                // class com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder
+       498: new           #333                // class com/hypixel/hytale/codec/KeyedCodec
+       501: dup
+       502: ldc_w         #498                // String Settings
+       505: new           #500                // class com/hypixel/hytale/codec/codecs/map/EnumMapCodec
+       508: dup
+       509: ldc_w         #502                // class com/hypixel/hytale/protocol/GameMode
+       512: ldc_w         #287                // class com/hypixel/hytale/protocol/RootInteractionSettings
+       515: invokedynamic #504,  0            // InvokeDynamic #37:get:()Ljava/util/function/Supplier;
+       520: invokestatic  #327                // Method com/hypixel/hytale/codec/builder/BuilderCodec.builder:(Ljava/lang/Class;Ljava/util/function/Supplier;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$Builder;
+       523: new           #333                // class com/hypixel/hytale/codec/KeyedCodec
+       526: dup
+       527: ldc_w         #373                // String Cooldown
+       530: getstatic     #438                // Field COOLDOWN_CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       533: invokespecial #343                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       536: invokedynamic #505,  0            // InvokeDynamic #38:accept:()Ljava/util/function/BiConsumer;
+       541: invokedynamic #506,  0            // InvokeDynamic #39:apply:()Ljava/util/function/Function;
+       546: invokedynamic #507,  0            // InvokeDynamic #40:accept:()Ljava/util/function/BiConsumer;
+       551: invokevirtual #355                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       554: ldc_w         #486                // String Cooldowns are used to prevent an interaction from running repeatedly too quickly.\n\nDuring a cooldown attempting to run an interaction with the same cooldown id will fail.
+       557: invokevirtual #363                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       560: invokevirtual #369                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       563: checkcast     #356                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       566: new           #333                // class com/hypixel/hytale/codec/KeyedCodec
+       569: dup
+       570: ldc_w         #508                // String AllowSkipChainOnClick
+       573: getstatic     #412                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+       576: invokespecial #343                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       579: invokedynamic #510,  0            // InvokeDynamic #41:accept:()Ljava/util/function/BiConsumer;
+       584: invokedynamic #511,  0            // InvokeDynamic #42:apply:()Ljava/util/function/Function;
+       589: invokedynamic #512,  0            // InvokeDynamic #43:accept:()Ljava/util/function/BiConsumer;
+       594: invokevirtual #355                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       597: ldc_w         #513                // String Whether to skip the whole interaction chain when another click is sent.
+       600: invokevirtual #363                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       603: invokevirtual #369                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       606: checkcast     #356                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       609: invokevirtual #435                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.build:()Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       612: invokespecial #515                // Method com/hypixel/hytale/codec/codecs/map/EnumMapCodec."<init>":(Ljava/lang/Class;Lcom/hypixel/hytale/codec/Codec;)V
+       615: invokespecial #343                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       618: invokedynamic #518,  0            // InvokeDynamic #44:accept:()Ljava/util/function/BiConsumer;
+       623: invokedynamic #519,  0            // InvokeDynamic #45:apply:()Ljava/util/function/Function;
+       628: invokedynamic #520,  0            // InvokeDynamic #46:accept:()Ljava/util/function/BiConsumer;
+       633: invokevirtual #468                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       636: ldc_w         #521                // String Per a gamemode settings.
+       639: invokevirtual #363                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       642: invokevirtual #369                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       645: checkcast     #455                // class com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder
+       648: new           #333                // class com/hypixel/hytale/codec/KeyedCodec
+       651: dup
+       652: ldc_w         #523                // String ClickQueuingTimeout
+       655: getstatic     #375                // Field com/hypixel/hytale/codec/Codec.FLOAT:Lcom/hypixel/hytale/codec/codecs/simple/FloatCodec;
+       658: invokespecial #343                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       661: invokedynamic #525,  0            // InvokeDynamic #47:accept:()Ljava/util/function/BiConsumer;
+       666: invokedynamic #526,  0            // InvokeDynamic #48:apply:()Ljava/util/function/Function;
+       671: invokedynamic #527,  0            // InvokeDynamic #49:accept:()Ljava/util/function/BiConsumer;
+       676: invokevirtual #468                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       679: ldc_w         #528                // String Controls the amount of time this root interaction can remain in the click queue before being discarded.
+       682: invokevirtual #363                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       685: invokevirtual #369                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       688: checkcast     #455                // class com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder
+       691: new           #333                // class com/hypixel/hytale/codec/KeyedCodec
+       694: dup
+       695: ldc_w         #530                // String RequireNewClick
+       698: getstatic     #412                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+       701: invokespecial #343                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       704: invokedynamic #532,  0            // InvokeDynamic #50:accept:()Ljava/util/function/BiConsumer;
+       709: invokedynamic #533,  0            // InvokeDynamic #51:apply:()Ljava/util/function/Function;
+       714: invokedynamic #534,  0            // InvokeDynamic #52:accept:()Ljava/util/function/BiConsumer;
+       719: invokevirtual #468                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       722: ldc_w         #535                // String Requires the user to click again before running another root interaction of the same type.
+       725: invokevirtual #363                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       728: invokevirtual #369                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       731: checkcast     #455                // class com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder
+       734: new           #333                // class com/hypixel/hytale/codec/KeyedCodec
+       737: dup
+       738: ldc_w         #537                // String HudInputBindingEntry
+       741: getstatic     #337                // Field com/hypixel/hytale/codec/Codec.STRING:Lcom/hypixel/hytale/codec/codecs/simple/StringCodec;
+       744: invokespecial #343                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       747: invokedynamic #539,  0            // InvokeDynamic #53:accept:()Ljava/util/function/BiConsumer;
+       752: invokedynamic #540,  0            // InvokeDynamic #54:apply:()Ljava/util/function/Function;
+       757: invokedynamic #541,  0            // InvokeDynamic #55:accept:()Ljava/util/function/BiConsumer;
+       762: invokevirtual #468                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       765: ldc_w         #542                // String The localization key the client shows as an input binding hint on the HUD for whichever input this root interaction is bound to. When unset, no hint is shown.
+       768: invokevirtual #363                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       771: invokevirtual #369                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       774: checkcast     #455                // class com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder
+       777: invokevirtual #544                // Method com/hypixel/hytale/assetstore/codec/AssetBuilderCodec$Builder.build:()Lcom/hypixel/hytale/assetstore/codec/AssetBuilderCodec;
+       780: putstatic     #547                // Field CODEC:Lcom/hypixel/hytale/assetstore/codec/AssetBuilderCodec;
+       783: new           #297                // class com/hypixel/hytale/codec/validation/ValidatorCache
+       786: dup
+       787: new           #550                // class com/hypixel/hytale/assetstore/AssetKeyValidator
+       790: dup
+       791: invokedynamic #552,  0            // InvokeDynamic #56:get:()Ljava/util/function/Supplier;
+       796: invokespecial #553                // Method com/hypixel/hytale/assetstore/AssetKeyValidator."<init>":(Ljava/util/function/Supplier;)V
+       799: invokespecial #556                // Method com/hypixel/hytale/codec/validation/ValidatorCache."<init>":(Lcom/hypixel/hytale/codec/validation/Validator;)V
+       802: putstatic     #557                // Field VALIDATOR_CACHE:Lcom/hypixel/hytale/codec/validation/ValidatorCache;
+       805: new           #558                // class com/hypixel/hytale/assetstore/codec/ContainedAssetCodec
+       808: dup
+       809: ldc           #14                 // class com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction
+       811: getstatic     #547                // Field CODEC:Lcom/hypixel/hytale/assetstore/codec/AssetBuilderCodec;
+       814: invokespecial #560                // Method com/hypixel/hytale/assetstore/codec/ContainedAssetCodec."<init>":(Ljava/lang/Class;Lcom/hypixel/hytale/assetstore/codec/AssetCodec;)V
+       817: putstatic     #563                // Field CHILD_ASSET_CODEC:Lcom/hypixel/hytale/assetstore/codec/ContainedAssetCodec;
+       820: new           #567                // class com/hypixel/hytale/codec/codecs/array/ArrayCodec
+       823: dup
+       824: getstatic     #563                // Field CHILD_ASSET_CODEC:Lcom/hypixel/hytale/assetstore/codec/ContainedAssetCodec;
+       827: invokedynamic #569,  0            // InvokeDynamic #57:apply:()Ljava/util/function/IntFunction;
+       832: invokespecial #572                // Method com/hypixel/hytale/codec/codecs/array/ArrayCodec."<init>":(Lcom/hypixel/hytale/codec/Codec;Ljava/util/function/IntFunction;)V
+       835: putstatic     #575                // Field CHILD_ASSET_CODEC_ARRAY:Lcom/hypixel/hytale/codec/Codec;
+       838: new           #576                // class com/hypixel/hytale/codec/codecs/map/MapCodec
+       841: dup
+       842: getstatic     #563                // Field CHILD_ASSET_CODEC:Lcom/hypixel/hytale/assetstore/codec/ContainedAssetCodec;
+       845: invokedynamic #578,  0            // InvokeDynamic #58:get:()Ljava/util/function/Supplier;
+       850: invokespecial #579                // Method com/hypixel/hytale/codec/codecs/map/MapCodec."<init>":(Lcom/hypixel/hytale/codec/Codec;Ljava/util/function/Supplier;)V
+       853: putstatic     #582                // Field CHILD_ASSET_CODEC_MAP:Lcom/hypixel/hytale/codec/codecs/map/MapCodec;
+       856: return
+}

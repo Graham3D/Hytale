@@ -1,0 +1,33 @@
+{
+  "installedAtUtc": "2026-09-07T17:47:53.8928791Z",
+  "revision": "R023",
+  "version": "0.0.16",
+  "schema": 3,
+  "hytaleVersion": "0.7.0-pre.1",
+  "sourceCommit": "bad70b1926fe530753b1627521652a7759aa2b42",
+  "installed": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\HytaleRPG-0.0.16.jar",
+  "sha256": "D3CEEA9CEEA5995F515451317452AB9A9CBB62F3E6CF56953B5F707A1BF7FA42",
+  "deployedJars": [
+    "CanvasUI-0.1.0.jar",
+    "HYTALEDEVLIB-0.5.0.jar",
+    "HytaleRPG-0.0.16.jar"
+  ],
+  "rollbackJars": [
+    "HytaleRPG-0.0.15.jar"
+  ],
+  "deployedHashes": [
+    {
+      "name": "CanvasUI-0.1.0.jar",
+      "sha256": "218DFFD40ABBCD57629EC57FC20436169C4AFCCC18B9B5A9F94D67835CBA07B6"
+    },
+    {
+      "name": "HYTALEDEVLIB-0.5.0.jar",
+      "sha256": "DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230"
+    },
+    {
+      "name": "HytaleRPG-0.0.16.jar",
+      "sha256": "D3CEEA9CEEA5995F515451317452AB9A9CBB62F3E6CF56953B5F707A1BF7FA42"
+    }
+  ],
+  "rollback": "Stop the RPG world, remove HytaleRPG-0.0.16.jar, and restore the retained HytaleRPG-0.0.15.jar."
+}

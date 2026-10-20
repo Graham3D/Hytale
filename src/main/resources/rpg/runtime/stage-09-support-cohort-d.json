@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {
+      "skillId": "thorns_aura",
+      "family": "AURA",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "STAFF",
+        "SPELLBOOK"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "resourceCost": 18,
+      "cooldownSeconds": 2,
+      "windupSeconds": 0,
+      "basePowerSource": "NONE",
+      "innateBasePower": 0,
+      "scaling": "UTILITY",
+      "support": {
+        "kind": "THORNS",
+        "range": 0,
+        "radius": 6,
+        "coefficient": 0.2,
+        "reservationFraction": 0,
+        "toggleLockSeconds": 2,
+        "durationSeconds": 0,
+        "movementIncreased": 0,
+        "upkeepPerSecond": 2,
+        "damageInterval": 0,
+        "chillInterval": 0,
+        "element": "PHYSICAL"
+      }
+    },
+    {
+      "skillId": "chilling_aura",
+      "family": "AURA",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "resourceCost": 20,
+      "cooldownSeconds": 3,
+      "windupSeconds": 0,
+      "basePowerSource": "INNATE",
+      "innateBasePower": 20,
+      "scaling": "MAGIC",
+      "support": {
+        "kind": "CHILL_AURA",
+        "range": 0,
+        "radius": 7,
+        "coefficient": 0.2,
+        "reservationFraction": 0,
+        "toggleLockSeconds": 3,
+        "durationSeconds": 0,
+        "movementIncreased": 0,
+        "upkeepPerSecond": 3,
+        "damageInterval": 1,
+        "chillInterval": 1.5,
+        "element": "COLD"
+      }
+    },
+    {
+      "skillId": "pedanticism",
+      "family": "AURA",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [],
+      "requiredOffHandKinds": [],
+      "resourceType": "NONE",
+      "resourceCost": 0,
+      "cooldownSeconds": 3,
+      "windupSeconds": 0,
+      "basePowerSource": "NONE",
+      "innateBasePower": 0,
+      "scaling": "UTILITY",
+      "support": {
+        "kind": "COOLDOWN_AURA",
+        "range": 0,
+        "radius": 8,
+        "coefficient": 0.15,
+        "reservationFraction": 0.2,
+        "toggleLockSeconds": 3,
+        "durationSeconds": 0,
+        "movementIncreased": 0,
+        "upkeepPerSecond": 0,
+        "damageInterval": 0,
+        "chillInterval": 0,
+        "element": "HOLY"
+      }
+    },
+    {
+      "skillId": "reaping_storm",
+      "family": "AURA",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "STAFF",
+        "SPELLBOOK"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "resourceCost": 40,
+      "cooldownSeconds": 35,
+      "windupSeconds": 0,
+      "basePowerSource": "MAGIC_WEAPON",
+      "innateBasePower": 0,
+      "scaling": "MAGIC",
+      "support": {
+        "kind": "DAMAGE_AURA",
+        "range": 0,
+        "radius": 8,
+        "coefficient": 0.7,
+        "reservationFraction": 0,
+        "toggleLockSeconds": 0,
+        "durationSeconds": 8,
+        "movementIncreased": 0,
+        "upkeepPerSecond": 4,
+        "damageInterval": 1,
+        "chillInterval": 0,
+        "element": "NECROTIC"
+      }
+    }
+  ]
+}

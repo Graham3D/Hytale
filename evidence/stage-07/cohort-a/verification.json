@@ -1,0 +1,33 @@
+{
+  "capturedAtUtc": "2026-09-07T21:39:24.2156206Z",
+  "revision": "R026",
+  "version": "0.0.19",
+  "stage": "07",
+  "cohort": "a",
+  "branch": "RPG",
+  "sourceHead": "689d451a8007ca667b7c2d96cfc85a3f17e61079",
+  "worktreeDirty": true,
+  "stageStatus": "IMPLEMENTATION_IN_PROGRESS",
+  "completeStageGate": false,
+  "gateScope": "LOCAL_ENGINEERING_ONLY",
+  "cohortPassives": [
+    "piercing",
+    "fork",
+    "chain",
+    "return"
+  ],
+  "tests": 236,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "connectedVerification": "UNVERIFIED",
+  "nativeCastingFixed": false,
+  "nativeProjectileBehaviorVerified": false,
+  "liveDeploymentPerformed": false,
+  "protectedPathsChanged": [],
+  "projectileConfigsWithNoNativeGameplay": 7,
+  "jarSha256": "628A48E943AB05D5882005CDA46FC2C610C660EB29F5AA9B23EE7C844B6917AB",
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "assetsSha256": "46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39",
+  "rollbackSha256": "B45CD1502D29D7ADE8E46F17000081A5CCDCA6858A19FC867CB4339438235766"
+}

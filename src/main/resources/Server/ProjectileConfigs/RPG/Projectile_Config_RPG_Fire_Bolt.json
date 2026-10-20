@@ -1,0 +1,15 @@
+{
+  "Model": "RPG_Fire_Bolt",
+  "UseModelScale": true,
+  "Physics": {
+    "Type": "Standard",
+    "Gravity": 0,
+    "TerminalVelocityAir": 24,
+    "TerminalVelocityWater": 24,
+    "RotationMode": "Velocity",
+    "Bounciness": 0.0
+  },
+  "LaunchForce": 24,
+  "SpawnOffset": { "X": 0, "Y": 0, "Z": 0 },
+  "Interactions": {}
+}

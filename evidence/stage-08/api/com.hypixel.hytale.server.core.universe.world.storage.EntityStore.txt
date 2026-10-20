@@ -1,0 +1,143 @@
+Compiled from "EntityStore.java"
+public class com.hypixel.hytale.server.core.universe.world.storage.EntityStore implements com.hypixel.hytale.server.core.universe.world.WorldProvider {
+  public static final com.hypixel.hytale.metrics.MetricsRegistry<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> METRICS_REGISTRY;
+
+  public static final com.hypixel.hytale.component.ComponentRegistry<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> REGISTRY;
+
+  public static final com.hypixel.hytale.codec.store.CodecKey<com.hypixel.hytale.component.Holder<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>> HOLDER_CODEC_KEY;
+
+  public static final com.hypixel.hytale.component.SystemGroup<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> SEND_PACKET_GROUP;
+
+  private final java.util.concurrent.atomic.AtomicInteger networkIdCounter;
+
+  private final com.hypixel.hytale.server.core.universe.world.World world;
+
+  private com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> store;
+
+  private final java.util.Map<java.util.UUID, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>> entitiesByUuid;
+
+  private final it.unimi.dsi.fastutil.ints.Int2ReferenceMap<com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>> networkIdToRef;
+
+  public com.hypixel.hytale.server.core.universe.world.storage.EntityStore(com.hypixel.hytale.server.core.universe.world.World);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #7                  // class java/util/concurrent/atomic/AtomicInteger
+         8: dup
+         9: iconst_1
+        10: invokespecial #9                  // Method java/util/concurrent/atomic/AtomicInteger."<init>":(I)V
+        13: putfield      #12                 // Field networkIdCounter:Ljava/util/concurrent/atomic/AtomicInteger;
+        16: aload_0
+        17: new           #18                 // class java/util/concurrent/ConcurrentHashMap
+        20: dup
+        21: invokespecial #20                 // Method java/util/concurrent/ConcurrentHashMap."<init>":()V
+        24: putfield      #21                 // Field entitiesByUuid:Ljava/util/Map;
+        27: aload_0
+        28: new           #25                 // class it/unimi/dsi/fastutil/ints/Int2ReferenceOpenHashMap
+        31: dup
+        32: invokespecial #27                 // Method it/unimi/dsi/fastutil/ints/Int2ReferenceOpenHashMap."<init>":()V
+        35: putfield      #28                 // Field networkIdToRef:Lit/unimi/dsi/fastutil/ints/Int2ReferenceMap;
+        38: aload_0
+        39: aload_1
+        40: putfield      #32                 // Field world:Lcom/hypixel/hytale/server/core/universe/world/World;
+        43: return
+
+  public void start(com.hypixel.hytale.component.IResourceStorage);
+    Code:
+         0: aload_0
+         1: getstatic     #36                 // Field REGISTRY:Lcom/hypixel/hytale/component/ComponentRegistry;
+         4: aload_0
+         5: aload_1
+         6: aload_0
+         7: invokedynamic #40,  0             // InvokeDynamic #0:accept:(Lcom/hypixel/hytale/server/core/universe/world/storage/EntityStore;)Ljava/util/function/Consumer;
+        12: invokevirtual #44                 // Method com/hypixel/hytale/component/ComponentRegistry.addStore:(Ljava/lang/Object;Lcom/hypixel/hytale/component/IResourceStorage;Ljava/util/function/Consumer;)Lcom/hypixel/hytale/component/Store;
+        15: putfield      #50                 // Field store:Lcom/hypixel/hytale/component/Store;
+        18: return
+
+  public void shutdown();
+    Code:
+         0: aload_0
+         1: getfield      #50                 // Field store:Lcom/hypixel/hytale/component/Store;
+         4: invokevirtual #54                 // Method com/hypixel/hytale/component/Store.shutdown:()V
+         7: aload_0
+         8: getfield      #21                 // Field entitiesByUuid:Ljava/util/Map;
+        11: invokeinterface #59,  1           // InterfaceMethod java/util/Map.clear:()V
+        16: return
+
+  public com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getStore();
+    Code:
+         0: aload_0
+         1: getfield      #50                 // Field store:Lcom/hypixel/hytale/component/Store;
+         4: areturn
+
+  public com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getRefFromUUID(java.util.UUID);
+    Code:
+         0: aload_0
+         1: getfield      #21                 // Field entitiesByUuid:Ljava/util/Map;
+         4: aload_1
+         5: invokeinterface #64,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+        10: checkcast     #68                 // class com/hypixel/hytale/component/Ref
+        13: areturn
+
+  public com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getRefFromNetworkId(int);
+    Code:
+         0: aload_0
+         1: getfield      #28                 // Field networkIdToRef:Lit/unimi/dsi/fastutil/ints/Int2ReferenceMap;
+         4: iload_1
+         5: invokeinterface #70,  2           // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ReferenceMap.get:(I)Ljava/lang/Object;
+        10: checkcast     #68                 // class com/hypixel/hytale/component/Ref
+        13: areturn
+
+  public int takeNextNetworkId();
+    Code:
+         0: aload_0
+         1: getfield      #12                 // Field networkIdCounter:Ljava/util/concurrent/atomic/AtomicInteger;
+         4: invokevirtual #75                 // Method java/util/concurrent/atomic/AtomicInteger.getAndIncrement:()I
+         7: ireturn
+
+  public com.hypixel.hytale.server.core.universe.world.World getWorld();
+    Code:
+         0: aload_0
+         1: getfield      #32                 // Field world:Lcom/hypixel/hytale/server/core/universe/world/World;
+         4: areturn
+
+  private void lambda$start$0(com.hypixel.hytale.component.Store);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #50                 // Field store:Lcom/hypixel/hytale/component/Store;
+         5: return
+
+  static {};
+    Code:
+         0: new           #79                 // class com/hypixel/hytale/metrics/MetricsRegistry
+         3: dup
+         4: invokespecial #81                 // Method com/hypixel/hytale/metrics/MetricsRegistry."<init>":()V
+         7: ldc           #82                 // String Store
+         9: invokedynamic #84,  0             // InvokeDynamic #1:apply:()Ljava/util/function/Function;
+        14: getstatic     #88                 // Field com/hypixel/hytale/component/Store.METRICS_REGISTRY:Lcom/hypixel/hytale/metrics/MetricsRegistry;
+        17: invokevirtual #92                 // Method com/hypixel/hytale/metrics/MetricsRegistry.register:(Ljava/lang/String;Ljava/util/function/Function;Lcom/hypixel/hytale/codec/Codec;)Lcom/hypixel/hytale/metrics/MetricsRegistry;
+        20: putstatic     #96                 // Field METRICS_REGISTRY:Lcom/hypixel/hytale/metrics/MetricsRegistry;
+        23: new           #45                 // class com/hypixel/hytale/component/ComponentRegistry
+        26: dup
+        27: invokespecial #97                 // Method com/hypixel/hytale/component/ComponentRegistry."<init>":()V
+        30: putstatic     #36                 // Field REGISTRY:Lcom/hypixel/hytale/component/ComponentRegistry;
+        33: new           #98                 // class com/hypixel/hytale/codec/store/CodecKey
+        36: dup
+        37: ldc           #100                // String EntityHolder
+        39: invokespecial #102                // Method com/hypixel/hytale/codec/store/CodecKey."<init>":(Ljava/lang/String;)V
+        42: putstatic     #105                // Field HOLDER_CODEC_KEY:Lcom/hypixel/hytale/codec/store/CodecKey;
+        45: getstatic     #109                // Field com/hypixel/hytale/codec/store/CodecStore.STATIC:Lcom/hypixel/hytale/codec/store/CodecStore;
+        48: getstatic     #105                // Field HOLDER_CODEC_KEY:Lcom/hypixel/hytale/codec/store/CodecKey;
+        51: getstatic     #36                 // Field REGISTRY:Lcom/hypixel/hytale/component/ComponentRegistry;
+        54: dup
+        55: invokestatic  #115                // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+        58: pop
+        59: invokedynamic #120,  0            // InvokeDynamic #2:get:(Lcom/hypixel/hytale/component/ComponentRegistry;)Ljava/util/function/Supplier;
+        64: invokevirtual #123                // Method com/hypixel/hytale/codec/store/CodecStore.putCodecSupplier:(Lcom/hypixel/hytale/codec/store/CodecKey;Ljava/util/function/Supplier;)V
+        67: getstatic     #36                 // Field REGISTRY:Lcom/hypixel/hytale/component/ComponentRegistry;
+        70: invokevirtual #127                // Method com/hypixel/hytale/component/ComponentRegistry.registerSystemGroup:()Lcom/hypixel/hytale/component/SystemGroup;
+        73: putstatic     #131                // Field SEND_PACKET_GROUP:Lcom/hypixel/hytale/component/SystemGroup;
+        76: return
+}

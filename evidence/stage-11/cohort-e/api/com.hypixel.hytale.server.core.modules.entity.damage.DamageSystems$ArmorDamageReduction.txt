@@ -1,0 +1,434 @@
+Compiled from "DamageSystems.java"
+public class com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems$ArmorDamageReduction extends com.hypixel.hytale.server.core.modules.entity.damage.DamageEventSystem {
+  private static final com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> QUERY;
+
+  public com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems$ArmorDamageReduction();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageEventSystem."<init>":()V
+         4: return
+
+  public com.hypixel.hytale.component.SystemGroup<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getGroup();
+    Code:
+         0: invokestatic  #7                  // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.get:()Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageModule;
+         3: invokevirtual #13                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.getFilterDamageGroup:()Lcom/hypixel/hytale/component/SystemGroup;
+         6: areturn
+
+  public com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getQuery();
+    Code:
+         0: getstatic     #17                 // Field QUERY:Lcom/hypixel/hytale/component/query/Query;
+         3: areturn
+
+  public void handle(int, com.hypixel.hytale.component.ArchetypeChunk<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.modules.entity.damage.Damage);
+    Code:
+         0: aload         4
+         2: invokevirtual #23                 // Method com/hypixel/hytale/component/CommandBuffer.getExternalData:()Ljava/lang/Object;
+         5: checkcast     #29                 // class com/hypixel/hytale/server/core/universe/world/storage/EntityStore
+         8: invokevirtual #31                 // Method com/hypixel/hytale/server/core/universe/world/storage/EntityStore.getWorld:()Lcom/hypixel/hytale/server/core/universe/world/World;
+        11: astore        6
+        13: aload_2
+        14: iload_1
+        15: invokevirtual #35                 // Method com/hypixel/hytale/component/ArchetypeChunk.getReferenceTo:(I)Lcom/hypixel/hytale/component/Ref;
+        18: astore        7
+        20: aload         4
+        22: aload         7
+        24: invokestatic  #41                 // Method com/hypixel/hytale/server/core/inventory/InventoryComponent$Armor.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        27: invokevirtual #47                 // Method com/hypixel/hytale/component/CommandBuffer.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        30: checkcast     #42                 // class com/hypixel/hytale/server/core/inventory/InventoryComponent$Armor
+        33: astore        8
+        35: aload         8
+        37: ifnull        48
+        40: aload         8
+        42: invokevirtual #51                 // Method com/hypixel/hytale/server/core/inventory/InventoryComponent$Armor.getInventory:()Lcom/hypixel/hytale/server/core/inventory/container/ItemContainer;
+        45: goto          51
+        48: getstatic     #55                 // Field com/hypixel/hytale/server/core/inventory/container/EmptyItemContainer.INSTANCE:Lcom/hypixel/hytale/server/core/inventory/container/EmptyItemContainer;
+        51: astore        9
+        53: aload_2
+        54: iload_1
+        55: invokestatic  #61                 // Method com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        58: invokevirtual #64                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        61: checkcast     #62                 // class com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent
+        64: astore        10
+        66: aload         6
+        68: aload         9
+        70: aload         7
+        72: aload         4
+        74: invokestatic  #67                 // Method com/hypixel/hytale/server/core/entity/ItemUtils.canApplyItemStackPenalties:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentAccessor;)Z
+        77: aload         10
+        79: invokestatic  #73                 // Method getResistanceModifiers:(Lcom/hypixel/hytale/server/core/universe/world/World;Lcom/hypixel/hytale/server/core/inventory/container/ItemContainer;ZLcom/hypixel/hytale/server/core/entity/effect/EffectControllerComponent;)Ljava/util/Map;
+        82: astore        11
+        84: aload         5
+        86: invokevirtual #77                 // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage.getCause:()Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageCause;
+        89: invokevirtual #83                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageCause.doesBypassResistances:()Z
+        92: ifne          234
+        95: aload         11
+        97: invokeinterface #89,  1           // InterfaceMethod java/util/Map.isEmpty:()Z
+       102: ifne          234
+       105: aload         11
+       107: aload         5
+       109: invokevirtual #77                 // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage.getCause:()Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageCause;
+       112: invokeinterface #94,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       117: checkcast     #97                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers
+       120: astore        12
+       122: aload         12
+       124: ifnonnull     128
+       127: return
+       128: fconst_0
+       129: aload         5
+       131: invokevirtual #99                 // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage.getAmount:()F
+       134: aload         12
+       136: getfield      #103                // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers.flatModifier:F
+       139: fsub
+       140: invokestatic  #107                // Method java/lang/Math.max:(FF)F
+       143: fstore        13
+       145: fload         13
+       147: fconst_0
+       148: fconst_1
+       149: aload         12
+       151: getfield      #113                // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers.multiplierModifier:F
+       154: fsub
+       155: invokestatic  #107                // Method java/lang/Math.max:(FF)F
+       158: fmul
+       159: fstore        13
+       161: aload         12
+       163: getfield      #116                // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers.inheritedParentId:Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageCause;
+       166: ifnull        227
+       169: aload         11
+       171: aload         12
+       173: getfield      #116                // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers.inheritedParentId:Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageCause;
+       176: invokeinterface #94,  2           // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+       181: checkcast     #97                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers
+       184: astore        12
+       186: aload         12
+       188: ifnonnull     194
+       191: goto          227
+       194: fconst_0
+       195: fload         13
+       197: aload         12
+       199: getfield      #103                // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers.flatModifier:F
+       202: fsub
+       203: invokestatic  #107                // Method java/lang/Math.max:(FF)F
+       206: fstore        13
+       208: fload         13
+       210: fconst_0
+       211: fconst_1
+       212: aload         12
+       214: getfield      #113                // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers.multiplierModifier:F
+       217: fsub
+       218: invokestatic  #107                // Method java/lang/Math.max:(FF)F
+       221: fmul
+       222: fstore        13
+       224: goto          161
+       227: aload         5
+       229: fload         13
+       231: invokevirtual #120                // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage.setAmount:(F)V
+       234: return
+
+  public static java.util.Map<com.hypixel.hytale.server.core.modules.entity.damage.DamageCause, com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers> getResistanceModifiers(com.hypixel.hytale.server.core.universe.world.World, com.hypixel.hytale.server.core.inventory.container.ItemContainer, boolean, com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent);
+    Code:
+         0: new           #124                // class it/unimi/dsi/fastutil/objects/Object2ObjectOpenHashMap
+         3: dup
+         4: invokespecial #126                // Method it/unimi/dsi/fastutil/objects/Object2ObjectOpenHashMap."<init>":()V
+         7: astore        4
+         9: iconst_0
+        10: istore        5
+        12: iload         5
+        14: aload_1
+        15: invokevirtual #127                // Method com/hypixel/hytale/server/core/inventory/container/ItemContainer.getCapacity:()S
+        18: if_icmpge     167
+        21: aload_1
+        22: iload         5
+        24: invokevirtual #133                // Method com/hypixel/hytale/server/core/inventory/container/ItemContainer.getItemStack:(S)Lcom/hypixel/hytale/server/core/inventory/ItemStack;
+        27: astore        6
+        29: aload         6
+        31: ifnull        157
+        34: aload         6
+        36: invokevirtual #137                // Method com/hypixel/hytale/server/core/inventory/ItemStack.isEmpty:()Z
+        39: ifeq          45
+        42: goto          157
+        45: aload         6
+        47: invokevirtual #140                // Method com/hypixel/hytale/server/core/inventory/ItemStack.getItem:()Lcom/hypixel/hytale/server/core/asset/type/item/config/Item;
+        50: astore        7
+        52: aload         7
+        54: invokevirtual #144                // Method com/hypixel/hytale/server/core/asset/type/item/config/Item.getArmor:()Lcom/hypixel/hytale/server/core/asset/type/item/config/ItemArmor;
+        57: astore        8
+        59: aload         8
+        61: ifnonnull     67
+        64: goto          157
+        67: aload         8
+        69: invokevirtual #150                // Method com/hypixel/hytale/server/core/asset/type/item/config/ItemArmor.getDamageResistanceValues:()Ljava/util/Map;
+        72: astore        9
+        74: aload         8
+        76: invokevirtual #156                // Method com/hypixel/hytale/server/core/asset/type/item/config/ItemArmor.getBaseDamageResistance:()D
+        79: dstore        10
+        81: aload         9
+        83: ifnonnull     89
+        86: goto          157
+        89: aload         9
+        91: invokeinterface #160,  1          // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+        96: invokeinterface #164,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+       101: astore        12
+       103: aload         12
+       105: invokeinterface #170,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+       110: ifeq          157
+       113: aload         12
+       115: invokeinterface #175,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       120: checkcast     #178                // class java/util/Map$Entry
+       123: astore        13
+       125: aload         13
+       127: invokeinterface #180,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+       132: ifnonnull     138
+       135: goto          103
+       138: aload         13
+       140: aload_0
+       141: aload         4
+       143: iload_2
+       144: aload         6
+       146: invokevirtual #183                // Method com/hypixel/hytale/server/core/inventory/ItemStack.isBroken:()Z
+       149: dload         10
+       151: invokestatic  #186                // Method calculateResistanceEntryModifications:(Ljava/util/Map$Entry;Lcom/hypixel/hytale/server/core/universe/world/World;Ljava/util/Map;ZZD)V
+       154: goto          103
+       157: iload         5
+       159: iconst_1
+       160: iadd
+       161: i2s
+       162: istore        5
+       164: goto          12
+       167: aload         4
+       169: aload_3
+       170: invokestatic  #190                // Method addResistanceModifiersFromEntityEffects:(Ljava/util/Map;Lcom/hypixel/hytale/server/core/entity/effect/EffectControllerComponent;)V
+       173: aload         4
+       175: areturn
+
+  private static void calculateResistanceEntryModifications(java.util.Map$Entry<com.hypixel.hytale.server.core.modules.entity.damage.DamageCause, com.hypixel.hytale.server.core.modules.entity.damage.ResistanceModifier[]>, com.hypixel.hytale.server.core.universe.world.World, java.util.Map<com.hypixel.hytale.server.core.modules.entity.damage.DamageCause, com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers>, boolean, boolean, double);
+    Code:
+         0: aload_2
+         1: aload_0
+         2: invokeinterface #194,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+         7: checkcast     #84                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageCause
+        10: invokedynamic #197,  0            // InvokeDynamic #0:apply:()Ljava/util/function/Function;
+        15: invokeinterface #201,  3          // InterfaceMethod java/util/Map.computeIfAbsent:(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+        20: checkcast     #97                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers
+        23: astore        7
+        25: aload_0
+        26: invokeinterface #180,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+        31: checkcast     #205                // class "[Lcom/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier;"
+        34: astore        8
+        36: iconst_0
+        37: istore        9
+        39: iload         9
+        41: aload         8
+        43: arraylength
+        44: if_icmpge     104
+        47: aload         8
+        49: iload         9
+        51: aaload
+        52: astore        10
+        54: aload         10
+        56: invokevirtual #207                // Method com/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier.getCalculationType:()Lcom/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier$ResistanceCalculationType;
+        59: getstatic     #213                // Field com/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier$ResistanceCalculationType.FLAT:Lcom/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier$ResistanceCalculationType;
+        62: if_acmpne     83
+        65: aload         7
+        67: dup
+        68: getfield      #103                // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers.flatModifier:F
+        71: aload         10
+        73: invokevirtual #219                // Method com/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier.getAmount:()F
+        76: fadd
+        77: putfield      #103                // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers.flatModifier:F
+        80: goto          98
+        83: aload         7
+        85: dup
+        86: getfield      #113                // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers.multiplierModifier:F
+        89: aload         10
+        91: invokevirtual #219                // Method com/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier.getAmount:()F
+        94: fadd
+        95: putfield      #113                // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers.multiplierModifier:F
+        98: iinc          9, 1
+       101: goto          39
+       104: aload         7
+       106: dup
+       107: getfield      #103                // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers.flatModifier:F
+       110: dload         5
+       112: d2f
+       113: fadd
+       114: putfield      #103                // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers.flatModifier:F
+       117: aload_0
+       118: invokeinterface #194,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+       123: checkcast     #84                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageCause
+       126: astore        9
+       128: aload         9
+       130: ifnull        160
+       133: aload         9
+       135: invokevirtual #220                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageCause.getInherits:()Ljava/lang/String;
+       138: ifnull        160
+       141: aload         7
+       143: invokestatic  #224                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageCause.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+       146: aload         9
+       148: invokevirtual #220                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageCause.getInherits:()Ljava/lang/String;
+       151: invokevirtual #228                // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(Ljava/lang/Object;)Lcom/hypixel/hytale/assetstore/JsonAsset;
+       154: checkcast     #84                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageCause
+       157: putfield      #116                // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers.inheritedParentId:Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageCause;
+       160: iload_3
+       161: ifeq          219
+       164: iload         4
+       166: ifeq          219
+       169: aload_1
+       170: invokevirtual #234                // Method com/hypixel/hytale/server/core/universe/world/World.getGameplayConfig:()Lcom/hypixel/hytale/server/core/asset/type/gameplay/GameplayConfig;
+       173: invokevirtual #240                // Method com/hypixel/hytale/server/core/asset/type/gameplay/GameplayConfig.getItemDurabilityConfig:()Lcom/hypixel/hytale/server/core/asset/type/gameplay/ItemDurabilityConfig;
+       176: invokevirtual #246                // Method com/hypixel/hytale/server/core/asset/type/gameplay/ItemDurabilityConfig.getBrokenPenalties:()Lcom/hypixel/hytale/server/core/asset/type/gameplay/BrokenPenalties;
+       179: astore        10
+       181: aload         10
+       183: dconst_0
+       184: invokevirtual #252                // Method com/hypixel/hytale/server/core/asset/type/gameplay/BrokenPenalties.getWeapon:(D)D
+       187: dstore        11
+       189: aload         7
+       191: dup
+       192: getfield      #103                // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers.flatModifier:F
+       195: dconst_1
+       196: dload         11
+       198: dsub
+       199: d2f
+       200: fmul
+       201: putfield      #103                // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers.flatModifier:F
+       204: aload         7
+       206: dup
+       207: getfield      #113                // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers.multiplierModifier:F
+       210: dconst_1
+       211: dload         11
+       213: dsub
+       214: d2f
+       215: fmul
+       216: putfield      #113                // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers.multiplierModifier:F
+       219: return
+
+  private static void addResistanceModifiersFromEntityEffects(java.util.Map<com.hypixel.hytale.server.core.modules.entity.damage.DamageCause, com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers>, com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent);
+    Code:
+         0: aload_1
+         1: ifnonnull     5
+         4: return
+         5: aload_1
+         6: invokevirtual #258                // Method com/hypixel/hytale/server/core/entity/effect/EffectControllerComponent.getActiveEffects:()Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+         9: invokeinterface #262,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.keySet:()Lit/unimi/dsi/fastutil/ints/IntSet;
+        14: invokeinterface #268,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/IntSet.iterator:()Lit/unimi/dsi/fastutil/ints/IntIterator;
+        19: astore_2
+        20: aload_2
+        21: invokeinterface #170,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+        26: ifeq          250
+        29: aload_2
+        30: invokeinterface #175,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+        35: checkcast     #273                // class java/lang/Integer
+        38: invokevirtual #275                // Method java/lang/Integer.intValue:()I
+        41: istore_3
+        42: invokestatic  #279                // Method com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+        45: iload_3
+        46: invokevirtual #282                // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(I)Lcom/hypixel/hytale/assetstore/map/JsonAssetWithMap;
+        49: checkcast     #280                // class com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect
+        52: astore        4
+        54: aload         4
+        56: ifnonnull     62
+        59: goto          20
+        62: aload         4
+        64: invokevirtual #285                // Method com/hypixel/hytale/server/core/asset/type/entityeffect/config/EntityEffect.getDamageResistanceValues:()Ljava/util/Map;
+        67: astore        5
+        69: aload         5
+        71: ifnull        20
+        74: aload         5
+        76: invokeinterface #89,  1           // InterfaceMethod java/util/Map.isEmpty:()Z
+        81: ifeq          87
+        84: goto          20
+        87: aload         5
+        89: invokeinterface #160,  1          // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+        94: invokeinterface #164,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+        99: astore        6
+       101: aload         6
+       103: invokeinterface #170,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+       108: ifeq          247
+       111: aload         6
+       113: invokeinterface #175,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       118: checkcast     #178                // class java/util/Map$Entry
+       121: astore        7
+       123: aload_0
+       124: aload         7
+       126: invokeinterface #194,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+       131: checkcast     #84                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageCause
+       134: invokedynamic #286,  0            // InvokeDynamic #1:apply:()Ljava/util/function/Function;
+       139: invokeinterface #201,  3          // InterfaceMethod java/util/Map.computeIfAbsent:(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;
+       144: checkcast     #97                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers
+       147: astore        8
+       149: aload         7
+       151: invokeinterface #180,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+       156: checkcast     #205                // class "[Lcom/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier;"
+       159: astore        9
+       161: aload         9
+       163: arraylength
+       164: istore        10
+       166: iconst_0
+       167: istore        11
+       169: iload         11
+       171: iload         10
+       173: if_icmpge     244
+       176: aload         9
+       178: iload         11
+       180: aaload
+       181: astore        12
+       183: aload         12
+       185: invokevirtual #207                // Method com/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier.getCalculationType:()Lcom/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier$ResistanceCalculationType;
+       188: getstatic     #213                // Field com/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier$ResistanceCalculationType.FLAT:Lcom/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier$ResistanceCalculationType;
+       191: if_acmpne     212
+       194: aload         8
+       196: dup
+       197: getfield      #103                // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers.flatModifier:F
+       200: aload         12
+       202: invokevirtual #219                // Method com/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier.getAmount:()F
+       205: fadd
+       206: putfield      #103                // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers.flatModifier:F
+       209: goto          238
+       212: aload         12
+       214: invokevirtual #207                // Method com/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier.getCalculationType:()Lcom/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier$ResistanceCalculationType;
+       217: getstatic     #287                // Field com/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier$ResistanceCalculationType.PERCENT:Lcom/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier$ResistanceCalculationType;
+       220: if_acmpne     238
+       223: aload         8
+       225: dup
+       226: getfield      #113                // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers.multiplierModifier:F
+       229: aload         12
+       231: invokevirtual #219                // Method com/hypixel/hytale/server/core/modules/entity/damage/ResistanceModifier.getAmount:()F
+       234: fadd
+       235: putfield      #113                // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers.multiplierModifier:F
+       238: iinc          11, 1
+       241: goto          169
+       244: goto          101
+       247: goto          20
+       250: return
+
+  public void handle(int, com.hypixel.hytale.component.ArchetypeChunk, com.hypixel.hytale.component.Store, com.hypixel.hytale.component.CommandBuffer, com.hypixel.hytale.component.system.EcsEvent);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: aload_2
+         3: aload_3
+         4: aload         4
+         6: aload         5
+         8: checkcast     #78                 // class com/hypixel/hytale/server/core/modules/entity/damage/Damage
+        11: invokevirtual #290                // Method handle:(ILcom/hypixel/hytale/component/ArchetypeChunk;Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/CommandBuffer;Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage;)V
+        14: return
+
+  private static com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers lambda$addResistanceModifiersFromEntityEffects$0(com.hypixel.hytale.server.core.modules.entity.damage.DamageCause);
+    Code:
+         0: new           #97                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers
+         3: dup
+         4: invokespecial #294                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers."<init>":()V
+         7: areturn
+
+  private static com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers lambda$calculateResistanceEntryModifications$0(com.hypixel.hytale.server.core.modules.entity.damage.DamageCause);
+    Code:
+         0: new           #97                 // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers
+         3: dup
+         4: invokespecial #294                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems$ArmorDamageReduction$ArmorResistanceModifiers."<init>":()V
+         7: areturn
+
+  static {};
+    Code:
+         0: getstatic     #295                // Field com/hypixel/hytale/server/core/modules/entity/AllLegacyLivingEntityTypesQuery.INSTANCE:Lcom/hypixel/hytale/server/core/modules/entity/AllLegacyLivingEntityTypesQuery;
+         3: putstatic     #17                 // Field QUERY:Lcom/hypixel/hytale/component/query/Query;
+         6: return
+}

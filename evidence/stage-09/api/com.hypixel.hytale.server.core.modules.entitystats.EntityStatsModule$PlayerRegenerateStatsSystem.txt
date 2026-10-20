@@ -1,0 +1,16 @@
+Compiled from "EntityStatsModule.java"
+public class com.hypixel.hytale.server.core.modules.entitystats.EntityStatsModule$PlayerRegenerateStatsSystem extends com.hypixel.hytale.server.core.modules.entitystats.EntityStatsSystems$Regenerate<com.hypixel.hytale.server.core.entity.entities.Player> {
+  public com.hypixel.hytale.server.core.modules.entitystats.EntityStatsModule$PlayerRegenerateStatsSystem(com.hypixel.hytale.server.core.modules.entitystats.EntityStatsModule);
+    Code:
+         0: aload_1
+         1: dup
+         2: invokestatic  #1                  // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+         5: pop
+         6: pop
+         7: aload_0
+         8: aload_1
+         9: getfield      #7                  // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatsModule.entityStatMapComponentType:Lcom/hypixel/hytale/component/ComponentType;
+        12: invokestatic  #13                 // Method com/hypixel/hytale/server/core/entity/entities/Player.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        15: invokespecial #19                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatsSystems$Regenerate."<init>":(Lcom/hypixel/hytale/component/ComponentType;Lcom/hypixel/hytale/component/ComponentType;)V
+        18: return
+}

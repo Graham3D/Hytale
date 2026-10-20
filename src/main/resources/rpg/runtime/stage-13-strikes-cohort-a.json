@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {
+      "skillId": "spear_thrust",
+      "family": "STRIKE",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "SPEAR"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "STAMINA",
+      "resourceCost": 6,
+      "cooldownSeconds": 1.1,
+      "windupSeconds": 0,
+      "basePowerSource": "WEAPON",
+      "innateBasePower": 0,
+      "scaling": "HEAVY",
+      "strike": {
+        "geometry": "LINE",
+        "range": 3.6,
+        "angleDegrees": 0,
+        "lineHalfWidth": 0.4,
+        "repeats": 1,
+        "repeatIntervalSeconds": 0,
+        "targetCap": 64,
+        "coefficient": 1.1,
+        "statusId": "",
+        "statusSeconds": 0,
+        "details": {
+          "element": "PHYSICAL",
+          "height": 2.5,
+          "actionLockSeconds": 0,
+          "movementFactor": 1
+        }
+      }
+    },
+    {
+      "skillId": "dagger_flurry",
+      "family": "STRIKE",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "DAGGER"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "STAMINA",
+      "resourceCost": 10,
+      "cooldownSeconds": 4,
+      "windupSeconds": 0,
+      "basePowerSource": "WEAPON",
+      "innateBasePower": 0,
+      "scaling": "LIGHT",
+      "strike": {
+        "geometry": "ARC",
+        "range": 2.4,
+        "angleDegrees": 80,
+        "lineHalfWidth": 0,
+        "repeats": 4,
+        "repeatIntervalSeconds": 0.2,
+        "targetCap": 64,
+        "coefficient": 0.35,
+        "statusId": "",
+        "statusSeconds": 0,
+        "details": {
+          "element": "PHYSICAL",
+          "height": 2.5,
+          "actionLockSeconds": 0.8,
+          "movementFactor": 1
+        }
+      }
+    },
+    {
+      "skillId": "maul_swing",
+      "family": "STRIKE",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "MACE",
+        "BATTLEAXE"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "STAMINA",
+      "resourceCost": 9,
+      "cooldownSeconds": 2,
+      "windupSeconds": 0,
+      "basePowerSource": "WEAPON",
+      "innateBasePower": 0,
+      "scaling": "HEAVY",
+      "strike": {
+        "geometry": "ARC",
+        "range": 2.8,
+        "angleDegrees": 120,
+        "lineHalfWidth": 0,
+        "repeats": 1,
+        "repeatIntervalSeconds": 0,
+        "targetCap": 64,
+        "coefficient": 0.9,
+        "statusId": "",
+        "statusSeconds": 0,
+        "details": {
+          "element": "PHYSICAL",
+          "height": 2.5,
+          "actionLockSeconds": 0,
+          "movementFactor": 1
+        }
+      }
+    },
+    {
+      "skillId": "scythe_sweep",
+      "family": "STRIKE",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "resourceCost": 8,
+      "cooldownSeconds": 4,
+      "windupSeconds": 0,
+      "basePowerSource": "INNATE",
+      "innateBasePower": 20,
+      "scaling": "MAGIC",
+      "strike": {
+        "geometry": "ARC",
+        "range": 4,
+        "angleDegrees": 160,
+        "lineHalfWidth": 0,
+        "repeats": 1,
+        "repeatIntervalSeconds": 0,
+        "targetCap": 64,
+        "coefficient": 1,
+        "statusId": "",
+        "statusSeconds": 0,
+        "details": {
+          "element": "NECROTIC",
+          "height": 2.5,
+          "actionLockSeconds": 0,
+          "movementFactor": 1
+        }
+      }
+    },
+    {
+      "skillId": "spark",
+      "family": "STRIKE",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "resourceCost": 7,
+      "cooldownSeconds": 2,
+      "windupSeconds": 0,
+      "basePowerSource": "INNATE",
+      "innateBasePower": 20,
+      "scaling": "MAGIC",
+      "strike": {
+        "geometry": "ARC",
+        "range": 2.8,
+        "angleDegrees": 120,
+        "lineHalfWidth": 0,
+        "repeats": 1,
+        "repeatIntervalSeconds": 0,
+        "targetCap": 64,
+        "coefficient": 0.9,
+        "statusId": "",
+        "statusSeconds": 0,
+        "details": {
+          "element": "FIRE",
+          "height": 2.5,
+          "actionLockSeconds": 0,
+          "movementFactor": 1
+        }
+      }
+    },
+    {
+      "skillId": "whirlwind",
+      "family": "STRIKE",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "SWORD",
+        "LONGSWORD",
+        "BATTLEAXE"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "STAMINA",
+      "resourceCost": 16,
+      "cooldownSeconds": 8,
+      "windupSeconds": 0,
+      "basePowerSource": "WEAPON",
+      "innateBasePower": 0,
+      "scaling": "WEAPON_CLASS",
+      "strike": {
+        "geometry": "RADIUS",
+        "range": 4.2,
+        "angleDegrees": 360,
+        "lineHalfWidth": 0,
+        "repeats": 3,
+        "repeatIntervalSeconds": 0.4,
+        "targetCap": 64,
+        "coefficient": 0.55,
+        "statusId": "",
+        "statusSeconds": 0,
+        "details": {
+          "element": "PHYSICAL",
+          "height": 2.5,
+          "actionLockSeconds": 1.2,
+          "movementFactor": 0.7
+        }
+      }
+    }
+  ]
+}

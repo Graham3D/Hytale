@@ -1,0 +1,7 @@
+{
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "jarSha256": "1BB2E2C9A86AA49B46A29EC8A0EBB2C5C504EDCE46BE5ABAEB6A49CEAE0DFE0F",
+  "scope": "Existing pre-Apply Health capture -> native Inspect actual hostile loss/provenance -> bounded rolling history -> next world-tick normal activation/payment",
+  "evidence": "Bytecode and call-site proof only, not connected event order, enemy damage, input, casting, native resource writes or rendering proof",
+  "connected": "UNVERIFIED"
+}

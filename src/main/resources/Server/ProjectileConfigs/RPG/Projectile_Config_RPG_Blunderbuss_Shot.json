@@ -1,0 +1,19 @@
+{
+  "Model": "RPG_Blunderbuss_Shot",
+  "UseModelScale": true,
+  "Physics": {
+    "Type": "Standard",
+    "Gravity": 0,
+    "TerminalVelocityAir": 50,
+    "TerminalVelocityWater": 15,
+    "RotationMode": "Velocity",
+    "Bounciness": 0
+  },
+  "LaunchForce": 22,
+  "SpawnOffset": {
+    "X": 0,
+    "Y": 0,
+    "Z": 0
+  },
+  "Interactions": {}
+}

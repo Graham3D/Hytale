@@ -1,0 +1,60 @@
+Compiled from "WorldSpawnTrackingSystem.java"
+class com.hypixel.hytale.server.spawning.world.system.WorldSpawnTrackingSystem$1 {
+  static final int[] $SwitchMap$com$hypixel$hytale$component$AddReason;
+
+  static final int[] $SwitchMap$com$hypixel$hytale$component$RemoveReason;
+
+  static {};
+    Code:
+         0: invokestatic  #1                  // Method com/hypixel/hytale/component/RemoveReason.values:()[Lcom/hypixel/hytale/component/RemoveReason;
+         3: arraylength
+         4: newarray       int
+         6: putstatic     #7                  // Field $SwitchMap$com$hypixel$hytale$component$RemoveReason:[I
+         9: getstatic     #7                  // Field $SwitchMap$com$hypixel$hytale$component$RemoveReason:[I
+        12: getstatic     #13                 // Field com/hypixel/hytale/component/RemoveReason.REMOVE:Lcom/hypixel/hytale/component/RemoveReason;
+        15: invokevirtual #17                 // Method com/hypixel/hytale/component/RemoveReason.ordinal:()I
+        18: iconst_1
+        19: iastore
+        20: goto          24
+        23: astore_0
+        24: getstatic     #7                  // Field $SwitchMap$com$hypixel$hytale$component$RemoveReason:[I
+        27: getstatic     #23                 // Field com/hypixel/hytale/component/RemoveReason.BUILDER_TOOLS_UNDO:Lcom/hypixel/hytale/component/RemoveReason;
+        30: invokevirtual #17                 // Method com/hypixel/hytale/component/RemoveReason.ordinal:()I
+        33: iconst_2
+        34: iastore
+        35: goto          39
+        38: astore_0
+        39: getstatic     #7                  // Field $SwitchMap$com$hypixel$hytale$component$RemoveReason:[I
+        42: getstatic     #26                 // Field com/hypixel/hytale/component/RemoveReason.UNLOAD:Lcom/hypixel/hytale/component/RemoveReason;
+        45: invokevirtual #17                 // Method com/hypixel/hytale/component/RemoveReason.ordinal:()I
+        48: iconst_3
+        49: iastore
+        50: goto          54
+        53: astore_0
+        54: invokestatic  #29                 // Method com/hypixel/hytale/component/AddReason.values:()[Lcom/hypixel/hytale/component/AddReason;
+        57: arraylength
+        58: newarray       int
+        60: putstatic     #34                 // Field $SwitchMap$com$hypixel$hytale$component$AddReason:[I
+        63: getstatic     #34                 // Field $SwitchMap$com$hypixel$hytale$component$AddReason:[I
+        66: getstatic     #37                 // Field com/hypixel/hytale/component/AddReason.SPAWN:Lcom/hypixel/hytale/component/AddReason;
+        69: invokevirtual #41                 // Method com/hypixel/hytale/component/AddReason.ordinal:()I
+        72: iconst_1
+        73: iastore
+        74: goto          78
+        77: astore_0
+        78: getstatic     #34                 // Field $SwitchMap$com$hypixel$hytale$component$AddReason:[I
+        81: getstatic     #42                 // Field com/hypixel/hytale/component/AddReason.LOAD:Lcom/hypixel/hytale/component/AddReason;
+        84: invokevirtual #41                 // Method com/hypixel/hytale/component/AddReason.ordinal:()I
+        87: iconst_2
+        88: iastore
+        89: goto          93
+        92: astore_0
+        93: return
+      Exception table:
+         from    to  target type
+             9    20    23   Class java/lang/NoSuchFieldError
+            24    35    38   Class java/lang/NoSuchFieldError
+            39    50    53   Class java/lang/NoSuchFieldError
+            63    74    77   Class java/lang/NoSuchFieldError
+            78    89    92   Class java/lang/NoSuchFieldError
+}

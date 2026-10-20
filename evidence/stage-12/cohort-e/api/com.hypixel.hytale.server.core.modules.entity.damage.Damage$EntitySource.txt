@@ -1,0 +1,46 @@
+Compiled from "Damage.java"
+public class com.hypixel.hytale.server.core.modules.entity.damage.Damage$EntitySource implements com.hypixel.hytale.server.core.modules.entity.damage.Damage$Source {
+  protected final com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> sourceRef;
+
+  public com.hypixel.hytale.server.core.modules.entity.damage.Damage$EntitySource(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: aload_1
+         6: putfield      #7                  // Field sourceRef:Lcom/hypixel/hytale/component/Ref;
+         9: return
+
+  public com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getRef();
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field sourceRef:Lcom/hypixel/hytale/component/Ref;
+         4: areturn
+
+  public com.hypixel.hytale.server.core.Message getDeathMessage(com.hypixel.hytale.server.core.modules.entity.damage.Damage, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: getstatic     #13                 // Field com/hypixel/hytale/server/core/modules/entity/damage/Damage.MESSAGE_GENERAL_DAMAGE_CAUSE_UNKNOWN:Lcom/hypixel/hytale/server/core/Message;
+         3: astore        4
+         5: aload_3
+         6: aload_0
+         7: getfield      #7                  // Field sourceRef:Lcom/hypixel/hytale/component/Ref;
+        10: invokestatic  #19                 // Method com/hypixel/hytale/server/core/modules/entity/component/DisplayNameComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        13: invokeinterface #25,  3           // InterfaceMethod com/hypixel/hytale/component/ComponentAccessor.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        18: checkcast     #20                 // class com/hypixel/hytale/server/core/modules/entity/component/DisplayNameComponent
+        21: astore        5
+        23: aload         5
+        25: ifnull        44
+        28: aload         5
+        30: invokevirtual #31                 // Method com/hypixel/hytale/server/core/modules/entity/component/DisplayNameComponent.getDisplayName:()Lcom/hypixel/hytale/server/core/Message;
+        33: astore        6
+        35: aload         6
+        37: ifnull        44
+        40: aload         6
+        42: astore        4
+        44: ldc           #35                 // String server.general.killedBy
+        46: invokestatic  #37                 // Method com/hypixel/hytale/server/core/Message.translation:(Ljava/lang/String;)Lcom/hypixel/hytale/server/core/Message;
+        49: ldc           #43                 // String damageSource
+        51: aload         4
+        53: invokevirtual #45                 // Method com/hypixel/hytale/server/core/Message.param:(Ljava/lang/String;Lcom/hypixel/hytale/server/core/Message;)Lcom/hypixel/hytale/server/core/Message;
+        56: areturn
+}

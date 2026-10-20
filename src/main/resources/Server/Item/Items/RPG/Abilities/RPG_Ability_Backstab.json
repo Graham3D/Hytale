@@ -1,0 +1,7 @@
+{
+  "TranslationProperties": {"Name": "server.items.RPG_Ability_Backstab.name", "Description": "server.items.RPG_Ability_Backstab.description"},
+  "Icon": "Icons/ItemsGenerated/Rune_WindStrike.png", "Quality": "Rare", "Categories": ["Items.Ingredients"],
+  "Model": "Items/Runes/Rune_Ability.blockymodel", "Texture": "Items/Runes/Rune_Textures/Rune_Ability_WindStrikes.png",
+  "PlayerAnimationsId": "Item", "MaxStack": 1, "Scale": 0.8, "ItemSoundSetId": "ISS_Items_Gems",
+  "Ability": {"Slot": "Primary", "Cooldown": 0, "Cost": 0, "CostType": "None", "Tags": ["rpg.native.bridge"], "Cast": "Root_RPG_Ability_Bridge"}
+}

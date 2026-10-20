@@ -1,0 +1,11 @@
+{
+  "connectedProof": false,
+  "setOffset": 0.2,
+  "scope": "Installed public methods: offset addition then reset; not a rate lease",
+  "activationGate": "NATIVE_PER_ACTOR_BASIC_ATTACK_CADENCE_UNVERIFIED",
+  "firstClearWithDelta05": 0.25,
+  "negativeOffsetRejected": true,
+  "provesUniversalEngineImpossibility": false,
+  "secondClearWithDelta05": 0,
+  "class": "com.hypixel.hytale.server.core.entity.InteractionManager"
+}

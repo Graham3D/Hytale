@@ -1,0 +1,33 @@
+{
+  "revision": "R010",
+  "observedAtUtc": "2026-09-06T19:20:09.3468146Z",
+  "serverLog": "2026-09-06_15-17-52_server.log",
+  "traceRecords": 279,
+  "compileSuccess": 12,
+  "attributeEvidence": {
+    "rawStrength": 500,
+    "effectiveStrength": 320.0,
+    "maxHealth": 720.0,
+    "heavyMultiplier": 1.96,
+    "resetValidation": "PASS"
+  },
+  "resourceEvidence": {
+    "manaSpendBefore": 100.0,
+    "manaSpendAfter": 90.0,
+    "manualRegenRecovered": 0.0,
+    "recoveryGap": "Native regeneration refilled resources before the manual proof; positive 4% and 12% amounts were not observed."
+  },
+  "damageEvidence": {
+    "neverCritPreMitigation": 5.15,
+    "forcedCritPreMitigation": 7.725,
+    "lastObservedBoundary": "DAMAGE_GATHERED",
+    "missingBoundaries": ["DAMAGE_FILTERED", "DAMAGE_APPLIED", "DAMAGE_INSPECTED"],
+    "diagnosis": "The diagnostic targeted its invoking player. With PvP disabled, Hytale PlayerDamageFilterSystem cancels player-sourced damage to player targets, and cancelled ECS events do not continue to later systems."
+  },
+  "statusEvidence": {
+    "requests": 6,
+    "threshold": "FROZEN"
+  },
+  "rpgScopedExceptionObserved": false,
+  "stage02Result": "BLOCKED"
+}

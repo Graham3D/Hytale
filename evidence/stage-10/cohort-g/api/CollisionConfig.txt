@@ -1,0 +1,860 @@
+Compiled from "CollisionConfig.java"
+public class com.hypixel.hytale.server.core.modules.collision.CollisionConfig {
+  public static final int MATERIAL_EMPTY;
+
+  public static final int MATERIAL_FLUID;
+
+  public static final int MATERIAL_SOLID;
+
+  public static final int MATERIAL_SUBMERGED;
+
+  public static final int MATERIAL_DAMAGE;
+
+  public static final int MATERIAL_SET_NONE;
+
+  public static final int MATERIAL_SET_ANY;
+
+  public static final int MATERIAL_INVALID;
+
+  public int blockId;
+
+  public com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType blockType;
+
+  public com.hypixel.hytale.protocol.BlockMaterial blockMaterial;
+
+  public int rotation;
+
+  public int blockX;
+
+  public int blockY;
+
+  public int blockZ;
+
+  private int boundingBoxOffsetX;
+
+  private int boundingBoxOffsetY;
+
+  private int boundingBoxOffsetZ;
+
+  private com.hypixel.hytale.server.core.asset.type.blockhitbox.BlockBoundingBoxes$RotatedVariantBoxes boundingBoxes;
+
+  private com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection chunkSection;
+
+  private int chunkX;
+
+  private int chunkY;
+
+  private int chunkZ;
+
+  private com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.ChunkStore> chunkSectionRef;
+
+  public com.hypixel.hytale.server.core.asset.type.fluid.Fluid fluid;
+
+  public int fluidId;
+
+  public byte fluidLevel;
+
+  private com.hypixel.hytale.math.shape.Box blockBox;
+
+  private com.hypixel.hytale.server.core.universe.world.World world;
+
+  private int blockMaterialCollisionMask;
+
+  public int blockMaterialMask;
+
+  public boolean blockCanCollide;
+
+  public boolean blockCanTrigger;
+
+  public boolean blockCanTriggerPartial;
+
+  public boolean checkTriggerBlocks;
+
+  public boolean checkDamageBlocks;
+
+  public boolean blockFilteredOut;
+
+  public java.util.function.Predicate<com.hypixel.hytale.server.core.modules.collision.CollisionConfig> canCollide;
+
+  public java.util.function.Predicate<com.hypixel.hytale.server.core.modules.collision.CollisionConfig> extraBlockCollisionFilter;
+
+  public boolean dumpInvalidBlocks;
+
+  public boolean dumpNonOverlappingBlocks;
+
+  public java.lang.Object extraData1;
+
+  public java.lang.Object extraData2;
+
+  public com.hypixel.hytale.server.core.modules.collision.CollisionConfig();
+    Code:
+         0: aload_0
+         1: invokespecial #3                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #9                  // class com/hypixel/hytale/math/shape/Box
+         8: dup
+         9: invokespecial #11                 // Method com/hypixel/hytale/math/shape/Box."<init>":()V
+        12: putfield      #12                 // Field blockBox:Lcom/hypixel/hytale/math/shape/Box;
+        15: aload_0
+        16: iconst_1
+        17: putfield      #18                 // Field checkTriggerBlocks:Z
+        20: aload_0
+        21: iconst_1
+        22: putfield      #22                 // Field checkDamageBlocks:Z
+        25: return
+
+  public int getDetailCount();
+    Code:
+         0: aload_0
+         1: getfield      #25                 // Field boundingBoxes:Lcom/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes$RotatedVariantBoxes;
+         4: invokevirtual #29                 // Method com/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes$RotatedVariantBoxes.getDetailBoxes:()[Lcom/hypixel/hytale/math/shape/Box;
+         7: arraylength
+         8: ireturn
+
+  public com.hypixel.hytale.math.shape.Box getBoundingBox();
+    Code:
+         0: aload_0
+         1: getfield      #12                 // Field blockBox:Lcom/hypixel/hytale/math/shape/Box;
+         4: aload_0
+         5: getfield      #25                 // Field boundingBoxes:Lcom/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes$RotatedVariantBoxes;
+         8: invokevirtual #35                 // Method com/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes$RotatedVariantBoxes.getBoundingBox:()Lcom/hypixel/hytale/math/shape/Box;
+        11: invokevirtual #39                 // Method com/hypixel/hytale/math/shape/Box.assign:(Lcom/hypixel/hytale/math/shape/Box;)Lcom/hypixel/hytale/math/shape/Box;
+        14: pop
+        15: aload_0
+        16: getfield      #43                 // Field blockId:I
+        19: ifne          83
+        22: aload_0
+        23: getfield      #47                 // Field fluidId:I
+        26: ifeq          83
+        29: aload_0
+        30: getfield      #50                 // Field fluid:Lcom/hypixel/hytale/server/core/asset/type/fluid/Fluid;
+        33: ifnull        83
+        36: aload_0
+        37: getfield      #12                 // Field blockBox:Lcom/hypixel/hytale/math/shape/Box;
+        40: getfield      #54                 // Field com/hypixel/hytale/math/shape/Box.max:Lorg/joml/Vector3d;
+        43: dup
+        44: getfield      #58                 // Field org/joml/Vector3d.y:D
+        47: ldc2_w        #64                 // double 0.03125d
+        50: dsub
+        51: putfield      #58                 // Field org/joml/Vector3d.y:D
+        54: aload_0
+        55: getfield      #12                 // Field blockBox:Lcom/hypixel/hytale/math/shape/Box;
+        58: getfield      #54                 // Field com/hypixel/hytale/math/shape/Box.max:Lorg/joml/Vector3d;
+        61: dup
+        62: getfield      #58                 // Field org/joml/Vector3d.y:D
+        65: aload_0
+        66: getfield      #66                 // Field fluidLevel:B
+        69: i2d
+        70: aload_0
+        71: getfield      #50                 // Field fluid:Lcom/hypixel/hytale/server/core/asset/type/fluid/Fluid;
+        74: invokevirtual #70                 // Method com/hypixel/hytale/server/core/asset/type/fluid/Fluid.getMaxFluidLevel:()I
+        77: i2d
+        78: ddiv
+        79: dmul
+        80: putfield      #58                 // Field org/joml/Vector3d.y:D
+        83: aload_0
+        84: getfield      #12                 // Field blockBox:Lcom/hypixel/hytale/math/shape/Box;
+        87: areturn
+
+  public com.hypixel.hytale.math.shape.Box getBoundingBox(int);
+    Code:
+         0: aload_0
+         1: getfield      #12                 // Field blockBox:Lcom/hypixel/hytale/math/shape/Box;
+         4: aload_0
+         5: getfield      #25                 // Field boundingBoxes:Lcom/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes$RotatedVariantBoxes;
+         8: invokevirtual #29                 // Method com/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes$RotatedVariantBoxes.getDetailBoxes:()[Lcom/hypixel/hytale/math/shape/Box;
+        11: iload_1
+        12: aaload
+        13: invokevirtual #39                 // Method com/hypixel/hytale/math/shape/Box.assign:(Lcom/hypixel/hytale/math/shape/Box;)Lcom/hypixel/hytale/math/shape/Box;
+        16: pop
+        17: aload_0
+        18: getfield      #12                 // Field blockBox:Lcom/hypixel/hytale/math/shape/Box;
+        21: areturn
+
+  public int getBoundingBoxOffsetX();
+    Code:
+         0: aload_0
+         1: getfield      #76                 // Field boundingBoxOffsetX:I
+         4: ireturn
+
+  public int getBoundingBoxOffsetY();
+    Code:
+         0: aload_0
+         1: getfield      #79                 // Field boundingBoxOffsetY:I
+         4: ireturn
+
+  public int getBoundingBoxOffsetZ();
+    Code:
+         0: aload_0
+         1: getfield      #82                 // Field boundingBoxOffsetZ:I
+         4: ireturn
+
+  public void setCollisionByMaterial(int);
+    Code:
+         0: aload_0
+         1: aload_0
+         2: getfield      #85                 // Field blockMaterialCollisionMask:I
+         5: bipush        -16
+         7: iand
+         8: iload_1
+         9: bipush        15
+        11: iand
+        12: ior
+        13: putfield      #85                 // Field blockMaterialCollisionMask:I
+        16: return
+
+  public int getCollisionByMaterial();
+    Code:
+         0: aload_0
+         1: getfield      #85                 // Field blockMaterialCollisionMask:I
+         4: bipush        15
+         6: iand
+         7: ireturn
+
+  public boolean isCollidingWithDamageBlocks();
+    Code:
+         0: aload_0
+         1: getfield      #85                 // Field blockMaterialCollisionMask:I
+         4: bipush        16
+         6: iand
+         7: ifeq          14
+        10: iconst_1
+        11: goto          15
+        14: iconst_0
+        15: ireturn
+
+  public boolean setCollideWithDamageBlocks(boolean);
+    Code:
+         0: aload_0
+         1: invokevirtual #88                 // Method isCollidingWithDamageBlocks:()Z
+         4: istore_2
+         5: iload_1
+         6: ifeq          23
+         9: aload_0
+        10: dup
+        11: getfield      #85                 // Field blockMaterialCollisionMask:I
+        14: bipush        16
+        16: ior
+        17: putfield      #85                 // Field blockMaterialCollisionMask:I
+        20: goto          34
+        23: aload_0
+        24: dup
+        25: getfield      #85                 // Field blockMaterialCollisionMask:I
+        28: bipush        -17
+        30: iand
+        31: putfield      #85                 // Field blockMaterialCollisionMask:I
+        34: iload_2
+        35: ireturn
+
+  public java.util.function.Predicate<com.hypixel.hytale.server.core.modules.collision.CollisionConfig> getBlockCollisionPredicate();
+    Code:
+         0: aload_0
+         1: getfield      #92                 // Field canCollide:Ljava/util/function/Predicate;
+         4: areturn
+
+  public void setDefaultCollisionBehaviour();
+    Code:
+         0: aload_0
+         1: iconst_4
+         2: invokevirtual #96                 // Method setCollisionByMaterial:(I)V
+         5: aload_0
+         6: iconst_1
+         7: invokevirtual #100                // Method setCollideWithDamageBlocks:(Z)Z
+        10: pop
+        11: aload_0
+        12: invokevirtual #104                // Method setDefaultBlockCollisionPredicate:()V
+        15: aload_0
+        16: aconst_null
+        17: putfield      #107                // Field extraBlockCollisionFilter:Ljava/util/function/Predicate;
+        20: return
+
+  public void setDefaultBlockCollisionPredicate();
+    Code:
+         0: aload_0
+         1: invokedynamic #110,  0            // InvokeDynamic #0:test:()Ljava/util/function/Predicate;
+         6: putfield      #92                 // Field canCollide:Ljava/util/function/Predicate;
+         9: return
+
+  public boolean isCheckTriggerBlocks();
+    Code:
+         0: aload_0
+         1: getfield      #18                 // Field checkTriggerBlocks:Z
+         4: ireturn
+
+  public void setCheckTriggerBlocks(boolean);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: putfield      #18                 // Field checkTriggerBlocks:Z
+         5: return
+
+  public boolean isCheckDamageBlocks();
+    Code:
+         0: aload_0
+         1: getfield      #22                 // Field checkDamageBlocks:Z
+         4: ireturn
+
+  public void setCheckDamageBlocks(boolean);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: putfield      #22                 // Field checkDamageBlocks:Z
+         5: return
+
+  public void setWorld(com.hypixel.hytale.server.core.universe.world.World);
+    Code:
+         0: aload_0
+         1: getfield      #114                // Field world:Lcom/hypixel/hytale/server/core/universe/world/World;
+         4: aload_1
+         5: if_acmpeq     18
+         8: aload_0
+         9: aconst_null
+        10: putfield      #118                // Field chunkSectionRef:Lcom/hypixel/hytale/component/Ref;
+        13: aload_0
+        14: aconst_null
+        15: putfield      #122                // Field chunkSection:Lcom/hypixel/hytale/server/core/universe/world/chunk/section/BlockSection;
+        18: aload_0
+        19: aload_1
+        20: putfield      #114                // Field world:Lcom/hypixel/hytale/server/core/universe/world/World;
+        23: aload_0
+        24: ldc           #128                // int -2147483648
+        26: putfield      #43                 // Field blockId:I
+        29: aload_0
+        30: ldc           #128                // int -2147483648
+        32: putfield      #131                // Field blockX:I
+        35: aload_0
+        36: ldc           #128                // int -2147483648
+        38: putfield      #134                // Field blockY:I
+        41: aload_0
+        42: ldc           #128                // int -2147483648
+        44: putfield      #137                // Field blockZ:I
+        47: return
+
+  public boolean canCollide(int, int, int);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: putfield      #131                // Field blockX:I
+         5: aload_0
+         6: iload_2
+         7: putfield      #134                // Field blockY:I
+        10: aload_0
+        11: iload_3
+        12: putfield      #137                // Field blockZ:I
+        15: aload_0
+        16: iconst_0
+        17: putfield      #140                // Field blockFilteredOut:Z
+        20: iload_1
+        21: invokestatic  #143                // Method com/hypixel/hytale/math/util/ChunkUtil.chunkCoordinate:(I)I
+        24: istore        4
+        26: iload_2
+        27: invokestatic  #143                // Method com/hypixel/hytale/math/util/ChunkUtil.chunkCoordinate:(I)I
+        30: istore        5
+        32: iload_3
+        33: invokestatic  #143                // Method com/hypixel/hytale/math/util/ChunkUtil.chunkCoordinate:(I)I
+        36: istore        6
+        38: aload_0
+        39: getfield      #122                // Field chunkSection:Lcom/hypixel/hytale/server/core/universe/world/chunk/section/BlockSection;
+        42: ifnull        89
+        45: aload_0
+        46: getfield      #118                // Field chunkSectionRef:Lcom/hypixel/hytale/component/Ref;
+        49: ifnull        89
+        52: aload_0
+        53: getfield      #118                // Field chunkSectionRef:Lcom/hypixel/hytale/component/Ref;
+        56: invokevirtual #149                // Method com/hypixel/hytale/component/Ref.isValid:()Z
+        59: ifeq          89
+        62: aload_0
+        63: getfield      #154                // Field chunkX:I
+        66: iload         4
+        68: if_icmpne     89
+        71: aload_0
+        72: getfield      #157                // Field chunkY:I
+        75: iload         5
+        77: if_icmpne     89
+        80: aload_0
+        81: getfield      #160                // Field chunkZ:I
+        84: iload         6
+        86: if_icmpeq     172
+        89: aload_0
+        90: aload_0
+        91: getfield      #114                // Field world:Lcom/hypixel/hytale/server/core/universe/world/World;
+        94: invokevirtual #163                // Method com/hypixel/hytale/server/core/universe/world/World.getChunkStore:()Lcom/hypixel/hytale/server/core/universe/world/storage/ChunkStore;
+        97: iload         4
+        99: iload         5
+       101: iload         6
+       103: invokevirtual #169                // Method com/hypixel/hytale/server/core/universe/world/storage/ChunkStore.getChunkSectionReference:(III)Lcom/hypixel/hytale/component/Ref;
+       106: putfield      #118                // Field chunkSectionRef:Lcom/hypixel/hytale/component/Ref;
+       109: aload_0
+       110: aload_0
+       111: getfield      #118                // Field chunkSectionRef:Lcom/hypixel/hytale/component/Ref;
+       114: ifnull        150
+       117: aload_0
+       118: getfield      #118                // Field chunkSectionRef:Lcom/hypixel/hytale/component/Ref;
+       121: invokevirtual #149                // Method com/hypixel/hytale/component/Ref.isValid:()Z
+       124: ifeq          150
+       127: aload_0
+       128: getfield      #118                // Field chunkSectionRef:Lcom/hypixel/hytale/component/Ref;
+       131: invokevirtual #175                // Method com/hypixel/hytale/component/Ref.getStore:()Lcom/hypixel/hytale/component/Store;
+       134: aload_0
+       135: getfield      #118                // Field chunkSectionRef:Lcom/hypixel/hytale/component/Ref;
+       138: invokestatic  #179                // Method com/hypixel/hytale/server/core/universe/world/chunk/section/BlockSection.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       141: invokevirtual #185                // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       144: checkcast     #180                // class com/hypixel/hytale/server/core/universe/world/chunk/section/BlockSection
+       147: goto          151
+       150: aconst_null
+       151: putfield      #122                // Field chunkSection:Lcom/hypixel/hytale/server/core/universe/world/chunk/section/BlockSection;
+       154: aload_0
+       155: iload         4
+       157: putfield      #154                // Field chunkX:I
+       160: aload_0
+       161: iload         5
+       163: putfield      #157                // Field chunkY:I
+       166: aload_0
+       167: iload         6
+       169: putfield      #160                // Field chunkZ:I
+       172: aload_0
+       173: iconst_0
+       174: putfield      #191                // Field blockCanTrigger:Z
+       177: aload_0
+       178: getfield      #122                // Field chunkSection:Lcom/hypixel/hytale/server/core/universe/world/chunk/section/BlockSection;
+       181: ifnonnull     242
+       184: aload_0
+       185: aconst_null
+       186: putfield      #194                // Field blockType:Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType;
+       189: aload_0
+       190: aconst_null
+       191: putfield      #198                // Field blockMaterial:Lcom/hypixel/hytale/protocol/BlockMaterial;
+       194: aload_0
+       195: aconst_null
+       196: putfield      #50                 // Field fluid:Lcom/hypixel/hytale/server/core/asset/type/fluid/Fluid;
+       199: aload_0
+       200: ldc           #128                // int -2147483648
+       202: putfield      #47                 // Field fluidId:I
+       205: aload_0
+       206: getstatic     #202                // Field com/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes.UNIT_BOX:Lcom/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes;
+       209: getstatic     #208                // Field com/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation.None:Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation;
+       212: getstatic     #208                // Field com/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation.None:Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation;
+       215: getstatic     #208                // Field com/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation.None:Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation;
+       218: invokevirtual #214                // Method com/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes.get:(Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation;Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation;Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation;)Lcom/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes$RotatedVariantBoxes;
+       221: putfield      #25                 // Field boundingBoxes:Lcom/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes$RotatedVariantBoxes;
+       224: aload_0
+       225: iconst_0
+       226: putfield      #218                // Field blockMaterialMask:I
+       229: aload_0
+       230: iconst_1
+       231: putfield      #221                // Field blockCanCollide:Z
+       234: aload_0
+       235: ldc           #128                // int -2147483648
+       237: putfield      #43                 // Field blockId:I
+       240: iconst_1
+       241: ireturn
+       242: aload_0
+       243: getfield      #122                // Field chunkSection:Lcom/hypixel/hytale/server/core/universe/world/chunk/section/BlockSection;
+       246: iload_1
+       247: iload_2
+       248: iload_3
+       249: invokevirtual #224                // Method com/hypixel/hytale/server/core/universe/world/chunk/section/BlockSection.get:(III)I
+       252: istore        7
+       254: invokestatic  #227                // Method com/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/BlockTypeAssetMap;
+       257: iload         7
+       259: invokevirtual #233                // Method com/hypixel/hytale/assetstore/map/BlockTypeAssetMap.getAsset:(I)Lcom/hypixel/hytale/assetstore/map/JsonAssetWithMap;
+       262: checkcast     #228                // class com/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType
+       265: astore        8
+       267: aload_0
+       268: getfield      #118                // Field chunkSectionRef:Lcom/hypixel/hytale/component/Ref;
+       271: invokevirtual #175                // Method com/hypixel/hytale/component/Ref.getStore:()Lcom/hypixel/hytale/component/Store;
+       274: aload_0
+       275: getfield      #118                // Field chunkSectionRef:Lcom/hypixel/hytale/component/Ref;
+       278: invokestatic  #239                // Method com/hypixel/hytale/server/core/universe/world/chunk/section/FluidSection.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       281: invokevirtual #185                // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       284: checkcast     #240                // class com/hypixel/hytale/server/core/universe/world/chunk/section/FluidSection
+       287: astore        9
+       289: iconst_0
+       290: istore        12
+       292: aload         9
+       294: ifnull        351
+       297: aload         9
+       299: aload_0
+       300: getfield      #131                // Field blockX:I
+       303: aload_0
+       304: getfield      #134                // Field blockY:I
+       307: aload_0
+       308: getfield      #137                // Field blockZ:I
+       311: invokevirtual #242                // Method com/hypixel/hytale/server/core/universe/world/chunk/section/FluidSection.getFluidId:(III)I
+       314: istore        10
+       316: invokestatic  #245                // Method com/hypixel/hytale/server/core/asset/type/fluid/Fluid.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+       319: iload         10
+       321: invokevirtual #248                // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(I)Lcom/hypixel/hytale/assetstore/map/JsonAssetWithMap;
+       324: checkcast     #71                 // class com/hypixel/hytale/server/core/asset/type/fluid/Fluid
+       327: astore        11
+       329: aload         9
+       331: aload_0
+       332: getfield      #131                // Field blockX:I
+       335: aload_0
+       336: getfield      #134                // Field blockY:I
+       339: aload_0
+       340: getfield      #137                // Field blockZ:I
+       343: invokevirtual #251                // Method com/hypixel/hytale/server/core/universe/world/chunk/section/FluidSection.getFluidLevel:(III)B
+       346: istore        12
+       348: goto          358
+       351: ldc           #128                // int -2147483648
+       353: istore        10
+       355: aconst_null
+       356: astore        11
+       358: aload_0
+       359: getfield      #122                // Field chunkSection:Lcom/hypixel/hytale/server/core/universe/world/chunk/section/BlockSection;
+       362: iload_1
+       363: iload_2
+       364: iload_3
+       365: invokevirtual #255                // Method com/hypixel/hytale/server/core/universe/world/chunk/section/BlockSection.getFiller:(III)I
+       368: istore        13
+       370: aload         8
+       372: invokevirtual #258                // Method com/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType.isUnknown:()Z
+       375: ifne          416
+       378: iload         13
+       380: ifeq          416
+       383: aload_0
+       384: iload         13
+       386: invokestatic  #261                // Method com/hypixel/hytale/server/core/util/FillerBlockUtil.unpackX:(I)I
+       389: ineg
+       390: putfield      #76                 // Field boundingBoxOffsetX:I
+       393: aload_0
+       394: iload         13
+       396: invokestatic  #266                // Method com/hypixel/hytale/server/core/util/FillerBlockUtil.unpackY:(I)I
+       399: ineg
+       400: putfield      #79                 // Field boundingBoxOffsetY:I
+       403: aload_0
+       404: iload         13
+       406: invokestatic  #269                // Method com/hypixel/hytale/server/core/util/FillerBlockUtil.unpackZ:(I)I
+       409: ineg
+       410: putfield      #82                 // Field boundingBoxOffsetZ:I
+       413: goto          431
+       416: aload_0
+       417: iconst_0
+       418: putfield      #76                 // Field boundingBoxOffsetX:I
+       421: aload_0
+       422: iconst_0
+       423: putfield      #79                 // Field boundingBoxOffsetY:I
+       426: aload_0
+       427: iconst_0
+       428: putfield      #82                 // Field boundingBoxOffsetZ:I
+       431: aload_0
+       432: getfield      #122                // Field chunkSection:Lcom/hypixel/hytale/server/core/universe/world/chunk/section/BlockSection;
+       435: iload_1
+       436: iload_2
+       437: iload_3
+       438: invokevirtual #272                // Method com/hypixel/hytale/server/core/universe/world/chunk/section/BlockSection.getRotationIndex:(III)I
+       441: istore        14
+       443: iload         7
+       445: aload_0
+       446: getfield      #43                 // Field blockId:I
+       449: if_icmpne     538
+       452: aload_0
+       453: getfield      #275                // Field rotation:I
+       456: iload         14
+       458: if_icmpne     538
+       461: aload_0
+       462: getfield      #47                 // Field fluidId:I
+       465: iload         10
+       467: if_icmpne     538
+       470: aload_0
+       471: getfield      #66                 // Field fluidLevel:B
+       474: iload         12
+       476: if_icmpne     538
+       479: aload_0
+       480: aload_0
+       481: getfield      #278                // Field blockCanTriggerPartial:Z
+       484: ifne          510
+       487: aload_0
+       488: getfield      #18                 // Field checkTriggerBlocks:Z
+       491: ifeq          514
+       494: aload         8
+       496: invokevirtual #281                // Method com/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType.isTrigger:()Z
+       499: ifne          510
+       502: aload         11
+       504: invokevirtual #284                // Method com/hypixel/hytale/server/core/asset/type/fluid/Fluid.isTrigger:()Z
+       507: ifeq          514
+       510: iconst_1
+       511: goto          515
+       514: iconst_0
+       515: putfield      #191                // Field blockCanTrigger:Z
+       518: aload_0
+       519: getfield      #221                // Field blockCanCollide:Z
+       522: ifne          532
+       525: aload_0
+       526: getfield      #191                // Field blockCanTrigger:Z
+       529: ifeq          536
+       532: iconst_1
+       533: goto          537
+       536: iconst_0
+       537: ireturn
+       538: aload_0
+       539: iload         7
+       541: putfield      #43                 // Field blockId:I
+       544: aload_0
+       545: aload         8
+       547: putfield      #194                // Field blockType:Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType;
+       550: aload_0
+       551: iload         14
+       553: putfield      #275                // Field rotation:I
+       556: aload_0
+       557: iload         10
+       559: putfield      #47                 // Field fluidId:I
+       562: aload_0
+       563: aload         11
+       565: putfield      #50                 // Field fluid:Lcom/hypixel/hytale/server/core/asset/type/fluid/Fluid;
+       568: aload_0
+       569: iload         12
+       571: putfield      #66                 // Field fluidLevel:B
+       574: aload_0
+       575: getfield      #22                 // Field checkDamageBlocks:Z
+       578: ifeq          605
+       581: aload_0
+       582: getfield      #194                // Field blockType:Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType;
+       585: invokevirtual #285                // Method com/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType.getDamageToEntities:()I
+       588: ifgt          601
+       591: aload_0
+       592: getfield      #50                 // Field fluid:Lcom/hypixel/hytale/server/core/asset/type/fluid/Fluid;
+       595: invokevirtual #288                // Method com/hypixel/hytale/server/core/asset/type/fluid/Fluid.getDamageToEntities:()I
+       598: ifle          605
+       601: iconst_1
+       602: goto          606
+       605: iconst_0
+       606: istore        15
+       608: aload_0
+       609: iload         15
+       611: ifne          639
+       614: aload_0
+       615: getfield      #18                 // Field checkTriggerBlocks:Z
+       618: ifeq          643
+       621: aload_0
+       622: getfield      #194                // Field blockType:Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType;
+       625: invokevirtual #281                // Method com/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType.isTrigger:()Z
+       628: ifne          639
+       631: aload         11
+       633: invokevirtual #284                // Method com/hypixel/hytale/server/core/asset/type/fluid/Fluid.isTrigger:()Z
+       636: ifeq          643
+       639: iconst_1
+       640: goto          644
+       643: iconst_0
+       644: putfield      #191                // Field blockCanTrigger:Z
+       647: aload_0
+       648: iload         15
+       650: ifeq          658
+       653: bipush        16
+       655: goto          659
+       658: iconst_0
+       659: putfield      #218                // Field blockMaterialMask:I
+       662: aload_0
+       663: getfield      #43                 // Field blockId:I
+       666: ifeq          679
+       669: aload_0
+       670: getfield      #194                // Field blockType:Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType;
+       673: getstatic     #289                // Field com/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType.EMPTY:Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType;
+       676: if_acmpne     770
+       679: aload_0
+       680: getfield      #47                 // Field fluidId:I
+       683: ifne          770
+       686: aload_0
+       687: getstatic     #292                // Field com/hypixel/hytale/protocol/BlockMaterial.Empty:Lcom/hypixel/hytale/protocol/BlockMaterial;
+       690: putfield      #198                // Field blockMaterial:Lcom/hypixel/hytale/protocol/BlockMaterial;
+       693: aload_0
+       694: getstatic     #202                // Field com/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes.UNIT_BOX:Lcom/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes;
+       697: getstatic     #208                // Field com/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation.None:Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation;
+       700: getstatic     #208                // Field com/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation.None:Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation;
+       703: getstatic     #208                // Field com/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation.None:Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation;
+       706: invokevirtual #214                // Method com/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes.get:(Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation;Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation;Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation;)Lcom/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes$RotatedVariantBoxes;
+       709: putfield      #25                 // Field boundingBoxes:Lcom/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes$RotatedVariantBoxes;
+       712: aload_0
+       713: dup
+       714: getfield      #218                // Field blockMaterialMask:I
+       717: iconst_1
+       718: ior
+       719: putfield      #218                // Field blockMaterialMask:I
+       722: aload_0
+       723: aload_0
+       724: getfield      #218                // Field blockMaterialMask:I
+       727: aload_0
+       728: getfield      #85                 // Field blockMaterialCollisionMask:I
+       731: iand
+       732: ifeq          746
+       735: aload_0
+       736: invokevirtual #297                // Method passesExtraBlockCollisionFilter:()Z
+       739: ifeq          746
+       742: iconst_1
+       743: goto          747
+       746: iconst_0
+       747: putfield      #221                // Field blockCanCollide:Z
+       750: aload_0
+       751: getfield      #221                // Field blockCanCollide:Z
+       754: ifne          764
+       757: aload_0
+       758: getfield      #191                // Field blockCanTrigger:Z
+       761: ifeq          768
+       764: iconst_1
+       765: goto          769
+       768: iconst_0
+       769: ireturn
+       770: aload_0
+       771: aload_0
+       772: getfield      #194                // Field blockType:Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType;
+       775: invokevirtual #300                // Method com/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType.getMaterial:()Lcom/hypixel/hytale/protocol/BlockMaterial;
+       778: putfield      #198                // Field blockMaterial:Lcom/hypixel/hytale/protocol/BlockMaterial;
+       781: aload_0
+       782: invokestatic  #304                // Method com/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+       785: aload         8
+       787: invokevirtual #305                // Method com/hypixel/hytale/server/core/asset/type/blocktype/config/BlockType.getHitboxTypeIndex:()I
+       790: invokevirtual #248                // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(I)Lcom/hypixel/hytale/assetstore/map/JsonAssetWithMap;
+       793: checkcast     #203                // class com/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes
+       796: aload_0
+       797: getfield      #275                // Field rotation:I
+       800: invokevirtual #308                // Method com/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes.get:(I)Lcom/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes$RotatedVariantBoxes;
+       803: putfield      #25                 // Field boundingBoxes:Lcom/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes$RotatedVariantBoxes;
+       806: aload_0
+       807: getfield      #198                // Field blockMaterial:Lcom/hypixel/hytale/protocol/BlockMaterial;
+       810: getstatic     #292                // Field com/hypixel/hytale/protocol/BlockMaterial.Empty:Lcom/hypixel/hytale/protocol/BlockMaterial;
+       813: if_acmpne     885
+       816: aload_0
+       817: dup
+       818: getfield      #218                // Field blockMaterialMask:I
+       821: aload_0
+       822: getfield      #47                 // Field fluidId:I
+       825: ifeq          832
+       828: iconst_2
+       829: goto          833
+       832: iconst_1
+       833: ior
+       834: putfield      #218                // Field blockMaterialMask:I
+       837: aload_0
+       838: aload_0
+       839: getfield      #218                // Field blockMaterialMask:I
+       842: aload_0
+       843: getfield      #85                 // Field blockMaterialCollisionMask:I
+       846: iand
+       847: ifeq          861
+       850: aload_0
+       851: invokevirtual #297                // Method passesExtraBlockCollisionFilter:()Z
+       854: ifeq          861
+       857: iconst_1
+       858: goto          862
+       861: iconst_0
+       862: putfield      #221                // Field blockCanCollide:Z
+       865: aload_0
+       866: getfield      #221                // Field blockCanCollide:Z
+       869: ifne          879
+       872: aload_0
+       873: getfield      #191                // Field blockCanTrigger:Z
+       876: ifeq          883
+       879: iconst_1
+       880: goto          884
+       883: iconst_0
+       884: ireturn
+       885: aload_0
+       886: getfield      #25                 // Field boundingBoxes:Lcom/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes$RotatedVariantBoxes;
+       889: ifnonnull     911
+       892: aload_0
+       893: getstatic     #202                // Field com/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes.UNIT_BOX:Lcom/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes;
+       896: getstatic     #208                // Field com/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation.None:Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation;
+       899: getstatic     #208                // Field com/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation.None:Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation;
+       902: getstatic     #208                // Field com/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation.None:Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation;
+       905: invokevirtual #214                // Method com/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes.get:(Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation;Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation;Lcom/hypixel/hytale/server/core/asset/type/blocktype/config/Rotation;)Lcom/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes$RotatedVariantBoxes;
+       908: putfield      #25                 // Field boundingBoxes:Lcom/hypixel/hytale/server/core/asset/type/blockhitbox/BlockBoundingBoxes$RotatedVariantBoxes;
+       911: aload_0
+       912: dup
+       913: getfield      #218                // Field blockMaterialMask:I
+       916: aload_0
+       917: getfield      #47                 // Field fluidId:I
+       920: ifne          927
+       923: iconst_4
+       924: goto          929
+       927: bipush        14
+       929: ior
+       930: putfield      #218                // Field blockMaterialMask:I
+       933: aload_0
+       934: aload_0
+       935: getfield      #92                 // Field canCollide:Ljava/util/function/Predicate;
+       938: aload_0
+       939: invokeinterface #311,  2          // InterfaceMethod java/util/function/Predicate.test:(Ljava/lang/Object;)Z
+       944: ifeq          958
+       947: aload_0
+       948: invokevirtual #297                // Method passesExtraBlockCollisionFilter:()Z
+       951: ifeq          958
+       954: iconst_1
+       955: goto          959
+       958: iconst_0
+       959: putfield      #221                // Field blockCanCollide:Z
+       962: aload_0
+       963: getfield      #221                // Field blockCanCollide:Z
+       966: ifne          976
+       969: aload_0
+       970: getfield      #191                // Field blockCanTrigger:Z
+       973: ifeq          980
+       976: iconst_1
+       977: goto          981
+       980: iconst_0
+       981: ireturn
+
+  private boolean passesExtraBlockCollisionFilter();
+    Code:
+         0: aload_0
+         1: getfield      #107                // Field extraBlockCollisionFilter:Ljava/util/function/Predicate;
+         4: ifnonnull     9
+         7: iconst_1
+         8: ireturn
+         9: aload_0
+        10: getfield      #107                // Field extraBlockCollisionFilter:Ljava/util/function/Predicate;
+        13: aload_0
+        14: invokeinterface #311,  2          // InterfaceMethod java/util/function/Predicate.test:(Ljava/lang/Object;)Z
+        19: ifeq          24
+        22: iconst_1
+        23: ireturn
+        24: aload_0
+        25: iconst_1
+        26: putfield      #140                // Field blockFilteredOut:Z
+        29: iconst_0
+        30: ireturn
+
+  public void clear();
+    Code:
+         0: aload_0
+         1: aconst_null
+         2: putfield      #118                // Field chunkSectionRef:Lcom/hypixel/hytale/component/Ref;
+         5: aload_0
+         6: aconst_null
+         7: putfield      #122                // Field chunkSection:Lcom/hypixel/hytale/server/core/universe/world/chunk/section/BlockSection;
+        10: aload_0
+        11: aconst_null
+        12: invokevirtual #316                // Method setWorld:(Lcom/hypixel/hytale/server/core/universe/world/World;)V
+        15: aload_0
+        16: iconst_0
+        17: putfield      #320                // Field dumpInvalidBlocks:Z
+        20: aload_0
+        21: iconst_0
+        22: putfield      #323                // Field dumpNonOverlappingBlocks:Z
+        25: aload_0
+        26: aconst_null
+        27: putfield      #326                // Field extraData1:Ljava/lang/Object;
+        30: aload_0
+        31: aconst_null
+        32: putfield      #330                // Field extraData2:Ljava/lang/Object;
+        35: aload_0
+        36: aconst_null
+        37: putfield      #107                // Field extraBlockCollisionFilter:Ljava/util/function/Predicate;
+        40: aload_0
+        41: iconst_0
+        42: putfield      #140                // Field blockFilteredOut:Z
+        45: return
+
+  private static boolean lambda$setDefaultBlockCollisionPredicate$0(com.hypixel.hytale.server.core.modules.collision.CollisionConfig);
+    Code:
+         0: aload_0
+         1: getfield      #218                // Field blockMaterialMask:I
+         4: aload_0
+         5: getfield      #85                 // Field blockMaterialCollisionMask:I
+         8: iand
+         9: ifeq          16
+        12: iconst_1
+        13: goto          17
+        16: iconst_0
+        17: ireturn
+}

@@ -1,0 +1,347 @@
+Compiled from "EntityStatsSystems.java"
+public class com.hypixel.hytale.server.core.modules.entitystats.EntityStatsSystems$Regenerate<EntityType extends com.hypixel.hytale.server.core.entity.LivingEntity> extends com.hypixel.hytale.component.system.tick.EntityTickingSystem<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> implements com.hypixel.hytale.server.core.modules.entitystats.EntityStatsSystems$StatModifyingSystem {
+  private final com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap> componentType;
+
+  private final com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, EntityType> entityTypeComponent;
+
+  private final com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> query;
+
+  static final boolean $assertionsDisabled;
+
+  public com.hypixel.hytale.server.core.modules.entitystats.EntityStatsSystems$Regenerate(com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap>, com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, EntityType>);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/component/system/tick/EntityTickingSystem."<init>":()V
+         4: aload_0
+         5: aload_1
+         6: putfield      #7                  // Field componentType:Lcom/hypixel/hytale/component/ComponentType;
+         9: aload_0
+        10: aload_2
+        11: putfield      #13                 // Field entityTypeComponent:Lcom/hypixel/hytale/component/ComponentType;
+        14: aload_0
+        15: iconst_2
+        16: anewarray     #16                 // class com/hypixel/hytale/component/query/Query
+        19: dup
+        20: iconst_0
+        21: aload_1
+        22: aastore
+        23: dup
+        24: iconst_1
+        25: aload_2
+        26: aastore
+        27: invokestatic  #18                 // InterfaceMethod com/hypixel/hytale/component/query/Query.and:([Lcom/hypixel/hytale/component/query/Query;)Lcom/hypixel/hytale/component/query/AndQuery;
+        30: putfield      #22                 // Field query:Lcom/hypixel/hytale/component/query/Query;
+        33: return
+
+  public com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getQuery();
+    Code:
+         0: aload_0
+         1: getfield      #22                 // Field query:Lcom/hypixel/hytale/component/query/Query;
+         4: areturn
+
+  public boolean isParallel(int, int);
+    Code:
+         0: iconst_0
+         1: ireturn
+
+  public void tick(float, int, com.hypixel.hytale.component.ArchetypeChunk<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_3
+         1: iload_2
+         2: invokevirtual #26                 // Method com/hypixel/hytale/component/ArchetypeChunk.getReferenceTo:(I)Lcom/hypixel/hytale/component/Ref;
+         5: astore        6
+         7: aload_3
+         8: iload_2
+         9: aload_0
+        10: getfield      #7                  // Field componentType:Lcom/hypixel/hytale/component/ComponentType;
+        13: invokevirtual #32                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        16: checkcast     #36                 // class com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap
+        19: astore        7
+        21: getstatic     #38                 // Field $assertionsDisabled:Z
+        24: ifne          40
+        27: aload         7
+        29: ifnonnull     40
+        32: new           #42                 // class java/lang/AssertionError
+        35: dup
+        36: invokespecial #44                 // Method java/lang/AssertionError."<init>":()V
+        39: athrow
+        40: aload         4
+        42: invokestatic  #45                 // Method com/hypixel/hytale/server/core/modules/time/TimeResource.getResourceType:()Lcom/hypixel/hytale/component/ResourceType;
+        45: invokevirtual #51                 // Method com/hypixel/hytale/component/Store.getResource:(Lcom/hypixel/hytale/component/ResourceType;)Lcom/hypixel/hytale/component/Resource;
+        48: checkcast     #46                 // class com/hypixel/hytale/server/core/modules/time/TimeResource
+        51: invokevirtual #57                 // Method com/hypixel/hytale/server/core/modules/time/TimeResource.getNow:()Ljava/time/Instant;
+        54: astore        8
+        56: aload         7
+        58: invokevirtual #61                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.size:()I
+        61: istore        9
+        63: aload         7
+        65: getfield      #65                 // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.tempRegenerationValues:[F
+        68: arraylength
+        69: iload         9
+        71: if_icmpge     83
+        74: aload         7
+        76: iload         9
+        78: newarray       float
+        80: putfield      #65                 // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.tempRegenerationValues:[F
+        83: iconst_1
+        84: istore        10
+        86: iload         10
+        88: iload         9
+        90: if_icmpge     249
+        93: aload         7
+        95: iload         10
+        97: invokevirtual #71                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+       100: astore        11
+       102: aload         11
+       104: ifnonnull     110
+       107: goto          243
+       110: aload         7
+       112: getfield      #65                 // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.tempRegenerationValues:[F
+       115: iload         10
+       117: fconst_0
+       118: fastore
+       119: aload         11
+       121: invokevirtual #75                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getRegeneratingValues:()[Lcom/hypixel/hytale/server/core/modules/entitystats/RegeneratingValue;
+       124: astore        12
+       126: aload         12
+       128: ifnull        243
+       131: aload         12
+       133: astore        13
+       135: aload         13
+       137: arraylength
+       138: istore        14
+       140: iconst_0
+       141: istore        15
+       143: iload         15
+       145: iload         14
+       147: if_icmpge     243
+       150: aload         13
+       152: iload         15
+       154: aaload
+       155: astore        16
+       157: aload         16
+       159: invokevirtual #81                 // Method com/hypixel/hytale/server/core/modules/entitystats/RegeneratingValue.getRegenerating:()Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating;
+       162: invokevirtual #87                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating.getAmount:()F
+       165: fconst_0
+       166: fcmpl
+       167: ifle          187
+       170: aload         11
+       172: invokevirtual #93                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+       175: aload         11
+       177: invokevirtual #95                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMax:()F
+       180: fcmpl
+       181: iflt          204
+       184: goto          237
+       187: aload         11
+       189: invokevirtual #93                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+       192: aload         11
+       194: invokevirtual #98                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMin:()F
+       197: fcmpg
+       198: ifgt          204
+       201: goto          237
+       204: aload         7
+       206: getfield      #65                 // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.tempRegenerationValues:[F
+       209: iload         10
+       211: dup2
+       212: faload
+       213: aload         16
+       215: aload         5
+       217: aload         6
+       219: aload         8
+       221: fload_1
+       222: aload         11
+       224: aload         7
+       226: getfield      #65                 // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.tempRegenerationValues:[F
+       229: iload         10
+       231: faload
+       232: invokevirtual #101                // Method com/hypixel/hytale/server/core/modules/entitystats/RegeneratingValue.regenerate:(Lcom/hypixel/hytale/component/ComponentAccessor;Lcom/hypixel/hytale/component/Ref;Ljava/time/Instant;FLcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;F)F
+       235: fadd
+       236: fastore
+       237: iinc          15, 1
+       240: goto          143
+       243: iinc          10, 1
+       246: goto          86
+       249: aload         5
+       251: aload         6
+       253: invokestatic  #105                // Method com/hypixel/hytale/server/core/inventory/InventoryComponent$Armor.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       256: invokevirtual #111                // Method com/hypixel/hytale/component/CommandBuffer.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+       259: checkcast     #106                // class com/hypixel/hytale/server/core/inventory/InventoryComponent$Armor
+       262: astore        10
+       264: aload         10
+       266: ifnonnull     270
+       269: return
+       270: aload         10
+       272: invokevirtual #116                // Method com/hypixel/hytale/server/core/inventory/InventoryComponent$Armor.getInventory:()Lcom/hypixel/hytale/server/core/inventory/container/ItemContainer;
+       275: astore        11
+       277: aload         11
+       279: invokevirtual #120                // Method com/hypixel/hytale/server/core/inventory/container/ItemContainer.getCapacity:()S
+       282: istore        12
+       284: iconst_0
+       285: istore        13
+       287: iload         13
+       289: iload         12
+       291: if_icmpge     557
+       294: aload         11
+       296: iload         13
+       298: invokevirtual #126                // Method com/hypixel/hytale/server/core/inventory/container/ItemContainer.getItemStack:(S)Lcom/hypixel/hytale/server/core/inventory/ItemStack;
+       301: astore        14
+       303: aload         14
+       305: invokestatic  #130                // Method com/hypixel/hytale/server/core/inventory/ItemStack.isEmpty:(Lcom/hypixel/hytale/server/core/inventory/ItemStack;)Z
+       308: ifeq          314
+       311: goto          547
+       314: aload         14
+       316: invokevirtual #136                // Method com/hypixel/hytale/server/core/inventory/ItemStack.getItem:()Lcom/hypixel/hytale/server/core/asset/type/item/config/Item;
+       319: astore        15
+       321: aload         15
+       323: invokevirtual #140                // Method com/hypixel/hytale/server/core/asset/type/item/config/Item.getArmor:()Lcom/hypixel/hytale/server/core/asset/type/item/config/ItemArmor;
+       326: ifnull        547
+       329: aload         15
+       331: invokevirtual #140                // Method com/hypixel/hytale/server/core/asset/type/item/config/Item.getArmor:()Lcom/hypixel/hytale/server/core/asset/type/item/config/ItemArmor;
+       334: invokevirtual #146                // Method com/hypixel/hytale/server/core/asset/type/item/config/ItemArmor.getRegeneratingValues:()Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+       337: ifnonnull     343
+       340: goto          547
+       343: aload         15
+       345: invokevirtual #140                // Method com/hypixel/hytale/server/core/asset/type/item/config/Item.getArmor:()Lcom/hypixel/hytale/server/core/asset/type/item/config/ItemArmor;
+       348: invokevirtual #146                // Method com/hypixel/hytale/server/core/asset/type/item/config/ItemArmor.getRegeneratingValues:()Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+       351: invokeinterface #151,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.isEmpty:()Z
+       356: ifeq          362
+       359: goto          547
+       362: iconst_1
+       363: istore        16
+       365: iload         16
+       367: iload         9
+       369: if_icmpge     547
+       372: aload         7
+       374: iload         16
+       376: invokevirtual #71                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+       379: astore        17
+       381: aload         17
+       383: ifnonnull     389
+       386: goto          541
+       389: aload         15
+       391: invokevirtual #140                // Method com/hypixel/hytale/server/core/asset/type/item/config/Item.getArmor:()Lcom/hypixel/hytale/server/core/asset/type/item/config/ItemArmor;
+       394: invokevirtual #146                // Method com/hypixel/hytale/server/core/asset/type/item/config/ItemArmor.getRegeneratingValues:()Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+       397: iload         16
+       399: invokeinterface #156,  2          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.get:(I)Ljava/lang/Object;
+       404: checkcast     #159                // class java/util/List
+       407: astore        18
+       409: aload         18
+       411: ifnull        541
+       414: aload         18
+       416: invokeinterface #161,  1          // InterfaceMethod java/util/List.isEmpty:()Z
+       421: ifeq          427
+       424: goto          541
+       427: aload         18
+       429: invokeinterface #162,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       434: astore        19
+       436: aload         19
+       438: invokeinterface #166,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+       443: ifeq          541
+       446: aload         19
+       448: invokeinterface #171,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       453: checkcast     #82                 // class com/hypixel/hytale/server/core/modules/entitystats/RegeneratingValue
+       456: astore        20
+       458: aload         20
+       460: invokevirtual #81                 // Method com/hypixel/hytale/server/core/modules/entitystats/RegeneratingValue.getRegenerating:()Lcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating;
+       463: invokevirtual #87                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType$Regenerating.getAmount:()F
+       466: fconst_0
+       467: fcmpl
+       468: ifle          488
+       471: aload         17
+       473: invokevirtual #93                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+       476: aload         17
+       478: invokevirtual #95                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMax:()F
+       481: fcmpl
+       482: iflt          505
+       485: goto          436
+       488: aload         17
+       490: invokevirtual #93                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+       493: aload         17
+       495: invokevirtual #98                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMin:()F
+       498: fcmpg
+       499: ifgt          505
+       502: goto          436
+       505: aload         7
+       507: getfield      #65                 // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.tempRegenerationValues:[F
+       510: iload         16
+       512: dup2
+       513: faload
+       514: aload         20
+       516: aload         5
+       518: aload         6
+       520: aload         8
+       522: fload_1
+       523: aload         17
+       525: aload         7
+       527: getfield      #65                 // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.tempRegenerationValues:[F
+       530: iload         16
+       532: faload
+       533: invokevirtual #101                // Method com/hypixel/hytale/server/core/modules/entitystats/RegeneratingValue.regenerate:(Lcom/hypixel/hytale/component/ComponentAccessor;Lcom/hypixel/hytale/component/Ref;Ljava/time/Instant;FLcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;F)F
+       536: fadd
+       537: fastore
+       538: goto          436
+       541: iinc          16, 1
+       544: goto          365
+       547: iload         13
+       549: iconst_1
+       550: iadd
+       551: i2s
+       552: istore        13
+       554: goto          287
+       557: iconst_1
+       558: istore        13
+       560: iload         13
+       562: iload         9
+       564: if_icmpge     655
+       567: aload         7
+       569: iload         13
+       571: invokevirtual #71                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+       574: astore        14
+       576: aload         14
+       578: ifnonnull     584
+       581: goto          649
+       584: aload         7
+       586: getfield      #65                 // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.tempRegenerationValues:[F
+       589: iload         13
+       591: faload
+       592: fstore        15
+       594: aload         5
+       596: aload         6
+       598: invokevirtual #175                // Method com/hypixel/hytale/component/CommandBuffer.getArchetype:(Lcom/hypixel/hytale/component/Ref;)Lcom/hypixel/hytale/component/Archetype;
+       601: invokestatic  #179                // Method com/hypixel/hytale/server/core/modules/entity/component/Invulnerable.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+       604: invokevirtual #182                // Method com/hypixel/hytale/component/Archetype.contains:(Lcom/hypixel/hytale/component/ComponentType;)Z
+       607: istore        16
+       609: fload         15
+       611: fconst_0
+       612: fcmpg
+       613: ifge          632
+       616: aload         14
+       618: invokevirtual #188                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getIgnoreInvulnerability:()Z
+       621: ifne          632
+       624: iload         16
+       626: ifeq          632
+       629: goto          649
+       632: fload         15
+       634: fconst_0
+       635: fcmpl
+       636: ifeq          649
+       639: aload         7
+       641: iload         13
+       643: fload         15
+       645: invokevirtual #191                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.addStatValue:(IF)F
+       648: pop
+       649: iinc          13, 1
+       652: goto          560
+       655: return
+
+  static {};
+    Code:
+         0: ldc           #195                // class com/hypixel/hytale/server/core/modules/entitystats/EntityStatsSystems
+         2: invokevirtual #197                // Method java/lang/Class.desiredAssertionStatus:()Z
+         5: ifne          12
+         8: iconst_1
+         9: goto          13
+        12: iconst_0
+        13: putstatic     #38                 // Field $assertionsDisabled:Z
+        16: return
+}

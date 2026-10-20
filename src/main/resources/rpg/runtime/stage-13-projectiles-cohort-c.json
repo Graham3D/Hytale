@@ -1,0 +1,367 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {
+      "skillId": "blunderbuss_shot",
+      "family": "PROJECTILE",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "GUN"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "STAMINA",
+      "resourceCost": 6,
+      "cooldownSeconds": 3,
+      "windupSeconds": 0,
+      "basePowerSource": "WEAPON",
+      "innateBasePower": 0,
+      "scaling": "LIGHT",
+      "projectile": {
+        "configId": "Projectile_Config_RPG_Blunderbuss_Shot",
+        "speed": 22,
+        "maxDistance": 8,
+        "radius": 0.04,
+        "gravity": 0,
+        "targetCap": 1,
+        "coefficient": 0.22,
+        "statusId": "",
+        "statusSeconds": 0,
+        "periodicCoefficient": 0,
+        "periodicTicks": 0,
+        "periodicIntervalSeconds": 0,
+        "ammoItemId": "",
+        "ammoQuantity": 0,
+        "fullyCharged": false,
+        "knockbackDistance": 0,
+        "configIdsByWeaponKind": {},
+        "speedsByWeaponKind": {},
+        "independentLifetimeSeconds": 0,
+        "details": {
+          "element": "PHYSICAL",
+          "chillStacks": 0,
+          "bossRootSlow": 0,
+          "bossSlowOptInRoles": [],
+          "pattern": {
+            "count": 8,
+            "horizontalDegrees": 55,
+            "verticalDegrees": 20,
+            "intervalSeconds": 0,
+            "homingTurnDegrees": 0,
+            "acquisitionRadius": 0,
+            "ballisticAim": false
+          },
+          "explosion": {
+            "radius": 0,
+            "coefficient": 0,
+            "burnRadius": 0,
+            "groundFuseSeconds": 0,
+            "detonateAtAirborneLimit": false
+          },
+          "nativeCapabilityGate": ""
+        }
+      }
+    },
+    {
+      "skillId": "snipe",
+      "family": "PROJECTILE",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "BOW"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "STAMINA",
+      "resourceCost": 12,
+      "cooldownSeconds": 10,
+      "windupSeconds": 0,
+      "basePowerSource": "WEAPON",
+      "innateBasePower": 0,
+      "scaling": "LIGHT",
+      "projectile": {
+        "configId": "Projectile_Config_RPG_Snipe",
+        "speed": 45,
+        "maxDistance": 48,
+        "radius": 0.1,
+        "gravity": 0,
+        "targetCap": 1,
+        "coefficient": 2,
+        "statusId": "",
+        "statusSeconds": 0,
+        "periodicCoefficient": 0,
+        "periodicTicks": 0,
+        "periodicIntervalSeconds": 0,
+        "ammoItemId": "Weapon_Arrow_Crude",
+        "ammoQuantity": 1,
+        "fullyCharged": true,
+        "knockbackDistance": 0,
+        "configIdsByWeaponKind": {},
+        "speedsByWeaponKind": {},
+        "independentLifetimeSeconds": 0,
+        "details": {
+          "element": "PHYSICAL",
+          "chillStacks": 0,
+          "bossRootSlow": 0,
+          "bossSlowOptInRoles": [],
+          "pattern": {
+            "count": 1,
+            "horizontalDegrees": 0,
+            "verticalDegrees": 0,
+            "intervalSeconds": 0,
+            "homingTurnDegrees": 0,
+            "acquisitionRadius": 0,
+            "ballisticAim": false
+          },
+          "explosion": {
+            "radius": 0,
+            "coefficient": 0,
+            "burnRadius": 0,
+            "groundFuseSeconds": 0,
+            "detonateAtAirborneLimit": false
+          },
+          "nativeCapabilityGate": "NATIVE_BOW_MAX_RANGE_UNVERIFIED"
+        }
+      }
+    },
+    {
+      "skillId": "explosive_flask",
+      "family": "PROJECTILE",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "BOMB"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "STAMINA",
+      "resourceCost": 8,
+      "cooldownSeconds": 8,
+      "windupSeconds": 0,
+      "basePowerSource": "WEAPON",
+      "innateBasePower": 0,
+      "scaling": "LIGHT",
+      "projectile": {
+        "configId": "Projectile_Config_RPG_Explosive_Flask",
+        "speed": 14,
+        "maxDistance": 18,
+        "radius": 0.2,
+        "gravity": 9.81,
+        "targetCap": 1,
+        "coefficient": 0,
+        "statusId": "",
+        "statusSeconds": 0,
+        "periodicCoefficient": 0,
+        "periodicTicks": 0,
+        "periodicIntervalSeconds": 0,
+        "ammoItemId": "",
+        "ammoQuantity": 0,
+        "fullyCharged": false,
+        "knockbackDistance": 0,
+        "configIdsByWeaponKind": {},
+        "speedsByWeaponKind": {},
+        "independentLifetimeSeconds": 3,
+        "details": {
+          "element": "PHYSICAL",
+          "chillStacks": 0,
+          "bossRootSlow": 0,
+          "bossSlowOptInRoles": [],
+          "pattern": {
+            "count": 1,
+            "horizontalDegrees": 0,
+            "verticalDegrees": 0,
+            "intervalSeconds": 0,
+            "homingTurnDegrees": 0,
+            "acquisitionRadius": 0,
+            "ballisticAim": true
+          },
+          "explosion": {
+            "radius": 3,
+            "coefficient": 1.3,
+            "burnRadius": 0,
+            "groundFuseSeconds": 0,
+            "detonateAtAirborneLimit": false
+          },
+          "nativeCapabilityGate": ""
+        }
+      }
+    },
+    {
+      "skillId": "bomb_toss",
+      "family": "PROJECTILE",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "BOMB"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "STAMINA",
+      "resourceCost": 8,
+      "cooldownSeconds": 9,
+      "windupSeconds": 0,
+      "basePowerSource": "WEAPON",
+      "innateBasePower": 0,
+      "scaling": "LIGHT",
+      "projectile": {
+        "configId": "Projectile_Config_RPG_Bomb_Toss",
+        "speed": 15,
+        "maxDistance": 20,
+        "radius": 0.2,
+        "gravity": 9.81,
+        "targetCap": 1,
+        "coefficient": 0,
+        "statusId": "",
+        "statusSeconds": 0,
+        "periodicCoefficient": 0,
+        "periodicTicks": 0,
+        "periodicIntervalSeconds": 0,
+        "ammoItemId": "",
+        "ammoQuantity": 0,
+        "fullyCharged": false,
+        "knockbackDistance": 0,
+        "configIdsByWeaponKind": {},
+        "speedsByWeaponKind": {},
+        "independentLifetimeSeconds": 3,
+        "details": {
+          "element": "PHYSICAL",
+          "chillStacks": 0,
+          "bossRootSlow": 0,
+          "bossSlowOptInRoles": [],
+          "pattern": {
+            "count": 1,
+            "horizontalDegrees": 0,
+            "verticalDegrees": 0,
+            "intervalSeconds": 0,
+            "homingTurnDegrees": 0,
+            "acquisitionRadius": 0,
+            "ballisticAim": true
+          },
+          "explosion": {
+            "radius": 3.5,
+            "coefficient": 1.5,
+            "burnRadius": 0,
+            "groundFuseSeconds": 1.5,
+            "detonateAtAirborneLimit": true
+          },
+          "nativeCapabilityGate": ""
+        }
+      }
+    },
+    {
+      "skillId": "arcane_missiles",
+      "family": "PROJECTILE",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "WAND",
+        "SPELLBOOK"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "resourceCost": 16,
+      "cooldownSeconds": 7,
+      "windupSeconds": 0,
+      "basePowerSource": "MAGIC_WEAPON",
+      "innateBasePower": 0,
+      "scaling": "MAGIC",
+      "projectile": {
+        "configId": "Projectile_Config_RPG_Arcane_Missiles",
+        "speed": 18,
+        "maxDistance": 26,
+        "radius": 0.22,
+        "gravity": 0,
+        "targetCap": 1,
+        "coefficient": 0.42,
+        "statusId": "",
+        "statusSeconds": 0,
+        "periodicCoefficient": 0,
+        "periodicTicks": 0,
+        "periodicIntervalSeconds": 0,
+        "ammoItemId": "",
+        "ammoQuantity": 0,
+        "fullyCharged": false,
+        "knockbackDistance": 0,
+        "configIdsByWeaponKind": {},
+        "speedsByWeaponKind": {},
+        "independentLifetimeSeconds": 2,
+        "details": {
+          "element": "ARCANE",
+          "chillStacks": 0,
+          "bossRootSlow": 0,
+          "bossSlowOptInRoles": [],
+          "pattern": {
+            "count": 5,
+            "horizontalDegrees": 0,
+            "verticalDegrees": 0,
+            "intervalSeconds": 0.08,
+            "homingTurnDegrees": 180,
+            "acquisitionRadius": 6,
+            "ballisticAim": false
+          },
+          "explosion": {
+            "radius": 0,
+            "coefficient": 0,
+            "burnRadius": 0,
+            "groundFuseSeconds": 0,
+            "detonateAtAirborneLimit": false
+          },
+          "nativeCapabilityGate": ""
+        }
+      }
+    },
+    {
+      "skillId": "fireball",
+      "family": "PROJECTILE",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "STAFF",
+        "WAND"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "resourceCost": 18,
+      "cooldownSeconds": 7,
+      "windupSeconds": 0,
+      "basePowerSource": "MAGIC_WEAPON",
+      "innateBasePower": 0,
+      "scaling": "MAGIC",
+      "projectile": {
+        "configId": "Projectile_Config_RPG_Fireball",
+        "speed": 18,
+        "maxDistance": 30,
+        "radius": 0.5,
+        "gravity": 0,
+        "targetCap": 1,
+        "coefficient": 1.55,
+        "statusId": "BURN",
+        "statusSeconds": 5,
+        "periodicCoefficient": 0.1,
+        "periodicTicks": 5,
+        "periodicIntervalSeconds": 1,
+        "ammoItemId": "",
+        "ammoQuantity": 0,
+        "fullyCharged": false,
+        "knockbackDistance": 0,
+        "configIdsByWeaponKind": {},
+        "speedsByWeaponKind": {},
+        "independentLifetimeSeconds": 0,
+        "details": {
+          "element": "FIRE",
+          "chillStacks": 0,
+          "bossRootSlow": 0,
+          "bossSlowOptInRoles": [],
+          "pattern": {
+            "count": 1,
+            "horizontalDegrees": 0,
+            "verticalDegrees": 0,
+            "intervalSeconds": 0,
+            "homingTurnDegrees": 0,
+            "acquisitionRadius": 0,
+            "ballisticAim": false
+          },
+          "explosion": {
+            "radius": 4,
+            "coefficient": 0.9,
+            "burnRadius": 3,
+            "groundFuseSeconds": 0,
+            "detonateAtAirborneLimit": false
+          },
+          "nativeCapabilityGate": ""
+        }
+      }
+    }
+  ]
+}

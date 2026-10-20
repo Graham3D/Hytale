@@ -1,0 +1,7 @@
+{
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "jarSha256": "B520F218707079CA855ECF6CDD7341CF333441C237DAD68179B979837A41F129",
+  "boundary": "DamageSystems.executeDamage returns -> observed native Health loss -> shared root budget -> bounded native Mana/Stamina credit",
+  "evidence": "Bytecode and API structure only; no connected packet, damage execution or recovery proof",
+  "connected": "UNVERIFIED"
+}

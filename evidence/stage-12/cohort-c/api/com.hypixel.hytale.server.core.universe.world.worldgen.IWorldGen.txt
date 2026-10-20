@@ -1,0 +1,25 @@
+Compiled from "IWorldGen.java"
+public interface com.hypixel.hytale.server.core.universe.world.worldgen.IWorldGen {
+  public abstract com.hypixel.hytale.server.core.universe.world.worldgen.WorldGenTimingsCollector getTimings();
+
+  public abstract java.util.concurrent.CompletableFuture<com.hypixel.hytale.server.core.universe.world.worldgen.GeneratedChunk> generate(int, long, int, int, java.util.function.LongPredicate, it.unimi.dsi.fastutil.longs.Long2FloatFunction);
+
+  public abstract com.hypixel.hytale.math.vector.Transform[] getSpawnPoints(int);
+
+  public default com.hypixel.hytale.server.core.universe.world.spawn.ISpawnProvider getDefaultSpawnProvider(int);
+    Code:
+         0: new           #1                  // class com/hypixel/hytale/server/core/universe/world/spawn/FitToHeightMapSpawnProvider
+         3: dup
+         4: new           #3                  // class com/hypixel/hytale/server/core/universe/world/spawn/IndividualSpawnProvider
+         7: dup
+         8: aload_0
+         9: iload_1
+        10: invokeinterface #5,  2            // InterfaceMethod getSpawnPoints:(I)[Lcom/hypixel/hytale/math/vector/Transform;
+        15: invokespecial #11                 // Method com/hypixel/hytale/server/core/universe/world/spawn/IndividualSpawnProvider."<init>":([Lcom/hypixel/hytale/math/vector/Transform;)V
+        18: invokespecial #15                 // Method com/hypixel/hytale/server/core/universe/world/spawn/FitToHeightMapSpawnProvider."<init>":(Lcom/hypixel/hytale/server/core/universe/world/spawn/ISpawnProvider;)V
+        21: areturn
+
+  public default void shutdown();
+    Code:
+         0: return
+}

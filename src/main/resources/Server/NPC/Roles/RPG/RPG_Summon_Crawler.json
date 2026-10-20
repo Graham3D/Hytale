@@ -1,0 +1,15 @@
+{
+  "Type": "Generic",
+  "Appearance": "Crawler_Void",
+  "MaxHealth": 100,
+  "IsMemory": false,
+  "DefaultPlayerAttitude": "Friendly",
+  "DefaultNPCAttitude": "Ignore",
+  "ApplySeparation": true,
+  "PickupDropOnDeath": false,
+  "MotionControllerList": [{"Type": "Walk", "MaxWalkSpeed": 6.5, "Gravity": 10,
+    "MaxFallSpeed": 15, "Acceleration": 10, "MaxClimbHeight": 1, "MaxDropHeight": 2}],
+  "Instructions": [{"Sensor": {"Type": "Target"},
+    "BodyMotion": {"Type": "Seek", "SlowDownDistance": 3, "StopDistance": 1.5, "RelativeSpeed": 1}}],
+  "NameTranslationKey": "server.npcRoles.RPG_Summon_Crawler.name"
+}

@@ -1,0 +1,10 @@
+{
+  "durationSeconds": 4.0,
+  "magnitudeFactor": 0.70,
+  "radius": 2.5,
+  "originHeight": 1.3,
+  "degreesPerSecond": 120.0,
+  "sampleSeconds": 0.05,
+  "targetIntervalSeconds": 0.75,
+  "maxOrbs": 3
+}

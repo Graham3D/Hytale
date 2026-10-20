@@ -1,0 +1,14 @@
+package com.inigmasgames.canvasui.api;
+
+public enum ConnectionCode {
+    ALLOW,
+    REJECT_SELF_CONNECTION,
+    REJECT_TYPE,
+    REJECT_DIRECTION,
+    REJECT_MAX_CONNECTIONS,
+    REJECT_DUPLICATE,
+    REJECT_CYCLE,
+    REJECT_MISSING_NODE,
+    REJECT_MISSING_PORT,
+    REJECT_CUSTOM
+}

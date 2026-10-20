@@ -1,0 +1,2039 @@
+Compiled from "EntityStatMap.java"
+public class com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap implements com.hypixel.hytale.component.Component<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> {
+  public static final int VERSION;
+
+  public static final com.hypixel.hytale.codec.builder.BuilderCodec<com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap> CODEC;
+
+  private final com.hypixel.hytale.server.core.entity.StatModifiersManager statModifiersManager;
+
+  private java.util.Map<java.lang.String, com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue> unknown;
+
+  private com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue[] values;
+
+  float[] tempRegenerationValues;
+
+  public final it.unimi.dsi.fastutil.ints.Int2ObjectMap<java.util.List<com.hypixel.hytale.protocol.EntityStatUpdate>> selfUpdates;
+
+  public final it.unimi.dsi.fastutil.ints.Int2ObjectMap<it.unimi.dsi.fastutil.floats.FloatList> selfStatValues;
+
+  public final it.unimi.dsi.fastutil.ints.Int2ObjectMap<java.util.List<com.hypixel.hytale.protocol.EntityStatUpdate>> otherUpdates;
+
+  protected boolean isSelfNetworkOutdated;
+
+  protected boolean isNetworkOutdated;
+
+  private transient it.unimi.dsi.fastutil.ints.Int2ObjectMap<com.hypixel.hytale.server.core.modules.entitystats.StatChangeDirection> suppressedStatChanges;
+
+  public static com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap> getComponentType();
+    Code:
+         0: invokestatic  #1                  // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatsModule.get:()Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatsModule;
+         3: invokevirtual #7                  // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatsModule.getEntityStatMapComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         6: areturn
+
+  public com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap();
+    Code:
+         0: aload_0
+         1: invokespecial #11                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #17                 // class com/hypixel/hytale/server/core/entity/StatModifiersManager
+         8: dup
+         9: invokespecial #19                 // Method com/hypixel/hytale/server/core/entity/StatModifiersManager."<init>":()V
+        12: putfield      #20                 // Field statModifiersManager:Lcom/hypixel/hytale/server/core/entity/StatModifiersManager;
+        15: aload_0
+        16: getstatic     #26                 // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.EMPTY_ARRAY:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        19: putfield      #32                 // Field values:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        22: aload_0
+        23: getstatic     #35                 // Field com/hypixel/hytale/common/util/ArrayUtil.EMPTY_FLOAT_ARRAY:[F
+        26: putfield      #41                 // Field tempRegenerationValues:[F
+        29: aload_0
+        30: new           #44                 // class it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap
+        33: dup
+        34: invokespecial #46                 // Method it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap."<init>":()V
+        37: putfield      #47                 // Field selfUpdates:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        40: aload_0
+        41: new           #44                 // class it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap
+        44: dup
+        45: invokespecial #46                 // Method it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap."<init>":()V
+        48: putfield      #51                 // Field selfStatValues:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        51: aload_0
+        52: new           #44                 // class it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap
+        55: dup
+        56: invokespecial #46                 // Method it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap."<init>":()V
+        59: putfield      #54                 // Field otherUpdates:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        62: return
+
+  public com.hypixel.hytale.server.core.entity.StatModifiersManager getStatModifiersManager();
+    Code:
+         0: aload_0
+         1: getfield      #20                 // Field statModifiersManager:Lcom/hypixel/hytale/server/core/entity/StatModifiersManager;
+         4: areturn
+
+  public int size();
+    Code:
+         0: aload_0
+         1: getfield      #32                 // Field values:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+         4: arraylength
+         5: ireturn
+
+  public com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue get(int);
+    Code:
+         0: iload_1
+         1: aload_0
+         2: getfield      #32                 // Field values:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+         5: arraylength
+         6: if_icmplt     11
+         9: aconst_null
+        10: areturn
+        11: aload_0
+        12: getfield      #32                 // Field values:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        15: iload_1
+        16: aaload
+        17: areturn
+
+  public com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue get(java.lang.String);
+    Code:
+         0: aload_0
+         1: invokestatic  #57                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+         4: aload_1
+         5: invokevirtual #63                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getIndex:(Ljava/lang/Object;)I
+         8: invokevirtual #69                 // Method get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        11: areturn
+
+  public void update();
+    Code:
+         0: invokestatic  #57                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+         3: astore_1
+         4: iconst_0
+         5: istore_2
+         6: iload_2
+         7: aload_0
+         8: getfield      #32                 // Field values:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        11: arraylength
+        12: if_icmpge     126
+        15: aload_1
+        16: iload_2
+        17: invokevirtual #72                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(I)Lcom/hypixel/hytale/assetstore/map/JsonAssetWithMap;
+        20: checkcast     #58                 // class com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType
+        23: astore_3
+        24: aload_0
+        25: getfield      #32                 // Field values:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        28: iload_2
+        29: aaload
+        30: astore        4
+        32: aload_3
+        33: ifnull        120
+        36: aload         4
+        38: ifnonnull     44
+        41: goto          120
+        44: aload_3
+        45: invokevirtual #76                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.isUnknown:()Z
+        48: ifeq          103
+        51: aload_0
+        52: getfield      #80                 // Field unknown:Ljava/util/Map;
+        55: ifnonnull     69
+        58: aload_0
+        59: new           #84                 // class it/unimi/dsi/fastutil/objects/Object2ObjectOpenHashMap
+        62: dup
+        63: invokespecial #86                 // Method it/unimi/dsi/fastutil/objects/Object2ObjectOpenHashMap."<init>":()V
+        66: putfield      #80                 // Field unknown:Ljava/util/Map;
+        69: aload_0
+        70: getfield      #80                 // Field unknown:Ljava/util/Map;
+        73: aload_3
+        74: invokevirtual #87                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.getId:()Ljava/lang/String;
+        77: aload         4
+        79: invokeinterface #91,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        84: pop
+        85: aload_0
+        86: getfield      #32                 // Field values:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        89: iload_2
+        90: new           #27                 // class com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue
+        93: dup
+        94: iload_2
+        95: aload_3
+        96: invokespecial #97                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue."<init>":(ILcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType;)V
+        99: aastore
+       100: goto          120
+       103: aload         4
+       105: iload_2
+       106: aload_3
+       107: invokevirtual #100                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.synchronizeAsset:(ILcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType;)Z
+       110: ifeq          120
+       113: aload_0
+       114: iload_2
+       115: aload         4
+       117: invokevirtual #104                // Method addInitChange:(ILcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;)V
+       120: iinc          2, 1
+       123: goto          6
+       126: aload_1
+       127: invokevirtual #108                // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getNextIndex:()I
+       130: istore_2
+       131: aload_0
+       132: getfield      #32                 // Field values:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+       135: arraylength
+       136: istore_3
+       137: iload_3
+       138: iload_2
+       139: if_icmpgt     325
+       142: aload_0
+       143: aload_0
+       144: getfield      #32                 // Field values:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+       147: iload_2
+       148: invokestatic  #112                // Method java/util/Arrays.copyOf:([Ljava/lang/Object;I)[Ljava/lang/Object;
+       151: checkcast     #118                // class "[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;"
+       154: putfield      #32                 // Field values:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+       157: iload_3
+       158: istore        4
+       160: iload         4
+       162: iload_2
+       163: if_icmpge     325
+       166: aload_1
+       167: iload         4
+       169: invokevirtual #72                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(I)Lcom/hypixel/hytale/assetstore/map/JsonAssetWithMap;
+       172: checkcast     #58                 // class com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType
+       175: astore        5
+       177: aload         5
+       179: ifnonnull     185
+       182: goto          319
+       185: aload         5
+       187: invokevirtual #76                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.isUnknown:()Z
+       190: ifeq          225
+       193: aload_0
+       194: getfield      #32                 // Field values:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+       197: iload         4
+       199: new           #27                 // class com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue
+       202: dup
+       203: iload         4
+       205: aload         5
+       207: invokespecial #97                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue."<init>":(ILcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType;)V
+       210: dup_x2
+       211: aastore
+       212: astore        6
+       214: aload_0
+       215: iload         4
+       217: aload         6
+       219: invokevirtual #104                // Method addInitChange:(ILcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;)V
+       222: goto          319
+       225: aload_0
+       226: getfield      #80                 // Field unknown:Ljava/util/Map;
+       229: ifnonnull     236
+       232: aconst_null
+       233: goto          253
+       236: aload_0
+       237: getfield      #80                 // Field unknown:Ljava/util/Map;
+       240: aload         5
+       242: invokevirtual #87                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.getId:()Ljava/lang/String;
+       245: invokeinterface #119,  2          // InterfaceMethod java/util/Map.remove:(Ljava/lang/Object;)Ljava/lang/Object;
+       250: checkcast     #27                 // class com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue
+       253: astore        6
+       255: aload         6
+       257: ifnull        290
+       260: aload         6
+       262: iload         4
+       264: aload         5
+       266: invokevirtual #100                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.synchronizeAsset:(ILcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType;)Z
+       269: pop
+       270: aload_0
+       271: getfield      #32                 // Field values:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+       274: iload         4
+       276: aload         6
+       278: aastore
+       279: aload_0
+       280: iload         4
+       282: aload         6
+       284: invokevirtual #104                // Method addInitChange:(ILcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;)V
+       287: goto          319
+       290: aload_0
+       291: getfield      #32                 // Field values:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+       294: iload         4
+       296: new           #27                 // class com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue
+       299: dup
+       300: iload         4
+       302: aload         5
+       304: invokespecial #97                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue."<init>":(ILcom/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType;)V
+       307: dup_x2
+       308: aastore
+       309: astore        6
+       311: aload_0
+       312: iload         4
+       314: aload         6
+       316: invokevirtual #104                // Method addInitChange:(ILcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;)V
+       319: iinc          4, 1
+       322: goto          160
+       325: return
+
+  public com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier getModifier(int, java.lang.String);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: invokevirtual #69                 // Method get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+         5: astore_3
+         6: aload_3
+         7: ifnonnull     29
+        10: invokestatic  #123                // Method com/hypixel/hytale/logger/HytaleLogger.getLogger:()Lcom/hypixel/hytale/logger/HytaleLogger;
+        13: getstatic     #129                // Field java/util/logging/Level.WARNING:Ljava/util/logging/Level;
+        16: invokevirtual #135                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+        19: ldc           #139                // String No EntityStatValue found for index: %d
+        21: iload_1
+        22: invokeinterface #141,  3          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;I)V
+        27: aconst_null
+        28: areturn
+        29: aload_3
+        30: invokevirtual #147                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getModifiers:()Ljava/util/Map;
+        33: ifnull        52
+        36: aload_3
+        37: invokevirtual #147                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getModifiers:()Ljava/util/Map;
+        40: aload_2
+        41: invokeinterface #151,  2          // InterfaceMethod java/util/Map.get:(Ljava/lang/Object;)Ljava/lang/Object;
+        46: checkcast     #153                // class com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier
+        49: goto          53
+        52: aconst_null
+        53: areturn
+
+  public com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier putModifier(int, java.lang.String, com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier);
+    Code:
+         0: aload_0
+         1: getstatic     #155                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable.NONE:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;
+         4: iload_1
+         5: aload_2
+         6: aload_3
+         7: invokevirtual #161                // Method putModifier:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;ILjava/lang/String;Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier;)Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier;
+        10: areturn
+
+  public com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier putModifier(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, int, java.lang.String, com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier);
+    Code:
+         0: aload_0
+         1: iload_2
+         2: invokevirtual #69                 // Method get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+         5: astore        5
+         7: aload         5
+         9: ifnonnull     31
+        12: invokestatic  #123                // Method com/hypixel/hytale/logger/HytaleLogger.getLogger:()Lcom/hypixel/hytale/logger/HytaleLogger;
+        15: getstatic     #129                // Field java/util/logging/Level.WARNING:Ljava/util/logging/Level;
+        18: invokevirtual #135                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+        21: ldc           #139                // String No EntityStatValue found for index: %d
+        23: iload_2
+        24: invokeinterface #141,  3          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;I)V
+        29: aconst_null
+        30: areturn
+        31: aload         5
+        33: invokevirtual #165                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+        36: fstore        6
+        38: aload         5
+        40: aload_3
+        41: aload         4
+        43: invokevirtual #168                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.putModifier:(Ljava/lang/String;Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier;)Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier;
+        46: astore        7
+        48: aload_0
+        49: aload_1
+        50: iload_2
+        51: getstatic     #171                // Field com/hypixel/hytale/protocol/EntityStatOp.PutModifier:Lcom/hypixel/hytale/protocol/EntityStatOp;
+        54: fload         6
+        56: aload_3
+        57: aload         4
+        59: invokevirtual #177                // Method addChange:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;ILcom/hypixel/hytale/protocol/EntityStatOp;FLjava/lang/String;Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier;)V
+        62: aload         7
+        64: areturn
+
+  public com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier removeModifier(int, java.lang.String);
+    Code:
+         0: aload_0
+         1: getstatic     #155                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable.NONE:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;
+         4: iload_1
+         5: aload_2
+         6: invokevirtual #181                // Method removeModifier:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;ILjava/lang/String;)Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier;
+         9: areturn
+
+  public com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier removeModifier(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, int, java.lang.String);
+    Code:
+         0: aload_0
+         1: iload_2
+         2: invokevirtual #69                 // Method get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+         5: astore        4
+         7: aload         4
+         9: ifnonnull     31
+        12: invokestatic  #123                // Method com/hypixel/hytale/logger/HytaleLogger.getLogger:()Lcom/hypixel/hytale/logger/HytaleLogger;
+        15: getstatic     #129                // Field java/util/logging/Level.WARNING:Ljava/util/logging/Level;
+        18: invokevirtual #135                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+        21: ldc           #139                // String No EntityStatValue found for index: %d
+        23: iload_2
+        24: invokeinterface #141,  3          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;I)V
+        29: aconst_null
+        30: areturn
+        31: aload         4
+        33: invokevirtual #165                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+        36: fstore        5
+        38: aload         4
+        40: aload_3
+        41: invokevirtual #185                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.removeModifier:(Ljava/lang/String;)Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier;
+        44: astore        6
+        46: aload         6
+        48: ifnull        64
+        51: aload_0
+        52: aload_1
+        53: iload_2
+        54: getstatic     #188                // Field com/hypixel/hytale/protocol/EntityStatOp.RemoveModifier:Lcom/hypixel/hytale/protocol/EntityStatOp;
+        57: fload         5
+        59: aload_3
+        60: aconst_null
+        61: invokevirtual #177                // Method addChange:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;ILcom/hypixel/hytale/protocol/EntityStatOp;FLjava/lang/String;Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier;)V
+        64: aload         6
+        66: areturn
+
+  public float setStatValue(int, float);
+    Code:
+         0: aload_0
+         1: getstatic     #155                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable.NONE:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;
+         4: iload_1
+         5: fload_2
+         6: invokevirtual #191                // Method setStatValue:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;IF)F
+         9: freturn
+
+  public float setStatValue(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, int, float);
+    Code:
+         0: aload_0
+         1: iload_2
+         2: invokevirtual #69                 // Method get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+         5: astore        4
+         7: aload         4
+         9: ifnonnull     31
+        12: invokestatic  #123                // Method com/hypixel/hytale/logger/HytaleLogger.getLogger:()Lcom/hypixel/hytale/logger/HytaleLogger;
+        15: getstatic     #129                // Field java/util/logging/Level.WARNING:Ljava/util/logging/Level;
+        18: invokevirtual #135                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+        21: ldc           #139                // String No EntityStatValue found for index: %d
+        23: iload_2
+        24: invokeinterface #141,  3          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;I)V
+        29: fconst_0
+        30: freturn
+        31: aload         4
+        33: invokevirtual #165                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+        36: fstore        5
+        38: aload_0
+        39: iload_2
+        40: fload         5
+        42: fload_3
+        43: invokevirtual #195                // Method shouldSuppressChange:(IFF)Z
+        46: ifeq          52
+        49: fload         5
+        51: freturn
+        52: aload         4
+        54: fload_3
+        55: invokevirtual #199                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.set:(F)F
+        58: fstore        6
+        60: aload_1
+        61: getstatic     #155                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable.NONE:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;
+        64: if_acmpne     74
+        67: fload_3
+        68: fload         5
+        70: fcmpl
+        71: ifeq          86
+        74: aload_0
+        75: aload_1
+        76: iload_2
+        77: getstatic     #203                // Field com/hypixel/hytale/protocol/EntityStatOp.Set:Lcom/hypixel/hytale/protocol/EntityStatOp;
+        80: fload         5
+        82: fload_3
+        83: invokevirtual #206                // Method addChange:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;ILcom/hypixel/hytale/protocol/EntityStatOp;FF)V
+        86: fload         6
+        88: freturn
+
+  public float addStatValue(int, float);
+    Code:
+         0: aload_0
+         1: getstatic     #155                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable.NONE:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;
+         4: iload_1
+         5: fload_2
+         6: invokevirtual #209                // Method addStatValue:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;IF)F
+         9: freturn
+
+  public float addStatValue(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, int, float);
+    Code:
+         0: aload_0
+         1: iload_2
+         2: invokevirtual #69                 // Method get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+         5: astore        4
+         7: aload         4
+         9: ifnonnull     31
+        12: invokestatic  #123                // Method com/hypixel/hytale/logger/HytaleLogger.getLogger:()Lcom/hypixel/hytale/logger/HytaleLogger;
+        15: getstatic     #129                // Field java/util/logging/Level.WARNING:Ljava/util/logging/Level;
+        18: invokevirtual #135                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+        21: ldc           #139                // String No EntityStatValue found for index: %d
+        23: iload_2
+        24: invokeinterface #141,  3          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;I)V
+        29: fconst_0
+        30: freturn
+        31: aload         4
+        33: invokevirtual #165                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+        36: fstore        5
+        38: aload_0
+        39: iload_2
+        40: fload         5
+        42: fload         5
+        44: fload_3
+        45: fadd
+        46: invokevirtual #195                // Method shouldSuppressChange:(IFF)Z
+        49: ifeq          55
+        52: fload         5
+        54: freturn
+        55: aload         4
+        57: fload         5
+        59: fload_3
+        60: fadd
+        61: invokevirtual #199                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.set:(F)F
+        64: fstore        6
+        66: aload_1
+        67: getstatic     #155                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable.NONE:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;
+        70: if_acmpne     81
+        73: fload         6
+        75: fload         5
+        77: fcmpl
+        78: ifeq          93
+        81: aload_0
+        82: aload_1
+        83: iload_2
+        84: getstatic     #212                // Field com/hypixel/hytale/protocol/EntityStatOp.Add:Lcom/hypixel/hytale/protocol/EntityStatOp;
+        87: fload         5
+        89: fload_3
+        90: invokevirtual #206                // Method addChange:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;ILcom/hypixel/hytale/protocol/EntityStatOp;FF)V
+        93: fload         6
+        95: freturn
+
+  public float subtractStatValue(int, float);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: fload_2
+         3: fneg
+         4: invokevirtual #215                // Method addStatValue:(IF)F
+         7: freturn
+
+  public float subtractStatValue(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, int, float);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: iload_2
+         3: fload_3
+         4: fneg
+         5: invokevirtual #209                // Method addStatValue:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;IF)F
+         8: freturn
+
+  public float minStatValue(int, float);
+    Code:
+         0: aload_0
+         1: getstatic     #155                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable.NONE:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;
+         4: iload_1
+         5: fload_2
+         6: invokevirtual #218                // Method minStatValue:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;IF)F
+         9: freturn
+
+  public float minStatValue(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, int, float);
+    Code:
+         0: aload_0
+         1: iload_2
+         2: invokevirtual #69                 // Method get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+         5: astore        4
+         7: aload         4
+         9: ifnonnull     31
+        12: invokestatic  #123                // Method com/hypixel/hytale/logger/HytaleLogger.getLogger:()Lcom/hypixel/hytale/logger/HytaleLogger;
+        15: getstatic     #129                // Field java/util/logging/Level.WARNING:Ljava/util/logging/Level;
+        18: invokevirtual #135                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+        21: ldc           #139                // String No EntityStatValue found for index: %d
+        23: iload_2
+        24: invokeinterface #141,  3          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;I)V
+        29: fconst_0
+        30: freturn
+        31: aload         4
+        33: invokevirtual #165                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+        36: fstore        5
+        38: fload         5
+        40: fload_3
+        41: invokestatic  #221                // Method java/lang/Math.min:(FF)F
+        44: fstore        6
+        46: aload_0
+        47: iload_2
+        48: fload         5
+        50: fload         6
+        52: invokevirtual #195                // Method shouldSuppressChange:(IFF)Z
+        55: ifeq          61
+        58: fload         5
+        60: freturn
+        61: aload         4
+        63: fload         6
+        65: invokevirtual #199                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.set:(F)F
+        68: fstore        7
+        70: aload_1
+        71: getstatic     #155                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable.NONE:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;
+        74: if_acmpne     85
+        77: fload         7
+        79: fload         5
+        81: fcmpl
+        82: ifeq          97
+        85: aload_0
+        86: aload_1
+        87: iload_2
+        88: getstatic     #227                // Field com/hypixel/hytale/protocol/EntityStatOp.Min:Lcom/hypixel/hytale/protocol/EntityStatOp;
+        91: fload         5
+        93: fload_3
+        94: invokevirtual #206                // Method addChange:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;ILcom/hypixel/hytale/protocol/EntityStatOp;FF)V
+        97: fload         7
+        99: freturn
+
+  public float maxStatValue(int, float);
+    Code:
+         0: aload_0
+         1: getstatic     #155                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable.NONE:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;
+         4: iload_1
+         5: fload_2
+         6: invokevirtual #230                // Method maxStatValue:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;IF)F
+         9: freturn
+
+  public float maxStatValue(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, int, float);
+    Code:
+         0: aload_0
+         1: iload_2
+         2: invokevirtual #69                 // Method get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+         5: astore        4
+         7: aload         4
+         9: ifnonnull     31
+        12: invokestatic  #123                // Method com/hypixel/hytale/logger/HytaleLogger.getLogger:()Lcom/hypixel/hytale/logger/HytaleLogger;
+        15: getstatic     #129                // Field java/util/logging/Level.WARNING:Ljava/util/logging/Level;
+        18: invokevirtual #135                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+        21: ldc           #139                // String No EntityStatValue found for index: %d
+        23: iload_2
+        24: invokeinterface #141,  3          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;I)V
+        29: fconst_0
+        30: freturn
+        31: aload         4
+        33: invokevirtual #165                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+        36: fstore        5
+        38: fload         5
+        40: fload_3
+        41: invokestatic  #233                // Method java/lang/Math.max:(FF)F
+        44: fstore        6
+        46: aload_0
+        47: iload_2
+        48: fload         5
+        50: fload         6
+        52: invokevirtual #195                // Method shouldSuppressChange:(IFF)Z
+        55: ifeq          61
+        58: fload         5
+        60: freturn
+        61: aload         4
+        63: fload         6
+        65: invokevirtual #199                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.set:(F)F
+        68: fstore        7
+        70: aload_1
+        71: getstatic     #155                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable.NONE:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;
+        74: if_acmpne     85
+        77: fload         7
+        79: fload         5
+        81: fcmpl
+        82: ifeq          97
+        85: aload_0
+        86: aload_1
+        87: iload_2
+        88: getstatic     #236                // Field com/hypixel/hytale/protocol/EntityStatOp.Max:Lcom/hypixel/hytale/protocol/EntityStatOp;
+        91: fload         5
+        93: fload_3
+        94: invokevirtual #206                // Method addChange:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;ILcom/hypixel/hytale/protocol/EntityStatOp;FF)V
+        97: fload         7
+        99: freturn
+
+  public float minimizeStatValue(int);
+    Code:
+         0: aload_0
+         1: getstatic     #155                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable.NONE:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;
+         4: iload_1
+         5: invokevirtual #239                // Method minimizeStatValue:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;I)F
+         8: freturn
+
+  public float minimizeStatValue(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, int);
+    Code:
+         0: aload_0
+         1: iload_2
+         2: invokevirtual #69                 // Method get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+         5: astore_3
+         6: aload_3
+         7: ifnonnull     29
+        10: invokestatic  #123                // Method com/hypixel/hytale/logger/HytaleLogger.getLogger:()Lcom/hypixel/hytale/logger/HytaleLogger;
+        13: getstatic     #129                // Field java/util/logging/Level.WARNING:Ljava/util/logging/Level;
+        16: invokevirtual #135                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+        19: ldc           #139                // String No EntityStatValue found for index: %d
+        21: iload_2
+        22: invokeinterface #141,  3          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;I)V
+        27: fconst_0
+        28: freturn
+        29: aload_3
+        30: invokevirtual #165                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+        33: fstore        4
+        35: aload_0
+        36: iload_2
+        37: fload         4
+        39: aload_3
+        40: invokevirtual #243                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMin:()F
+        43: invokevirtual #195                // Method shouldSuppressChange:(IFF)Z
+        46: ifeq          52
+        49: fload         4
+        51: freturn
+        52: aload_3
+        53: aload_3
+        54: invokevirtual #243                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMin:()F
+        57: invokevirtual #199                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.set:(F)F
+        60: fstore        5
+        62: aload_1
+        63: getstatic     #155                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable.NONE:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;
+        66: if_acmpne     77
+        69: fload         5
+        71: fload         4
+        73: fcmpl
+        74: ifeq          89
+        77: aload_0
+        78: aload_1
+        79: iload_2
+        80: getstatic     #246                // Field com/hypixel/hytale/protocol/EntityStatOp.Minimize:Lcom/hypixel/hytale/protocol/EntityStatOp;
+        83: fload         4
+        85: fconst_0
+        86: invokevirtual #206                // Method addChange:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;ILcom/hypixel/hytale/protocol/EntityStatOp;FF)V
+        89: fload         5
+        91: freturn
+
+  public float maximizeStatValue(int);
+    Code:
+         0: aload_0
+         1: getstatic     #155                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable.NONE:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;
+         4: iload_1
+         5: invokevirtual #249                // Method maximizeStatValue:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;I)F
+         8: freturn
+
+  public float maximizeStatValue(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, int);
+    Code:
+         0: aload_0
+         1: iload_2
+         2: invokevirtual #69                 // Method get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+         5: astore_3
+         6: aload_3
+         7: ifnonnull     29
+        10: invokestatic  #123                // Method com/hypixel/hytale/logger/HytaleLogger.getLogger:()Lcom/hypixel/hytale/logger/HytaleLogger;
+        13: getstatic     #129                // Field java/util/logging/Level.WARNING:Ljava/util/logging/Level;
+        16: invokevirtual #135                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+        19: ldc           #139                // String No EntityStatValue found for index: %d
+        21: iload_2
+        22: invokeinterface #141,  3          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;I)V
+        27: fconst_0
+        28: freturn
+        29: aload_3
+        30: invokevirtual #165                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+        33: fstore        4
+        35: aload_0
+        36: iload_2
+        37: fload         4
+        39: aload_3
+        40: invokevirtual #252                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMax:()F
+        43: invokevirtual #195                // Method shouldSuppressChange:(IFF)Z
+        46: ifeq          52
+        49: fload         4
+        51: freturn
+        52: aload_3
+        53: aload_3
+        54: invokevirtual #252                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMax:()F
+        57: invokevirtual #199                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.set:(F)F
+        60: fstore        5
+        62: aload_1
+        63: getstatic     #155                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable.NONE:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;
+        66: if_acmpne     77
+        69: fload         5
+        71: fload         4
+        73: fcmpl
+        74: ifeq          89
+        77: aload_0
+        78: aload_1
+        79: iload_2
+        80: getstatic     #255                // Field com/hypixel/hytale/protocol/EntityStatOp.Maximize:Lcom/hypixel/hytale/protocol/EntityStatOp;
+        83: fload         4
+        85: fconst_0
+        86: invokevirtual #206                // Method addChange:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;ILcom/hypixel/hytale/protocol/EntityStatOp;FF)V
+        89: fload         5
+        91: freturn
+
+  public float resetStatValue(int);
+    Code:
+         0: aload_0
+         1: getstatic     #155                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable.NONE:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;
+         4: iload_1
+         5: invokevirtual #258                // Method resetStatValue:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;I)F
+         8: freturn
+
+  public float resetStatValue(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, int);
+    Code:
+         0: invokestatic  #57                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+         3: iload_2
+         4: invokevirtual #72                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(I)Lcom/hypixel/hytale/assetstore/map/JsonAssetWithMap;
+         7: checkcast     #58                 // class com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType
+        10: astore_3
+        11: aload_3
+        12: ifnonnull     35
+        15: invokestatic  #123                // Method com/hypixel/hytale/logger/HytaleLogger.getLogger:()Lcom/hypixel/hytale/logger/HytaleLogger;
+        18: getstatic     #129                // Field java/util/logging/Level.WARNING:Ljava/util/logging/Level;
+        21: invokevirtual #135                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+        24: ldc_w         #261                // String No EntityStatType found for index: %d
+        27: iload_2
+        28: invokeinterface #141,  3          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;I)V
+        33: fconst_0
+        34: freturn
+        35: aload_0
+        36: iload_2
+        37: invokevirtual #69                 // Method get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        40: astore        4
+        42: aload         4
+        44: ifnonnull     66
+        47: invokestatic  #123                // Method com/hypixel/hytale/logger/HytaleLogger.getLogger:()Lcom/hypixel/hytale/logger/HytaleLogger;
+        50: getstatic     #129                // Field java/util/logging/Level.WARNING:Ljava/util/logging/Level;
+        53: invokevirtual #135                // Method com/hypixel/hytale/logger/HytaleLogger.at:(Ljava/util/logging/Level;)Lcom/hypixel/hytale/logger/HytaleLogger$Api;
+        56: ldc           #139                // String No EntityStatValue found for index: %d
+        58: iload_2
+        59: invokeinterface #141,  3          // InterfaceMethod com/hypixel/hytale/logger/HytaleLogger$Api.log:(Ljava/lang/String;I)V
+        64: fconst_0
+        65: freturn
+        66: aload         4
+        68: invokevirtual #165                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+        71: fstore        5
+        73: getstatic     #263                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$1.$SwitchMap$com$hypixel$hytale$protocol$EntityStatResetBehavior:[I
+        76: aload_3
+        77: invokevirtual #269                // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.getResetBehavior:()Lcom/hypixel/hytale/protocol/EntityStatResetBehavior;
+        80: invokevirtual #273                // Method com/hypixel/hytale/protocol/EntityStatResetBehavior.ordinal:()I
+        83: iaload
+        84: lookupswitch  { // 2
+
+                       1: 112
+
+                       2: 143
+                 default: 176
+            }
+       112: aload_0
+       113: iload_2
+       114: fload         5
+       116: aload_3
+       117: invokevirtual #278                // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.getInitialValue:()F
+       120: invokevirtual #195                // Method shouldSuppressChange:(IFF)Z
+       123: ifeq          129
+       126: fload         5
+       128: freturn
+       129: aload         4
+       131: aload_3
+       132: invokevirtual #278                // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.getInitialValue:()F
+       135: invokevirtual #199                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.set:(F)F
+       138: fstore        6
+       140: goto          179
+       143: aload_0
+       144: iload_2
+       145: fload         5
+       147: aload         4
+       149: invokevirtual #252                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMax:()F
+       152: invokevirtual #195                // Method shouldSuppressChange:(IFF)Z
+       155: ifeq          161
+       158: fload         5
+       160: freturn
+       161: aload         4
+       163: aload         4
+       165: invokevirtual #252                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMax:()F
+       168: invokevirtual #199                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.set:(F)F
+       171: fstore        6
+       173: goto          179
+       176: fconst_0
+       177: fstore        6
+       179: aload_1
+       180: getstatic     #155                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable.NONE:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;
+       183: if_acmpne     194
+       186: fload         6
+       188: fload         5
+       190: fcmpl
+       191: ifeq          206
+       194: aload_0
+       195: aload_1
+       196: iload_2
+       197: getstatic     #281                // Field com/hypixel/hytale/protocol/EntityStatOp.Reset:Lcom/hypixel/hytale/protocol/EntityStatOp;
+       200: fload         5
+       202: fconst_0
+       203: invokevirtual #206                // Method addChange:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;ILcom/hypixel/hytale/protocol/EntityStatOp;FF)V
+       206: fload         6
+       208: freturn
+
+  public it.unimi.dsi.fastutil.ints.Int2ObjectMap<java.util.List<com.hypixel.hytale.protocol.EntityStatUpdate>> getSelfUpdates();
+    Code:
+         0: aload_0
+         1: getfield      #47                 // Field selfUpdates:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+         4: areturn
+
+  public it.unimi.dsi.fastutil.ints.Int2ObjectMap<it.unimi.dsi.fastutil.floats.FloatList> getSelfStatValues();
+    Code:
+         0: aload_0
+         1: getfield      #51                 // Field selfStatValues:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+         4: areturn
+
+  public it.unimi.dsi.fastutil.ints.Int2ObjectMap<com.hypixel.hytale.protocol.EntityStatUpdate[]> consumeSelfUpdates();
+    Code:
+         0: aload_0
+         1: aload_0
+         2: getfield      #47                 // Field selfUpdates:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+         5: invokevirtual #284                // Method updatesToProtocol:(Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;)Lit/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap;
+         8: areturn
+
+  public void clearUpdates();
+    Code:
+         0: aload_0
+         1: getfield      #47                 // Field selfUpdates:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+         4: invokeinterface #288,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.values:()Lit/unimi/dsi/fastutil/objects/ObjectCollection;
+         9: invokedynamic #293,  0            // InvokeDynamic #0:accept:()Ljava/util/function/Consumer;
+        14: invokeinterface #297,  2          // InterfaceMethod it/unimi/dsi/fastutil/objects/ObjectCollection.forEach:(Ljava/util/function/Consumer;)V
+        19: aload_0
+        20: getfield      #51                 // Field selfStatValues:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        23: invokeinterface #288,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.values:()Lit/unimi/dsi/fastutil/objects/ObjectCollection;
+        28: invokedynamic #303,  0            // InvokeDynamic #1:accept:()Ljava/util/function/Consumer;
+        33: invokeinterface #297,  2          // InterfaceMethod it/unimi/dsi/fastutil/objects/ObjectCollection.forEach:(Ljava/util/function/Consumer;)V
+        38: aload_0
+        39: getfield      #54                 // Field otherUpdates:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        42: invokeinterface #288,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.values:()Lit/unimi/dsi/fastutil/objects/ObjectCollection;
+        47: invokedynamic #293,  0            // InvokeDynamic #0:accept:()Ljava/util/function/Consumer;
+        52: invokeinterface #297,  2          // InterfaceMethod it/unimi/dsi/fastutil/objects/ObjectCollection.forEach:(Ljava/util/function/Consumer;)V
+        57: return
+
+  public it.unimi.dsi.fastutil.ints.Int2ObjectMap<com.hypixel.hytale.protocol.EntityStatUpdate[]> consumeOtherUpdates();
+    Code:
+         0: aload_0
+         1: aload_0
+         2: getfield      #54                 // Field otherUpdates:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+         5: invokevirtual #284                // Method updatesToProtocol:(Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;)Lit/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap;
+         8: areturn
+
+  private it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap<com.hypixel.hytale.protocol.EntityStatUpdate[]> updatesToProtocol(it.unimi.dsi.fastutil.ints.Int2ObjectMap<java.util.List<com.hypixel.hytale.protocol.EntityStatUpdate>>);
+    Code:
+         0: new           #44                 // class it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap
+         3: dup
+         4: aload_1
+         5: invokeinterface #304,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.size:()I
+        10: invokespecial #307                // Method it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap."<init>":(I)V
+        13: astore_2
+        14: aload_1
+        15: invokestatic  #310                // Method it/unimi/dsi/fastutil/ints/Int2ObjectMaps.fastIterator:(Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;)Lit/unimi/dsi/fastutil/objects/ObjectIterator;
+        18: astore_3
+        19: aload_3
+        20: invokeinterface #316,  1          // InterfaceMethod it/unimi/dsi/fastutil/objects/ObjectIterator.hasNext:()Z
+        25: ifeq          98
+        28: aload_3
+        29: invokeinterface #321,  1          // InterfaceMethod it/unimi/dsi/fastutil/objects/ObjectIterator.next:()Ljava/lang/Object;
+        34: checkcast     #325                // class it/unimi/dsi/fastutil/ints/Int2ObjectMap$Entry
+        37: astore        4
+        39: aload         4
+        41: invokeinterface #327,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap$Entry.getValue:()Ljava/lang/Object;
+        46: checkcast     #330                // class java/util/List
+        49: invokeinterface #332,  1          // InterfaceMethod java/util/List.isEmpty:()Z
+        54: ifeq          60
+        57: goto          19
+        60: aload_2
+        61: aload         4
+        63: invokeinterface #335,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap$Entry.getIntKey:()I
+        68: aload         4
+        70: invokeinterface #327,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap$Entry.getValue:()Ljava/lang/Object;
+        75: checkcast     #330                // class java/util/List
+        78: invokedynamic #338,  0            // InvokeDynamic #2:apply:()Ljava/util/function/IntFunction;
+        83: invokeinterface #342,  2          // InterfaceMethod java/util/List.toArray:(Ljava/util/function/IntFunction;)[Ljava/lang/Object;
+        88: checkcast     #346                // class "[Lcom/hypixel/hytale/protocol/EntityStatUpdate;"
+        91: invokevirtual #348                // Method it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap.put:(ILjava/lang/Object;)Ljava/lang/Object;
+        94: pop
+        95: goto          19
+        98: aload_2
+        99: areturn
+
+  public it.unimi.dsi.fastutil.ints.Int2ObjectMap<com.hypixel.hytale.protocol.EntityStatUpdate[]> createInitUpdate(boolean);
+    Code:
+         0: new           #44                 // class it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap
+         3: dup
+         4: aload_0
+         5: invokevirtual #351                // Method size:()I
+         8: invokespecial #307                // Method it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap."<init>":(I)V
+        11: astore_2
+        12: iconst_0
+        13: istore_3
+        14: iload_3
+        15: aload_0
+        16: invokevirtual #351                // Method size:()I
+        19: if_icmpge     84
+        22: aload_0
+        23: iload_3
+        24: invokevirtual #69                 // Method get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        27: astore        4
+        29: aload         4
+        31: ifnonnull     37
+        34: goto          78
+        37: invokestatic  #57                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+        40: iload_3
+        41: invokevirtual #72                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(I)Lcom/hypixel/hytale/assetstore/map/JsonAssetWithMap;
+        44: checkcast     #58                 // class com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType
+        47: invokevirtual #352                // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.isShared:()Z
+        50: ifne          60
+        53: iload_1
+        54: ifne          60
+        57: goto          78
+        60: aload_2
+        61: iload_3
+        62: iconst_1
+        63: anewarray     #355                // class com/hypixel/hytale/protocol/EntityStatUpdate
+        66: dup
+        67: iconst_0
+        68: aload         4
+        70: invokestatic  #357                // Method makeInitChange:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;)Lcom/hypixel/hytale/protocol/EntityStatUpdate;
+        73: aastore
+        74: invokevirtual #348                // Method it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap.put:(ILjava/lang/Object;)Ljava/lang/Object;
+        77: pop
+        78: iinc          3, 1
+        81: goto          14
+        84: aload_2
+        85: areturn
+
+  public boolean isStatChangeSuppressed(int, com.hypixel.hytale.server.core.modules.entitystats.StatChangeDirection);
+    Code:
+         0: aload_0
+         1: getfield      #361                // Field suppressedStatChanges:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+         4: ifnonnull     9
+         7: iconst_0
+         8: ireturn
+         9: aload_0
+        10: getfield      #361                // Field suppressedStatChanges:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        13: iload_1
+        14: invokeinterface #364,  2          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.get:(I)Ljava/lang/Object;
+        19: checkcast     #367                // class com/hypixel/hytale/server/core/modules/entitystats/StatChangeDirection
+        22: astore_3
+        23: aload_3
+        24: ifnull        39
+        27: aload_3
+        28: aload_2
+        29: invokevirtual #369                // Method com/hypixel/hytale/server/core/modules/entitystats/StatChangeDirection.covers:(Lcom/hypixel/hytale/server/core/modules/entitystats/StatChangeDirection;)Z
+        32: ifeq          39
+        35: iconst_1
+        36: goto          40
+        39: iconst_0
+        40: ireturn
+
+  public void setStatChangeSuppressed(int, com.hypixel.hytale.server.core.modules.entitystats.StatChangeDirection, boolean);
+    Code:
+         0: iload_3
+         1: ifeq          66
+         4: aload_0
+         5: getfield      #361                // Field suppressedStatChanges:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+         8: ifnonnull     22
+        11: aload_0
+        12: new           #44                 // class it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap
+        15: dup
+        16: invokespecial #46                 // Method it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap."<init>":()V
+        19: putfield      #361                // Field suppressedStatChanges:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        22: aload_0
+        23: getfield      #361                // Field suppressedStatChanges:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        26: iload_1
+        27: invokeinterface #364,  2          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.get:(I)Ljava/lang/Object;
+        32: checkcast     #367                // class com/hypixel/hytale/server/core/modules/entitystats/StatChangeDirection
+        35: astore        4
+        37: aload_0
+        38: getfield      #361                // Field suppressedStatChanges:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        41: iload_1
+        42: aload         4
+        44: ifnonnull     51
+        47: aload_2
+        48: goto          57
+        51: aload         4
+        53: aload_2
+        54: invokevirtual #373                // Method com/hypixel/hytale/server/core/modules/entitystats/StatChangeDirection.union:(Lcom/hypixel/hytale/server/core/modules/entitystats/StatChangeDirection;)Lcom/hypixel/hytale/server/core/modules/entitystats/StatChangeDirection;
+        57: invokeinterface #377,  3          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.put:(ILjava/lang/Object;)Ljava/lang/Object;
+        62: pop
+        63: goto          134
+        66: aload_0
+        67: getfield      #361                // Field suppressedStatChanges:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        70: ifnull        134
+        73: aload_0
+        74: getfield      #361                // Field suppressedStatChanges:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        77: iload_1
+        78: invokeinterface #364,  2          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.get:(I)Ljava/lang/Object;
+        83: checkcast     #367                // class com/hypixel/hytale/server/core/modules/entitystats/StatChangeDirection
+        86: astore        4
+        88: aload         4
+        90: ifnonnull     94
+        93: return
+        94: aload         4
+        96: aload_2
+        97: invokevirtual #378                // Method com/hypixel/hytale/server/core/modules/entitystats/StatChangeDirection.without:(Lcom/hypixel/hytale/server/core/modules/entitystats/StatChangeDirection;)Lcom/hypixel/hytale/server/core/modules/entitystats/StatChangeDirection;
+       100: astore        5
+       102: aload         5
+       104: ifnonnull     121
+       107: aload_0
+       108: getfield      #361                // Field suppressedStatChanges:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+       111: iload_1
+       112: invokeinterface #381,  2          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.remove:(I)Ljava/lang/Object;
+       117: pop
+       118: goto          134
+       121: aload_0
+       122: getfield      #361                // Field suppressedStatChanges:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+       125: iload_1
+       126: aload         5
+       128: invokeinterface #377,  3          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.put:(ILjava/lang/Object;)Ljava/lang/Object;
+       133: pop
+       134: return
+
+  public boolean consumeSelfNetworkOutdated();
+    Code:
+         0: aload_0
+         1: getfield      #383                // Field isSelfNetworkOutdated:Z
+         4: istore_1
+         5: aload_0
+         6: iconst_0
+         7: putfield      #383                // Field isSelfNetworkOutdated:Z
+        10: iload_1
+        11: ireturn
+
+  public boolean consumeNetworkOutdated();
+    Code:
+         0: aload_0
+         1: getfield      #387                // Field isNetworkOutdated:Z
+         4: istore_1
+         5: aload_0
+         6: iconst_0
+         7: putfield      #387                // Field isNetworkOutdated:Z
+        10: iload_1
+        11: ireturn
+
+  private boolean shouldSuppressChange(int, float, float);
+    Code:
+         0: fload_3
+         1: fload_2
+         2: fcmpl
+         3: ifle          15
+         6: aload_0
+         7: iload_1
+         8: getstatic     #390                // Field com/hypixel/hytale/server/core/modules/entitystats/StatChangeDirection.RAISE:Lcom/hypixel/hytale/server/core/modules/entitystats/StatChangeDirection;
+        11: invokevirtual #394                // Method isStatChangeSuppressed:(ILcom/hypixel/hytale/server/core/modules/entitystats/StatChangeDirection;)Z
+        14: ireturn
+        15: fload_3
+        16: fload_2
+        17: fcmpg
+        18: ifge          30
+        21: aload_0
+        22: iload_1
+        23: getstatic     #398                // Field com/hypixel/hytale/server/core/modules/entitystats/StatChangeDirection.LOWER:Lcom/hypixel/hytale/server/core/modules/entitystats/StatChangeDirection;
+        26: invokevirtual #394                // Method isStatChangeSuppressed:(ILcom/hypixel/hytale/server/core/modules/entitystats/StatChangeDirection;)Z
+        29: ireturn
+        30: iconst_0
+        31: ireturn
+
+  private void addInitChange(int, com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue);
+    Code:
+         0: aload_0
+         1: getstatic     #155                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable.NONE:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;
+         4: iload_1
+         5: getstatic     #401                // Field com/hypixel/hytale/protocol/EntityStatOp.Init:Lcom/hypixel/hytale/protocol/EntityStatOp;
+         8: aload_2
+         9: invokevirtual #165                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+        12: aload_2
+        13: invokevirtual #165                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+        16: aload_2
+        17: invokevirtual #147                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getModifiers:()Ljava/util/Map;
+        20: invokevirtual #404                // Method addChange:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;ILcom/hypixel/hytale/protocol/EntityStatOp;FFLjava/util/Map;)V
+        23: return
+
+  private void addChange(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, int, com.hypixel.hytale.protocol.EntityStatOp, float, float);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: iload_2
+         3: aload_3
+         4: fload         4
+         6: fload         5
+         8: aconst_null
+         9: invokevirtual #404                // Method addChange:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;ILcom/hypixel/hytale/protocol/EntityStatOp;FFLjava/util/Map;)V
+        12: return
+
+  private void addChange(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, int, com.hypixel.hytale.protocol.EntityStatOp, float, float, java.util.Map<java.lang.String, com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier>);
+    Code:
+         0: invokestatic  #57                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+         3: iload_2
+         4: invokevirtual #72                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(I)Lcom/hypixel/hytale/assetstore/map/JsonAssetWithMap;
+         7: checkcast     #58                 // class com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType
+        10: astore        7
+        12: aload         7
+        14: invokevirtual #352                // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.isShared:()Z
+        17: ifeq          73
+        20: aload_1
+        21: getstatic     #407                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable.ALL:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;
+        24: if_acmpne     31
+        27: iconst_1
+        28: goto          32
+        31: iconst_0
+        32: istore        8
+        34: aload_0
+        35: getfield      #54                 // Field otherUpdates:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        38: iload_2
+        39: invokedynamic #410,  0            // InvokeDynamic #3:get:()Lit/unimi/dsi/fastutil/ints/Int2ObjectFunction;
+        44: invokeinterface #413,  3          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.computeIfAbsent:(ILit/unimi/dsi/fastutil/ints/Int2ObjectFunction;)Ljava/lang/Object;
+        49: checkcast     #330                // class java/util/List
+        52: astore        9
+        54: aload_0
+        55: aload         9
+        57: aload_3
+        58: fload         5
+        60: aload         6
+        62: iload         8
+        64: invokevirtual #417                // Method tryMergeUpdate:(Ljava/util/List;Lcom/hypixel/hytale/protocol/EntityStatOp;FLjava/util/Map;Z)Z
+        67: pop
+        68: aload_0
+        69: iconst_1
+        70: putfield      #387                // Field isNetworkOutdated:Z
+        73: aload_1
+        74: getstatic     #155                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable.NONE:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;
+        77: if_acmpeq     84
+        80: iconst_1
+        81: goto          85
+        84: iconst_0
+        85: istore        8
+        87: aload_0
+        88: getfield      #47                 // Field selfUpdates:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        91: iload_2
+        92: invokedynamic #421,  0            // InvokeDynamic #4:get:()Lit/unimi/dsi/fastutil/ints/Int2ObjectFunction;
+        97: invokeinterface #413,  3          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.computeIfAbsent:(ILit/unimi/dsi/fastutil/ints/Int2ObjectFunction;)Ljava/lang/Object;
+       102: checkcast     #330                // class java/util/List
+       105: astore        9
+       107: aload_0
+       108: getfield      #51                 // Field selfStatValues:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+       111: iload_2
+       112: invokedynamic #422,  0            // InvokeDynamic #5:get:()Lit/unimi/dsi/fastutil/ints/Int2ObjectFunction;
+       117: invokeinterface #413,  3          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.computeIfAbsent:(ILit/unimi/dsi/fastutil/ints/Int2ObjectFunction;)Ljava/lang/Object;
+       122: checkcast     #423                // class it/unimi/dsi/fastutil/floats/FloatList
+       125: astore        10
+       127: aload_0
+       128: aload         9
+       130: aload_3
+       131: fload         5
+       133: aload         6
+       135: iload         8
+       137: invokevirtual #417                // Method tryMergeUpdate:(Ljava/util/List;Lcom/hypixel/hytale/protocol/EntityStatOp;FLjava/util/Map;Z)Z
+       140: ifeq          169
+       143: aload         10
+       145: aload         10
+       147: invokeinterface #425,  1          // InterfaceMethod it/unimi/dsi/fastutil/floats/FloatList.size:()I
+       152: iconst_1
+       153: isub
+       154: aload_0
+       155: iload_2
+       156: invokevirtual #69                 // Method get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+       159: invokevirtual #165                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+       162: invokeinterface #426,  3          // InterfaceMethod it/unimi/dsi/fastutil/floats/FloatList.set:(IF)F
+       167: pop
+       168: return
+       169: aload         10
+       171: fload         4
+       173: invokeinterface #428,  2          // InterfaceMethod it/unimi/dsi/fastutil/floats/FloatList.add:(F)Z
+       178: pop
+       179: aload         10
+       181: aload_0
+       182: iload_2
+       183: invokevirtual #69                 // Method get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+       186: invokevirtual #165                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+       189: invokeinterface #428,  2          // InterfaceMethod it/unimi/dsi/fastutil/floats/FloatList.add:(F)Z
+       194: pop
+       195: aload_0
+       196: iconst_1
+       197: putfield      #383                // Field isSelfNetworkOutdated:Z
+       200: return
+
+  private void addChange(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, int, com.hypixel.hytale.protocol.EntityStatOp, float, java.lang.String, com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier);
+    Code:
+         0: invokestatic  #57                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.getAssetMap:()Lcom/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap;
+         3: iload_2
+         4: invokevirtual #72                 // Method com/hypixel/hytale/assetstore/map/IndexedLookupTableAssetMap.getAsset:(I)Lcom/hypixel/hytale/assetstore/map/JsonAssetWithMap;
+         7: checkcast     #58                 // class com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType
+        10: astore        7
+        12: aload         6
+        14: ifnull        25
+        17: aload         6
+        19: invokevirtual #432                // Method com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier.toPacket:()Lcom/hypixel/hytale/protocol/Modifier;
+        22: goto          26
+        25: aconst_null
+        26: astore        8
+        28: aload         7
+        30: invokevirtual #352                // Method com/hypixel/hytale/server/core/modules/entitystats/asset/EntityStatType.isShared:()Z
+        33: ifeq          99
+        36: aload_1
+        37: getstatic     #407                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable.ALL:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;
+        40: if_acmpne     47
+        43: iconst_1
+        44: goto          48
+        47: iconst_0
+        48: istore        9
+        50: aload_0
+        51: getfield      #54                 // Field otherUpdates:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+        54: iload_2
+        55: invokedynamic #436,  0            // InvokeDynamic #6:get:()Lit/unimi/dsi/fastutil/ints/Int2ObjectFunction;
+        60: invokeinterface #413,  3          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.computeIfAbsent:(ILit/unimi/dsi/fastutil/ints/Int2ObjectFunction;)Ljava/lang/Object;
+        65: checkcast     #330                // class java/util/List
+        68: astore        10
+        70: aload         10
+        72: new           #355                // class com/hypixel/hytale/protocol/EntityStatUpdate
+        75: dup
+        76: aload_3
+        77: iload         9
+        79: fconst_0
+        80: aconst_null
+        81: aload         5
+        83: aload         8
+        85: invokespecial #437                // Method com/hypixel/hytale/protocol/EntityStatUpdate."<init>":(Lcom/hypixel/hytale/protocol/EntityStatOp;ZFLjava/util/Map;Ljava/lang/String;Lcom/hypixel/hytale/protocol/Modifier;)V
+        88: invokeinterface #440,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        93: pop
+        94: aload_0
+        95: iconst_1
+        96: putfield      #387                // Field isNetworkOutdated:Z
+        99: aload_1
+       100: getstatic     #155                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable.NONE:Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;
+       103: if_acmpeq     110
+       106: iconst_1
+       107: goto          111
+       110: iconst_0
+       111: istore        9
+       113: aload_0
+       114: getfield      #47                 // Field selfUpdates:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+       117: iload_2
+       118: invokedynamic #443,  0            // InvokeDynamic #7:get:()Lit/unimi/dsi/fastutil/ints/Int2ObjectFunction;
+       123: invokeinterface #413,  3          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.computeIfAbsent:(ILit/unimi/dsi/fastutil/ints/Int2ObjectFunction;)Ljava/lang/Object;
+       128: checkcast     #330                // class java/util/List
+       131: astore        10
+       133: aload         10
+       135: new           #355                // class com/hypixel/hytale/protocol/EntityStatUpdate
+       138: dup
+       139: aload_3
+       140: iload         9
+       142: fconst_0
+       143: aconst_null
+       144: aload         5
+       146: aload         8
+       148: invokespecial #437                // Method com/hypixel/hytale/protocol/EntityStatUpdate."<init>":(Lcom/hypixel/hytale/protocol/EntityStatOp;ZFLjava/util/Map;Ljava/lang/String;Lcom/hypixel/hytale/protocol/Modifier;)V
+       151: invokeinterface #440,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+       156: pop
+       157: aload_0
+       158: getfield      #51                 // Field selfStatValues:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+       161: iload_2
+       162: invokedynamic #444,  0            // InvokeDynamic #8:get:()Lit/unimi/dsi/fastutil/ints/Int2ObjectFunction;
+       167: invokeinterface #413,  3          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.computeIfAbsent:(ILit/unimi/dsi/fastutil/ints/Int2ObjectFunction;)Ljava/lang/Object;
+       172: checkcast     #423                // class it/unimi/dsi/fastutil/floats/FloatList
+       175: astore        11
+       177: aload         11
+       179: fload         4
+       181: invokeinterface #428,  2          // InterfaceMethod it/unimi/dsi/fastutil/floats/FloatList.add:(F)Z
+       186: pop
+       187: aload         11
+       189: aload_0
+       190: iload_2
+       191: invokevirtual #69                 // Method get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+       194: invokevirtual #165                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+       197: invokeinterface #428,  2          // InterfaceMethod it/unimi/dsi/fastutil/floats/FloatList.add:(F)Z
+       202: pop
+       203: aload_0
+       204: iconst_1
+       205: putfield      #383                // Field isSelfNetworkOutdated:Z
+       208: return
+
+  private boolean tryMergeUpdate(java.util.List<com.hypixel.hytale.protocol.EntityStatUpdate>, com.hypixel.hytale.protocol.EntityStatOp, float, java.util.Map<java.lang.String, com.hypixel.hytale.server.core.modules.entitystats.modifier.Modifier>, boolean);
+    Code:
+         0: aload_1
+         1: invokeinterface #332,  1          // InterfaceMethod java/util/List.isEmpty:()Z
+         6: ifeq          13
+         9: aconst_null
+        10: goto          22
+        13: aload_1
+        14: invokeinterface #445,  1          // InterfaceMethod java/util/List.getLast:()Ljava/lang/Object;
+        19: checkcast     #355                // class com/hypixel/hytale/protocol/EntityStatUpdate
+        22: astore        6
+        24: getstatic     #448                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$1.$SwitchMap$com$hypixel$hytale$protocol$EntityStatOp:[I
+        27: aload_2
+        28: invokevirtual #451                // Method com/hypixel/hytale/protocol/EntityStatOp.ordinal:()I
+        31: iaload
+        32: tableswitch   { // 1 to 11
+
+                       1: 92
+
+                       2: 240
+
+                       3: 264
+
+                       4: 351
+
+                       5: 351
+
+                       6: 354
+
+                       7: 354
+
+                       8: 377
+
+                       9: 377
+
+                      10: 377
+
+                      11: 377
+                 default: 454
+            }
+        92: iload         5
+        94: ifne          129
+        97: aload         6
+        99: ifnull        129
+       102: aload         6
+       104: getfield      #452                // Field com/hypixel/hytale/protocol/EntityStatUpdate.predictable:Z
+       107: ifne          129
+       110: aload         6
+       112: getfield      #455                // Field com/hypixel/hytale/protocol/EntityStatUpdate.op:Lcom/hypixel/hytale/protocol/EntityStatOp;
+       115: getstatic     #401                // Field com/hypixel/hytale/protocol/EntityStatOp.Init:Lcom/hypixel/hytale/protocol/EntityStatOp;
+       118: if_acmpne     129
+       121: aload         6
+       123: fload_3
+       124: putfield      #458                // Field com/hypixel/hytale/protocol/EntityStatUpdate.value:F
+       127: iconst_1
+       128: ireturn
+       129: aconst_null
+       130: astore        7
+       132: aload         4
+       134: ifnull        216
+       137: new           #84                 // class it/unimi/dsi/fastutil/objects/Object2ObjectOpenHashMap
+       140: dup
+       141: invokespecial #86                 // Method it/unimi/dsi/fastutil/objects/Object2ObjectOpenHashMap."<init>":()V
+       144: astore        7
+       146: aload         4
+       148: invokeinterface #462,  1          // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+       153: invokeinterface #466,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+       158: astore        8
+       160: aload         8
+       162: invokeinterface #472,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+       167: ifeq          216
+       170: aload         8
+       172: invokeinterface #475,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       177: checkcast     #476                // class java/util/Map$Entry
+       180: astore        9
+       182: aload         7
+       184: aload         9
+       186: invokeinterface #478,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+       191: checkcast     #481                // class java/lang/String
+       194: aload         9
+       196: invokeinterface #483,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+       201: checkcast     #153                // class com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier
+       204: invokevirtual #432                // Method com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier.toPacket:()Lcom/hypixel/hytale/protocol/Modifier;
+       207: invokeinterface #91,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       212: pop
+       213: goto          160
+       216: aload_1
+       217: new           #355                // class com/hypixel/hytale/protocol/EntityStatUpdate
+       220: dup
+       221: aload_2
+       222: iload         5
+       224: fload_3
+       225: aload         7
+       227: aconst_null
+       228: aconst_null
+       229: invokespecial #437                // Method com/hypixel/hytale/protocol/EntityStatUpdate."<init>":(Lcom/hypixel/hytale/protocol/EntityStatOp;ZFLjava/util/Map;Ljava/lang/String;Lcom/hypixel/hytale/protocol/Modifier;)V
+       232: invokeinterface #440,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+       237: pop
+       238: iconst_0
+       239: ireturn
+       240: aload_1
+       241: new           #355                // class com/hypixel/hytale/protocol/EntityStatUpdate
+       244: dup
+       245: aload_2
+       246: iload         5
+       248: fconst_0
+       249: aconst_null
+       250: aconst_null
+       251: aconst_null
+       252: invokespecial #437                // Method com/hypixel/hytale/protocol/EntityStatUpdate."<init>":(Lcom/hypixel/hytale/protocol/EntityStatOp;ZFLjava/util/Map;Ljava/lang/String;Lcom/hypixel/hytale/protocol/Modifier;)V
+       255: invokeinterface #440,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+       260: pop
+       261: goto          454
+       264: iload         5
+       266: ifne          328
+       269: aload         6
+       271: ifnull        328
+       274: aload         6
+       276: getfield      #452                // Field com/hypixel/hytale/protocol/EntityStatUpdate.predictable:Z
+       279: ifne          328
+       282: aload         6
+       284: getfield      #455                // Field com/hypixel/hytale/protocol/EntityStatUpdate.op:Lcom/hypixel/hytale/protocol/EntityStatOp;
+       287: getstatic     #401                // Field com/hypixel/hytale/protocol/EntityStatOp.Init:Lcom/hypixel/hytale/protocol/EntityStatOp;
+       290: if_acmpeq     315
+       293: aload         6
+       295: getfield      #455                // Field com/hypixel/hytale/protocol/EntityStatUpdate.op:Lcom/hypixel/hytale/protocol/EntityStatOp;
+       298: getstatic     #212                // Field com/hypixel/hytale/protocol/EntityStatOp.Add:Lcom/hypixel/hytale/protocol/EntityStatOp;
+       301: if_acmpeq     315
+       304: aload         6
+       306: getfield      #455                // Field com/hypixel/hytale/protocol/EntityStatUpdate.op:Lcom/hypixel/hytale/protocol/EntityStatOp;
+       309: getstatic     #203                // Field com/hypixel/hytale/protocol/EntityStatOp.Set:Lcom/hypixel/hytale/protocol/EntityStatOp;
+       312: if_acmpne     328
+       315: aload         6
+       317: dup
+       318: getfield      #458                // Field com/hypixel/hytale/protocol/EntityStatUpdate.value:F
+       321: fload_3
+       322: fadd
+       323: putfield      #458                // Field com/hypixel/hytale/protocol/EntityStatUpdate.value:F
+       326: iconst_1
+       327: ireturn
+       328: aload_1
+       329: new           #355                // class com/hypixel/hytale/protocol/EntityStatUpdate
+       332: dup
+       333: aload_2
+       334: iload         5
+       336: fload_3
+       337: aconst_null
+       338: aconst_null
+       339: aconst_null
+       340: invokespecial #437                // Method com/hypixel/hytale/protocol/EntityStatUpdate."<init>":(Lcom/hypixel/hytale/protocol/EntityStatOp;ZFLjava/util/Map;Ljava/lang/String;Lcom/hypixel/hytale/protocol/Modifier;)V
+       343: invokeinterface #440,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+       348: pop
+       349: iconst_0
+       350: ireturn
+       351: goto          454
+       354: aload_1
+       355: new           #355                // class com/hypixel/hytale/protocol/EntityStatUpdate
+       358: dup
+       359: aload_2
+       360: iload         5
+       362: fload_3
+       363: aconst_null
+       364: aconst_null
+       365: aconst_null
+       366: invokespecial #437                // Method com/hypixel/hytale/protocol/EntityStatUpdate."<init>":(Lcom/hypixel/hytale/protocol/EntityStatOp;ZFLjava/util/Map;Ljava/lang/String;Lcom/hypixel/hytale/protocol/Modifier;)V
+       369: invokeinterface #440,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+       374: pop
+       375: iconst_0
+       376: ireturn
+       377: iload         5
+       379: ifne          431
+       382: aload         6
+       384: ifnull        431
+       387: aload         6
+       389: getfield      #452                // Field com/hypixel/hytale/protocol/EntityStatUpdate.predictable:Z
+       392: ifne          431
+       395: aload         6
+       397: getfield      #455                // Field com/hypixel/hytale/protocol/EntityStatUpdate.op:Lcom/hypixel/hytale/protocol/EntityStatOp;
+       400: getstatic     #484                // Field com/hypixel/hytale/protocol/EntityStatOp.Remove:Lcom/hypixel/hytale/protocol/EntityStatOp;
+       403: if_acmpeq     431
+       406: aload         6
+       408: getfield      #455                // Field com/hypixel/hytale/protocol/EntityStatUpdate.op:Lcom/hypixel/hytale/protocol/EntityStatOp;
+       411: getstatic     #401                // Field com/hypixel/hytale/protocol/EntityStatOp.Init:Lcom/hypixel/hytale/protocol/EntityStatOp;
+       414: if_acmpeq     423
+       417: aload         6
+       419: aload_2
+       420: putfield      #455                // Field com/hypixel/hytale/protocol/EntityStatUpdate.op:Lcom/hypixel/hytale/protocol/EntityStatOp;
+       423: aload         6
+       425: fload_3
+       426: putfield      #458                // Field com/hypixel/hytale/protocol/EntityStatUpdate.value:F
+       429: iconst_1
+       430: ireturn
+       431: aload_1
+       432: new           #355                // class com/hypixel/hytale/protocol/EntityStatUpdate
+       435: dup
+       436: aload_2
+       437: iload         5
+       439: fload_3
+       440: aconst_null
+       441: aconst_null
+       442: aconst_null
+       443: invokespecial #437                // Method com/hypixel/hytale/protocol/EntityStatUpdate."<init>":(Lcom/hypixel/hytale/protocol/EntityStatOp;ZFLjava/util/Map;Ljava/lang/String;Lcom/hypixel/hytale/protocol/Modifier;)V
+       446: invokeinterface #440,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+       451: pop
+       452: iconst_0
+       453: ireturn
+       454: iconst_0
+       455: ireturn
+
+  public void processStatChanges(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap$Predictable, it.unimi.dsi.fastutil.ints.Int2FloatMap, com.hypixel.hytale.protocol.ValueType, com.hypixel.hytale.protocol.ChangeStatBehaviour);
+    Code:
+         0: aload_2
+         1: invokeinterface #487,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2FloatMap.int2FloatEntrySet:()Lit/unimi/dsi/fastutil/objects/ObjectSet;
+         6: invokeinterface #493,  1          // InterfaceMethod it/unimi/dsi/fastutil/objects/ObjectSet.iterator:()Lit/unimi/dsi/fastutil/objects/ObjectIterator;
+        11: astore        5
+        13: aload         5
+        15: invokeinterface #472,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+        20: ifeq          188
+        23: aload         5
+        25: invokeinterface #475,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+        30: checkcast     #498                // class it/unimi/dsi/fastutil/ints/Int2FloatMap$Entry
+        33: astore        6
+        35: aload         6
+        37: invokeinterface #500,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2FloatMap$Entry.getIntKey:()I
+        42: istore        7
+        44: aload         6
+        46: invokeinterface #501,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2FloatMap$Entry.getFloatValue:()F
+        51: fstore        8
+        53: aload_3
+        54: getstatic     #504                // Field com/hypixel/hytale/protocol/ValueType.Percent:Lcom/hypixel/hytale/protocol/ValueType;
+        57: if_acmpne     96
+        60: aload_0
+        61: iload         7
+        63: invokevirtual #69                 // Method get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        66: astore        9
+        68: aload         9
+        70: ifnonnull     76
+        73: goto          13
+        76: fload         8
+        78: aload         9
+        80: invokevirtual #252                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMax:()F
+        83: aload         9
+        85: invokevirtual #243                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMin:()F
+        88: fsub
+        89: fmul
+        90: ldc_w         #510                // float 100.0f
+        93: fdiv
+        94: fstore        8
+        96: getstatic     #511                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$1.$SwitchMap$com$hypixel$hytale$protocol$ChangeStatBehaviour:[I
+        99: aload         4
+       101: invokevirtual #514                // Method com/hypixel/hytale/protocol/ChangeStatBehaviour.ordinal:()I
+       104: iaload
+       105: tableswitch   { // 1 to 4
+
+                       1: 136
+
+                       2: 149
+
+                       3: 162
+
+                       4: 175
+                 default: 185
+            }
+       136: aload_0
+       137: aload_1
+       138: iload         7
+       140: fload         8
+       142: invokevirtual #191                // Method setStatValue:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;IF)F
+       145: pop
+       146: goto          185
+       149: aload_0
+       150: aload_1
+       151: iload         7
+       153: fload         8
+       155: invokevirtual #209                // Method addStatValue:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;IF)F
+       158: pop
+       159: goto          185
+       162: aload_0
+       163: aload_1
+       164: iload         7
+       166: fload         8
+       168: invokevirtual #218                // Method minStatValue:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;IF)F
+       171: pop
+       172: goto          185
+       175: aload_0
+       176: aload_1
+       177: iload         7
+       179: fload         8
+       181: invokevirtual #230                // Method maxStatValue:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap$Predictable;IF)F
+       184: pop
+       185: goto          13
+       188: return
+
+  public java.lang.String toString();
+    Code:
+         0: aload_0
+         1: getfield      #80                 // Field unknown:Ljava/util/Map;
+         4: invokestatic  #517                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+         7: aload_0
+         8: getfield      #32                 // Field values:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        11: invokestatic  #521                // Method java/util/Arrays.toString:([Ljava/lang/Object;)Ljava/lang/String;
+        14: invokedynamic #525,  0            // InvokeDynamic #9:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+        19: areturn
+
+  public com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap clone();
+    Code:
+         0: new           #21                 // class com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap
+         3: dup
+         4: invokespecial #529                // Method "<init>":()V
+         7: astore_1
+         8: aload_1
+         9: aload_0
+        10: getfield      #80                 // Field unknown:Ljava/util/Map;
+        13: putfield      #80                 // Field unknown:Ljava/util/Map;
+        16: aload_1
+        17: invokevirtual #530                // Method update:()V
+        20: iconst_0
+        21: istore_2
+        22: iload_2
+        23: aload_0
+        24: getfield      #32                 // Field values:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        27: arraylength
+        28: if_icmpge     150
+        31: aload_0
+        32: getfield      #32                 // Field values:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        35: iload_2
+        36: aaload
+        37: ifnonnull     43
+        40: goto          144
+        43: aload_0
+        44: getfield      #32                 // Field values:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        47: iload_2
+        48: aaload
+        49: astore_3
+        50: aload_1
+        51: getfield      #32                 // Field values:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        54: iload_2
+        55: aaload
+        56: aload_3
+        57: invokevirtual #165                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+        60: invokevirtual #199                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.set:(F)F
+        63: pop
+        64: aload_3
+        65: invokevirtual #147                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getModifiers:()Ljava/util/Map;
+        68: astore        4
+        70: aload         4
+        72: ifnull        144
+        75: aload         4
+        77: invokeinterface #462,  1          // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+        82: invokeinterface #466,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+        87: astore        5
+        89: aload         5
+        91: invokeinterface #472,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+        96: ifeq          144
+        99: aload         5
+       101: invokeinterface #475,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       106: checkcast     #476                // class java/util/Map$Entry
+       109: astore        6
+       111: aload_1
+       112: getfield      #32                 // Field values:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+       115: iload_2
+       116: aaload
+       117: aload         6
+       119: invokeinterface #478,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+       124: checkcast     #481                // class java/lang/String
+       127: aload         6
+       129: invokeinterface #483,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+       134: checkcast     #153                // class com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier
+       137: invokevirtual #168                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.putModifier:(Ljava/lang/String;Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier;)Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier;
+       140: pop
+       141: goto          89
+       144: iinc          2, 1
+       147: goto          22
+       150: aload_0
+       151: getfield      #47                 // Field selfUpdates:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+       154: invokeinterface #533,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.int2ObjectEntrySet:()Lit/unimi/dsi/fastutil/objects/ObjectSet;
+       159: invokeinterface #493,  1          // InterfaceMethod it/unimi/dsi/fastutil/objects/ObjectSet.iterator:()Lit/unimi/dsi/fastutil/objects/ObjectIterator;
+       164: astore_2
+       165: aload_2
+       166: invokeinterface #472,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+       171: ifeq          219
+       174: aload_2
+       175: invokeinterface #475,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       180: checkcast     #325                // class it/unimi/dsi/fastutil/ints/Int2ObjectMap$Entry
+       183: astore_3
+       184: aload_1
+       185: getfield      #47                 // Field selfUpdates:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+       188: aload_3
+       189: invokeinterface #335,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap$Entry.getIntKey:()I
+       194: new           #536                // class it/unimi/dsi/fastutil/objects/ObjectArrayList
+       197: dup
+       198: aload_3
+       199: invokeinterface #327,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap$Entry.getValue:()Ljava/lang/Object;
+       204: checkcast     #538                // class java/util/Collection
+       207: invokespecial #540                // Method it/unimi/dsi/fastutil/objects/ObjectArrayList."<init>":(Ljava/util/Collection;)V
+       210: invokeinterface #377,  3          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.put:(ILjava/lang/Object;)Ljava/lang/Object;
+       215: pop
+       216: goto          165
+       219: aload_0
+       220: getfield      #51                 // Field selfStatValues:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+       223: invokeinterface #533,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.int2ObjectEntrySet:()Lit/unimi/dsi/fastutil/objects/ObjectSet;
+       228: invokeinterface #493,  1          // InterfaceMethod it/unimi/dsi/fastutil/objects/ObjectSet.iterator:()Lit/unimi/dsi/fastutil/objects/ObjectIterator;
+       233: astore_2
+       234: aload_2
+       235: invokeinterface #472,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+       240: ifeq          288
+       243: aload_2
+       244: invokeinterface #475,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       249: checkcast     #325                // class it/unimi/dsi/fastutil/ints/Int2ObjectMap$Entry
+       252: astore_3
+       253: aload_1
+       254: getfield      #51                 // Field selfStatValues:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+       257: aload_3
+       258: invokeinterface #335,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap$Entry.getIntKey:()I
+       263: new           #543                // class it/unimi/dsi/fastutil/floats/FloatArrayList
+       266: dup
+       267: aload_3
+       268: invokeinterface #327,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap$Entry.getValue:()Ljava/lang/Object;
+       273: checkcast     #423                // class it/unimi/dsi/fastutil/floats/FloatList
+       276: invokespecial #545                // Method it/unimi/dsi/fastutil/floats/FloatArrayList."<init>":(Lit/unimi/dsi/fastutil/floats/FloatList;)V
+       279: invokeinterface #377,  3          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.put:(ILjava/lang/Object;)Ljava/lang/Object;
+       284: pop
+       285: goto          234
+       288: aload_0
+       289: getfield      #54                 // Field otherUpdates:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+       292: invokeinterface #533,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.int2ObjectEntrySet:()Lit/unimi/dsi/fastutil/objects/ObjectSet;
+       297: invokeinterface #493,  1          // InterfaceMethod it/unimi/dsi/fastutil/objects/ObjectSet.iterator:()Lit/unimi/dsi/fastutil/objects/ObjectIterator;
+       302: astore_2
+       303: aload_2
+       304: invokeinterface #472,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+       309: ifeq          357
+       312: aload_2
+       313: invokeinterface #475,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       318: checkcast     #325                // class it/unimi/dsi/fastutil/ints/Int2ObjectMap$Entry
+       321: astore_3
+       322: aload_1
+       323: getfield      #54                 // Field otherUpdates:Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+       326: aload_3
+       327: invokeinterface #335,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap$Entry.getIntKey:()I
+       332: new           #536                // class it/unimi/dsi/fastutil/objects/ObjectArrayList
+       335: dup
+       336: aload_3
+       337: invokeinterface #327,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap$Entry.getValue:()Ljava/lang/Object;
+       342: checkcast     #538                // class java/util/Collection
+       345: invokespecial #540                // Method it/unimi/dsi/fastutil/objects/ObjectArrayList."<init>":(Ljava/util/Collection;)V
+       348: invokeinterface #377,  3          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.put:(ILjava/lang/Object;)Ljava/lang/Object;
+       353: pop
+       354: goto          303
+       357: aload_1
+       358: areturn
+
+  private static com.hypixel.hytale.protocol.EntityStatUpdate makeInitChange(com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue);
+    Code:
+         0: aconst_null
+         1: astore_1
+         2: aload_0
+         3: invokevirtual #147                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getModifiers:()Ljava/util/Map;
+         6: ifnull        82
+         9: new           #84                 // class it/unimi/dsi/fastutil/objects/Object2ObjectOpenHashMap
+        12: dup
+        13: invokespecial #86                 // Method it/unimi/dsi/fastutil/objects/Object2ObjectOpenHashMap."<init>":()V
+        16: astore_1
+        17: aload_0
+        18: invokevirtual #147                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getModifiers:()Ljava/util/Map;
+        21: invokeinterface #462,  1          // InterfaceMethod java/util/Map.entrySet:()Ljava/util/Set;
+        26: invokeinterface #466,  1          // InterfaceMethod java/util/Set.iterator:()Ljava/util/Iterator;
+        31: astore_2
+        32: aload_2
+        33: invokeinterface #472,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+        38: ifeq          82
+        41: aload_2
+        42: invokeinterface #475,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+        47: checkcast     #476                // class java/util/Map$Entry
+        50: astore_3
+        51: aload_1
+        52: aload_3
+        53: invokeinterface #478,  1          // InterfaceMethod java/util/Map$Entry.getKey:()Ljava/lang/Object;
+        58: checkcast     #481                // class java/lang/String
+        61: aload_3
+        62: invokeinterface #483,  1          // InterfaceMethod java/util/Map$Entry.getValue:()Ljava/lang/Object;
+        67: checkcast     #153                // class com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier
+        70: invokevirtual #432                // Method com/hypixel/hytale/server/core/modules/entitystats/modifier/Modifier.toPacket:()Lcom/hypixel/hytale/protocol/Modifier;
+        73: invokeinterface #91,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        78: pop
+        79: goto          32
+        82: new           #355                // class com/hypixel/hytale/protocol/EntityStatUpdate
+        85: dup
+        86: getstatic     #401                // Field com/hypixel/hytale/protocol/EntityStatOp.Init:Lcom/hypixel/hytale/protocol/EntityStatOp;
+        89: iconst_0
+        90: aload_0
+        91: invokevirtual #165                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+        94: aload_1
+        95: aconst_null
+        96: aconst_null
+        97: invokespecial #437                // Method com/hypixel/hytale/protocol/EntityStatUpdate."<init>":(Lcom/hypixel/hytale/protocol/EntityStatOp;ZFLjava/util/Map;Ljava/lang/String;Lcom/hypixel/hytale/protocol/Modifier;)V
+       100: areturn
+
+  public static it.unimi.dsi.fastutil.ints.Int2ObjectMap<com.hypixel.hytale.protocol.Modifier[]> toPacket(it.unimi.dsi.fastutil.ints.Int2ObjectMap<com.hypixel.hytale.server.core.modules.entitystats.modifier.StaticModifier[]>);
+    Code:
+         0: aload_0
+         1: ifnonnull     6
+         4: aconst_null
+         5: areturn
+         6: new           #44                 // class it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap
+         9: dup
+        10: aload_0
+        11: invokeinterface #304,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.size:()I
+        16: invokespecial #307                // Method it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap."<init>":(I)V
+        19: astore_1
+        20: aload_0
+        21: invokeinterface #533,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap.int2ObjectEntrySet:()Lit/unimi/dsi/fastutil/objects/ObjectSet;
+        26: invokeinterface #493,  1          // InterfaceMethod it/unimi/dsi/fastutil/objects/ObjectSet.iterator:()Lit/unimi/dsi/fastutil/objects/ObjectIterator;
+        31: astore_2
+        32: aload_2
+        33: invokeinterface #472,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+        38: ifeq          119
+        41: aload_2
+        42: invokeinterface #475,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+        47: checkcast     #325                // class it/unimi/dsi/fastutil/ints/Int2ObjectMap$Entry
+        50: astore_3
+        51: aload_3
+        52: invokeinterface #327,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap$Entry.getValue:()Ljava/lang/Object;
+        57: checkcast     #548                // class "[Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier;"
+        60: arraylength
+        61: anewarray     #550                // class com/hypixel/hytale/protocol/Modifier
+        64: astore        4
+        66: iconst_0
+        67: istore        5
+        69: iload         5
+        71: aload         4
+        73: arraylength
+        74: if_icmpge     103
+        77: aload         4
+        79: iload         5
+        81: aload_3
+        82: invokeinterface #327,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap$Entry.getValue:()Ljava/lang/Object;
+        87: checkcast     #548                // class "[Lcom/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier;"
+        90: iload         5
+        92: aaload
+        93: invokevirtual #552                // Method com/hypixel/hytale/server/core/modules/entitystats/modifier/StaticModifier.toPacket:()Lcom/hypixel/hytale/protocol/Modifier;
+        96: aastore
+        97: iinc          5, 1
+       100: goto          69
+       103: aload_1
+       104: aload_3
+       105: invokeinterface #335,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/Int2ObjectMap$Entry.getIntKey:()I
+       110: aload         4
+       112: invokevirtual #348                // Method it/unimi/dsi/fastutil/ints/Int2ObjectOpenHashMap.put:(ILjava/lang/Object;)Ljava/lang/Object;
+       115: pop
+       116: goto          32
+       119: aload_1
+       120: areturn
+
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+    Code:
+         0: aload_0
+         1: invokevirtual #555                // Method clone:()Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap;
+         4: areturn
+
+  public com.hypixel.hytale.component.Component clone();
+    Code:
+         0: aload_0
+         1: invokevirtual #555                // Method clone:()Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatMap;
+         4: areturn
+
+  private static it.unimi.dsi.fastutil.floats.FloatList lambda$addChange$5(int);
+    Code:
+         0: new           #543                // class it/unimi/dsi/fastutil/floats/FloatArrayList
+         3: dup
+         4: invokespecial #559                // Method it/unimi/dsi/fastutil/floats/FloatArrayList."<init>":()V
+         7: areturn
+
+  private static java.util.List lambda$addChange$4(int);
+    Code:
+         0: new           #536                // class it/unimi/dsi/fastutil/objects/ObjectArrayList
+         3: dup
+         4: invokespecial #560                // Method it/unimi/dsi/fastutil/objects/ObjectArrayList."<init>":()V
+         7: areturn
+
+  private static java.util.List lambda$addChange$3(int);
+    Code:
+         0: new           #536                // class it/unimi/dsi/fastutil/objects/ObjectArrayList
+         3: dup
+         4: invokespecial #560                // Method it/unimi/dsi/fastutil/objects/ObjectArrayList."<init>":()V
+         7: areturn
+
+  private static it.unimi.dsi.fastutil.floats.FloatList lambda$addChange$2(int);
+    Code:
+         0: new           #543                // class it/unimi/dsi/fastutil/floats/FloatArrayList
+         3: dup
+         4: invokespecial #559                // Method it/unimi/dsi/fastutil/floats/FloatArrayList."<init>":()V
+         7: areturn
+
+  private static java.util.List lambda$addChange$1(int);
+    Code:
+         0: new           #536                // class it/unimi/dsi/fastutil/objects/ObjectArrayList
+         3: dup
+         4: invokespecial #560                // Method it/unimi/dsi/fastutil/objects/ObjectArrayList."<init>":()V
+         7: areturn
+
+  private static java.util.List lambda$addChange$0(int);
+    Code:
+         0: new           #536                // class it/unimi/dsi/fastutil/objects/ObjectArrayList
+         3: dup
+         4: invokespecial #560                // Method it/unimi/dsi/fastutil/objects/ObjectArrayList."<init>":()V
+         7: areturn
+
+  private static com.hypixel.hytale.protocol.EntityStatUpdate[] lambda$updatesToProtocol$0(int);
+    Code:
+         0: iload_0
+         1: anewarray     #355                // class com/hypixel/hytale/protocol/EntityStatUpdate
+         4: areturn
+
+  private static void lambda$static$2(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap);
+    Code:
+         0: aload_0
+         1: getstatic     #26                 // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.EMPTY_ARRAY:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+         4: putfield      #32                 // Field values:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+         7: aload_0
+         8: invokevirtual #530                // Method update:()V
+        11: return
+
+  private static java.util.Map lambda$static$1(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap);
+    Code:
+         0: new           #561                // class java/util/HashMap
+         3: dup
+         4: invokespecial #563                // Method java/util/HashMap."<init>":()V
+         7: astore_1
+         8: aload_0
+         9: getfield      #80                 // Field unknown:Ljava/util/Map;
+        12: ifnull        23
+        15: aload_1
+        16: aload_0
+        17: getfield      #80                 // Field unknown:Ljava/util/Map;
+        20: invokevirtual #564                // Method java/util/HashMap.putAll:(Ljava/util/Map;)V
+        23: aload_0
+        24: getfield      #32                 // Field values:[Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        27: astore_2
+        28: aload_2
+        29: arraylength
+        30: istore_3
+        31: iconst_0
+        32: istore        4
+        34: iload         4
+        36: iload_3
+        37: if_icmpge     72
+        40: aload_2
+        41: iload         4
+        43: aaload
+        44: astore        5
+        46: aload         5
+        48: ifnonnull     54
+        51: goto          66
+        54: aload_1
+        55: aload         5
+        57: invokevirtual #568                // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getId:()Ljava/lang/String;
+        60: aload         5
+        62: invokevirtual #569                // Method java/util/HashMap.putIfAbsent:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        65: pop
+        66: iinc          4, 1
+        69: goto          34
+        72: aload_1
+        73: areturn
+
+  private static void lambda$static$0(com.hypixel.hytale.server.core.modules.entitystats.EntityStatMap, java.util.Map);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #80                 // Field unknown:Ljava/util/Map;
+         5: return
+
+  static {};
+    Code:
+         0: ldc           #21                 // class com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap
+         2: invokedynamic #572,  0            // InvokeDynamic #10:get:()Ljava/util/function/Supplier;
+         7: invokestatic  #575                // Method com/hypixel/hytale/codec/builder/BuilderCodec.builder:(Ljava/lang/Class;Ljava/util/function/Supplier;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$Builder;
+        10: invokevirtual #581                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.legacyVersioned:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        13: checkcast     #582                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        16: iconst_5
+        17: invokevirtual #587                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.codecVersion:(I)Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        20: checkcast     #582                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        23: new           #591                // class com/hypixel/hytale/codec/KeyedCodec
+        26: dup
+        27: ldc_w         #593                // String Stats
+        30: new           #595                // class com/hypixel/hytale/codec/codecs/map/MapCodec
+        33: dup
+        34: getstatic     #597                // Field com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+        37: invokedynamic #601,  0            // InvokeDynamic #11:get:()Ljava/util/function/Supplier;
+        42: iconst_0
+        43: invokespecial #602                // Method com/hypixel/hytale/codec/codecs/map/MapCodec."<init>":(Lcom/hypixel/hytale/codec/Codec;Ljava/util/function/Supplier;Z)V
+        46: invokespecial #605                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        49: invokedynamic #608,  0            // InvokeDynamic #12:accept:()Ljava/util/function/BiConsumer;
+        54: invokedynamic #611,  0            // InvokeDynamic #13:apply:()Ljava/util/function/Function;
+        59: invokevirtual #614                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.addField:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        62: checkcast     #582                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        65: invokedynamic #618,  0            // InvokeDynamic #14:accept:()Ljava/util/function/Consumer;
+        70: invokevirtual #619                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.afterDecode:(Ljava/util/function/Consumer;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        73: checkcast     #582                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        76: invokevirtual #623                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.build:()Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+        79: putstatic     #627                // Field CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+        82: return
+}

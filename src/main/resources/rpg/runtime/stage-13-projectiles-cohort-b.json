@@ -1,0 +1,258 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {
+      "skillId": "spear_toss",
+      "family": "PROJECTILE",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "SPEAR"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "STAMINA",
+      "resourceCost": 7,
+      "cooldownSeconds": 5,
+      "windupSeconds": 0,
+      "basePowerSource": "WEAPON",
+      "innateBasePower": 0,
+      "scaling": "HEAVY",
+      "projectile": {
+        "configId": "Projectile_Config_RPG_Spear_Toss",
+        "speed": 22,
+        "maxDistance": 24,
+        "radius": 0.25,
+        "gravity": 0,
+        "targetCap": 1,
+        "coefficient": 1.15,
+        "statusId": "",
+        "statusSeconds": 0,
+        "periodicCoefficient": 0,
+        "periodicTicks": 0,
+        "periodicIntervalSeconds": 0,
+        "ammoItemId": "",
+        "ammoQuantity": 0,
+        "fullyCharged": false,
+        "knockbackDistance": 0,
+        "configIdsByWeaponKind": {},
+        "speedsByWeaponKind": {},
+        "details": {
+          "element": "PHYSICAL",
+          "chillStacks": 0,
+          "bossRootSlow": 0,
+          "bossSlowOptInRoles": []
+        }
+      }
+    },
+    {
+      "skillId": "crossbow_bolt",
+      "family": "PROJECTILE",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "CROSSBOW"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "STAMINA",
+      "resourceCost": 5,
+      "cooldownSeconds": 2,
+      "windupSeconds": 0,
+      "basePowerSource": "WEAPON",
+      "innateBasePower": 0,
+      "scaling": "LIGHT",
+      "projectile": {
+        "configId": "Projectile_Config_RPG_Crossbow_Bolt",
+        "speed": 40,
+        "maxDistance": 32,
+        "radius": 0.075,
+        "gravity": 10,
+        "targetCap": 1,
+        "coefficient": 1.25,
+        "statusId": "",
+        "statusSeconds": 0,
+        "periodicCoefficient": 0,
+        "periodicTicks": 0,
+        "periodicIntervalSeconds": 0,
+        "ammoItemId": "Weapon_Arrow_Crude",
+        "ammoQuantity": 1,
+        "fullyCharged": false,
+        "knockbackDistance": 0,
+        "configIdsByWeaponKind": {},
+        "speedsByWeaponKind": {},
+        "details": {
+          "element": "PHYSICAL",
+          "chillStacks": 0,
+          "bossRootSlow": 0,
+          "bossSlowOptInRoles": []
+        }
+      }
+    },
+    {
+      "skillId": "web_shot",
+      "family": "PROJECTILE",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [],
+      "requiredOffHandKinds": [],
+      "resourceType": "STAMINA",
+      "resourceCost": 7,
+      "cooldownSeconds": 7,
+      "windupSeconds": 0,
+      "basePowerSource": "INNATE",
+      "innateBasePower": 20,
+      "scaling": "LIGHT",
+      "projectile": {
+        "configId": "Projectile_Config_RPG_Web_Shot",
+        "speed": 16,
+        "maxDistance": 18,
+        "radius": 0.35,
+        "gravity": 0,
+        "targetCap": 1,
+        "coefficient": 0.25,
+        "statusId": "ROOT",
+        "statusSeconds": 2.5,
+        "periodicCoefficient": 0,
+        "periodicTicks": 0,
+        "periodicIntervalSeconds": 0,
+        "ammoItemId": "",
+        "ammoQuantity": 0,
+        "fullyCharged": false,
+        "knockbackDistance": 0,
+        "configIdsByWeaponKind": {},
+        "speedsByWeaponKind": {},
+        "details": {
+          "element": "PHYSICAL",
+          "chillStacks": 0,
+          "bossRootSlow": 0.3,
+          "bossSlowOptInRoles": []
+        }
+      }
+    },
+    {
+      "skillId": "void_bolt",
+      "family": "PROJECTILE",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "WAND",
+        "SPELLBOOK"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "resourceCost": 8,
+      "cooldownSeconds": 1.6,
+      "windupSeconds": 0,
+      "basePowerSource": "MAGIC_WEAPON",
+      "innateBasePower": 0,
+      "scaling": "MAGIC",
+      "projectile": {
+        "configId": "Projectile_Config_RPG_Void_Bolt",
+        "speed": 21,
+        "maxDistance": 24,
+        "radius": 0.32,
+        "gravity": 0,
+        "targetCap": 1,
+        "coefficient": 1,
+        "statusId": "",
+        "statusSeconds": 0,
+        "periodicCoefficient": 0,
+        "periodicTicks": 0,
+        "periodicIntervalSeconds": 0,
+        "ammoItemId": "",
+        "ammoQuantity": 0,
+        "fullyCharged": false,
+        "knockbackDistance": 0,
+        "configIdsByWeaponKind": {},
+        "speedsByWeaponKind": {},
+        "details": {
+          "element": "VOID",
+          "chillStacks": 0,
+          "bossRootSlow": 0,
+          "bossSlowOptInRoles": []
+        }
+      }
+    },
+    {
+      "skillId": "bone_shard",
+      "family": "PROJECTILE",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "WAND",
+        "SPELLBOOK"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "resourceCost": 8,
+      "cooldownSeconds": 1.8,
+      "windupSeconds": 0,
+      "basePowerSource": "MAGIC_WEAPON",
+      "innateBasePower": 0,
+      "scaling": "MAGIC",
+      "projectile": {
+        "configId": "Projectile_Config_RPG_Bone_Shard",
+        "speed": 25,
+        "maxDistance": 25,
+        "radius": 0.25,
+        "gravity": 0,
+        "targetCap": 1,
+        "coefficient": 1,
+        "statusId": "",
+        "statusSeconds": 0,
+        "periodicCoefficient": 0,
+        "periodicTicks": 0,
+        "periodicIntervalSeconds": 0,
+        "ammoItemId": "",
+        "ammoQuantity": 0,
+        "fullyCharged": false,
+        "knockbackDistance": 0,
+        "configIdsByWeaponKind": {},
+        "speedsByWeaponKind": {},
+        "details": {
+          "element": "NECROTIC",
+          "chillStacks": 0,
+          "bossRootSlow": 0,
+          "bossSlowOptInRoles": []
+        }
+      }
+    },
+    {
+      "skillId": "cold_blast",
+      "family": "PROJECTILE",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "STAFF",
+        "WAND"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "resourceCost": 14,
+      "cooldownSeconds": 5,
+      "windupSeconds": 0,
+      "basePowerSource": "MAGIC_WEAPON",
+      "innateBasePower": 0,
+      "scaling": "MAGIC",
+      "projectile": {
+        "configId": "Projectile_Config_RPG_Cold_Blast",
+        "speed": 19,
+        "maxDistance": 22,
+        "radius": 0.45,
+        "gravity": 0,
+        "targetCap": 1,
+        "coefficient": 1.1,
+        "statusId": "CHILL",
+        "statusSeconds": 0,
+        "periodicCoefficient": 0,
+        "periodicTicks": 0,
+        "periodicIntervalSeconds": 0,
+        "ammoItemId": "",
+        "ammoQuantity": 0,
+        "fullyCharged": false,
+        "knockbackDistance": 0,
+        "configIdsByWeaponKind": {},
+        "speedsByWeaponKind": {},
+        "details": {
+          "element": "COLD",
+          "chillStacks": 2,
+          "bossRootSlow": 0,
+          "bossSlowOptInRoles": []
+        }
+      }
+    }
+  ]
+}

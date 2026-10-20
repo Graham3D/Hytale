@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "profileId": "rpg.encounters.r031.pilot",
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "assetsSha256": "46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39",
+  "roles": [
+    {"roleId":"Wolf_Black","combatIdentity":"wolf_black","rank":"COMMON","rarity":"ORDINARY","assetPath":"Server/NPC/Roles/Creature/Mammal/Wolf_Black.json","assetSha256":"6D3F4E98DAC9D6C480B441338CB2BA0043A4CC3AF9EB7331EC8501802C0FDF42","evidence":"ASSET_AUDITED_CONNECTED_UNVERIFIED"},
+    {"roleId":"Trork_Warrior","combatIdentity":"trork_warrior","rank":"COMMON","rarity":"ORDINARY","assetPath":"Server/NPC/Roles/Intelligent/Faction/Trork/Trork_Warrior.json","assetSha256":"CB1D4223BD75CDED0F2C25B5B8167076413DC04F9130D4A3353A1A40938B3E73","evidence":"ASSET_AUDITED_CONNECTED_UNVERIFIED"},
+    {"roleId":"Skeleton_Archer","combatIdentity":"skeleton_archer","rank":"COMMON","rarity":"ORDINARY","assetPath":"Server/NPC/Roles/Undead/Skeleton/Skeleton/Skeleton_Archer.json","assetSha256":"01ACE605BA60D1D3ED59EFC2FDA013EE665BC036F7D3065F7E5B47DF7B172657","evidence":"ASSET_AUDITED_CONNECTED_UNVERIFIED"}
+  ],
+  "biomes": [
+    {"worldgenName":"Default","zoneId":"Zone1_Tier1","biomeId":"Forest_Birch","rpgBand":"emerald_wilds","combatLevel":5,"assetPath":"Server/World/Default/Zones/Zone1_Tier1/Tile.Forest_Birch.json","assetSha256":"41A8C5AED98D412EDA4F44E1A8612BBCF03ECD96A8B99B612720AEEC4EB5E0D9"},
+    {"worldgenName":"Default","zoneId":"Zone2_Tier1","biomeId":"Savannah_Plains","rpgBand":"howling_sands","combatLevel":25,"assetPath":"Server/World/Default/Zones/Zone2_Tier1/Tile.Savannah_Plains.json","assetSha256":"D1477F83A4209DABA5BF97D37E1A973D46638971C171D66CD21116B2F856E887"},
+    {"worldgenName":"Default","zoneId":"Zone3_Tier1","biomeId":"Forest_Fir","rpgBand":"whisperfrost","combatLevel":45,"assetPath":"Server/World/Default/Zones/Zone3_Tier1/Tile.Forest_Fir.json","assetSha256":"6FFB86E3963A7C9010243A31AC102C1511AB5190368558DD1446FFA727EC8104"},
+    {"worldgenName":"Default","zoneId":"Zone4_Tier4","biomeId":"Wastes_Grasslands","rpgBand":"devastated_lands","combatLevel":65,"assetPath":"Server/World/Default/Zones/Zone4_Tier4/Tile.Wastes_Grasslands.json","assetSha256":"0F8D7DC405850361B7258CC435E8CBDDBFEBF613B7837793166DF840987A0C77"}
+  ]
+}

@@ -1,0 +1,216 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {
+      "skillId": "vortex",
+      "family": "GROUND_ZONE",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "STAFF",
+        "SPELLBOOK"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "resourceCost": 28,
+      "cooldownSeconds": 20,
+      "windupSeconds": 0,
+      "basePowerSource": "MAGIC_WEAPON",
+      "scaling": "MAGIC",
+      "area": {
+        "geometry": "DISC",
+        "height": 3,
+        "status": "",
+        "candidateBudget": 64,
+        "radius": 5,
+        "placementRange": 20,
+        "lifetimeSeconds": 6,
+        "periodic": true,
+        "intervalSeconds": 0.25,
+        "impactCount": 0,
+        "perTargetHitCap": 24,
+        "coefficient": 0.35,
+        "pullSpeed": 1.5,
+        "pullCoreRadius": 1.5,
+        "visualCoreRadius": 1.5,
+        "element": "VOID"
+      }
+    },
+    {
+      "skillId": "earthquake",
+      "family": "GROUND_ZONE",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "STAFF",
+        "SPELLBOOK"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "resourceCost": 30,
+      "cooldownSeconds": 22,
+      "windupSeconds": 0,
+      "basePowerSource": "MAGIC_WEAPON",
+      "scaling": "MAGIC",
+      "area": {
+        "geometry": "DISC",
+        "height": 3,
+        "status": "STAGGER",
+        "candidateBudget": 64,
+        "radius": 7,
+        "placementRange": 18,
+        "lifetimeSeconds": 4.5,
+        "intervalSeconds": 1.125,
+        "impactCount": 4,
+        "perTargetHitCap": 4,
+        "coefficient": 0.55,
+        "statusSeconds": 0.4,
+        "element": "EARTH"
+      }
+    },
+    {
+      "skillId": "meteor",
+      "family": "OVERHEAD",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "STAFF",
+        "SPELLBOOK"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "resourceCost": 45,
+      "cooldownSeconds": 30,
+      "windupSeconds": 0.9,
+      "basePowerSource": "MAGIC_WEAPON",
+      "scaling": "MAGIC",
+      "area": {
+        "geometry": "DISC",
+        "height": 3,
+        "status": "BURN",
+        "candidateBudget": 256,
+        "radius": 5,
+        "placementRange": 30,
+        "warningSeconds": 1.2,
+        "impactCount": 1,
+        "perTargetHitCap": 1,
+        "coefficient": 1.6,
+        "innerRadius": 2,
+        "innerCoefficient": 2.5,
+        "statusSeconds": 4,
+        "statusInnerRadius": 3,
+        "statusInnerSeconds": 8,
+        "overheadHeight": 12,
+        "descentSeconds": 0.6,
+        "element": "FIRE"
+      }
+    },
+    {
+      "skillId": "comet",
+      "family": "OVERHEAD",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "STAFF",
+        "SPELLBOOK"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "resourceCost": 45,
+      "cooldownSeconds": 30,
+      "windupSeconds": 0.9,
+      "basePowerSource": "MAGIC_WEAPON",
+      "scaling": "MAGIC",
+      "area": {
+        "geometry": "DISC",
+        "height": 3,
+        "status": "CHILL",
+        "candidateBudget": 256,
+        "radius": 5.5,
+        "placementRange": 30,
+        "warningSeconds": 1.3,
+        "impactCount": 1,
+        "perTargetHitCap": 1,
+        "coefficient": 1.5,
+        "innerRadius": 2,
+        "innerCoefficient": 2.35,
+        "chillStacks": 3,
+        "innerChillStacks": 5,
+        "overheadHeight": 12,
+        "descentSeconds": 0.6,
+        "element": "COLD"
+      }
+    },
+    {
+      "skillId": "avalanche",
+      "family": "BOMBARDMENT",
+      "secondaryFamilies": [
+        "GROUND_ZONE"
+      ],
+      "allowedMainHandKinds": [
+        "STAFF",
+        "SPELLBOOK"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "resourceCost": 45,
+      "cooldownSeconds": 36,
+      "windupSeconds": 0,
+      "basePowerSource": "MAGIC_WEAPON",
+      "scaling": "MAGIC",
+      "area": {
+        "geometry": "DISC",
+        "height": 3,
+        "status": "",
+        "candidateBudget": 256,
+        "radius": 8,
+        "placementRange": 28,
+        "lifetimeSeconds": 6,
+        "intervalSeconds": 1,
+        "impactCount": 6,
+        "firstImpactSeconds": 0.5,
+        "impactRadius": 2.5,
+        "warningSeconds": 0.25,
+        "stratified": true,
+        "perTargetHitCap": 3,
+        "coefficient": 0.7,
+        "alternatingIceStone": true,
+        "statusSeconds": 0.5,
+        "element": "COLD"
+      }
+    },
+    {
+      "skillId": "void_cataclysm",
+      "family": "BOMBARDMENT",
+      "secondaryFamilies": [
+        "GROUND_ZONE"
+      ],
+      "allowedMainHandKinds": [
+        "STAFF",
+        "SPELLBOOK"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "resourceCost": 65,
+      "cooldownSeconds": 60,
+      "windupSeconds": 1.25,
+      "basePowerSource": "MAGIC_WEAPON",
+      "scaling": "MAGIC",
+      "area": {
+        "geometry": "DISC",
+        "height": 3,
+        "status": "",
+        "candidateBudget": 256,
+        "radius": 10,
+        "placementRange": 35,
+        "lifetimeSeconds": 8,
+        "intervalSeconds": 1,
+        "impactCount": 8,
+        "impactRadius": 2.5,
+        "stratified": true,
+        "perTargetHitCap": 5,
+        "coefficient": 0.85,
+        "finalCoefficient": 2,
+        "finalPull": 3,
+        "visualCoreRadius": 4,
+        "element": "VOID"
+      }
+    }
+  ]
+}

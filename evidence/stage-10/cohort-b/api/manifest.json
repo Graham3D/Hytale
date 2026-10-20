@@ -1,0 +1,29 @@
+{
+  "scope": "INSTALLED_ASSET_AND_BYTECODE_ONLY",
+  "connectedProof": false,
+  "sourceRole": "Wolf_Black",
+  "sourceTemplate": "Server/NPC/Roles/_Core/Templates/Template_Predator.json",
+  "conservativeAuthoredAttackIntervalSeconds": 3,
+  "nativeAttackPauseRange": [
+    2,
+    3
+  ],
+  "nativeDeathAnimationTimeSeconds": 1.5,
+  "sourceMaxHealthPolicy": "Read actual native maximum at DeathComponent creation, not template defaults",
+  "nativeEliteClassificationProven": false,
+  "nativeReviveProven": false,
+  "files": [
+    {
+      "name": "DeferredCorpseRemoval.txt",
+      "sha256": "7EE1DED6AE96B04691D77D32FAF280CCC77EEA688449D9CDFD1D0DC1435EDCBC"
+    },
+    {
+      "name": "EntityStore.txt",
+      "sha256": "E5FC22950168BF9FB453BD1607EF62CBC2A6AF577EB45BD56E6D8593DBC7FAD8"
+    },
+    {
+      "name": "Template_Predator.json.txt",
+      "sha256": "E3A7CEF027CE47F59AC57422D40E1DF30E148712A91014417C0E94BF12399152"
+    }
+  ]
+}

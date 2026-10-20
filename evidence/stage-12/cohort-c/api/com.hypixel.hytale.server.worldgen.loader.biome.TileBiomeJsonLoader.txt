@@ -1,0 +1,101 @@
+Compiled from "TileBiomeJsonLoader.java"
+public class com.hypixel.hytale.server.worldgen.loader.biome.TileBiomeJsonLoader extends com.hypixel.hytale.server.worldgen.loader.biome.BiomeJsonLoader {
+  public com.hypixel.hytale.server.worldgen.loader.biome.TileBiomeJsonLoader(com.hypixel.hytale.procedurallib.json.SeedString<com.hypixel.hytale.server.worldgen.SeedStringResource>, java.nio.file.Path, com.google.gson.JsonElement, com.hypixel.hytale.server.worldgen.loader.context.BiomeFileContext);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: ldc           #3                  // String .TileBiome-%s
+         4: iconst_1
+         5: anewarray     #5                  // class java/lang/Object
+         8: dup
+         9: iconst_0
+        10: aload         4
+        12: invokevirtual #7                  // Method com/hypixel/hytale/server/worldgen/loader/context/BiomeFileContext.getName:()Ljava/lang/String;
+        15: aastore
+        16: invokestatic  #13                 // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+        19: invokevirtual #19                 // Method com/hypixel/hytale/procedurallib/json/SeedString.append:(Ljava/lang/String;)Lcom/hypixel/hytale/procedurallib/json/SeedString;
+        22: aload_2
+        23: aload_3
+        24: aload         4
+        26: invokespecial #25                 // Method com/hypixel/hytale/server/worldgen/loader/biome/BiomeJsonLoader."<init>":(Lcom/hypixel/hytale/procedurallib/json/SeedString;Ljava/nio/file/Path;Lcom/google/gson/JsonElement;Lcom/hypixel/hytale/server/worldgen/loader/context/BiomeFileContext;)V
+        29: return
+
+  public com.hypixel.hytale.server.worldgen.biome.TileBiome load();
+    Code:
+         0: new           #31                 // class com/hypixel/hytale/server/worldgen/biome/TileBiome
+         3: dup
+         4: aload_0
+         5: getfield      #33                 // Field biomeContext:Lcom/hypixel/hytale/server/worldgen/loader/context/BiomeFileContext;
+         8: invokevirtual #39                 // Method com/hypixel/hytale/server/worldgen/loader/context/BiomeFileContext.getId:()I
+        11: aload_0
+        12: getfield      #33                 // Field biomeContext:Lcom/hypixel/hytale/server/worldgen/loader/context/BiomeFileContext;
+        15: invokevirtual #7                  // Method com/hypixel/hytale/server/worldgen/loader/context/BiomeFileContext.getName:()Ljava/lang/String;
+        18: aload_0
+        19: invokevirtual #43                 // Method loadInterpolation:()Lcom/hypixel/hytale/server/worldgen/biome/BiomeInterpolation;
+        22: aload_0
+        23: invokevirtual #47                 // Method loadTerrainHeightThreshold:()Lcom/hypixel/hytale/procedurallib/condition/IHeightThresholdInterpreter;
+        26: aload_0
+        27: invokevirtual #51                 // Method loadCoverContainer:()Lcom/hypixel/hytale/server/worldgen/container/CoverContainer;
+        30: aload_0
+        31: invokevirtual #55                 // Method loadLayerContainers:()Lcom/hypixel/hytale/server/worldgen/container/LayerContainer;
+        34: aload_0
+        35: invokevirtual #59                 // Method loadPrefabContainer:()Lcom/hypixel/hytale/server/worldgen/container/PrefabContainer;
+        38: aload_0
+        39: invokevirtual #63                 // Method loadTintContainer:()Lcom/hypixel/hytale/server/worldgen/container/TintContainer;
+        42: aload_0
+        43: invokevirtual #67                 // Method loadEnvironmentContainer:()Lcom/hypixel/hytale/server/worldgen/container/EnvironmentContainer;
+        46: aload_0
+        47: invokevirtual #71                 // Method loadWaterContainer:()Lcom/hypixel/hytale/server/worldgen/container/WaterContainer;
+        50: aload_0
+        51: invokevirtual #75                 // Method loadFadeContainer:()Lcom/hypixel/hytale/server/worldgen/container/FadeContainer;
+        54: aload_0
+        55: invokevirtual #79                 // Method loadHeightmapNoise:()Lcom/hypixel/hytale/procedurallib/property/NoiseProperty;
+        58: aload_0
+        59: invokevirtual #83                 // Method loadWeight:()D
+        62: aload_0
+        63: invokevirtual #87                 // Method loadSizeModifier:()D
+        66: aload_0
+        67: invokevirtual #90                 // Method loadColor:()I
+        70: invokespecial #93                 // Method com/hypixel/hytale/server/worldgen/biome/TileBiome."<init>":(ILjava/lang/String;Lcom/hypixel/hytale/server/worldgen/biome/BiomeInterpolation;Lcom/hypixel/hytale/procedurallib/condition/IHeightThresholdInterpreter;Lcom/hypixel/hytale/server/worldgen/container/CoverContainer;Lcom/hypixel/hytale/server/worldgen/container/LayerContainer;Lcom/hypixel/hytale/server/worldgen/container/PrefabContainer;Lcom/hypixel/hytale/server/worldgen/container/TintContainer;Lcom/hypixel/hytale/server/worldgen/container/EnvironmentContainer;Lcom/hypixel/hytale/server/worldgen/container/WaterContainer;Lcom/hypixel/hytale/server/worldgen/container/FadeContainer;Lcom/hypixel/hytale/procedurallib/property/NoiseProperty;DDI)V
+        73: areturn
+
+  protected double loadWeight();
+    Code:
+         0: dconst_1
+         1: dstore_1
+         2: aload_0
+         3: ldc           #96                 // String Weight
+         5: invokevirtual #98                 // Method has:(Ljava/lang/String;)Z
+         8: ifeq          21
+        11: aload_0
+        12: ldc           #96                 // String Weight
+        14: invokevirtual #102                // Method get:(Ljava/lang/String;)Lcom/google/gson/JsonElement;
+        17: invokevirtual #106                // Method com/google/gson/JsonElement.getAsDouble:()D
+        20: dstore_1
+        21: dload_1
+        22: dreturn
+
+  protected double loadSizeModifier();
+    Code:
+         0: dconst_1
+         1: dstore_1
+         2: aload_0
+         3: ldc           #111                // String SizeModifier
+         5: invokevirtual #98                 // Method has:(Ljava/lang/String;)Z
+         8: ifeq          21
+        11: aload_0
+        12: ldc           #111                // String SizeModifier
+        14: invokevirtual #102                // Method get:(Ljava/lang/String;)Lcom/google/gson/JsonElement;
+        17: invokevirtual #106                // Method com/google/gson/JsonElement.getAsDouble:()D
+        20: dstore_1
+        21: dload_1
+        22: dload_1
+        23: dmul
+        24: dreturn
+
+  public java.lang.Object load();
+    Code:
+         0: aload_0
+         1: invokevirtual #113                // Method load:()Lcom/hypixel/hytale/server/worldgen/biome/TileBiome;
+         4: areturn
+}

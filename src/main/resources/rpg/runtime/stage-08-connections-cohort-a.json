@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {
+      "skillId": "wind_cutter", "family": "LINE", "secondaryFamilies": [],
+      "allowedMainHandKinds": ["STAFF", "WAND"], "requiredOffHandKinds": [],
+      "resourceType": "MANA", "resourceCost": 8, "cooldownSeconds": 2.5, "windupSeconds": 0,
+      "basePowerSource": "MAGIC_WEAPON", "scaling": "MAGIC",
+      "connection": {"kind": "WAVE", "range": 16, "width": 1.2, "height": 2.5, "depth": 0.3,
+        "speed": 20, "lifetimeSeconds": 0.8, "intervalSeconds": 0, "coefficient": 0.95,
+        "upkeepPerSecond": 0, "radius": 0, "originHeight": 1.25, "element": "WIND"}
+    },
+    {
+      "skillId": "void_beam", "family": "BEAM", "secondaryFamilies": [],
+      "allowedMainHandKinds": ["STAFF", "WAND"], "requiredOffHandKinds": [],
+      "resourceType": "NONE", "resourceCost": 0, "cooldownSeconds": 2, "windupSeconds": 0,
+      "basePowerSource": "MAGIC_WEAPON", "scaling": "MAGIC",
+      "connection": {"kind": "BEAM", "range": 22, "width": 0.8, "height": 0.8, "depth": 0,
+        "speed": 0, "lifetimeSeconds": 5, "intervalSeconds": 0.25, "coefficient": 0.45,
+        "upkeepPerSecond": 4, "radius": 0, "originHeight": 1.35, "element": "VOID"}
+    },
+    {
+      "skillId": "ball_lightning", "family": "ORB", "secondaryFamilies": [],
+      "allowedMainHandKinds": ["STAFF", "WAND"], "requiredOffHandKinds": [],
+      "resourceType": "MANA", "resourceCost": 18, "cooldownSeconds": 10, "windupSeconds": 0,
+      "basePowerSource": "MAGIC_WEAPON", "scaling": "MAGIC",
+      "connection": {"kind": "ORB", "range": 18, "width": 0, "height": 3, "depth": 0,
+        "speed": 5, "lifetimeSeconds": 5, "intervalSeconds": 0.75, "coefficient": 0.35,
+        "upkeepPerSecond": 0, "radius": 1.8, "originHeight": 1.35, "element": "LIGHTNING"}
+    }
+  ]
+}

@@ -1,0 +1,372 @@
+Compiled from "PhysicsMath.java"
+public class com.hypixel.hytale.server.core.modules.physics.util.PhysicsMath {
+  public static final double DENSITY_AIR;
+
+  public static final double DENSITY_WATER;
+
+  public static final double AIR_DENSITY;
+
+  public static final float HEADING_DIRECTION;
+
+  public com.hypixel.hytale.server.core.modules.physics.util.PhysicsMath();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+
+  public static double getAcceleration(double, double);
+    Code:
+         0: dload_0
+         1: dload_2
+         2: ddiv
+         3: invokestatic  #7                  // Method java/lang/Math.abs:(D)D
+         6: dstore        4
+         8: ldc2_w        #15                 // double 32.0d
+        11: dload_2
+        12: invokestatic  #17                 // Method java/lang/Math.signum:(D)D
+        15: dload_0
+        16: invokestatic  #17                 // Method java/lang/Math.signum:(D)D
+        19: dload         4
+        21: dload         4
+        23: dmul
+        24: dload         4
+        26: dmul
+        27: dmul
+        28: dsub
+        29: dmul
+        30: dreturn
+
+  public static double getTerminalVelocity(double, double, double, double);
+    Code:
+         0: dload_0
+         1: ldc2_w        #20                 // double 1000.0d
+         4: dmul
+         5: dstore        8
+         7: dload         4
+         9: ldc2_w        #22                 // double 1000000.0d
+        12: dmul
+        13: dstore        10
+        15: ldc2_w        #24                 // double 64.0d
+        18: dload         8
+        20: dmul
+        21: dload_2
+        22: dload         10
+        24: dmul
+        25: dload         6
+        27: dmul
+        28: ddiv
+        29: invokestatic  #26                 // Method java/lang/Math.sqrt:(D)D
+        32: dreturn
+
+  public static double getRelativeDensity(org.joml.Vector3d, com.hypixel.hytale.math.shape.Box);
+    Code:
+         0: ldc2_w        #29                 // double 0.001225d
+         3: dreturn
+
+  public static double computeDragCoefficient(double, double, double, double);
+    Code:
+         0: dload         4
+         2: dload         6
+         4: dmul
+         5: dload_2
+         6: dload_0
+         7: dmul
+         8: dload_0
+         9: dmul
+        10: ddiv
+        11: dreturn
+
+  public static double computeTerminalSpeed(double, double, double, double);
+    Code:
+         0: dload         4
+         2: dload         6
+         4: dmul
+         5: dload_2
+         6: dload_0
+         7: dmul
+         8: ddiv
+         9: invokestatic  #26                 // Method java/lang/Math.sqrt:(D)D
+        12: dreturn
+
+  public static double computeProjectedArea(double, double, double, com.hypixel.hytale.math.shape.Box);
+    Code:
+         0: dconst_0
+         1: dstore        7
+         3: dload_0
+         4: dconst_0
+         5: dcmpl
+         6: ifeq          30
+         9: dload         7
+        11: dload_0
+        12: invokestatic  #7                  // Method java/lang/Math.abs:(D)D
+        15: aload         6
+        17: invokevirtual #31                 // Method com/hypixel/hytale/math/shape/Box.depth:()D
+        20: dmul
+        21: aload         6
+        23: invokevirtual #37                 // Method com/hypixel/hytale/math/shape/Box.height:()D
+        26: dmul
+        27: dadd
+        28: dstore        7
+        30: dload_2
+        31: dconst_0
+        32: dcmpl
+        33: ifeq          57
+        36: dload         7
+        38: dload_2
+        39: invokestatic  #7                  // Method java/lang/Math.abs:(D)D
+        42: aload         6
+        44: invokevirtual #31                 // Method com/hypixel/hytale/math/shape/Box.depth:()D
+        47: dmul
+        48: aload         6
+        50: invokevirtual #40                 // Method com/hypixel/hytale/math/shape/Box.width:()D
+        53: dmul
+        54: dadd
+        55: dstore        7
+        57: dload         4
+        59: dconst_0
+        60: dcmpl
+        61: ifeq          86
+        64: dload         7
+        66: dload         4
+        68: invokestatic  #7                  // Method java/lang/Math.abs:(D)D
+        71: aload         6
+        73: invokevirtual #40                 // Method com/hypixel/hytale/math/shape/Box.width:()D
+        76: dmul
+        77: aload         6
+        79: invokevirtual #37                 // Method com/hypixel/hytale/math/shape/Box.height:()D
+        82: dmul
+        83: dadd
+        84: dstore        7
+        86: dload         7
+        88: dreturn
+
+  public static double computeProjectedArea(org.joml.Vector3d, com.hypixel.hytale.math.shape.Box);
+    Code:
+         0: aload_0
+         1: getfield      #43                 // Field org/joml/Vector3d.x:D
+         4: aload_0
+         5: getfield      #49                 // Field org/joml/Vector3d.y:D
+         8: aload_0
+         9: getfield      #52                 // Field org/joml/Vector3d.z:D
+        12: aload_1
+        13: invokestatic  #55                 // Method computeProjectedArea:(DDDLcom/hypixel/hytale/math/shape/Box;)D
+        16: dreturn
+
+  public static double volumeOfIntersection(com.hypixel.hytale.math.shape.Box, org.joml.Vector3dc, com.hypixel.hytale.math.shape.Box, org.joml.Vector3dc);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: aload_3
+         4: invokeinterface #61,  1           // InterfaceMethod org/joml/Vector3dc.x:()D
+         9: aload_3
+        10: invokeinterface #65,  1           // InterfaceMethod org/joml/Vector3dc.y:()D
+        15: aload_3
+        16: invokeinterface #67,  1           // InterfaceMethod org/joml/Vector3dc.z:()D
+        21: invokestatic  #69                 // Method volumeOfIntersection:(Lcom/hypixel/hytale/math/shape/Box;Lorg/joml/Vector3dc;Lcom/hypixel/hytale/math/shape/Box;DDD)D
+        24: dreturn
+
+  public static double volumeOfIntersection(com.hypixel.hytale.math.shape.Box, org.joml.Vector3dc, com.hypixel.hytale.math.shape.Box, double, double, double);
+    Code:
+         0: dload_3
+         1: aload_1
+         2: invokeinterface #61,  1           // InterfaceMethod org/joml/Vector3dc.x:()D
+         7: dsub
+         8: dstore_3
+         9: dload         5
+        11: aload_1
+        12: invokeinterface #65,  1           // InterfaceMethod org/joml/Vector3dc.y:()D
+        17: dsub
+        18: dstore        5
+        20: dload         7
+        22: aload_1
+        23: invokeinterface #67,  1           // InterfaceMethod org/joml/Vector3dc.z:()D
+        28: dsub
+        29: dstore        7
+        31: aload_0
+        32: getfield      #73                 // Field com/hypixel/hytale/math/shape/Box.min:Lorg/joml/Vector3d;
+        35: getfield      #43                 // Field org/joml/Vector3d.x:D
+        38: aload_0
+        39: getfield      #77                 // Field com/hypixel/hytale/math/shape/Box.max:Lorg/joml/Vector3d;
+        42: getfield      #43                 // Field org/joml/Vector3d.x:D
+        45: dload_3
+        46: aload_2
+        47: getfield      #73                 // Field com/hypixel/hytale/math/shape/Box.min:Lorg/joml/Vector3d;
+        50: getfield      #43                 // Field org/joml/Vector3d.x:D
+        53: dadd
+        54: dload_3
+        55: aload_2
+        56: getfield      #77                 // Field com/hypixel/hytale/math/shape/Box.max:Lorg/joml/Vector3d;
+        59: getfield      #43                 // Field org/joml/Vector3d.x:D
+        62: dadd
+        63: invokestatic  #80                 // Method lengthOfIntersection:(DDDD)D
+        66: aload_0
+        67: getfield      #73                 // Field com/hypixel/hytale/math/shape/Box.min:Lorg/joml/Vector3d;
+        70: getfield      #49                 // Field org/joml/Vector3d.y:D
+        73: aload_0
+        74: getfield      #77                 // Field com/hypixel/hytale/math/shape/Box.max:Lorg/joml/Vector3d;
+        77: getfield      #49                 // Field org/joml/Vector3d.y:D
+        80: dload         5
+        82: aload_2
+        83: getfield      #73                 // Field com/hypixel/hytale/math/shape/Box.min:Lorg/joml/Vector3d;
+        86: getfield      #49                 // Field org/joml/Vector3d.y:D
+        89: dadd
+        90: dload         5
+        92: aload_2
+        93: getfield      #77                 // Field com/hypixel/hytale/math/shape/Box.max:Lorg/joml/Vector3d;
+        96: getfield      #49                 // Field org/joml/Vector3d.y:D
+        99: dadd
+       100: invokestatic  #80                 // Method lengthOfIntersection:(DDDD)D
+       103: dmul
+       104: aload_0
+       105: getfield      #73                 // Field com/hypixel/hytale/math/shape/Box.min:Lorg/joml/Vector3d;
+       108: getfield      #52                 // Field org/joml/Vector3d.z:D
+       111: aload_0
+       112: getfield      #77                 // Field com/hypixel/hytale/math/shape/Box.max:Lorg/joml/Vector3d;
+       115: getfield      #52                 // Field org/joml/Vector3d.z:D
+       118: dload         7
+       120: aload_2
+       121: getfield      #73                 // Field com/hypixel/hytale/math/shape/Box.min:Lorg/joml/Vector3d;
+       124: getfield      #52                 // Field org/joml/Vector3d.z:D
+       127: dadd
+       128: dload         7
+       130: aload_2
+       131: getfield      #77                 // Field com/hypixel/hytale/math/shape/Box.max:Lorg/joml/Vector3d;
+       134: getfield      #52                 // Field org/joml/Vector3d.z:D
+       137: dadd
+       138: invokestatic  #80                 // Method lengthOfIntersection:(DDDD)D
+       141: dmul
+       142: dreturn
+
+  public static double lengthOfIntersection(double, double, double, double);
+    Code:
+         0: dload_0
+         1: dload         4
+         3: invokestatic  #84                 // Method java/lang/Math.max:(DD)D
+         6: dstore        8
+         8: dload_2
+         9: dload         6
+        11: invokestatic  #87                 // Method java/lang/Math.min:(DD)D
+        14: dstore        10
+        16: dconst_0
+        17: dload         10
+        19: dload         8
+        21: dsub
+        22: invokestatic  #84                 // Method java/lang/Math.max:(DD)D
+        25: dreturn
+
+  public static float headingFromDirection(double, double);
+    Code:
+         0: fconst_1
+         1: dload_0
+         2: dneg
+         3: dload_2
+         4: dneg
+         5: invokestatic  #89                 // Method com/hypixel/hytale/math/util/TrigMathUtil.atan2:(DD)F
+         8: fmul
+         9: freturn
+
+  public static float normalizeAngle(float);
+    Code:
+         0: fload_0
+         1: ldc           #95                 // float 6.2831855f
+         3: frem
+         4: fstore_0
+         5: fload_0
+         6: fconst_0
+         7: fcmpg
+         8: ifge          16
+        11: fload_0
+        12: ldc           #95                 // float 6.2831855f
+        14: fadd
+        15: fstore_0
+        16: fload_0
+        17: freturn
+
+  public static float normalizeTurnAngle(float);
+    Code:
+         0: fload_0
+         1: invokestatic  #96                 // Method normalizeAngle:(F)F
+         4: fstore_0
+         5: fload_0
+         6: ldc           #100                // float 3.1415927f
+         8: fcmpl
+         9: iflt          17
+        12: fload_0
+        13: ldc           #95                 // float 6.2831855f
+        15: fsub
+        16: fstore_0
+        17: fload_0
+        18: freturn
+
+  public static float pitchFromDirection(double, double, double);
+    Code:
+         0: dload_2
+         1: dload_0
+         2: dload_0
+         3: dmul
+         4: dload         4
+         6: dload         4
+         8: dmul
+         9: dadd
+        10: invokestatic  #26                 // Method java/lang/Math.sqrt:(D)D
+        13: invokestatic  #89                 // Method com/hypixel/hytale/math/util/TrigMathUtil.atan2:(DD)F
+        16: freturn
+
+  public static org.joml.Vector3d vectorFromAngles(float, float, org.joml.Vector3d);
+    Code:
+         0: fload_1
+         1: invokestatic  #101                // Method pitchX:(F)F
+         4: fstore_3
+         5: aload_2
+         6: fload_1
+         7: invokestatic  #104                // Method pitchY:(F)F
+        10: f2d
+        11: putfield      #49                 // Field org/joml/Vector3d.y:D
+        14: aload_2
+        15: fload_0
+        16: invokestatic  #107                // Method headingX:(F)F
+        19: fload_3
+        20: fmul
+        21: f2d
+        22: putfield      #43                 // Field org/joml/Vector3d.x:D
+        25: aload_2
+        26: fload_0
+        27: invokestatic  #110                // Method headingZ:(F)F
+        30: fload_3
+        31: fmul
+        32: f2d
+        33: putfield      #52                 // Field org/joml/Vector3d.z:D
+        36: aload_2
+        37: areturn
+
+  public static float pitchX(float);
+    Code:
+         0: fload_0
+         1: invokestatic  #113                // Method com/hypixel/hytale/math/util/TrigMathUtil.cos:(F)F
+         4: freturn
+
+  public static float pitchY(float);
+    Code:
+         0: fload_0
+         1: invokestatic  #116                // Method com/hypixel/hytale/math/util/TrigMathUtil.sin:(F)F
+         4: freturn
+
+  public static float headingX(float);
+    Code:
+         0: fconst_1
+         1: fload_0
+         2: fmul
+         3: invokestatic  #116                // Method com/hypixel/hytale/math/util/TrigMathUtil.sin:(F)F
+         6: fneg
+         7: freturn
+
+  public static float headingZ(float);
+    Code:
+         0: fconst_1
+         1: fload_0
+         2: fmul
+         3: invokestatic  #113                // Method com/hypixel/hytale/math/util/TrigMathUtil.cos:(F)F
+         6: fneg
+         7: freturn
+}

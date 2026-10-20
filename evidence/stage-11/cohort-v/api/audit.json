@@ -1,0 +1,7 @@
+{
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "jarSha256": "03B66B087149C940579D7A29A95AB2DC344F394B9CE9B97A9047058050EAB0AB",
+  "scope": "Native damage receipt -> conditional decision -> shared release queue -> fresh world/target/equipment revalidation -> existing family executor; retained projectile root accounting",
+  "evidence": "Bytecode/call-site structure only, not connected input, hit, target selection, timing, repeat rendering or native execution proof",
+  "connected": "UNVERIFIED"
+}

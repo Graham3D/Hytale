@@ -1,0 +1,19 @@
+{
+  "Model": "RPG_Crossbow_Bolt",
+  "UseModelScale": true,
+  "Physics": {
+    "Type": "Standard",
+    "Gravity": 10,
+    "TerminalVelocityAir": 50,
+    "TerminalVelocityWater": 15,
+    "RotationMode": "Velocity",
+    "Bounciness": 0
+  },
+  "LaunchForce": 40,
+  "SpawnOffset": {
+    "X": 0,
+    "Y": 0,
+    "Z": 0
+  },
+  "Interactions": {}
+}

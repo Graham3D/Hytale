@@ -1,0 +1,93 @@
+plugins {
+    id 'java'
+}
+
+group = maven_group
+version = project.version
+
+def hytaleHome = file("${System.getProperty('user.home')}/AppData/Roaming/Hytale")
+def gamePackage = file("${hytaleHome}/install/${patchline}/package/game/latest")
+def serverJar = file("${gamePackage}/Server/HytaleServer.jar")
+def assetsZip = file("${gamePackage}/Assets.zip")
+def htDevLibJar = file("${hytaleHome}/UserData/Saves/RPG/mods/HYTALEDEVLIB-0.5.0.jar")
+
+if (!serverJar.exists()) {
+    throw new GradleException("Hytale server jar not found: ${serverJar}")
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(java_version)
+}
+
+repositories { mavenCentral() }
+
+dependencies {
+    compileOnly files(serverJar)
+    compileOnly files(htDevLibJar)
+    testImplementation files(serverJar)
+    testImplementation platform('org.junit:junit-bom:5.12.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.register('validateCustomUi', Exec) {
+    group = 'verification'
+    description = 'Rejects malformed CustomUI documents before resources are packaged.'
+    commandLine 'powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
+        file('tools/Test-CustomUIDocuments.ps1'), '-Path', projectDir
+}
+
+allprojects {
+    tasks.matching { it.name == 'processResources' }.configureEach {
+        dependsOn rootProject.tasks.named('validateCustomUi')
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+tasks.test {
+    useJUnitPlatform()
+    exclude '**/R023NativeRuneControlTest*'
+    exclude '**/R024NativeInteractionAssetTest*'
+    exclude '**/Stage09NativeManaTest*'
+    exclude '**/Stage12NativeBiomeAssetTest*'
+    exclude '**/Stage13NativeBasicPathTest*'
+    exclude '**/Stage13NativeCadenceAuditTest*'
+}
+
+tasks.register('nativeControlTest', Test) {
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    useJUnitPlatform()
+    filter {
+        includeTestsMatching '*R023NativeRuneControlTest'
+        includeTestsMatching '*R024NativeInteractionAssetTest'
+        includeTestsMatching '*Stage09NativeManaTest'
+        includeTestsMatching '*Stage12NativeBiomeAssetTest'
+        includeTestsMatching '*Stage13NativeBasicPathTest'
+        includeTestsMatching '*Stage13NativeCadenceAuditTest'
+    }
+    // Separate JVM: native codecs require Hytale's logger; retained UI tests exercise the JUL fallback.
+    systemProperty 'java.util.logging.manager', 'com.hypixel.hytale.logger.backend.HytaleLogManager'
+}
+tasks.check { dependsOn tasks.named('nativeControlTest') }
+
+tasks.processResources {
+    inputs.property('version', project.version)
+    inputs.property('rpgRevision', rpg_revision)
+    inputs.property('hytaleVersion', hytale_version)
+    filesMatching(['manifest.json', 'rpg-build.properties']) {
+        expand(version: project.version, rpgRevision: rpg_revision, hytaleVersion: hytale_version)
+    }
+}
+
+tasks.register('printAuditClasspath') {
+    doLast {
+        println "serverJar=${serverJar}"
+        println "assetsZip=${assetsZip}"
+        println "htDevLibJar=${htDevLibJar}"
+        println "rpgRevision=${rpg_revision}"
+    }
+}

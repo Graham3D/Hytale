@@ -1,0 +1,40 @@
+{
+  "capturedAtUtc": "2026-09-08T13:06:01.8958560Z",
+  "stage": 10,
+  "cohort": "c",
+  "revision": "R029",
+  "version": "0.0.22",
+  "playerSchema": 5,
+  "compiledPlanSchema": 7,
+  "sourceHead": "7948b7a27adfe307cd3371781e56dd3dad53bcd3",
+  "branch": "RPG",
+  "status": "IMPLEMENTATION_IN_PROGRESS",
+  "cohortStatus": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+  "localGate": "PASS",
+  "connectedGate": "UNVERIFIED",
+  "cohortSkills": [
+    "summon_void_crawlers",
+    "brood_call"
+  ],
+  "cohortPassives": [
+    "swarm",
+    "minion_empowerment"
+  ],
+  "tests": 576,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "jarSha256": "2D3D5EDF3020FC61E5A892A3ACA5D9251D601DB4E13B1F64C3F38ECB62782D6F",
+  "rollbackSha256": "6D8CD1110E3572CFFF43E960CD2D115BC21A2D5A2A0F2D0E24B3E3BE5B186DA8",
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "assetsSha256": "46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39",
+  "zeroNativeCostTriggers": 55,
+  "normalThreeModSmoke": true,
+  "nativeSpawnOrMotionProven": false,
+  "nativeCastingFixed": false,
+  "liveDeploymentPerformed": false,
+  "protectedPathsChanged": [],
+  "remainingStage10Skills": 5,
+  "stage10Complete": false,
+  "rollbackStateRequirement": "No migration from Stage09 schema5. Earlier live R023 schema3 still needs its own backup before any eventual deployment."
+}

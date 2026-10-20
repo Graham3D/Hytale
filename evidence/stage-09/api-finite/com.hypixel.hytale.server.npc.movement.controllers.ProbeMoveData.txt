@@ -1,0 +1,968 @@
+Compiled from "ProbeMoveData.java"
+public class com.hypixel.hytale.server.npc.movement.controllers.ProbeMoveData {
+  public final org.joml.Vector3d probePosition;
+
+  public final org.joml.Vector3d probeDirection;
+
+  public final org.joml.Vector3d initialPosition;
+
+  public final org.joml.Vector3d targetPosition;
+
+  public final org.joml.Vector3d directionComponentSelector;
+
+  private final java.util.EnumSet<com.hypixel.hytale.server.npc.movement.constraints.RelaxedConstraint> relaxedConstraints;
+
+  private java.util.function.Predicate<com.hypixel.hytale.server.core.modules.collision.CollisionConfig> blockCollisionFilter;
+
+  private int breathableBlockSet;
+
+  public boolean edgeBlocked;
+
+  public boolean isSavingSegments;
+
+  public int segmentCount;
+
+  public com.hypixel.hytale.server.npc.movement.controllers.ProbeMoveData$Segment[] segments;
+
+  public boolean debugCollision;
+
+  public com.hypixel.hytale.server.npc.movement.controllers.ProbeMoveData();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: ldc           #7                  // class com/hypixel/hytale/server/npc/movement/constraints/RelaxedConstraint
+         7: invokestatic  #9                  // Method java/util/EnumSet.noneOf:(Ljava/lang/Class;)Ljava/util/EnumSet;
+        10: putfield      #15                 // Field relaxedConstraints:Ljava/util/EnumSet;
+        13: aload_0
+        14: ldc           #23                 // int -2147483648
+        16: putfield      #24                 // Field breathableBlockSet:I
+        19: aload_0
+        20: new           #28                 // class org/joml/Vector3d
+        23: dup
+        24: invokespecial #30                 // Method org/joml/Vector3d."<init>":()V
+        27: putfield      #31                 // Field probeDirection:Lorg/joml/Vector3d;
+        30: aload_0
+        31: new           #28                 // class org/joml/Vector3d
+        34: dup
+        35: invokespecial #30                 // Method org/joml/Vector3d."<init>":()V
+        38: putfield      #35                 // Field probePosition:Lorg/joml/Vector3d;
+        41: aload_0
+        42: new           #28                 // class org/joml/Vector3d
+        45: dup
+        46: invokespecial #30                 // Method org/joml/Vector3d."<init>":()V
+        49: putfield      #38                 // Field initialPosition:Lorg/joml/Vector3d;
+        52: aload_0
+        53: new           #28                 // class org/joml/Vector3d
+        56: dup
+        57: invokespecial #30                 // Method org/joml/Vector3d."<init>":()V
+        60: putfield      #41                 // Field targetPosition:Lorg/joml/Vector3d;
+        63: aload_0
+        64: new           #28                 // class org/joml/Vector3d
+        67: dup
+        68: invokespecial #30                 // Method org/joml/Vector3d."<init>":()V
+        71: putfield      #44                 // Field directionComponentSelector:Lorg/joml/Vector3d;
+        74: return
+
+  public void setSaveSegments(boolean);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: putfield      #47                 // Field isSavingSegments:Z
+         5: aload_0
+         6: getfield      #47                 // Field isSavingSegments:Z
+         9: ifeq          58
+        12: aload_0
+        13: getfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+        16: ifnonnull     58
+        19: aload_0
+        20: bipush        6
+        22: anewarray     #55                 // class com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment
+        25: putfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+        28: iconst_0
+        29: istore_2
+        30: iload_2
+        31: aload_0
+        32: getfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+        35: arraylength
+        36: if_icmpge     58
+        39: aload_0
+        40: getfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+        43: iload_2
+        44: new           #55                 // class com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment
+        47: dup
+        48: invokespecial #57                 // Method com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment."<init>":()V
+        51: aastore
+        52: iinc          2, 1
+        55: goto          30
+        58: return
+
+  public java.util.EnumSet<com.hypixel.hytale.server.npc.movement.constraints.RelaxedConstraint> getRelaxedConstraints();
+    Code:
+         0: aload_0
+         1: getfield      #15                 // Field relaxedConstraints:Ljava/util/EnumSet;
+         4: areturn
+
+  public void setRelaxedConstraints(java.util.EnumSet<com.hypixel.hytale.server.npc.movement.constraints.RelaxedConstraint>);
+    Code:
+         0: aload_0
+         1: getfield      #15                 // Field relaxedConstraints:Ljava/util/EnumSet;
+         4: invokevirtual #58                 // Method java/util/EnumSet.clear:()V
+         7: aload_0
+         8: getfield      #15                 // Field relaxedConstraints:Ljava/util/EnumSet;
+        11: aload_1
+        12: invokevirtual #61                 // Method java/util/EnumSet.addAll:(Ljava/util/Collection;)Z
+        15: pop
+        16: return
+
+  public java.util.function.Predicate<com.hypixel.hytale.server.core.modules.collision.CollisionConfig> getBlockCollisionFilter();
+    Code:
+         0: aload_0
+         1: getfield      #65                 // Field blockCollisionFilter:Ljava/util/function/Predicate;
+         4: areturn
+
+  public void setBlockCollisionFilter(java.util.function.Predicate<com.hypixel.hytale.server.core.modules.collision.CollisionConfig>);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #65                 // Field blockCollisionFilter:Ljava/util/function/Predicate;
+         5: return
+
+  public int getBreathableBlockSet();
+    Code:
+         0: aload_0
+         1: getfield      #24                 // Field breathableBlockSet:I
+         4: ireturn
+
+  public void setBreathableBlockSet(int);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: putfield      #24                 // Field breathableBlockSet:I
+         5: return
+
+  public com.hypixel.hytale.server.npc.movement.controllers.ProbeMoveData setPosition(org.joml.Vector3dc);
+    Code:
+         0: aload_0
+         1: getfield      #35                 // Field probePosition:Lorg/joml/Vector3d;
+         4: aload_1
+         5: invokevirtual #69                 // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+         8: pop
+         9: aload_0
+        10: getfield      #38                 // Field initialPosition:Lorg/joml/Vector3d;
+        13: aload_1
+        14: invokevirtual #69                 // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+        17: pop
+        18: aload_0
+        19: areturn
+
+  public com.hypixel.hytale.server.npc.movement.controllers.ProbeMoveData setDirection(org.joml.Vector3dc);
+    Code:
+         0: aload_0
+         1: getfield      #31                 // Field probeDirection:Lorg/joml/Vector3d;
+         4: aload_1
+         5: invokevirtual #69                 // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+         8: pop
+         9: aload_0
+        10: getfield      #41                 // Field targetPosition:Lorg/joml/Vector3d;
+        13: aload_0
+        14: getfield      #35                 // Field probePosition:Lorg/joml/Vector3d;
+        17: invokevirtual #69                 // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+        20: aload_0
+        21: getfield      #31                 // Field probeDirection:Lorg/joml/Vector3d;
+        24: invokevirtual #73                 // Method org/joml/Vector3d.add:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+        27: pop
+        28: aload_0
+        29: areturn
+
+  public com.hypixel.hytale.server.npc.movement.controllers.ProbeMoveData setTargetPosition(org.joml.Vector3dc);
+    Code:
+         0: aload_0
+         1: getfield      #41                 // Field targetPosition:Lorg/joml/Vector3d;
+         4: aload_1
+         5: invokevirtual #69                 // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+         8: pop
+         9: aload_0
+        10: getfield      #31                 // Field probeDirection:Lorg/joml/Vector3d;
+        13: aload_1
+        14: invokevirtual #69                 // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+        17: aload_0
+        18: getfield      #35                 // Field probePosition:Lorg/joml/Vector3d;
+        21: invokevirtual #76                 // Method org/joml/Vector3d.sub:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+        24: pop
+        25: aload_0
+        26: areturn
+
+  public boolean canAdvance(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.npc.movement.controllers.MotionController, double, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: dload_3
+         1: aload_0
+         2: getfield      #31                 // Field probeDirection:Lorg/joml/Vector3d;
+         5: invokevirtual #79                 // Method org/joml/Vector3d.length:()D
+         8: dmul
+         9: dstore        6
+        11: aload_0
+        12: aload_1
+        13: aload_2
+        14: dload         6
+        16: aload         5
+        18: invokevirtual #83                 // Method canAdvanceAbs:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/npc/movement/controllers/MotionController;DLcom/hypixel/hytale/component/ComponentAccessor;)Z
+        21: ireturn
+
+  public boolean canAdvanceAbs(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.npc.movement.controllers.MotionController, double, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_2
+         1: aload_1
+         2: aload_0
+         3: aload         5
+         5: invokeinterface #87,  4           // InterfaceMethod com/hypixel/hytale/server/npc/movement/controllers/MotionController.probeMove:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData;Lcom/hypixel/hytale/component/ComponentAccessor;)D
+        10: dstore        6
+        12: dload         6
+        14: dload_3
+        15: dcmpl
+        16: iflt          23
+        19: iconst_1
+        20: goto          24
+        23: iconst_0
+        24: ireturn
+
+  public boolean canMoveTo(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.npc.movement.controllers.MotionController, double, double, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: dload_3
+         4: aload         7
+         6: invokevirtual #93                 // Method canMoveTo:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/npc/movement/controllers/MotionController;DLcom/hypixel/hytale/component/ComponentAccessor;)Z
+         9: ifne          14
+        12: iconst_0
+        13: ireturn
+        14: aload_2
+        15: invokeinterface #96,  1           // InterfaceMethod com/hypixel/hytale/server/npc/movement/controllers/MotionController.is2D:()Z
+        20: ifne          25
+        23: iconst_1
+        24: ireturn
+        25: aload_0
+        26: getfield      #41                 // Field targetPosition:Lorg/joml/Vector3d;
+        29: aload_0
+        30: getfield      #35                 // Field probePosition:Lorg/joml/Vector3d;
+        33: aload_2
+        34: invokeinterface #100,  1          // InterfaceMethod com/hypixel/hytale/server/npc/movement/controllers/MotionController.getComponentSelector:()Lorg/joml/Vector3d;
+        39: invokestatic  #104                // Method com/hypixel/hytale/server/npc/util/NPCPhysicsMath.getProjectedDifference:(Lorg/joml/Vector3d;Lorg/joml/Vector3d;Lorg/joml/Vector3d;)D
+        42: dstore        8
+        44: dload         8
+        46: invokestatic  #110                // Method java/lang/Math.abs:(D)D
+        49: dload         5
+        51: dcmpg
+        52: ifgt          59
+        55: iconst_1
+        56: goto          60
+        59: iconst_0
+        60: ireturn
+
+  public boolean canMoveTo(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.npc.movement.controllers.MotionController, double, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_2
+         1: aload_1
+         2: aload_0
+         3: aload         5
+         5: invokeinterface #87,  4           // InterfaceMethod com/hypixel/hytale/server/npc/movement/controllers/MotionController.probeMove:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData;Lcom/hypixel/hytale/component/ComponentAccessor;)D
+        10: pop2
+        11: aload_2
+        12: aload_0
+        13: getfield      #41                 // Field targetPosition:Lorg/joml/Vector3d;
+        16: aload_0
+        17: getfield      #35                 // Field probePosition:Lorg/joml/Vector3d;
+        20: invokeinterface #116,  3          // InterfaceMethod com/hypixel/hytale/server/npc/movement/controllers/MotionController.waypointDistanceSquared:(Lorg/joml/Vector3dc;Lorg/joml/Vector3dc;)D
+        25: dload_3
+        26: dload_3
+        27: dmul
+        28: dcmpg
+        29: ifgt          36
+        32: iconst_1
+        33: goto          37
+        36: iconst_0
+        37: ireturn
+
+  public boolean computePosition(double, org.joml.Vector3d);
+    Code:
+         0: aload_0
+         1: getfield      #120                // Field segmentCount:I
+         4: iconst_2
+         5: if_icmpge     10
+         8: iconst_0
+         9: ireturn
+        10: dload_1
+        11: dconst_0
+        12: dcmpg
+        13: ifgt          32
+        16: aload_3
+        17: aload_0
+        18: getfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+        21: iconst_0
+        22: aaload
+        23: getfield      #123                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.position:Lorg/joml/Vector3d;
+        26: invokevirtual #69                 // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+        29: pop
+        30: iconst_1
+        31: ireturn
+        32: iconst_1
+        33: istore        4
+        35: aload_0
+        36: getfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+        39: iconst_0
+        40: aaload
+        41: astore        5
+        43: aconst_null
+        44: astore        6
+        46: iload         4
+        48: aload_0
+        49: getfield      #120                // Field segmentCount:I
+        52: if_icmpge     87
+        55: aload         5
+        57: astore        6
+        59: aload_0
+        60: getfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+        63: iload         4
+        65: aaload
+        66: astore        5
+        68: aload         5
+        70: getfield      #126                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.distance:D
+        73: dload_1
+        74: dcmpl
+        75: iflt          81
+        78: goto          87
+        81: iinc          4, 1
+        84: goto          46
+        87: aload         5
+        89: getfield      #126                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.distance:D
+        92: dload_1
+        93: dcmpg
+        94: ifgt          109
+        97: aload_3
+        98: aload         5
+       100: getfield      #123                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.position:Lorg/joml/Vector3d;
+       103: invokevirtual #69                 // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+       106: pop
+       107: iconst_1
+       108: ireturn
+       109: aload         5
+       111: getfield      #130                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.type:Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type;
+       114: invokevirtual #134                // Method com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type.canInterpolate:()Z
+       117: ifeq          159
+       120: dload_1
+       121: aload         6
+       123: getfield      #126                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.distance:D
+       126: dsub
+       127: aload         5
+       129: getfield      #126                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.distance:D
+       132: aload         6
+       134: getfield      #126                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.distance:D
+       137: dsub
+       138: ddiv
+       139: dstore        7
+       141: aload         6
+       143: getfield      #123                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.position:Lorg/joml/Vector3d;
+       146: aload         5
+       148: getfield      #123                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.position:Lorg/joml/Vector3d;
+       151: dload         7
+       153: aload_3
+       154: invokestatic  #139                // Method com/hypixel/hytale/server/npc/util/NPCPhysicsMath.lerp:(Lorg/joml/Vector3d;Lorg/joml/Vector3d;DLorg/joml/Vector3d;)V
+       157: iconst_1
+       158: ireturn
+       159: aload_3
+       160: aload         6
+       162: getfield      #123                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.position:Lorg/joml/Vector3d;
+       165: invokevirtual #69                 // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+       168: pop
+       169: iconst_1
+       170: ireturn
+
+  public boolean locateSegmentAtDistance(double, com.hypixel.hytale.server.npc.movement.controllers.ProbeMoveData$SegmentLocation);
+    Code:
+         0: aload_3
+         1: invokevirtual #143                // Method com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$SegmentLocation.reset:()V
+         4: aload_0
+         5: getfield      #120                // Field segmentCount:I
+         8: ifle          18
+        11: aload_0
+        12: getfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+        15: ifnonnull     20
+        18: iconst_0
+        19: ireturn
+        20: dload_1
+        21: dconst_0
+        22: dcmpg
+        23: ifgt          56
+        26: aload_3
+        27: iconst_0
+        28: putfield      #148                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$SegmentLocation.segmentIndex:I
+        31: aload_3
+        32: iconst_m1
+        33: putfield      #151                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$SegmentLocation.previousSegmentIndex:I
+        36: aload_3
+        37: dconst_0
+        38: putfield      #154                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$SegmentLocation.lambda:D
+        41: aload_3
+        42: aload_0
+        43: getfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+        46: iconst_0
+        47: aaload
+        48: getfield      #130                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.type:Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type;
+        51: putfield      #157                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$SegmentLocation.segmentType:Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type;
+        54: iconst_1
+        55: ireturn
+        56: iconst_1
+        57: istore        4
+        59: aload_0
+        60: getfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+        63: iconst_0
+        64: aaload
+        65: astore        5
+        67: aconst_null
+        68: astore        6
+        70: iload         4
+        72: aload_0
+        73: getfield      #120                // Field segmentCount:I
+        76: if_icmpge     111
+        79: aload         5
+        81: astore        6
+        83: aload_0
+        84: getfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+        87: iload         4
+        89: aaload
+        90: astore        5
+        92: aload         5
+        94: getfield      #126                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.distance:D
+        97: dload_1
+        98: dcmpl
+        99: iflt          105
+       102: goto          111
+       105: iinc          4, 1
+       108: goto          70
+       111: iload         4
+       113: aload_0
+       114: getfield      #120                // Field segmentCount:I
+       117: if_icmplt     167
+       120: aload_3
+       121: aload_0
+       122: getfield      #120                // Field segmentCount:I
+       125: iconst_1
+       126: isub
+       127: putfield      #148                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$SegmentLocation.segmentIndex:I
+       130: aload_3
+       131: iconst_0
+       132: aload_0
+       133: getfield      #120                // Field segmentCount:I
+       136: iconst_2
+       137: isub
+       138: invokestatic  #160                // Method java/lang/Math.max:(II)I
+       141: putfield      #151                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$SegmentLocation.previousSegmentIndex:I
+       144: aload_3
+       145: dconst_1
+       146: putfield      #154                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$SegmentLocation.lambda:D
+       149: aload_3
+       150: aload_0
+       151: getfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+       154: aload_3
+       155: getfield      #148                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$SegmentLocation.segmentIndex:I
+       158: aaload
+       159: getfield      #130                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.type:Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type;
+       162: putfield      #157                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$SegmentLocation.segmentType:Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type;
+       165: iconst_1
+       166: ireturn
+       167: aload_3
+       168: iload         4
+       170: putfield      #148                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$SegmentLocation.segmentIndex:I
+       173: aload_3
+       174: iload         4
+       176: iconst_1
+       177: isub
+       178: putfield      #151                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$SegmentLocation.previousSegmentIndex:I
+       181: aload_3
+       182: aload         5
+       184: getfield      #130                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.type:Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type;
+       187: putfield      #157                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$SegmentLocation.segmentType:Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type;
+       190: aload         5
+       192: getfield      #126                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.distance:D
+       195: dload_1
+       196: dcmpg
+       197: ifle          205
+       200: aload         6
+       202: ifnonnull     212
+       205: aload_3
+       206: dconst_1
+       207: putfield      #154                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$SegmentLocation.lambda:D
+       210: iconst_1
+       211: ireturn
+       212: aload         5
+       214: getfield      #126                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.distance:D
+       217: aload         6
+       219: getfield      #126                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.distance:D
+       222: dsub
+       223: dstore        7
+       225: dload         7
+       227: invokestatic  #110                // Method java/lang/Math.abs:(D)D
+       230: ldc2_w        #164                // double 1.0E-6d
+       233: dcmpg
+       234: ifgt          244
+       237: aload_3
+       238: dconst_1
+       239: putfield      #154                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$SegmentLocation.lambda:D
+       242: iconst_1
+       243: ireturn
+       244: aload_3
+       245: dload_1
+       246: aload         6
+       248: getfield      #126                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.distance:D
+       251: dsub
+       252: dload         7
+       254: ddiv
+       255: putfield      #154                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$SegmentLocation.lambda:D
+       258: iconst_1
+       259: ireturn
+
+  public boolean startProbing();
+    Code:
+         0: aload_0
+         1: iconst_0
+         2: putfield      #166                // Field edgeBlocked:Z
+         5: aload_0
+         6: getfield      #47                 // Field isSavingSegments:Z
+         9: ifeq          17
+        12: aload_0
+        13: iconst_0
+        14: putfield      #120                // Field segmentCount:I
+        17: aload_0
+        18: getfield      #47                 // Field isSavingSegments:Z
+        21: ireturn
+
+  public void addStartSegment(org.joml.Vector3dc, boolean);
+    Code:
+         0: aload_0
+         1: invokevirtual #169                // Method newSegment:()Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+         4: aload_1
+         5: iload_2
+         6: invokevirtual #173                // Method com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.initAsStartSegment:(Lorg/joml/Vector3dc;Z)V
+         9: return
+
+  public void addEndSegment(org.joml.Vector3dc, boolean, double);
+    Code:
+         0: aload_0
+         1: invokevirtual #169                // Method newSegment:()Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+         4: aload_1
+         5: iload_2
+         6: dload_3
+         7: invokevirtual #177                // Method com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.initAsEndSegment:(Lorg/joml/Vector3dc;ZD)V
+        10: return
+
+  public void addBlockedGroundSegment(org.joml.Vector3dc, double, org.joml.Vector3dc, int);
+    Code:
+         0: aload_0
+         1: invokevirtual #169                // Method newSegment:()Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+         4: aload_1
+         5: dload_2
+         6: aload         4
+         8: iload         5
+        10: invokevirtual #181                // Method com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.initAsBlockedGroundSegment:(Lorg/joml/Vector3dc;DLorg/joml/Vector3dc;I)V
+        13: return
+
+  public void addHitGroundSegment(org.joml.Vector3dc, double, org.joml.Vector3dc, int);
+    Code:
+         0: aload_0
+         1: invokevirtual #169                // Method newSegment:()Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+         4: aload_1
+         5: dload_2
+         6: aload         4
+         8: iload         5
+        10: invokevirtual #185                // Method com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.initAsHitGroundSegment:(Lorg/joml/Vector3dc;DLorg/joml/Vector3dc;I)V
+        13: return
+
+  public void addHitWallSegment(org.joml.Vector3dc, boolean, double, org.joml.Vector3dc, int);
+    Code:
+         0: aload_0
+         1: invokevirtual #169                // Method newSegment:()Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+         4: aload_1
+         5: iload_2
+         6: dload_3
+         7: aload         5
+         9: iload         6
+        11: invokevirtual #188                // Method com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.initAsHitWallSegment:(Lorg/joml/Vector3dc;ZDLorg/joml/Vector3dc;I)V
+        14: return
+
+  public void addMoveSegment(org.joml.Vector3dc, boolean, double);
+    Code:
+         0: aload_0
+         1: invokevirtual #169                // Method newSegment:()Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+         4: aload_1
+         5: iload_2
+         6: dload_3
+         7: invokevirtual #192                // Method com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.initAsMoveSegment:(Lorg/joml/Vector3dc;ZD)V
+        10: return
+
+  public void addClimbSegment(org.joml.Vector3dc, double, int);
+    Code:
+         0: aload_0
+         1: invokevirtual #169                // Method newSegment:()Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+         4: aload_1
+         5: dload_2
+         6: iload         4
+         8: invokevirtual #195                // Method com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.initAsClimbSegment:(Lorg/joml/Vector3dc;DI)V
+        11: return
+
+  public void addHitEdgeSegment(org.joml.Vector3dc, double);
+    Code:
+         0: aload_0
+         1: invokevirtual #169                // Method newSegment:()Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+         4: aload_1
+         5: dload_2
+         6: invokevirtual #199                // Method com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.initAsHitEdgeSegment:(Lorg/joml/Vector3dc;D)V
+         9: return
+
+  public void addDropSegment(org.joml.Vector3d, double);
+    Code:
+         0: aload_0
+         1: invokevirtual #169                // Method newSegment:()Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+         4: aload_1
+         5: dload_2
+         6: invokevirtual #203                // Method com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.initAsDropSegment:(Lorg/joml/Vector3dc;D)V
+         9: return
+
+  public void addBlockedDropSegment(org.joml.Vector3d, double);
+    Code:
+         0: aload_0
+         1: iconst_1
+         2: putfield      #166                // Field edgeBlocked:Z
+         5: aload_0
+         6: invokevirtual #169                // Method newSegment:()Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+         9: aload_1
+        10: dload_2
+        11: invokevirtual #206                // Method com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.initAsBlockedDropSegment:(Lorg/joml/Vector3dc;D)V
+        14: return
+
+  public void changeSegmentToBlockedWall();
+    Code:
+         0: aload_0
+         1: getfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+         4: aload_0
+         5: getfield      #120                // Field segmentCount:I
+         8: iconst_1
+         9: isub
+        10: aaload
+        11: getstatic     #209                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type.BLOCKED_WALL:Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type;
+        14: putfield      #130                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.type:Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type;
+        17: return
+
+  public void changeSegmentToBlockedEdge();
+    Code:
+         0: aload_0
+         1: iconst_1
+         2: putfield      #166                // Field edgeBlocked:Z
+         5: aload_0
+         6: getfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+         9: aload_0
+        10: getfield      #120                // Field segmentCount:I
+        13: iconst_1
+        14: isub
+        15: aaload
+        16: getstatic     #212                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type.BLOCKED_EDGE:Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type;
+        19: putfield      #130                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.type:Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type;
+        22: return
+
+  public double truncateBeforeInvalidPosition(com.hypixel.hytale.server.npc.movement.controllers.MotionController, org.joml.Vector3dc);
+    Code:
+         0: aload_0
+         1: getfield      #35                 // Field probePosition:Lorg/joml/Vector3d;
+         4: aload_2
+         5: invokevirtual #69                 // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+         8: pop
+         9: aload_1
+        10: aload_0
+        11: getfield      #38                 // Field initialPosition:Lorg/joml/Vector3d;
+        14: aload_0
+        15: getfield      #35                 // Field probePosition:Lorg/joml/Vector3d;
+        18: invokeinterface #215,  3          // InterfaceMethod com/hypixel/hytale/server/npc/movement/controllers/MotionController.waypointDistance:(Lorg/joml/Vector3dc;Lorg/joml/Vector3dc;)D
+        23: dstore_3
+        24: aload_0
+        25: getfield      #47                 // Field isSavingSegments:Z
+        28: ifeq          47
+        31: aload_0
+        32: aload_0
+        33: getfield      #35                 // Field probePosition:Lorg/joml/Vector3d;
+        36: dload_3
+        37: aload_1
+        38: invokeinterface #218,  1          // InterfaceMethod com/hypixel/hytale/server/npc/movement/controllers/MotionController.getWorldNormal:()Lorg/joml/Vector3dc;
+        43: iconst_m1
+        44: invokevirtual #222                // Method addBlockedGroundSegment:(Lorg/joml/Vector3dc;DLorg/joml/Vector3dc;I)V
+        47: dload_3
+        48: dreturn
+
+  public double getLastDistance();
+    Code:
+         0: aload_0
+         1: getfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+         4: aload_0
+         5: getfield      #120                // Field segmentCount:I
+         8: iconst_1
+         9: isub
+        10: aaload
+        11: getfield      #126                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.distance:D
+        14: dreturn
+
+  public java.lang.String dump();
+    Code:
+         0: new           #225                // class java/lang/StringBuilder
+         3: dup
+         4: invokespecial #227                // Method java/lang/StringBuilder."<init>":()V
+         7: astore_1
+         8: aload_1
+         9: ldc           #228                // String ProbeMoveData
+        11: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        14: ldc           #234                // String \nprobePosition=
+        16: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        19: aload_0
+        20: getfield      #35                 // Field probePosition:Lorg/joml/Vector3d;
+        23: invokestatic  #236                // Method com/hypixel/hytale/math/vector/Vector3dUtil.formatShortString:(Lorg/joml/Vector3dc;)Ljava/lang/String;
+        26: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        29: ldc           #242                // String , probeDirection=
+        31: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        34: aload_0
+        35: getfield      #31                 // Field probeDirection:Lorg/joml/Vector3d;
+        38: invokestatic  #236                // Method com/hypixel/hytale/math/vector/Vector3dUtil.formatShortString:(Lorg/joml/Vector3dc;)Ljava/lang/String;
+        41: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        44: ldc           #244                // String , initialPosition=
+        46: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        49: aload_0
+        50: getfield      #38                 // Field initialPosition:Lorg/joml/Vector3d;
+        53: invokestatic  #236                // Method com/hypixel/hytale/math/vector/Vector3dUtil.formatShortString:(Lorg/joml/Vector3dc;)Ljava/lang/String;
+        56: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        59: ldc           #246                // String , targetPosition=
+        61: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        64: aload_0
+        65: getfield      #41                 // Field targetPosition:Lorg/joml/Vector3d;
+        68: invokestatic  #236                // Method com/hypixel/hytale/math/vector/Vector3dUtil.formatShortString:(Lorg/joml/Vector3dc;)Ljava/lang/String;
+        71: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        74: ldc           #248                // String \ndirectionComponentSelector=
+        76: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        79: aload_0
+        80: getfield      #44                 // Field directionComponentSelector:Lorg/joml/Vector3d;
+        83: invokestatic  #236                // Method com/hypixel/hytale/math/vector/Vector3dUtil.formatShortString:(Lorg/joml/Vector3dc;)Ljava/lang/String;
+        86: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        89: ldc           #250                // String , edgeBlocked=
+        91: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        94: aload_0
+        95: getfield      #166                // Field edgeBlocked:Z
+        98: invokevirtual #252                // Method java/lang/StringBuilder.append:(Z)Ljava/lang/StringBuilder;
+       101: ldc           #255                // String , isSavingSegments=
+       103: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       106: aload_0
+       107: getfield      #47                 // Field isSavingSegments:Z
+       110: invokevirtual #252                // Method java/lang/StringBuilder.append:(Z)Ljava/lang/StringBuilder;
+       113: ldc_w         #257                // String , segmentCount=
+       116: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       119: aload_0
+       120: getfield      #120                // Field segmentCount:I
+       123: invokevirtual #259                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+       126: ldc_w         #262                // String \nrelaxedConstraints=
+       129: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       132: aload_0
+       133: getfield      #15                 // Field relaxedConstraints:Ljava/util/EnumSet;
+       136: invokevirtual #264                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+       139: ldc_w         #267                // String , blockCollisionFilter=
+       142: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       145: aload_0
+       146: getfield      #65                 // Field blockCollisionFilter:Ljava/util/function/Predicate;
+       149: ifnull        158
+       152: ldc_w         #269                // String set
+       155: goto          161
+       158: ldc_w         #270                // String none
+       161: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       164: pop
+       165: aload_0
+       166: getfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+       169: ifnull        179
+       172: aload_0
+       173: getfield      #120                // Field segmentCount:I
+       176: ifgt          192
+       179: aload_1
+       180: ldc_w         #272                // String \nsegments=none
+       183: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       186: pop
+       187: aload_1
+       188: invokevirtual #274                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+       191: areturn
+       192: aload_0
+       193: getfield      #120                // Field segmentCount:I
+       196: aload_0
+       197: getfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+       200: arraylength
+       201: invokestatic  #278                // Method java/lang/Math.min:(II)I
+       204: istore_2
+       205: iload_2
+       206: ifgt          222
+       209: aload_1
+       210: ldc_w         #272                // String \nsegments=none
+       213: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       216: pop
+       217: aload_1
+       218: invokevirtual #274                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+       221: areturn
+       222: aload_1
+       223: ldc_w         #281                // String \nsegments:
+       226: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       229: pop
+       230: iconst_0
+       231: istore_3
+       232: iload_3
+       233: iload_2
+       234: if_icmpge     477
+       237: aload_0
+       238: getfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+       241: iload_3
+       242: aaload
+       243: astore        4
+       245: aload         4
+       247: ifnonnull     271
+       250: aload_1
+       251: ldc_w         #283                // String \nsegment[
+       254: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       257: iload_3
+       258: invokevirtual #259                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+       261: ldc_w         #285                // String ]=null
+       264: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       267: pop
+       268: goto          471
+       271: aload_1
+       272: ldc_w         #283                // String \nsegment[
+       275: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       278: iload_3
+       279: invokevirtual #259                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+       282: ldc_w         #287                // String ]: type=
+       285: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       288: aload         4
+       290: getfield      #130                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.type:Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type;
+       293: invokevirtual #264                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+       296: ldc_w         #289                // String , distance=
+       299: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       302: aload         4
+       304: getfield      #126                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.distance:D
+       307: invokevirtual #291                // Method java/lang/StringBuilder.append:(D)Ljava/lang/StringBuilder;
+       310: ldc_w         #294                // String , onGround=
+       313: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       316: aload         4
+       318: getfield      #296                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.onGround:Z
+       321: invokevirtual #252                // Method java/lang/StringBuilder.append:(Z)Ljava/lang/StringBuilder;
+       324: ldc_w         #299                // String , blockId=
+       327: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       330: aload         4
+       332: getfield      #301                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.blockId:I
+       335: invokevirtual #259                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+       338: ldc_w         #304                // String , position=
+       341: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       344: aload         4
+       346: getfield      #123                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.position:Lorg/joml/Vector3d;
+       349: invokestatic  #236                // Method com/hypixel/hytale/math/vector/Vector3dUtil.formatShortString:(Lorg/joml/Vector3dc;)Ljava/lang/String;
+       352: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       355: ldc_w         #306                // String , normal=
+       358: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       361: aload         4
+       363: getfield      #308                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.normal:Lorg/joml/Vector3d;
+       366: invokestatic  #236                // Method com/hypixel/hytale/math/vector/Vector3dUtil.formatShortString:(Lorg/joml/Vector3dc;)Ljava/lang/String;
+       369: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       372: pop
+       373: aload         4
+       375: getfield      #130                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.type:Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type;
+       378: getstatic     #311                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type.CLIMB:Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type;
+       381: if_acmpeq     406
+       384: aload         4
+       386: getfield      #130                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.type:Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type;
+       389: getstatic     #314                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type.DROP:Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type;
+       392: if_acmpeq     406
+       395: aload         4
+       397: getfield      #130                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.type:Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type;
+       400: getstatic     #317                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type.BLOCKED_DROP:Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment$Type;
+       403: if_acmpne     471
+       406: iload_3
+       407: ifle          421
+       410: aload_0
+       411: getfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+       414: iload_3
+       415: iconst_1
+       416: isub
+       417: aaload
+       418: goto          422
+       421: aconst_null
+       422: astore        5
+       424: aload         5
+       426: ifnull        440
+       429: aload         5
+       431: getfield      #123                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.position:Lorg/joml/Vector3d;
+       434: getfield      #320                // Field org/joml/Vector3d.y:D
+       437: goto          447
+       440: aload_0
+       441: getfield      #38                 // Field initialPosition:Lorg/joml/Vector3d;
+       444: getfield      #320                // Field org/joml/Vector3d.y:D
+       447: dstore        6
+       449: aload_1
+       450: ldc_w         #323                // String , dy=
+       453: invokevirtual #230                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       456: aload         4
+       458: getfield      #123                // Field com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment.position:Lorg/joml/Vector3d;
+       461: getfield      #320                // Field org/joml/Vector3d.y:D
+       464: dload         6
+       466: dsub
+       467: invokevirtual #291                // Method java/lang/StringBuilder.append:(D)Ljava/lang/StringBuilder;
+       470: pop
+       471: iinc          3, 1
+       474: goto          232
+       477: aload_1
+       478: invokevirtual #274                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+       481: areturn
+
+  protected com.hypixel.hytale.server.npc.movement.controllers.ProbeMoveData$Segment newSegment();
+    Code:
+         0: aload_0
+         1: getfield      #120                // Field segmentCount:I
+         4: aload_0
+         5: getfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+         8: arraylength
+         9: if_icmpne     65
+        12: aload_0
+        13: aload_0
+        14: getfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+        17: aload_0
+        18: getfield      #120                // Field segmentCount:I
+        21: iconst_4
+        22: iadd
+        23: invokestatic  #325                // Method java/util/Arrays.copyOf:([Ljava/lang/Object;I)[Ljava/lang/Object;
+        26: checkcast     #331                // class "[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;"
+        29: putfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+        32: aload_0
+        33: getfield      #120                // Field segmentCount:I
+        36: istore_1
+        37: iload_1
+        38: aload_0
+        39: getfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+        42: arraylength
+        43: if_icmpge     65
+        46: aload_0
+        47: getfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+        50: iload_1
+        51: new           #55                 // class com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment
+        54: dup
+        55: invokespecial #57                 // Method com/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment."<init>":()V
+        58: aastore
+        59: iinc          1, 1
+        62: goto          37
+        65: aload_0
+        66: getfield      #51                 // Field segments:[Lcom/hypixel/hytale/server/npc/movement/controllers/ProbeMoveData$Segment;
+        69: aload_0
+        70: dup
+        71: getfield      #120                // Field segmentCount:I
+        74: dup_x1
+        75: iconst_1
+        76: iadd
+        77: putfield      #120                // Field segmentCount:I
+        80: aaload
+        81: areturn
+}

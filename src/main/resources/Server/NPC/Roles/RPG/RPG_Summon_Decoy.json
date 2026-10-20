@@ -1,0 +1,12 @@
+{
+  "Type": "Generic",
+  "Appearance": "Mannequin",
+  "MaxHealth": 100,
+  "IsMemory": false,
+  "DefaultPlayerAttitude": "Friendly",
+  "DefaultNPCAttitude": "Ignore",
+  "PickupDropOnDeath": false,
+  "MotionControllerList": [{"Type": "Walk"}],
+  "Instructions": [{}],
+  "NameTranslationKey": "server.npcRoles.RPG_Summon_Decoy.name"
+}

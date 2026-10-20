@@ -1,0 +1,1070 @@
+Compiled from "StandardPhysicsConfig.java"
+public class com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig implements com.hypixel.hytale.server.core.modules.projectile.config.PhysicsConfig {
+  public static final com.hypixel.hytale.codec.builder.BuilderCodec<com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig> CODEC;
+
+  public static final com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig DEFAULT;
+
+  protected static final double HIT_WATER_IMPULSE_LOSS;
+
+  protected static final double ROTATION_FORCE;
+
+  protected static final float SPEED_ROTATION_FACTOR;
+
+  protected static final double SWIMMING_DAMPING_FACTOR;
+
+  protected double density;
+
+  protected double gravity;
+
+  protected double bounciness;
+
+  protected int bounceCount;
+
+  protected double bounceLimit;
+
+  protected boolean sticksVertically;
+
+  protected boolean computeYaw;
+
+  protected boolean computePitch;
+
+  protected com.hypixel.hytale.protocol.RotationMode rotationMode;
+
+  protected boolean allowRolling;
+
+  protected double rollingFrictionFactor;
+
+  protected float rollingSpeed;
+
+  protected double moveOutOfSolidSpeed;
+
+  protected double terminalVelocityAir;
+
+  protected double densityAir;
+
+  protected double terminalVelocityWater;
+
+  protected double densityWater;
+
+  protected double hitWaterImpulseLoss;
+
+  protected double rotationForce;
+
+  protected float speedRotationFactor;
+
+  protected double swimmingDampingFactor;
+
+  static final boolean $assertionsDisabled;
+
+  public com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig();
+    Code:
+         0: aload_0
+         1: invokespecial #3                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: ldc2_w        #9                  // double 700.0d
+         8: putfield      #11                 // Field density:D
+        11: aload_0
+        12: iconst_m1
+        13: putfield      #17                 // Field bounceCount:I
+        16: aload_0
+        17: ldc2_w        #21                 // double 0.4d
+        20: putfield      #23                 // Field bounceLimit:D
+        23: aload_0
+        24: iconst_1
+        25: putfield      #26                 // Field computeYaw:Z
+        28: aload_0
+        29: iconst_1
+        30: putfield      #30                 // Field computePitch:Z
+        33: aload_0
+        34: getstatic     #33                 // Field com/hypixel/hytale/protocol/RotationMode.VelocityDamped:Lcom/hypixel/hytale/protocol/RotationMode;
+        37: putfield      #39                 // Field rotationMode:Lcom/hypixel/hytale/protocol/RotationMode;
+        40: aload_0
+        41: iconst_0
+        42: putfield      #42                 // Field allowRolling:Z
+        45: aload_0
+        46: ldc2_w        #45                 // double 0.99d
+        49: putfield      #47                 // Field rollingFrictionFactor:D
+        52: aload_0
+        53: ldc           #50                 // float 0.1f
+        55: putfield      #51                 // Field rollingSpeed:F
+        58: aload_0
+        59: dconst_1
+        60: putfield      #55                 // Field terminalVelocityAir:D
+        63: aload_0
+        64: ldc2_w        #60                 // double 1.2d
+        67: putfield      #62                 // Field densityAir:D
+        70: aload_0
+        71: dconst_1
+        72: putfield      #65                 // Field terminalVelocityWater:D
+        75: aload_0
+        76: ldc2_w        #68                 // double 998.0d
+        79: putfield      #70                 // Field densityWater:D
+        82: aload_0
+        83: ldc2_w        #73                 // double 0.2d
+        86: putfield      #75                 // Field hitWaterImpulseLoss:D
+        89: aload_0
+        90: ldc2_w        #78                 // double 3.0d
+        93: putfield      #80                 // Field rotationForce:D
+        96: aload_0
+        97: fconst_2
+        98: putfield      #83                 // Field speedRotationFactor:F
+       101: aload_0
+       102: dconst_1
+       103: putfield      #86                 // Field swimmingDampingFactor:D
+       106: return
+
+  public double getGravity();
+    Code:
+         0: aload_0
+         1: getfield      #89                 // Field gravity:D
+         4: dreturn
+
+  public void apply(com.hypixel.hytale.component.Holder<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, org.joml.Vector3d, com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, boolean);
+    Code:
+         0: aload_2
+         1: ifnull        49
+         4: aload         4
+         6: aload_2
+         7: invokestatic  #92                 // Method com/hypixel/hytale/server/core/entity/UUIDComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        10: invokeinterface #98,  3           // InterfaceMethod com/hypixel/hytale/component/ComponentAccessor.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        15: checkcast     #93                 // class com/hypixel/hytale/server/core/entity/UUIDComponent
+        18: astore        7
+        20: getstatic     #104                // Field $assertionsDisabled:Z
+        23: ifne          39
+        26: aload         7
+        28: ifnonnull     39
+        31: new           #107                // class java/lang/AssertionError
+        34: dup
+        35: invokespecial #109                // Method java/lang/AssertionError."<init>":()V
+        38: athrow
+        39: aload         7
+        41: invokevirtual #110                // Method com/hypixel/hytale/server/core/entity/UUIDComponent.getUuid:()Ljava/util/UUID;
+        44: astore        6
+        46: goto          52
+        49: aconst_null
+        50: astore        6
+        52: aload_1
+        53: invokestatic  #114                // Method com/hypixel/hytale/server/core/modules/entity/component/BoundingBox.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        56: invokevirtual #117                // Method com/hypixel/hytale/component/Holder.getComponent:(Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        59: checkcast     #115                // class com/hypixel/hytale/server/core/modules/entity/component/BoundingBox
+        62: astore        7
+        64: getstatic     #104                // Field $assertionsDisabled:Z
+        67: ifne          83
+        70: aload         7
+        72: ifnonnull     83
+        75: new           #107                // class java/lang/AssertionError
+        78: dup
+        79: invokespecial #109                // Method java/lang/AssertionError."<init>":()V
+        82: athrow
+        83: aload_1
+        84: invokestatic  #122                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        87: new           #1                  // class com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider
+        90: dup
+        91: aload         7
+        93: aload         6
+        95: aload_0
+        96: aload_3
+        97: iload         5
+        99: invokespecial #123                // Method com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsProvider."<init>":(Lcom/hypixel/hytale/server/core/modules/entity/component/BoundingBox;Ljava/util/UUID;Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsConfig;Lorg/joml/Vector3d;Z)V
+       102: invokevirtual #126                // Method com/hypixel/hytale/component/Holder.addComponent:(Lcom/hypixel/hytale/component/ComponentType;Lcom/hypixel/hytale/component/Component;)V
+       105: return
+
+  public com.hypixel.hytale.protocol.PhysicsConfig toPacket();
+    Code:
+         0: new           #130                // class com/hypixel/hytale/protocol/PhysicsConfig
+         3: dup
+         4: invokespecial #132                // Method com/hypixel/hytale/protocol/PhysicsConfig."<init>":()V
+         7: astore_1
+         8: aload_1
+         9: getstatic     #133                // Field com/hypixel/hytale/protocol/PhysicsType.Standard:Lcom/hypixel/hytale/protocol/PhysicsType;
+        12: putfield      #139                // Field com/hypixel/hytale/protocol/PhysicsConfig.type:Lcom/hypixel/hytale/protocol/PhysicsType;
+        15: aload_1
+        16: aload_0
+        17: getfield      #11                 // Field density:D
+        20: putfield      #142                // Field com/hypixel/hytale/protocol/PhysicsConfig.density:D
+        23: aload_1
+        24: aload_0
+        25: getfield      #89                 // Field gravity:D
+        28: putfield      #143                // Field com/hypixel/hytale/protocol/PhysicsConfig.gravity:D
+        31: aload_1
+        32: aload_0
+        33: getfield      #144                // Field bounciness:D
+        36: putfield      #147                // Field com/hypixel/hytale/protocol/PhysicsConfig.bounciness:D
+        39: aload_1
+        40: aload_0
+        41: getfield      #17                 // Field bounceCount:I
+        44: putfield      #148                // Field com/hypixel/hytale/protocol/PhysicsConfig.bounceCount:I
+        47: aload_1
+        48: aload_0
+        49: getfield      #23                 // Field bounceLimit:D
+        52: putfield      #149                // Field com/hypixel/hytale/protocol/PhysicsConfig.bounceLimit:D
+        55: aload_1
+        56: aload_0
+        57: getfield      #150                // Field sticksVertically:Z
+        60: putfield      #153                // Field com/hypixel/hytale/protocol/PhysicsConfig.sticksVertically:Z
+        63: aload_1
+        64: aload_0
+        65: getfield      #26                 // Field computeYaw:Z
+        68: putfield      #154                // Field com/hypixel/hytale/protocol/PhysicsConfig.computeYaw:Z
+        71: aload_1
+        72: aload_0
+        73: getfield      #30                 // Field computePitch:Z
+        76: putfield      #155                // Field com/hypixel/hytale/protocol/PhysicsConfig.computePitch:Z
+        79: aload_1
+        80: aload_0
+        81: getfield      #39                 // Field rotationMode:Lcom/hypixel/hytale/protocol/RotationMode;
+        84: putfield      #156                // Field com/hypixel/hytale/protocol/PhysicsConfig.rotationMode:Lcom/hypixel/hytale/protocol/RotationMode;
+        87: aload_1
+        88: aload_0
+        89: getfield      #157                // Field moveOutOfSolidSpeed:D
+        92: putfield      #160                // Field com/hypixel/hytale/protocol/PhysicsConfig.moveOutOfSolidSpeed:D
+        95: aload_1
+        96: aload_0
+        97: getfield      #55                 // Field terminalVelocityAir:D
+       100: putfield      #161                // Field com/hypixel/hytale/protocol/PhysicsConfig.terminalVelocityAir:D
+       103: aload_1
+       104: aload_0
+       105: getfield      #62                 // Field densityAir:D
+       108: putfield      #162                // Field com/hypixel/hytale/protocol/PhysicsConfig.densityAir:D
+       111: aload_1
+       112: aload_0
+       113: getfield      #65                 // Field terminalVelocityWater:D
+       116: putfield      #163                // Field com/hypixel/hytale/protocol/PhysicsConfig.terminalVelocityWater:D
+       119: aload_1
+       120: aload_0
+       121: getfield      #70                 // Field densityWater:D
+       124: putfield      #164                // Field com/hypixel/hytale/protocol/PhysicsConfig.densityWater:D
+       127: aload_1
+       128: aload_0
+       129: getfield      #75                 // Field hitWaterImpulseLoss:D
+       132: putfield      #165                // Field com/hypixel/hytale/protocol/PhysicsConfig.hitWaterImpulseLoss:D
+       135: aload_1
+       136: aload_0
+       137: getfield      #80                 // Field rotationForce:D
+       140: putfield      #166                // Field com/hypixel/hytale/protocol/PhysicsConfig.rotationForce:D
+       143: aload_1
+       144: aload_0
+       145: getfield      #83                 // Field speedRotationFactor:F
+       148: putfield      #167                // Field com/hypixel/hytale/protocol/PhysicsConfig.speedRotationFactor:F
+       151: aload_1
+       152: aload_0
+       153: getfield      #86                 // Field swimmingDampingFactor:D
+       156: putfield      #168                // Field com/hypixel/hytale/protocol/PhysicsConfig.swimmingDampingFactor:D
+       159: aload_1
+       160: aload_0
+       161: getfield      #42                 // Field allowRolling:Z
+       164: putfield      #169                // Field com/hypixel/hytale/protocol/PhysicsConfig.allowRolling:Z
+       167: aload_1
+       168: aload_0
+       169: getfield      #47                 // Field rollingFrictionFactor:D
+       172: putfield      #170                // Field com/hypixel/hytale/protocol/PhysicsConfig.rollingFrictionFactor:D
+       175: aload_1
+       176: aload_0
+       177: getfield      #51                 // Field rollingSpeed:F
+       180: putfield      #171                // Field com/hypixel/hytale/protocol/PhysicsConfig.rollingSpeed:F
+       183: aload_1
+       184: areturn
+
+  public double getBounciness();
+    Code:
+         0: aload_0
+         1: getfield      #144                // Field bounciness:D
+         4: dreturn
+
+  public int getBounceCount();
+    Code:
+         0: aload_0
+         1: getfield      #17                 // Field bounceCount:I
+         4: ireturn
+
+  public double getBounceLimit();
+    Code:
+         0: aload_0
+         1: getfield      #23                 // Field bounceLimit:D
+         4: dreturn
+
+  public boolean isSticksVertically();
+    Code:
+         0: aload_0
+         1: getfield      #150                // Field sticksVertically:Z
+         4: ireturn
+
+  public boolean isAllowRolling();
+    Code:
+         0: aload_0
+         1: getfield      #42                 // Field allowRolling:Z
+         4: ireturn
+
+  public double getRollingFrictionFactor();
+    Code:
+         0: aload_0
+         1: getfield      #47                 // Field rollingFrictionFactor:D
+         4: dreturn
+
+  public double getSwimmingDampingFactor();
+    Code:
+         0: aload_0
+         1: getfield      #86                 // Field swimmingDampingFactor:D
+         4: dreturn
+
+  public double getHitWaterImpulseLoss();
+    Code:
+         0: aload_0
+         1: getfield      #75                 // Field hitWaterImpulseLoss:D
+         4: dreturn
+
+  public java.lang.Object toPacket();
+    Code:
+         0: aload_0
+         1: invokevirtual #172                // Method toPacket:()Lcom/hypixel/hytale/protocol/PhysicsConfig;
+         4: areturn
+
+  private static void lambda$static$62(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #51                 // Field rollingSpeed:F
+         5: putfield      #51                 // Field rollingSpeed:F
+         8: return
+
+  private static java.lang.Float lambda$static$61(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: getfield      #51                 // Field rollingSpeed:F
+         4: invokestatic  #176                // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+         7: areturn
+
+  private static void lambda$static$60(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, java.lang.Float);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #182                // Method java/lang/Float.floatValue:()F
+         5: putfield      #51                 // Field rollingSpeed:F
+         8: return
+
+  private static void lambda$static$59(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #47                 // Field rollingFrictionFactor:D
+         5: putfield      #47                 // Field rollingFrictionFactor:D
+         8: return
+
+  private static java.lang.Double lambda$static$58(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: getfield      #47                 // Field rollingFrictionFactor:D
+         4: invokestatic  #186                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+         7: areturn
+
+  private static void lambda$static$57(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, java.lang.Double);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #191                // Method java/lang/Double.doubleValue:()D
+         5: putfield      #47                 // Field rollingFrictionFactor:D
+         8: return
+
+  private static void lambda$static$56(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #42                 // Field allowRolling:Z
+         5: putfield      #42                 // Field allowRolling:Z
+         8: return
+
+  private static java.lang.Boolean lambda$static$55(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: getfield      #42                 // Field allowRolling:Z
+         4: invokestatic  #195                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         7: areturn
+
+  private static void lambda$static$54(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, java.lang.Boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #200                // Method java/lang/Boolean.booleanValue:()Z
+         5: putfield      #42                 // Field allowRolling:Z
+         8: return
+
+  private static void lambda$static$53(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #86                 // Field swimmingDampingFactor:D
+         5: putfield      #86                 // Field swimmingDampingFactor:D
+         8: return
+
+  private static java.lang.Double lambda$static$52(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: getfield      #86                 // Field swimmingDampingFactor:D
+         4: invokestatic  #186                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+         7: areturn
+
+  private static void lambda$static$51(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, java.lang.Double);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #191                // Method java/lang/Double.doubleValue:()D
+         5: putfield      #86                 // Field swimmingDampingFactor:D
+         8: return
+
+  private static void lambda$static$50(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #83                 // Field speedRotationFactor:F
+         5: putfield      #83                 // Field speedRotationFactor:F
+         8: return
+
+  private static java.lang.Float lambda$static$49(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: getfield      #83                 // Field speedRotationFactor:F
+         4: invokestatic  #176                // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+         7: areturn
+
+  private static void lambda$static$48(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, java.lang.Float);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #182                // Method java/lang/Float.floatValue:()F
+         5: putfield      #83                 // Field speedRotationFactor:F
+         8: return
+
+  private static void lambda$static$47(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #80                 // Field rotationForce:D
+         5: putfield      #80                 // Field rotationForce:D
+         8: return
+
+  private static java.lang.Double lambda$static$46(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: getfield      #80                 // Field rotationForce:D
+         4: invokestatic  #186                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+         7: areturn
+
+  private static void lambda$static$45(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, java.lang.Double);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #191                // Method java/lang/Double.doubleValue:()D
+         5: putfield      #80                 // Field rotationForce:D
+         8: return
+
+  private static void lambda$static$44(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #75                 // Field hitWaterImpulseLoss:D
+         5: putfield      #75                 // Field hitWaterImpulseLoss:D
+         8: return
+
+  private static java.lang.Double lambda$static$43(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: getfield      #75                 // Field hitWaterImpulseLoss:D
+         4: invokestatic  #186                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+         7: areturn
+
+  private static void lambda$static$42(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, java.lang.Double);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #191                // Method java/lang/Double.doubleValue:()D
+         5: putfield      #75                 // Field hitWaterImpulseLoss:D
+         8: return
+
+  private static void lambda$static$41(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #70                 // Field densityWater:D
+         5: putfield      #70                 // Field densityWater:D
+         8: return
+
+  private static java.lang.Double lambda$static$40(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: getfield      #70                 // Field densityWater:D
+         4: invokestatic  #186                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+         7: areturn
+
+  private static void lambda$static$39(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, java.lang.Double);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #191                // Method java/lang/Double.doubleValue:()D
+         5: putfield      #70                 // Field densityWater:D
+         8: return
+
+  private static void lambda$static$38(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #65                 // Field terminalVelocityWater:D
+         5: putfield      #65                 // Field terminalVelocityWater:D
+         8: return
+
+  private static java.lang.Double lambda$static$37(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: getfield      #65                 // Field terminalVelocityWater:D
+         4: invokestatic  #186                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+         7: areturn
+
+  private static void lambda$static$36(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, java.lang.Double);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #191                // Method java/lang/Double.doubleValue:()D
+         5: putfield      #65                 // Field terminalVelocityWater:D
+         8: return
+
+  private static void lambda$static$35(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #62                 // Field densityAir:D
+         5: putfield      #62                 // Field densityAir:D
+         8: return
+
+  private static java.lang.Double lambda$static$34(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: getfield      #62                 // Field densityAir:D
+         4: invokestatic  #186                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+         7: areturn
+
+  private static void lambda$static$33(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, java.lang.Double);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #191                // Method java/lang/Double.doubleValue:()D
+         5: putfield      #62                 // Field densityAir:D
+         8: return
+
+  private static void lambda$static$32(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #55                 // Field terminalVelocityAir:D
+         5: putfield      #55                 // Field terminalVelocityAir:D
+         8: return
+
+  private static java.lang.Double lambda$static$31(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: getfield      #55                 // Field terminalVelocityAir:D
+         4: invokestatic  #186                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+         7: areturn
+
+  private static void lambda$static$30(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, java.lang.Double);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #191                // Method java/lang/Double.doubleValue:()D
+         5: putfield      #55                 // Field terminalVelocityAir:D
+         8: return
+
+  private static void lambda$static$29(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #157                // Field moveOutOfSolidSpeed:D
+         5: putfield      #157                // Field moveOutOfSolidSpeed:D
+         8: return
+
+  private static java.lang.Double lambda$static$28(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: getfield      #157                // Field moveOutOfSolidSpeed:D
+         4: invokestatic  #186                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+         7: areturn
+
+  private static void lambda$static$27(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, java.lang.Double);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #191                // Method java/lang/Double.doubleValue:()D
+         5: putfield      #157                // Field moveOutOfSolidSpeed:D
+         8: return
+
+  private static void lambda$static$26(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #39                 // Field rotationMode:Lcom/hypixel/hytale/protocol/RotationMode;
+         5: putfield      #39                 // Field rotationMode:Lcom/hypixel/hytale/protocol/RotationMode;
+         8: return
+
+  private static com.hypixel.hytale.protocol.RotationMode lambda$static$25(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: getfield      #39                 // Field rotationMode:Lcom/hypixel/hytale/protocol/RotationMode;
+         4: areturn
+
+  private static void lambda$static$24(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, com.hypixel.hytale.protocol.RotationMode);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #39                 // Field rotationMode:Lcom/hypixel/hytale/protocol/RotationMode;
+         5: return
+
+  private static void lambda$static$23(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #30                 // Field computePitch:Z
+         5: putfield      #30                 // Field computePitch:Z
+         8: return
+
+  private static java.lang.Boolean lambda$static$22(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: getfield      #30                 // Field computePitch:Z
+         4: invokestatic  #195                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         7: areturn
+
+  private static void lambda$static$21(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, java.lang.Boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #200                // Method java/lang/Boolean.booleanValue:()Z
+         5: putfield      #30                 // Field computePitch:Z
+         8: return
+
+  private static void lambda$static$20(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #26                 // Field computeYaw:Z
+         5: putfield      #26                 // Field computeYaw:Z
+         8: return
+
+  private static java.lang.Boolean lambda$static$19(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: getfield      #26                 // Field computeYaw:Z
+         4: invokestatic  #195                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         7: areturn
+
+  private static void lambda$static$18(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, java.lang.Boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #200                // Method java/lang/Boolean.booleanValue:()Z
+         5: putfield      #26                 // Field computeYaw:Z
+         8: return
+
+  private static void lambda$static$17(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #150                // Field sticksVertically:Z
+         5: putfield      #150                // Field sticksVertically:Z
+         8: return
+
+  private static java.lang.Boolean lambda$static$16(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: getfield      #150                // Field sticksVertically:Z
+         4: invokestatic  #195                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         7: areturn
+
+  private static void lambda$static$15(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, java.lang.Boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #200                // Method java/lang/Boolean.booleanValue:()Z
+         5: putfield      #150                // Field sticksVertically:Z
+         8: return
+
+  private static void lambda$static$14(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #17                 // Field bounceCount:I
+         5: putfield      #17                 // Field bounceCount:I
+         8: return
+
+  private static java.lang.Integer lambda$static$13(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: getfield      #17                 // Field bounceCount:I
+         4: invokestatic  #204                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+         7: areturn
+
+  private static void lambda$static$12(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, java.lang.Integer);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #209                // Method java/lang/Integer.intValue:()I
+         5: putfield      #17                 // Field bounceCount:I
+         8: return
+
+  private static void lambda$static$11(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #23                 // Field bounceLimit:D
+         5: putfield      #23                 // Field bounceLimit:D
+         8: return
+
+  private static java.lang.Double lambda$static$10(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: getfield      #23                 // Field bounceLimit:D
+         4: invokestatic  #186                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+         7: areturn
+
+  private static void lambda$static$9(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, java.lang.Double);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #191                // Method java/lang/Double.doubleValue:()D
+         5: putfield      #23                 // Field bounceLimit:D
+         8: return
+
+  private static void lambda$static$8(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #144                // Field bounciness:D
+         5: putfield      #144                // Field bounciness:D
+         8: return
+
+  private static java.lang.Double lambda$static$7(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: getfield      #144                // Field bounciness:D
+         4: invokestatic  #186                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+         7: areturn
+
+  private static void lambda$static$6(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, java.lang.Double);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #191                // Method java/lang/Double.doubleValue:()D
+         5: putfield      #144                // Field bounciness:D
+         8: return
+
+  private static void lambda$static$5(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #89                 // Field gravity:D
+         5: putfield      #89                 // Field gravity:D
+         8: return
+
+  private static java.lang.Double lambda$static$4(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: getfield      #89                 // Field gravity:D
+         4: invokestatic  #186                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+         7: areturn
+
+  private static void lambda$static$3(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, java.lang.Double);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #191                // Method java/lang/Double.doubleValue:()D
+         5: putfield      #89                 // Field gravity:D
+         8: return
+
+  private static void lambda$static$2(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #11                 // Field density:D
+         5: putfield      #11                 // Field density:D
+         8: return
+
+  private static java.lang.Double lambda$static$1(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig);
+    Code:
+         0: aload_0
+         1: getfield      #11                 // Field density:D
+         4: invokestatic  #186                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+         7: areturn
+
+  private static void lambda$static$0(com.hypixel.hytale.server.core.modules.projectile.config.StandardPhysicsConfig, java.lang.Double);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #191                // Method java/lang/Double.doubleValue:()D
+         5: putfield      #11                 // Field density:D
+         8: return
+
+  static {};
+    Code:
+         0: ldc           #12                 // class com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsConfig
+         2: invokevirtual #213                // Method java/lang/Class.desiredAssertionStatus:()Z
+         5: ifne          12
+         8: iconst_1
+         9: goto          13
+        12: iconst_0
+        13: putstatic     #104                // Field $assertionsDisabled:Z
+        16: ldc           #12                 // class com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsConfig
+        18: invokedynamic #218,  0            // InvokeDynamic #0:get:()Ljava/util/function/Supplier;
+        23: invokestatic  #222                // Method com/hypixel/hytale/codec/builder/BuilderCodec.builder:(Ljava/lang/Class;Ljava/util/function/Supplier;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$Builder;
+        26: new           #228                // class com/hypixel/hytale/codec/KeyedCodec
+        29: dup
+        30: ldc           #230                // String Density
+        32: getstatic     #232                // Field com/hypixel/hytale/codec/Codec.DOUBLE:Lcom/hypixel/hytale/codec/codecs/simple/DoubleCodec;
+        35: invokespecial #238                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        38: invokedynamic #241,  0            // InvokeDynamic #1:accept:()Ljava/util/function/BiConsumer;
+        43: invokedynamic #245,  0            // InvokeDynamic #2:apply:()Ljava/util/function/Function;
+        48: invokedynamic #249,  0            // InvokeDynamic #3:accept:()Ljava/util/function/BiConsumer;
+        53: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        56: invokevirtual #256                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        59: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        62: new           #228                // class com/hypixel/hytale/codec/KeyedCodec
+        65: dup
+        66: ldc_w         #262                // String Gravity
+        69: getstatic     #232                // Field com/hypixel/hytale/codec/Codec.DOUBLE:Lcom/hypixel/hytale/codec/codecs/simple/DoubleCodec;
+        72: invokespecial #238                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        75: invokedynamic #264,  0            // InvokeDynamic #4:accept:()Ljava/util/function/BiConsumer;
+        80: invokedynamic #265,  0            // InvokeDynamic #5:apply:()Ljava/util/function/Function;
+        85: invokedynamic #266,  0            // InvokeDynamic #6:accept:()Ljava/util/function/BiConsumer;
+        90: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        93: invokevirtual #256                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        96: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        99: new           #228                // class com/hypixel/hytale/codec/KeyedCodec
+       102: dup
+       103: ldc_w         #267                // String Bounciness
+       106: getstatic     #232                // Field com/hypixel/hytale/codec/Codec.DOUBLE:Lcom/hypixel/hytale/codec/codecs/simple/DoubleCodec;
+       109: invokespecial #238                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       112: invokedynamic #269,  0            // InvokeDynamic #7:accept:()Ljava/util/function/BiConsumer;
+       117: invokedynamic #270,  0            // InvokeDynamic #8:apply:()Ljava/util/function/Function;
+       122: invokedynamic #271,  0            // InvokeDynamic #9:accept:()Ljava/util/function/BiConsumer;
+       127: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       130: dconst_0
+       131: invokestatic  #186                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       134: dconst_1
+       135: invokestatic  #186                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       138: invokestatic  #272                // Method com/hypixel/hytale/codec/validation/Validators.range:(Ljava/lang/Comparable;Ljava/lang/Comparable;)Lcom/hypixel/hytale/codec/validation/Validator;
+       141: invokevirtual #278                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidator:(Lcom/hypixel/hytale/codec/validation/Validator;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       144: invokevirtual #256                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       147: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       150: new           #228                // class com/hypixel/hytale/codec/KeyedCodec
+       153: dup
+       154: ldc_w         #282                // String BounceLimit
+       157: getstatic     #232                // Field com/hypixel/hytale/codec/Codec.DOUBLE:Lcom/hypixel/hytale/codec/codecs/simple/DoubleCodec;
+       160: invokespecial #238                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       163: invokedynamic #284,  0            // InvokeDynamic #10:accept:()Ljava/util/function/BiConsumer;
+       168: invokedynamic #285,  0            // InvokeDynamic #11:apply:()Ljava/util/function/Function;
+       173: invokedynamic #286,  0            // InvokeDynamic #12:accept:()Ljava/util/function/BiConsumer;
+       178: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       181: invokevirtual #256                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       184: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       187: new           #228                // class com/hypixel/hytale/codec/KeyedCodec
+       190: dup
+       191: ldc_w         #287                // String BounceCount
+       194: getstatic     #289                // Field com/hypixel/hytale/codec/Codec.INTEGER:Lcom/hypixel/hytale/codec/codecs/simple/IntegerCodec;
+       197: invokespecial #238                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       200: invokedynamic #293,  0            // InvokeDynamic #13:accept:()Ljava/util/function/BiConsumer;
+       205: invokedynamic #294,  0            // InvokeDynamic #14:apply:()Ljava/util/function/Function;
+       210: invokedynamic #295,  0            // InvokeDynamic #15:accept:()Ljava/util/function/BiConsumer;
+       215: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       218: invokevirtual #256                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       221: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       224: new           #228                // class com/hypixel/hytale/codec/KeyedCodec
+       227: dup
+       228: ldc_w         #296                // String SticksVertically
+       231: getstatic     #298                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+       234: invokespecial #238                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       237: invokedynamic #302,  0            // InvokeDynamic #16:accept:()Ljava/util/function/BiConsumer;
+       242: invokedynamic #303,  0            // InvokeDynamic #17:apply:()Ljava/util/function/Function;
+       247: invokedynamic #304,  0            // InvokeDynamic #18:accept:()Ljava/util/function/BiConsumer;
+       252: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       255: invokevirtual #256                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       258: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       261: new           #228                // class com/hypixel/hytale/codec/KeyedCodec
+       264: dup
+       265: ldc_w         #305                // String ComputeYaw
+       268: getstatic     #298                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+       271: invokespecial #238                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       274: invokedynamic #307,  0            // InvokeDynamic #19:accept:()Ljava/util/function/BiConsumer;
+       279: invokedynamic #308,  0            // InvokeDynamic #20:apply:()Ljava/util/function/Function;
+       284: invokedynamic #309,  0            // InvokeDynamic #21:accept:()Ljava/util/function/BiConsumer;
+       289: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       292: invokevirtual #256                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       295: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       298: new           #228                // class com/hypixel/hytale/codec/KeyedCodec
+       301: dup
+       302: ldc_w         #310                // String ComputePitch
+       305: getstatic     #298                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+       308: invokespecial #238                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       311: invokedynamic #312,  0            // InvokeDynamic #22:accept:()Ljava/util/function/BiConsumer;
+       316: invokedynamic #313,  0            // InvokeDynamic #23:apply:()Ljava/util/function/Function;
+       321: invokedynamic #314,  0            // InvokeDynamic #24:accept:()Ljava/util/function/BiConsumer;
+       326: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       329: invokevirtual #256                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       332: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       335: new           #228                // class com/hypixel/hytale/codec/KeyedCodec
+       338: dup
+       339: ldc_w         #315                // String RotationMode
+       342: new           #317                // class com/hypixel/hytale/codec/codecs/EnumCodec
+       345: dup
+       346: ldc           #34                 // class com/hypixel/hytale/protocol/RotationMode
+       348: invokespecial #319                // Method com/hypixel/hytale/codec/codecs/EnumCodec."<init>":(Ljava/lang/Class;)V
+       351: invokespecial #238                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       354: invokedynamic #322,  0            // InvokeDynamic #25:accept:()Ljava/util/function/BiConsumer;
+       359: invokedynamic #323,  0            // InvokeDynamic #26:apply:()Ljava/util/function/Function;
+       364: invokedynamic #324,  0            // InvokeDynamic #27:accept:()Ljava/util/function/BiConsumer;
+       369: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       372: invokevirtual #256                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       375: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       378: new           #228                // class com/hypixel/hytale/codec/KeyedCodec
+       381: dup
+       382: ldc_w         #325                // String MoveOutOfSolidSpeed
+       385: getstatic     #232                // Field com/hypixel/hytale/codec/Codec.DOUBLE:Lcom/hypixel/hytale/codec/codecs/simple/DoubleCodec;
+       388: invokespecial #238                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       391: invokedynamic #327,  0            // InvokeDynamic #28:accept:()Ljava/util/function/BiConsumer;
+       396: invokedynamic #328,  0            // InvokeDynamic #29:apply:()Ljava/util/function/Function;
+       401: invokedynamic #329,  0            // InvokeDynamic #30:accept:()Ljava/util/function/BiConsumer;
+       406: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       409: invokevirtual #256                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       412: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       415: new           #228                // class com/hypixel/hytale/codec/KeyedCodec
+       418: dup
+       419: ldc_w         #330                // String TerminalVelocityAir
+       422: getstatic     #232                // Field com/hypixel/hytale/codec/Codec.DOUBLE:Lcom/hypixel/hytale/codec/codecs/simple/DoubleCodec;
+       425: invokespecial #238                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       428: invokedynamic #332,  0            // InvokeDynamic #31:accept:()Ljava/util/function/BiConsumer;
+       433: invokedynamic #333,  0            // InvokeDynamic #32:apply:()Ljava/util/function/Function;
+       438: invokedynamic #334,  0            // InvokeDynamic #33:accept:()Ljava/util/function/BiConsumer;
+       443: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       446: dconst_0
+       447: invokestatic  #186                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       450: invokestatic  #335                // Method com/hypixel/hytale/codec/validation/Validators.greaterThan:(Ljava/lang/Comparable;)Lcom/hypixel/hytale/codec/validation/Validator;
+       453: invokevirtual #278                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidator:(Lcom/hypixel/hytale/codec/validation/Validator;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       456: invokevirtual #256                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       459: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       462: new           #228                // class com/hypixel/hytale/codec/KeyedCodec
+       465: dup
+       466: ldc_w         #339                // String DensityAir
+       469: getstatic     #232                // Field com/hypixel/hytale/codec/Codec.DOUBLE:Lcom/hypixel/hytale/codec/codecs/simple/DoubleCodec;
+       472: invokespecial #238                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       475: invokedynamic #341,  0            // InvokeDynamic #34:accept:()Ljava/util/function/BiConsumer;
+       480: invokedynamic #342,  0            // InvokeDynamic #35:apply:()Ljava/util/function/Function;
+       485: invokedynamic #343,  0            // InvokeDynamic #36:accept:()Ljava/util/function/BiConsumer;
+       490: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       493: invokevirtual #256                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       496: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       499: new           #228                // class com/hypixel/hytale/codec/KeyedCodec
+       502: dup
+       503: ldc_w         #344                // String TerminalVelocityWater
+       506: getstatic     #232                // Field com/hypixel/hytale/codec/Codec.DOUBLE:Lcom/hypixel/hytale/codec/codecs/simple/DoubleCodec;
+       509: invokespecial #238                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       512: invokedynamic #346,  0            // InvokeDynamic #37:accept:()Ljava/util/function/BiConsumer;
+       517: invokedynamic #347,  0            // InvokeDynamic #38:apply:()Ljava/util/function/Function;
+       522: invokedynamic #348,  0            // InvokeDynamic #39:accept:()Ljava/util/function/BiConsumer;
+       527: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       530: dconst_0
+       531: invokestatic  #186                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       534: invokestatic  #335                // Method com/hypixel/hytale/codec/validation/Validators.greaterThan:(Ljava/lang/Comparable;)Lcom/hypixel/hytale/codec/validation/Validator;
+       537: invokevirtual #278                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidator:(Lcom/hypixel/hytale/codec/validation/Validator;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       540: invokevirtual #256                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       543: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       546: new           #228                // class com/hypixel/hytale/codec/KeyedCodec
+       549: dup
+       550: ldc_w         #349                // String DensityWater
+       553: getstatic     #232                // Field com/hypixel/hytale/codec/Codec.DOUBLE:Lcom/hypixel/hytale/codec/codecs/simple/DoubleCodec;
+       556: invokespecial #238                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       559: invokedynamic #351,  0            // InvokeDynamic #40:accept:()Ljava/util/function/BiConsumer;
+       564: invokedynamic #352,  0            // InvokeDynamic #41:apply:()Ljava/util/function/Function;
+       569: invokedynamic #353,  0            // InvokeDynamic #42:accept:()Ljava/util/function/BiConsumer;
+       574: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       577: invokevirtual #256                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       580: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       583: new           #228                // class com/hypixel/hytale/codec/KeyedCodec
+       586: dup
+       587: ldc_w         #354                // String HitWaterImpulseLoss
+       590: getstatic     #232                // Field com/hypixel/hytale/codec/Codec.DOUBLE:Lcom/hypixel/hytale/codec/codecs/simple/DoubleCodec;
+       593: invokespecial #238                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       596: invokedynamic #356,  0            // InvokeDynamic #43:accept:()Ljava/util/function/BiConsumer;
+       601: invokedynamic #357,  0            // InvokeDynamic #44:apply:()Ljava/util/function/Function;
+       606: invokedynamic #358,  0            // InvokeDynamic #45:accept:()Ljava/util/function/BiConsumer;
+       611: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       614: invokevirtual #256                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       617: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       620: new           #228                // class com/hypixel/hytale/codec/KeyedCodec
+       623: dup
+       624: ldc_w         #359                // String RotationForce
+       627: getstatic     #232                // Field com/hypixel/hytale/codec/Codec.DOUBLE:Lcom/hypixel/hytale/codec/codecs/simple/DoubleCodec;
+       630: invokespecial #238                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       633: invokedynamic #361,  0            // InvokeDynamic #46:accept:()Ljava/util/function/BiConsumer;
+       638: invokedynamic #362,  0            // InvokeDynamic #47:apply:()Ljava/util/function/Function;
+       643: invokedynamic #363,  0            // InvokeDynamic #48:accept:()Ljava/util/function/BiConsumer;
+       648: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       651: invokevirtual #256                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       654: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       657: new           #228                // class com/hypixel/hytale/codec/KeyedCodec
+       660: dup
+       661: ldc_w         #364                // String SpeedRotationFactor
+       664: getstatic     #366                // Field com/hypixel/hytale/codec/Codec.FLOAT:Lcom/hypixel/hytale/codec/codecs/simple/FloatCodec;
+       667: invokespecial #238                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       670: invokedynamic #370,  0            // InvokeDynamic #49:accept:()Ljava/util/function/BiConsumer;
+       675: invokedynamic #371,  0            // InvokeDynamic #50:apply:()Ljava/util/function/Function;
+       680: invokedynamic #372,  0            // InvokeDynamic #51:accept:()Ljava/util/function/BiConsumer;
+       685: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       688: invokevirtual #256                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       691: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       694: new           #228                // class com/hypixel/hytale/codec/KeyedCodec
+       697: dup
+       698: ldc_w         #373                // String SwimmingDampingFactor
+       701: getstatic     #232                // Field com/hypixel/hytale/codec/Codec.DOUBLE:Lcom/hypixel/hytale/codec/codecs/simple/DoubleCodec;
+       704: invokespecial #238                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       707: invokedynamic #375,  0            // InvokeDynamic #52:accept:()Ljava/util/function/BiConsumer;
+       712: invokedynamic #376,  0            // InvokeDynamic #53:apply:()Ljava/util/function/Function;
+       717: invokedynamic #377,  0            // InvokeDynamic #54:accept:()Ljava/util/function/BiConsumer;
+       722: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       725: invokevirtual #256                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       728: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       731: new           #228                // class com/hypixel/hytale/codec/KeyedCodec
+       734: dup
+       735: ldc_w         #378                // String AllowRolling
+       738: getstatic     #298                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+       741: invokespecial #238                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       744: invokedynamic #380,  0            // InvokeDynamic #55:accept:()Ljava/util/function/BiConsumer;
+       749: invokedynamic #381,  0            // InvokeDynamic #56:apply:()Ljava/util/function/Function;
+       754: invokedynamic #382,  0            // InvokeDynamic #57:accept:()Ljava/util/function/BiConsumer;
+       759: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       762: invokevirtual #256                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       765: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       768: new           #228                // class com/hypixel/hytale/codec/KeyedCodec
+       771: dup
+       772: ldc_w         #383                // String RollingFrictionFactor
+       775: getstatic     #232                // Field com/hypixel/hytale/codec/Codec.DOUBLE:Lcom/hypixel/hytale/codec/codecs/simple/DoubleCodec;
+       778: invokespecial #238                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       781: invokedynamic #385,  0            // InvokeDynamic #58:accept:()Ljava/util/function/BiConsumer;
+       786: invokedynamic #386,  0            // InvokeDynamic #59:apply:()Ljava/util/function/Function;
+       791: invokedynamic #387,  0            // InvokeDynamic #60:accept:()Ljava/util/function/BiConsumer;
+       796: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       799: invokevirtual #256                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       802: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       805: new           #228                // class com/hypixel/hytale/codec/KeyedCodec
+       808: dup
+       809: ldc_w         #388                // String RollingSpeed
+       812: getstatic     #366                // Field com/hypixel/hytale/codec/Codec.FLOAT:Lcom/hypixel/hytale/codec/codecs/simple/FloatCodec;
+       815: invokespecial #238                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       818: invokedynamic #390,  0            // InvokeDynamic #61:accept:()Ljava/util/function/BiConsumer;
+       823: invokedynamic #391,  0            // InvokeDynamic #62:apply:()Ljava/util/function/Function;
+       828: invokedynamic #392,  0            // InvokeDynamic #63:accept:()Ljava/util/function/BiConsumer;
+       833: invokevirtual #250                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       836: invokevirtual #256                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       839: checkcast     #251                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       842: invokevirtual #393                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.build:()Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       845: putstatic     #397                // Field CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       848: new           #12                 // class com/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsConfig
+       851: dup
+       852: invokespecial #401                // Method "<init>":()V
+       855: putstatic     #402                // Field DEFAULT:Lcom/hypixel/hytale/server/core/modules/projectile/config/StandardPhysicsConfig;
+       858: return
+}

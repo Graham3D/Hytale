@@ -1,0 +1,298 @@
+Compiled from "RootEffectBudget.java"
+public final class com.inigmasgames.hytalerpg.execution.RootEffectBudget {
+  private final java.util.UUID actor;
+
+  private final java.lang.String root;
+
+  private final java.util.Set<java.lang.String> effects;
+
+  private final java.util.Set<java.lang.String> controllers;
+
+  private int triggered;
+
+  private final com.inigmasgames.hytalerpg.execution.area.RootDisplacementLedger displacement;
+
+  private final java.util.Map<java.lang.String, java.lang.Double> statusTimes;
+
+  private final java.util.Map<java.lang.String, java.lang.Double> orbitContacts;
+
+  public synchronized java.lang.String claimOrbitContact(java.lang.String, double);
+    Code:
+         0: aload_1
+         1: ifnull        28
+         4: aload_1
+         5: invokevirtual #1                  // Method java/lang/String.isBlank:()Z
+         8: ifne          28
+        11: aload_1
+        12: invokevirtual #7                  // Method java/lang/String.length:()I
+        15: sipush        256
+        18: if_icmpgt     28
+        21: dload_2
+        22: invokestatic  #11                 // Method java/lang/Double.isFinite:(D)Z
+        25: ifne          31
+        28: ldc           #17                 // String INVALID_ORBIT_CONTACT
+        30: areturn
+        31: dload_2
+        32: aload_0
+        33: getfield      #19                 // Field orbitContacts:Ljava/util/Map;
+        36: aload_1
+        37: ldc2_w        #25                 // double -Infinityd
+        40: invokestatic  #27                 // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+        43: invokeinterface #31,  3           // InterfaceMethod java/util/Map.getOrDefault:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        48: checkcast     #12                 // class java/lang/Double
+        51: invokevirtual #37                 // Method java/lang/Double.doubleValue:()D
+        54: dsub
+        55: ldc2_w        #41                 // double 0.749999999d
+        58: dcmpg
+        59: ifge          65
+        62: ldc           #43                 // String ROOT_ORBIT_CONTACT_ICD
+        64: areturn
+        65: aload_0
+        66: getfield      #19                 // Field orbitContacts:Ljava/util/Map;
+        69: aload_1
+        70: invokeinterface #45,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+        75: ifne          96
+        78: aload_0
+        79: getfield      #19                 // Field orbitContacts:Ljava/util/Map;
+        82: invokeinterface #49,  1           // InterfaceMethod java/util/Map.size:()I
+        87: sipush        256
+        90: if_icmplt     96
+        93: ldc           #52                 // String ROOT_ORBIT_TARGET_BUDGET
+        95: areturn
+        96: aload_0
+        97: getfield      #19                 // Field orbitContacts:Ljava/util/Map;
+       100: aload_1
+       101: dload_2
+       102: invokestatic  #27                 // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       105: invokeinterface #54,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       110: pop
+       111: ldc           #57                 // String PASS
+       113: areturn
+
+  public synchronized boolean statusReady(java.lang.String, double, double);
+    Code:
+         0: dload_2
+         1: invokestatic  #11                 // Method java/lang/Double.isFinite:(D)Z
+         4: ifeq          88
+         7: dload         4
+         9: invokestatic  #11                 // Method java/lang/Double.isFinite:(D)Z
+        12: ifeq          88
+        15: dload         4
+        17: dconst_0
+        18: dcmpl
+        19: iflt          88
+        22: aload_0
+        23: getfield      #59                 // Field statusTimes:Ljava/util/Map;
+        26: aload_1
+        27: invokeinterface #45,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+        32: ifne          50
+        35: aload_0
+        36: getfield      #59                 // Field statusTimes:Ljava/util/Map;
+        39: invokeinterface #49,  1           // InterfaceMethod java/util/Map.size:()I
+        44: sipush        256
+        47: if_icmpge     88
+        50: dload_2
+        51: aload_0
+        52: getfield      #59                 // Field statusTimes:Ljava/util/Map;
+        55: aload_1
+        56: ldc2_w        #25                 // double -Infinityd
+        59: invokestatic  #27                 // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+        62: invokeinterface #31,  3           // InterfaceMethod java/util/Map.getOrDefault:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        67: checkcast     #12                 // class java/lang/Double
+        70: invokevirtual #37                 // Method java/lang/Double.doubleValue:()D
+        73: dsub
+        74: dload         4
+        76: ldc2_w        #62                 // double 1.0E-9d
+        79: dsub
+        80: dcmpl
+        81: iflt          88
+        84: iconst_1
+        85: goto          89
+        88: iconst_0
+        89: ireturn
+
+  public synchronized void statusApplied(java.lang.String, double);
+    Code:
+         0: aload_0
+         1: getfield      #59                 // Field statusTimes:Ljava/util/Map;
+         4: aload_1
+         5: invokeinterface #45,  2           // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+        10: ifne          28
+        13: aload_0
+        14: getfield      #59                 // Field statusTimes:Ljava/util/Map;
+        17: invokeinterface #49,  1           // InterfaceMethod java/util/Map.size:()I
+        22: sipush        256
+        25: if_icmpge     43
+        28: aload_0
+        29: getfield      #59                 // Field statusTimes:Ljava/util/Map;
+        32: aload_1
+        33: dload_2
+        34: invokestatic  #27                 // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+        37: invokeinterface #54,  3           // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        42: pop
+        43: return
+
+  public com.inigmasgames.hytalerpg.execution.area.RootDisplacementLedger displacement();
+    Code:
+         0: aload_0
+         1: getfield      #64                 // Field displacement:Lcom/inigmasgames/hytalerpg/execution/area/RootDisplacementLedger;
+         4: areturn
+
+  public com.inigmasgames.hytalerpg.execution.RootEffectBudget(java.util.UUID, java.lang.String);
+    Code:
+         0: aload_0
+         1: invokespecial #68                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #74                 // class java/util/HashSet
+         8: dup
+         9: ldc           #76                 // String PRIMARY
+        11: invokestatic  #78                 // InterfaceMethod java/util/Set.of:(Ljava/lang/Object;)Ljava/util/Set;
+        14: invokespecial #84                 // Method java/util/HashSet."<init>":(Ljava/util/Collection;)V
+        17: putfield      #87                 // Field effects:Ljava/util/Set;
+        20: aload_0
+        21: new           #74                 // class java/util/HashSet
+        24: dup
+        25: invokespecial #91                 // Method java/util/HashSet."<init>":()V
+        28: putfield      #92                 // Field controllers:Ljava/util/Set;
+        31: aload_0
+        32: new           #95                 // class com/inigmasgames/hytalerpg/execution/area/RootDisplacementLedger
+        35: dup
+        36: invokespecial #97                 // Method com/inigmasgames/hytalerpg/execution/area/RootDisplacementLedger."<init>":()V
+        39: putfield      #64                 // Field displacement:Lcom/inigmasgames/hytalerpg/execution/area/RootDisplacementLedger;
+        42: aload_0
+        43: new           #98                 // class java/util/HashMap
+        46: dup
+        47: invokespecial #100                // Method java/util/HashMap."<init>":()V
+        50: putfield      #59                 // Field statusTimes:Ljava/util/Map;
+        53: aload_0
+        54: new           #98                 // class java/util/HashMap
+        57: dup
+        58: invokespecial #100                // Method java/util/HashMap."<init>":()V
+        61: putfield      #19                 // Field orbitContacts:Ljava/util/Map;
+        64: aload_0
+        65: aload_1
+        66: invokestatic  #101                // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+        69: checkcast     #107                // class java/util/UUID
+        72: putfield      #109                // Field actor:Ljava/util/UUID;
+        75: aload_0
+        76: aload_2
+        77: invokestatic  #101                // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+        80: checkcast     #2                  // class java/lang/String
+        83: putfield      #113                // Field root:Ljava/lang/String;
+        86: return
+
+  public boolean owns(java.util.UUID, java.lang.String);
+    Code:
+         0: aload_0
+         1: getfield      #109                // Field actor:Ljava/util/UUID;
+         4: aload_1
+         5: invokevirtual #117                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+         8: ifeq          26
+        11: aload_0
+        12: getfield      #113                // Field root:Ljava/lang/String;
+        15: aload_2
+        16: invokevirtual #120                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+        19: ifeq          26
+        22: iconst_1
+        23: goto          27
+        26: iconst_0
+        27: ireturn
+
+  public synchronized boolean once(java.lang.String);
+    Code:
+         0: aload_1
+         1: ifnull        51
+         4: aload_1
+         5: invokevirtual #1                  // Method java/lang/String.isBlank:()Z
+         8: ifne          51
+        11: aload_1
+        12: invokevirtual #7                  // Method java/lang/String.length:()I
+        15: bipush        64
+        17: if_icmpgt     51
+        20: aload_0
+        21: getfield      #92                 // Field controllers:Ljava/util/Set;
+        24: invokeinterface #121,  1          // InterfaceMethod java/util/Set.size:()I
+        29: bipush        16
+        31: if_icmpge     51
+        34: aload_0
+        35: getfield      #92                 // Field controllers:Ljava/util/Set;
+        38: aload_1
+        39: invokeinterface #122,  2          // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+        44: ifeq          51
+        47: iconst_1
+        48: goto          52
+        51: iconst_0
+        52: ireturn
+
+  public synchronized java.lang.String claim(java.lang.String, int, boolean);
+    Code:
+         0: aload_1
+         1: ifnull        21
+         4: aload_1
+         5: invokevirtual #1                  // Method java/lang/String.isBlank:()Z
+         8: ifne          21
+        11: aload_1
+        12: invokevirtual #7                  // Method java/lang/String.length:()I
+        15: sipush        512
+        18: if_icmple     24
+        21: ldc           #125                // String INVALID_EFFECT_ID
+        23: areturn
+        24: iload_2
+        25: iconst_1
+        26: if_icmplt     34
+        29: iload_2
+        30: iconst_3
+        31: if_icmple     37
+        34: ldc           #127                // String MAX_GENERATION
+        36: areturn
+        37: aload_0
+        38: getfield      #87                 // Field effects:Ljava/util/Set;
+        41: aload_1
+        42: invokeinterface #129,  2          // InterfaceMethod java/util/Set.contains:(Ljava/lang/Object;)Z
+        47: ifeq          53
+        50: ldc           #132                // String DUPLICATE_EFFECT
+        52: areturn
+        53: aload_0
+        54: getfield      #87                 // Field effects:Ljava/util/Set;
+        57: invokeinterface #121,  1          // InterfaceMethod java/util/Set.size:()I
+        62: bipush        48
+        64: if_icmplt     70
+        67: ldc           #134                // String ROOT_SPAWN_EFFECT_BUDGET
+        69: areturn
+        70: iload_3
+        71: ifeq          86
+        74: aload_0
+        75: getfield      #136                // Field triggered:I
+        78: bipush        16
+        80: if_icmplt     86
+        83: ldc           #140                // String ROOT_TRIGGERED_SECONDARY_BUDGET
+        85: areturn
+        86: aload_0
+        87: getfield      #87                 // Field effects:Ljava/util/Set;
+        90: aload_1
+        91: invokeinterface #122,  2          // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+        96: pop
+        97: iload_3
+        98: ifeq          111
+       101: aload_0
+       102: dup
+       103: getfield      #136                // Field triggered:I
+       106: iconst_1
+       107: iadd
+       108: putfield      #136                // Field triggered:I
+       111: ldc           #57                 // String PASS
+       113: areturn
+
+  public synchronized int spawned();
+    Code:
+         0: aload_0
+         1: getfield      #87                 // Field effects:Ljava/util/Set;
+         4: invokeinterface #121,  1          // InterfaceMethod java/util/Set.size:()I
+         9: ireturn
+
+  public synchronized int triggered();
+    Code:
+         0: aload_0
+         1: getfield      #136                // Field triggered:I
+         4: ireturn
+}

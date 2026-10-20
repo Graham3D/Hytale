@@ -1,0 +1,118 @@
+Compiled from "RegeneratingModifier.java"
+public class com.hypixel.hytale.server.core.modules.entitystats.asset.modifier.RegeneratingModifier {
+  public static final com.hypixel.hytale.codec.builder.BuilderCodec<com.hypixel.hytale.server.core.modules.entitystats.asset.modifier.RegeneratingModifier> CODEC;
+
+  protected com.hypixel.hytale.server.core.modules.entity.condition.Condition[] conditions;
+
+  protected float amount;
+
+  protected com.hypixel.hytale.server.core.modules.entitystats.asset.modifier.RegeneratingModifier();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+
+  public com.hypixel.hytale.server.core.modules.entitystats.asset.modifier.RegeneratingModifier(com.hypixel.hytale.server.core.modules.entity.condition.Condition[], float);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: aload_1
+         6: putfield      #7                  // Field conditions:[Lcom/hypixel/hytale/server/core/modules/entity/condition/Condition;
+         9: aload_0
+        10: fload_2
+        11: putfield      #13                 // Field amount:F
+        14: return
+
+  public float getModifier(com.hypixel.hytale.component.ComponentAccessor<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, java.time.Instant);
+    Code:
+         0: aload_1
+         1: aload_2
+         2: aload_3
+         3: aload_0
+         4: getfield      #7                  // Field conditions:[Lcom/hypixel/hytale/server/core/modules/entity/condition/Condition;
+         7: invokestatic  #17                 // Method com/hypixel/hytale/server/core/modules/entity/condition/Condition.allConditionsMet:(Lcom/hypixel/hytale/component/ComponentAccessor;Lcom/hypixel/hytale/component/Ref;Ljava/time/Instant;[Lcom/hypixel/hytale/server/core/modules/entity/condition/Condition;)Z
+        10: ifeq          18
+        13: aload_0
+        14: getfield      #13                 // Field amount:F
+        17: freturn
+        18: fconst_1
+        19: freturn
+
+  public java.lang.String toString();
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field conditions:[Lcom/hypixel/hytale/server/core/modules/entity/condition/Condition;
+         4: invokestatic  #23                 // Method java/util/Arrays.toString:([Ljava/lang/Object;)Ljava/lang/String;
+         7: aload_0
+         8: getfield      #13                 // Field amount:F
+        11: invokedynamic #29,  0             // InvokeDynamic #0:makeConcatWithConstants:(Ljava/lang/String;F)Ljava/lang/String;
+        16: areturn
+
+  private static java.lang.Float lambda$static$3(com.hypixel.hytale.server.core.modules.entitystats.asset.modifier.RegeneratingModifier);
+    Code:
+         0: aload_0
+         1: getfield      #13                 // Field amount:F
+         4: invokestatic  #33                 // Method java/lang/Float.valueOf:(F)Ljava/lang/Float;
+         7: areturn
+
+  private static void lambda$static$2(com.hypixel.hytale.server.core.modules.entitystats.asset.modifier.RegeneratingModifier, java.lang.Float);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #39                 // Method java/lang/Float.floatValue:()F
+         5: putfield      #13                 // Field amount:F
+         8: return
+
+  private static com.hypixel.hytale.server.core.modules.entity.condition.Condition[] lambda$static$1(com.hypixel.hytale.server.core.modules.entitystats.asset.modifier.RegeneratingModifier);
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field conditions:[Lcom/hypixel/hytale/server/core/modules/entity/condition/Condition;
+         4: areturn
+
+  private static void lambda$static$0(com.hypixel.hytale.server.core.modules.entitystats.asset.modifier.RegeneratingModifier, com.hypixel.hytale.server.core.modules.entity.condition.Condition[]);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #7                  // Field conditions:[Lcom/hypixel/hytale/server/core/modules/entity/condition/Condition;
+         5: return
+
+  private static com.hypixel.hytale.server.core.modules.entity.condition.Condition[] lambda$CODEC$0(int);
+    Code:
+         0: iload_0
+         1: anewarray     #18                 // class com/hypixel/hytale/server/core/modules/entity/condition/Condition
+         4: areturn
+
+  static {};
+    Code:
+         0: ldc           #8                  // class com/hypixel/hytale/server/core/modules/entitystats/asset/modifier/RegeneratingModifier
+         2: invokedynamic #43,  0             // InvokeDynamic #1:get:()Ljava/util/function/Supplier;
+         7: invokestatic  #47                 // Method com/hypixel/hytale/codec/builder/BuilderCodec.builder:(Ljava/lang/Class;Ljava/util/function/Supplier;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$Builder;
+        10: new           #53                 // class com/hypixel/hytale/codec/KeyedCodec
+        13: dup
+        14: ldc           #55                 // String Conditions
+        16: new           #57                 // class com/hypixel/hytale/codec/codecs/array/ArrayCodec
+        19: dup
+        20: getstatic     #59                 // Field com/hypixel/hytale/server/core/modules/entity/condition/Condition.CODEC:Lcom/hypixel/hytale/codec/lookup/CodecMapCodec;
+        23: invokedynamic #63,  0             // InvokeDynamic #2:apply:()Ljava/util/function/IntFunction;
+        28: invokespecial #67                 // Method com/hypixel/hytale/codec/codecs/array/ArrayCodec."<init>":(Lcom/hypixel/hytale/codec/Codec;Ljava/util/function/IntFunction;)V
+        31: invokespecial #70                 // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        34: invokedynamic #73,  0             // InvokeDynamic #3:accept:()Ljava/util/function/BiConsumer;
+        39: invokedynamic #77,  0             // InvokeDynamic #4:apply:()Ljava/util/function/Function;
+        44: invokevirtual #80                 // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        47: invokevirtual #86                 // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        50: checkcast     #81                 // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        53: new           #53                 // class com/hypixel/hytale/codec/KeyedCodec
+        56: dup
+        57: ldc           #92                 // String Amount
+        59: getstatic     #94                 // Field com/hypixel/hytale/codec/Codec.FLOAT:Lcom/hypixel/hytale/codec/codecs/simple/FloatCodec;
+        62: invokespecial #70                 // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        65: invokedynamic #100,  0            // InvokeDynamic #5:accept:()Ljava/util/function/BiConsumer;
+        70: invokedynamic #101,  0            // InvokeDynamic #6:apply:()Ljava/util/function/Function;
+        75: invokevirtual #80                 // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        78: invokevirtual #86                 // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        81: checkcast     #81                 // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        84: invokevirtual #102                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.build:()Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+        87: putstatic     #106                // Field CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+        90: return
+}

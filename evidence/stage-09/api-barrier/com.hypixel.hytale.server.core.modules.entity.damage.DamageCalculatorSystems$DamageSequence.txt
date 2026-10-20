@@ -1,0 +1,57 @@
+Compiled from "DamageCalculatorSystems.java"
+public class com.hypixel.hytale.server.core.modules.entity.damage.DamageCalculatorSystems$DamageSequence {
+  private final com.hypixel.hytale.server.core.modules.entity.damage.DamageCalculatorSystems$Sequence sequence;
+
+  private final com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.combat.DamageCalculator damageCalculator;
+
+  private com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.DamageEntityInteraction$EntityStatOnHit[] entityStatOnHit;
+
+  public com.hypixel.hytale.server.core.modules.entity.damage.DamageCalculatorSystems$DamageSequence(com.hypixel.hytale.server.core.modules.entity.damage.DamageCalculatorSystems$Sequence, com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.combat.DamageCalculator);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: aload_1
+         6: putfield      #7                  // Field sequence:Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageCalculatorSystems$Sequence;
+         9: aload_0
+        10: aload_2
+        11: putfield      #13                 // Field damageCalculator:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/server/combat/DamageCalculator;
+        14: return
+
+  public int getSequentialHits();
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field sequence:Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageCalculatorSystems$Sequence;
+         4: getfield      #17                 // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageCalculatorSystems$Sequence.hits:I
+         7: ireturn
+
+  public void addSequentialHit();
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field sequence:Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageCalculatorSystems$Sequence;
+         4: dup
+         5: getfield      #17                 // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageCalculatorSystems$Sequence.hits:I
+         8: iconst_1
+         9: iadd
+        10: putfield      #17                 // Field com/hypixel/hytale/server/core/modules/entity/damage/DamageCalculatorSystems$Sequence.hits:I
+        13: return
+
+  public com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.combat.DamageCalculator getDamageCalculator();
+    Code:
+         0: aload_0
+         1: getfield      #13                 // Field damageCalculator:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/server/combat/DamageCalculator;
+         4: areturn
+
+  public com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.DamageEntityInteraction$EntityStatOnHit[] getEntityStatOnHit();
+    Code:
+         0: aload_0
+         1: getfield      #23                 // Field entityStatOnHit:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/server/DamageEntityInteraction$EntityStatOnHit;
+         4: areturn
+
+  public void setEntityStatOnHit(com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.DamageEntityInteraction$EntityStatOnHit[]);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #23                 // Field entityStatOnHit:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/server/DamageEntityInteraction$EntityStatOnHit;
+         5: return
+}

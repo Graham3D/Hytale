@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" tests="25" skipped="0" failures="4" errors="0" timestamp="2026-09-09T03:23:27.595Z" hostname="GRAHAM" time="0.308">
+  <properties/>
+  <testcase name="depletedFixtureAndNativeFloatCreditUseObservedDeltas()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.0"/>
+  <testcase name="missingHealthCannotBeReplacedByReportedDamageAmount()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.0"/>
+  <testcase name="nativeStaminaFailureBranchCannotBecomeChargedRecovery()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.03">
+    <failure message="java.lang.ExceptionInInitializerError" type="java.lang.ExceptionInInitializerError">java.lang.ExceptionInInitializerError
+	at com.hypixel.hytale.codec.validation.validator.RangeValidator.&lt;clinit&gt;(RangeValidator.java:16)
+	at com.hypixel.hytale.codec.validation.Validators.range(Validators.java:83)
+	at com.hypixel.hytale.server.core.codec.ProtocolCodecs.&lt;clinit&gt;(ProtocolCodecs.java:207)
+	at com.hypixel.hytale.server.core.asset.type.particle.config.ParticleSpawner.&lt;clinit&gt;(ParticleSpawner.java:60)
+	at com.hypixel.hytale.server.core.asset.type.particle.config.ParticleSpawnerGroup.&lt;clinit&gt;(ParticleSpawnerGroup.java:22)
+	at com.hypixel.hytale.server.core.asset.type.particle.config.ParticleSystem.&lt;clinit&gt;(ParticleSystem.java:33)
+	at com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle.&lt;clinit&gt;(ModelParticle.java:27)
+	at com.hypixel.hytale.server.core.modules.interaction.interaction.config.InteractionEffects.&lt;clinit&gt;(InteractionEffects.java:22)
+	at com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.&lt;clinit&gt;(Interaction.java:111)
+	at com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest.nativeStaminaFailureBranchCannotBecomeChargedRecovery(Stage13NativeBasicHitTest.java:106)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+Caused by: java.lang.IllegalStateException: Log manager wasn't set! Please ensure HytaleLogger is the first logger to be initialized or
+use `System.setProperty(&quot;java.util.logging.manager&quot;, HytaleLogManager.class.getName());` at the start of your application.
+Log manager is: java.util.logging.LogManager@286b39c2
+	at com.hypixel.hytale.logger.HytaleLogger.&lt;clinit&gt;(HytaleLogger.java:27)
+	... 13 more
+</failure>
+  </testcase>
+  <testcase name="ambiguousSharedDamagePathAndOnHitDamageBranchesCannotMintBasicReceipts()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.003">
+    <failure message="java.lang.NoClassDefFoundError: Could not initialize class com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction" type="java.lang.NoClassDefFoundError">java.lang.NoClassDefFoundError: Could not initialize class com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction
+	at com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest.ambiguousSharedDamagePathAndOnHitDamageBranchesCannotMintBasicReceipts(Stage13NativeBasicHitTest.java:111)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+Caused by: java.lang.ExceptionInInitializerError: Exception java.lang.ExceptionInInitializerError [in thread &quot;Test worker&quot;]
+	at com.hypixel.hytale.codec.validation.validator.RangeValidator.&lt;clinit&gt;(RangeValidator.java:16)
+	at com.hypixel.hytale.codec.validation.Validators.range(Validators.java:83)
+	at com.hypixel.hytale.server.core.codec.ProtocolCodecs.&lt;clinit&gt;(ProtocolCodecs.java:207)
+	at com.hypixel.hytale.server.core.asset.type.particle.config.ParticleSpawner.&lt;clinit&gt;(ParticleSpawner.java:60)
+	at com.hypixel.hytale.server.core.asset.type.particle.config.ParticleSpawnerGroup.&lt;clinit&gt;(ParticleSpawnerGroup.java:22)
+	at com.hypixel.hytale.server.core.asset.type.particle.config.ParticleSystem.&lt;clinit&gt;(ParticleSystem.java:33)
+	at com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle.&lt;clinit&gt;(ModelParticle.java:27)
+	at com.hypixel.hytale.server.core.modules.interaction.interaction.config.InteractionEffects.&lt;clinit&gt;(InteractionEffects.java:22)
+	at com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.&lt;clinit&gt;(Interaction.java:111)
+	at com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest.nativeStaminaFailureBranchCannotBecomeChargedRecovery(Stage13NativeBasicHitTest.java:106)
+	... 3 more
+</failure>
+  </testcase>
+  <testcase name="sameRootCannotRecoverAgainForAnotherVictimOrDamageComponent()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.0"/>
+  <testcase name="rollingWindowIsNotALifetimeHitCount()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.001"/>
+  <testcase name="finisherConsumesAtRealServiceReleaseEvenOnMiss()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.091"/>
+  <testcase name="repeatedReleaseSharesResolvedScalarWithoutConsumingAnotherToken()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.0"/>
+  <testcase name="irreversibleDispatchFailureConsumesTokenAndRetainsPayment()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.046"/>
+  <testcase name="partialRecoveryFailureCannotRetryTheFirstWrite()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.002"/>
+  <testcase name="rejectedPaymentDoesNotConsumeFinisher()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.044"/>
+  <testcase name="backwardsOrNonfiniteNativeClockIsRejected()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.0"/>
+  <testcase name="newRootHasIndependentRecoveryIdentity()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.001"/>
+  <testcase name="[1] false, 4" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.01"/>
+  <testcase name="[2] true, 12" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.002"/>
+  <testcase name="[1] 100, 100, false, true" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.001"/>
+  <testcase name="[2] 100, 90, true, true" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.001"/>
+  <testcase name="[3] 100, 90, false, false" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.0"/>
+  <testcase name="[4] 0, 0, false, true" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.001"/>
+  <testcase name="[5] 100, -1, false, true" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.0"/>
+  <testcase name="delayedReleaseConsumesOnReleaseRatherThanCommit()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.045">
+    <failure message="org.opentest4j.AssertionFailedError: expected: &lt;true&gt; but was: &lt;false&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: expected: &lt;true&gt; but was: &lt;false&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at app//org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at app//org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:31)
+	at app//org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:183)
+	at app//com.inigmasgames.hytalerpg.Stage11ResourcePassivesTest$H.link(Stage11ResourcePassivesTest.java:31)
+	at app//com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest.delayedReleaseConsumesOnReleaseRatherThanCommit(Stage13NativeBasicHitTest.java:88)
+	at java.base@25.0.4/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base@25.0.4/java.util.ArrayList.forEach(ArrayList.java:1604)
+</failure>
+  </testcase>
+  <testcase name="threeRootsWithinInclusiveFourSecondsGrantOnePersistentToken()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.0"/>
+  <testcase name="nativeChargingZeroBranchSupersedesOuterHeldThreshold()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.002">
+    <failure message="java.lang.NoClassDefFoundError: Could not initialize class com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction" type="java.lang.NoClassDefFoundError">java.lang.NoClassDefFoundError: Could not initialize class com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction
+	at com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest.nativeChargingZeroBranchSupersedesOuterHeldThreshold(Stage13NativeBasicHitTest.java:97)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+Caused by: java.lang.ExceptionInInitializerError: Exception java.lang.ExceptionInInitializerError [in thread &quot;Test worker&quot;]
+	at com.hypixel.hytale.codec.validation.validator.RangeValidator.&lt;clinit&gt;(RangeValidator.java:16)
+	at com.hypixel.hytale.codec.validation.Validators.range(Validators.java:83)
+	at com.hypixel.hytale.server.core.codec.ProtocolCodecs.&lt;clinit&gt;(ProtocolCodecs.java:207)
+	at com.hypixel.hytale.server.core.asset.type.particle.config.ParticleSpawner.&lt;clinit&gt;(ParticleSpawner.java:60)
+	at com.hypixel.hytale.server.core.asset.type.particle.config.ParticleSpawnerGroup.&lt;clinit&gt;(ParticleSpawnerGroup.java:22)
+	at com.hypixel.hytale.server.core.asset.type.particle.config.ParticleSystem.&lt;clinit&gt;(ParticleSystem.java:33)
+	at com.hypixel.hytale.server.core.asset.type.model.config.ModelParticle.&lt;clinit&gt;(ModelParticle.java:27)
+	at com.hypixel.hytale.server.core.modules.interaction.interaction.config.InteractionEffects.&lt;clinit&gt;(InteractionEffects.java:22)
+	at com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction.&lt;clinit&gt;(Interaction.java:111)
+	at com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest.nativeStaminaFailureBranchCannotBecomeChargedRecovery(Stage13NativeBasicHitTest.java:106)
+	... 3 more
+</failure>
+  </testcase>
+  <testcase name="ownerAndTerminalCleanupSeparateComboState()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.0"/>
+  <testcase name="tokenDoesNotBankExtraTokensFromHitsWhileReady()" classname="com.inigmasgames.hytalerpg.Stage13NativeBasicHitTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

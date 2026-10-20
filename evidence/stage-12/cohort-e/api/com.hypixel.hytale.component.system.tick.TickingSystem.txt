@@ -1,0 +1,10 @@
+Compiled from "TickingSystem.java"
+public abstract class com.hypixel.hytale.component.system.tick.TickingSystem<ECS_TYPE> extends com.hypixel.hytale.component.system.System<ECS_TYPE> implements com.hypixel.hytale.component.system.tick.TickableSystem<ECS_TYPE> {
+  public com.hypixel.hytale.component.system.tick.TickingSystem();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/component/system/System."<init>":()V
+         4: return
+
+  public abstract void tick(float, int, com.hypixel.hytale.component.Store<ECS_TYPE>);
+}

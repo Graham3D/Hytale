@@ -1,0 +1,27 @@
+{
+  "capturedAtUtc": "2026-09-06T18:11:12Z",
+  "save": "RPG",
+  "serverLog": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\logs\\2026-09-06_14-11-04_server.log",
+  "invocationUsedExplicitModsArgument": false,
+  "installedMods": [
+    "CanvasUI-0.1.0.jar",
+    "HYTALEDEVLIB-0.5.0.jar",
+    "HytaleRPG-0.0.2.jar"
+  ],
+  "rpgRevision": "R009",
+  "rpgSetup": true,
+  "stageReady": true,
+  "rpgEnabled": true,
+  "rpgShutdown": true,
+  "serverShutdownCompleted": true,
+  "duplicateRpgPluginObserved": false,
+  "rpgScopedExceptionObserved": false,
+  "observedMarkers": [
+    "HYTALE_RPG_SETUP revision=R009 version=0.0.2 hytale=0.7.0-pre.1 stage=01B combatEnabled=false",
+    "RPG_STAGE01B_READY revision=R009 skills=87 passives=66 schema=2",
+    "Enabled plugin InigmasGames:HytaleRPGPhase00Audit",
+    "HYTALE_RPG_SHUTDOWN revision=R009 stage=01B",
+    "Shutdown completed!"
+  ],
+  "scope": "Real RPG-save server startup and shutdown only; no connected player was simulated."
+}

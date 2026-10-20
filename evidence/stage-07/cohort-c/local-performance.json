@@ -1,0 +1,11 @@
+{
+  "remainingCarriers": 0,
+  "bursts": 512,
+  "secondaryVictimLedgerEntries": 32768,
+  "milliseconds": 31.1929,
+  "traceDiskOrNetworkMeasured": false,
+  "owners": 22,
+  "remainingRoots": 0,
+  "nativePhysicsMeasured": false,
+  "carriers": 512
+}

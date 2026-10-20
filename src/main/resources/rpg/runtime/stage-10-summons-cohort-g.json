@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {"skillId":"bone_cage","family":"WALL","allowedMainHandKinds":["SPELLBOOK"],"requiredOffHandKinds":[],"secondaryFamilies":["GROUND_ZONE","BARRIER"],
+      "resourceType":"MANA","resourceCost":28,"cooldownSeconds":18,"windupSeconds":0,
+      "basePowerSource":"MAGIC_WEAPON","innateBasePower":0,"scaling":"MAGIC",
+      "cage":{"range":18,"radius":4,"segments":12,"height":2.5,"thickness":0.25,"duration":5,"coefficient":0.60,"rootSeconds":1}}
+  ]
+}

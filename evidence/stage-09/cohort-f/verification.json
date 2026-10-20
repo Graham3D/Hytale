@@ -1,0 +1,52 @@
+{
+  "capturedAtUtc": "2026-09-08T03:03:26.4535539Z",
+  "revision": "R028",
+  "version": "0.0.21",
+  "stage": "09",
+  "cohort": "f",
+  "playerSchema": 5,
+  "branch": "RPG",
+  "sourceHead": "a2941e6112bea28170bfed86df9d447a3c32f31f",
+  "worktreeDirty": true,
+  "stageStatus": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+  "completeStageGate": true,
+  "gateScope": "LOCAL_ENGINEERING_ONLY",
+  "cohortSkills": null,
+  "cohortPassives": [
+    "triage",
+    "shared_aegis",
+    "reflective_ward"
+  ],
+  "compiledPlanSchema": 6,
+  "capabilityGates": {
+    "pedanticismEnemy": "NATIVE_COOLDOWN_REMAINING_WORK_NOT_EXPOSED; ally RPG rate implemented, enemy native branch not modified",
+    "flame_weapon": "NATIVE_ROOT_WEAPON_CONTACT_ID_UNAVAILABLE; no native hit callback is wired; rejects before cost/cooldown"
+  },
+  "tests": 516,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "connectedVerification": "UNVERIFIED",
+  "nativeCastingFixed": false,
+  "nativeSupportBehaviorVerified": false,
+  "liveDeploymentPerformed": false,
+  "protectedPathsChanged": [],
+  "zeroNativeCostTriggerAssets": 51,
+  "explicitlyScopedCooldownChanges": [
+    "src/main/java/com/inigmasgames/hytalerpg/combat/cooldown/RpgCooldownService.java",
+    "src/main/java/com/inigmasgames/hytalerpg/combat/cooldown/SavedCooldown.java"
+  ],
+  "cooldownPersistence": "Remaining RPG work persisted before dispatch, <=1Hz checkpoint, disconnect save not reset; no offline credit or saved Aura rate",
+  "reservationAuthority": "Existing ReservationService; 03.3 transactional debit; actual native static spendable capacity",
+  "regenerationAuthority": "Original native RegeneratingValue clock and conditions; positive Mana entry decorator",
+  "allyPolicy": "SELF_OR_NATIVE_FRIENDLY_OR_REVERED; affirmative player-party provider pending Stage 12",
+  "jarSha256": "50ED7ACA31BFD78125B1762D9A80FDC463C747A84C3C09DBEFC04BE933B8FE3A",
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "assetsSha256": "46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39",
+  "rollbackSha256": "16F580BE625AD71CE254807EDF4966B8BDAC52096DBCB6F949ED88BF80FADB5F",
+  "rollbackStateRequirement": "Before eventual live upgrade back up the full schema-3 player directory; .20 cannot read newer schemas. Cohort F also requires pre-F state to downgrade to cohort E. No live state was migrated.",
+  "loadMeasurements": [
+    "STAGE09_LOAD overflowEffects=4096 owners=16 rejectedOverflow=16 elapsedMs=754.4167 finalEffects=0 finalSecondaryRoots=0 nativeExecution=false",
+    "STAGE09_LOAD thornsSeconds=300 ownerTicks=3000 attemptedSecondary=30000 grantedSecondary=2400 paidSeconds=300.25 elapsedMs=16.7214 finalAuras=0 finalFields=0 nativeExecution=false"
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "Model": "RPG_Quick_Shot_Arrow", "UseModelScale": true,
+  "Physics": { "Type": "Standard", "Gravity": 0, "TerminalVelocityAir": 40, "TerminalVelocityWater": 15, "RotationMode": "VelocityDamped", "Bounciness": 0.0, "SticksVertically": true },
+  "LaunchForce": 40, "SpawnOffset": { "X": 0, "Y": 0, "Z": 0 }, "Interactions": {}
+}

@@ -1,0 +1,287 @@
+Compiled from "ConditionalRepeatRuntime.java"
+public final class com.inigmasgames.hytalerpg.execution.ConditionalRepeatRuntime {
+  private final java.util.Map<com.inigmasgames.hytalerpg.execution.ConditionalRepeatRuntime$Key, java.lang.Double> readyAt;
+
+  public com.inigmasgames.hytalerpg.execution.ConditionalRepeatRuntime();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: new           #7                  // class java/util/HashMap
+         8: dup
+         9: invokespecial #9                  // Method java/util/HashMap."<init>":()V
+        12: putfield      #10                 // Field readyAt:Ljava/util/Map;
+        15: return
+
+  public synchronized java.lang.String observed(com.inigmasgames.hytalerpg.execution.SkillExecutionContext, com.inigmasgames.hytalerpg.execution.ConditionalRepeatRuntime$Hit, double, com.inigmasgames.hytalerpg.execution.ConditionalRepeatRuntime$Port);
+    Code:
+         0: dload_3
+         1: invokestatic  #16                 // Method java/lang/Double.isFinite:(D)Z
+         4: ifne          17
+         7: new           #22                 // class java/lang/IllegalArgumentException
+        10: dup
+        11: ldc           #24                 // String INVALID_REPEAT_CLOCK
+        13: invokespecial #26                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        16: athrow
+        17: aload_1
+        18: invokevirtual #29                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+        21: invokevirtual #35                 // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.conditionalRepeat:()Ljava/lang/String;
+        24: astore        6
+        26: aload         6
+        28: invokevirtual #41                 // Method java/lang/String.isEmpty:()Z
+        31: ifne          61
+        34: aload_1
+        35: invokevirtual #47                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.derivedRelease:()Z
+        38: ifne          61
+        41: aload_1
+        42: invokevirtual #50                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.request:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;
+        45: invokevirtual #54                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionRequest.origin:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest$Origin;
+        48: getstatic     #60                 // Field com/inigmasgames/hytalerpg/execution/SkillExecutionRequest$Origin.MANUAL:Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest$Origin;
+        51: if_acmpne     61
+        54: aload_2
+        55: invokevirtual #66                 // Method com/inigmasgames/hytalerpg/execution/ConditionalRepeatRuntime$Hit.rootComponent:()Z
+        58: ifne          64
+        61: ldc           #71                 // String NOT_ROOT_REPEAT_SOURCE
+        63: areturn
+        64: aload_1
+        65: invokevirtual #73                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+        68: aload         6
+        70: ldc           #77                 // String critical_trigger
+        72: invokevirtual #79                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+        75: invokestatic  #83                 // Method com/inigmasgames/hytalerpg/execution/ProfileComponentPolicy.conditionalRepeat:(Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;Z)Z
+        78: ifne          84
+        81: ldc           #88                 // String PRIMARY_NOT_REPEATABLE
+        83: areturn
+        84: aload_2
+        85: invokevirtual #90                 // Method com/inigmasgames/hytalerpg/execution/ConditionalRepeatRuntime$Hit.cancelled:()Z
+        88: ifne          129
+        91: aload_2
+        92: invokevirtual #93                 // Method com/inigmasgames/hytalerpg/execution/ConditionalRepeatRuntime$Hit.hostile:()Z
+        95: ifeq          129
+        98: aload_2
+        99: invokevirtual #96                 // Method com/inigmasgames/hytalerpg/execution/ConditionalRepeatRuntime$Hit.protectedTarget:()Z
+       102: ifne          129
+       105: aload_2
+       106: invokevirtual #99                 // Method com/inigmasgames/hytalerpg/execution/ConditionalRepeatRuntime$Hit.before:()D
+       109: aload_2
+       110: invokevirtual #103                // Method com/inigmasgames/hytalerpg/execution/ConditionalRepeatRuntime$Hit.minimum:()D
+       113: dcmpg
+       114: ifle          129
+       117: aload_2
+       118: invokevirtual #106                // Method com/inigmasgames/hytalerpg/execution/ConditionalRepeatRuntime$Hit.after:()D
+       121: aload_2
+       122: invokevirtual #99                 // Method com/inigmasgames/hytalerpg/execution/ConditionalRepeatRuntime$Hit.before:()D
+       125: dcmpl
+       126: iflt          132
+       129: ldc           #109                // String NO_HOSTILE_NATIVE_HEALTH_LOSS
+       131: areturn
+       132: aload         6
+       134: ldc           #77                 // String critical_trigger
+       136: invokevirtual #79                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       139: istore        7
+       141: iload         7
+       143: ifeq          170
+       146: aload_2
+       147: invokevirtual #111                // Method com/inigmasgames/hytalerpg/execution/ConditionalRepeatRuntime$Hit.direct:()Z
+       150: ifeq          182
+       153: aload_2
+       154: invokevirtual #114                // Method com/inigmasgames/hytalerpg/execution/ConditionalRepeatRuntime$Hit.canProc:()Z
+       157: ifeq          182
+       160: aload_2
+       161: invokevirtual #117                // Method com/inigmasgames/hytalerpg/execution/ConditionalRepeatRuntime$Hit.critical:()Z
+       164: ifne          185
+       167: goto          182
+       170: aload_2
+       171: invokevirtual #106                // Method com/inigmasgames/hytalerpg/execution/ConditionalRepeatRuntime$Hit.after:()D
+       174: aload_2
+       175: invokevirtual #103                // Method com/inigmasgames/hytalerpg/execution/ConditionalRepeatRuntime$Hit.minimum:()D
+       178: dcmpl
+       179: ifle          185
+       182: ldc           #120                // String CONDITION_NOT_MET
+       184: areturn
+       185: aload_0
+       186: getfield      #10                 // Field readyAt:Ljava/util/Map;
+       189: invokeinterface #122,  1          // InterfaceMethod java/util/Map.values:()Ljava/util/Collection;
+       194: dload_3
+       195: invokedynamic #128,  0            // InvokeDynamic #0:test:(D)Ljava/util/function/Predicate;
+       200: invokeinterface #132,  2          // InterfaceMethod java/util/Collection.removeIf:(Ljava/util/function/Predicate;)Z
+       205: pop
+       206: new           #138                // class com/inigmasgames/hytalerpg/execution/ConditionalRepeatRuntime$Key
+       209: dup
+       210: aload_1
+       211: invokevirtual #50                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.request:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionRequest;
+       214: invokevirtual #140                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionRequest.actorId:()Ljava/util/UUID;
+       217: aload_1
+       218: invokevirtual #73                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+       221: invokevirtual #144                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.skillId:()Ljava/lang/String;
+       224: aload         6
+       226: invokespecial #149                // Method com/inigmasgames/hytalerpg/execution/ConditionalRepeatRuntime$Key."<init>":(Ljava/util/UUID;Ljava/lang/String;Ljava/lang/String;)V
+       229: astore        8
+       231: aload_0
+       232: getfield      #10                 // Field readyAt:Ljava/util/Map;
+       235: aload         8
+       237: invokeinterface #152,  2          // InterfaceMethod java/util/Map.containsKey:(Ljava/lang/Object;)Z
+       242: ifeq          248
+       245: ldc           #155                // String CONDITIONAL_REPEAT_ICD
+       247: areturn
+       248: aload_0
+       249: getfield      #10                 // Field readyAt:Ljava/util/Map;
+       252: invokeinterface #157,  1          // InterfaceMethod java/util/Map.size:()I
+       257: sipush        4096
+       260: if_icmpge     301
+       263: aload_0
+       264: getfield      #10                 // Field readyAt:Ljava/util/Map;
+       267: invokeinterface #161,  1          // InterfaceMethod java/util/Map.keySet:()Ljava/util/Set;
+       272: invokeinterface #165,  1          // InterfaceMethod java/util/Set.stream:()Ljava/util/stream/Stream;
+       277: aload         8
+       279: invokedynamic #171,  0            // InvokeDynamic #1:test:(Lcom/inigmasgames/hytalerpg/execution/ConditionalRepeatRuntime$Key;)Ljava/util/function/Predicate;
+       284: invokeinterface #174,  2          // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+       289: invokeinterface #180,  1          // InterfaceMethod java/util/stream/Stream.count:()J
+       294: ldc2_w        #184                // long 16l
+       297: lcmp
+       298: iflt          304
+       301: ldc           #186                // String CONDITIONAL_REPEAT_LEDGER_CAPACITY
+       303: areturn
+       304: aload_1
+       305: invokevirtual #188                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.effects:()Lcom/inigmasgames/hytalerpg/execution/RootEffectBudget;
+       308: aload         6
+       310: invokevirtual #192                // Method com/inigmasgames/hytalerpg/execution/RootEffectBudget.once:(Ljava/lang/String;)Z
+       313: ifne          319
+       316: ldc           #198                // String ROOT_REPEAT_ALREADY_CLAIMED
+       318: areturn
+       319: iload         7
+       321: ifeq          331
+       324: aload_1
+       325: invokevirtual #200                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.target:()Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;
+       328: goto          340
+       331: aload         5
+       333: aload_1
+       334: aload_2
+       335: invokeinterface #204,  3          // InterfaceMethod com/inigmasgames/hytalerpg/execution/ConditionalRepeatRuntime$Port.killTarget:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/execution/ConditionalRepeatRuntime$Hit;)Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;
+       340: astore        9
+       342: aload         9
+       344: ifnonnull     350
+       347: ldc           #210                // String NO_VALID_REPEAT_TARGET
+       349: areturn
+       350: aload_1
+       351: aload         9
+       353: invokevirtual #212                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.conditionalCopy:(Lcom/inigmasgames/hytalerpg/execution/CommittedTarget;)Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       356: astore        10
+       358: aload         10
+       360: invokevirtual #73                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+       363: invokevirtual #216                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.projectile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile$Projectile;
+       366: ifnull        394
+       369: aload         10
+       371: invokevirtual #29                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+       374: invokevirtual #220                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.orbit:()Z
+       377: ifne          394
+       380: aload         10
+       382: invokevirtual #29                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+       385: invokevirtual #223                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.projectileModifiers:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ProjectileModifiers;
+       388: invokevirtual #227                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ProjectileModifiers.batchSize:()I
+       391: goto          395
+       394: iconst_1
+       395: istore        11
+       397: iconst_0
+       398: istore        12
+       400: iload         12
+       402: iload         11
+       404: if_icmpge     449
+       407: aload_1
+       408: invokevirtual #188                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.effects:()Lcom/inigmasgames/hytalerpg/execution/RootEffectBudget;
+       411: aload         10
+       413: invokevirtual #232                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.skillInstanceId:()Ljava/lang/String;
+       416: iload         12
+       418: invokedynamic #235,  0            // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;I)Ljava/lang/String;
+       423: iconst_2
+       424: iconst_1
+       425: invokevirtual #239                // Method com/inigmasgames/hytalerpg/execution/RootEffectBudget.claim:(Ljava/lang/String;IZ)Ljava/lang/String;
+       428: astore        13
+       430: aload         13
+       432: ldc           #243                // String PASS
+       434: invokevirtual #79                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       437: ifne          443
+       440: aload         13
+       442: areturn
+       443: iinc          12, 1
+       446: goto          400
+       449: aload         5
+       451: aload         10
+       453: dload_3
+       454: iload         7
+       456: ifeq          465
+       459: ldc2_w        #245                // double 0.2d
+       462: goto          466
+       465: dconst_0
+       466: dadd
+       467: invokeinterface #247,  4          // InterfaceMethod com/inigmasgames/hytalerpg/execution/ConditionalRepeatRuntime$Port.enqueue:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;D)Ljava/lang/String;
+       472: astore        12
+       474: aload         12
+       476: ldc           #243                // String PASS
+       478: invokevirtual #79                 // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       481: ifne          487
+       484: aload         12
+       486: areturn
+       487: aload_0
+       488: getfield      #10                 // Field readyAt:Ljava/util/Map;
+       491: aload         8
+       493: dload_3
+       494: iload         7
+       496: ifeq          505
+       499: ldc2_w        #251                // double 1.5d
+       502: goto          506
+       505: dconst_1
+       506: dadd
+       507: invokestatic  #253                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       510: invokeinterface #257,  3          // InterfaceMethod java/util/Map.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       515: pop
+       516: ldc_w         #261                // String CONDITIONAL_REPEAT_SCHEDULED
+       519: areturn
+
+  public synchronized void forget(java.util.UUID);
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field readyAt:Ljava/util/Map;
+         4: invokeinterface #161,  1          // InterfaceMethod java/util/Map.keySet:()Ljava/util/Set;
+         9: aload_1
+        10: invokedynamic #263,  0            // InvokeDynamic #3:test:(Ljava/util/UUID;)Ljava/util/function/Predicate;
+        15: invokeinterface #266,  2          // InterfaceMethod java/util/Set.removeIf:(Ljava/util/function/Predicate;)Z
+        20: pop
+        21: return
+
+  public synchronized int size();
+    Code:
+         0: aload_0
+         1: getfield      #10                 // Field readyAt:Ljava/util/Map;
+         4: invokeinterface #157,  1          // InterfaceMethod java/util/Map.size:()I
+         9: ireturn
+
+  private static boolean lambda$forget$0(java.util.UUID, com.inigmasgames.hytalerpg.execution.ConditionalRepeatRuntime$Key);
+    Code:
+         0: aload_1
+         1: getfield      #267                // Field com/inigmasgames/hytalerpg/execution/ConditionalRepeatRuntime$Key.actor:Ljava/util/UUID;
+         4: aload_0
+         5: invokevirtual #271                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+         8: ireturn
+
+  private static boolean lambda$observed$1(com.inigmasgames.hytalerpg.execution.ConditionalRepeatRuntime$Key, com.inigmasgames.hytalerpg.execution.ConditionalRepeatRuntime$Key);
+    Code:
+         0: aload_1
+         1: getfield      #267                // Field com/inigmasgames/hytalerpg/execution/ConditionalRepeatRuntime$Key.actor:Ljava/util/UUID;
+         4: aload_0
+         5: getfield      #267                // Field com/inigmasgames/hytalerpg/execution/ConditionalRepeatRuntime$Key.actor:Ljava/util/UUID;
+         8: invokevirtual #271                // Method java/util/UUID.equals:(Ljava/lang/Object;)Z
+        11: ireturn
+
+  private static boolean lambda$observed$0(double, java.lang.Double);
+    Code:
+         0: aload_2
+         1: invokevirtual #274                // Method java/lang/Double.doubleValue:()D
+         4: dload_0
+         5: dcmpg
+         6: ifgt          13
+         9: iconst_1
+        10: goto          14
+        13: iconst_0
+        14: ireturn
+}

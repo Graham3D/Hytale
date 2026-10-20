@@ -1,0 +1,460 @@
+Compiled from "SupportDamageSystems.java"
+public final class com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems {
+  private static final com.hypixel.hytale.server.core.meta.MetaKey<java.lang.Double> BEFORE;
+
+  private static final com.hypixel.hytale.server.core.meta.MetaKey<java.lang.Boolean> OBSERVED;
+
+  private com.inigmasgames.hytalerpg.execution.hytale.SupportDamageSystems();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+
+  private static double health(com.hypixel.hytale.component.ArchetypeChunk<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, int);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: invokestatic  #7                  // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         5: invokevirtual #13                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+         8: checkcast     #8                  // class com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap
+        11: astore_2
+        12: aload_2
+        13: ifnonnull     20
+        16: aconst_null
+        17: goto          27
+        20: aload_2
+        21: invokestatic  #19                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/DefaultEntityStatTypes.getHealth:()I
+        24: invokevirtual #25                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        27: astore_3
+        28: aload_3
+        29: ifnonnull     38
+        32: ldc2_w        #31                 // double NaNd
+        35: goto          43
+        38: aload_3
+        39: invokevirtual #33                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+        42: f2d
+        43: dreturn
+
+  public static boolean secondaryCannotReflect(com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageMetadata);
+    Code:
+         0: aload_0
+         1: ifnull        28
+         4: aload_0
+         5: invokevirtual #38                 // Method com/inigmasgames/hytalerpg/combat/hytale/HytaleDamageMetadata.origin:()Lcom/inigmasgames/hytalerpg/combat/hytale/HytaleDamageMetadata$Origin;
+         8: getstatic     #44                 // Field com/inigmasgames/hytalerpg/combat/hytale/HytaleDamageMetadata$Origin.REFLECTED:Lcom/inigmasgames/hytalerpg/combat/hytale/HytaleDamageMetadata$Origin;
+        11: if_acmpeq     24
+        14: aload_0
+        15: invokevirtual #38                 // Method com/inigmasgames/hytalerpg/combat/hytale/HytaleDamageMetadata.origin:()Lcom/inigmasgames/hytalerpg/combat/hytale/HytaleDamageMetadata$Origin;
+        18: getstatic     #50                 // Field com/inigmasgames/hytalerpg/combat/hytale/HytaleDamageMetadata$Origin.REDIRECTED:Lcom/inigmasgames/hytalerpg/combat/hytale/HytaleDamageMetadata$Origin;
+        21: if_acmpne     28
+        24: iconst_1
+        25: goto          29
+        28: iconst_0
+        29: ireturn
+
+  private static com.inigmasgames.hytalerpg.execution.support.SecondaryDamageAttempt submit(com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem, com.inigmasgames.hytalerpg.execution.support.FiniteSupportEffects$Effect, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.modules.entity.damage.DamageCause, double, com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageMetadata$Origin);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: aload_3
+         4: aload         4
+         6: dload         5
+         8: aload         7
+        10: aconst_null
+        11: invokestatic  #53                 // Method submit:(Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;Lcom/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageCause;DLcom/inigmasgames/hytalerpg/combat/hytale/HytaleDamageMetadata$Origin;Lcom/inigmasgames/hytalerpg/combat/damage/ConditionalDamage;)Lcom/inigmasgames/hytalerpg/execution/support/SecondaryDamageAttempt;
+        14: areturn
+
+  private static com.inigmasgames.hytalerpg.execution.support.SecondaryDamageAttempt submit(com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem, com.inigmasgames.hytalerpg.execution.support.FiniteSupportEffects$Effect, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.modules.entity.damage.DamageCause, double, com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageMetadata$Origin, com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage);
+    Code:
+         0: aload_3
+         1: aload_2
+         2: invokestatic  #7                  // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         5: invokevirtual #59                 // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+         8: checkcast     #8                  // class com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap
+        11: astore        9
+        13: aload         9
+        15: ifnonnull     22
+        18: aconst_null
+        19: goto          30
+        22: aload         9
+        24: invokestatic  #19                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/DefaultEntityStatTypes.getHealth:()I
+        27: invokevirtual #25                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        30: astore        10
+        32: aload         10
+        34: invokedynamic #64,  0             // InvokeDynamic #0:getAsDouble:(Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;)Ljava/util/function/DoubleSupplier;
+        39: aload_2
+        40: aload_3
+        41: aload         4
+        43: aload_1
+        44: dload         5
+        46: aload         7
+        48: aload         8
+        50: invokedynamic #68,  0             // InvokeDynamic #1:get:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageCause;Lcom/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect;DLcom/inigmasgames/hytalerpg/combat/hytale/HytaleDamageMetadata$Origin;Lcom/inigmasgames/hytalerpg/combat/damage/ConditionalDamage;)Ljava/util/function/Supplier;
+        55: invokestatic  #71                 // Method com/inigmasgames/hytalerpg/execution/support/SecondaryDamageAttempt.once:(Ljava/util/function/DoubleSupplier;Ljava/util/function/Supplier;)Lcom/inigmasgames/hytalerpg/execution/support/SecondaryDamageAttempt;
+        58: astore        11
+        60: aload         11
+        62: invokevirtual #77                 // Method com/inigmasgames/hytalerpg/execution/support/SecondaryDamageAttempt.failure:()Ljava/lang/RuntimeException;
+        65: ifnull        338
+        68: aload_0
+        69: invokevirtual #81                 // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.runtime:()Lcom/inigmasgames/hytalerpg/execution/support/SupportRuntime;
+        72: invokevirtual #87                 // Method com/inigmasgames/hytalerpg/execution/support/SupportRuntime.finite:()Lcom/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects;
+        75: aload_1
+        76: invokevirtual #93                 // Method com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect.key:()Lcom/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Key;
+        79: invokevirtual #99                 // Method com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects.remove:(Lcom/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Key;)V
+        82: aload_1
+        83: invokevirtual #105                // Method com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect.context:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        86: invokevirtual #109                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+        89: invokevirtual #115                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.support:()Lcom/inigmasgames/hytalerpg/execution/support/SupportProfile;
+        92: ifnull        188
+        95: aload_1
+        96: invokevirtual #105                // Method com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect.context:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        99: invokevirtual #109                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.profile:()Lcom/inigmasgames/hytalerpg/execution/Stage04SkillProfile;
+       102: invokevirtual #115                // Method com/inigmasgames/hytalerpg/execution/Stage04SkillProfile.support:()Lcom/inigmasgames/hytalerpg/execution/support/SupportProfile;
+       105: invokevirtual #121                // Method com/inigmasgames/hytalerpg/execution/support/SupportProfile.aura:()Z
+       108: ifeq          188
+       111: aload_3
+       112: invokevirtual #127                // Method com/hypixel/hytale/component/Store.getExternalData:()Ljava/lang/Object;
+       115: checkcast     #131                // class com/hypixel/hytale/server/core/universe/world/storage/EntityStore
+       118: aload_1
+       119: invokevirtual #93                 // Method com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect.key:()Lcom/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Key;
+       122: invokevirtual #133                // Method com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Key.owner:()Ljava/util/UUID;
+       125: invokevirtual #139                // Method com/hypixel/hytale/server/core/universe/world/storage/EntityStore.getRefFromUUID:(Ljava/util/UUID;)Lcom/hypixel/hytale/component/Ref;
+       128: astore        12
+       130: aload         12
+       132: ifnull        188
+       135: aload         12
+       137: invokevirtual #143                // Method com/hypixel/hytale/component/Ref.isValid:()Z
+       140: ifeq          188
+       143: aload_0
+       144: invokevirtual #81                 // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.runtime:()Lcom/inigmasgames/hytalerpg/execution/support/SupportRuntime;
+       147: aload_1
+       148: invokevirtual #93                 // Method com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect.key:()Lcom/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Key;
+       151: invokevirtual #133                // Method com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Key.owner:()Ljava/util/UUID;
+       154: aload_1
+       155: invokevirtual #93                 // Method com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect.key:()Lcom/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Key;
+       158: invokevirtual #148                // Method com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Key.skill:()Ljava/lang/String;
+       161: ldc           #152                // String NATIVE_SECONDARY_DAMAGE_DISPATCH_EXCEPTION
+       163: aload_0
+       164: aload_3
+       165: aload         12
+       167: invokevirtual #154                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.port:(Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/Ref;)Lcom/inigmasgames/hytalerpg/execution/support/SupportWorldPort;
+       170: invokevirtual #158                // Method com/inigmasgames/hytalerpg/execution/support/SupportRuntime.terminateAura:(Ljava/util/UUID;Ljava/lang/String;Ljava/lang/String;Lcom/inigmasgames/hytalerpg/execution/support/SupportWorldPort;)V
+       173: goto          188
+       176: astore        13
+       178: aload         11
+       180: invokevirtual #77                 // Method com/inigmasgames/hytalerpg/execution/support/SecondaryDamageAttempt.failure:()Ljava/lang/RuntimeException;
+       183: aload         13
+       185: invokevirtual #164                // Method java/lang/RuntimeException.addSuppressed:(Ljava/lang/Throwable;)V
+       188: new           #168                // class java/util/LinkedHashMap
+       191: dup
+       192: invokespecial #170                // Method java/util/LinkedHashMap."<init>":()V
+       195: astore        12
+       197: aload         12
+       199: ldc           #171                // String reason
+       201: ldc           #152                // String NATIVE_SECONDARY_DAMAGE_DISPATCH_EXCEPTION
+       203: invokevirtual #173                // Method java/util/LinkedHashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       206: pop
+       207: aload         12
+       209: ldc           #177                // String origin
+       211: aload         7
+       213: invokevirtual #173                // Method java/util/LinkedHashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       216: pop
+       217: aload         12
+       219: ldc           #178                // String error
+       221: aload         11
+       223: invokevirtual #77                 // Method com/inigmasgames/hytalerpg/execution/support/SecondaryDamageAttempt.failure:()Ljava/lang/RuntimeException;
+       226: invokevirtual #180                // Method java/lang/Object.getClass:()Ljava/lang/Class;
+       229: invokevirtual #184                // Method java/lang/Class.getName:()Ljava/lang/String;
+       232: invokevirtual #173                // Method java/util/LinkedHashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       235: pop
+       236: aload         12
+       238: ldc           #189                // String nativeCompletionProven
+       240: iconst_0
+       241: invokestatic  #191                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+       244: invokevirtual #173                // Method java/util/LinkedHashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       247: pop
+       248: aload         12
+       250: ldc           #197                // String healthBefore
+       252: aload         11
+       254: invokevirtual #199                // Method com/inigmasgames/hytalerpg/execution/support/SecondaryDamageAttempt.before:()D
+       257: invokestatic  #203                // Method java/lang/Double.isFinite:(D)Z
+       260: ifeq          274
+       263: aload         11
+       265: invokevirtual #199                // Method com/inigmasgames/hytalerpg/execution/support/SecondaryDamageAttempt.before:()D
+       268: invokestatic  #207                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       271: goto          276
+       274: ldc           #210                // String UNAVAILABLE
+       276: invokevirtual #173                // Method java/util/LinkedHashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       279: pop
+       280: aload         12
+       282: ldc           #212                // String healthAfter
+       284: aload         11
+       286: invokevirtual #214                // Method com/inigmasgames/hytalerpg/execution/support/SecondaryDamageAttempt.after:()D
+       289: invokestatic  #203                // Method java/lang/Double.isFinite:(D)Z
+       292: ifeq          306
+       295: aload         11
+       297: invokevirtual #214                // Method com/inigmasgames/hytalerpg/execution/support/SecondaryDamageAttempt.after:()D
+       300: invokestatic  #207                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       303: goto          308
+       306: ldc           #210                // String UNAVAILABLE
+       308: invokevirtual #173                // Method java/util/LinkedHashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       311: pop
+       312: aload         12
+       314: ldc           #217                // String transferAcceptedFromObservedHealthLoss
+       316: aload         11
+       318: invokevirtual #219                // Method com/inigmasgames/hytalerpg/execution/support/SecondaryDamageAttempt.transferAccepted:()Z
+       321: invokestatic  #191                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+       324: invokevirtual #173                // Method java/util/LinkedHashMap.put:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       327: pop
+       328: aload_0
+       329: aload_1
+       330: getstatic     #222                // Field com/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType.NATIVE_SUPPORT_REJECTED:Lcom/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType;
+       333: aload         12
+       335: invokevirtual #228                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.traceFinite:(Lcom/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect;Lcom/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType;Ljava/util/Map;)V
+       338: aload         11
+       340: areturn
+      Exception table:
+         from    to  target type
+           143   173   176   Class java/lang/RuntimeException
+
+  public static void reflectAbsorbed(com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem, com.inigmasgames.hytalerpg.execution.support.FiniteSupportEffects$Absorption, com.hypixel.hytale.server.core.modules.entity.damage.Damage, com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, double);
+    Code:
+         0: aload_1
+         1: ifnull        66
+         4: aload_1
+         5: invokevirtual #232                // Method com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Absorption.amount:()D
+         8: dconst_0
+         9: dcmpg
+        10: ifle          66
+        13: aload_1
+        14: invokevirtual #237                // Method com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Absorption.effect:()Lcom/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect;
+        17: invokevirtual #105                // Method com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect.context:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+        20: invokevirtual #241                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+        23: invokevirtual #245                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.supportModifiers:()Lcom/inigmasgames/hytalerpg/domain/SupportModifiers;
+        26: invokevirtual #251                // Method com/inigmasgames/hytalerpg/domain/SupportModifiers.reflectiveWard:()Z
+        29: ifeq          66
+        32: aload_2
+        33: invokestatic  #256                // Method com/inigmasgames/hytalerpg/combat/hytale/HytaleDamageAdapter.metadata:(Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage;)Lcom/inigmasgames/hytalerpg/combat/hytale/HytaleDamageMetadata;
+        36: invokestatic  #262                // Method secondaryCannotReflect:(Lcom/inigmasgames/hytalerpg/combat/hytale/HytaleDamageMetadata;)Z
+        39: ifne          66
+        42: aload_2
+        43: invokevirtual #266                // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage.getSource:()Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage$Source;
+        46: astore        8
+        48: aload         8
+        50: instanceof    #272                // class com/hypixel/hytale/server/core/modules/entity/damage/Damage$EntitySource
+        53: ifeq          66
+        56: aload         8
+        58: checkcast     #272                // class com/hypixel/hytale/server/core/modules/entity/damage/Damage$EntitySource
+        61: astore        7
+        63: goto          67
+        66: return
+        67: aload         7
+        69: invokevirtual #274                // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage$EntitySource.getRef:()Lcom/hypixel/hytale/component/Ref;
+        72: astore        8
+        74: aload_1
+        75: invokevirtual #237                // Method com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Absorption.effect:()Lcom/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect;
+        78: astore        9
+        80: aload         8
+        82: aload_3
+        83: invokevirtual #278                // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+        86: ifne          127
+        89: aload         4
+        91: aload         8
+        93: invokestatic  #282                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.alive:(Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/Ref;)Z
+        96: ifeq          127
+        99: aload         4
+       101: aload         8
+       103: aload_3
+       104: invokestatic  #286                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleAreaQueries.hostile:(Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/Ref;)Z
+       107: ifeq          127
+       110: aload         4
+       112: aload         8
+       114: aload_0
+       115: invokevirtual #292                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.bosses:()Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleBossBarTracker;
+       118: invokestatic  #296                // Method com/inigmasgames/hytalerpg/execution/hytale/SupportNativeEffects.control:(Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/Ref;Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleBossBarTracker;)Lcom/inigmasgames/hytalerpg/combat/status/ControlProfile;
+       121: invokevirtual #302                // Method com/inigmasgames/hytalerpg/combat/status/ControlProfile.protectedEntity:()Z
+       124: ifeq          128
+       127: return
+       128: aload_0
+       129: aload         9
+       131: dload         5
+       133: invokestatic  #307                // Method claimSecondary:(Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;Lcom/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect;D)Z
+       136: ifne          140
+       139: return
+       140: aload_2
+       141: invokevirtual #311                // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage.getCause:()Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageCause;
+       144: astore        10
+       146: aload         10
+       148: ifnonnull     170
+       151: aload_0
+       152: aload         9
+       154: getstatic     #222                // Field com/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType.NATIVE_SUPPORT_REJECTED:Lcom/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType;
+       157: ldc_w         #315                // String boundary
+       160: ldc_w         #317                // String REFLECTION_ORIGINAL_DAMAGE_CAUSE_UNAVAILABLE
+       163: invokestatic  #319                // InterfaceMethod java/util/Map.of:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;
+       166: invokevirtual #228                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.traceFinite:(Lcom/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect;Lcom/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType;Ljava/util/Map;)V
+       169: return
+       170: aload         9
+       172: invokevirtual #105                // Method com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect.context:()Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       175: aload_1
+       176: invokevirtual #232                // Method com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Absorption.amount:()D
+       179: invokestatic  #325                // Method com/inigmasgames/hytalerpg/execution/support/SupportMagnitude.wardReflection:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;D)D
+       182: dstore        11
+       184: aload_0
+       185: aload         9
+       187: aload         8
+       189: aload         4
+       191: aload         10
+       193: dload         11
+       195: getstatic     #44                 // Field com/inigmasgames/hytalerpg/combat/hytale/HytaleDamageMetadata$Origin.REFLECTED:Lcom/inigmasgames/hytalerpg/combat/hytale/HytaleDamageMetadata$Origin;
+       198: invokestatic  #331                // Method submit:(Lcom/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem;Lcom/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageCause;DLcom/inigmasgames/hytalerpg/combat/hytale/HytaleDamageMetadata$Origin;)Lcom/inigmasgames/hytalerpg/execution/support/SecondaryDamageAttempt;
+       201: astore        13
+       203: aload         13
+       205: invokevirtual #334                // Method com/inigmasgames/hytalerpg/execution/support/SecondaryDamageAttempt.completed:()Lcom/inigmasgames/hytalerpg/combat/hytale/HytaleDamageAdapter$NativeResult;
+       208: astore        14
+       210: aload         14
+       212: ifnonnull     216
+       215: return
+       216: aload_0
+       217: aload         9
+       219: getstatic     #338                // Field com/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType.DAMAGE_REFLECTED:Lcom/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType;
+       222: ldc_w         #341                // String actuallyAbsorbed
+       225: aload_1
+       226: invokevirtual #232                // Method com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Absorption.amount:()D
+       229: invokestatic  #207                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       232: ldc_w         #343                // String requestedReflection
+       235: dload         11
+       237: invokestatic  #207                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       240: ldc_w         #345                // String originalChannel
+       243: aload         10
+       245: invokevirtual #347                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageCause.getId:()Ljava/lang/String;
+       248: ldc           #197                // String healthBefore
+       250: aload         14
+       252: invokevirtual #352                // Method com/inigmasgames/hytalerpg/combat/hytale/HytaleDamageAdapter$NativeResult.healthBefore:()D
+       255: invokestatic  #207                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       258: ldc           #212                // String healthAfter
+       260: aload         14
+       262: invokevirtual #356                // Method com/inigmasgames/hytalerpg/combat/hytale/HytaleDamageAdapter$NativeResult.healthAfter:()D
+       265: invokestatic  #207                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       268: ldc_w         #358                // String cancelled
+       271: aload         14
+       273: invokevirtual #360                // Method com/inigmasgames/hytalerpg/combat/hytale/HytaleDamageAdapter$NativeResult.cancelled:()Z
+       276: invokestatic  #191                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+       279: ldc_w         #362                // String noProc
+       282: iconst_1
+       283: invokestatic  #191                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+       286: ldc_w         #364                // String noCrit
+       289: iconst_1
+       290: invokestatic  #191                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+       293: invokestatic  #366                // InterfaceMethod java/util/Map.of:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;
+       296: invokevirtual #228                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.traceFinite:(Lcom/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect;Lcom/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType;Ljava/util/Map;)V
+       299: return
+
+  private static boolean claimSecondary(com.inigmasgames.hytalerpg.execution.hytale.HytaleSupportSystem, com.inigmasgames.hytalerpg.execution.support.FiniteSupportEffects$Effect, double);
+    Code:
+         0: aload_0
+         1: invokevirtual #81                 // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.runtime:()Lcom/inigmasgames/hytalerpg/execution/support/SupportRuntime;
+         4: aload_1
+         5: dload_2
+         6: invokevirtual #369                // Method com/inigmasgames/hytalerpg/execution/support/SupportRuntime.claimSupportSecondary:(Lcom/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect;D)I
+         9: istore        4
+        11: iload         4
+        13: iconst_m1
+        14: if_icmpne     41
+        17: aload_0
+        18: aload_1
+        19: getstatic     #222                // Field com/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType.NATIVE_SUPPORT_REJECTED:Lcom/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType;
+        22: ldc_w         #315                // String boundary
+        25: ldc_w         #373                // String SUPPORT_SECONDARY_BUDGET
+        28: ldc_w         #375                // String oncePerBudgetWindow
+        31: iconst_1
+        32: invokestatic  #191                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+        35: invokestatic  #377                // InterfaceMethod java/util/Map.of:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;
+        38: invokevirtual #228                // Method com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.traceFinite:(Lcom/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect;Lcom/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType;Ljava/util/Map;)V
+        41: iload         4
+        43: iconst_1
+        44: if_icmpne     51
+        47: iconst_1
+        48: goto          52
+        51: iconst_0
+        52: ireturn
+
+  private static com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageAdapter$NativeResult lambda$submit$1(com.hypixel.hytale.component.Ref, com.hypixel.hytale.component.Store, com.hypixel.hytale.server.core.modules.entity.damage.DamageCause, com.inigmasgames.hytalerpg.execution.support.FiniteSupportEffects$Effect, double, com.inigmasgames.hytalerpg.combat.hytale.HytaleDamageMetadata$Origin, com.inigmasgames.hytalerpg.combat.damage.ConditionalDamage);
+    Code:
+         0: new           #257                // class com/inigmasgames/hytalerpg/combat/hytale/HytaleDamageAdapter
+         3: dup
+         4: invokespecial #380                // Method com/inigmasgames/hytalerpg/combat/hytale/HytaleDamageAdapter."<init>":()V
+         7: aload_0
+         8: aload_1
+         9: aconst_null
+        10: aload_2
+        11: new           #39                 // class com/inigmasgames/hytalerpg/combat/hytale/HytaleDamageMetadata
+        14: dup
+        15: aload_3
+        16: invokevirtual #93                 // Method com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect.key:()Lcom/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Key;
+        19: invokevirtual #133                // Method com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Key.owner:()Ljava/util/UUID;
+        22: aload_3
+        23: invokevirtual #381                // Method com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect.rootCastId:()Ljava/lang/String;
+        26: aload_3
+        27: invokevirtual #384                // Method com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect.skillInstanceId:()Ljava/lang/String;
+        30: aload_3
+        31: invokevirtual #387                // Method com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect.correlationId:()Ljava/lang/String;
+        34: dload         4
+        36: ldc2_w        #31                 // double NaNd
+        39: aload_3
+        40: invokevirtual #384                // Method com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects$Effect.skillInstanceId:()Ljava/lang/String;
+        43: aload         6
+        45: invokestatic  #390                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+        48: invokestatic  #395                // Method java/util/UUID.randomUUID:()Ljava/util/UUID;
+        51: invokestatic  #390                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+        54: invokedynamic #400,  0            // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+        59: iconst_0
+        60: aload         6
+        62: invokespecial #404                // Method com/inigmasgames/hytalerpg/combat/hytale/HytaleDamageMetadata."<init>":(Ljava/util/UUID;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;DDLjava/lang/String;ZLcom/inigmasgames/hytalerpg/combat/hytale/HytaleDamageMetadata$Origin;)V
+        65: dload         4
+        67: aload         7
+        69: invokevirtual #407                // Method com/inigmasgames/hytalerpg/combat/hytale/HytaleDamageAdapter.applyResolved:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentAccessor;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageCause;Lcom/inigmasgames/hytalerpg/combat/hytale/HytaleDamageMetadata;DLcom/inigmasgames/hytalerpg/combat/damage/ConditionalDamage;)Lcom/inigmasgames/hytalerpg/combat/hytale/HytaleDamageAdapter$NativeResult;
+        72: areturn
+
+  private static double lambda$submit$0(com.hypixel.hytale.server.core.modules.entitystats.EntityStatValue);
+    Code:
+         0: aload_0
+         1: ifnonnull     10
+         4: ldc2_w        #31                 // double NaNd
+         7: goto          15
+        10: aload_0
+        11: invokevirtual #33                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.get:()F
+        14: f2d
+        15: dreturn
+
+  private static java.lang.Boolean lambda$static$1(com.hypixel.hytale.server.core.modules.entity.damage.Damage);
+    Code:
+         0: iconst_0
+         1: invokestatic  #191                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         4: areturn
+
+  private static java.lang.Double lambda$static$0(com.hypixel.hytale.server.core.modules.entity.damage.Damage);
+    Code:
+         0: ldc2_w        #31                 // double NaNd
+         3: invokestatic  #207                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+         6: areturn
+
+  static {};
+    Code:
+         0: getstatic     #411                // Field com/hypixel/hytale/server/core/modules/entity/damage/Damage.META_REGISTRY:Lcom/hypixel/hytale/server/core/meta/MetaRegistry;
+         3: invokedynamic #415,  0            // InvokeDynamic #3:apply:()Ljava/util/function/Function;
+         8: iconst_0
+         9: ldc_w         #419                // String InigmasGames:SupportHealthBefore
+        12: getstatic     #421                // Field com/hypixel/hytale/codec/Codec.DOUBLE:Lcom/hypixel/hytale/codec/codecs/simple/DoubleCodec;
+        15: invokevirtual #427                // Method com/hypixel/hytale/server/core/meta/MetaRegistry.registerMetaObject:(Ljava/util/function/Function;ZLjava/lang/String;Lcom/hypixel/hytale/codec/Codec;)Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        18: putstatic     #433                // Field BEFORE:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        21: getstatic     #411                // Field com/hypixel/hytale/server/core/modules/entity/damage/Damage.META_REGISTRY:Lcom/hypixel/hytale/server/core/meta/MetaRegistry;
+        24: invokedynamic #437,  0            // InvokeDynamic #4:apply:()Ljava/util/function/Function;
+        29: iconst_0
+        30: ldc_w         #438                // String InigmasGames:SupportDamageObserved
+        33: getstatic     #440                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+        36: invokevirtual #427                // Method com/hypixel/hytale/server/core/meta/MetaRegistry.registerMetaObject:(Ljava/util/function/Function;ZLjava/lang/String;Lcom/hypixel/hytale/codec/Codec;)Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        39: putstatic     #444                // Field OBSERVED:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+        42: return
+}

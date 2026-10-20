@@ -1,0 +1,50 @@
+{
+  "capturedAtUtc": "2026-09-08T16:41:55.7210462Z",
+  "stage": 11,
+  "cohort": "k",
+  "revision": "R030",
+  "version": "0.0.23",
+  "playerSchema": 6,
+  "compiledPlanSchema": 20,
+  "sourceHead": "42a853b11c42fb69f790b4dccc8980f4dd0a855f",
+  "branch": "RPG",
+  "status": "IMPLEMENTATION_IN_PROGRESS",
+  "cohortStatus": "IMPLEMENTED_AWAITING_CONNECTED_VERIFICATION",
+  "localGate": "PASS",
+  "connectedGate": "UNVERIFIED",
+  "cohortSkills": [],
+  "cohortPassives": [
+    "lifeblood",
+    "attunement"
+  ],
+  "tests": 941,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "jarSha256": "6A7D067D901DFD4A149CD9A6AE718AF1CDF8C5B067B9B7A4F4E81D2FCE2F9C8B",
+  "rollbackSha256": "93252D1109F75C49B3C7C83AFD7A4AD8499258D6F4A55B7E2381BB46DB1460AC",
+  "serverSha256": "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+  "assetsSha256": "46F6AA12DECF4F900FCFDF28ECC67568403C37A3AD0A03A4E4CF7653A324AE39",
+  "normalThreeModSmoke": true,
+  "zeroNativeCostTriggers": 60,
+  "nativeCastingFixed": false,
+  "liveDeploymentPerformed": false,
+  "liveArtifacts": [
+    {
+      "name": "CanvasUI-0.1.0.jar",
+      "sha256": "218DFFD40ABBCD57629EC57FC20436169C4AFCCC18B9B5A9F94D67835CBA07B6"
+    },
+    {
+      "name": "HYTALEDEVLIB-0.5.0.jar",
+      "sha256": "DE01E4BAAF1DAA679CB00E4182AD999DA67ECC49A8533942DE3EA87DA4129230"
+    },
+    {
+      "name": "HytaleRPG-0.0.16.jar",
+      "sha256": "D3CEEA9CEEA5995F515451317452AB9A9CBB62F3E6CF56953B5F707A1BF7FA42"
+    }
+  ],
+  "protectedPathsChanged": [],
+  "canonicalSkillCount": 87,
+  "canonicalPassiveCount": 66,
+  "rollbackStateRequirement": "Player schema6 serial charge queue. Restore a pre-migration schema5 save checkpoint with cohortB code for rollback; do not downgrade queued state or refill debt. Live R023 schema3 remains untouched and requires a separate backup before any deployment."
+}

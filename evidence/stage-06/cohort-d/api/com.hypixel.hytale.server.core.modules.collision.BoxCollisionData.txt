@@ -1,0 +1,29 @@
+Compiled from "BoxCollisionData.java"
+public class com.hypixel.hytale.server.core.modules.collision.BoxCollisionData extends com.hypixel.hytale.server.core.modules.collision.BasicCollisionData {
+  public double collisionEnd;
+
+  public final org.joml.Vector3d collisionNormal;
+
+  public com.hypixel.hytale.server.core.modules.collision.BoxCollisionData();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/server/core/modules/collision/BasicCollisionData."<init>":()V
+         4: aload_0
+         5: new           #7                  // class org/joml/Vector3d
+         8: dup
+         9: invokespecial #9                  // Method org/joml/Vector3d."<init>":()V
+        12: putfield      #10                 // Field collisionNormal:Lorg/joml/Vector3d;
+        15: return
+
+  public void setEnd(double, org.joml.Vector3d);
+    Code:
+         0: aload_0
+         1: dload_1
+         2: putfield      #16                 // Field collisionEnd:D
+         5: aload_0
+         6: getfield      #10                 // Field collisionNormal:Lorg/joml/Vector3d;
+         9: aload_3
+        10: invokevirtual #20                 // Method org/joml/Vector3d.set:(Lorg/joml/Vector3dc;)Lorg/joml/Vector3d;
+        13: pop
+        14: return
+}

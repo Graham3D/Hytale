@@ -1,0 +1,130 @@
+Compiled from "DamageSystems.java"
+public class com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems$ApplyDamage extends com.hypixel.hytale.server.core.modules.entity.damage.DamageEventSystem implements com.hypixel.hytale.server.core.modules.entitystats.EntityStatsSystems$StatModifyingSystem {
+  private static final com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> QUERY;
+
+  private static final java.util.Set<com.hypixel.hytale.component.dependency.Dependency<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>> DEPENDENCIES;
+
+  static final boolean $assertionsDisabled;
+
+  public com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems$ApplyDamage();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageEventSystem."<init>":()V
+         4: return
+
+  public com.hypixel.hytale.component.query.Query<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> getQuery();
+    Code:
+         0: getstatic     #7                  // Field QUERY:Lcom/hypixel/hytale/component/query/Query;
+         3: areturn
+
+  public java.util.Set<com.hypixel.hytale.component.dependency.Dependency<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>> getDependencies();
+    Code:
+         0: getstatic     #13                 // Field DEPENDENCIES:Ljava/util/Set;
+         3: areturn
+
+  public void handle(int, com.hypixel.hytale.component.ArchetypeChunk<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.Store<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.component.CommandBuffer<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>, com.hypixel.hytale.server.core.modules.entity.damage.Damage);
+    Code:
+         0: aload_2
+         1: iload_1
+         2: invokestatic  #17                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         5: invokevirtual #23                 // Method com/hypixel/hytale/component/ArchetypeChunk.getComponent:(ILcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+         8: checkcast     #18                 // class com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap
+        11: astore        6
+        13: getstatic     #29                 // Field $assertionsDisabled:Z
+        16: ifne          32
+        19: aload         6
+        21: ifnonnull     32
+        24: new           #33                 // class java/lang/AssertionError
+        27: dup
+        28: invokespecial #35                 // Method java/lang/AssertionError."<init>":()V
+        31: athrow
+        32: invokestatic  #36                 // Method com/hypixel/hytale/server/core/modules/entitystats/asset/DefaultEntityStatTypes.getHealth:()I
+        35: istore        7
+        37: aload         6
+        39: iload         7
+        41: invokevirtual #42                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.get:(I)Lcom/hypixel/hytale/server/core/modules/entitystats/EntityStatValue;
+        44: astore        8
+        46: aload         8
+        48: invokestatic  #46                 // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+        51: pop
+        52: aload_2
+        53: invokevirtual #52                 // Method com/hypixel/hytale/component/ArchetypeChunk.getArchetype:()Lcom/hypixel/hytale/component/Archetype;
+        56: invokestatic  #56                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathComponent.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        59: invokevirtual #59                 // Method com/hypixel/hytale/component/Archetype.contains:(Lcom/hypixel/hytale/component/ComponentType;)Z
+        62: istore        9
+        64: iload         9
+        66: ifeq          76
+        69: aload         5
+        71: iconst_1
+        72: invokevirtual #65                 // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage.setCancelled:(Z)V
+        75: return
+        76: aload         5
+        78: aload         5
+        80: invokevirtual #71                 // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage.getAmount:()F
+        83: invokestatic  #75                 // Method java/lang/Math.round:(F)I
+        86: i2f
+        87: invokevirtual #81                 // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage.setAmount:(F)V
+        90: aload         6
+        92: iload         7
+        94: aload         5
+        96: invokevirtual #71                 // Method com/hypixel/hytale/server/core/modules/entity/damage/Damage.getAmount:()F
+        99: invokevirtual #85                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.subtractStatValue:(IF)F
+       102: fstore        10
+       104: fload         10
+       106: aload         8
+       108: invokevirtual #89                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatValue.getMin:()F
+       111: fcmpg
+       112: ifgt          127
+       115: aload         4
+       117: aload_2
+       118: iload_1
+       119: invokevirtual #94                 // Method com/hypixel/hytale/component/ArchetypeChunk.getReferenceTo:(I)Lcom/hypixel/hytale/component/Ref;
+       122: aload         5
+       124: invokestatic  #98                 // Method com/hypixel/hytale/server/core/modules/entity/damage/DeathComponent.tryAddComponent:(Lcom/hypixel/hytale/component/CommandBuffer;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage;)V
+       127: return
+
+  public void handle(int, com.hypixel.hytale.component.ArchetypeChunk, com.hypixel.hytale.component.Store, com.hypixel.hytale.component.CommandBuffer, com.hypixel.hytale.component.system.EcsEvent);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: aload_2
+         3: aload_3
+         4: aload         4
+         6: aload         5
+         8: checkcast     #66                 // class com/hypixel/hytale/server/core/modules/entity/damage/Damage
+        11: invokevirtual #102                // Method handle:(ILcom/hypixel/hytale/component/ArchetypeChunk;Lcom/hypixel/hytale/component/Store;Lcom/hypixel/hytale/component/CommandBuffer;Lcom/hypixel/hytale/server/core/modules/entity/damage/Damage;)V
+        14: return
+
+  static {};
+    Code:
+         0: ldc           #106                // class com/hypixel/hytale/server/core/modules/entity/damage/DamageSystems
+         2: invokevirtual #108                // Method java/lang/Class.desiredAssertionStatus:()Z
+         5: ifne          12
+         8: iconst_1
+         9: goto          13
+        12: iconst_0
+        13: putstatic     #29                 // Field $assertionsDisabled:Z
+        16: invokestatic  #17                 // Method com/hypixel/hytale/server/core/modules/entitystats/EntityStatMap.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        19: putstatic     #7                  // Field QUERY:Lcom/hypixel/hytale/component/query/Query;
+        22: new           #114                // class com/hypixel/hytale/component/dependency/SystemGroupDependency
+        25: dup
+        26: getstatic     #116                // Field com/hypixel/hytale/component/dependency/Order.AFTER:Lcom/hypixel/hytale/component/dependency/Order;
+        29: invokestatic  #122                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.get:()Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageModule;
+        32: invokevirtual #127                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.getGatherDamageGroup:()Lcom/hypixel/hytale/component/SystemGroup;
+        35: invokespecial #131                // Method com/hypixel/hytale/component/dependency/SystemGroupDependency."<init>":(Lcom/hypixel/hytale/component/dependency/Order;Lcom/hypixel/hytale/component/SystemGroup;)V
+        38: new           #114                // class com/hypixel/hytale/component/dependency/SystemGroupDependency
+        41: dup
+        42: getstatic     #116                // Field com/hypixel/hytale/component/dependency/Order.AFTER:Lcom/hypixel/hytale/component/dependency/Order;
+        45: invokestatic  #122                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.get:()Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageModule;
+        48: invokevirtual #134                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.getFilterDamageGroup:()Lcom/hypixel/hytale/component/SystemGroup;
+        51: invokespecial #131                // Method com/hypixel/hytale/component/dependency/SystemGroupDependency."<init>":(Lcom/hypixel/hytale/component/dependency/Order;Lcom/hypixel/hytale/component/SystemGroup;)V
+        54: new           #114                // class com/hypixel/hytale/component/dependency/SystemGroupDependency
+        57: dup
+        58: getstatic     #137                // Field com/hypixel/hytale/component/dependency/Order.BEFORE:Lcom/hypixel/hytale/component/dependency/Order;
+        61: invokestatic  #122                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.get:()Lcom/hypixel/hytale/server/core/modules/entity/damage/DamageModule;
+        64: invokevirtual #140                // Method com/hypixel/hytale/server/core/modules/entity/damage/DamageModule.getInspectDamageGroup:()Lcom/hypixel/hytale/component/SystemGroup;
+        67: invokespecial #131                // Method com/hypixel/hytale/component/dependency/SystemGroupDependency."<init>":(Lcom/hypixel/hytale/component/dependency/Order;Lcom/hypixel/hytale/component/SystemGroup;)V
+        70: invokestatic  #143                // InterfaceMethod java/util/Set.of:(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Set;
+        73: putstatic     #13                 // Field DEPENDENCIES:Ljava/util/Set;
+        76: return
+}

@@ -1,0 +1,17 @@
+﻿{
+    "capturedAtUtc":  "2026-09-07T01:35:36.7850431Z",
+    "serverJarSha256":  "EC57E9BD6E2CA3CB16CC5883D42B04A0C64D382DEE532C5BC1CFCF68421E1EE3",
+    "hudAbilitiesComponent":  true,
+    "nativeAbilityInventoryIsItemContainer":  true,
+    "abilityProtocolSlots":  [
+                                 "Primary",
+                                 "Support"
+                             ],
+    "publicGlobalHotkeySymbols":  [
+
+                                  ],
+    "skillTreeOpenHotkey":  "BLOCKED_PUBLIC_API",
+    "nativeAbility1Ownership":  "Weapon Signature Move; RPG packet adapter deliberately returns null",
+    "rpgAbilityMapping":  "Ability2-\u003eskill01, Ability3-\u003eskill02, Ability4-\u003eskill03",
+    "hudDecision":  "Native Abilities component remains visible; public API has no arbitrary RPG state projection, so three non-overlapping CustomUI cells are used."
+}

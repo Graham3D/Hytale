@@ -1,0 +1,131 @@
+Compiled from "PierceProjectile.java"
+public class com.hypixel.hytale.server.core.modules.projectile.component.PierceProjectile implements com.hypixel.hytale.component.Component<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> {
+  private final it.unimi.dsi.fastutil.ints.IntOpenHashSet hitEntityIndexes;
+
+  private final org.joml.Vector3d origin;
+
+  private final double maxDistanceSq;
+
+  private final float maxLifetimeS;
+
+  private float ageS;
+
+  public com.hypixel.hytale.server.core.modules.projectile.component.PierceProjectile(org.joml.Vector3dc, double, float);
+    Code:
+         0: aload_0
+         1: new           #1                  // class it/unimi/dsi/fastutil/ints/IntOpenHashSet
+         4: dup
+         5: invokespecial #3                  // Method it/unimi/dsi/fastutil/ints/IntOpenHashSet."<init>":()V
+         8: aload_1
+         9: dload_2
+        10: dload_2
+        11: dmul
+        12: fload         4
+        14: invokespecial #7                  // Method "<init>":(Lit/unimi/dsi/fastutil/ints/IntOpenHashSet;Lorg/joml/Vector3dc;DF)V
+        17: return
+
+  private com.hypixel.hytale.server.core.modules.projectile.component.PierceProjectile(it.unimi.dsi.fastutil.ints.IntOpenHashSet, org.joml.Vector3dc, double, float);
+    Code:
+         0: aload_0
+         1: invokespecial #12                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: aload_1
+         6: putfield      #15                 // Field hitEntityIndexes:Lit/unimi/dsi/fastutil/ints/IntOpenHashSet;
+         9: aload_0
+        10: new           #19                 // class org/joml/Vector3d
+        13: dup
+        14: aload_2
+        15: invokespecial #21                 // Method org/joml/Vector3d."<init>":(Lorg/joml/Vector3dc;)V
+        18: putfield      #24                 // Field origin:Lorg/joml/Vector3d;
+        21: aload_0
+        22: dload_3
+        23: putfield      #28                 // Field maxDistanceSq:D
+        26: aload_0
+        27: fload         5
+        29: putfield      #32                 // Field maxLifetimeS:F
+        32: return
+
+  public static com.hypixel.hytale.component.ComponentType<com.hypixel.hytale.server.core.universe.world.storage.EntityStore, com.hypixel.hytale.server.core.modules.projectile.component.PierceProjectile> getComponentType();
+    Code:
+         0: invokestatic  #36                 // Method com/hypixel/hytale/server/core/modules/projectile/ProjectileModule.get:()Lcom/hypixel/hytale/server/core/modules/projectile/ProjectileModule;
+         3: invokevirtual #42                 // Method com/hypixel/hytale/server/core/modules/projectile/ProjectileModule.getPierceProjectileComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         6: areturn
+
+  public boolean markHit(com.hypixel.hytale.component.Ref<com.hypixel.hytale.server.core.universe.world.storage.EntityStore>);
+    Code:
+         0: aload_0
+         1: getfield      #15                 // Field hitEntityIndexes:Lit/unimi/dsi/fastutil/ints/IntOpenHashSet;
+         4: aload_1
+         5: invokevirtual #46                 // Method com/hypixel/hytale/component/Ref.getIndex:()I
+         8: invokevirtual #52                 // Method it/unimi/dsi/fastutil/ints/IntOpenHashSet.add:(I)Z
+        11: ireturn
+
+  public boolean isBeyondMaxDistance(org.joml.Vector3dc);
+    Code:
+         0: aload_1
+         1: aload_0
+         2: getfield      #24                 // Field origin:Lorg/joml/Vector3d;
+         5: invokeinterface #56,  2           // InterfaceMethod org/joml/Vector3dc.distanceSquared:(Lorg/joml/Vector3dc;)D
+        10: aload_0
+        11: getfield      #28                 // Field maxDistanceSq:D
+        14: dcmpl
+        15: iflt          22
+        18: iconst_1
+        19: goto          23
+        22: iconst_0
+        23: ireturn
+
+  public boolean advanceAndCheckExpired(float);
+    Code:
+         0: aload_0
+         1: dup
+         2: getfield      #62                 // Field ageS:F
+         5: fload_1
+         6: fadd
+         7: putfield      #62                 // Field ageS:F
+        10: aload_0
+        11: getfield      #32                 // Field maxLifetimeS:F
+        14: fconst_0
+        15: fcmpl
+        16: ifle          35
+        19: aload_0
+        20: getfield      #62                 // Field ageS:F
+        23: aload_0
+        24: getfield      #32                 // Field maxLifetimeS:F
+        27: fcmpl
+        28: iflt          35
+        31: iconst_1
+        32: goto          36
+        35: iconst_0
+        36: ireturn
+
+  public com.hypixel.hytale.component.Component<com.hypixel.hytale.server.core.universe.world.storage.EntityStore> clone();
+    Code:
+         0: new           #8                  // class com/hypixel/hytale/server/core/modules/projectile/component/PierceProjectile
+         3: dup
+         4: new           #1                  // class it/unimi/dsi/fastutil/ints/IntOpenHashSet
+         7: dup
+         8: aload_0
+         9: getfield      #15                 // Field hitEntityIndexes:Lit/unimi/dsi/fastutil/ints/IntOpenHashSet;
+        12: invokespecial #65                 // Method it/unimi/dsi/fastutil/ints/IntOpenHashSet."<init>":(Lit/unimi/dsi/fastutil/ints/IntCollection;)V
+        15: aload_0
+        16: getfield      #24                 // Field origin:Lorg/joml/Vector3d;
+        19: aload_0
+        20: getfield      #28                 // Field maxDistanceSq:D
+        23: aload_0
+        24: getfield      #32                 // Field maxLifetimeS:F
+        27: invokespecial #7                  // Method "<init>":(Lit/unimi/dsi/fastutil/ints/IntOpenHashSet;Lorg/joml/Vector3dc;DF)V
+        30: astore_1
+        31: aload_1
+        32: aload_0
+        33: getfield      #62                 // Field ageS:F
+        36: putfield      #62                 // Field ageS:F
+        39: aload_1
+        40: areturn
+
+  public java.lang.Object clone() throws java.lang.CloneNotSupportedException;
+    Code:
+         0: aload_0
+         1: invokevirtual #68                 // Method clone:()Lcom/hypixel/hytale/component/Component;
+         4: areturn
+}

@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {
+      "skillId": "root_lash",
+      "family": "LINE",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "STAFF",
+        "WAND"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "resourceCost": 9,
+      "cooldownSeconds": 5,
+      "windupSeconds": 0,
+      "basePowerSource": "MAGIC_WEAPON",
+      "scaling": "MAGIC",
+      "connection": {
+        "kind": "TETHER",
+        "range": 12,
+        "width": 0.7,
+        "height": 2.5,
+        "depth": 0,
+        "speed": 0,
+        "lifetimeSeconds": 0.25,
+        "intervalSeconds": 0,
+        "coefficient": 0.7,
+        "upkeepPerSecond": 0,
+        "radius": 0,
+        "originHeight": 1.25,
+        "element": "NATURE",
+        "details": {
+          "jumpRadius": 0,
+          "jumpCoefficients": [],
+          "bladeCount": 0,
+          "degreesPerSecond": 0,
+          "contactCooldown": 0,
+          "healFraction": 0,
+          "status": "ROOT",
+          "statusSeconds": 1.5
+        }
+      }
+    },
+    {
+      "skillId": "lightning_bolt",
+      "family": "LINE",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "STAFF",
+        "WAND"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "resourceCost": 16,
+      "cooldownSeconds": 6,
+      "windupSeconds": 0.15,
+      "basePowerSource": "MAGIC_WEAPON",
+      "scaling": "MAGIC",
+      "connection": {
+        "kind": "LINE",
+        "range": 24,
+        "width": 1,
+        "height": 2.5,
+        "depth": 0,
+        "speed": 0,
+        "lifetimeSeconds": 0.15,
+        "intervalSeconds": 0,
+        "coefficient": 1.45,
+        "upkeepPerSecond": 0,
+        "radius": 0,
+        "originHeight": 1.25,
+        "element": "LIGHTNING",
+        "details": {
+          "jumpRadius": 0,
+          "jumpCoefficients": [],
+          "bladeCount": 0,
+          "degreesPerSecond": 0,
+          "contactCooldown": 0,
+          "healFraction": 0,
+          "status": "",
+          "statusSeconds": 0
+        }
+      }
+    },
+    {
+      "skillId": "chain_lightning",
+      "family": "DIRECT_TARGET",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "STAFF",
+        "WAND"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "resourceCost": 24,
+      "cooldownSeconds": 10,
+      "windupSeconds": 0,
+      "basePowerSource": "MAGIC_WEAPON",
+      "scaling": "MAGIC",
+      "connection": {
+        "kind": "CHAIN",
+        "range": 22,
+        "width": 0.02,
+        "height": 0.02,
+        "depth": 0,
+        "speed": 0,
+        "lifetimeSeconds": 0.25,
+        "intervalSeconds": 0.08,
+        "coefficient": 1.25,
+        "upkeepPerSecond": 0,
+        "radius": 0,
+        "originHeight": 1.35,
+        "element": "LIGHTNING",
+        "details": {
+          "jumpRadius": 8,
+          "jumpCoefficients": [
+            1.25,
+            1,
+            0.8,
+            0.65
+          ],
+          "bladeCount": 0,
+          "degreesPerSecond": 0,
+          "contactCooldown": 0,
+          "healFraction": 0,
+          "status": "",
+          "statusSeconds": 0
+        }
+      }
+    },
+    {
+      "skillId": "orbiting_shadow_blades",
+      "family": "ORB",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "WAND",
+        "SPELLBOOK"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "MANA",
+      "resourceCost": 26,
+      "cooldownSeconds": 20,
+      "windupSeconds": 0,
+      "basePowerSource": "MAGIC_WEAPON",
+      "scaling": "MAGIC",
+      "connection": {
+        "kind": "ORBIT",
+        "range": 2.8,
+        "width": 0,
+        "height": 0.6,
+        "depth": 0,
+        "speed": 0,
+        "lifetimeSeconds": 10,
+        "intervalSeconds": 0.05,
+        "coefficient": 0.55,
+        "upkeepPerSecond": 0,
+        "radius": 0.3,
+        "originHeight": 1.1,
+        "element": "VOID",
+        "details": {
+          "jumpRadius": 0,
+          "jumpCoefficients": [],
+          "bladeCount": 4,
+          "degreesPerSecond": 120,
+          "contactCooldown": 0.75,
+          "healFraction": 0,
+          "status": "",
+          "statusSeconds": 0
+        }
+      }
+    },
+    {
+      "skillId": "life_drain",
+      "family": "BEAM",
+      "secondaryFamilies": [],
+      "allowedMainHandKinds": [
+        "STAFF",
+        "WAND"
+      ],
+      "requiredOffHandKinds": [],
+      "resourceType": "NONE",
+      "resourceCost": 0,
+      "cooldownSeconds": 8,
+      "windupSeconds": 0,
+      "basePowerSource": "MAGIC_WEAPON",
+      "scaling": "MAGIC",
+      "connection": {
+        "kind": "DRAIN",
+        "range": 18,
+        "width": 0.02,
+        "height": 0.02,
+        "depth": 0,
+        "speed": 0,
+        "lifetimeSeconds": 5,
+        "intervalSeconds": 0.25,
+        "coefficient": 0.55,
+        "upkeepPerSecond": 5,
+        "radius": 0,
+        "originHeight": 1.35,
+        "element": "NECROTIC",
+        "details": {
+          "jumpRadius": 0,
+          "jumpCoefficients": [],
+          "bladeCount": 0,
+          "degreesPerSecond": 0,
+          "contactCooldown": 0,
+          "healFraction": 0.6,
+          "status": "",
+          "statusSeconds": 0
+        }
+      }
+    }
+  ]
+}

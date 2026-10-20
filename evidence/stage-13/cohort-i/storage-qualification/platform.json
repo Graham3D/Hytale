@@ -1,0 +1,26 @@
+{
+  "capturedAtUtc": "2026-09-09T14:44:51.4363978Z",
+  "cpu": [
+    {
+      "threads": 24,
+      "model": "AMD Ryzen 9 7900X 12-Core Processor            ",
+      "cores": 12
+    }
+  ],
+  "disk": [
+    {
+      "model": "Samsung SSD 980 PRO 2TB",
+      "bytes": 2000398934016,
+      "bus": "NVMe"
+    }
+  ],
+  "volume": [
+    {
+      "freeBytes": 1121000734720,
+      "filesystem": "NTFS",
+      "bytes": 1999383818240
+    }
+  ],
+  "securityCacheFirmwarePolicyChanged": false,
+  "otherApplicationLoad": "No Hytale, Gradle or RPG workload ran concurrently; normal Windows background activity was not disabled"
+}

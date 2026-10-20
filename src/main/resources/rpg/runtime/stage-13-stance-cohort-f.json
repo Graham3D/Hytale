@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "skills": [{
+    "skillId": "frenzy", "family": "BUFF", "secondaryFamilies": ["STANCE"],
+    "allowedMainHandKinds": ["SWORD", "DAGGER", "BATTLEAXE"], "requiredOffHandKinds": [],
+    "resourceType": "STAMINA", "resourceCost": 12, "cooldownSeconds": 10, "windupSeconds": 0,
+    "basePowerSource": "NONE", "innateBasePower": 0, "scaling": "LIGHT",
+    "nativeStance": {"maximumStacks": 5, "attackSpeedPerStack": 0.04,
+      "inactivitySeconds": 3, "staminaPerSecond": 2, "cooldownOnEnd": true}
+  }]
+}

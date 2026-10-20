@@ -1,0 +1,583 @@
+Compiled from "StrikeSecondaryRuntime.java"
+public final class com.inigmasgames.hytalerpg.execution.strike.StrikeSecondaryRuntime {
+  public com.inigmasgames.hytalerpg.execution.strike.StrikeSecondaryRuntime();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+
+  public <T> int afterPrimary(com.inigmasgames.hytalerpg.execution.SkillExecutionContext, int, com.inigmasgames.hytalerpg.execution.math.Vec3, com.inigmasgames.hytalerpg.execution.math.Vec3, java.util.List<com.inigmasgames.hytalerpg.execution.strike.StrikeSecondaryRuntime$Hit<T>>, com.inigmasgames.hytalerpg.execution.strike.StrikeSecondaryRuntime$Port<T>);
+    Code:
+         0: aload_1
+         1: invokevirtual #7                  // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.derivedRelease:()Z
+         4: ifeq          9
+         7: iconst_0
+         8: ireturn
+         9: aload_1
+        10: invokevirtual #13                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+        13: invokevirtual #17                 // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.strikes:()Lcom/inigmasgames/hytalerpg/domain/StrikeModifiers;
+        16: astore        7
+        18: iconst_0
+        19: istore        8
+        21: new           #23                 // class java/util/HashSet
+        24: dup
+        25: invokespecial #25                 // Method java/util/HashSet."<init>":()V
+        28: astore        9
+        30: aload         5
+        32: aload         9
+        34: invokedynamic #26,  0             // InvokeDynamic #0:accept:(Ljava/util/Set;)Ljava/util/function/Consumer;
+        39: invokeinterface #30,  2           // InterfaceMethod java/util/List.forEach:(Ljava/util/function/Consumer;)V
+        44: aload         7
+        46: invokevirtual #36                 // Method com/inigmasgames/hytalerpg/domain/StrikeModifiers.cleavingEdge:()Z
+        49: ifeq          355
+        52: iload_2
+        53: ifne          355
+        56: aload_1
+        57: invokevirtual #41                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.effects:()Lcom/inigmasgames/hytalerpg/execution/RootEffectBudget;
+        60: ldc           #45                 // String CLEAVING_EDGE
+        62: invokevirtual #47                 // Method com/inigmasgames/hytalerpg/execution/RootEffectBudget.once:(Ljava/lang/String;)Z
+        65: ifeq          355
+        68: ldc2_w        #53                 // double 3.0d
+        71: aload_1
+        72: invokevirtual #13                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+        75: invokevirtual #55                 // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.foundationModifiers:()Lcom/inigmasgames/hytalerpg/domain/FoundationModifiers;
+        78: invokevirtual #59                 // Method com/inigmasgames/hytalerpg/domain/FoundationModifiers.rangeFactor:()D
+        81: dmul
+        82: dstore        10
+        84: ldc2_w        #65                 // double 80.0d
+        87: aload_1
+        88: invokevirtual #13                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+        91: invokevirtual #55                 // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.foundationModifiers:()Lcom/inigmasgames/hytalerpg/domain/FoundationModifiers;
+        94: invokevirtual #67                 // Method com/inigmasgames/hytalerpg/domain/FoundationModifiers.concentration:()Z
+        97: ifeq          106
+       100: ldc2_w        #70                 // double 0.7d
+       103: goto          107
+       106: dconst_1
+       107: dmul
+       108: dstore        12
+       110: new           #72                 // class com/inigmasgames/hytalerpg/execution/area/AreaGeometry
+       113: dup
+       114: getstatic     #74                 // Field com/inigmasgames/hytalerpg/execution/area/AreaGeometry$Kind.SECTOR:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Kind;
+       117: aload_3
+       118: aload         4
+       120: dload         10
+       122: dload         12
+       124: dconst_0
+       125: dconst_0
+       126: ldc2_w        #80                 // double 2.5d
+       129: invokespecial #82                 // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry."<init>":(Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Kind;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;DDDDD)V
+       132: astore        14
+       134: aload         6
+       136: aload_3
+       137: dload         10
+       139: invokeinterface #85,  4           // InterfaceMethod com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port.candidates:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;D)Ljava/util/List;
+       144: aload_3
+       145: aload         9
+       147: aload         6
+       149: invokestatic  #91                 // Method valid:(Ljava/util/List;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Ljava/util/Set;Lcom/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port;)Ljava/util/List;
+       152: astore        15
+       154: iconst_0
+       155: istore        16
+       157: aload         6
+       159: aload_3
+       160: aload         4
+       162: dload         10
+       164: dload         12
+       166: invokeinterface #97,  7           // InterfaceMethod com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port.presentCleave:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;DD)V
+       171: goto          176
+       174: astore        17
+       176: aload         15
+       178: invokeinterface #103,  1          // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+       183: aload         14
+       185: aload         6
+       187: invokedynamic #107,  0            // InvokeDynamic #1:test:(Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;Lcom/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port;)Ljava/util/function/Predicate;
+       192: invokeinterface #111,  2          // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+       197: ldc2_w        #117                // long 4l
+       200: invokeinterface #119,  3          // InterfaceMethod java/util/stream/Stream.limit:(J)Ljava/util/stream/Stream;
+       205: invokeinterface #123,  1          // InterfaceMethod java/util/stream/Stream.toList:()Ljava/util/List;
+       210: invokeinterface #127,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       215: astore        17
+       217: aload         17
+       219: invokeinterface #131,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+       224: ifeq          355
+       227: aload         17
+       229: invokeinterface #136,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       234: checkcast     #140                // class com/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate
+       237: astore        18
+       239: aload_1
+       240: ldc           #142                // String cleaving_edge
+       242: iinc          16, 1
+       245: iload         16
+       247: ldc2_w        #144                // double 0.6d
+       250: invokevirtual #146                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.secondaryCopy:(Ljava/lang/String;ID)Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       253: astore        19
+       255: aload_1
+       256: invokevirtual #13                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+       259: invokevirtual #150                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.concentrationOnlyOnSecondary:()Z
+       262: ifeq          294
+       265: aload         19
+       267: aload         19
+       269: invokevirtual #153                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.snapshot:()Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;
+       272: aload         19
+       274: invokevirtual #153                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.snapshot:()Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;
+       277: invokevirtual #157                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.modifiers:()Lcom/inigmasgames/hytalerpg/combat/damage/ModifierBuckets;
+       280: ldc2_w        #163                // double 0.3d
+       283: invokevirtual #165                // Method com/inigmasgames/hytalerpg/combat/damage/ModifierBuckets.withIncreased:(D)Lcom/inigmasgames/hytalerpg/combat/damage/ModifierBuckets;
+       286: invokevirtual #171                // Method com/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot.withModifiers:(Lcom/inigmasgames/hytalerpg/combat/damage/ModifierBuckets;)Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;
+       289: invokevirtual #175                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.withSnapshot:(Lcom/inigmasgames/hytalerpg/combat/snapshot/CombatSnapshot;)Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       292: astore        19
+       294: aload_1
+       295: invokevirtual #41                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.effects:()Lcom/inigmasgames/hytalerpg/execution/RootEffectBudget;
+       298: aload         19
+       300: invokevirtual #179                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.skillInstanceId:()Ljava/lang/String;
+       303: iconst_1
+       304: iconst_1
+       305: invokevirtual #183                // Method com/inigmasgames/hytalerpg/execution/RootEffectBudget.claim:(Ljava/lang/String;IZ)Ljava/lang/String;
+       308: astore        20
+       310: aload         20
+       312: ldc           #187                // String PASS
+       314: invokevirtual #189                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       317: ifeq          338
+       320: aload         6
+       322: aload         19
+       324: aload         18
+       326: aconst_null
+       327: invokeinterface #195,  4          // InterfaceMethod com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port.damage:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate;Ljava/lang/Double;)V
+       332: iinc          8, 1
+       335: goto          352
+       338: aload         6
+       340: aload         19
+       342: invokevirtual #179                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.skillInstanceId:()Ljava/lang/String;
+       345: aload         20
+       347: invokeinterface #199,  3          // InterfaceMethod com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port.rejected:(Ljava/lang/String;Ljava/lang/String;)V
+       352: goto          217
+       355: aload         7
+       357: invokevirtual #203                // Method com/inigmasgames/hytalerpg/domain/StrikeModifiers.phantomReach:()Z
+       360: ifeq          634
+       363: iload_2
+       364: ifne          634
+       367: aload         5
+       369: invokeinterface #206,  1          // InterfaceMethod java/util/List.isEmpty:()Z
+       374: ifne          634
+       377: aload         5
+       379: invokeinterface #209,  1          // InterfaceMethod java/util/List.getFirst:()Ljava/lang/Object;
+       384: checkcast     #212                // class com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Hit
+       387: astore        10
+       389: aload         10
+       391: getfield      #214                // Field com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Hit.cancelled:Z
+       394: ifne          634
+       397: aload         10
+       399: getfield      #218                // Field com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Hit.healthLost:D
+       402: invokestatic  #222                // Method java/lang/Double.isFinite:(D)Z
+       405: ifeq          634
+       408: aload         10
+       410: getfield      #218                // Field com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Hit.healthLost:D
+       413: dconst_0
+       414: dcmpl
+       415: ifle          634
+       418: aload         10
+       420: getfield      #228                // Field com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Hit.preMitigation:D
+       423: invokestatic  #222                // Method java/lang/Double.isFinite:(D)Z
+       426: ifeq          634
+       429: aload         10
+       431: getfield      #228                // Field com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Hit.preMitigation:D
+       434: dconst_0
+       435: dcmpl
+       436: iflt          634
+       439: aload_1
+       440: invokevirtual #41                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.effects:()Lcom/inigmasgames/hytalerpg/execution/RootEffectBudget;
+       443: ldc           #231                // String PHANTOM_REACH
+       445: invokevirtual #47                 // Method com/inigmasgames/hytalerpg/execution/RootEffectBudget.once:(Ljava/lang/String;)Z
+       448: ifeq          634
+       451: aload         10
+       453: getfield      #233                // Field com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Hit.target:Lcom/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate;
+       456: invokevirtual #237                // Method com/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate.position:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       459: astore        11
+       461: aload         6
+       463: aload         11
+       465: ldc2_w        #53                 // double 3.0d
+       468: invokeinterface #85,  4           // InterfaceMethod com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port.candidates:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;D)Ljava/util/List;
+       473: aload         11
+       475: aload         9
+       477: aload         6
+       479: invokestatic  #91                 // Method valid:(Ljava/util/List;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Ljava/util/Set;Lcom/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port;)Ljava/util/List;
+       482: invokeinterface #103,  1          // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+       487: aload         11
+       489: aload         6
+       491: invokedynamic #241,  0            // InvokeDynamic #2:test:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port;)Ljava/util/function/Predicate;
+       496: invokeinterface #111,  2          // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+       501: invokeinterface #123,  1          // InterfaceMethod java/util/stream/Stream.toList:()Ljava/util/List;
+       506: astore        12
+       508: aload         12
+       510: invokeinterface #206,  1          // InterfaceMethod java/util/List.isEmpty:()Z
+       515: ifne          634
+       518: aload_1
+       519: ldc           #244                // String phantom_reach
+       521: iconst_1
+       522: ldc2_w        #144                // double 0.6d
+       525: invokevirtual #146                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.secondaryCopy:(Ljava/lang/String;ID)Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       528: astore        13
+       530: aload_1
+       531: invokevirtual #41                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.effects:()Lcom/inigmasgames/hytalerpg/execution/RootEffectBudget;
+       534: aload         13
+       536: invokevirtual #179                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.skillInstanceId:()Ljava/lang/String;
+       539: iconst_1
+       540: iconst_1
+       541: invokevirtual #183                // Method com/inigmasgames/hytalerpg/execution/RootEffectBudget.claim:(Ljava/lang/String;IZ)Ljava/lang/String;
+       544: astore        14
+       546: aload         14
+       548: ldc           #187                // String PASS
+       550: invokevirtual #189                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       553: ifeq          620
+       556: aload         6
+       558: aload         13
+       560: aload         12
+       562: invokeinterface #209,  1          // InterfaceMethod java/util/List.getFirst:()Ljava/lang/Object;
+       567: checkcast     #140                // class com/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate
+       570: aload         10
+       572: getfield      #228                // Field com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Hit.preMitigation:D
+       575: ldc2_w        #144                // double 0.6d
+       578: dmul
+       579: invokestatic  #246                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       582: invokeinterface #195,  4          // InterfaceMethod com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port.damage:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate;Ljava/lang/Double;)V
+       587: iinc          8, 1
+       590: aload         6
+       592: aload         11
+       594: aload         12
+       596: invokeinterface #209,  1          // InterfaceMethod java/util/List.getFirst:()Ljava/lang/Object;
+       601: checkcast     #140                // class com/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate
+       604: invokevirtual #237                // Method com/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate.position:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       607: invokeinterface #250,  3          // InterfaceMethod com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port.presentPhantom:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;)V
+       612: goto          634
+       615: astore        15
+       617: goto          634
+       620: aload         6
+       622: aload         13
+       624: invokevirtual #179                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.skillInstanceId:()Ljava/lang/String;
+       627: aload         14
+       629: invokeinterface #199,  3          // InterfaceMethod com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port.rejected:(Ljava/lang/String;Ljava/lang/String;)V
+       634: aload         7
+       636: invokevirtual #254                // Method com/inigmasgames/hytalerpg/domain/StrikeModifiers.shockwave:()Z
+       639: ifeq          953
+       642: aload         5
+       644: invokeinterface #103,  1          // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+       649: invokedynamic #257,  0            // InvokeDynamic #3:test:()Ljava/util/function/Predicate;
+       654: invokeinterface #111,  2          // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+       659: invokeinterface #260,  1          // InterfaceMethod java/util/stream/Stream.findFirst:()Ljava/util/Optional;
+       664: astore        10
+       666: aload         10
+       668: invokevirtual #264                // Method java/util/Optional.isPresent:()Z
+       671: ifeq          953
+       674: aload_1
+       675: invokevirtual #41                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.effects:()Lcom/inigmasgames/hytalerpg/execution/RootEffectBudget;
+       678: ldc_w         #269                // String SHOCKWAVE
+       681: invokevirtual #47                 // Method com/inigmasgames/hytalerpg/execution/RootEffectBudget.once:(Ljava/lang/String;)Z
+       684: ifeq          953
+       687: aload         10
+       689: invokevirtual #271                // Method java/util/Optional.get:()Ljava/lang/Object;
+       692: checkcast     #212                // class com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Hit
+       695: astore        11
+       697: aload_1
+       698: invokevirtual #13                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.compiledPlan:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;
+       701: astore        12
+       703: ldc2_w        #53                 // double 3.0d
+       706: aload         12
+       708: invokevirtual #274                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.executionModifiers:()Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers;
+       711: invokevirtual #278                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan$ExecutionModifiers.radiusFactor:()D
+       714: dmul
+       715: aload         12
+       717: invokevirtual #55                 // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.foundationModifiers:()Lcom/inigmasgames/hytalerpg/domain/FoundationModifiers;
+       720: invokevirtual #67                 // Method com/inigmasgames/hytalerpg/domain/FoundationModifiers.concentration:()Z
+       723: ifeq          732
+       726: ldc2_w        #70                 // double 0.7d
+       729: goto          733
+       732: dconst_1
+       733: dmul
+       734: dstore        13
+       736: new           #72                 // class com/inigmasgames/hytalerpg/execution/area/AreaGeometry
+       739: dup
+       740: getstatic     #283                // Field com/inigmasgames/hytalerpg/execution/area/AreaGeometry$Kind.DISC:Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Kind;
+       743: aload         11
+       745: getfield      #233                // Field com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Hit.target:Lcom/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate;
+       748: invokevirtual #237                // Method com/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate.position:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       751: getstatic     #286                // Field com/inigmasgames/hytalerpg/execution/math/Vec3.FORWARD:Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       754: dload         13
+       756: ldc2_w        #292                // double 360.0d
+       759: dconst_0
+       760: dconst_0
+       761: ldc2_w        #53                 // double 3.0d
+       764: invokespecial #82                 // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry."<init>":(Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Kind;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;DDDDD)V
+       767: astore        15
+       769: aload_1
+       770: ldc_w         #294                // String shockwave
+       773: iconst_1
+       774: ldc2_w        #295                // double 0.4d
+       777: invokevirtual #146                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.secondaryCopy:(Ljava/lang/String;ID)Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;
+       780: astore        16
+       782: aload_1
+       783: invokevirtual #41                 // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.effects:()Lcom/inigmasgames/hytalerpg/execution/RootEffectBudget;
+       786: aload         16
+       788: invokevirtual #179                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.skillInstanceId:()Ljava/lang/String;
+       791: iconst_1
+       792: iconst_1
+       793: invokevirtual #183                // Method com/inigmasgames/hytalerpg/execution/RootEffectBudget.claim:(Ljava/lang/String;IZ)Ljava/lang/String;
+       796: astore        17
+       798: aload         17
+       800: ldc           #187                // String PASS
+       802: invokevirtual #189                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+       805: ifeq          939
+       808: aload         12
+       810: aload         11
+       812: invokestatic  #297                // Method shockwaveAmount:(Lcom/inigmasgames/hytalerpg/domain/CompiledSkillPlan;Lcom/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Hit;)D
+       815: dstore        18
+       817: aload         6
+       819: aload         15
+       821: invokeinterface #301,  2          // InterfaceMethod com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port.burstCandidates:(Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;)Ljava/util/List;
+       826: aload         15
+       828: invokevirtual #305                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.origin:()Lcom/inigmasgames/hytalerpg/execution/math/Vec3;
+       831: invokestatic  #308                // InterfaceMethod java/util/Set.of:()Ljava/util/Set;
+       834: aload         6
+       836: invokestatic  #91                 // Method valid:(Ljava/util/List;Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Ljava/util/Set;Lcom/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port;)Ljava/util/List;
+       839: invokeinterface #103,  1          // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+       844: aload         15
+       846: aload         6
+       848: invokedynamic #314,  0            // InvokeDynamic #4:test:(Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;Lcom/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port;)Ljava/util/function/Predicate;
+       853: invokeinterface #111,  2          // InterfaceMethod java/util/stream/Stream.filter:(Ljava/util/function/Predicate;)Ljava/util/stream/Stream;
+       858: ldc2_w        #315                // long 64l
+       861: invokeinterface #119,  3          // InterfaceMethod java/util/stream/Stream.limit:(J)Ljava/util/stream/Stream;
+       866: invokeinterface #123,  1          // InterfaceMethod java/util/stream/Stream.toList:()Ljava/util/List;
+       871: invokeinterface #127,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       876: astore        20
+       878: aload         20
+       880: invokeinterface #131,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+       885: ifeq          922
+       888: aload         20
+       890: invokeinterface #136,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       895: checkcast     #140                // class com/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate
+       898: astore        21
+       900: aload         6
+       902: aload         16
+       904: aload         21
+       906: dload         18
+       908: invokestatic  #246                // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+       911: invokeinterface #195,  4          // InterfaceMethod com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port.damage:(Lcom/inigmasgames/hytalerpg/execution/SkillExecutionContext;Lcom/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate;Ljava/lang/Double;)V
+       916: iinc          8, 1
+       919: goto          878
+       922: aload         6
+       924: aload         15
+       926: invokeinterface #317,  2          // InterfaceMethod com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port.presentShockwave:(Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry;)V
+       931: goto          936
+       934: astore        20
+       936: goto          953
+       939: aload         6
+       941: aload         16
+       943: invokevirtual #179                // Method com/inigmasgames/hytalerpg/execution/SkillExecutionContext.skillInstanceId:()Ljava/lang/String;
+       946: aload         17
+       948: invokeinterface #199,  3          // InterfaceMethod com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port.rejected:(Ljava/lang/String;Ljava/lang/String;)V
+       953: iload         8
+       955: ireturn
+      Exception table:
+         from    to  target type
+           157   171   174   Class java/lang/RuntimeException
+           590   612   615   Class java/lang/RuntimeException
+           922   931   934   Class java/lang/RuntimeException
+
+  public static double shockwaveAmount(com.inigmasgames.hytalerpg.domain.CompiledSkillPlan, com.inigmasgames.hytalerpg.execution.strike.StrikeSecondaryRuntime$Hit<?>);
+    Code:
+         0: aload_1
+         1: getfield      #228                // Field com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Hit.preMitigation:D
+         4: dstore_2
+         5: aload_0
+         6: invokevirtual #150                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.concentrationOnlyOnSecondary:()Z
+         9: ifeq          53
+        12: aload_1
+        13: getfield      #321                // Field com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Hit.increasedUnit:D
+        16: invokestatic  #222                // Method java/lang/Double.isFinite:(D)Z
+        19: ifeq          31
+        22: aload_1
+        23: getfield      #321                // Field com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Hit.increasedUnit:D
+        26: dconst_0
+        27: dcmpg
+        28: ifge          42
+        31: new           #324                // class java/lang/IllegalArgumentException
+        34: dup
+        35: ldc_w         #326                // String RESOLVED_ADDITIVE_UNIT_UNAVAILABLE
+        38: invokespecial #328                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        41: athrow
+        42: dload_2
+        43: ldc2_w        #163                // double 0.3d
+        46: aload_1
+        47: getfield      #321                // Field com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Hit.increasedUnit:D
+        50: dmul
+        51: dadd
+        52: dstore_2
+        53: dload_2
+        54: ldc2_w        #295                // double 0.4d
+        57: dmul
+        58: aload_0
+        59: invokevirtual #331                // Method com/inigmasgames/hytalerpg/domain/CompiledSkillPlan.radiusOnlyOnShockwave:()Z
+        62: ifeq          71
+        65: ldc2_w        #334                // double 0.9d
+        68: goto          72
+        71: dconst_1
+        72: dmul
+        73: dstore        4
+        75: dload         4
+        77: invokestatic  #222                // Method java/lang/Double.isFinite:(D)Z
+        80: ifeq          99
+        83: dload         4
+        85: dconst_0
+        86: dcmpg
+        87: iflt          99
+        90: dload         4
+        92: ldc2_w        #338                // double 3.4028234663852886E38d
+        95: dcmpl
+        96: ifle          110
+        99: new           #324                // class java/lang/IllegalArgumentException
+       102: dup
+       103: ldc_w         #340                // String SHOCKWAVE_DAMAGE_OVERFLOW
+       106: invokespecial #328                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+       109: athrow
+       110: dload         4
+       112: dreturn
+
+  private static <T> java.util.List<com.inigmasgames.hytalerpg.execution.strike.StrikeGeometryService$Candidate<T>> valid(java.util.List<com.inigmasgames.hytalerpg.execution.strike.StrikeGeometryService$Candidate<T>>, com.inigmasgames.hytalerpg.execution.math.Vec3, java.util.Set<java.lang.String>, com.inigmasgames.hytalerpg.execution.strike.StrikeSecondaryRuntime$Port<T>);
+    Code:
+         0: aload_0
+         1: invokeinterface #342,  1          // InterfaceMethod java/util/List.size:()I
+         6: sipush        256
+         9: if_icmple     16
+        12: invokestatic  #346                // InterfaceMethod java/util/List.of:()Ljava/util/List;
+        15: areturn
+        16: new           #348                // class java/util/TreeMap
+        19: dup
+        20: invokespecial #350                // Method java/util/TreeMap."<init>":()V
+        23: astore        4
+        25: aload_0
+        26: invokeinterface #127,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+        31: astore        5
+        33: aload         5
+        35: invokeinterface #131,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+        40: ifeq          118
+        43: aload         5
+        45: invokeinterface #136,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+        50: checkcast     #140                // class com/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate
+        53: astore        6
+        55: aload         6
+        57: ifnull        115
+        60: aload         6
+        62: invokevirtual #351                // Method com/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate.damageable:()Z
+        65: ifeq          115
+        68: aload         6
+        70: invokevirtual #354                // Method com/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate.protectedTarget:()Z
+        73: ifne          115
+        76: aload_2
+        77: aload         6
+        79: invokevirtual #357                // Method com/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate.stableId:()Ljava/lang/String;
+        82: invokeinterface #360,  2          // InterfaceMethod java/util/Set.contains:(Ljava/lang/Object;)Z
+        87: ifne          115
+        90: aload_3
+        91: aload_1
+        92: aload         6
+        94: invokeinterface #363,  3          // InterfaceMethod com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port.lineOfSight:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate;)Z
+        99: ifeq          115
+       102: aload         4
+       104: aload         6
+       106: invokevirtual #357                // Method com/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate.stableId:()Ljava/lang/String;
+       109: aload         6
+       111: invokevirtual #367                // Method java/util/TreeMap.putIfAbsent:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+       114: pop
+       115: goto          33
+       118: aload         4
+       120: invokevirtual #371                // Method java/util/TreeMap.values:()Ljava/util/Collection;
+       123: invokeinterface #375,  1          // InterfaceMethod java/util/Collection.stream:()Ljava/util/stream/Stream;
+       128: aload_1
+       129: aload_3
+       130: invokedynamic #378,  0            // InvokeDynamic #5:applyAsDouble:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port;)Ljava/util/function/ToDoubleFunction;
+       135: invokestatic  #382                // InterfaceMethod java/util/Comparator.comparingDouble:(Ljava/util/function/ToDoubleFunction;)Ljava/util/Comparator;
+       138: invokedynamic #388,  0            // InvokeDynamic #6:apply:()Ljava/util/function/Function;
+       143: invokeinterface #392,  2          // InterfaceMethod java/util/Comparator.thenComparing:(Ljava/util/function/Function;)Ljava/util/Comparator;
+       148: invokeinterface #396,  2          // InterfaceMethod java/util/stream/Stream.sorted:(Ljava/util/Comparator;)Ljava/util/stream/Stream;
+       153: invokeinterface #123,  1          // InterfaceMethod java/util/stream/Stream.toList:()Ljava/util/List;
+       158: areturn
+
+  private static double lambda$valid$0(com.inigmasgames.hytalerpg.execution.math.Vec3, com.inigmasgames.hytalerpg.execution.strike.StrikeSecondaryRuntime$Port, com.inigmasgames.hytalerpg.execution.strike.StrikeGeometryService$Candidate);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: invokeinterface #400,  2          // InterfaceMethod com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port.bounds:(Lcom/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate;)Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;
+         8: invokestatic  #404                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionShape.pointDistanceSquared:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;)D
+        11: dreturn
+
+  private static boolean lambda$afterPrimary$4(com.inigmasgames.hytalerpg.execution.area.AreaGeometry, com.inigmasgames.hytalerpg.execution.strike.StrikeSecondaryRuntime$Port, com.inigmasgames.hytalerpg.execution.strike.StrikeGeometryService$Candidate);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: invokeinterface #400,  2          // InterfaceMethod com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port.bounds:(Lcom/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate;)Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;
+         8: invokevirtual #410                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.intersects:(Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;)Z
+        11: ireturn
+
+  private static boolean lambda$afterPrimary$3(com.inigmasgames.hytalerpg.execution.strike.StrikeSecondaryRuntime$Hit);
+    Code:
+         0: aload_0
+         1: getfield      #214                // Field com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Hit.cancelled:Z
+         4: ifne          49
+         7: aload_0
+         8: getfield      #218                // Field com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Hit.healthLost:D
+        11: invokestatic  #222                // Method java/lang/Double.isFinite:(D)Z
+        14: ifeq          49
+        17: aload_0
+        18: getfield      #218                // Field com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Hit.healthLost:D
+        21: dconst_0
+        22: dcmpl
+        23: ifle          49
+        26: aload_0
+        27: getfield      #228                // Field com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Hit.preMitigation:D
+        30: invokestatic  #222                // Method java/lang/Double.isFinite:(D)Z
+        33: ifeq          49
+        36: aload_0
+        37: getfield      #228                // Field com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Hit.preMitigation:D
+        40: dconst_0
+        41: dcmpl
+        42: iflt          49
+        45: iconst_1
+        46: goto          50
+        49: iconst_0
+        50: ireturn
+
+  private static boolean lambda$afterPrimary$2(com.inigmasgames.hytalerpg.execution.math.Vec3, com.inigmasgames.hytalerpg.execution.strike.StrikeSecondaryRuntime$Port, com.inigmasgames.hytalerpg.execution.strike.StrikeGeometryService$Candidate);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: invokeinterface #400,  2          // InterfaceMethod com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port.bounds:(Lcom/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate;)Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;
+         8: invokestatic  #404                // Method com/inigmasgames/hytalerpg/execution/connection/ConnectionShape.pointDistanceSquared:(Lcom/inigmasgames/hytalerpg/execution/math/Vec3;Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;)D
+        11: ldc2_w        #414                // double 9.000000001d
+        14: dcmpg
+        15: ifgt          22
+        18: iconst_1
+        19: goto          23
+        22: iconst_0
+        23: ireturn
+
+  private static boolean lambda$afterPrimary$1(com.inigmasgames.hytalerpg.execution.area.AreaGeometry, com.inigmasgames.hytalerpg.execution.strike.StrikeSecondaryRuntime$Port, com.inigmasgames.hytalerpg.execution.strike.StrikeGeometryService$Candidate);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: aload_2
+         3: invokeinterface #400,  2          // InterfaceMethod com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Port.bounds:(Lcom/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate;)Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;
+         8: invokevirtual #410                // Method com/inigmasgames/hytalerpg/execution/area/AreaGeometry.intersects:(Lcom/inigmasgames/hytalerpg/execution/area/AreaGeometry$Bounds;)Z
+        11: ireturn
+
+  private static void lambda$afterPrimary$0(java.util.Set, com.inigmasgames.hytalerpg.execution.strike.StrikeSecondaryRuntime$Hit);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #233                // Field com/inigmasgames/hytalerpg/execution/strike/StrikeSecondaryRuntime$Hit.target:Lcom/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate;
+         5: invokevirtual #357                // Method com/inigmasgames/hytalerpg/execution/strike/StrikeGeometryService$Candidate.stableId:()Ljava/lang/String;
+         8: invokeinterface #416,  2          // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+        13: pop
+        14: return
+}
