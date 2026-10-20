@@ -46,9 +46,7 @@
           "DamageEffects": {
             "WorldSoundEventId": "SFX_Longsword_Special_Impact"
           },
-          "Type": "RPG_GearDamage",
-          "RpgProcSelector": "Longsword_Swing_Left_Damage",
-          "RpgProcCoefficient": 1.0
+          "Type": "RPG_GearDamage"
         }
       ]
     },
@@ -76,9 +74,7 @@
           "DamageEffects": {
             "WorldSoundEventId": "SFX_Longsword_Special_Impact"
           },
-          "Type": "RPG_GearDamage",
-          "RpgProcSelector": "Longsword_Swing_Right_Damage",
-          "RpgProcCoefficient": 1.0
+          "Type": "RPG_GearDamage"
         }
       ]
     },
@@ -106,9 +102,7 @@
           "DamageEffects": {
             "WorldSoundEventId": "SFX_Longsword_Special_Impact"
           },
-          "Type": "RPG_GearDamage",
-          "RpgProcSelector": "Longsword_Swing_Up_Left_Damage",
-          "RpgProcCoefficient": 1.0
+          "Type": "RPG_GearDamage"
         }
       ]
     },
@@ -127,9 +121,7 @@
           "DamageEffects": {
             "WorldSoundEventId": "SFX_Longsword_Special_Impact"
           },
-          "Type": "RPG_GearDamage",
-          "RpgProcSelector": "Longsword_Stab_Charged_Damage",
-          "RpgProcCoefficient": 1.0
+          "Type": "RPG_GearDamage"
         }
       ]
     }

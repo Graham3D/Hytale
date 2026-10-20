@@ -1,6 +1,0 @@
-{
-  "Type": "ChangeStat",
-  "StatModifiers": {
-    "Mana": -25
-  }
-}

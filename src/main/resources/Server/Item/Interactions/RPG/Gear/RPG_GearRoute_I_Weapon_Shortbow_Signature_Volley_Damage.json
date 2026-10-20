@@ -32,7 +32,5 @@
     "BaseDamage": {
       "Physical": 6
     }
-  },
-  "RpgProcSelector": "RPG_GearRoute_I_Weapon_Shortbow_Signature_Volley_Damage",
-  "RpgProcCoefficient": 0.3333333333333333
+  }
 }

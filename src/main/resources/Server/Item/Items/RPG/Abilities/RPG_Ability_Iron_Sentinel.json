@@ -5,9 +5,7 @@
   },
   "Icon": "Icons/Items/RPG/SkillSummonskeletonarchers.png",
   "Quality": "Rare",
-  "Categories": [
-    "Items.Ingredients"
-  ],
+  "Categories": ["Items.Ingredients"],
   "Model": "Items/Runes/Rune_Ability.blockymodel",
   "Texture": "Items/Runes/Rune_Textures/Rune_Ability_Blank.png",
   "PlayerAnimationsId": "Item",
@@ -15,10 +13,11 @@
   "Scale": 0.8,
   "ItemSoundSetId": "ISS_Items_Gems",
   "Ability": {
-    "Slot": "Core",
+    "Slot": "Primary",
     "Cooldown": 0,
     "Cost": 0,
     "CostType": "None",
+    "Tags": ["rpg.native.bridge"],
     "Cast": "Root_RPG_Ability_Bridge"
   }
 }

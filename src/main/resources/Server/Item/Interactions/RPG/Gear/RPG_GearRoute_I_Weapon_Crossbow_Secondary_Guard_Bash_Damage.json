@@ -32,7 +32,5 @@
     "BaseDamage": {
       "Physical": 0
     }
-  },
-  "RpgProcSelector": "RPG_GearRoute_I_Weapon_Crossbow_Secondary_Guard_Bash_Damage",
-  "RpgProcCoefficient": 1.0
+  }
 }

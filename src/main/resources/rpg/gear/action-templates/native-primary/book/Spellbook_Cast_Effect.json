@@ -1,8 +1,0 @@
-{
-  "Type": "Simple",
-  "$Comment": "Length of Effect",
-  "RunTime": 0.5,
-  "Effects": {
-    "WorldSoundEventId": "SFX_Skeleton_Mage_Spellbook_Impact"
-  }
-}

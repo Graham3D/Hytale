@@ -1,7 +1,0 @@
-{
-  "Type": "ChangeState",
-  "UpdateBlockState": true,
-  "Changes": {
-    "default": "Exploding"
-  }
-}

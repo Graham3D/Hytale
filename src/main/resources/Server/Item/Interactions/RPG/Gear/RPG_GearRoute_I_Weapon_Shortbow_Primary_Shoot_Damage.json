@@ -32,7 +32,5 @@
     "BaseDamage": {
       "Physical": 6
     }
-  },
-  "RpgProcSelector": "RPG_GearRoute_I_Weapon_Shortbow_Primary_Shoot_Damage",
-  "RpgProcCoefficient": 1.0
+  }
 }

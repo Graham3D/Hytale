@@ -69,9 +69,7 @@
               "Physical": 19
             }
           },
-          "Type": "RPG_GearDamage",
-          "RpgProcSelector": "Swing_Left_Damage",
-          "RpgProcCoefficient": 1.0
+          "Type": "RPG_GearDamage"
         }
       ]
     },
@@ -88,9 +86,7 @@
               "Physical": 19
             }
           },
-          "Type": "RPG_GearDamage",
-          "RpgProcSelector": "Swing_Right_Damage",
-          "RpgProcCoefficient": 1.0
+          "Type": "RPG_GearDamage"
         }
       ]
     },
@@ -107,9 +103,7 @@
               "Physical": 19
             }
           },
-          "Type": "RPG_GearDamage",
-          "RpgProcSelector": "Swing_Up_Left_Damage",
-          "RpgProcCoefficient": 1.0
+          "Type": "RPG_GearDamage"
         }
       ]
     },
@@ -143,9 +137,7 @@
               "Amount": 2
             }
           ],
-          "Type": "RPG_GearDamage",
-          "RpgProcSelector": "Swing_Left_Charged_Damage",
-          "RpgProcCoefficient": 1.0
+          "Type": "RPG_GearDamage"
         }
       ]
     },
@@ -179,9 +171,7 @@
               "Amount": 2
             }
           ],
-          "Type": "RPG_GearDamage",
-          "RpgProcSelector": "Swing_Right_Charged_Damage",
-          "RpgProcCoefficient": 1.0
+          "Type": "RPG_GearDamage"
         }
       ]
     },
@@ -215,9 +205,7 @@
               "Amount": 2
             }
           ],
-          "Type": "RPG_GearDamage",
-          "RpgProcSelector": "Swing_Up_Left_Charged_Damage",
-          "RpgProcCoefficient": 1.0
+          "Type": "RPG_GearDamage"
         }
       ]
     },
@@ -254,9 +242,7 @@
             "WorldSoundEventId": "SFX_Mace_T1_Impact",
             "LocalSoundEventId": "SFX_Mace_T1_Impact"
           },
-          "Type": "RPG_GearDamage",
-          "RpgProcSelector": "Groundslam_Damage",
-          "RpgProcCoefficient": 1.0
+          "Type": "RPG_GearDamage"
         }
       ]
     }

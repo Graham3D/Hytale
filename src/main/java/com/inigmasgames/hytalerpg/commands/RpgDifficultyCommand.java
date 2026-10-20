@@ -59,24 +59,6 @@ public final class RpgDifficultyCommand extends AbstractCommandCollection {
             {setPermissionGroup(GameMode.Adventure);}
             @Override protected void execute(CommandContext c,Store<EntityStore> s,Ref<EntityStore> r,PlayerRef p,World w){reply(c,travel.request(p.getUuid(),DifficultyId.NORMAL,false),"Returned to Normal.");}
         });
-        addSubCommand(new AbstractPlayerCommand("unlock","Complete golem requirements and permanently unlock Nightmare or Hell.") {
-            final RequiredArg<String> value=withRequiredArg("difficulty","Nightmare or Hell.",ArgTypes.STRING);
-            {requirePermission(AUTHOR_PERMISSION);}
-            @Override protected void execute(CommandContext c,Store<EntityStore> s,Ref<EntityStore> r,PlayerRef p,World w){try{
-                var target=DifficultyOperatorUnlock.target(c.get(value));
-                var view=players.getPresentationView(p.getUuid());
-                var before=view.state().difficulty;
-                var after=DifficultyOperatorUnlock.apply(before,target);
-                if(after.equals(before)){c.sendMessage(Message.raw(target+" is already unlocked with its required golem milestones complete."));return;}
-                var result=players.mutateProgress(p.getUuid(),view.state().revision,"difficulty-operator-unlock/"+UUID.randomUUID(),
-                        state->state.difficulty=DifficultyOperatorUnlock.apply(state.difficulty,target));
-                if(!result.success()){c.sendMessage(Message.raw("Difficulty unlock: "+result.message()));return;}
-                com.hypixel.hytale.logger.HytaleLogger.getLogger().atInfo().log(
-                        "RPG_DIFFICULTY_OPERATOR_UNLOCK actor=%s target=%s progressRevision=%s rewardsGranted=false",
-                        p.getUuid(),target,after.revision());
-                c.sendMessage(Message.raw(target+" unlocked. Required golem milestones are complete; no combat rewards granted."));
-            }catch(RuntimeException e){c.sendMessage(Message.raw("Difficulty unlock: "+e.getMessage()));}}
-        });
         addSubCommand(new AbstractAsyncCommand("prepare","Prepare persistent Nightmare and Hell worlds."){
             {requirePermission(AUTHOR_PERMISSION);}
             @Override protected CompletableFuture<Void> executeAsync(CommandContext c){
@@ -108,13 +90,11 @@ public final class RpgDifficultyCommand extends AbstractCommandCollection {
                 var golem=GolemMilestones.load().require(text.toLowerCase(Locale.ROOT));
                 // Explicit campaign authoring, distinct from /npc spawn and forced travel. Native role stats are retained.
                 var npc=com.hypixel.hytale.server.npc.NPCPlugin.get();npc.validateSpawnableRole(golem.roleId());UUID placement=UUID.randomUUID();
-                // NPCPlugin receives no explicit Model, so its pre-add holder does not yet have ModelComponent.
-                // The audited role Appearance IDs match these native model asset IDs; keep native NPC model selection.
-                var modelAsset=com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset.getAssetMap().getAsset(golem.roleId());
-                if(modelAsset==null)throw new IllegalStateException("NATIVE_GOLEM_ASSET_MISSING:"+golem.roleId());
-                HytaleDifficultyTravel.requireClear(w,at,modelAsset.getBoundingBox());
                 var result=npc.spawnEntity(s,npc.getIndex(golem.roleId()),at,t.getRotation(),null,
                         (entity,holder,store)->{
+                            var model=holder.getComponent(com.hypixel.hytale.server.core.modules.entity.component.ModelComponent.getComponentType());
+                            if(model==null)throw new IllegalStateException("NATIVE_GOLEM_MODEL_MISSING");
+                            HytaleDifficultyTravel.requireClear(w,at,model.getModel().getBoundingBox());
                             holder.addComponent(CampaignEncounterProjection.getComponentType(),new CampaignEncounterProjection(p.getWorldUuid(),placement,golem.roleId()));
                         },null);
                 if(result==null)throw new IllegalStateException("CAMPAIGN_GOLEM_SPAWN_FAILED");
