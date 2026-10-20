@@ -1,0 +1,7 @@
+Implemented the resource owner handoff and recorded the details in [resource-owner-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/resource-owner-result.md).
+
+WA110 now uses one duration selector in [FiniteSupportEffects.java](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/src/main/java/com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects.java), called by the production adapter and the focused simulator. The test proves the finite receipt survives past its base expiry and disappears at its extended expiry, while unrolled, removed, hostile, and aura controls retain their base behavior.
+
+WA118 now uses the existing native movement owner’s effect application path and returns a measured payload projection only after acceptance. The focused test covers acceptance, rejection, speed mismatch, and unrolled and removed controls. **A live NPC velocity was not measured**; the fixture cannot establish that runtime movement changed. The shared production gate still excludes WA118 and remains with Main.
+
+Direct Java compilation passed. Both new focused tests and the six existing summon completion tests passed. No Gradle, server, deployment, or commit action was taken.

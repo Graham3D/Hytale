@@ -1,0 +1,24 @@
+{
+  "clientFile": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\install\\pre-release\\package\\game\\latest\\Client\\HytaleClient.exe",
+  "sha256": "006f34c19617f03a0529564a8ebce12dd3758a6536e6b4d622fcbd4b59441390",
+  "method": "Read native reflection strings without loading or launching the client",
+  "fieldExcerptByteOffset": 36204613,
+  "reflectionStrings": [
+    "cketItemWithAllMetadata@",
+    "(ToPacketItemQuantity@",
+    " IsEquivalentType",
+    "GetDisplayName@",
+    "*GetDisplayDescription",
+    "IsEquivalent",
+    "Durability",
+    "MaxDurability",
+    "Quality8OverrideDroppedItemAnimation",
+    "IsBroken",
+    "get_Adventure@",
+    "set_Adventure@",
+    "$get_CapturedEntity@",
+    "$set_CapturedEntity@"
+  ],
+  "QualityOverridePresent": false,
+  "clientOrServerStarted": false
+}

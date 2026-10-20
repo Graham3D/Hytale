@@ -1,0 +1,5 @@
+WA-144–150 are **unfinished**. I implemented WA-144 temporary skill availability, normal slot execution, and last-source cleanup. I also added WA-145–147 trigger admission and a native post-block observer. The Bolt and Succor children still need a canonical execution handoff; WA-148–150 still need item-owned Aura support in `SupportRuntime` and its native port.
+
+The handoffs and exact cross-owner changes are in [itemskills-result.md](<C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/itemskills-result.md>). I left `native-result.md` to the carrier worker who owns that shared file.
+
+Deterministic tests were authored but not run, as instructed. `git diff --check` passed. I did not run Gradle or claim any of these IDs fully connected.

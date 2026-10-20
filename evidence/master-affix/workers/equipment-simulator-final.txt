@@ -1,0 +1,5 @@
+Implemented the 160-affix equipment simulator with a package-private candidate policy shared by admission and effects. Public production methods still use the unchanged `ENABLED` set.
+
+Direct javac/JUnit results: **160/160 lifecycle checks passed**; **159/160 carrier-legality checks passed**. WA-141 remains blocked because production `GearDropGenerator.eligible` does not admit its authored dagger `M*` scope. Main owns that change. The run also found that snapshot revision hashes can change after JSON reload even when the frozen roll and effects remain equal.
+
+The proof-registration anchor, per-invocation results, and remaining limits are in [equipment-simulator-result.md](/C:/Users/Zemio/.codex/worktrees/hyarpg-separation/equipment-simulator-result.md). These tests establish equipment admission and removal, not functional gameplay qualification.

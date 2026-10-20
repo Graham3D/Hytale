@@ -1,0 +1,5 @@
+Implemented item-only equal-share budgets for managed strike AoE and the owned native selector path. The native share now reaches WA-136’s premitigation roll and the post-Apply receipt. Authored sequential strikes retain distinct allowances, and the three-leg Shortbow Volley’s authored one-third coefficient was verified. Base skill behavior, metadata, payloads, and the main-owned consumers were left unchanged.
+
+Direct `javac` compilation and **11 focused offline checks passed**. The implementation and evidence are in [proc-producer-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/proc-producer-result.md).
+
+**Master 6.2 is not fully qualified.** The existing paid channel submits periodic damage without a gear-hit receipt, so its tested paid-window budget has no runtime item-proc consumer. Native selector behavior across later live ticks also remains unverified.

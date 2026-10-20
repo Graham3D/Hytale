@@ -1,0 +1,3 @@
+Closed the offline recovery/support proof for **WA-094–098 and WA-111**. The owner handoff, including exact test methods and IDs, is in [recovery-final-owner-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/recovery-final-owner-result.md). WA-112 uses the existing canonical receipt proof; no new cleanse work was added.
+
+Direct `javac` and focused JUnit verification passed: **18/18 tests**. This is offline owner-adapter proof; no native ECS run or Gradle, game, server, gate, or commit action was performed.

@@ -1,0 +1,5 @@
+Added the three requested test files and the [handoff note](</C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/resource-proof-result.md>). The new tests cover cast release, separate committed heals, resource controls, production loot selection, credited Gold, reduced requirements, and six summon owner outcomes. No existing files or gates were changed.
+
+Direct javac compilation passed. Bounded JUnit ran **18 tests: 12 passed, 6 failed**. The six failures are `WA-113..117` and `WA-119`: their runtime consumers still suppress the effects through closed capability checks. The tests assert active behavior without branching on those gates.
+
+**Gameplay proof remains incomplete.** `WA-110` needs a shared finite-duration owner that the offline simulator can call; `WA-118` needs an observable offline native movement effect. Final native attack, HP, and damage-loss observations also remain for the failing summon cases. The handoff identifies each affix’s test method, consumer, result, and the main-owned source locations for those gaps.

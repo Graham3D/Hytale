@@ -1,0 +1,3 @@
+Updated the coverage generator, proof map, and Python tests, and wrote the [proof registration result](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/proof-registration-result.md). The mapping now checks reviewed loop IDs, parameter rows, helper calls, and the finite 20 Mana `WA-120` runtime chain. It also replaces the stale Ameliorate reference for `WA-112` with the generic cleanse test.
+
+**Verification:** 12 Python tests passed. The read-only coverage check remains **0 FUNCTIONAL, 160 GATED**. The handoff records the exact remaining gaps; no final audit was regenerated.

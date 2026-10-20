@@ -1,0 +1,16 @@
+
+Test run finished after 728 ms
+[         6 containers found      ]
+[         0 containers skipped    ]
+[         6 containers started    ]
+[         0 containers aborted    ]
+[         6 containers successful ]
+[         0 containers failed     ]
+[       330 tests found           ]
+[         0 tests skipped         ]
+[       330 tests started         ]
+[         0 tests aborted         ]
+[       329 tests successful      ]
+[         1 tests failed          ]
+
+FAIL WA-141 production carrier legality: ab-wa-141-affixed: WA-141 has no legal carrier: gm.daggers_adamantite.h ==> expected: <true> but was: <false>

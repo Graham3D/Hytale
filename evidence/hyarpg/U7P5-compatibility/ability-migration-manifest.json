@@ -1,0 +1,1263 @@
+[
+  {
+    "assetId": "RPG_Ability_Arcane_Bolt",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Arcane_Bolt.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Arcane_Missiles",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Arcane_Missiles.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Avalanche",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Avalanche.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Axe_Toss",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Axe_Toss.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Backstab",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Backstab.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Ball_Lightning",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Ball_Lightning.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Battle_Cry",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Battle_Cry.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Blessing_Of_Protection",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Blessing_Of_Protection.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Blizzard",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Blizzard.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Blunderbuss_Shot",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Blunderbuss_Shot.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Bomb_Toss",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Bomb_Toss.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Bone_Cage",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Bone_Cage.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Bone_Shard",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Bone_Shard.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Brood_Call",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Brood_Call.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Charge",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Charge.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Charged_Bolt",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Charged_Bolt.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Chilling_Aura",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Chilling_Aura.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Cold_Blast",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Cold_Blast.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Cold_Wave",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Cold_Wave.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Comet",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Comet.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Consume_Minion",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Consume_Minion.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Corpse_Burst",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Corpse_Burst.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Crossbow_Bolt",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Crossbow_Bolt.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Dagger_Flurry",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Dagger_Flurry.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Dive_Strike",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Dive_Strike.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Dominate",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Dominate.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Earthquake",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Earthquake.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Emanatism",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Emanatism.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Execution_Strike",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Execution_Strike.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Explosive_Flask",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Explosive_Flask.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Finishing_Strike",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Finishing_Strike.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Fire_Bolt",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Fire_Bolt.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Fireball",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Fireball.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Fireball_Charge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Flame_Weapon",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Flame_Weapon.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Frenzy",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Frenzy.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Frost_Bolt",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Frost_Bolt.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Frost_Nova",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Frost_Nova.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Ground_Slam",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Ground_Slam.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Guard",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Guard.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Healing_Beam",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Healing_Beam.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Healing_Beam_Held",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Heavy_Swing",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Heavy_Swing.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Hunter_S_Mark",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Hunter_S_Mark.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Intimidate",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Intimidate.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Iron_Sentinel",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Iron_Sentinel.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Jump_Strike",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Jump_Strike.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Life_Drain",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Life_Drain.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Lightning_Arrow",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Lightning_Arrow.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Lightning_Bolt",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Lightning_Bolt.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Lightning_Coil",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Lightning_Coil.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Managuard",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Managuard.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Mantle_Of_Flame",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Mantle_Of_Flame.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Mantle_Of_Thunder",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Mantle_Of_Thunder.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Maul_Swing",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Maul_Swing.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Meteor",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Meteor.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Minor_Heal",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Minor_Heal.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Orbiting_Shadow_Blades",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Orbiting_Shadow_Blades.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Pack_Howl",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Pack_Howl.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Pedanticism",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Pedanticism.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Poison_Cloud",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Poison_Cloud.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Pounce",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Pounce.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Powder_Mine",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Powder_Mine.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Quick_Shot",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Quick_Shot.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Quick_Slash",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Quick_Slash.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Quickstep",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Quickstep.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Reaping_Storm",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Reaping_Storm.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Reflective_Hide",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Reflective_Hide.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Revive_Fallen",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Revive_Fallen.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Riposte",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Riposte.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Root_Lash",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Root_Lash.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Root_Snare",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Root_Snare.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Scythe_Sweep",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Scythe_Sweep.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Shield_Bash",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Shield_Bash.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Simulacrum",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Simulacrum.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Snipe",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Snipe.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Snipe_Release",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Spear_Thrust",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Spear_Thrust.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Spear_Toss",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Spear_Toss.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Spirit_Shield",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Spirit_Shield.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Static_Field",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Static_Field.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Stone_Bolt",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Stone_Bolt.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Storm_Strike",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Storm_Strike.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Summon_Skeleton_Archers",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Summon_Skeleton_Archers.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Summon_Void_Crawlers",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Summon_Void_Crawlers.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Taunt",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Taunt.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Teleport",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Teleport.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Thorns_Aura",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Thorns_Aura.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Venom_Spray",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Venom_Spray.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Void_Beam",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Void_Beam.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Void_Bolt",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Void_Bolt.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Void_Cataclysm",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Void_Cataclysm.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Void_Dash",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Void_Dash.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Vortex",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Vortex.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Wall_Of_Fire",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Wall_Of_Fire.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Weakening_Hex",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Weakening_Hex.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Web_Shot",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Web_Shot.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Whirlwind",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Whirlwind.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Wind_Cutter",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Wind_Cutter.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  },
+  {
+    "assetId": "RPG_Ability_Wolf_Summon",
+    "path": "src/main/resources/Server/Item/Items/RPG/Abilities/RPG_Ability_Wolf_Summon.json",
+    "oldSlot": "Primary",
+    "newSlot": "Core",
+    "removedDiagnosticTags": [
+      "rpg.native.bridge"
+    ],
+    "preservedCast": "Root_RPG_Ability_Bridge",
+    "preservedNativeCost": 0,
+    "preservedNativeCooldown": 0,
+    "preservedNativeCostType": "None"
+  }
+]

@@ -1,0 +1,3 @@
+Implemented findings 1–4 and the `baseSkillRank` temporary-grant condition in the specified code regions. Quick Slash again allows each authored component to proc; existing skill movement uses HEAD’s NPC eligibility, control, collision, and pull geometry, with WA-082 reducing the target’s requested displacement. Release recomputes the learned rank while keeping the item bonus frozen through windup. Unlearned rank one now requires a temporary copy.
+
+The [repair report](/C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/scope-repair-result.md) records the changes and checks. Eight isolated Java planner scenarios, scoped source assertions, and `git diff --check` passed. Native gameplay was not run under the requested restrictions.

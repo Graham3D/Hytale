@@ -1,0 +1,5 @@
+Continued the four native affix routes in the shared checkout. WA-015/016 now use the accepted skill snapshot and exact held item for native projectile speed and travel, with a path guard and final segment clip. WA-156 admits more ordinary resource materials through the existing protected stock receipt and save flow. WA-155 now has a bounded calibration adapter and `/rpg geartrace light`, `lightprobe`, and `lightcal` diagnostics.
+
+Direct compilation against the configured pre-release server JAR succeeded, and **8 spatial adapter tests passed**. The detailed findings and handoff are in [native4-result.md](/C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/native4-result.md).
+
+These IDs are **not yet connected-game verified or enabled**. The main owner has registered the projectile Path systems; WA-155 still needs measured client radius calibration and light-system registration. No Gradle, launches, deployments, commits, or pushes were performed.

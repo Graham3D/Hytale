@@ -1,0 +1,25 @@
+{
+  "revision": "R165",
+  "authored": 160,
+  "functional": 159,
+  "gated": [
+    "WA-155"
+  ],
+  "unsupported": 0,
+  "advancedStatsAffixes": 64,
+  "connectedAcceptance": "USER_TEST_PENDING",
+  "nativeServerStarted": false,
+  "sha256": "2d262a02cd0be5b250d7889e976b78a00c0d839be009a3065b394e52e727d902",
+  "test": {
+    "tests": 3127,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "nativeControlTest": {
+    "tests": 376,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}

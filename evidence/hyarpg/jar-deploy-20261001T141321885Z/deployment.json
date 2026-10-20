@@ -1,0 +1,12 @@
+{
+  "result": "DEPLOYED",
+  "version": "0.2.0-R176",
+  "revision": "R176",
+  "installedJar": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\HyARPG.jar",
+  "sha256": "0E0694365A08B4CF1F678C9E9809F0B66265F9A11ADF791E345A3B1AB64C4EEA",
+  "backupJar": "C:\\Users\\Zemio\\.codex\\worktrees\\hyarpg-separation\\evidence\\hyarpg\\jar-deploy-20261001T141321885Z\\HyARPG-before.jar",
+  "previousSha256": "8C5CD4494E2ED995FC6640B6AF9D032BFB3B1DAEC37016C079EF5804BE0C0D79",
+  "connectedAcceptance": "USER_TEST_PENDING",
+  "nativeServerStarted": false,
+  "saveMigration": false
+}

@@ -1,0 +1,588 @@
+[
+  [
+    "Server/Item/Items/Rune/Ability/Rune_ChainHook.json",
+    {
+      "Slot": "Core",
+      "Cooldown": 6,
+      "Cost": 50,
+      "CostType": "Mana",
+      "AbilityKeywords": [
+        "Damage",
+        "Physical",
+        "Projectile",
+        "Duration"
+      ],
+      "Attributes": {
+        "Duration": 0.8
+      },
+      "Cast": "Root_Ability_ChainHook"
+    }
+  ],
+  [
+    "Server/Item/Items/Rune/Ability/Rune_ChargedShot.json",
+    {
+      "Slot": "Core",
+      "Cooldown": 4,
+      "Cost": 35,
+      "CostType": "Mana",
+      "AbilityKeywords": [
+        "Damage",
+        "Elemental",
+        "Water",
+        "Projectile",
+        "Charged",
+        "Duration"
+      ],
+      "Attributes": {
+        "Duration": 2.0,
+        "FreezeDuration": 1.5,
+        "ShortFreezeDuration": 0.8,
+        "Fork": 3,
+        "SplitChildDamage": 0.35,
+        "SplitChildScale": 0.5,
+        "SplitChildFreezeDuration": 0.02
+      },
+      "Cast": "Root_Ability_ChargedShot"
+    }
+  ],
+  [
+    "Server/Item/Items/Rune/Ability/Rune_Enrage.json",
+    {
+      "Slot": "Core",
+      "Cooldown": 4,
+      "Cost": 45,
+      "CostType": "Mana",
+      "AbilityKeywords": [
+        "Buff",
+        "Duration"
+      ],
+      "Attributes": {
+        "Duration": 8.0
+      },
+      "Cast": "Root_Ability_Enrage"
+    }
+  ],
+  [
+    "Server/Item/Items/Rune/Ability/Rune_Fireball.json",
+    {
+      "Slot": "Core",
+      "Cooldown": 2,
+      "Cost": 30,
+      "CostType": "Mana",
+      "AbilityKeywords": [
+        "Damage",
+        "Elemental",
+        "Fire",
+        "Projectile",
+        "Aoe"
+      ],
+      "Cast": "Root_Ability_Fireball"
+    }
+  ],
+  [
+    "Server/Item/Items/Rune/Ability/Rune_GroundSlam.json",
+    {
+      "Slot": "Core",
+      "Cooldown": 5,
+      "Cost": 40,
+      "CostType": "Mana",
+      "AbilityKeywords": [
+        "Damage",
+        "Elemental",
+        "Earth",
+        "Melee",
+        "Aoe"
+      ],
+      "Cast": "Root_Ability_GroundSlam"
+    }
+  ],
+  [
+    "Server/Item/Items/Rune/Ability/Rune_PoisonImbue.json",
+    {
+      "Slot": "Core",
+      "Cooldown": 4,
+      "Cost": 40,
+      "CostType": "Mana",
+      "AbilityKeywords": [
+        "Buff",
+        "Damage",
+        "Poison",
+        "Duration"
+      ],
+      "Attributes": {
+        "Duration": 6
+      },
+      "Cast": "Root_Ability_PoisonImbue"
+    }
+  ],
+  [
+    "Server/Item/Items/Rune/Ability/Rune_WindStrike.json",
+    {
+      "Slot": "Core",
+      "Cooldown": 2,
+      "Cost": 30,
+      "CostType": "Mana",
+      "AbilityKeywords": [
+        "Buff",
+        "Damage",
+        "Elemental",
+        "Wind",
+        "Aoe",
+        "Duration"
+      ],
+      "Attributes": {
+        "Duration": 8.0
+      },
+      "Cast": "Root_Ability_WindStrike"
+    }
+  ],
+  [
+    "Server/Item/Items/Rune/Ability/_Debug/Debug_Rune_Frostbolt.json",
+    {
+      "Slot": "Core",
+      "Cooldown": 4,
+      "Cost": 20,
+      "CostType": "Mana",
+      "AbilityKeywords": [
+        "Damage",
+        "Elemental",
+        "Water",
+        "Projectile",
+        "Aoe"
+      ],
+      "Cast": "Root_Debug_Ability_Frostbolt"
+    }
+  ],
+  [
+    "Server/Item/Items/Rune/Ability/_Debug/Debug_Rune_Tornado.json",
+    {
+      "Slot": "Core",
+      "Cooldown": 8,
+      "Cost": 15,
+      "CostType": "Mana",
+      "AbilityKeywords": [
+        "Damage",
+        "Elemental",
+        "Wind",
+        "Aoe",
+        "Duration"
+      ],
+      "Attributes": {
+        "Duration": 5.0
+      },
+      "Cast": "Root_Debug_Ability_Tornado"
+    }
+  ],
+  [
+    "Server/Item/Items/Rune/Modifier/Rune_Aoe_Up.json",
+    {
+      "Slot": "Support",
+      "RequiresAnyAbilityKeyword": [
+        "Aoe"
+      ],
+      "AttributeModifiers": {
+        "ProjectileSize": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 2.5
+          }
+        ],
+        "AoeScale": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 1.6
+          }
+        ],
+        "Damage": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 1.4
+          }
+        ],
+        "Speed": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 0.5
+          }
+        ],
+        "Cost": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 1.6
+          }
+        ]
+      }
+    }
+  ],
+  [
+    "Server/Item/Items/Rune/Modifier/Rune_Convert_Lightning.json",
+    {
+      "Slot": "Support",
+      "RequiresAnyAbilityKeyword": [
+        "Elemental"
+      ],
+      "ConvertElement": "Lightning"
+    }
+  ],
+  [
+    "Server/Item/Items/Rune/Modifier/Rune_Convert_Wind.json",
+    {
+      "Slot": "Support",
+      "RequiresAnyAbilityKeyword": [
+        "Elemental"
+      ],
+      "ConvertElement": "Wind"
+    }
+  ],
+  [
+    "Server/Item/Items/Rune/Modifier/Rune_Damage_Up.json",
+    {
+      "Slot": "Support",
+      "RequiresAnyAbilityKeyword": [
+        "Damage"
+      ],
+      "AttributeModifiers": {
+        "Damage": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 1.5
+          }
+        ]
+      }
+    }
+  ],
+  [
+    "Server/Item/Items/Rune/Modifier/Rune_Duration_Up.json",
+    {
+      "Slot": "Support",
+      "RequiresAnyAbilityKeyword": [
+        "Buff"
+      ],
+      "AttributeModifiers": {
+        "Duration": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 1.5
+          }
+        ],
+        "Cost": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 1.3
+          }
+        ],
+        "Cooldown": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 1.6
+          }
+        ]
+      }
+    }
+  ],
+  [
+    "Server/Item/Items/Rune/Modifier/Rune_Fork.json",
+    {
+      "Slot": "Support",
+      "RequiresAnyAbilityKeyword": [
+        "Projectile"
+      ],
+      "AttributeModifiers": {
+        "SplitChildDamage": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 0.7
+          }
+        ],
+        "SplitChildScale": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 0.7
+          }
+        ],
+        "SplitChildAoeScale": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 0.7
+          }
+        ],
+        "Cooldown": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 1.2
+          }
+        ],
+        "Fork": [
+          {
+            "CalculationType": "Additive",
+            "Amount": 2
+          }
+        ],
+        "Cost": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 1.25
+          }
+        ]
+      }
+    }
+  ],
+  [
+    "Server/Item/Items/Rune/Modifier/Rune_Quickening.json",
+    {
+      "Slot": "Support",
+      "RequiresAnyAbilityKeyword": [
+        "Aoe",
+        "Buff"
+      ],
+      "AttributeModifiers": {
+        "Cooldown": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 0.7
+          }
+        ],
+        "Speed": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 1.4
+          }
+        ],
+        "Damage": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 0.75
+          }
+        ],
+        "Cost": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 0.8
+          }
+        ],
+        "Duration": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 0.8
+          }
+        ]
+      }
+    }
+  ],
+  [
+    "Server/Item/Items/Rune/Modifier/Rune_Rend.json",
+    {
+      "Slot": "Support",
+      "RequiresAnyAbilityKeyword": [
+        "Damage"
+      ],
+      "ExcludesAnyAbilityKeyword": [
+        "Poison"
+      ],
+      "AttributeModifiers": {
+        "Damage": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 0.8
+          }
+        ],
+        "Cooldown": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 1.25
+          }
+        ],
+        "Cost": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 1.2
+          }
+        ]
+      },
+      "OnHitEffects": [
+        "Rend"
+      ]
+    }
+  ],
+  [
+    "Server/Item/Items/Rune/Modifier/Rune_Ricochet.json",
+    {
+      "Slot": "Support",
+      "RequiresAnyAbilityKeyword": [
+        "Projectile"
+      ],
+      "AttributeModifiers": {
+        "Speed": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 1.4
+          }
+        ],
+        "SplitChildDamage": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 0.8
+          }
+        ],
+        "Cooldown": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 1.3
+          }
+        ],
+        "Ricochet": [
+          {
+            "CalculationType": "Additive",
+            "Amount": 2
+          }
+        ],
+        "Cost": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 1.25
+          }
+        ]
+      }
+    }
+  ],
+  [
+    "Server/Item/Items/Rune/Modifier/Rune_Thrift.json",
+    {
+      "Slot": "Support",
+      "AttributeModifiers": {
+        "Damage": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 0.8
+          }
+        ],
+        "Cost": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 0.75
+          }
+        ]
+      }
+    }
+  ],
+  [
+    "Server/Item/Items/Rune/Modifier/Rune_Wither.json",
+    {
+      "Slot": "Support",
+      "RequiresAnyAbilityKeyword": [
+        "Damage"
+      ],
+      "ExcludesAnyAbilityKeyword": [
+        "Poison"
+      ],
+      "AttributeModifiers": {
+        "Damage": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 0.7
+          }
+        ],
+        "Cooldown": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 1.3
+          }
+        ],
+        "Cost": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 1.2
+          }
+        ]
+      },
+      "OnHitEffects": [
+        "Wither"
+      ]
+    }
+  ],
+  [
+    "Server/Item/Items/Rune/Modifier/_Debug/Debug_Rune_Burning.json",
+    {
+      "Slot": "Support",
+      "RequiresAnyAbilityKeyword": [
+        "Damage"
+      ],
+      "OnHitEffects": [
+        "Burn"
+      ]
+    }
+  ],
+  [
+    "Server/Item/Items/Rune/Modifier/_Debug/Debug_Rune_Fork.json",
+    {
+      "Slot": "Support",
+      "RequiresAnyAbilityKeyword": [
+        "Projectile"
+      ],
+      "AttributeModifiers": {
+        "Fork": [
+          {
+            "CalculationType": "Additive",
+            "Amount": 2
+          }
+        ],
+        "SplitChildDamage": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 0.5
+          }
+        ],
+        "SplitChildScale": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 0.5
+          }
+        ]
+      }
+    }
+  ],
+  [
+    "Server/Item/Items/Rune/Modifier/_Debug/Debug_Rune_Speed.json",
+    {
+      "Slot": "Support",
+      "AttributeModifiers": {
+        "Speed": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 0.35
+          }
+        ],
+        "AoeScale": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 3
+          }
+        ],
+        "ProjectileSize": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 2
+          }
+        ],
+        "Cost": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 0.5
+          }
+        ],
+        "Cooldown": [
+          {
+            "CalculationType": "Multiplicative",
+            "Amount": 0.5
+          }
+        ]
+      }
+    }
+  ],
+  [
+    "Server/Item/Items/Rune/Modifier/_Debug/Debug_Rune_Test.json",
+    {
+      "Slot": "Support"
+    }
+  ]
+]

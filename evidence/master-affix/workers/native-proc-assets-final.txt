@@ -1,0 +1,5 @@
+Completed baseline proc metadata for managed gear damage leaves, including carriers that use stock actions without a WA-008, WA-014, or WA-141 variant. The pinned asset audit verifies **4,181 leaves across 2,040 carriers**; Shortbow Volley’s 106 leaves use a one third coefficient, and the remaining 4,075 use 1.0. The [carrier generator](/C:/Users/Zemio/.codex/worktrees/hyarpg-separation/tools/Complete-NativeGearCarriers.ps1) now preserves the metadata on regeneration.
+
+Added the [offline author and audit tool](/C:/Users/Zemio/.codex/worktrees/hyarpg-separation/tools/New-NativeProcMetadata.py), [asset metadata tests](/C:/Users/Zemio/.codex/worktrees/hyarpg-separation/src/test/java/com/inigmasgames/hytalerpg/gear/NativeAffixProcAssetMetadataTest.java), and [evidence report](/C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/native-proc-assets-result.md).
+
+The offline metadata audit, carrier generator verification, Python syntax check, and `git diff --check` passed. **JUnit was added but not run**, as requested by the no-Gradle boundary.

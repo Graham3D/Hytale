@@ -1,0 +1,5 @@
+Implemented the remaining offline owner evidence for **WA-113, WA-114, WA-115, WA-116, and WA-118**. The tests now measure a submitted native damage amount, native Health maximum with preserved deficit, the summon damage filter’s `setAmount` result, and a decoded Pursuit effect installed in `EffectControllerComponent`.
+
+Direct `javac` compilation succeeded; the focused offline test run passed **7/7**. I did not run Gradle or a server. Live victim HP and world ticking remain outside this offline proof.
+
+Methods, controls, and limits are recorded in [summon-final-owner-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/summon-final-owner-result.md).

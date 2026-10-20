@@ -1,0 +1,5 @@
+Implemented consumer evidence for **WA-121–133 and WA-144–150** across the rank, child, and aura tests, plus [BorrowedSkillOwnerTest.java](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/src/test/java/com/inigmasgames/hytalerpg/BorrowedSkillOwnerTest.java). The exact ID-to-method handoff is in [item-final-owner-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/workers/item-final-owner-result.md).
+
+Direct `javac` compilation passed, and a focused runner reported **13 tests passed, 0 failed**. No Gradle or production-system edits were made. The tests measure offline owner results; native projectile impact and final target HP remain connected-game QA.
+
+Automatic command review blocked deletion of 16 temporary `javac` classes, including a path-checked cleanup attempt. They remain in [item-owner-classes](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/item-owner-classes/).

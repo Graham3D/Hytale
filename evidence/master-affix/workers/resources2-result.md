@@ -1,0 +1,38 @@
+# Resources continuation: native hook checklist
+
+Status: partial. This checkout has concurrent workers. No Gradle, native server, game launch, deployment, commit, or push was run. The production `GearAffixRuntime.ENABLED` gate remains in place. Controlled snapshots in tests exercise consumers only; they do not prove native equipment admission or connected gameplay.
+
+## Files in this continuation
+
+- `execution/SkillExecutionService.java`: retains the accepted effective rank at commit after wind-up instead of re-reading live gear.
+- `execution/GearSkillRanks.java`: explicit WATER and martial selector rosters for the canonical authored skills; existing rarity/ilvl gates and source roll checks remain.
+- `execution/hytale/HytaleSkillExecutionSystem.java`: routes directly authored periodic status packages and Bleed proc packages through `GearStatusRuntime.applyPeriodic` with their accepted snapshot; keeps Proliferation's already resolved package from receiving the bonus twice. Applies WA-068 to the native periodic presentation lifetime. Life Drain's authored heal opts into recipient WA-111 at its actual Health write; generic leech remains separate.
+- `execution/hytale/HytaleSupportSystem.java`: continues to take `GearNativeItems.effects(ref,store).snapshot()` on the registered support tick for passive native regeneration. Its live shield reprojection call is deliberately disconnected pending the controller correction below.
+- `src/test/java/com/inigmasgames/hytalerpg/GearSupportConsumerTest.java`: fixed the extra closing parenthesis; controlled gear now enters the actual skill/support service through the existing `Effects(..., snapshot)` constructor while the production gate stays closed. Added return-capacity assertion to the concurrent WA-105 reprojection test. WA-107/108 run the existing `SkillExecutionService` and `ConnectionRuntime` channel with the canonical resource owner, paid pulse, saturation, and unpaid controls.
+- `src/test/java/com/inigmasgames/hytalerpg/execution/GearResourceConsumerTest.java`: positive/control/negative owner tests for WA-099/100, WA-101/102/107/120 regeneration and resource reserve/commit boundaries.
+- `src/test/java/com/inigmasgames/hytalerpg/execution/GearSkillRanksTest.java`: positive/excluded/empty cases for WA-121–133 plus key rarity and ilvl boundaries, including WATER and martial examples.
+
+Earlier `resources-result.md` lists the other resource/support files changed by this worker. `native-result.md` already belongs to a different worker; this file is the resource/native checklist for this continuation.
+
+## Exact ID state
+
+- Production consumer paths present, pending main compilation and gate admission: WA-009, WA-099–108, WA-110–111, WA-120–133. WA-121–133 use `GearSkillRanks.bonus` only for learned execution profiles. WA-124/129 now match explicit authored rosters rather than generic COLD/PHYSICAL labels.
+- WA-105 **incomplete**: new cast capacity is scaled, but live capacity reprojection is unsafe until `FiniteSupportEffects.reprojectShieldCapacity` is corrected. It currently computes `effect.magnitude / acceptedFactor * currentFactor` after `effect.magnitude` was previously reprojected. Repeated ticks or A→B→A swaps compound/shrink capacity and can refill by mistake. The deterministic test expects original capacity to return with absorbed points still spent. The native tick call must be restored only after that controller preserves unmodified base capacity or current factor per effect. Do not enable WA-105 yet.
+- WA-109 **incomplete**, owned by status2: active valid-channel state must be read from `ConnectionRuntime.channelActive(owner)` when admitting Hard Control, adding WA-109 to the same duration reduction bucket as Recovery. The status owner must wire and test it.
+- WA-112 **incomplete**: production search found no actual cleanse/Ameliorate operation or successful cleanse receipt in Java. The available `StatusService.remove(target,type)` does not itself prove a successful native cleanse. Add one canonical cleanse operation with receipt `(world, root, caster, recipient, removedCount, time)` after removal and native projection; only `removedCount>0` can trigger a 3 second shield of recipient normal MaxHealth × frozen WA-112 %, keyed by caster/recipient for 10 seconds across gear swaps. Use the finite shield controller and test no removal, repeated cleanse at 5 seconds, new cleanse at 10 seconds, expiry and real absorption. No synthetic cleanse was added here.
+- WA-111: direct support heal, friendly Tether heal and Life Drain's authored self heal read valid live recipient gear at their Health writes. A repository search of `setStatValue(Health)` found only these three RPG heal writers; difficulty restore, derived-stat reprojection and `EntityStatResourcePort` are not eligible heals. This is a code audit, not a connected native test.
+- The rank matrix lacks a per-skill accepted scaling proof for every WA-121–133 ID, plus remove/re-equip and UI parity. Current broad selector tests are deterministic but are not a substitute for those production execution tests.
+
+## Native hook checklist for main/owners
+
+1. Keep `HytaleSupportSystem` registered before `PlayerRegenerateStatsSystem`; it installs Mana/Stamina native regeneration decorators from `GearNativeItems.effects(ref,store).snapshot()`. The decorators retain native delay/conditions and only scale positive passive ticks. Keep the current `ENABLED` gate until all consumers pass.
+2. Keep `HytaleSkillExecutionSystem.Port.gearEffects()` backed by `GearNativeItems.effects(actor,store)`. `SkillExecutionService` captures this snapshot at accepted preparation. `Port.itemGrantedSkillLevels` calls `GearSkillRanks.bonus`; the effective rank is now frozen through release. Connect the UI owner's projection to the same `bonus` result for learned skills and `EffectiveSkillLevel.resolveBase`, including base/effective split.
+3. Retain the `GearStatusRuntime.applyPeriodic` calls in the real `HytaleSkillExecutionSystem` periodic producers. Status2 owns canonical status admission and projection; it must ensure accepted valid-equipment source scope and WA-109 channel state. Proliferation must continue copying resolved packages without a second item bonus.
+4. Correct `FiniteSupportEffects.reprojectShieldCapacity` in its owning file, then call it once per `HytaleSupportSystem.tick` after obtaining live valid gear and before support/damage handling. Verify 100/40→120/40 and return 120/40→100/40 over repeated ticks, without expiry reset or reservation changes. The currently added `GearSupportConsumerTest.liveBarrierCapacityReprojectsWithoutRestoringAbsorbedPoints` is expected to expose the controller bug.
+5. Itemskills/status owner must create the actual Ameliorate cleanse and successful receipt before WA-112 can be wired to support. Do not infer a cleanse from a tooltip/operator or from an attempted status removal.
+6. Catalog owner should publish explicit primary `schoolElement` and martial classification in canonical skill profiles to replace the checked ID rosters for WA-124/129. Current roster is tied to the present canonical skills and should fail review if skills are added without classifying them.
+7. Summon owner should exclude a bound source from boosting its own Iron Sentinel forge for WA-131. Itemskills owner should keep item grants separate from learned rank selection. UI owner controls rank display; no UI files were changed here.
+
+## Verification
+
+`git diff --check` on the tracked edited resource files reported no whitespace errors. Tests were edited but not executed; main agent owns Gradle compilation and focused/full tests. No statement of 160 completed affixes or native connected QA is made.

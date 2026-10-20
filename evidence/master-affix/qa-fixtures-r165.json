@@ -1,0 +1,2693 @@
+{
+  "combined": 29,
+  "fixtures": [
+    {
+      "id": "head-magic",
+      "base": "gm.cloth_linen.head.n",
+      "affixes": [
+        "WA-091",
+        "WA-009"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "chest-magic",
+      "base": "gm.cloth_linen.chest.n",
+      "affixes": [
+        "WA-092",
+        "WA-012"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "hands-rare",
+      "base": "gm.cloth_linen.hands.n",
+      "affixes": [
+        "GA-159",
+        "WA-085",
+        "WA-151"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "legs-rare",
+      "base": "gm.cloth_linen.legs.n",
+      "affixes": [
+        "GA-160",
+        "WA-093",
+        "WA-086",
+        "WA-154"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "sword-rare",
+      "base": "gm.sword_copper.n",
+      "affixes": [
+        "WA-001",
+        "WA-157"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "shortbow-rare",
+      "base": "gm.shortbow_copper.n",
+      "affixes": [
+        "WA-002",
+        "WA-158",
+        "WA-088"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "battleaxe-paragon",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-121",
+        "WA-089"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "crossbow-magic",
+      "base": "gm.crossbow_scout.nm",
+      "affixes": [
+        "WA-090"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "mace-magic",
+      "base": "gm.mace_copper.n",
+      "affixes": [
+        "WA-087"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-001-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-001-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-001"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-002-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-002-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-002"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-003-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-003-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-003"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-004-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-004-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-004"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-005-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-005-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-005"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-006-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-006-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-006"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-007-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-007-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-007"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-008-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-008-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-008"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-009-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-009-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-009"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-010-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-010-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-010"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-011-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-011-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-011"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-012-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-012-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-012"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-013-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-013-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-013"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-014-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-014-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-014"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-015-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-015-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-015"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-016-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-016-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-016"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-157-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-157-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-157"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-158-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-158-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-158"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-017-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-017-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-017"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-018-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-018-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-018"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-019-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-019-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-019"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-020-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-020-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-020"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-021-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-021-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-021"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-022-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-022-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-022"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-023-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-023-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-023"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-024-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-024-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-024"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-025-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-025-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-025"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-026-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-026-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-026"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-027-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-027-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-027"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-028-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-028-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-028"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-029-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-029-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-029"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-030-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-030-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-030"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-031-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-031-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-031"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-032-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-032-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-032"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-033-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-033-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-033"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-034-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-034-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-034"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-035-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-035-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-035"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-036-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-036-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-036"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-037-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-037-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-037"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-038-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-038-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-038"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-039-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-039-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-039"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-040-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-040-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-040"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-041-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-041-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-041"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-042-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-042-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-042"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-043-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-043-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-043"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-044-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-044-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-044"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-045-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-045-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-045"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-046-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-046-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-046"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-047-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-047-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-047"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-048-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-048-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-048"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-049-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-049-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-049"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-050-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-050-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-050"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-051-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-051-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-051"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-052-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-052-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-052"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-053-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-053-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-053"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-054-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-054-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-054"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-055-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-055-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-055"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-056-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-056-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-056"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-057-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-057-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-057"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-058-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-058-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-058"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-059-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-059-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-059"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-060-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-060-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-060"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-061-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-061-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-061"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-062-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-062-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-062"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-063-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-063-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-063"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-064-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-064-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-064"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-065-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-065-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-065"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-066-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-066-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-066"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-067-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-067-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-067"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-068-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-068-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-068"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-069-control",
+      "base": "gm.shield_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-069-affixed",
+      "base": "gm.shield_adamantite.h",
+      "affixes": [
+        "WA-069"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-070-control",
+      "base": "gm.shield_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-070-affixed",
+      "base": "gm.shield_adamantite.h",
+      "affixes": [
+        "WA-070"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-071-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-071-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-071"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-072-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-072-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-072"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-073-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-073-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-073"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-074-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-074-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-074"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-075-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-075-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-075"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-076-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-076-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-076"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-077-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-077-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-077"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-078-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-078-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-078"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-079-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-079-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-079"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-080-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-080-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-080"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-081-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-081-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-081"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-082-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-082-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-082"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-083-control",
+      "base": "gm.shield_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-083-affixed",
+      "base": "gm.shield_adamantite.h",
+      "affixes": [
+        "WA-083"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-084-control",
+      "base": "gm.shield_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-084-affixed",
+      "base": "gm.shield_adamantite.h",
+      "affixes": [
+        "WA-084"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-085-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-085-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-085"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-086-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-086-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-086"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-087-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-087-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-087"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-088-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-088-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-088"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-089-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-089-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-089"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-090-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-090-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-090"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-091-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-091-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-091"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-092-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-092-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-092"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-093-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-093-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-093"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-094-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-094-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-094"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-095-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-095-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-095"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-096-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-096-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-096"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-097-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-097-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-097"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-098-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-098-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-098"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-099-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-099-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-099"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-100-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-100-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-100"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-101-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-101-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-101"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-102-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-102-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-102"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-103-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-103-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-103"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-104-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-104-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-104"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-105-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-105-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-105"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-106-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-106-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-106"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-107-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-107-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-107"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-108-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-108-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-108"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-109-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-109-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-109"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-110-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-110-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-110"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-111-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-111-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-111"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-112-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-112-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-112"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-113-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-113-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-113"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-114-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-114-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-114"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-115-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-115-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-115"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-116-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-116-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-116"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-117-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-117-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-117"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-118-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-118-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-118"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-119-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-119-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-119"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-120-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-120-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-120"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-121-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-121-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-121"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-122-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-122-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-122"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-123-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-123-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-123"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-124-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-124-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-124"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-125-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-125-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-125"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-126-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-126-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-126"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-127-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-127-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-127"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-128-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-128-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-128"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-129-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-129-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-129"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-130-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-130-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-130"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-131-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-131-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-131"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-132-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-132-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-132"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-133-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-133-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-133"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-134-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-134-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-134"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-135-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-135-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-135"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-136-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-136-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-136"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-137-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-137-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-137"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-138-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-138-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-138"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-139-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-139-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-139"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-140-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-140-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-140"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-141-control",
+      "base": "gm.daggers_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-141-affixed",
+      "base": "gm.daggers_adamantite.h",
+      "affixes": [
+        "WA-141"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-142-control",
+      "base": "gm.shield_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-142-affixed",
+      "base": "gm.shield_adamantite.h",
+      "affixes": [
+        "WA-142"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-143-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-143-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-143"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-144-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-144-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-144"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-145-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-145-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-145"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-146-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-146-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-146"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-147-control",
+      "base": "gm.book_apprentice.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-147-affixed",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-147"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-148-control",
+      "base": "gm.book_binder.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-148-affixed",
+      "base": "gm.book_binder.h",
+      "affixes": [
+        "WA-148"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-149-control",
+      "base": "gm.book_binder.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-149-affixed",
+      "base": "gm.book_binder.h",
+      "affixes": [
+        "WA-149"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-150-control",
+      "base": "gm.book_binder.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-150-affixed",
+      "base": "gm.book_binder.h",
+      "affixes": [
+        "WA-150"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-151-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-151-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-151"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-152-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-152-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-152"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-153-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-153-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-153"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-154-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-154-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-154"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-155-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": false
+    },
+    {
+      "id": "ab-wa-155-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-155"
+      ],
+      "spawnable": false
+    },
+    {
+      "id": "ab-wa-156-control",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-wa-156-affixed",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-156"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-ga-159-control",
+      "base": "gm.cloth_cinder.chest.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-ga-159-affixed",
+      "base": "gm.cloth_cinder.chest.h",
+      "affixes": [
+        "GA-159"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "ab-ga-160-control",
+      "base": "gm.cloth_cinder.chest.h",
+      "affixes": [],
+      "spawnable": true
+    },
+    {
+      "id": "ab-ga-160-affixed",
+      "base": "gm.cloth_cinder.chest.h",
+      "affixes": [
+        "GA-160"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-battleaxe-adamantite-h-1",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-001",
+        "WA-002",
+        "WA-005",
+        "WA-006",
+        "WA-007",
+        "WA-008",
+        "WA-010",
+        "WA-011",
+        "WA-012",
+        "WA-013"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-battleaxe-adamantite-h-2",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-014",
+        "WA-157",
+        "WA-158",
+        "WA-017",
+        "WA-023",
+        "WA-029",
+        "WA-035",
+        "WA-041",
+        "WA-053",
+        "WA-064"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-battleaxe-adamantite-h-3",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-018",
+        "WA-024",
+        "WA-030",
+        "WA-036",
+        "WA-043",
+        "WA-054",
+        "WA-065",
+        "WA-068",
+        "WA-071",
+        "WA-072"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-battleaxe-adamantite-h-4",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-019",
+        "WA-025",
+        "WA-031",
+        "WA-037",
+        "WA-044",
+        "WA-055",
+        "WA-066",
+        "WA-073",
+        "WA-074",
+        "WA-075"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-battleaxe-adamantite-h-5",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-020",
+        "WA-026",
+        "WA-032",
+        "WA-038",
+        "WA-045",
+        "WA-056",
+        "WA-067",
+        "WA-076",
+        "WA-077",
+        "WA-079"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-battleaxe-adamantite-h-6",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-021",
+        "WA-027",
+        "WA-033",
+        "WA-039",
+        "WA-046",
+        "WA-057",
+        "WA-080",
+        "WA-081",
+        "WA-082",
+        "WA-085"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-battleaxe-adamantite-h-7",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-022",
+        "WA-028",
+        "WA-034",
+        "WA-040",
+        "WA-047",
+        "WA-058",
+        "WA-086",
+        "WA-091",
+        "WA-092",
+        "WA-093"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-battleaxe-adamantite-h-8",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-048",
+        "WA-059",
+        "WA-087",
+        "WA-094",
+        "WA-095",
+        "WA-096",
+        "WA-097",
+        "WA-098",
+        "WA-099",
+        "WA-100"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-battleaxe-adamantite-h-9",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-049",
+        "WA-060",
+        "WA-088",
+        "WA-102",
+        "WA-111",
+        "WA-121",
+        "WA-135",
+        "WA-136",
+        "WA-137",
+        "WA-138"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-battleaxe-adamantite-h-10",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-050",
+        "WA-061",
+        "WA-089",
+        "WA-122",
+        "WA-139",
+        "WA-140",
+        "WA-143",
+        "WA-144",
+        "WA-145",
+        "WA-151"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-battleaxe-adamantite-h-11",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-051",
+        "WA-062",
+        "WA-090",
+        "WA-123",
+        "WA-146",
+        "WA-152",
+        "WA-153",
+        "WA-154",
+        "WA-156"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-battleaxe-adamantite-h-12",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-052",
+        "WA-063",
+        "WA-124"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-battleaxe-adamantite-h-13",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-125",
+        "WA-134"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-battleaxe-adamantite-h-14",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-126"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-battleaxe-adamantite-h-15",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-127"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-battleaxe-adamantite-h-16",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-128"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-battleaxe-adamantite-h-17",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-129"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-battleaxe-adamantite-h-18",
+      "base": "gm.battleaxe_adamantite.h",
+      "affixes": [
+        "WA-132"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-book-apprentice-h-1",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-003",
+        "WA-004",
+        "WA-009",
+        "WA-015",
+        "WA-016",
+        "WA-042",
+        "WA-078",
+        "WA-101",
+        "WA-103",
+        "WA-104"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-book-apprentice-h-2",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-105",
+        "WA-106",
+        "WA-107",
+        "WA-108",
+        "WA-109",
+        "WA-110",
+        "WA-112",
+        "WA-113",
+        "WA-114",
+        "WA-115"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-book-apprentice-h-3",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-116",
+        "WA-117",
+        "WA-118",
+        "WA-119",
+        "WA-120",
+        "WA-130",
+        "WA-147"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-book-apprentice-h-4",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-131"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-book-apprentice-h-5",
+      "base": "gm.book_apprentice.h",
+      "affixes": [
+        "WA-133"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-shield-adamantite-h-1",
+      "base": "gm.shield_adamantite.h",
+      "affixes": [
+        "WA-069",
+        "WA-070",
+        "WA-083",
+        "WA-084",
+        "WA-142"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-daggers-adamantite-h-1",
+      "base": "gm.daggers_adamantite.h",
+      "affixes": [
+        "WA-141"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-book-binder-h-1",
+      "base": "gm.book_binder.h",
+      "affixes": [
+        "WA-148"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-book-binder-h-2",
+      "base": "gm.book_binder.h",
+      "affixes": [
+        "WA-149"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-book-binder-h-3",
+      "base": "gm.book_binder.h",
+      "affixes": [
+        "WA-150"
+      ],
+      "spawnable": true
+    },
+    {
+      "id": "combo-cloth-cinder-chest-h-1",
+      "base": "gm.cloth_cinder.chest.h",
+      "affixes": [
+        "GA-159",
+        "GA-160"
+      ],
+      "spawnable": true
+    }
+  ],
+  "pairs": 160,
+  "total": 358,
+  "spawnable": 356
+}

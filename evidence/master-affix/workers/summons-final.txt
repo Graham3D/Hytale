@@ -1,0 +1,5 @@
+Implemented the summon lease snapshot path and native consumers for WA-113, WA-114, WA-116, WA-118, and WA-119. D12 classification now matches all 160 cards. WA-117 has a lease attack interval change, but native archer firing timing is still missing; WA-115 has no summon Defense adapter. WA-120 is in the resource owner’s path.
+
+**This scope is unfinished.** The new minion IDs remain gated, and 85 compatible Sentinel source effects still lack adapters. I did not run Gradle, as instructed. Asset validation and `git diff --check` passed.
+
+The changed files, tests, exact native hooks, and cross-owner work are recorded in [summons-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/summons-result.md).

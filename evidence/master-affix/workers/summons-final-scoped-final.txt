@@ -1,0 +1,5 @@
+The Iron Sentinel implementation is in place for **101 of 104 compatible affix families**. Its native NPC now executes queued rank-one Fire Bolt, Frost Bolt, and Minor Heal children from the exact bound item. Fire Bolt’s Burn and Frost Bolt’s Chill use the existing status owners. Recipient effects use the live Sentinel lease, and the duplicate critical reduction was removed.
+
+**Three families remain forge-gated:** WA-083 and WA-147 need a real native guard that the audited Sentinel does not have; WA-141 needs two distinct dagger items, while the Sentinel binds one. I did not invent either source. Main still owns capability enabling and connected qualification.
+
+Direct `javac` succeeded; **18 focused tests passed**. No Gradle, server, game, authentication, agent, commit, or push was run. Details are in [summons-final-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/summons-final-result.md).

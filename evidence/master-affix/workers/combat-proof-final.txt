@@ -1,0 +1,3 @@
+Added [12 gameplay simulator tests](/C:/Users/Zemio/.codex/worktrees/hyarpg-separation/src/test/java/com/inigmasgames/hytalerpg/gear/MasterAffixCombatCompletionTest.java) using mapped legal carriers, same-base unrolled controls, and current combat, status, and signature consumers. Direct `javac` succeeded; **12/12 focused JUnit tests passed**.
+
+The [per-ID handoff](/C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/combat-proof-result.md) names each method and its proof boundary. Actual native defense HP loss and a connected WA-141 selector/Gather contact remain unproven, so those fields should stay open.

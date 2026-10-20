@@ -1,0 +1,22 @@
+[
+  {
+    "path": "Server/NPC/Roles/Intelligent/Faction/Trork/Trork_Warrior.json",
+    "nativeSha256": "cb1d4223bd75cded0f2c25b5b8167076413dc04f9130d4a3353a1a40938b3e73"
+  },
+  {
+    "path": "Server/NPC/Roles/Void/Larva_Void.json",
+    "nativeSha256": "a573e8ebafca701f5d4a89bd4f6d334bbaeb70909dad1530e221f4236589bb4d"
+  },
+  {
+    "path": "Server/NPC/Roles/_Core/Templates/Template_Predator.json",
+    "nativeSha256": "c7fb6f17a96e0dd674e27fab416ef56c970a072d468f29fbed5b3f0de4800736"
+  },
+  {
+    "path": "Server/NPC/Roles/Intelligent/Faction/Trork/Templates/Template_Trork_Melee.json",
+    "nativeSha256": "e1d5246db747deb0778b23e9c5cf85a6c7c131d5f770ee9b6f9e111f8e79bfd5"
+  },
+  {
+    "path": "Server/NPC/Roles/Intelligent/Faction/Trork/Components/Component_Instruction_Attack_Sequence_Trork_Warrior.json",
+    "nativeSha256": "b421a14c9e296a4edc7694c35336753390bf1995e923528f09dae6b1a03470da"
+  }
+]

@@ -1,0 +1,3 @@
+I added WA-083 guard-source attribution for active hotbar and utility guard chains, plus WA-153 pre-debit replacement systems for the installed armor and attacker damage writers. The new tests cover positive, control, and negative adapter cases, but **they have not been run**; I did not run Gradle.
+
+Neither ID is complete or enabled. The main agent must register the systems, replace the two native durability writers atomically, verify the new shield path, and run ECS and connected tests. The exact hooks and remaining boundaries are in [durability-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/durability-result.md).

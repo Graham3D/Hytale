@@ -1,0 +1,31 @@
+{
+  "result": "PASS",
+  "patch": "0.7.0-pre.5",
+  "baselineRevision": "R176",
+  "baselineJarSha256": "0e0694365a08b4cf1f678c9e9809f0b66265f9a11adf791e345a3b1ab64c4eea",
+  "jsonAssetsChecked": 4556,
+  "serverAssetCounts": {
+    "Drops/Core": 3,
+    "Drops/Furniture": 1,
+    "Entity/Beams": 3,
+    "Entity/Damage": 5,
+    "Entity/Effects": 975,
+    "Entity/Stats": 2,
+    "Item/Animations": 215,
+    "Item/Interactions": 289,
+    "Item/Items": 2197,
+    "Item/Qualities": 6,
+    "Item/Recipes": 1,
+    "Item/RootInteractions": 235,
+    "Models/Projectiles": 22,
+    "Models/RPG": 31,
+    "NPC/Roles": 219,
+    "Prefabs/Testing": 1,
+    "ProjectileConfigs/RPG": 48
+  },
+  "referencesChecked": 40440,
+  "failures": [],
+  "nativeServerStarted": false,
+  "saveMigration": false,
+  "connectedAcceptance": "USER_TEST_PENDING"
+}

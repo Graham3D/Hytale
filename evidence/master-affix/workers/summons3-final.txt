@@ -1,0 +1,5 @@
+I implemented the schema-3 Sentinel forge handoff and replaced the Physical-only direct attack with native channel submissions from a frozen bound-item hit. I added file-restart, source-exclusion, equipment-swap, Health-projection, and native witness tests. The tests were **not run** because this worker was instructed not to run Gradle; `git diff --check` passed.
+
+The scope remains **incomplete**. Main-owned post-Apply observer registration is needed for proc, status, and recovery callbacks. WA-115 still lacks a positive armored ordinary-summon path, WA-117 lacks native NPC timing variants, and the D08 item Aura lifecycle helper does not yet exist. I left the ENABLED and ADAPTED gates unchanged and make no 160-complete claim.
+
+Changed files, exact wiring instructions, and remaining boundaries are in [summons3-result.md](</C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/summons3-result.md>).

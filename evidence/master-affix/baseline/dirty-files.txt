@@ -1,0 +1,87 @@
+ M build.gradle
+ M canvas-ui/src/main/java/com/inigmasgames/canvasui/CanvasUI.java
+ M canvas-ui/src/main/java/com/inigmasgames/canvasui/rendering/CanvasPage.java
+ M canvas-ui/src/main/java/com/inigmasgames/canvasui/runtime/CanvasSession.java
+ M docs/COMMANDS.md
+ M gradle.properties
+ M src/main/java/com/inigmasgames/hytalerpg/commands/RpgGearCommand.java
+ M src/main/java/com/inigmasgames/hytalerpg/diagnostics/BoundedTraceWriter.java
+ M src/main/java/com/inigmasgames/hytalerpg/gear/GearDropGenerator.java
+ M src/main/java/com/inigmasgames/hytalerpg/gear/GearLootService.java
+ M src/main/java/com/inigmasgames/hytalerpg/gear/GearQuality.java
+ M src/main/java/com/inigmasgames/hytalerpg/gear/GearRarity.java
+ M src/main/java/com/inigmasgames/hytalerpg/gear/GearRequirements.java
+ M src/main/java/com/inigmasgames/hytalerpg/gear/HytaleGearLoot.java
+ M src/main/java/com/inigmasgames/hytalerpg/gear/ManagedGearDamageInteraction.java
+ M src/main/java/com/inigmasgames/hytalerpg/ui/inventory/AdvancedStatsViewModel.java
+ M src/main/java/com/inigmasgames/hytalerpg/ui/inventory/InventoryProbeBag.java
+ M src/main/java/com/inigmasgames/hytalerpg/ui/inventory/InventoryProbePage.java
+ M src/main/java/com/inigmasgames/hytalerpg/ui/inventory/NativeGearTargetGrid.java
+ M src/main/java/com/inigmasgames/hytalerpg/ui/inventory/NativeInventoryEntryProbe.java
+ M src/main/java/com/inigmasgames/hytalerpg/ui/inventory/SpatialBagAggregate.java
+ M src/main/java/com/inigmasgames/hytalerpg/ui/inventory/SpatialBagComponent.java
+ M src/main/java/com/inigmasgames/hytalerpg/ui/inventory/SpatialInventoryTransferCoordinator.java
+ M src/main/java/com/inigmasgames/hywind/HyArpgPlugin.java
+ M src/main/resources/Common/UI/Custom/RpgInventoryProbe.ui
+ M src/main/resources/Server/Item/Qualities/RPG_Gear_RandomRare.json
+ M src/main/resources/Server/Item/Qualities/RPG_Gear_Rare.json
+ M src/main/resources/Server/Languages/en-US/server.lang
+ M src/test/java/com/inigmasgames/hytalerpg/gear/GearTransactionsTest.java
+ M src/test/java/com/inigmasgames/hytalerpg/ui/inventory/InventoryProbeBagTest.java
+ M src/test/java/com/inigmasgames/hytalerpg/ui/inventory/NativeGearTargetGridTest.java
+ M src/test/java/com/inigmasgames/hytalerpg/ui/inventory/SpatialBagAggregateTest.java
+ M tools/Test-HyArpgPackage.ps1
+?? bow-texture-inspect.png
+?? canvas-ui/src/main/java/com/inigmasgames/canvasui/api/CanvasInteractionObserver.java
+?? docs/GEAR_AFFIX_QA_COVERAGE.md
+?? docs/GEAR_AFFIX_RUNTIME_AUDIT.csv
+?? docs/GEAR_AFFIX_RUNTIME_AUDIT.md
+?? docs/MASTER_AFFIX_RUNTIME_TASK.md
+?? docs/Master_Affix_v1.0.md
+?? evidence/hyarpg/jar-deploy-20260929T012802508Z/
+?? evidence/hyarpg/jar-deploy-20260929T014238884Z/
+?? evidence/hyarpg/jar-deploy-20260929T014817191Z/
+?? evidence/hyarpg/jar-deploy-20260929T134940710Z/
+?? evidence/hyarpg/jar-deploy-20260929T162500105Z/
+?? evidence/hyarpg/jar-deploy-20260929T170412788Z/
+?? evidence/hyarpg/jar-deploy-20260929T174458781Z/
+?? evidence/hyarpg/jar-deploy-20260930T000141489Z/
+?? evidence/hyarpg/jar-deploy-20260930T000728576Z/
+?? evidence/hyarpg/jar-deploy-20260930T010733776Z/
+?? evidence/hyarpg/jar-deploy-20260930T012011069Z/
+?? evidence/hyarpg/jar-deploy-20260930T013458954Z/
+?? evidence/hyarpg/jar-deploy-20260930T020809308Z/
+?? evidence/hyarpg/jar-deploy-20260930T022345460Z/
+?? evidence/hyarpg/jar-deploy-20260930T030012685Z/
+?? evidence/hyarpg/jar-deploy-20260930T133435414Z/
+?? evidence/hyarpg/jar-deploy-20260930T152907065Z/
+?? evidence/hyarpg/jar-deploy-20260930T160005511Z/
+?? evidence/hyarpg/jar-deploy-20260930T164212452Z/
+?? evidence/hyarpg/jar-deploy-20260930T170323669Z/
+?? evidence/hyarpg/jar-deploy-20260930T172134949Z/
+?? evidence/hyarpg/jar-deploy-20260930T175556154Z/
+?? evidence/hyarpg/jar-deploy-20260930T185144117Z/
+?? evidence/icon-pose-debug/
+?? src/main/java/com/inigmasgames/hytalerpg/commands/RpgGearTraceCommand.java
+?? src/main/java/com/inigmasgames/hytalerpg/commands/RpgNativeDropTraceCommand.java
+?? src/main/java/com/inigmasgames/hytalerpg/commands/RpgUiTraceCommand.java
+?? src/main/java/com/inigmasgames/hytalerpg/gear/GearAffixQaSuite.java
+?? src/main/java/com/inigmasgames/hytalerpg/gear/GearQaTrace.java
+?? src/main/java/com/inigmasgames/hytalerpg/ui/inventory/NativeInventoryDropTraceProbe.java
+?? src/main/java/com/inigmasgames/hytalerpg/ui/inventory/NativeOutsideDropTarget.java
+?? src/main/java/com/inigmasgames/hytalerpg/ui/inventory/WeaponArtCatalog.java
+?? src/main/java/com/inigmasgames/hytalerpg/ui/trace/UiInteractionTrace.java
+?? src/main/resources/Common/UI/Custom/Icons/Hytale/ContainerHeaderNoRunes@2x.png
+?? src/main/resources/Common/UI/Custom/Icons/RPG/WeaponArt/
+?? src/main/resources/Common/UI/Custom/InventoryDropTargets/
+?? src/main/resources/rpg/gear/affix-qa-coverage-v1.json
+?? src/main/resources/rpg/gear/affix-qa-fixtures-v1.json
+?? src/main/resources/rpg/inventory/weapon-art-v1.json
+?? src/test/java/com/inigmasgames/hytalerpg/gear/GearAffixQaSuiteTest.java
+?? src/test/java/com/inigmasgames/hytalerpg/gear/GearQaTraceTest.java
+?? src/test/java/com/inigmasgames/hytalerpg/gear/GearRequirementFeedbackTest.java
+?? src/test/java/com/inigmasgames/hytalerpg/ui/inventory/NativeInventoryDropTraceProbeTest.java
+?? src/test/java/com/inigmasgames/hytalerpg/ui/trace/
+?? tools/Audit-GearAffixes.py
+?? tools/Import-WeaponArt.py
+?? tools/__pycache__/

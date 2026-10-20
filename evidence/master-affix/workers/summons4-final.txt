@@ -1,0 +1,3 @@
+Implemented the scoped summon work: WA-115 now reads native NPC protection at spawn, WA-117 has 209 archer action and animation variants plus a rate matched Sentinel swing, and the bound item Aura lifecycle has spawn, tick, and teardown calls ready for main to wire. The Sentinel forge gate now admits 25 directly consumed elemental affix IDs.
+
+Offline compilation passed, as did 8 focused JUnit tests and generated asset checks. **Full runtime completion remains open:** main must connect the Aura recipient observers, run Gradle and native QA, and resolve WA-120’s Simulacrum full-pool contract before enabling those gates. Details and exact wiring are in [summons4-result.md](/C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/summons4-result.md).

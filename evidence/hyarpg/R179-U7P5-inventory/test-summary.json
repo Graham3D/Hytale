@@ -1,0 +1,30 @@
+[
+  {
+    "suite": "build/test-results/test",
+    "tests": 3152,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "build/test-results/nativeControlTest",
+    "tests": 394,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "canvas-ui/build/test-results/test",
+    "tests": 49,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  {
+    "suite": "hytale-taverns/build/test-results/test",
+    "tests": 5,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+]

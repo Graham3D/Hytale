@@ -1,0 +1,5 @@
+I added canonical status package and Chill operations, a capped recovery queue, and a native before/after HP receipt hook. I also wrote deterministic tests against the existing status owners and the recovery queue.
+
+**This worker scope is unfinished.** The receipt hook is not registered, Health payout still needs the existing healing owner, and the remaining control and special proc IDs need the native seams listed in [status-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/status-result.md). No IDs are claimed fully production functional; the capability gate remains in place.
+
+I did not run Gradle or the tests, as instructed.

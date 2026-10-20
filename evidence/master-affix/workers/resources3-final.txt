@@ -1,0 +1,5 @@
+Implemented the assigned Master Affix paths: WA-105 shield capacity now survives repeated equip and unequip without refilling; WA-108’s paid channel ramp reaches the damage and healing modifier buckets; and WA-112 creates a timed shield only after a successful Ameliorate cleanse. All 13 WA-121–133 rank selectors now have learned skill execution positive, control, and negative tests, plus a shared UI rank projection accessor.
+
+Ameliorate was absent from the checkout, so I added its catalog profile and assets. Its new cost, range, cooldown, and proposed acquisition source need owner review. Focused compilation passed, as did the scoped test runs (91/91, 121/121, 6/6, 9/9, and 1/1). **The capability gate remains closed.** I ran no Gradle build or connected QA.
+
+Full changes and evidence are in [resources3-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/resources3-result.md). Automatic command review rejected recursive removal of my temporary `resources3-classes` output, which remains in that evidence folder.

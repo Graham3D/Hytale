@@ -1,0 +1,3 @@
+Implemented on-demand native action variants for the audited melee, ranged, focus, and bomb primary graphs, plus the conditional dagger Utility carrier and per-leaf proc metadata. Direct compilation succeeded; **21 focused tests passed**. [Full evidence and cross-owner wiring](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/actions3-result.md).
+
+**WA-008, WA-014, and WA-141 remain partial.** Native asset loading, connected client/server timing and contact, and the listed carrier and proc boundaries still need verification. The affix gate remains unchanged; I do not claim these IDs or the 160-affix task complete.

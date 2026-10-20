@@ -1,0 +1,13 @@
+{
+  "result": "PASS",
+  "jar": "C:\\Users\\Zemio\\.codex\\worktrees\\hyarpg-separation\\build\\libs\\HyARPG.jar",
+  "sha256": "5CA78FFC6A6307629F1862D8E69C30636BD1007FCDBB4AACD19D318753F61F0A",
+  "bytes": 17472384,
+  "entries": 18411,
+  "classes": 1756,
+  "tavernClasses": 90,
+  "ability4Assets": 75,
+  "manifest": "InigmasGames:HyARPG@0.2.0-R195-U7P5",
+  "revision": "R195-U7P5",
+  "immersivePayloadEntries": 0
+}

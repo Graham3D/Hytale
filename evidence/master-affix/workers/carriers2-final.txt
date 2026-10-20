@@ -1,0 +1,5 @@
+Implemented managed focus, shield, and durable bomb carrier interactions and generated their production asset graphs. Focus attacks consume the valid item’s Magic Power; bomb throws freeze its Physical roll at launch; shield bash has a final Total Defense resolver. The native damage Gather path now recognizes the new carrier hits.
+
+**Offline verification passed:** direct Java compilation, five positive/control/negative consumer tests, and graph checks for 450 carriers against 90 pinned stock source hashes. The bomb graph has no ordinary item removal or fixed native explosion damage.
+
+The 90 bindings and affix capability gate remain closed. Main still needs to register the supplied codecs and systems, make the two shared equipment snapshot checks, and run native asset-loader and `GearNativeItems.create/read` tests before promotion. No connected QA is claimed. Exact registrations and results are in [carriers2-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/carriers2-result.md).

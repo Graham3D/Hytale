@@ -1,0 +1,1215 @@
+Compiled from "SelectInteraction.java"
+public class com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction extends com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInteraction {
+  public static boolean SHOW_VISUAL_DEBUG;
+
+  public static com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction$SnapshotSource SNAPSHOT_SOURCE;
+
+  public static final com.hypixel.hytale.codec.builder.BuilderCodec<com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction> CODEC;
+
+  public static final com.hypixel.hytale.server.core.meta.MetaKey<it.unimi.dsi.fastutil.ints.IntSet> HIT_ENTITIES;
+
+  public static final com.hypixel.hytale.server.core.meta.MetaKey<java.util.Set<com.hypixel.hytale.protocol.BlockPosition>> HIT_BLOCKS;
+
+  public static final com.hypixel.hytale.server.core.meta.MetaKey<com.hypixel.hytale.server.core.meta.DynamicMetaStore<com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction>> SELECT_META_STORE;
+
+  private static final com.hypixel.hytale.server.core.meta.MetaKey<com.hypixel.hytale.server.core.modules.interaction.interaction.config.selector.Selector> ENTITY_SELECTOR;
+
+  protected com.hypixel.hytale.server.core.modules.interaction.interaction.config.selector.SelectorType selector;
+
+  protected java.lang.String hitEntity;
+
+  protected com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction$HitEntity[] hitEntityRules;
+
+  protected java.lang.String hitBlock;
+
+  protected com.hypixel.hytale.protocol.FailOnType failOn;
+
+  protected boolean ignoreOwner;
+
+  protected int maxTargets;
+
+  private static final com.hypixel.hytale.server.core.modules.interaction.interaction.config.data.StringTag TAG_HIT_ENTITY;
+
+  private static final com.hypixel.hytale.server.core.modules.interaction.interaction.config.data.StringTag TAG_HIT_BLOCK;
+
+  static final boolean $assertionsDisabled;
+
+  public com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/SimpleInteraction."<init>":()V
+         4: aload_0
+         5: getstatic     #7                  // Field com/hypixel/hytale/protocol/FailOnType.Neither:Lcom/hypixel/hytale/protocol/FailOnType;
+         8: putfield      #13                 // Field failOn:Lcom/hypixel/hytale/protocol/FailOnType;
+        11: aload_0
+        12: iconst_1
+        13: putfield      #18                 // Field ignoreOwner:Z
+        16: return
+
+  public com.hypixel.hytale.protocol.WaitForDataFrom getWaitForDataFrom();
+    Code:
+         0: getstatic     #22                 // Field com/hypixel/hytale/protocol/WaitForDataFrom.Client:Lcom/hypixel/hytale/protocol/WaitForDataFrom;
+         3: areturn
+
+  public boolean needsRemoteSync();
+    Code:
+         0: iconst_1
+         1: ireturn
+
+  protected void tick0(boolean, float, com.hypixel.hytale.protocol.InteractionType, com.hypixel.hytale.server.core.entity.InteractionContext, com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler);
+    Code:
+         0: aload         4
+         2: invokevirtual #28                 // Method com/hypixel/hytale/server/core/entity/InteractionContext.getEntity:()Lcom/hypixel/hytale/component/Ref;
+         5: astore        6
+         7: aload         4
+         9: invokevirtual #34                 // Method com/hypixel/hytale/server/core/entity/InteractionContext.getCommandBuffer:()Lcom/hypixel/hytale/component/CommandBuffer;
+        12: astore        7
+        14: getstatic     #38                 // Field $assertionsDisabled:Z
+        17: ifne          33
+        20: aload         7
+        22: ifnonnull     33
+        25: new           #41                 // class java/lang/AssertionError
+        28: dup
+        29: invokespecial #43                 // Method java/lang/AssertionError."<init>":()V
+        32: athrow
+        33: aload         4
+        35: invokevirtual #44                 // Method com/hypixel/hytale/server/core/entity/InteractionContext.getInstanceStore:()Lcom/hypixel/hytale/server/core/meta/DynamicMetaStore;
+        38: astore        8
+        40: aload         7
+        42: aload         6
+        44: invokestatic  #48                 // Method com/hypixel/hytale/server/core/entity/entities/Player.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        47: invokevirtual #54                 // Method com/hypixel/hytale/component/CommandBuffer.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        50: checkcast     #49                 // class com/hypixel/hytale/server/core/entity/entities/Player
+        53: astore        9
+        55: iload_1
+        56: ifeq          168
+        59: aload_0
+        60: getfield      #60                 // Field selector:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/selector/SelectorType;
+        63: invokevirtual #64                 // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/selector/SelectorType.newSelector:()Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/selector/Selector;
+        66: astore        10
+        68: aload         4
+        70: aload         6
+        72: aload         7
+        74: invokestatic  #70                 // Method com/hypixel/hytale/server/core/modules/projectile/component/ImpactModifiers.resolve:(Lcom/hypixel/hytale/server/core/entity/InteractionContext;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentAccessor;)Lcom/hypixel/hytale/server/core/modules/projectile/component/ImpactModifiers;
+        77: astore        11
+        79: aload         10
+        81: aload         11
+        83: ifnull        94
+        86: aload         11
+        88: invokevirtual #76                 // Method com/hypixel/hytale/server/core/modules/projectile/component/ImpactModifiers.getAttributes:()Ljava/util/Map;
+        91: goto          95
+        94: aconst_null
+        95: invokeinterface #80,  2           // InterfaceMethod com/hypixel/hytale/server/core/modules/interaction/interaction/config/selector/Selector.setAbilityAttributes:(Ljava/util/Map;)V
+       100: aload         9
+       102: ifnull        127
+       105: getstatic     #86                 // Field SNAPSHOT_SOURCE:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$SnapshotSource;
+       108: getstatic     #90                 // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$SnapshotSource.CLIENT:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$SnapshotSource;
+       111: if_acmpne     127
+       114: new           #95                 // class com/hypixel/hytale/server/core/modules/interaction/interaction/config/selector/ClientSourcedSelector
+       117: dup
+       118: aload         10
+       120: aload         4
+       122: invokespecial #97                 // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/selector/ClientSourcedSelector."<init>":(Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/selector/Selector;Lcom/hypixel/hytale/server/core/entity/InteractionContext;)V
+       125: astore        10
+       127: aload         8
+       129: getstatic     #100                // Field ENTITY_SELECTOR:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       132: aload         10
+       134: invokevirtual #104                // Method com/hypixel/hytale/server/core/meta/DynamicMetaStore.putMetaObject:(Lcom/hypixel/hytale/server/core/meta/MetaKey;Ljava/lang/Object;)Ljava/lang/Object;
+       137: pop
+       138: aload         9
+       140: ifnull        152
+       143: getstatic     #86                 // Field SNAPSHOT_SOURCE:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$SnapshotSource;
+       146: getstatic     #90                 // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$SnapshotSource.CLIENT:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$SnapshotSource;
+       149: if_acmpeq     168
+       152: fload_2
+       153: fconst_0
+       154: fcmpg
+       155: ifgt          168
+       158: aload_0
+       159: invokevirtual #110                // Method getRunTime:()F
+       162: fconst_0
+       163: fcmpl
+       164: ifle          168
+       167: return
+       168: aload         8
+       170: getstatic     #100                // Field ENTITY_SELECTOR:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       173: invokevirtual #114                // Method com/hypixel/hytale/server/core/meta/DynamicMetaStore.getMetaObject:(Lcom/hypixel/hytale/server/core/meta/MetaKey;)Ljava/lang/Object;
+       176: checkcast     #81                 // class com/hypixel/hytale/server/core/modules/interaction/interaction/config/selector/Selector
+       179: astore        10
+       181: aload         10
+       183: aload         7
+       185: aload         4
+       187: invokevirtual #28                 // Method com/hypixel/hytale/server/core/entity/InteractionContext.getEntity:()Lcom/hypixel/hytale/component/Ref;
+       190: fload_2
+       191: aload_0
+       192: invokevirtual #110                // Method getRunTime:()F
+       195: invokestatic  #118                // Method java/lang/Math.min:(FF)F
+       198: aload_0
+       199: invokevirtual #110                // Method getRunTime:()F
+       202: invokeinterface #124,  5          // InterfaceMethod com/hypixel/hytale/server/core/modules/interaction/interaction/config/selector/Selector.tick:(Lcom/hypixel/hytale/component/CommandBuffer;Lcom/hypixel/hytale/component/Ref;FF)V
+       207: aload_0
+       208: getfield      #128                // Field hitEntity:Ljava/lang/String;
+       211: ifnonnull     221
+       214: aload_0
+       215: getfield      #132                // Field hitEntityRules:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$HitEntity;
+       218: ifnull        225
+       221: iconst_1
+       222: goto          226
+       225: iconst_0
+       226: istore        11
+       228: iload         11
+       230: ifeq          565
+       233: aload         8
+       235: getstatic     #136                // Field HIT_ENTITIES:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       238: invokevirtual #114                // Method com/hypixel/hytale/server/core/meta/DynamicMetaStore.getMetaObject:(Lcom/hypixel/hytale/server/core/meta/MetaKey;)Ljava/lang/Object;
+       241: checkcast     #139                // class it/unimi/dsi/fastutil/ints/IntSet
+       244: astore        12
+       246: new           #141                // class java/util/ArrayList
+       249: dup
+       250: invokespecial #143                // Method java/util/ArrayList."<init>":()V
+       253: astore        13
+       255: aload         10
+       257: aload         7
+       259: aload         4
+       261: invokevirtual #28                 // Method com/hypixel/hytale/server/core/entity/InteractionContext.getEntity:()Lcom/hypixel/hytale/component/Ref;
+       264: aload_0
+       265: aload         12
+       267: aload         7
+       269: aload         6
+       271: aload         13
+       273: invokedynamic #144,  0            // InvokeDynamic #0:accept:(Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction;Lit/unimi/dsi/fastutil/ints/IntSet;Lcom/hypixel/hytale/component/CommandBuffer;Lcom/hypixel/hytale/component/Ref;Ljava/util/ArrayList;)Ljava/util/function/BiConsumer;
+       278: aload_0
+       279: aload         6
+       281: aload         4
+       283: invokedynamic #148,  0            // InvokeDynamic #1:test:(Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/core/entity/InteractionContext;)Ljava/util/function/Predicate;
+       288: invokeinterface #152,  5          // InterfaceMethod com/hypixel/hytale/server/core/modules/interaction/interaction/config/selector/Selector.selectTargetEntities:(Lcom/hypixel/hytale/component/CommandBuffer;Lcom/hypixel/hytale/component/Ref;Ljava/util/function/BiConsumer;Ljava/util/function/Predicate;)V
+       293: aload_0
+       294: getfield      #156                // Field maxTargets:I
+       297: ifle          324
+       300: aload         13
+       302: invokevirtual #160                // Method java/util/ArrayList.size:()I
+       305: aload_0
+       306: getfield      #156                // Field maxTargets:I
+       309: if_icmple     324
+       312: aload         13
+       314: aload_0
+       315: getfield      #156                // Field maxTargets:I
+       318: invokestatic  #164                // Method reservoirSample:(Ljava/util/List;I)Ljava/util/List;
+       321: goto          326
+       324: aload         13
+       326: astore        14
+       328: aload         14
+       330: invokeinterface #168,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       335: astore        15
+       337: aload         15
+       339: invokeinterface #174,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+       344: ifeq          502
+       347: aload         15
+       349: invokeinterface #180,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       354: checkcast     #184                // class com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$EntityCandidate
+       357: astore        16
+       359: aload         16
+       361: invokevirtual #186                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$EntityCandidate.hitEntity:()Ljava/lang/String;
+       364: invokestatic  #189                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction.getRootInteractionOrUnknown:(Ljava/lang/String;)Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction;
+       367: astore        17
+       369: aload         4
+       371: invokevirtual #195                // Method com/hypixel/hytale/server/core/entity/InteractionContext.duplicate:()Lcom/hypixel/hytale/server/core/entity/InteractionContext;
+       374: astore        18
+       376: aload         18
+       378: invokevirtual #199                // Method com/hypixel/hytale/server/core/entity/InteractionContext.getMetaStore:()Lcom/hypixel/hytale/server/core/meta/DynamicMetaStore;
+       381: astore        19
+       383: aload         19
+       385: getstatic     #202                // Field TARGET_ENTITY:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       388: aload         16
+       390: invokevirtual #205                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$EntityCandidate.targetRef:()Lcom/hypixel/hytale/component/Ref;
+       393: invokevirtual #104                // Method com/hypixel/hytale/server/core/meta/DynamicMetaStore.putMetaObject:(Lcom/hypixel/hytale/server/core/meta/MetaKey;Ljava/lang/Object;)Ljava/lang/Object;
+       396: pop
+       397: aload         19
+       399: getstatic     #208                // Field HIT_LOCATION:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       402: aload         16
+       404: invokevirtual #211                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$EntityCandidate.hit:()Lorg/joml/Vector4d;
+       407: invokevirtual #104                // Method com/hypixel/hytale/server/core/meta/DynamicMetaStore.putMetaObject:(Lcom/hypixel/hytale/server/core/meta/MetaKey;Ljava/lang/Object;)Ljava/lang/Object;
+       410: pop
+       411: aload         19
+       413: getstatic     #215                // Field SELECT_META_STORE:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       416: aload         8
+       418: invokevirtual #104                // Method com/hypixel/hytale/server/core/meta/DynamicMetaStore.putMetaObject:(Lcom/hypixel/hytale/server/core/meta/MetaKey;Ljava/lang/Object;)Ljava/lang/Object;
+       421: pop
+       422: aload         19
+       424: getstatic     #218                // Field TARGET_BLOCK:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       427: invokevirtual #221                // Method com/hypixel/hytale/server/core/meta/DynamicMetaStore.removeMetaObject:(Lcom/hypixel/hytale/server/core/meta/MetaKey;)Ljava/lang/Object;
+       430: pop
+       431: aload         19
+       433: getstatic     #224                // Field TARGET_BLOCK_RAW:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       436: invokevirtual #221                // Method com/hypixel/hytale/server/core/meta/DynamicMetaStore.removeMetaObject:(Lcom/hypixel/hytale/server/core/meta/MetaKey;)Ljava/lang/Object;
+       439: pop
+       440: aload         9
+       442: ifnull        473
+       445: getstatic     #86                 // Field SNAPSHOT_SOURCE:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$SnapshotSource;
+       448: getstatic     #90                 // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$SnapshotSource.CLIENT:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$SnapshotSource;
+       451: if_acmpne     473
+       454: aload         4
+       456: invokevirtual #227                // Method com/hypixel/hytale/server/core/entity/InteractionContext.getClientState:()Lcom/hypixel/hytale/protocol/InteractionSyncData;
+       459: astore        20
+       461: aload         18
+       463: aload         20
+       465: invokedynamic #231,  0            // InvokeDynamic #2:getSnapshot:(Lcom/hypixel/hytale/protocol/InteractionSyncData;)Lcom/hypixel/hytale/server/core/entity/InteractionContext$SnapshotProvider;
+       470: invokevirtual #235                // Method com/hypixel/hytale/server/core/entity/InteractionContext.setSnapshotProvider:(Lcom/hypixel/hytale/server/core/entity/InteractionContext$SnapshotProvider;)V
+       473: aload         4
+       475: new           #239                // class com/hypixel/hytale/protocol/InteractionChainData
+       478: dup
+       479: invokespecial #241                // Method com/hypixel/hytale/protocol/InteractionChainData."<init>":()V
+       482: aload         4
+       484: invokevirtual #242                // Method com/hypixel/hytale/server/core/entity/InteractionContext.getChain:()Lcom/hypixel/hytale/server/core/entity/InteractionChain;
+       487: invokevirtual #246                // Method com/hypixel/hytale/server/core/entity/InteractionChain.getType:()Lcom/hypixel/hytale/protocol/InteractionType;
+       490: aload         18
+       492: aload         17
+       494: iconst_0
+       495: invokevirtual #252                // Method com/hypixel/hytale/server/core/entity/InteractionContext.fork:(Lcom/hypixel/hytale/protocol/InteractionChainData;Lcom/hypixel/hytale/protocol/InteractionType;Lcom/hypixel/hytale/server/core/entity/InteractionContext;Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction;Z)Lcom/hypixel/hytale/server/core/entity/InteractionChain;
+       498: pop
+       499: goto          337
+       502: aload         4
+       504: invokevirtual #256                // Method com/hypixel/hytale/server/core/entity/InteractionContext.hasLabels:()Z
+       507: ifeq          565
+       510: aload         12
+       512: invokeinterface #259,  1          // InterfaceMethod it/unimi/dsi/fastutil/ints/IntSet.isEmpty:()Z
+       517: ifeq          565
+       520: aload         4
+       522: invokevirtual #262                // Method com/hypixel/hytale/server/core/entity/InteractionContext.getState:()Lcom/hypixel/hytale/protocol/InteractionSyncData;
+       525: getfield      #265                // Field com/hypixel/hytale/protocol/InteractionSyncData.state:Lcom/hypixel/hytale/protocol/InteractionState;
+       528: getstatic     #271                // Field com/hypixel/hytale/protocol/InteractionState.Finished:Lcom/hypixel/hytale/protocol/InteractionState;
+       531: if_acmpne     565
+       534: aload_0
+       535: getfield      #13                 // Field failOn:Lcom/hypixel/hytale/protocol/FailOnType;
+       538: getstatic     #276                // Field com/hypixel/hytale/protocol/FailOnType.Entity:Lcom/hypixel/hytale/protocol/FailOnType;
+       541: if_acmpeq     554
+       544: aload_0
+       545: getfield      #13                 // Field failOn:Lcom/hypixel/hytale/protocol/FailOnType;
+       548: getstatic     #279                // Field com/hypixel/hytale/protocol/FailOnType.Either:Lcom/hypixel/hytale/protocol/FailOnType;
+       551: if_acmpne     565
+       554: aload         4
+       556: invokevirtual #262                // Method com/hypixel/hytale/server/core/entity/InteractionContext.getState:()Lcom/hypixel/hytale/protocol/InteractionSyncData;
+       559: getstatic     #282                // Field com/hypixel/hytale/protocol/InteractionState.Failed:Lcom/hypixel/hytale/protocol/InteractionState;
+       562: putfield      #265                // Field com/hypixel/hytale/protocol/InteractionSyncData.state:Lcom/hypixel/hytale/protocol/InteractionState;
+       565: aload_0
+       566: getfield      #285                // Field hitBlock:Ljava/lang/String;
+       569: ifnull        846
+       572: aload         8
+       574: getstatic     #288                // Field HIT_BLOCKS:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       577: invokevirtual #114                // Method com/hypixel/hytale/server/core/meta/DynamicMetaStore.getMetaObject:(Lcom/hypixel/hytale/server/core/meta/MetaKey;)Ljava/lang/Object;
+       580: checkcast     #291                // class java/util/Set
+       583: astore        12
+       585: aload_0
+       586: getfield      #285                // Field hitBlock:Ljava/lang/String;
+       589: invokestatic  #189                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction.getRootInteractionOrUnknown:(Ljava/lang/String;)Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction;
+       592: astore        13
+       594: new           #141                // class java/util/ArrayList
+       597: dup
+       598: invokespecial #143                // Method java/util/ArrayList."<init>":()V
+       601: astore        14
+       603: aload         10
+       605: aload         7
+       607: aload         4
+       609: invokevirtual #28                 // Method com/hypixel/hytale/server/core/entity/InteractionContext.getEntity:()Lcom/hypixel/hytale/component/Ref;
+       612: aload         12
+       614: aload         14
+       616: invokedynamic #293,  0            // InvokeDynamic #3:accept:(Ljava/util/Set;Ljava/util/ArrayList;)Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/selector/Selector$BlockConsumer;
+       621: invokeinterface #296,  4          // InterfaceMethod com/hypixel/hytale/server/core/modules/interaction/interaction/config/selector/Selector.selectTargetBlocks:(Lcom/hypixel/hytale/component/CommandBuffer;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/selector/Selector$BlockConsumer;)V
+       626: aload_0
+       627: getfield      #156                // Field maxTargets:I
+       630: ifle          657
+       633: aload         14
+       635: invokevirtual #160                // Method java/util/ArrayList.size:()I
+       638: aload_0
+       639: getfield      #156                // Field maxTargets:I
+       642: if_icmple     657
+       645: aload         14
+       647: aload_0
+       648: getfield      #156                // Field maxTargets:I
+       651: invokestatic  #164                // Method reservoirSample:(Ljava/util/List;I)Ljava/util/List;
+       654: goto          659
+       657: aload         14
+       659: astore        15
+       661: aload         15
+       663: invokeinterface #168,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       668: astore        16
+       670: aload         16
+       672: invokeinterface #174,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+       677: ifeq          783
+       680: aload         16
+       682: invokeinterface #180,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+       687: checkcast     #300                // class com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$BlockCandidate
+       690: astore        17
+       692: aload         4
+       694: invokevirtual #195                // Method com/hypixel/hytale/server/core/entity/InteractionContext.duplicate:()Lcom/hypixel/hytale/server/core/entity/InteractionContext;
+       697: astore        18
+       699: aload         18
+       701: invokevirtual #199                // Method com/hypixel/hytale/server/core/entity/InteractionContext.getMetaStore:()Lcom/hypixel/hytale/server/core/meta/DynamicMetaStore;
+       704: astore        19
+       706: aload         19
+       708: getstatic     #218                // Field TARGET_BLOCK:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       711: aload         17
+       713: invokevirtual #302                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$BlockCandidate.targetBlock:()Lcom/hypixel/hytale/protocol/BlockPosition;
+       716: invokevirtual #104                // Method com/hypixel/hytale/server/core/meta/DynamicMetaStore.putMetaObject:(Lcom/hypixel/hytale/server/core/meta/MetaKey;Ljava/lang/Object;)Ljava/lang/Object;
+       719: pop
+       720: aload         19
+       722: getstatic     #224                // Field TARGET_BLOCK_RAW:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       725: aload         17
+       727: invokevirtual #306                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$BlockCandidate.rawBlock:()Lcom/hypixel/hytale/protocol/BlockPosition;
+       730: invokevirtual #104                // Method com/hypixel/hytale/server/core/meta/DynamicMetaStore.putMetaObject:(Lcom/hypixel/hytale/server/core/meta/MetaKey;Ljava/lang/Object;)Ljava/lang/Object;
+       733: pop
+       734: aload         19
+       736: getstatic     #215                // Field SELECT_META_STORE:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       739: aload         8
+       741: invokevirtual #104                // Method com/hypixel/hytale/server/core/meta/DynamicMetaStore.putMetaObject:(Lcom/hypixel/hytale/server/core/meta/MetaKey;Ljava/lang/Object;)Ljava/lang/Object;
+       744: pop
+       745: aload         19
+       747: getstatic     #202                // Field TARGET_ENTITY:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       750: invokevirtual #221                // Method com/hypixel/hytale/server/core/meta/DynamicMetaStore.removeMetaObject:(Lcom/hypixel/hytale/server/core/meta/MetaKey;)Ljava/lang/Object;
+       753: pop
+       754: aload         4
+       756: new           #239                // class com/hypixel/hytale/protocol/InteractionChainData
+       759: dup
+       760: invokespecial #241                // Method com/hypixel/hytale/protocol/InteractionChainData."<init>":()V
+       763: aload         4
+       765: invokevirtual #242                // Method com/hypixel/hytale/server/core/entity/InteractionContext.getChain:()Lcom/hypixel/hytale/server/core/entity/InteractionChain;
+       768: invokevirtual #246                // Method com/hypixel/hytale/server/core/entity/InteractionChain.getType:()Lcom/hypixel/hytale/protocol/InteractionType;
+       771: aload         18
+       773: aload         13
+       775: iconst_0
+       776: invokevirtual #252                // Method com/hypixel/hytale/server/core/entity/InteractionContext.fork:(Lcom/hypixel/hytale/protocol/InteractionChainData;Lcom/hypixel/hytale/protocol/InteractionType;Lcom/hypixel/hytale/server/core/entity/InteractionContext;Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction;Z)Lcom/hypixel/hytale/server/core/entity/InteractionChain;
+       779: pop
+       780: goto          670
+       783: aload         4
+       785: invokevirtual #256                // Method com/hypixel/hytale/server/core/entity/InteractionContext.hasLabels:()Z
+       788: ifeq          846
+       791: aload         12
+       793: invokeinterface #309,  1          // InterfaceMethod java/util/Set.isEmpty:()Z
+       798: ifeq          846
+       801: aload         4
+       803: invokevirtual #262                // Method com/hypixel/hytale/server/core/entity/InteractionContext.getState:()Lcom/hypixel/hytale/protocol/InteractionSyncData;
+       806: getfield      #265                // Field com/hypixel/hytale/protocol/InteractionSyncData.state:Lcom/hypixel/hytale/protocol/InteractionState;
+       809: getstatic     #271                // Field com/hypixel/hytale/protocol/InteractionState.Finished:Lcom/hypixel/hytale/protocol/InteractionState;
+       812: if_acmpne     846
+       815: aload_0
+       816: getfield      #13                 // Field failOn:Lcom/hypixel/hytale/protocol/FailOnType;
+       819: getstatic     #310                // Field com/hypixel/hytale/protocol/FailOnType.Block:Lcom/hypixel/hytale/protocol/FailOnType;
+       822: if_acmpeq     835
+       825: aload_0
+       826: getfield      #13                 // Field failOn:Lcom/hypixel/hytale/protocol/FailOnType;
+       829: getstatic     #279                // Field com/hypixel/hytale/protocol/FailOnType.Either:Lcom/hypixel/hytale/protocol/FailOnType;
+       832: if_acmpne     846
+       835: aload         4
+       837: invokevirtual #262                // Method com/hypixel/hytale/server/core/entity/InteractionContext.getState:()Lcom/hypixel/hytale/protocol/InteractionSyncData;
+       840: getstatic     #282                // Field com/hypixel/hytale/protocol/InteractionState.Failed:Lcom/hypixel/hytale/protocol/InteractionState;
+       843: putfield      #265                // Field com/hypixel/hytale/protocol/InteractionSyncData.state:Lcom/hypixel/hytale/protocol/InteractionState;
+       846: aload         9
+       848: ifnull        890
+       851: getstatic     #86                 // Field SNAPSHOT_SOURCE:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$SnapshotSource;
+       854: getstatic     #90                 // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$SnapshotSource.CLIENT:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$SnapshotSource;
+       857: if_acmpne     890
+       860: aload         4
+       862: invokevirtual #262                // Method com/hypixel/hytale/server/core/entity/InteractionContext.getState:()Lcom/hypixel/hytale/protocol/InteractionSyncData;
+       865: getfield      #265                // Field com/hypixel/hytale/protocol/InteractionSyncData.state:Lcom/hypixel/hytale/protocol/InteractionState;
+       868: getstatic     #282                // Field com/hypixel/hytale/protocol/InteractionState.Failed:Lcom/hypixel/hytale/protocol/InteractionState;
+       871: if_acmpeq     890
+       874: aload         4
+       876: invokevirtual #262                // Method com/hypixel/hytale/server/core/entity/InteractionContext.getState:()Lcom/hypixel/hytale/protocol/InteractionSyncData;
+       879: aload         4
+       881: invokevirtual #227                // Method com/hypixel/hytale/server/core/entity/InteractionContext.getClientState:()Lcom/hypixel/hytale/protocol/InteractionSyncData;
+       884: getfield      #265                // Field com/hypixel/hytale/protocol/InteractionSyncData.state:Lcom/hypixel/hytale/protocol/InteractionState;
+       887: putfield      #265                // Field com/hypixel/hytale/protocol/InteractionSyncData.state:Lcom/hypixel/hytale/protocol/InteractionState;
+       890: aload_0
+       891: iload_1
+       892: fload_2
+       893: aload_3
+       894: aload         4
+       896: aload         5
+       898: invokespecial #313                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/SimpleInteraction.tick0:(ZFLcom/hypixel/hytale/protocol/InteractionType;Lcom/hypixel/hytale/server/core/entity/InteractionContext;Lcom/hypixel/hytale/server/core/modules/interaction/interaction/CooldownHandler;)V
+       901: return
+
+  protected void simulateTick0(boolean, float, com.hypixel.hytale.protocol.InteractionType, com.hypixel.hytale.server.core.entity.InteractionContext, com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler);
+    Code:
+         0: return
+
+  public boolean walk(com.hypixel.hytale.server.core.modules.interaction.interaction.config.data.Collector, com.hypixel.hytale.server.core.entity.InteractionContext);
+    Code:
+         0: aload_0
+         1: getfield      #128                // Field hitEntity:Ljava/lang/String;
+         4: ifnull        30
+         7: aload_1
+         8: aload_2
+         9: getstatic     #317                // Field TAG_HIT_ENTITY:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/data/StringTag;
+        12: aload_0
+        13: getfield      #128                // Field hitEntity:Ljava/lang/String;
+        16: invokestatic  #189                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction.getRootInteractionOrUnknown:(Ljava/lang/String;)Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction;
+        19: invokevirtual #321                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction.getInteractionIds:()[Ljava/lang/String;
+        22: invokestatic  #325                // Method com/hypixel/hytale/server/core/entity/InteractionManager.walkInteractions:(Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/data/Collector;Lcom/hypixel/hytale/server/core/entity/InteractionContext;Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/data/CollectorTag;[Ljava/lang/String;)Z
+        25: ifeq          30
+        28: iconst_1
+        29: ireturn
+        30: aload_0
+        31: getfield      #132                // Field hitEntityRules:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$HitEntity;
+        34: ifnull        98
+        37: iconst_0
+        38: istore_3
+        39: iload_3
+        40: aload_0
+        41: getfield      #132                // Field hitEntityRules:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$HitEntity;
+        44: arraylength
+        45: if_icmpge     98
+        48: aload_0
+        49: getfield      #132                // Field hitEntityRules:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$HitEntity;
+        52: iload_3
+        53: aaload
+        54: astore        4
+        56: aload         4
+        58: getfield      #331                // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$HitEntity.next:Ljava/lang/String;
+        61: ifnonnull     67
+        64: goto          92
+        67: aload_1
+        68: aload_2
+        69: iload_3
+        70: invokestatic  #335                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$HitEntityRuleTag.of:(I)Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$HitEntityRuleTag;
+        73: aload         4
+        75: getfield      #331                // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$HitEntity.next:Ljava/lang/String;
+        78: invokestatic  #189                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction.getRootInteractionOrUnknown:(Ljava/lang/String;)Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction;
+        81: invokevirtual #321                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction.getInteractionIds:()[Ljava/lang/String;
+        84: invokestatic  #325                // Method com/hypixel/hytale/server/core/entity/InteractionManager.walkInteractions:(Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/data/Collector;Lcom/hypixel/hytale/server/core/entity/InteractionContext;Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/data/CollectorTag;[Ljava/lang/String;)Z
+        87: ifeq          92
+        90: iconst_1
+        91: ireturn
+        92: iinc          3, 1
+        95: goto          39
+        98: aload_0
+        99: getfield      #285                // Field hitBlock:Ljava/lang/String;
+       102: ifnull        128
+       105: aload_1
+       106: aload_2
+       107: getstatic     #341                // Field TAG_HIT_BLOCK:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/data/StringTag;
+       110: aload_0
+       111: getfield      #285                // Field hitBlock:Ljava/lang/String;
+       114: invokestatic  #189                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction.getRootInteractionOrUnknown:(Ljava/lang/String;)Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction;
+       117: invokevirtual #321                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction.getInteractionIds:()[Ljava/lang/String;
+       120: invokestatic  #325                // Method com/hypixel/hytale/server/core/entity/InteractionManager.walkInteractions:(Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/data/Collector;Lcom/hypixel/hytale/server/core/entity/InteractionContext;Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/data/CollectorTag;[Ljava/lang/String;)Z
+       123: ifeq          128
+       126: iconst_1
+       127: ireturn
+       128: aload_0
+       129: aload_1
+       130: aload_2
+       131: invokespecial #344                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/SimpleInteraction.walk:(Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/data/Collector;Lcom/hypixel/hytale/server/core/entity/InteractionContext;)Z
+       134: ireturn
+
+  public com.hypixel.hytale.server.core.entity.InteractionChain mapForkChain(com.hypixel.hytale.server.core.entity.InteractionContext, com.hypixel.hytale.protocol.InteractionChainData);
+    Code:
+         0: aload_2
+         1: getfield      #348                // Field com/hypixel/hytale/protocol/InteractionChainData.blockPosition:Lcom/hypixel/hytale/protocol/BlockPosition;
+         4: ifnull        9
+         7: aconst_null
+         8: areturn
+         9: aload_1
+        10: invokevirtual #242                // Method com/hypixel/hytale/server/core/entity/InteractionContext.getChain:()Lcom/hypixel/hytale/server/core/entity/InteractionChain;
+        13: invokevirtual #352                // Method com/hypixel/hytale/server/core/entity/InteractionChain.getForkedChains:()Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;
+        16: astore_3
+        17: aload_3
+        18: invokeinterface #356,  1          // InterfaceMethod it/unimi/dsi/fastutil/longs/Long2ObjectMap.values:()Lit/unimi/dsi/fastutil/objects/ObjectCollection;
+        23: invokeinterface #362,  1          // InterfaceMethod it/unimi/dsi/fastutil/objects/ObjectCollection.iterator:()Lit/unimi/dsi/fastutil/objects/ObjectIterator;
+        28: astore        4
+        30: aload         4
+        32: invokeinterface #174,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+        37: ifeq          98
+        40: aload         4
+        42: invokeinterface #180,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+        47: checkcast     #247                // class com/hypixel/hytale/server/core/entity/InteractionChain
+        50: astore        5
+        52: aload         5
+        54: invokevirtual #367                // Method com/hypixel/hytale/server/core/entity/InteractionChain.getBaseForkedChainId:()Lcom/hypixel/hytale/protocol/ForkedChainId;
+        57: getfield      #371                // Field com/hypixel/hytale/protocol/ForkedChainId.entryIndex:I
+        60: aload_1
+        61: invokevirtual #376                // Method com/hypixel/hytale/server/core/entity/InteractionContext.getEntry:()Lcom/hypixel/hytale/server/core/entity/InteractionEntry;
+        64: invokevirtual #380                // Method com/hypixel/hytale/server/core/entity/InteractionEntry.getIndex:()I
+        67: if_icmpeq     73
+        70: goto          30
+        73: aload         5
+        75: invokevirtual #385                // Method com/hypixel/hytale/server/core/entity/InteractionChain.getChainData:()Lcom/hypixel/hytale/protocol/InteractionChainData;
+        78: astore        6
+        80: aload         6
+        82: getfield      #389                // Field com/hypixel/hytale/protocol/InteractionChainData.entityId:I
+        85: aload_2
+        86: getfield      #389                // Field com/hypixel/hytale/protocol/InteractionChainData.entityId:I
+        89: if_icmpne     95
+        92: aload         5
+        94: areturn
+        95: goto          30
+        98: aconst_null
+        99: areturn
+
+  protected com.hypixel.hytale.protocol.Interaction generatePacket();
+    Code:
+         0: new           #392                // class com/hypixel/hytale/protocol/SelectInteraction
+         3: dup
+         4: invokespecial #394                // Method com/hypixel/hytale/protocol/SelectInteraction."<init>":()V
+         7: areturn
+
+  protected void configurePacket(com.hypixel.hytale.protocol.Interaction);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokespecial #395                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/SimpleInteraction.configurePacket:(Lcom/hypixel/hytale/protocol/Interaction;)V
+         5: aload_1
+         6: checkcast     #392                // class com/hypixel/hytale/protocol/SelectInteraction
+         9: astore_2
+        10: aload_2
+        11: aload_0
+        12: getfield      #128                // Field hitEntity:Ljava/lang/String;
+        15: invokestatic  #399                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction.getRootInteractionIdOrUnknown:(Ljava/lang/String;)I
+        18: putfield      #403                // Field com/hypixel/hytale/protocol/SelectInteraction.hitEntity:I
+        21: aload_2
+        22: aload_0
+        23: getfield      #13                 // Field failOn:Lcom/hypixel/hytale/protocol/FailOnType;
+        26: putfield      #405                // Field com/hypixel/hytale/protocol/SelectInteraction.failOn:Lcom/hypixel/hytale/protocol/FailOnType;
+        29: aload_2
+        30: aload_0
+        31: getfield      #18                 // Field ignoreOwner:Z
+        34: putfield      #406                // Field com/hypixel/hytale/protocol/SelectInteraction.ignoreOwner:Z
+        37: aload_2
+        38: aload_0
+        39: getfield      #60                 // Field selector:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/selector/SelectorType;
+        42: invokevirtual #407                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/selector/SelectorType.toPacket:()Ljava/lang/Object;
+        45: checkcast     #410                // class com/hypixel/hytale/protocol/Selector
+        48: putfield      #412                // Field com/hypixel/hytale/protocol/SelectInteraction.selector:Lcom/hypixel/hytale/protocol/Selector;
+        51: aload_0
+        52: getfield      #132                // Field hitEntityRules:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$HitEntity;
+        55: ifnull        105
+        58: aload_0
+        59: getfield      #132                // Field hitEntityRules:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$HitEntity;
+        62: arraylength
+        63: anewarray     #415                // class com/hypixel/hytale/protocol/HitEntity
+        66: astore_3
+        67: iconst_0
+        68: istore        4
+        70: iload         4
+        72: aload_0
+        73: getfield      #132                // Field hitEntityRules:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$HitEntity;
+        76: arraylength
+        77: if_icmpge     100
+        80: aload_3
+        81: iload         4
+        83: aload_0
+        84: getfield      #132                // Field hitEntityRules:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$HitEntity;
+        87: iload         4
+        89: aaload
+        90: invokevirtual #417                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$HitEntity.toPacket:()Lcom/hypixel/hytale/protocol/HitEntity;
+        93: aastore
+        94: iinc          4, 1
+        97: goto          70
+       100: aload_2
+       101: aload_3
+       102: putfield      #420                // Field com/hypixel/hytale/protocol/SelectInteraction.hitEntityRules:[Lcom/hypixel/hytale/protocol/HitEntity;
+       105: return
+
+  private static <T> java.util.List<T> reservoirSample(java.util.List<T>, int);
+    Code:
+         0: new           #141                // class java/util/ArrayList
+         3: dup
+         4: iload_1
+         5: invokespecial #423                // Method java/util/ArrayList."<init>":(I)V
+         8: astore_2
+         9: invokestatic  #426                // Method java/util/concurrent/ThreadLocalRandom.current:()Ljava/util/concurrent/ThreadLocalRandom;
+        12: astore_3
+        13: iconst_0
+        14: istore        4
+        16: aload_0
+        17: invokeinterface #432,  1          // InterfaceMethod java/util/List.size:()I
+        22: istore        5
+        24: iload         4
+        26: iload         5
+        28: if_icmpge     90
+        31: iload         4
+        33: iload_1
+        34: if_icmpge     53
+        37: aload_2
+        38: aload_0
+        39: iload         4
+        41: invokeinterface #433,  2          // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+        46: invokevirtual #437                // Method java/util/ArrayList.add:(Ljava/lang/Object;)Z
+        49: pop
+        50: goto          84
+        53: aload_3
+        54: iload         4
+        56: iconst_1
+        57: iadd
+        58: invokevirtual #441                // Method java/util/concurrent/ThreadLocalRandom.nextInt:(I)I
+        61: istore        6
+        63: iload         6
+        65: iload_1
+        66: if_icmpge     84
+        69: aload_2
+        70: iload         6
+        72: aload_0
+        73: iload         4
+        75: invokeinterface #433,  2          // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+        80: invokevirtual #445                // Method java/util/ArrayList.set:(ILjava/lang/Object;)Ljava/lang/Object;
+        83: pop
+        84: iinc          4, 1
+        87: goto          24
+        90: aload_2
+        91: areturn
+
+  public java.lang.String toString();
+    Code:
+         0: aload_0
+         1: getfield      #60                 // Field selector:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/selector/SelectorType;
+         4: invokestatic  #449                // Method java/lang/String.valueOf:(Ljava/lang/Object;)Ljava/lang/String;
+         7: aload_0
+         8: getfield      #128                // Field hitEntity:Ljava/lang/String;
+        11: aload_0
+        12: getfield      #285                // Field hitBlock:Ljava/lang/String;
+        15: aload_0
+        16: getfield      #18                 // Field ignoreOwner:Z
+        19: aload_0
+        20: getfield      #156                // Field maxTargets:I
+        23: aload_0
+        24: invokespecial #455                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/SimpleInteraction.toString:()Ljava/lang/String;
+        27: invokedynamic #458,  0            // InvokeDynamic #4:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/String;)Ljava/lang/String;
+        32: areturn
+
+  private static void lambda$tick0$3(java.util.Set, java.util.ArrayList, int, int, int, int, int, int);
+    Code:
+         0: new           #462                // class com/hypixel/hytale/protocol/BlockPosition
+         3: dup
+         4: iload         5
+         6: iload         6
+         8: iload         7
+        10: invokespecial #464                // Method com/hypixel/hytale/protocol/BlockPosition."<init>":(III)V
+        13: astore        8
+        15: aload_0
+        16: aload         8
+        18: invokeinterface #467,  2          // InterfaceMethod java/util/Set.add:(Ljava/lang/Object;)Z
+        23: ifne          27
+        26: return
+        27: aload_1
+        28: new           #300                // class com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$BlockCandidate
+        31: dup
+        32: new           #462                // class com/hypixel/hytale/protocol/BlockPosition
+        35: dup
+        36: iload_2
+        37: iload_3
+        38: iload         4
+        40: invokespecial #464                // Method com/hypixel/hytale/protocol/BlockPosition."<init>":(III)V
+        43: aload         8
+        45: invokespecial #468                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$BlockCandidate."<init>":(Lcom/hypixel/hytale/protocol/BlockPosition;Lcom/hypixel/hytale/protocol/BlockPosition;)V
+        48: invokevirtual #437                // Method java/util/ArrayList.add:(Ljava/lang/Object;)Z
+        51: pop
+        52: return
+
+  private static com.hypixel.hytale.server.core.entity.EntitySnapshot lambda$tick0$2(com.hypixel.hytale.protocol.InteractionSyncData, com.hypixel.hytale.component.CommandBuffer, com.hypixel.hytale.component.Ref, int);
+    Code:
+         0: aload_1
+         1: aload_2
+         2: invokestatic  #471                // Method com/hypixel/hytale/server/core/modules/entity/tracker/NetworkId.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+         5: invokevirtual #54                 // Method com/hypixel/hytale/component/CommandBuffer.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+         8: checkcast     #472                // class com/hypixel/hytale/server/core/modules/entity/tracker/NetworkId
+        11: invokevirtual #474                // Method com/hypixel/hytale/server/core/modules/entity/tracker/NetworkId.getId:()I
+        14: istore        4
+        16: iload_3
+        17: iload         4
+        19: if_icmpne     44
+        22: new           #477                // class com/hypixel/hytale/server/core/entity/EntitySnapshot
+        25: dup
+        26: aload_0
+        27: getfield      #479                // Field com/hypixel/hytale/protocol/InteractionSyncData.attackerPos:Lcom/hypixel/hytale/protocol/Position;
+        30: invokestatic  #483                // Method com/hypixel/hytale/server/core/util/PositionUtil.toVector3d:(Lcom/hypixel/hytale/protocol/Position;)Lorg/joml/Vector3d;
+        33: aload_0
+        34: getfield      #489                // Field com/hypixel/hytale/protocol/InteractionSyncData.attackerRot:Lcom/hypixel/hytale/protocol/Direction;
+        37: invokestatic  #493                // Method com/hypixel/hytale/server/core/util/PositionUtil.toRotation:(Lcom/hypixel/hytale/protocol/Direction;)Lcom/hypixel/hytale/math/vector/Rotation3f;
+        40: invokespecial #497                // Method com/hypixel/hytale/server/core/entity/EntitySnapshot."<init>":(Lorg/joml/Vector3d;Lcom/hypixel/hytale/math/vector/Rotation3f;)V
+        43: areturn
+        44: aload_0
+        45: getfield      #500                // Field com/hypixel/hytale/protocol/InteractionSyncData.hitEntities:[Lcom/hypixel/hytale/protocol/SelectedHitEntity;
+        48: astore        5
+        50: aload         5
+        52: arraylength
+        53: istore        6
+        55: iconst_0
+        56: istore        7
+        58: iload         7
+        60: iload         6
+        62: if_icmpge     114
+        65: aload         5
+        67: iload         7
+        69: aaload
+        70: astore        8
+        72: aload         8
+        74: getfield      #504                // Field com/hypixel/hytale/protocol/SelectedHitEntity.networkId:I
+        77: iload_3
+        78: if_icmpeq     84
+        81: goto          108
+        84: new           #477                // class com/hypixel/hytale/server/core/entity/EntitySnapshot
+        87: dup
+        88: aload         8
+        90: getfield      #509                // Field com/hypixel/hytale/protocol/SelectedHitEntity.position:Lcom/hypixel/hytale/protocol/Position;
+        93: invokestatic  #483                // Method com/hypixel/hytale/server/core/util/PositionUtil.toVector3d:(Lcom/hypixel/hytale/protocol/Position;)Lorg/joml/Vector3d;
+        96: aload         8
+        98: getfield      #512                // Field com/hypixel/hytale/protocol/SelectedHitEntity.bodyRotation:Lcom/hypixel/hytale/protocol/Direction;
+       101: invokestatic  #493                // Method com/hypixel/hytale/server/core/util/PositionUtil.toRotation:(Lcom/hypixel/hytale/protocol/Direction;)Lcom/hypixel/hytale/math/vector/Rotation3f;
+       104: invokespecial #497                // Method com/hypixel/hytale/server/core/entity/EntitySnapshot."<init>":(Lorg/joml/Vector3d;Lcom/hypixel/hytale/math/vector/Rotation3f;)V
+       107: areturn
+       108: iinc          7, 1
+       111: goto          58
+       114: new           #515                // class java/lang/IllegalArgumentException
+       117: dup
+       118: iload_3
+       119: invokedynamic #517,  0            // InvokeDynamic #5:makeConcatWithConstants:(I)Ljava/lang/String;
+       124: invokespecial #520                // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+       127: athrow
+
+  private boolean lambda$tick0$1(com.hypixel.hytale.component.Ref, com.hypixel.hytale.server.core.entity.InteractionContext, com.hypixel.hytale.component.Ref);
+    Code:
+         0: aload_0
+         1: getfield      #18                 // Field ignoreOwner:Z
+         4: ifeq          17
+         7: aload_3
+         8: aload_1
+         9: invokevirtual #523                // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+        12: ifeq          17
+        15: iconst_0
+        16: ireturn
+        17: aload_3
+        18: aload_2
+        19: invokevirtual #28                 // Method com/hypixel/hytale/server/core/entity/InteractionContext.getEntity:()Lcom/hypixel/hytale/component/Ref;
+        22: invokevirtual #523                // Method java/lang/Object.equals:(Ljava/lang/Object;)Z
+        25: ifne          32
+        28: iconst_1
+        29: goto          33
+        32: iconst_0
+        33: ireturn
+
+  private void lambda$tick0$0(it.unimi.dsi.fastutil.ints.IntSet, com.hypixel.hytale.component.CommandBuffer, com.hypixel.hytale.component.Ref, java.util.ArrayList, com.hypixel.hytale.component.Ref, org.joml.Vector4d);
+    Code:
+         0: aload         5
+         2: invokevirtual #528                // Method com/hypixel/hytale/component/Ref.getStore:()Lcom/hypixel/hytale/component/Store;
+         5: aload         5
+         7: invokestatic  #471                // Method com/hypixel/hytale/server/core/modules/entity/tracker/NetworkId.getComponentType:()Lcom/hypixel/hytale/component/ComponentType;
+        10: invokevirtual #534                // Method com/hypixel/hytale/component/Store.getComponent:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/ComponentType;)Lcom/hypixel/hytale/component/Component;
+        13: checkcast     #472                // class com/hypixel/hytale/server/core/modules/entity/tracker/NetworkId
+        16: astore        7
+        18: aload         7
+        20: ifnonnull     24
+        23: return
+        24: aload         7
+        26: invokevirtual #474                // Method com/hypixel/hytale/server/core/modules/entity/tracker/NetworkId.getId:()I
+        29: istore        8
+        31: aload_1
+        32: iload         8
+        34: invokeinterface #537,  2          // InterfaceMethod it/unimi/dsi/fastutil/ints/IntSet.add:(I)Z
+        39: ifne          43
+        42: return
+        43: aload_0
+        44: getfield      #128                // Field hitEntity:Ljava/lang/String;
+        47: astore        9
+        49: aload         9
+        51: ifnull        67
+        54: aload_2
+        55: aload_3
+        56: aload         5
+        58: invokestatic  #540                // Method isTargetInvulnerable:(Lcom/hypixel/hytale/component/CommandBuffer;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/Ref;)Z
+        61: ifeq          67
+        64: aconst_null
+        65: astore        9
+        67: aload_0
+        68: getfield      #132                // Field hitEntityRules:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$HitEntity;
+        71: ifnull        165
+        74: aload_0
+        75: getfield      #132                // Field hitEntityRules:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$HitEntity;
+        78: astore        10
+        80: aload         10
+        82: arraylength
+        83: istore        11
+        85: iconst_0
+        86: istore        12
+        88: iload         12
+        90: iload         11
+        92: if_icmpge     165
+        95: aload         10
+        97: iload         12
+        99: aaload
+       100: astore        13
+       102: aload         13
+       104: getfield      #544                // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$HitEntity.matchers:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$EntityMatcher;
+       107: astore        14
+       109: aload         14
+       111: arraylength
+       112: istore        15
+       114: iconst_0
+       115: istore        16
+       117: iload         16
+       119: iload         15
+       121: if_icmpge     152
+       124: aload         14
+       126: iload         16
+       128: aaload
+       129: astore        17
+       131: aload         17
+       133: aload_3
+       134: aload         5
+       136: aload_2
+       137: invokevirtual #548                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$EntityMatcher.test:(Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/Ref;Lcom/hypixel/hytale/component/CommandBuffer;)Z
+       140: ifne          146
+       143: goto          159
+       146: iinc          16, 1
+       149: goto          117
+       152: aload         13
+       154: getfield      #331                // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$HitEntity.next:Ljava/lang/String;
+       157: astore        9
+       159: iinc          12, 1
+       162: goto          88
+       165: aload         9
+       167: ifnonnull     171
+       170: return
+       171: aload         4
+       173: new           #184                // class com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$EntityCandidate
+       176: dup
+       177: aload         5
+       179: aload         6
+       181: aload         9
+       183: invokespecial #553                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$EntityCandidate."<init>":(Lcom/hypixel/hytale/component/Ref;Lorg/joml/Vector4d;Ljava/lang/String;)V
+       186: invokevirtual #437                // Method java/util/ArrayList.add:(Ljava/lang/Object;)Z
+       189: pop
+       190: return
+
+  private static com.hypixel.hytale.server.core.modules.interaction.interaction.config.selector.Selector lambda$static$25(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction);
+    Code:
+         0: aconst_null
+         1: areturn
+
+  private static com.hypixel.hytale.server.core.meta.DynamicMetaStore lambda$static$24(com.hypixel.hytale.server.core.entity.InteractionContext);
+    Code:
+         0: aconst_null
+         1: areturn
+
+  private static java.util.Set lambda$static$23(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction);
+    Code:
+         0: new           #556                // class java/util/HashSet
+         3: dup
+         4: invokespecial #558                // Method java/util/HashSet."<init>":()V
+         7: areturn
+
+  private static it.unimi.dsi.fastutil.ints.IntSet lambda$static$22(com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction);
+    Code:
+         0: new           #559                // class it/unimi/dsi/fastutil/ints/IntOpenHashSet
+         3: dup
+         4: invokespecial #561                // Method it/unimi/dsi/fastutil/ints/IntOpenHashSet."<init>":()V
+         7: areturn
+
+  private static void lambda$static$21(com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction, com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #156                // Field maxTargets:I
+         5: putfield      #156                // Field maxTargets:I
+         8: return
+
+  private static java.lang.Integer lambda$static$20(com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction);
+    Code:
+         0: aload_0
+         1: getfield      #156                // Field maxTargets:I
+         4: invokestatic  #562                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+         7: areturn
+
+  private static void lambda$static$19(com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction, java.lang.Integer);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #567                // Method java/lang/Integer.intValue:()I
+         5: putfield      #156                // Field maxTargets:I
+         8: return
+
+  private static void lambda$static$18(com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction, com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #18                 // Field ignoreOwner:Z
+         5: putfield      #18                 // Field ignoreOwner:Z
+         8: return
+
+  private static java.lang.Boolean lambda$static$17(com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction);
+    Code:
+         0: aload_0
+         1: getfield      #18                 // Field ignoreOwner:Z
+         4: invokestatic  #570                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         7: areturn
+
+  private static void lambda$static$16(com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction, java.lang.Boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #575                // Method java/lang/Boolean.booleanValue:()Z
+         5: putfield      #18                 // Field ignoreOwner:Z
+         8: return
+
+  private static com.hypixel.hytale.protocol.FailOnType lambda$static$15(com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction);
+    Code:
+         0: aload_0
+         1: getfield      #13                 // Field failOn:Lcom/hypixel/hytale/protocol/FailOnType;
+         4: areturn
+
+  private static void lambda$static$14(com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction, com.hypixel.hytale.protocol.FailOnType);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #13                 // Field failOn:Lcom/hypixel/hytale/protocol/FailOnType;
+         5: return
+
+  private static com.hypixel.hytale.codec.validation.LateValidator lambda$static$13();
+    Code:
+         0: getstatic     #578                // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction.VALIDATOR_CACHE:Lcom/hypixel/hytale/codec/validation/ValidatorCache;
+         3: invokevirtual #582                // Method com/hypixel/hytale/codec/validation/ValidatorCache.getValidator:()Lcom/hypixel/hytale/codec/validation/Validator;
+         6: invokeinterface #588,  1          // InterfaceMethod com/hypixel/hytale/codec/validation/Validator.late:()Lcom/hypixel/hytale/codec/validation/LateValidator;
+        11: areturn
+
+  private static void lambda$static$12(com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction, com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #285                // Field hitBlock:Ljava/lang/String;
+         5: putfield      #285                // Field hitBlock:Ljava/lang/String;
+         8: return
+
+  private static java.lang.String lambda$static$11(com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction);
+    Code:
+         0: aload_0
+         1: getfield      #285                // Field hitBlock:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$10(com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #285                // Field hitBlock:Ljava/lang/String;
+         5: return
+
+  private static void lambda$static$9(com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction, com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #132                // Field hitEntityRules:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$HitEntity;
+         5: putfield      #132                // Field hitEntityRules:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$HitEntity;
+         8: return
+
+  private static com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction$HitEntity[] lambda$static$8(com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction);
+    Code:
+         0: aload_0
+         1: getfield      #132                // Field hitEntityRules:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$HitEntity;
+         4: areturn
+
+  private static void lambda$static$7(com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction, com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction$HitEntity[]);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #132                // Field hitEntityRules:[Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$HitEntity;
+         5: return
+
+  private static com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction$HitEntity[] lambda$CODEC$0(int);
+    Code:
+         0: iload_0
+         1: anewarray     #332                // class com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$HitEntity
+         4: areturn
+
+  private static com.hypixel.hytale.codec.validation.LateValidator lambda$static$6();
+    Code:
+         0: getstatic     #578                // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction.VALIDATOR_CACHE:Lcom/hypixel/hytale/codec/validation/ValidatorCache;
+         3: invokevirtual #582                // Method com/hypixel/hytale/codec/validation/ValidatorCache.getValidator:()Lcom/hypixel/hytale/codec/validation/Validator;
+         6: invokeinterface #588,  1          // InterfaceMethod com/hypixel/hytale/codec/validation/Validator.late:()Lcom/hypixel/hytale/codec/validation/LateValidator;
+        11: areturn
+
+  private static void lambda$static$5(com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction, com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #128                // Field hitEntity:Ljava/lang/String;
+         5: putfield      #128                // Field hitEntity:Ljava/lang/String;
+         8: return
+
+  private static java.lang.String lambda$static$4(com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction);
+    Code:
+         0: aload_0
+         1: getfield      #128                // Field hitEntity:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$3(com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #128                // Field hitEntity:Ljava/lang/String;
+         5: return
+
+  private static void lambda$static$2(com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction, com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: getfield      #60                 // Field selector:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/selector/SelectorType;
+         5: putfield      #60                 // Field selector:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/selector/SelectorType;
+         8: return
+
+  private static com.hypixel.hytale.server.core.modules.interaction.interaction.config.selector.SelectorType lambda$static$1(com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction);
+    Code:
+         0: aload_0
+         1: getfield      #60                 // Field selector:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/selector/SelectorType;
+         4: areturn
+
+  private static void lambda$static$0(com.hypixel.hytale.server.core.modules.interaction.interaction.config.none.SelectInteraction, com.hypixel.hytale.server.core.modules.interaction.interaction.config.selector.SelectorType);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #60                 // Field selector:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/selector/SelectorType;
+         5: return
+
+  static {};
+    Code:
+         0: ldc           #14                 // class com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction
+         2: invokevirtual #594                // Method java/lang/Class.desiredAssertionStatus:()Z
+         5: ifne          12
+         8: iconst_1
+         9: goto          13
+        12: iconst_0
+        13: putstatic     #38                 // Field $assertionsDisabled:Z
+        16: getstatic     #90                 // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$SnapshotSource.CLIENT:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$SnapshotSource;
+        19: putstatic     #86                 // Field SNAPSHOT_SOURCE:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$SnapshotSource;
+        22: ldc           #14                 // class com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction
+        24: invokedynamic #599,  0            // InvokeDynamic #6:get:()Ljava/util/function/Supplier;
+        29: getstatic     #602                // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/SimpleInteraction.CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+        32: invokestatic  #606                // Method com/hypixel/hytale/codec/builder/BuilderCodec.builder:(Ljava/lang/Class;Ljava/util/function/Supplier;Lcom/hypixel/hytale/codec/builder/BuilderCodec;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$Builder;
+        35: ldc_w         #612                // String An interaction that can be used to find entities/blocks within a given area.\n\nThis runs the given `Selector` every tick this interactions runs for, the selector may change the search area over time (based on `RunTime`). e.g. to trace out an arc of a sword swing.\n\nWhen an entity/block is found this interaction will run a set of interactions (as defined by `HitEntity`/`HitBlock`) **per a entity/block**, this will not interrupt the selector and it will continue searching until the select interaction completes.\n\nThis interaction does not wait for any forked interaction chains from `HitEntity`/`HitBlock` to complete before finishing itself.
+        38: invokevirtual #614                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        41: checkcast     #615                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        44: new           #620                // class com/hypixel/hytale/codec/KeyedCodec
+        47: dup
+        48: ldc_w         #622                // String Selector
+        51: getstatic     #624                // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/selector/SelectorType.CODEC:Lcom/hypixel/hytale/codec/lookup/CodecMapCodec;
+        54: invokespecial #627                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        57: invokedynamic #630,  0            // InvokeDynamic #7:accept:()Ljava/util/function/BiConsumer;
+        62: invokedynamic #633,  0            // InvokeDynamic #8:apply:()Ljava/util/function/Function;
+        67: invokedynamic #637,  0            // InvokeDynamic #9:accept:()Ljava/util/function/BiConsumer;
+        72: invokevirtual #638                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        75: ldc_w         #642                // String The selector to use to find entities and blocks in an area.\nThe selector may be spread over the duration `RunTime`.
+        78: invokevirtual #644                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        81: invokestatic  #649                // Method com/hypixel/hytale/codec/validation/Validators.nonNull:()Lcom/hypixel/hytale/codec/validation/Validator;
+        84: invokevirtual #654                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidator:(Lcom/hypixel/hytale/codec/validation/Validator;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        87: invokevirtual #658                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        90: checkcast     #615                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        93: new           #620                // class com/hypixel/hytale/codec/KeyedCodec
+        96: dup
+        97: ldc_w         #661                // String HitEntity
+       100: getstatic     #663                // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction.CHILD_ASSET_CODEC:Lcom/hypixel/hytale/assetstore/codec/ContainedAssetCodec;
+       103: invokespecial #627                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       106: invokedynamic #667,  0            // InvokeDynamic #10:accept:()Ljava/util/function/BiConsumer;
+       111: invokedynamic #668,  0            // InvokeDynamic #11:apply:()Ljava/util/function/Function;
+       116: invokedynamic #669,  0            // InvokeDynamic #12:accept:()Ljava/util/function/BiConsumer;
+       121: invokevirtual #638                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       124: ldc_w         #670                // String The interactions to fork into when an entity is hit by the selector.\nThe hit entity will be the target of the interaction chain.\n\nAn entity cannot be hit multiple times by a single selector.
+       127: invokevirtual #644                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       130: invokedynamic #672,  0            // InvokeDynamic #13:get:()Ljava/util/function/Supplier;
+       135: invokevirtual #673                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidatorLate:(Ljava/util/function/Supplier;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       138: invokevirtual #658                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       141: checkcast     #615                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       144: new           #620                // class com/hypixel/hytale/codec/KeyedCodec
+       147: dup
+       148: ldc_w         #677                // String HitEntityRules
+       151: new           #679                // class com/hypixel/hytale/codec/codecs/array/ArrayCodec
+       154: dup
+       155: getstatic     #681                // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/none/SelectInteraction$HitEntity.CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       158: invokedynamic #682,  0            // InvokeDynamic #14:apply:()Ljava/util/function/IntFunction;
+       163: invokespecial #685                // Method com/hypixel/hytale/codec/codecs/array/ArrayCodec."<init>":(Lcom/hypixel/hytale/codec/Codec;Ljava/util/function/IntFunction;)V
+       166: invokespecial #627                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       169: invokedynamic #688,  0            // InvokeDynamic #15:accept:()Ljava/util/function/BiConsumer;
+       174: invokedynamic #689,  0            // InvokeDynamic #16:apply:()Ljava/util/function/Function;
+       179: invokedynamic #690,  0            // InvokeDynamic #17:accept:()Ljava/util/function/BiConsumer;
+       184: invokevirtual #638                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       187: ldc_w         #691                // String Tests any hit entity with the given rules, running a fork for the last one matched.\nThis overrides `HitEntity` if any match.
+       190: invokevirtual #644                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       193: invokevirtual #658                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       196: checkcast     #615                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       199: new           #620                // class com/hypixel/hytale/codec/KeyedCodec
+       202: dup
+       203: ldc_w         #693                // String HitBlock
+       206: getstatic     #663                // Field com/hypixel/hytale/server/core/modules/interaction/interaction/config/RootInteraction.CHILD_ASSET_CODEC:Lcom/hypixel/hytale/assetstore/codec/ContainedAssetCodec;
+       209: invokespecial #627                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       212: invokedynamic #695,  0            // InvokeDynamic #18:accept:()Ljava/util/function/BiConsumer;
+       217: invokedynamic #696,  0            // InvokeDynamic #19:apply:()Ljava/util/function/Function;
+       222: invokedynamic #697,  0            // InvokeDynamic #20:accept:()Ljava/util/function/BiConsumer;
+       227: invokevirtual #638                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       230: ldc_w         #698                // String The interactions to fork into when a block is hit by the selector.\nThe hit block will be the target of the interaction chain.\n\nA block cannot be hit multiple times by a single selector.
+       233: invokevirtual #644                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       236: invokedynamic #700,  0            // InvokeDynamic #21:get:()Ljava/util/function/Supplier;
+       241: invokevirtual #673                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.addValidatorLate:(Ljava/util/function/Supplier;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       244: invokevirtual #658                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       247: checkcast     #615                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       250: new           #620                // class com/hypixel/hytale/codec/KeyedCodec
+       253: dup
+       254: ldc_w         #701                // String FailOn
+       257: new           #703                // class com/hypixel/hytale/codec/codecs/EnumCodec
+       260: dup
+       261: ldc           #8                  // class com/hypixel/hytale/protocol/FailOnType
+       263: invokespecial #705                // Method com/hypixel/hytale/codec/codecs/EnumCodec."<init>":(Ljava/lang/Class;)V
+       266: invokespecial #627                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       269: invokedynamic #708,  0            // InvokeDynamic #22:accept:()Ljava/util/function/BiConsumer;
+       274: invokedynamic #709,  0            // InvokeDynamic #23:apply:()Ljava/util/function/Function;
+       279: invokevirtual #710                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       282: ldc_w         #714                // String Changes what causes the Failed case to run
+       285: invokevirtual #644                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       288: invokevirtual #658                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       291: checkcast     #615                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       294: new           #620                // class com/hypixel/hytale/codec/KeyedCodec
+       297: dup
+       298: ldc_w         #716                // String IgnoreOwner
+       301: getstatic     #718                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+       304: invokespecial #627                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       307: invokedynamic #724,  0            // InvokeDynamic #24:accept:()Ljava/util/function/BiConsumer;
+       312: invokedynamic #725,  0            // InvokeDynamic #25:apply:()Ljava/util/function/Function;
+       317: invokedynamic #726,  0            // InvokeDynamic #26:accept:()Ljava/util/function/BiConsumer;
+       322: invokevirtual #638                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       325: ldc_w         #727                // String Determines whether the owner of the affiliated entity should be ignored in the selection.\n\nFor example, ignoring the thrower of a projectile.
+       328: invokevirtual #644                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       331: invokevirtual #658                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       334: checkcast     #615                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       337: new           #620                // class com/hypixel/hytale/codec/KeyedCodec
+       340: dup
+       341: ldc_w         #729                // String MaxTargets
+       344: getstatic     #731                // Field com/hypixel/hytale/codec/Codec.INTEGER:Lcom/hypixel/hytale/codec/codecs/simple/IntegerCodec;
+       347: invokespecial #627                // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       350: invokedynamic #735,  0            // InvokeDynamic #27:accept:()Ljava/util/function/BiConsumer;
+       355: invokedynamic #736,  0            // InvokeDynamic #28:apply:()Ljava/util/function/Function;
+       360: invokedynamic #737,  0            // InvokeDynamic #29:accept:()Ljava/util/function/BiConsumer;
+       365: invokevirtual #638                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.appendInherited:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       368: ldc_w         #738                // String Maximum number of targets to select for running interactions (uses reservoir sampling).
+       371: invokevirtual #644                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.documentation:(Ljava/lang/String;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       374: invokevirtual #658                // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       377: checkcast     #615                // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       380: invokevirtual #740                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.build:()Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       383: putstatic     #744                // Field CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       386: getstatic     #745                // Field META_REGISTRY:Lcom/hypixel/hytale/server/core/meta/MetaRegistry;
+       389: invokedynamic #749,  0            // InvokeDynamic #30:apply:()Ljava/util/function/Function;
+       394: invokevirtual #750                // Method com/hypixel/hytale/server/core/meta/MetaRegistry.registerMetaObject:(Ljava/util/function/Function;)Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       397: putstatic     #136                // Field HIT_ENTITIES:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       400: getstatic     #745                // Field META_REGISTRY:Lcom/hypixel/hytale/server/core/meta/MetaRegistry;
+       403: invokedynamic #756,  0            // InvokeDynamic #31:apply:()Ljava/util/function/Function;
+       408: invokevirtual #750                // Method com/hypixel/hytale/server/core/meta/MetaRegistry.registerMetaObject:(Ljava/util/function/Function;)Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       411: putstatic     #288                // Field HIT_BLOCKS:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       414: getstatic     #757                // Field CONTEXT_META_REGISTRY:Lcom/hypixel/hytale/server/core/meta/MetaRegistry;
+       417: invokedynamic #760,  0            // InvokeDynamic #32:apply:()Ljava/util/function/Function;
+       422: invokevirtual #750                // Method com/hypixel/hytale/server/core/meta/MetaRegistry.registerMetaObject:(Ljava/util/function/Function;)Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       425: putstatic     #215                // Field SELECT_META_STORE:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       428: getstatic     #745                // Field META_REGISTRY:Lcom/hypixel/hytale/server/core/meta/MetaRegistry;
+       431: invokedynamic #761,  0            // InvokeDynamic #33:apply:()Ljava/util/function/Function;
+       436: invokevirtual #750                // Method com/hypixel/hytale/server/core/meta/MetaRegistry.registerMetaObject:(Ljava/util/function/Function;)Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       439: putstatic     #100                // Field ENTITY_SELECTOR:Lcom/hypixel/hytale/server/core/meta/MetaKey;
+       442: ldc_w         #661                // String HitEntity
+       445: invokestatic  #762                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/data/StringTag.of:(Ljava/lang/String;)Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/data/StringTag;
+       448: putstatic     #317                // Field TAG_HIT_ENTITY:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/data/StringTag;
+       451: ldc_w         #693                // String HitBlock
+       454: invokestatic  #762                // Method com/hypixel/hytale/server/core/modules/interaction/interaction/config/data/StringTag.of:(Ljava/lang/String;)Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/data/StringTag;
+       457: putstatic     #341                // Field TAG_HIT_BLOCK:Lcom/hypixel/hytale/server/core/modules/interaction/interaction/config/data/StringTag;
+       460: return
+}

@@ -1,0 +1,5 @@
+Wired the six Sentinel recipient adapters for WA-079, WA-080, WA-081, WA-082, WA-084, and WA-111 through a shared selector backed by the live `summonSystem.sentinelEffects` lease. Player equipment remains on its existing path. The damage filter now applies qualified critical reduction to Sentinel NPCs; the summon guard still owns incoming resistance, and its duplicate critical reduction is removed. Plugin registration and world-unload cleanup are in place. WA-083, WA-147, and WA-141 remain gated.
+
+Direct `javac --release 25` compiled the scoped production files, and **17/17 focused JUnit tests passed**. No Gradle, game, server, deployment, or commit was run. The offline tests did not construct a native `Store`, so wrong-world, dead-owner, and missing-owned-item rejection were reviewed in `sentinelEffects` but were not independently exercised end to end.
+
+The full result is in [recipient-adapters-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/recipient-adapters-result.md).

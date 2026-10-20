@@ -1,0 +1,5 @@
+Implemented the combat-owned native hit path: rounded Physical power, seven damage channels, frozen projectile snapshots, critical and conditional hit data, live player resistance filtering, Defense helpers, and a skill handoff API. Added deterministic positive, control, and boundary tests, but **did not run them** because the main agent owns Gradle validation.
+
+This scope is **not yet complete**. Conditional Gather registration, skill call sites, NPC penetration, and authoritative basic-attack critical baselines still need cross-owner work. The enabled gate remains in place; no 160-affix completion claim is made.
+
+Exact wiring instructions, changed files, tests, and boundaries are in [combat-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/combat-result.md).

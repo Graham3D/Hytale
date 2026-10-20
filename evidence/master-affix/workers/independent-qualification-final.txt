@@ -1,0 +1,3 @@
+The read-only qualification review is in [independent-qualification-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/independent-qualification-result.md). It covers all 80 IDs with specific gaps, separating existing offline adapter proof from the tests still needed. It keeps WA-155 gated and makes no 160-functional claim.
+
+Focused JUnit XML shows passing evidence for several recent fixes; the retained full-suite XML still contains one failure and predates a source change, so a fresh complete pass is unverified. No Gradle, server, deployment, commit, or agent was run.

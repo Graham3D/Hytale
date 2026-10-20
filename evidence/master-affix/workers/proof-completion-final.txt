@@ -1,0 +1,5 @@
+Registered reviewed evidence candidates across all 160 affixes, including the simulator’s equipment lifecycle and legal carrier test fields. The registry now has 135 positive, 114 control, and 109 negative runtime candidates. Source review found no registered field with an unbound ID or unverified consumer call chain.
+
+Python verification passed **14 tests**. The read-only coverage report remains **0 FUNCTIONAL, 160 GATED**: simulator rows lack fresh per-ID JUnit XML, 156 carrier bases still need explicit mapped proof, and other runtime scenarios remain open. The production gate and final audit were untouched.
+
+The counts, affix IDs, and precise tests still required are in [proof-completion-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/proof-completion-result.md).

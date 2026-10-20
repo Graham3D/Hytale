@@ -1,0 +1,3 @@
+I staged 405 stock-derived shield, staff, wand, and book carrier assets and pinned their native source hashes. I also made binding enumeration deterministic and made the interaction audit reject unmanaged native explosions. The [carrier evidence](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/carriers-result.md) records the asset graphs and exact cross-owner wiring needed.
+
+The offline carrier check passed for all 405 assets. **Zero affix IDs are complete.** All 90 shield, focus, and bomb bases remain gated: focus damage, shield Smite, and a durable snapshot-owned bomb action still need production integration and native positive/control/negative tests. I did not run Gradle or launch the game.

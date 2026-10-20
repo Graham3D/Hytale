@@ -1,0 +1,5 @@
+Implemented the WA-094–098 recovery hooks in the production owners and added [GearRecoveryBindings.java](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/src/main/java/com/inigmasgames/hytalerpg/execution/hytale/GearRecoveryBindings.java) with the observer, payout tick, callbacks, and lifecycle systems main can register. The support Health writer, committed attack registration, credited death dispatch, and Sentinel lease checks are in place.
+
+Direct compilation of the affected recovery, support, encounter, and skill sources passed. Focused positive, control, and negative tests passed **11/11**. The capability gate remains closed, and no connected QA is claimed.
+
+The exact `HyArpgPlugin` constructor, registration, and lifecycle lines are in [recovery2-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/recovery2-result.md). Main still owns those plugin edits and the combined build.

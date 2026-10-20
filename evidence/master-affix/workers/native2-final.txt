@@ -1,0 +1,3 @@
+Implemented native-facing adapters for **WA-015, WA-016, WA-155, and WA-156**, with deterministic positive, control, and negative contract tests. The new production classes and test class compile against the installed server JAR. Gradle and the server were not run.
+
+**None of the four IDs is functional or enabled yet.** Projectile and loot owner calls, light calibration, and registered runtime tests remain. The exact wiring and known boundaries are in [native2-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/native2-result.md). The 160-affix task remains unfinished.

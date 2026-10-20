@@ -1,0 +1,5 @@
+The resources continuation is **partial**. I fixed the support test syntax, froze effective rank through skill release, connected periodic status modifiers to real producers, and added Life Drain’s recipient healing modifier. I also added deterministic resource, rank, and paid channel tests.
+
+[resources2-result.md](<C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/resources2-result.md>) records the changed files, native hooks, tests, and cross-owner work. WA-105 remains disconnected because the finite shield controller compounds capacity across equipment changes. WA-109 needs the status owner’s channel admission hook; WA-112 needs an actual successful cleanse receipt and barrier path. The production `ENABLED` gate remains in place.
+
+`git diff --check` found no whitespace errors. Tests were **not run**; the main agent owns Gradle verification. I did not claim 160 affixes complete.

@@ -1,0 +1,5 @@
+I wired WA-015/016 into the existing managed projectile launch, added a player light ECS bridge for WA-155, and connected WA-156’s extended material reach to the protected stock transfer using the exact source and a LOS recheck. The focused offline suite passed **6 tests**; I did not run Gradle.
+
+**None of the four IDs is ready to enable.** The main owned plugin still needs to register the projectile path and light systems. Light radius needs client calibration, Stage04 skill projectiles need the same launch hook, and ordinary world material pickup remains outside the copied-save stock route.
+
+The changed files, exact registration calls, test evidence, and remaining boundaries are in [native3-result.md](/C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/native3-result.md).

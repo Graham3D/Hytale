@@ -1,0 +1,5 @@
+The direct skill path now submits gear affected damage by channel through the native damage adapter, using the committed gear snapshot and the skill’s existing critical roll. NPC penetration uses its existing resistance pass; player resistance combines native and gear values before the cap and penetration calculation.
+
+**Combat scope remains unfinished.** Quick Slash’s mixed Physical/Fire path still uses scalar damage, duplicate same-carrier items need a frozen source UUID at skill acceptance, and the registered normal maximum Health provider currently uses live `Health.getMax()`, which can include temporary capacity. The exact wiring and remaining work are in [combat2-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/combat2-result.md).
+
+Deterministic tests were added but not run. Gradle, server, game, deployment, commits, and pushes were not run. The `ENABLED` gate remains in place; I am not claiming these IDs or the 160-affix matrix complete.

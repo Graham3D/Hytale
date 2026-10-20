@@ -1,0 +1,2364 @@
+[
+  {
+    "fixtureId": "qa159-01",
+    "baseId": "gm.plate_iron.head.h",
+    "itemId": "3ae0e583-dbe7-3ba1-bb15-6aea8586545a",
+    "affixes": [
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "cooldown",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/SkillExecutionService.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-012",
+        "value": 3.2
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "resist by channel",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-075",
+        "value": 9.6
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "resist by channel",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-078",
+        "value": 2.4
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "statusResistance",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/status/GearStatusRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-079",
+        "value": 2.4
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/status/StatusService.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-080",
+        "value": 3.6
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "heavy",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearEquipmentResolution.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-090",
+        "value": 1.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "mana",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearEquipmentResolution.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-092",
+        "value": 8.4
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/resource/GearRecoveryRuntime.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-098",
+        "value": 0.4
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "find",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearLootService.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-151",
+        "value": 7.2
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearEquipmentResolution.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-154",
+        "value": 7.2
+      }
+    ],
+    "qaOnly": true
+  },
+  {
+    "fixtureId": "qa159-02",
+    "baseId": "gm.robes_oracle.chest.h",
+    "itemId": "29d0230a-cf7e-3d64-873e-b5de0fd8598e",
+    "affixes": [
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "defense",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/HytaleGearEquipment.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "GA-160",
+        "value": 12.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "resist by channel",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-073",
+        "value": 9.6
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "magic",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearEquipmentResolution.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-087",
+        "value": 4.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "stamina",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearEquipmentResolution.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-093",
+        "value": 9.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "manaRegen",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/resource/RpgResourceService.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-099",
+        "value": 6.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "manaCost",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/resource/RpgResourceService.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-101",
+        "value": 2.4
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "healingDone",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/support/SupportRuntime.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-104",
+        "value": 6.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "barrierStrength",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-105",
+        "value": 6.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "supportDuration",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-110",
+        "value": 5.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "minionHealth",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleSummonSystem.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-114",
+        "value": 7.2
+      }
+    ],
+    "qaOnly": true
+  },
+  {
+    "fixtureId": "qa159-03",
+    "baseId": "gm.cloth_cinder.hands.h",
+    "itemId": "e06f47c5-0561-30a0-9ff1-83b14abfbd4b",
+    "affixes": [
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "physicalDamage",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-006",
+        "value": 6.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "damage by channel",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-007",
+        "value": 5.6
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "cast",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/SkillExecutionService.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-009",
+        "value": 3.6
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "dotDamage",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/status/GearStatusRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-013",
+        "value": 7.2
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "damageChannel",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-024",
+        "value": 7.2
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "resist by channel",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-074",
+        "value": 9.6
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/status/StatusService.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-081",
+        "value": 5.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "healing",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearEquipmentResolution.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-088",
+        "value": 4.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "health",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearEquipmentResolution.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-091",
+        "value": 16.8
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/NativeAffixDurabilitySystems.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-153",
+        "value": 12.0
+      }
+    ],
+    "qaOnly": true
+  },
+  {
+    "fixtureId": "qa159-04",
+    "baseId": "gm.leather_raven.legs.h",
+    "itemId": "0de0b862-349f-330f-87fa-482980797b17",
+    "affixes": [
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "defense",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/HytaleGearEquipment.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "GA-159",
+        "value": 0.9
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "resist by channel",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-072",
+        "value": 9.6
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "resist by channel",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-076",
+        "value": 9.6
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "resist by channel",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-077",
+        "value": 9.6
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "critical",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearEquipmentResolution.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-089",
+        "value": 4.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "staminaRegen",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/resource/RpgResourceService.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-100",
+        "value": 6.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "staminaCost",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/resource/RpgResourceService.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-102",
+        "value": 2.4
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "healingReceived",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleSummonSystem.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-111",
+        "value": 3.2
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "currencyQuantity",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/progress/EncounterContributions.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-152",
+        "value": 12.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "pickupReachBonus",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/NativeAffixMaterialPickup.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-156",
+        "value": 0.4
+      }
+    ],
+    "qaOnly": true
+  },
+  {
+    "fixtureId": "qa159-05",
+    "baseId": "gm.sword_copper.h",
+    "itemId": "f7383d8f-6ed0-3082-9e99-d2b619327f79",
+    "affixes": [
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "weapon/critical presentation",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-001",
+        "value": 4.8
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-005",
+        "value": 14.4
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "damageChannel",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-025",
+        "value": 14.4
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-036",
+        "value": 12.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/hytale/HytaleConditionalDamage.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-052",
+        "value": 9.6
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/status/GearStatusRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-061",
+        "value": 4.8
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/status/GearStatusRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-066",
+        "value": 14.4
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/resource/GearRecoveryRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-094",
+        "value": 1.6
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/GearSkillRanks.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-124",
+        "value": 1.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/ItemSkillTriggerRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-146",
+        "value": 4.8
+      }
+    ],
+    "qaOnly": true
+  },
+  {
+    "fixtureId": "qa159-06",
+    "baseId": "gm.battleaxe_iron.h",
+    "itemId": "763c5053-374a-3006-b6c3-c5833ecbb007",
+    "affixes": [
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "weapon/critical presentation",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-002",
+        "value": 36.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "penetrationChannel",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-034",
+        "value": 4.8
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-037",
+        "value": 12.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/hytale/HytaleConditionalDamage.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-051",
+        "value": 11.2
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/status/GearStatusRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-059",
+        "value": 4.8
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "statusDuration",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/status/GearStatusRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-068",
+        "value": 12.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/HytaleGearEquipment.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-071",
+        "value": 7.2
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/GearSkillRanks.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-127",
+        "value": 1.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearSignatureProcRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-135",
+        "value": 4.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearSignatureProcRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-137",
+        "value": 10.0
+      }
+    ],
+    "qaOnly": true
+  },
+  {
+    "fixtureId": "qa159-07",
+    "baseId": "gm.mace_thorium.h",
+    "itemId": "37d952dd-a4d3-3094-8f57-7b5eef5c61b1",
+    "affixes": [
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "critical",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-010",
+        "value": 2.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/NativePrimaryActionAssets.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-014",
+        "value": 0.2
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "penetrationChannel",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-033",
+        "value": 4.8
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-040",
+        "value": 12.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/hytale/HytaleConditionalDamage.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-045",
+        "value": 14.4
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/status/GearStatusRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-056",
+        "value": 10.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/GearSkillRanks.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-123",
+        "value": 1.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearSignatureProcRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-136",
+        "value": 4.8
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/ManagedGearDamageInteraction.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-157",
+        "value": 4.0
+      }
+    ],
+    "qaOnly": true
+  },
+  {
+    "fixtureId": "qa159-08",
+    "baseId": "gm.daggers_adamantite.h",
+    "itemId": "d833d270-0659-3b10-9d3c-01d8299ac955",
+    "affixes": [
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-018",
+        "value": 4.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "damageChannel",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-027",
+        "value": 14.4
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "penetrationChannel",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-029",
+        "value": 4.8
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-038",
+        "value": 12.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/hytale/HytaleConditionalDamage.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-041",
+        "value": 12.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/status/GearStatusRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-057",
+        "value": 10.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/GearSkillRanks.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-129",
+        "value": 1.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INAPPLICABLE",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/ManagedGearDamageInteraction.java",
+          "sentinelReason": "INAPPLICABLE on the current single-item chassis: Twin Assault requires two actual distinct daggers; no offhand is fabricated"
+        },
+        "affixId": "WA-141",
+        "value": 4.8
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/ItemSkillTriggerRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-145",
+        "value": 4.8
+      }
+    ],
+    "qaOnly": true
+  },
+  {
+    "fixtureId": "qa159-09",
+    "baseId": "gm.daggers_cobalt.h",
+    "itemId": "ae4821f4-5bc9-33cf-a71e-df076c61ed9c",
+    "affixes": [
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/hytale/HytaleConditionalDamage.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-043",
+        "value": 14.4
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/status/GearStatusRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-055",
+        "value": 10.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "statusPenetration",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/status/GearStatusRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-064",
+        "value": 4.8
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/NativeAffixHostileDisplacement.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-082",
+        "value": 12.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/resource/GearRecoveryRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-096",
+        "value": 1.6
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/resource/GearRecoveryRuntime.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-097",
+        "value": 0.8
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/GearSkillRanks.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-126",
+        "value": 1.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearSignatureProcRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-138",
+        "value": 10.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/ManagedGearDamageInteraction.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-158",
+        "value": 6.4
+      }
+    ],
+    "qaOnly": true
+  },
+  {
+    "fixtureId": "qa159-10",
+    "baseId": "gm.shortbow_cobalt.h",
+    "itemId": "93ea829a-689a-3350-92c2-8cd08a42d976",
+    "affixes": [
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/NativePrimaryActionAssets.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-008",
+        "value": 7.2
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-017",
+        "value": 4.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "damageChannel",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-023",
+        "value": 14.4
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "penetrationChannel",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-031",
+        "value": 4.8
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-035",
+        "value": 12.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/hytale/HytaleConditionalDamage.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-049",
+        "value": 11.2
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/status/GearStatusRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-065",
+        "value": 14.4
+      },
+      {
+        "selector": "hunter_s_mark",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/GearSkillRanks.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-122",
+        "value": 1.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/status/GearStatusRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-134",
+        "value": 8.0
+      }
+    ],
+    "qaOnly": true
+  },
+  {
+    "fixtureId": "qa159-11",
+    "baseId": "gm.crossbow_heavy.h",
+    "itemId": "23ed3890-fc05-39e6-8d46-a8b477e2be41",
+    "affixes": [
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/NativeAffixProjectileTravel.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-015",
+        "value": 12.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-019",
+        "value": 4.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "damageChannel",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-026",
+        "value": 14.4
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/hytale/HytaleConditionalDamage.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-050",
+        "value": 11.2
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/status/GearStatusRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-062",
+        "value": 4.8
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "heavy",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearEquipmentResolution.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-085",
+        "value": 9.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/resource/GearRecoveryRuntime.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-095",
+        "value": 0.8
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/GearSkillRanks.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-133",
+        "value": 1.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearSignatureProcRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-139",
+        "value": 5.0
+      }
+    ],
+    "qaOnly": true
+  },
+  {
+    "fixtureId": "qa159-12",
+    "baseId": "gm.longsword_adamantite.h",
+    "itemId": "fe595e9a-c0d9-3be5-b094-2f6ac0737628",
+    "affixes": [
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-021",
+        "value": 4.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "penetrationChannel",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-030",
+        "value": 4.8
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-039",
+        "value": 12.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/hytale/HytaleConditionalDamage.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-046",
+        "value": 12.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/status/GearStatusRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-053",
+        "value": 10.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/GearSkillRanks.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-125",
+        "value": 1.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearSignatureProcRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-140",
+        "value": 10.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearSignatureProcRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-143",
+        "value": 6.4
+      },
+      {
+        "selector": "execution_strike",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/SkillExecutionService.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-144",
+        "value": 1.0
+      }
+    ],
+    "qaOnly": true
+  },
+  {
+    "fixtureId": "qa159-13",
+    "baseId": "gm.shield_mithril.h",
+    "itemId": "e02a49d6-4265-3b09-83be-ce6063ba169e",
+    "affixes": [
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/hytale/HytaleConditionalDamage.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-047",
+        "value": 11.2
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/HytaleGearEquipment.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-069",
+        "value": 24.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/HytaleGearEquipment.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-070",
+        "value": 24.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INAPPLICABLE",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/NativeAffixBlockCostSystem.java",
+          "sentinelReason": "INAPPLICABLE on the current unguarded chassis: native successful block and eligible guard source are required; no block is fabricated"
+        },
+        "affixId": "WA-083",
+        "value": 7.2
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearDefenseEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-084",
+        "value": 12.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/GearSkillRanks.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-132",
+        "value": 1.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearSignatureProcRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-142",
+        "value": 4.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INAPPLICABLE",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/ItemSkillTriggerRuntime.java",
+          "sentinelReason": "INAPPLICABLE on the current unguarded chassis: native successful block and eligible guard source are required; no block is fabricated"
+        },
+        "affixId": "WA-147",
+        "value": 4.8
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/support/SupportRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-149",
+        "value": 1.0
+      }
+    ],
+    "qaOnly": true
+  },
+  {
+    "fixtureId": "qa159-14",
+    "baseId": "gm.staff_flame.h",
+    "itemId": "50df1594-1235-388a-9782-86990b7f1984",
+    "affixes": [
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "spellDamage",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-004",
+        "value": 14.4
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/hytale/HytaleConditionalDamage.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-048",
+        "value": 11.2
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/status/GearStatusRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-058",
+        "value": 10.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "channelCost",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/resource/RpgResourceService.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-107",
+        "value": 7.2
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/status/StatusService.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-109",
+        "value": 7.2
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/support/FiniteSupportEffects.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-112",
+        "value": 2.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "minionResistance",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleSummonSystem.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-116",
+        "value": 4.8
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "minionAttackSpeed",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/summon/SummonRegistry.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-117",
+        "value": 4.8
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/GearSkillRanks.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-128",
+        "value": 1.0
+      }
+    ],
+    "qaOnly": true
+  },
+  {
+    "fixtureId": "qa159-15",
+    "baseId": "gm.staff_healing.h",
+    "itemId": "645aaeef-bc92-3d61-8c26-e7ed283a669b",
+    "affixes": [
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-022",
+        "value": 4.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/status/GearStatusRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-060",
+        "value": 4.8
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "light",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearEquipmentResolution.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-086",
+        "value": 9.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "healingPower",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/support/SupportRuntime.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-103",
+        "value": 4.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "minionMovement",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/summon/SummonNativeMovement.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-118",
+        "value": 7.2
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "minionDuration",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/summon/SummonRegistry.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-119",
+        "value": 12.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "summonCost",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/resource/RpgResourceService.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-120",
+        "value": 6.4
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/GearSkillRanks.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-131",
+        "value": 1.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/support/SupportRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-148",
+        "value": 1.0
+      }
+    ],
+    "qaOnly": true
+  },
+  {
+    "fixtureId": "qa159-16",
+    "baseId": "gm.book_binder.h",
+    "itemId": "f0fc7dbb-3bf3-3bad-8fb2-fc82edf3222d",
+    "affixes": [
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "criticalDamage",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-011",
+        "value": 10.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-020",
+        "value": 4.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "damageChannel",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-028",
+        "value": 14.4
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/hytale/HytaleConditionalDamage.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-044",
+        "value": 14.4
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/status/GearStatusRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-054",
+        "value": 10.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "channelRamp",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/GearSupportModifiers.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-108",
+        "value": 2.4
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "minionDamage",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/hytale/HytaleDamageAdapter.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-113",
+        "value": 12.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/GearSkillRanks.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-121",
+        "value": 1.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/support/SupportRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-150",
+        "value": 1.0
+      }
+    ],
+    "qaOnly": true
+  },
+  {
+    "fixtureId": "qa159-17",
+    "baseId": "gm.wand_crystal.h",
+    "itemId": "5fc0df3b-7ad9-3691-8faa-99b65f271648",
+    "affixes": [
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "weapon/critical presentation",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/ManagedCarrierDamageInteraction.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-003",
+        "value": 4.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/NativeAffixProjectileTravel.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-016",
+        "value": 12.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "penetrationChannel",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCombatEffects.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-032",
+        "value": 4.8
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/hytale/HytaleConditionalDamage.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-042",
+        "value": 12.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/status/GearStatusRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-063",
+        "value": 4.8
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "INHERITED",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "EXPECTED",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/combat/status/GearStatusRuntime.java",
+          "sentinelReason": "Hywind Sentinel native combat adapter"
+        },
+        "affixId": "WA-067",
+        "value": 14.4
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "tetherReach",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/connection/ConnectionRuntime.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-106",
+        "value": 12.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "EXPECTED",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "minionDefense",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleSummonSystem.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-115",
+        "value": 12.0
+      },
+      {
+        "selector": "",
+        "checks": {
+          "inventoryStats": "NOT_APPLICABLE",
+          "sentinelDisposition": "OWNER_ONLY",
+          "gameplay": "EXPECTED",
+          "statsField": "NOT_APPLICABLE",
+          "sentinel": "NOT_APPLICABLE",
+          "runtimeOwner": "src/main/java/com/inigmasgames/hytalerpg/execution/GearSkillRanks.java",
+          "sentinelReason": "Player-only action, equipment, economy, or skill context; bound Sentinel receives no copy"
+        },
+        "affixId": "WA-130",
+        "value": 1.0
+      }
+    ],
+    "qaOnly": true
+  }
+]

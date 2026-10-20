@@ -1,0 +1,3 @@
+Implemented the Gold reward consumer and saved balance in the shared reward receipt path. Ordinary eligible deaths now freeze one configurable Gold pot; Gold and its fractional remainder are saved together with the accepted reward receipt. Added receipt, replay, restart, migration, party allocation, and isolated QA Magic Find tests.
+
+WA-152 remains behind its existing enabled gate. The tests have **not** been run, and connected gameplay is unverified; I did not run Gradle or launch the game. The changed files, exact wiring, and main-owner follow-up are in [gold-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/gold-result.md).

@@ -1,0 +1,3 @@
+I added resource cost and regeneration, healing and barrier, tether and channel, and skill-rank consumers using valid-equipment snapshots. I also added deterministic tests and recorded the exact native wiring and cross-owner work in [resources-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/resources-result.md).
+
+**This scope is unfinished.** WA-109, WA-112, WA-144–150 and some rank and healing boundaries still need the receipts, lifecycle hooks, or catalog fields listed in the evidence file. The production capability gate remains in place. I did not run Gradle; the main agent must compile and run the tests.

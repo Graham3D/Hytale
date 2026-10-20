@@ -1,0 +1,5 @@
+I added a WA-083 native block-cost adapter and deterministic positive, control, and negative tests. The adapter uses the installed server’s pre-debit `Damage.STAMINA_DRAIN_MULTIPLIER` seam.
+
+**WA-083 is not complete or enabled.** The system still needs registration by the main owner, and guard-source attribution and shield carriers remain unresolved. No ID in my scope is claimed complete. I did not run Gradle or launch the game, as directed.
+
+The [native worker evidence](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/native-result.md) lists the changed files, exact registration instruction, API findings, and remaining boundaries for every assigned ID.

@@ -1,0 +1,381 @@
+Compiled from "ItemGridSlot.java"
+public class com.hypixel.hytale.server.core.ui.ItemGridSlot {
+  public static final com.hypixel.hytale.codec.builder.BuilderCodec<com.hypixel.hytale.server.core.ui.ItemGridSlot> CODEC;
+
+  private com.hypixel.hytale.server.core.inventory.ItemStack itemStack;
+
+  private com.hypixel.hytale.server.core.ui.Value<com.hypixel.hytale.server.core.ui.PatchStyle> background;
+
+  private com.hypixel.hytale.server.core.ui.Value<com.hypixel.hytale.server.core.ui.PatchStyle> overlay;
+
+  private com.hypixel.hytale.server.core.ui.Value<com.hypixel.hytale.server.core.ui.PatchStyle> icon;
+
+  private boolean isItemIncompatible;
+
+  private java.lang.String name;
+
+  private java.lang.String description;
+
+  private boolean skipItemQualityBackground;
+
+  private boolean isActivatable;
+
+  private boolean isItemUncraftable;
+
+  public com.hypixel.hytale.server.core.ui.ItemGridSlot();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+
+  public com.hypixel.hytale.server.core.ui.ItemGridSlot(com.hypixel.hytale.server.core.inventory.ItemStack);
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: aload_1
+         6: putfield      #7                  // Field itemStack:Lcom/hypixel/hytale/server/core/inventory/ItemStack;
+         9: return
+
+  public com.hypixel.hytale.server.core.ui.ItemGridSlot setItemStack(com.hypixel.hytale.server.core.inventory.ItemStack);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #7                  // Field itemStack:Lcom/hypixel/hytale/server/core/inventory/ItemStack;
+         5: aload_0
+         6: areturn
+
+  public com.hypixel.hytale.server.core.ui.ItemGridSlot setBackground(com.hypixel.hytale.server.core.ui.Value<com.hypixel.hytale.server.core.ui.PatchStyle>);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #13                 // Field background:Lcom/hypixel/hytale/server/core/ui/Value;
+         5: aload_0
+         6: areturn
+
+  public com.hypixel.hytale.server.core.ui.ItemGridSlot setOverlay(com.hypixel.hytale.server.core.ui.Value<com.hypixel.hytale.server.core.ui.PatchStyle>);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #17                 // Field overlay:Lcom/hypixel/hytale/server/core/ui/Value;
+         5: aload_0
+         6: areturn
+
+  public com.hypixel.hytale.server.core.ui.ItemGridSlot setIcon(com.hypixel.hytale.server.core.ui.Value<com.hypixel.hytale.server.core.ui.PatchStyle>);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #20                 // Field icon:Lcom/hypixel/hytale/server/core/ui/Value;
+         5: aload_0
+         6: areturn
+
+  public com.hypixel.hytale.server.core.ui.ItemGridSlot setItemIncompatible(boolean);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: putfield      #23                 // Field isItemIncompatible:Z
+         5: aload_0
+         6: areturn
+
+  public com.hypixel.hytale.server.core.ui.ItemGridSlot setName(java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #27                 // Field name:Ljava/lang/String;
+         5: aload_0
+         6: areturn
+
+  public com.hypixel.hytale.server.core.ui.ItemGridSlot setDescription(java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #31                 // Field description:Ljava/lang/String;
+         5: aload_0
+         6: areturn
+
+  public boolean isItemUncraftable();
+    Code:
+         0: aload_0
+         1: getfield      #34                 // Field isItemUncraftable:Z
+         4: ireturn
+
+  public void setItemUncraftable(boolean);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: putfield      #34                 // Field isItemUncraftable:Z
+         5: return
+
+  public boolean isActivatable();
+    Code:
+         0: aload_0
+         1: getfield      #37                 // Field isActivatable:Z
+         4: ireturn
+
+  public void setActivatable(boolean);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: putfield      #37                 // Field isActivatable:Z
+         5: return
+
+  public boolean isSkipItemQualityBackground();
+    Code:
+         0: aload_0
+         1: getfield      #40                 // Field skipItemQualityBackground:Z
+         4: ireturn
+
+  public void setSkipItemQualityBackground(boolean);
+    Code:
+         0: aload_0
+         1: iload_1
+         2: putfield      #40                 // Field skipItemQualityBackground:Z
+         5: return
+
+  private static java.lang.Boolean lambda$static$19(com.hypixel.hytale.server.core.ui.ItemGridSlot);
+    Code:
+         0: aload_0
+         1: getfield      #34                 // Field isItemUncraftable:Z
+         4: invokestatic  #43                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         7: areturn
+
+  private static void lambda$static$18(com.hypixel.hytale.server.core.ui.ItemGridSlot, java.lang.Boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #49                 // Method java/lang/Boolean.booleanValue:()Z
+         5: putfield      #34                 // Field isItemUncraftable:Z
+         8: return
+
+  private static java.lang.Boolean lambda$static$17(com.hypixel.hytale.server.core.ui.ItemGridSlot);
+    Code:
+         0: aload_0
+         1: getfield      #37                 // Field isActivatable:Z
+         4: invokestatic  #43                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         7: areturn
+
+  private static void lambda$static$16(com.hypixel.hytale.server.core.ui.ItemGridSlot, java.lang.Boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #49                 // Method java/lang/Boolean.booleanValue:()Z
+         5: putfield      #37                 // Field isActivatable:Z
+         8: return
+
+  private static java.lang.Boolean lambda$static$15(com.hypixel.hytale.server.core.ui.ItemGridSlot);
+    Code:
+         0: aload_0
+         1: getfield      #40                 // Field skipItemQualityBackground:Z
+         4: invokestatic  #43                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         7: areturn
+
+  private static void lambda$static$14(com.hypixel.hytale.server.core.ui.ItemGridSlot, java.lang.Boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #49                 // Method java/lang/Boolean.booleanValue:()Z
+         5: putfield      #40                 // Field skipItemQualityBackground:Z
+         8: return
+
+  private static java.lang.String lambda$static$13(com.hypixel.hytale.server.core.ui.ItemGridSlot);
+    Code:
+         0: aload_0
+         1: getfield      #31                 // Field description:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$12(com.hypixel.hytale.server.core.ui.ItemGridSlot, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #31                 // Field description:Ljava/lang/String;
+         5: return
+
+  private static java.lang.String lambda$static$11(com.hypixel.hytale.server.core.ui.ItemGridSlot);
+    Code:
+         0: aload_0
+         1: getfield      #27                 // Field name:Ljava/lang/String;
+         4: areturn
+
+  private static void lambda$static$10(com.hypixel.hytale.server.core.ui.ItemGridSlot, java.lang.String);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #27                 // Field name:Ljava/lang/String;
+         5: return
+
+  private static java.lang.Boolean lambda$static$9(com.hypixel.hytale.server.core.ui.ItemGridSlot);
+    Code:
+         0: aload_0
+         1: getfield      #23                 // Field isItemIncompatible:Z
+         4: invokestatic  #43                 // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+         7: areturn
+
+  private static void lambda$static$8(com.hypixel.hytale.server.core.ui.ItemGridSlot, java.lang.Boolean);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: invokevirtual #49                 // Method java/lang/Boolean.booleanValue:()Z
+         5: putfield      #23                 // Field isItemIncompatible:Z
+         8: return
+
+  private static com.hypixel.hytale.server.core.ui.Value lambda$static$7(com.hypixel.hytale.server.core.ui.ItemGridSlot);
+    Code:
+         0: aload_0
+         1: getfield      #20                 // Field icon:Lcom/hypixel/hytale/server/core/ui/Value;
+         4: areturn
+
+  private static void lambda$static$6(com.hypixel.hytale.server.core.ui.ItemGridSlot, com.hypixel.hytale.server.core.ui.Value);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #20                 // Field icon:Lcom/hypixel/hytale/server/core/ui/Value;
+         5: return
+
+  private static com.hypixel.hytale.server.core.ui.Value lambda$static$5(com.hypixel.hytale.server.core.ui.ItemGridSlot);
+    Code:
+         0: aload_0
+         1: getfield      #17                 // Field overlay:Lcom/hypixel/hytale/server/core/ui/Value;
+         4: areturn
+
+  private static void lambda$static$4(com.hypixel.hytale.server.core.ui.ItemGridSlot, com.hypixel.hytale.server.core.ui.Value);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #17                 // Field overlay:Lcom/hypixel/hytale/server/core/ui/Value;
+         5: return
+
+  private static com.hypixel.hytale.server.core.ui.Value lambda$static$3(com.hypixel.hytale.server.core.ui.ItemGridSlot);
+    Code:
+         0: aload_0
+         1: getfield      #13                 // Field background:Lcom/hypixel/hytale/server/core/ui/Value;
+         4: areturn
+
+  private static void lambda$static$2(com.hypixel.hytale.server.core.ui.ItemGridSlot, com.hypixel.hytale.server.core.ui.Value);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #13                 // Field background:Lcom/hypixel/hytale/server/core/ui/Value;
+         5: return
+
+  private static com.hypixel.hytale.server.core.inventory.ItemStack lambda$static$1(com.hypixel.hytale.server.core.ui.ItemGridSlot);
+    Code:
+         0: aload_0
+         1: getfield      #7                  // Field itemStack:Lcom/hypixel/hytale/server/core/inventory/ItemStack;
+         4: areturn
+
+  private static void lambda$static$0(com.hypixel.hytale.server.core.ui.ItemGridSlot, com.hypixel.hytale.server.core.inventory.ItemStack);
+    Code:
+         0: aload_0
+         1: aload_1
+         2: putfield      #7                  // Field itemStack:Lcom/hypixel/hytale/server/core/inventory/ItemStack;
+         5: return
+
+  static {};
+    Code:
+         0: ldc           #8                  // class com/hypixel/hytale/server/core/ui/ItemGridSlot
+         2: invokedynamic #53,  0             // InvokeDynamic #0:get:()Ljava/util/function/Supplier;
+         7: invokestatic  #57                 // Method com/hypixel/hytale/codec/builder/BuilderCodec.builder:(Ljava/lang/Class;Ljava/util/function/Supplier;)Lcom/hypixel/hytale/codec/builder/BuilderCodec$Builder;
+        10: new           #63                 // class com/hypixel/hytale/codec/KeyedCodec
+        13: dup
+        14: ldc           #65                 // String ItemStack
+        16: getstatic     #67                 // Field com/hypixel/hytale/server/core/inventory/ItemStack.CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+        19: invokespecial #73                 // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        22: invokedynamic #76,  0             // InvokeDynamic #1:accept:()Ljava/util/function/BiConsumer;
+        27: invokedynamic #80,  0             // InvokeDynamic #2:apply:()Ljava/util/function/Function;
+        32: invokevirtual #84                 // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        35: invokevirtual #90                 // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        38: checkcast     #85                 // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        41: new           #63                 // class com/hypixel/hytale/codec/KeyedCodec
+        44: dup
+        45: ldc           #96                 // String Background
+        47: getstatic     #98                 // Field com/hypixel/hytale/server/core/ui/ValueCodec.PATCH_STYLE:Lcom/hypixel/hytale/server/core/ui/ValueCodec;
+        50: invokespecial #73                 // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        53: invokedynamic #104,  0            // InvokeDynamic #3:accept:()Ljava/util/function/BiConsumer;
+        58: invokedynamic #105,  0            // InvokeDynamic #4:apply:()Ljava/util/function/Function;
+        63: invokevirtual #84                 // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        66: invokevirtual #90                 // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+        69: checkcast     #85                 // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+        72: new           #63                 // class com/hypixel/hytale/codec/KeyedCodec
+        75: dup
+        76: ldc           #106                // String Overlay
+        78: getstatic     #98                 // Field com/hypixel/hytale/server/core/ui/ValueCodec.PATCH_STYLE:Lcom/hypixel/hytale/server/core/ui/ValueCodec;
+        81: invokespecial #73                 // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+        84: invokedynamic #108,  0            // InvokeDynamic #5:accept:()Ljava/util/function/BiConsumer;
+        89: invokedynamic #109,  0            // InvokeDynamic #6:apply:()Ljava/util/function/Function;
+        94: invokevirtual #84                 // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+        97: invokevirtual #90                 // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       100: checkcast     #85                 // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       103: new           #63                 // class com/hypixel/hytale/codec/KeyedCodec
+       106: dup
+       107: ldc           #110                // String Icon
+       109: getstatic     #98                 // Field com/hypixel/hytale/server/core/ui/ValueCodec.PATCH_STYLE:Lcom/hypixel/hytale/server/core/ui/ValueCodec;
+       112: invokespecial #73                 // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       115: invokedynamic #112,  0            // InvokeDynamic #7:accept:()Ljava/util/function/BiConsumer;
+       120: invokedynamic #113,  0            // InvokeDynamic #8:apply:()Ljava/util/function/Function;
+       125: invokevirtual #84                 // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       128: invokevirtual #90                 // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       131: checkcast     #85                 // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       134: new           #63                 // class com/hypixel/hytale/codec/KeyedCodec
+       137: dup
+       138: ldc           #114                // String IsItemIncompatible
+       140: getstatic     #116                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+       143: invokespecial #73                 // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       146: invokedynamic #122,  0            // InvokeDynamic #9:accept:()Ljava/util/function/BiConsumer;
+       151: invokedynamic #123,  0            // InvokeDynamic #10:apply:()Ljava/util/function/Function;
+       156: invokevirtual #84                 // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       159: invokevirtual #90                 // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       162: checkcast     #85                 // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       165: new           #63                 // class com/hypixel/hytale/codec/KeyedCodec
+       168: dup
+       169: ldc           #124                // String Name
+       171: getstatic     #126                // Field com/hypixel/hytale/codec/Codec.STRING:Lcom/hypixel/hytale/codec/codecs/simple/StringCodec;
+       174: invokespecial #73                 // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       177: invokedynamic #130,  0            // InvokeDynamic #11:accept:()Ljava/util/function/BiConsumer;
+       182: invokedynamic #131,  0            // InvokeDynamic #12:apply:()Ljava/util/function/Function;
+       187: invokevirtual #84                 // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       190: invokevirtual #90                 // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       193: checkcast     #85                 // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       196: new           #63                 // class com/hypixel/hytale/codec/KeyedCodec
+       199: dup
+       200: ldc           #132                // String Description
+       202: getstatic     #126                // Field com/hypixel/hytale/codec/Codec.STRING:Lcom/hypixel/hytale/codec/codecs/simple/StringCodec;
+       205: invokespecial #73                 // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       208: invokedynamic #134,  0            // InvokeDynamic #13:accept:()Ljava/util/function/BiConsumer;
+       213: invokedynamic #135,  0            // InvokeDynamic #14:apply:()Ljava/util/function/Function;
+       218: invokevirtual #84                 // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       221: invokevirtual #90                 // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       224: checkcast     #85                 // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       227: new           #63                 // class com/hypixel/hytale/codec/KeyedCodec
+       230: dup
+       231: ldc           #136                // String SkipItemQualityBackground
+       233: getstatic     #116                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+       236: invokespecial #73                 // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       239: invokedynamic #138,  0            // InvokeDynamic #15:accept:()Ljava/util/function/BiConsumer;
+       244: invokedynamic #139,  0            // InvokeDynamic #16:apply:()Ljava/util/function/Function;
+       249: invokevirtual #84                 // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       252: invokevirtual #90                 // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       255: checkcast     #85                 // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       258: new           #63                 // class com/hypixel/hytale/codec/KeyedCodec
+       261: dup
+       262: ldc           #140                // String IsActivatable
+       264: getstatic     #116                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+       267: invokespecial #73                 // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       270: invokedynamic #142,  0            // InvokeDynamic #17:accept:()Ljava/util/function/BiConsumer;
+       275: invokedynamic #143,  0            // InvokeDynamic #18:apply:()Ljava/util/function/Function;
+       280: invokevirtual #84                 // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       283: invokevirtual #90                 // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       286: checkcast     #85                 // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       289: new           #63                 // class com/hypixel/hytale/codec/KeyedCodec
+       292: dup
+       293: ldc           #144                // String IsItemUncraftable
+       295: getstatic     #116                // Field com/hypixel/hytale/codec/Codec.BOOLEAN:Lcom/hypixel/hytale/codec/codecs/simple/BooleanCodec;
+       298: invokespecial #73                 // Method com/hypixel/hytale/codec/KeyedCodec."<init>":(Ljava/lang/String;Lcom/hypixel/hytale/codec/Codec;)V
+       301: invokedynamic #146,  0            // InvokeDynamic #19:accept:()Ljava/util/function/BiConsumer;
+       306: invokedynamic #147,  0            // InvokeDynamic #20:apply:()Ljava/util/function/Function;
+       311: invokevirtual #84                 // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.append:(Lcom/hypixel/hytale/codec/KeyedCodec;Ljava/util/function/BiConsumer;Ljava/util/function/Function;)Lcom/hypixel/hytale/codec/builder/BuilderField$FieldBuilder;
+       314: invokevirtual #90                 // Method com/hypixel/hytale/codec/builder/BuilderField$FieldBuilder.add:()Lcom/hypixel/hytale/codec/builder/BuilderCodec$BuilderBase;
+       317: checkcast     #85                 // class com/hypixel/hytale/codec/builder/BuilderCodec$Builder
+       320: invokevirtual #148                // Method com/hypixel/hytale/codec/builder/BuilderCodec$Builder.build:()Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       323: putstatic     #152                // Field CODEC:Lcom/hypixel/hytale/codec/builder/BuilderCodec;
+       326: return
+}

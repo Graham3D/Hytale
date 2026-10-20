@@ -1,0 +1,5 @@
+I added status admission through the real periodic runtime, native control projections, exact NPC Slow steering, Rending regeneration suppression, and a swept hostile displacement adapter. Deterministic positive and negative tests are written, but **the status scope is unfinished**.
+
+Main and sibling owners still need to register the applied-hit observer, connect the skill owner’s periodic packages and proc budget, and wire hostile movement requests. Exact player Slow and player hostile displacement also remain open. I did not run Gradle or connected gameplay tests, so these IDs are not verified or ready to enable.
+
+The changed files, exact hooks, test coverage, and remaining boundaries are recorded in [status2-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/status2-result.md).

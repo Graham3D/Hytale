@@ -1,0 +1,22 @@
+[
+  {
+    "Path": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\HyARPG.jar",
+    "Hash": "0CA24797D0C2F768970B2B63B9E5B8890CBFC7A25D1F96775360B16C85F39951"
+  },
+  {
+    "Path": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\install\\pre-release\\package\\game\\latest\\Server\\HytaleServer.jar",
+    "Hash": "B5FD9FF3E55E0A5D4DACCC6A7A3A4F89FF45F1B539BF32894E4A15DE343E6A5D"
+  },
+  {
+    "Path": "C:\\Users\\Zemio\\.codex\\worktrees\\hyarpg-separation\\src\\main\\resources\\rpg\\gear\\affixes-v1.json",
+    "Hash": "AA8B73B703733622AFA4BF1244EB2D2E5D9D89CA107782464606C3A95CBD7D9C"
+  },
+  {
+    "Path": "C:\\Users\\Zemio\\.codex\\worktrees\\hyarpg-separation\\src\\main\\resources\\rpg\\gear\\quality-profile-v1.json",
+    "Hash": "5BAF377B993D4D2BCEBAB36CACD36781F1D6804C9729FF85017A16C74648D4C3"
+  },
+  {
+    "Path": "C:\\Users\\Zemio\\.codex\\worktrees\\hyarpg-separation\\docs\\Master_Affix_v1.0.md",
+    "Hash": "F030F45EA94CCBA204EB025B10C3E5C774C4E24A4918F6692DB38330BAF7774E"
+  }
+]

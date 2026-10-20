@@ -1,0 +1,3 @@
+I filled [affix-proof-map-v1.json](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/tools/affix-proof-map-v1.json) with reviewed candidate registrations for all 160 IDs and wrote the per-ID proof and gap matrix in [proof-review-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/proof-review-result.md).
+
+The map registers 120 positive, 89 control and 108 negative assertions. It keeps narrower checks separate from gameplay proof, including combined rolls, gate-dependent summon tests, Aura activation and Sentinel descriptors. A read-only generator check still reports **160 GATED**. I validated all 160 matrix rows and test references; fresh JUnit XML and main’s gate validation remain outstanding. No runtime code, tests, gates or commits were changed.

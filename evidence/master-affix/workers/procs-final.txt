@@ -1,0 +1,5 @@
+I added the shared runtime, native receipt and damage adapters, and deterministic tests for WA-135–140 and WA-142–143. The existing affix gate remains unchanged.
+
+**These eight IDs are not yet production complete.** The combat owner must supply accepted strike context, the death reward owner must supply credited kill receipts and a protected Cull execute path, and main must register the native systems. Tests were written but not run, as instructed; no Gradle or server was started.
+
+The changed files, exact hooks, tests, and remaining boundaries are recorded in [procs-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/procs-result.md).

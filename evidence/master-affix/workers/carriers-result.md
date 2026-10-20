@@ -1,0 +1,34 @@
+# Native carrier worker evidence
+
+## Result
+
+**No affix ID was completed or enabled by this worker.** The 81 shield, staff, wand and book base IDs remain `BLOCKED_WITH_REASON`; all nine bomb base IDs remain blocked. The carrier assets below are loadable stock-derived package candidates, but `GearNativeItems.create()` still rejects their bindings and native action use remains gated. This is deliberate until the actual action consumers pass native positive/control/negative tests. The 160-affix objective is unfinished.
+
+## Changed files
+
+- `src/main/java/com/inigmasgames/hytalerpg/gear/GearBindings.java`: `all()` now enumerates binding rows in sorted base-ID order, including default constructor users such as `GearNativeItems`.
+- `src/main/java/com/inigmasgames/hytalerpg/gear/GearInteractionAudit.java`: rejects native `Explode` interactions, whose `Explode_Generic` parent directly applies fixed entity damage and would otherwise evade the `DamageEntityInteraction` leaf check.
+- `src/main/resources/rpg/gear/native-bindings-v1.json`: records exact installed source IDs, paths and SHA-256 for 81 staged shield/focus rows and nine blocked bomb rows. No new row is `MAPPED`, and no staged row has a `managedItemId`.
+- `tools/New-NativeGearCarriers.ps1`: pins selected installed stock visuals/action roots, flattens shield `Template_Weapon_Shield` inheritance, writes the complete common/uncommon/rare/epic/legendary carrier assets, and has a read-only `-VerifyOnly` source/package check.
+- `tools/Test-NativeGearCarriers.ps1`: offline package/source graph checks.
+- `src/main/resources/Server/Item/Items/RPG/Gear/RPG_Gear_{shield,staff,wand,book}_*.json`: 405 new assets, one per base and mechanical rarity carrier. Each is single-stack, uses the authored base durability, stock model/texture/icon/animation, and selected native root/interaction variables. Shield assets retain the inherited `Utility` block and `Root_Weapon_Shield_Secondary_Guard` secondary root. Quality names match existing managed carrier assets. There are no changes to source artwork or `server.lang`.
+
+## Native graph findings and activation boundary
+
+- Shield: installed `Template_Weapon_Shield` supplies `Shield` animation, utility block and secondary guard. The inherited guard bash reaches `Weapon_Shield_Secondary_Guard_Bash_Damage` with zero fixed physical damage. `GearDefenseEffects.resolve()` now computes shield rating from the valid snapshot, and `NativeAffixBlockCostSystem.guardSource()` already uses an authenticated live Secondary chain and the active utility slot. Main still must install the defense projection and route `shield_bash`/Smite (`basePowerSource: OFFHAND_WEAPON`) to final Total Defense exactly once. The native bash leaf must be made managed or explicitly handled before the action audit can accept it. No shield row may be activated from asset presence alone.
+- Staff/wand/book: only stock sources with the ordinary `Staff_Primary`, `Wand_Primary` or `Spellbook_Primary` root on both actions were selected. The installed charged branches launch stock projectiles, while their quick melee branches use stock damage leaves. The current `GearInteractionAudit` rejects those routes, and `ManagedGearDamageInteraction` samples Physical rather than authored `magicPower`. The local magic consumer must use the exact valid contributing item from `GearNativeItems.effects(actor, accessor).snapshot().forItem(itemId)` at accepted attack/launch. The managed impact route must preserve one frozen source and native collision. C-star eligibility must stay closed until those native profiles are proven.
+- Bomb: installed `Weapon_Bomb` is stack-10 ammunition. `Bomb_Throw` launches a native projectile then removes `Weapon_Bomb`; its `Bomb_Explode` inherits `Explode_Generic` with fixed `EntityDamage: 20`. This cannot represent the authored durable bomb carrier, and copying it would duplicate or bypass the frozen item power. An authored persistent launcher and snapshot-owned impact path are still required, with no `Weapon_Bomb` removal from the managed carrier and no duplicate native explosion damage. No bomb carrier asset or binding was activated.
+- Native block source attribution is already implemented by `NativeAffixBlockCostSystem` in another owner's files. It matches the live Secondary chain's section, slot and held stack to the hotbar or utility active item, then checks `snapshot.forItem(identity())`. Main must register that system; this worker did not modify or claim its runtime test.
+
+## Cross-owner wiring required before mapping
+
+1. **Main / `HytaleGearEquipment` / `HyArpgPlugin`:** install the actual `GearDefenseEffects.resolve()` projection at the native defense owner and ensure the valid active utility shield is counted once. Register `NativeAffixBlockCostSystem` with its documented dependency. Resolve shield bash/Smite from final Total Defense at the skill damage owner and prove the shield's native guard and damage audit path. Main owns these files.
+2. **Combat / skill owners:** replace or bind stock focus quick-hit and charged projectile damage to managed native consumers using the committed local item snapshot; preserve native timing, visuals, collision and one source. The staged item JSON must be revised to reference those validated interactions before its binding becomes `MAPPED`.
+3. **Bomb combat owner:** create a separate durable managed throw action and projectile/area impact with authored bomb Physical sampled once, then retire the stock fixed `Explode_Generic` damage on that carrier. Use the installed bomb model/texture/icon only as visual provenance. Stock `Weapon_Bomb` remains ammunition.
+4. **Main activation:** after each asset graph is genuinely managed, set only its verified base rows to `MAPPED` with `managedItemId = RPG_Gear_<base ID without gm., dots replaced by underscores>` and `resolutionClass = VALIDATED_NATIVE_REUSE`. Run `GearNativeItems.create/read` roundtrips for all five rarity IDs, package asset loading and deterministic positive/control/negative native action tests. Then change starred `GearDropGenerator.eligible` only for each actually verified C-star, M-star block or WA-141 dual-wield profile. The present `GearAffixRuntime.ENABLED` gate stays unchanged.
+
+## Verification and limits
+
+- `./tools/Test-NativeGearCarriers.ps1` passed: 405 JSON package roundtrips; 81 staged binding/source hashes; installed visual, animation and root references; shield utility guard; nine bomb rows still unmapped. `New-NativeGearCarriers.ps1 -VerifyOnly` passed independently.
+- `git diff --check` passed on edited tracked files. No Gradle, game/server launch, auth, deployment, commit or push was run.
+- No Java compile, native asset-loader result, `GearNativeItems.create/read` production roundtrip or native gameplay positive/control/negative test was run. Asset/package checks alone do **not** establish affix runtime behavior. This worker's completed affix-ID set is empty.

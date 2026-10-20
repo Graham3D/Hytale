@@ -1,0 +1,5 @@
+Registered the reviewed adapter proofs in [affix-proof-map-v1.json](/C:/Users/Zemio/.codex/worktrees/hyarpg-separation/tools/affix-proof-map-v1.json), including the final-controls and summon results. I updated [Generate-AffixCoverage.py](/C:/Users/Zemio/.codex/worktrees/hyarpg-separation/tools/Generate-AffixCoverage.py) and added a bracket-parameter XML regression in [test_affix_coverage.py](/C:/Users/Zemio/.codex/worktrees/hyarpg-separation/tools/test_affix_coverage.py). The per-ID evidence and remaining owner measurements are in [final-proof-registration-result.md](/C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/final-proof-registration-result.md).
+
+**58 IDs retain specific qualification holes.** WA-155 remains gated pending measured native light calibration. Fresh main JUnit XML is still required for recently changed Java sources; the focused worker results do not establish a complete gate.
+
+Python unit tests passed: **19/19**. I ran no Gradle, game, or server.

@@ -1,0 +1,3 @@
+Saved the [scope audit](</C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/scope-audit-result.md>). It identifies six unaffixed runtime behavior changes for the owning workers to review, including Quick Slash proc eligibility, knockback and pull behavior, windup rank handling, Sentinel hit metadata, and summon Health projection. It separates those findings from allowed affix hooks and records that the canonical Simulacrum cost remains 20 Mana.
+
+I left runtime files untouched. I did not add a duplicate regression test: existing focused tests cover the restored catalog, Simulacrum payment, and temporary item grants. No tests or Gradle commands were run.

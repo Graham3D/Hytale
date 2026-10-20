@@ -1,0 +1,23 @@
+# Iron Sentinel scoped implementation result — 2026-09-30
+
+The owner correction in `docs/MASTER_AFFIX_SCOPE_CORRECTION.md` governed this work. No base skill was created or changed. This result does not enable the main-owned capability gate or claim connected game behavior.
+
+## Implemented native paths
+
+- `IronSentinelAffixes` now admits 101 of the 104 compatible source families at the Sentinel forge. `OWNER_ONLY` families remain excluded. The source gate only names an adapter where a native consumer exists; the three remaining compatible IDs have precise closed-gate reasons in `classify`.
+- The Sentinel attack callback freezes the native NPC origin and bound one-item source, commits each affix-envelope root through `NativeGearAttackAcceptance.commit` with the authored single-target coefficient `1` before any native channel submission, then gives that same hit to the status owner. The actual melee claim uses the bound WA-014 reach. Existing damage, status, recovery, signature and item receipt owners consume the committed contact.
+- A distinct `NativeSentinelItemChildren` port queues frozen rank-one Fire Bolt, Frost Bolt or self Minor Heal requests from `NativeItemAffixBindings`. A live durable Sentinel lease, actor/world, exact item identity/revision and skill/target are rechecked on the world-thread summon tick and projectile impact. The NPC projectile path uses the existing projectile and impact owners with triggered, NoProc, NoCrit and NoLeech semantics. After actual HP loss, Fire Bolt Burn enters the shared `PeriodicStatusRuntime` and native status projection; Frost Bolt Chill enters `StatusService` and native projection. Minor Heal writes native Health, capped by `NativeNormalHealthMaximum.value`, and reports successful healing. It spends no NPC Mana. Pending requests and source-owned periodic packages clear on removal, lease end, transfer and world unload.
+- `NativeSentinelItemAuras` creates rank-one bound-item contexts through `SkillExecutionService.boundItemAura`, projects the three D08 Auras from the native NPC into the shared support owner, and clears activation/recipient state on native end or world unload. No player actor or equipment is substituted.
+- `HytaleSummonSystem.sentinelEffects(store, actor)` supplies the exact one-item snapshot only while native actor UUID/world, owner life, registry lease and durable `IronSentinelBinding` agree. Native successful-block cost and item observers require real `Damage.BLOCKED`/Wielding evidence; no guard event is fabricated.
+
+The exact registration factory and recipient source contract are in `summons-integration.md`. The plugin now registers the child port, both native block observers, Aura lookups, live NPC recipient selector and world-unload cleanup. Shared status, steering, displacement, critical and healing consumers now read that recipient selector. The duplicate local WA-084 critical reduction was removed from the Sentinel damage guard.
+
+## Closed compatible gates
+
+`WA-083` and `WA-147` require an actual successful native block. The audited Iron Sentinel has an empty `Weapons` list and no eligible shield/focus guard source, so the registered observer cannot receive a positive native block. `WA-141` requires two distinct dagger identities in the canonical Twin Assault owner, while the Sentinel binds exactly one item. These three remain closed pending an approved native source design; no fabricated block or second item was added.
+
+## Offline verification
+
+Direct `javac --release 25` compiled the owned production files and current recipient facade against the installed pre-release Hytale server JAR and current checkout classes. Direct JUnit execution passed `NativeSentinelItemChildrenTest` (2), `SentinelItemChildContextTest` (1), `SentinelSourceConsumerTest` (8), `SentinelSignatureConsumerTest` (2), `SentinelBoundAuraContextTest` (1), and `IronSentinelAffixInheritanceTest` (4): **18 passed, 0 failed**. The source tests include positive, no-affix and no-proc/invalid-channel controls across the attack status IDs, all twelve frozen-origin conditional IDs, recipient status/displacement/critical/healing owners, projectile travel and signatures. The NPC child context test covers all three fixed-rank skills, zero Mana, exact source and a wrong-actor control; queue tests cover world-unload status cleanup. Earlier focused shared owner suites also passed as recorded in the worker notes. These are offline owner tests, not connected native contact, Burn/Chill projection, or asset qualification.
+
+No Gradle, server, game, authentication, agent, commit or push was run in this scoped work. Main owns final capability enabling, Gradle gates, deployment and connected proof.

@@ -1,0 +1,5 @@
+Catalog work is in the shared checkout: five-band generation, corrected WA-121 legality, frozen skill selectors, and capability-gated A/B and combined QA fixtures covering all 160 authored IDs.
+
+**The Master Affix task is not complete.** Focus, shield, and bomb production carriers still need verified native adapters, and the remaining affixes need gameplay consumer tests before their gates can open. I ran JSON and diff checks; I did not run Gradle or claim gameplay test passage.
+
+Changed files, installed-asset evidence, and exact cross-owner wiring requests are in [catalog-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/catalog-result.md).

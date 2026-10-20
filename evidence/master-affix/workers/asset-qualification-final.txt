@@ -1,0 +1,5 @@
+Added the [offline native asset fixture and qualification tests](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/src/test/java/com/inigmasgames/hytalerpg/gear/NativeAffixCarrierAssetQualificationTest.java) and tightened the two carrier scripts. An isolated generated preview passed **5/5 standalone JUnit tests**: 450 item decodes, 450 `GearNativeItems.create/read` and native `ItemStack` roundtrips, 24 custom graph decodes, and 450 installed stock graph reachability checks.
+
+**The checked in assets still fail qualification.** Four managed damage leaves lack native root wrappers, and the spellbook cost inherits a `ModifyInventory` step. The generator now produces the required repairs, but I left source assets and bindings unchanged within my assigned scope. Main’s exact regeneration and test commands are in [asset-qualification-result.md](C:/Users/Zemio/.codex/worktrees/hyarpg-separation/evidence/master-affix/workers/asset-qualification-result.md).
+
+I ran no Gradle, server, authentication, promotion, commit, or deployment.
