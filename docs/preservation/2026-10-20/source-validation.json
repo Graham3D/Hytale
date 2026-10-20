@@ -1,0 +1,44 @@
+{
+  "sourceVerification": "PASS",
+  "independentClone": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale-main-clean\\build\\preservation-20261020\\remote-verification.git",
+  "snapshotBranches": 6,
+  "historyBranches": 17,
+  "fileVersionsVerified": 9718,
+  "deletionsVerified": 12512,
+  "uniqueBlobsSha256Verified": 8250,
+  "localSourceStillMatches": true,
+  "pngChecks": [
+    {
+      "path": "art/Skills Alpha Art/CycloneArmor.png",
+      "dimensions": [
+        1374,
+        1145
+      ]
+    },
+    {
+      "path": "art/Skills/SkillCycloneArmor.png",
+      "dimensions": [
+        128,
+        128
+      ]
+    },
+    {
+      "path": "src/main/resources/Common/Icons/Items/RPG/SkillSpiritshield.png",
+      "dimensions": [
+        128,
+        128
+      ]
+    },
+    {
+      "path": "src/main/resources/Common/UI/Custom/Icons/RPG/SkillSpiritshield.png",
+      "dimensions": [
+        128,
+        128
+      ]
+    }
+  ],
+  "historicalSourceBlobsForSupplement": 0,
+  "gameplayTestsRun": false,
+  "deploymentChanged": false,
+  "connectedQAAcceptance": "UNVERIFIED"
+}

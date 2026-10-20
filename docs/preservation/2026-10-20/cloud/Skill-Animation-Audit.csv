@@ -1,0 +1,89 @@
+,Skill,Animation I would use,Audit
+0,Quick Slash,Sword/Longsword/Daggers SwingLeft or SwingRight,✅
+1,Heavy Swing,Longsword/Mace/Battleaxe SwingDown or Charged,✅
+2,Spear Thrust,Spear Stab animation,✅
+3,Shield Bash,Shield GuardBash,✅
+4,Guard,Weapon/Shield Guard,✅
+5,Quickstep,Player Dash,✅
+6,Dagger Flurry,Alternate Daggers stab/swing animations rapidly,✅
+7,Axe Toss,Battleaxe Throw,✅
+8,Spear Toss,Spear Throw,✅
+9,Quick Shot,Shortbow normal Shoot/release,✅
+10,Crossbow Bolt,Crossbow Shoot,✅
+11,Blunderbuss Shot,Rifle Shoot,✅
+12,Taunt,Player Taunt animation,✅
+13,Maul Swing,Mace/Battleaxe heavy SwingDown,✅
+14,Weakening Hex,Spellbook Hurl Cast or Wand cast,✅
+15,Scythe Sweep,Battleaxe wide SwingLeft/Right,✅
+16,Hunter's Mark,Bow Charging/aim pose followed by release without projectile,🟨
+17,Battle Cry,Taunt or aggressive emote,🟨
+18,Pounce,Vanilla Dagger Pounce ability animation,✅
+19,Web Shot,Item_Throw / hand throw,✅
+20,Dive Strike,Mace Groundslam launch + downward strike,🟨
+21,Pack Howl,Taunt/Laugh-style emote,❌
+22,Fire Bolt,Staff Cast,✅
+23,Frost Bolt,Staff Cast,✅
+24,Arcane Bolt,Staff Cast / Spellbook Hurl,✅
+25,Void Bolt,Spellbook Hurl,✅
+26,Stone Bolt,Staff Cast,✅
+27,Reflective Hide,Guard/defensive stance,🟨
+28,Spark,Unarmed SwingLeft/Punch,✅
+29,Intimidate,Player Taunt,✅
+30,Root Lash,Staff Cast,✅
+31,Bone Shard,Spellbook Hurl,✅
+32,Minor Heal,Staff/Spellbook Cast,✅
+33,Wind Cutter,Staff Cast,✅
+34,Snipe,Shortbow fully charged Shoot/release,✅
+35,Jump Strike,Mace Groundslam jump + weapon SwingDown,🟨
+36,Charge,Player Dash + Spear Stab layered/sequenced,🟨
+37,Finishing Strike,Appropriate weapon Charged attack,✅
+38,Whirlwind,Battleaxe Signature Whirlwind,✅
+39,Ground Slam,Mace Signature Groundslam,✅
+40,Execution Strike,Longsword/Battleaxe Charged or SwingDown,✅
+41,Riposte,Guard → Sword/Longsword fast swing,✅
+42,Backstab,Dagger Stab,✅
+43,Frenzy,Existing weapon attacks at increased playback speed,✅
+44,Explosive Flask,Item_Throw,✅
+45,Bomb Toss,Item_Throw,✅
+46,Powder Mine,Block/Item placement motion,🟨
+47,Arcane Missiles,Spellbook Hurl / Staff Cast,✅
+48,Fireball,Flame Staff Fireball cast,✅
+49,Consume Minion,Staff Summon Cast,✅
+50,Thorns Aura,Staff/Spellbook Cast activation,✅
+51,Flame Weapon,Equipped weapon Charging/Charged pose,🟨
+52,Cold Blast,Frost Staff Cast,✅
+53,Frost Nova,Staff Cast,✅
+54,Cold Wave,Staff Cast,✅
+55,Lightning Bolt,Staff Cast,✅
+56,Ball Lightning,Staff Cast,✅
+57,Simulacrum,Staff Summon Cast,✅
+58,Corpse Burst,Spellbook Hurl/Cast,✅
+59,Root Snare,Staff Summon Cast,✅
+60,Venom Spray,Unarmed Punch/Swing used as hand-cast gesture,🟨
+61,Void Dash,Player Dash,✅
+62,Void Beam,Staff Charging held/looped while channeling,✅
+63,Wolf Summon,Staff Summon Cast,✅
+64,Spirit Shield,Staff/Spellbook Cast,✅
+65,Managuard,"Staff Cast body animation, optionally without visible staff",🟨
+66,Emanatism,Staff Cast body animation,🟨
+67,Chain Lightning,Staff Cast,✅
+68,Blizzard,Staff/Spellbook Cast,✅
+69,Wall of Fire,Staff Cast,✅
+70,Bone Cage,Spellbook Cast,✅
+71,Poison Cloud,Staff/Spellbook Cast,✅
+72,Vortex,Staff Cast,✅
+73,Revive Fallen,Spellbook Cast / Staff Summon Cast,✅
+74,Summon Void Crawlers,Staff Summon Cast,✅
+75,Brood Call,Staff Summon Cast body motion with empty hands,🟨
+76,Chilling Aura,Staff Cast activation,✅
+77,Dominate,Spellbook Cast,✅
+78,Earthquake,Staff SwingDown/heavy casting motion,🟨
+79,Orbiting Shadow Blades,Spellbook Hurl/Cast,✅
+80,Life Drain,Staff Charging held while channeling,✅
+81,Pedanticism,Staff Cast,✅
+82,Meteor,Staff Charging → Charged,✅
+83,Comet,Staff Charging → Charged,✅
+84,Reaping Storm,"Staff Cast activation, then normal locomotion",✅
+85,Avalanche,Staff Charging → Charged,✅
+86,Void Cataclysm,Staff Charging → Charged,✅
+

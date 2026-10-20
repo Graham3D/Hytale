@@ -1,0 +1,1624 @@
+[
+  {
+    "branch": "codex/preserve-20261020-history-802ac377",
+    "head": "802ac377dba42ae7f39fc63cf036cdfc6a5d75b0",
+    "summary": "Implement R261-C progression Mana Before Life and resource HUD",
+    "sourceRoot": "C:/Users/Zemio/.codex/worktrees/elite-natural-hookup/Hytale-main-clean",
+    "unpublishedCommits": [
+      "802ac377dba42ae7f39fc63cf036cdfc6a5d75b0"
+    ],
+    "newBlobs": [
+      {
+        "path": "docs/COMMANDS.md",
+        "size": 32313,
+        "gitBlob": "dece148b4f21e5114d9364ce3e69aec1ead28eb7"
+      },
+      {
+        "path": "docs/CYCLONE_DURABILITY.md",
+        "size": 11438,
+        "gitBlob": "b3ba1cd7550fbfd05261f9ebb4d8811d0dde1a42"
+      },
+      {
+        "path": "docs/DEVELOPMENT_BASELINE.md",
+        "size": 56934,
+        "gitBlob": "33f68eeeb5fe7e71c7c84935111df05098128fcb"
+      },
+      {
+        "path": "docs/QA-R261C-DEVELOPMENT.md",
+        "size": 1714,
+        "gitBlob": "f3c549bf49d17bd9918ffcbce0e155c579adf903"
+      },
+      {
+        "path": "docs/R261C_ENGINEERING.md",
+        "size": 4776,
+        "gitBlob": "65841a83614b00a66b115da66d7f092497318f0a"
+      },
+      {
+        "path": "gradle.properties",
+        "size": 178,
+        "gitBlob": "549a4c63844db0487cb180ef88435190442b0e3a"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/combat/attribute/CharacterHealthCurve.java",
+        "size": 449,
+        "gitBlob": "b3f852a6dd83cf0515cb5f6a27f1674b50c5052d"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/combat/attribute/DerivedStatService.java",
+        "size": 3327,
+        "gitBlob": "12c153225347342ed65fb4165608bb5be53fbcbb"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/combat/hytale/DerivedStatEntityAdapter.java",
+        "size": 5239,
+        "gitBlob": "ac238a6e3cd3e6df8f51d83af86400b4a0591978"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/combat/hytale/EntityStatResourcePort.java",
+        "size": 3524,
+        "gitBlob": "6620a2c179a4c05df25cbd1cca8ee1faaa28fe23"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/commands/RpgCommand.java",
+        "size": 43306,
+        "gitBlob": "555f1c5a5bdf6b94c501967bd6f14331162e26bb"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/SkillExecutionService.java",
+        "size": 80275,
+        "gitBlob": "d15117af1bba0df47825f01aa1743b54badba99f"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.java",
+        "size": 87187,
+        "gitBlob": "748ebed62e170808ed759130db60a1a9fa9b3b8c"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/SupportDamageSystems.java",
+        "size": 31915,
+        "gitBlob": "f6070480d15d632573075f60efb729ba6f5102fc"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/support/ManaBeforeLifeStage.java",
+        "size": 2704,
+        "gitBlob": "80924e21d867b081281b45c265825d79822a10e7"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/gear/GearAffixQaSuite.java",
+        "size": 17480,
+        "gitBlob": "09d0427be99e7fff2fd1c8c6fe670c879c9e0a02"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/gear/GearAffixRuntime.java",
+        "size": 7796,
+        "gitBlob": "ff1d96ae7c036006ead34407a487313e4efdf1c1"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/gear/GearCatalog.java",
+        "size": 11270,
+        "gitBlob": "b57b0bed490c0e0254c82980aa779fa26b08ab7a"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/gear/GearDropGenerator.java",
+        "size": 21233,
+        "gitBlob": "711f8a123bbd22544e7ac28aebedd8f54c4b6bdd"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/gear/GearEffectSnapshot.java",
+        "size": 7032,
+        "gitBlob": "399acb604ad83636a9af7712f77f24b030bd0f14"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/gear/HytaleGearEquipment.java",
+        "size": 20937,
+        "gitBlob": "24cec08b08d2e6d8e9b4c7892d9c1086e911d456"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/gear/Qa159Pack.java",
+        "size": 10143,
+        "gitBlob": "4c805d5a30a9c8c0855a0fbde9c3ef18bdde0128"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/phase00/Phase00Plugin.java",
+        "size": 38384,
+        "gitBlob": "4d91998f4fd1374781e528fa5e88b8e864a4db1f"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/ui/RpgUiProjectionService.java",
+        "size": 11499,
+        "gitBlob": "e93fe9114ffa6b18475fc784790912accec87d72"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/ui/hud/RpgHud.java",
+        "size": 14112,
+        "gitBlob": "74fc387405a82f244ca02d59eabd18de93baa004"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/ui/hud/RpgHudCoordinator.java",
+        "size": 19243,
+        "gitBlob": "d8c9bc2339f50ec0b849db5361aa65e5194d086c"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/ui/model/BarrierView.java",
+        "size": 727,
+        "gitBlob": "a632170951d631cc4c8c80a491df7cc7c34365ec"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/ui/model/RpgHudViewModel.java",
+        "size": 1000,
+        "gitBlob": "7e2a34260edc87a1b8d35b43f8ad4f43d4c74592"
+      },
+      {
+        "path": "src/main/resources/Common/UI/Custom/RpgHud.ui",
+        "size": 5860,
+        "gitBlob": "565c0e561271646c957c0faffcdd2d18a03eee73"
+      },
+      {
+        "path": "src/main/resources/rpg/balance/combat-kernel-v1.json",
+        "size": 1574,
+        "gitBlob": "85f8385af2d5b2e539b1c8334e65b3724c37662d"
+      },
+      {
+        "path": "src/main/resources/rpg/gear/affixes-v2.json",
+        "size": 1108,
+        "gitBlob": "adcb0a2191750d01f78ab13e7c22d5a8f25d7e6e"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/R261CCombatLatencyTest.java",
+        "size": 5184,
+        "gitBlob": "590afa28e8cbba51d8e20f4172358a1c95ec96d1"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/R261CProgressionTest.java",
+        "size": 1611,
+        "gitBlob": "1abd249e6509c00427a5cdd9c2d8536c19baecda"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/Stage02CombatKernelTest.java",
+        "size": 24864,
+        "gitBlob": "4f185cec48dab7d04d6a7a0675db5a81952c5bf4"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/enemies/EnemyNativeHealthTest.java",
+        "size": 9823,
+        "gitBlob": "4daefc3ae31d364e99faeac7f3f5be7812c40916"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/execution/hytale/R261CManaDamageReceiptTest.java",
+        "size": 856,
+        "gitBlob": "91cc8b013f6371ff9f820a77ce548eba9e376812"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/execution/support/ManaBeforeLifeStageTest.java",
+        "size": 5022,
+        "gitBlob": "4d420c6027c8e0c0c9d4ffa11bb31a894a85ee07"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/gear/GearAffixQaSuiteTest.java",
+        "size": 3982,
+        "gitBlob": "45e127c8ed8ae6803d9d0add64083bb39290c0a7"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/gear/ManaBeforeLifeAffixTest.java",
+        "size": 2410,
+        "gitBlob": "2d781544c23f258334aa5822ab7133124e719299"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/gear/Qa159PackTest.java",
+        "size": 8281,
+        "gitBlob": "1d1292451c2bc4960ccb976e44ce72575a8a0d33"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/ui/hud/R261CResourceHudTest.java",
+        "size": 2278,
+        "gitBlob": "a2d3770577d724dbd4500d79e425bdd4db065272"
+      },
+      {
+        "path": "tools/Test-U7P5AssetCompatibility.py",
+        "size": 19246,
+        "gitBlob": "4d279999c38f69f297eca77cc9dffed49996b170"
+      },
+      {
+        "path": "tools/u7p5-r261c-resource-reviewed-assets.json",
+        "size": 431,
+        "gitBlob": "7b97371afd4e4bb2b853a8f70a2f0f988b7e3d89"
+      }
+    ],
+    "disposition": "QUARANTINED",
+    "acceptance": "UNVERIFIED"
+  },
+  {
+    "branch": "codex/preserve-20261020-history-143019a2",
+    "head": "143019a28d6a343abf49c6b3faaa2fd1324a6c20",
+    "summary": "Rebalance Cyclone Armor barrier with effective Wisdom and Intelligence",
+    "sourceRoot": "C:/Users/Zemio/.codex/worktrees/elite-natural-hookup/Hytale-main-clean",
+    "unpublishedCommits": [
+      "143019a28d6a343abf49c6b3faaa2fd1324a6c20"
+    ],
+    "newBlobs": [
+      {
+        "path": "README.md",
+        "size": 3363,
+        "gitBlob": "17740bfa4f1c0cf83ebea1a5ab3638f8e71793f1"
+      },
+      {
+        "path": "docs/COMMANDS.md",
+        "size": 31898,
+        "gitBlob": "c7ca71cf3aae04c8a4fa6e7f73453f9f1c1261cd"
+      },
+      {
+        "path": "docs/CYCLONE_ARMOR_BALANCE.md",
+        "size": 2939,
+        "gitBlob": "d12084696dbf056f47a9c6a94d451964b1d00732"
+      },
+      {
+        "path": "docs/DEVELOPMENT_BASELINE.md",
+        "size": 49747,
+        "gitBlob": "b9b922c712d243a4378c086629749eb9028b3cc6"
+      },
+      {
+        "path": "gradle.properties",
+        "size": 176,
+        "gitBlob": "f90071ca6baf04b4cc7541110fee8f88ace1bf5a"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.java",
+        "size": 74191,
+        "gitBlob": "b63cd1f9cbe3b65aa1376f480644df6b454f3c90"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/support/CycloneArmorFormula.java",
+        "size": 2212,
+        "gitBlob": "ad8afd2ce54ef5faff64974bdfa6f11448745681"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/support/SupportMagnitude.java",
+        "size": 6917,
+        "gitBlob": "47c0a1896c9d55ab2741cc2bc45a2abb42a45f7f"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/CycloneArmorTest.java",
+        "size": 10973,
+        "gitBlob": "f28b4657d83f453e53fb5b799537e7f157b00a0c"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/GearSupportConsumerTest.java",
+        "size": 20235,
+        "gitBlob": "980d5d392511ecb9c9e110c572c96e1d6be24f83"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/Stage09BarrierSupportTest.java",
+        "size": 14659,
+        "gitBlob": "a8e7111e28106116290e40e3d546e7e7ee21fc39"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/Stage09FinalSupportPassivesTest.java",
+        "size": 12992,
+        "gitBlob": "46142b3475aa2c91cd4d5e4efa39ca3d9c6304cc"
+      }
+    ],
+    "disposition": "QUARANTINED",
+    "acceptance": "UNVERIFIED"
+  },
+  {
+    "branch": "codex/preserve-20261020-history-0c51fec0",
+    "head": "0c51fec0d7cb08d6a5b0a57e6c3d8fd380ba6252",
+    "summary": "Recover copied Chapter I difficulty destinations for portal QA",
+    "sourceRoot": "C:/Users/Zemio/.codex/worktrees/elite-natural-hookup/Hytale-main-clean",
+    "unpublishedCommits": [
+      "0c51fec0d7cb08d6a5b0a57e6c3d8fd380ba6252"
+    ],
+    "newBlobs": [
+      {
+        "path": "README.md",
+        "size": 10371,
+        "gitBlob": "c10224bd9a609939e8b91b933ed0f1fb57307f86"
+      },
+      {
+        "path": "docs/COMMANDS.md",
+        "size": 44384,
+        "gitBlob": "1b61d385edf60deda168953b4d1e18ca8e927416"
+      },
+      {
+        "path": "docs/DEVELOPMENT_BASELINE.md",
+        "size": 147854,
+        "gitBlob": "04a1e61bbbd39ea20d06135fbe00bd4558f20f6e"
+      },
+      {
+        "path": "gradle.properties",
+        "size": 321,
+        "gitBlob": "35e68567681b7dceeb87dc84e2d4b7a2e691b706"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/commands/RpgDifficultyCommand.java",
+        "size": 12925,
+        "gitBlob": "24c1505c184e5b65cbe5468859199f896ac2ad79"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/difficulty/DifficultyRuntime.java",
+        "size": 7030,
+        "gitBlob": "e681e100eeeeb6bb3d1a89cb97e3cc04ded4481f"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/difficulty/HytaleDifficultyWorlds.java",
+        "size": 5096,
+        "gitBlob": "7f3224f19f87703f27a35ef7adc1a200b0659b29"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/difficulty/ChapterIWorldIdentityRecoveryTest.java",
+        "size": 9050,
+        "gitBlob": "521ec0c53e79887a29d34103f2703123ad955363"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/phase00/BuildIdentityTest.java",
+        "size": 1037,
+        "gitBlob": "bda6179ffc08d116f7f558e7bf136a7c9627c549"
+      }
+    ],
+    "disposition": "QUARANTINED",
+    "acceptance": "UNVERIFIED"
+  },
+  {
+    "branch": "codex/preserve-20261020-history-cb5306dd",
+    "head": "cb5306dd154af8c2f22c52d63a377f43be5006d6",
+    "summary": "Record inventory Tab QA correction and trace findings",
+    "sourceRoot": "C:/Users/Zemio/.codex/worktrees/elite-natural-hookup/Hytale-main-clean",
+    "unpublishedCommits": [
+      "cb5306dd154af8c2f22c52d63a377f43be5006d6"
+    ],
+    "newBlobs": [
+      {
+        "path": "README.md",
+        "size": 9908,
+        "gitBlob": "2c144c680dc8b49a83799ff587a4bd50488a1101"
+      },
+      {
+        "path": "docs/DEVELOPMENT_BASELINE.md",
+        "size": 118258,
+        "gitBlob": "71d54b033ba91cad1a157ddf38f87c95d3ae9dd7"
+      }
+    ],
+    "disposition": "QUARANTINED",
+    "acceptance": "UNVERIFIED"
+  },
+  {
+    "branch": "codex/preserve-20261020-history-9169ccf9",
+    "head": "9169ccf96837c9c4d237022961078949568c9731",
+    "summary": "Add operator QA command to set learned skill level",
+    "sourceRoot": "C:/Users/Zemio/.codex/worktrees/elite-natural-hookup/Hytale-main-clean",
+    "unpublishedCommits": [
+      "9169ccf96837c9c4d237022961078949568c9731"
+    ],
+    "newBlobs": [
+      {
+        "path": "docs/COMMANDS.md",
+        "size": 33399,
+        "gitBlob": "3052c3489f6e1fa3fce6a12879eee918df52f366"
+      },
+      {
+        "path": "gradle.properties",
+        "size": 176,
+        "gitBlob": "67650c2c9ef7bd8deefb4dc1988fb2503f369109"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/commands/RpgCommand.java",
+        "size": 43361,
+        "gitBlob": "1d03fce00658e12ef5a647f5e95a276581b1890a"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/commands/RpgSkillLevelQaCommand.java",
+        "size": 2862,
+        "gitBlob": "cbbdb9f608914d02b172a461d8ff531ca07d359f"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/gear/GearEconomyProgress.java",
+        "size": 3935,
+        "gitBlob": "34f9339390a1adcd73ddcc6f54ad979b13da9d25"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/progress/RpgLoadoutService.java",
+        "size": 68497,
+        "gitBlob": "e3e2d0d442f2767eeac020c7134a365ff7906871"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/Stage12ProgressionClosureTest.java",
+        "size": 26795,
+        "gitBlob": "36b1e21c2a7f53af72e2765d7a380a50201a011a"
+      }
+    ],
+    "disposition": "QUARANTINED",
+    "acceptance": "UNVERIFIED"
+  },
+  {
+    "branch": "codex/preserve-20261020-history-e4900dbc",
+    "head": "e4900dbc37866674a2cd128e20539c0d3dcf7aad",
+    "summary": "Enable durable Cyclone for normal R261 QA launches",
+    "sourceRoot": "C:/Users/Zemio/.codex/worktrees/elite-natural-hookup/Hytale-main-clean",
+    "unpublishedCommits": [
+      "e4900dbc37866674a2cd128e20539c0d3dcf7aad"
+    ],
+    "newBlobs": [
+      {
+        "path": "README.md",
+        "size": 3600,
+        "gitBlob": "7927786c6a6d10af680c9183fdd3473b5a2f2f5c"
+      },
+      {
+        "path": "docs/COMMANDS.md",
+        "size": 33210,
+        "gitBlob": "22d8e52b7abe4067abc1ac34e9344f37b1fb490b"
+      },
+      {
+        "path": "docs/DEVELOPMENT_BASELINE.md",
+        "size": 63194,
+        "gitBlob": "084a93ccc43138e30ba7ed2ecffae9889952db2c"
+      },
+      {
+        "path": "docs/QA-R261-FINAL.md",
+        "size": 4451,
+        "gitBlob": "85c73329f83c6658934d38d937475aace906a96d"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hywind/CycloneGateConfiguration.java",
+        "size": 479,
+        "gitBlob": "359038f618e5398b7cf9b1a2ef5b32a6d413ebb0"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hywind/HyArpgPlugin.java",
+        "size": 113733,
+        "gitBlob": "6e0b9f792f56c14a71e39d283db724dcfafae001"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hywind/R261ProductionCycloneGateTest.java",
+        "size": 1755,
+        "gitBlob": "5b5fbee690c0de684eb1fd127866e19eb72ecb21"
+      }
+    ],
+    "disposition": "QUARANTINED",
+    "acceptance": "UNVERIFIED"
+  },
+  {
+    "branch": "codex/preserve-20261020-history-2d92d561",
+    "head": "2d92d561b9c4a5057bd291ace53274d9411efd79",
+    "summary": "Record ME12 Task 2 checkpoint and remaining owner gates",
+    "sourceRoot": "C:/Users/Zemio/.codex/worktrees/elite-natural-hookup/Hytale-main-clean",
+    "unpublishedCommits": [
+      "2d92d561b9c4a5057bd291ace53274d9411efd79"
+    ],
+    "newBlobs": [
+      {
+        "path": "docs/DEVELOPMENT_BASELINE.md",
+        "size": 131735,
+        "gitBlob": "6f8df0edd080d170e14547b172586284755d1d89"
+      },
+      {
+        "path": "docs/enemies/ME12_STAGE4_RUN_SHEET.md",
+        "size": 4874,
+        "gitBlob": "4c05ca9281231633263eeb74f969aa92fb3ac345"
+      }
+    ],
+    "disposition": "QUARANTINED",
+    "acceptance": "UNVERIFIED"
+  },
+  {
+    "branch": "codex/preserve-20261020-history-b9ed34ed",
+    "head": "b9ed34ed0df61eed64b8db77229c49b9b83e3d43",
+    "summary": "Recover copied Chapter I difficulty destinations for portal QA",
+    "sourceRoot": "C:/Users/Zemio/.codex/worktrees/elite-natural-hookup/Hytale-main-clean",
+    "unpublishedCommits": [
+      "b9ed34ed0df61eed64b8db77229c49b9b83e3d43"
+    ],
+    "newBlobs": [
+      {
+        "path": "docs/COMMANDS.md",
+        "size": 44384,
+        "gitBlob": "1b61d385edf60deda168953b4d1e18ca8e927416"
+      },
+      {
+        "path": "docs/DEVELOPMENT_BASELINE.md",
+        "size": 147854,
+        "gitBlob": "04a1e61bbbd39ea20d06135fbe00bd4558f20f6e"
+      },
+      {
+        "path": "gradle.properties",
+        "size": 321,
+        "gitBlob": "35e68567681b7dceeb87dc84e2d4b7a2e691b706"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/commands/RpgDifficultyCommand.java",
+        "size": 12925,
+        "gitBlob": "24c1505c184e5b65cbe5468859199f896ac2ad79"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/difficulty/DifficultyRuntime.java",
+        "size": 7030,
+        "gitBlob": "e681e100eeeeb6bb3d1a89cb97e3cc04ded4481f"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/difficulty/HytaleDifficultyWorlds.java",
+        "size": 5096,
+        "gitBlob": "7f3224f19f87703f27a35ef7adc1a200b0659b29"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/difficulty/ChapterIWorldIdentityRecoveryTest.java",
+        "size": 9050,
+        "gitBlob": "521ec0c53e79887a29d34103f2703123ad955363"
+      }
+    ],
+    "disposition": "QUARANTINED",
+    "acceptance": "UNVERIFIED"
+  },
+  {
+    "branch": "codex/preserve-20261020-history-a3fc9085",
+    "head": "a3fc9085458307c6e4e3165ed0dbdc9c0d915a4a",
+    "summary": "Recover copied Chapter I difficulty destinations for portal QA",
+    "sourceRoot": "C:/Users/Zemio/.codex/worktrees/elite-natural-hookup/Hytale-main-clean",
+    "unpublishedCommits": [
+      "a3fc9085458307c6e4e3165ed0dbdc9c0d915a4a"
+    ],
+    "newBlobs": [
+      {
+        "path": "docs/COMMANDS.md",
+        "size": 44384,
+        "gitBlob": "1b61d385edf60deda168953b4d1e18ca8e927416"
+      },
+      {
+        "path": "docs/DEVELOPMENT_BASELINE.md",
+        "size": 147854,
+        "gitBlob": "04a1e61bbbd39ea20d06135fbe00bd4558f20f6e"
+      },
+      {
+        "path": "gradle.properties",
+        "size": 321,
+        "gitBlob": "35e68567681b7dceeb87dc84e2d4b7a2e691b706"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/commands/RpgDifficultyCommand.java",
+        "size": 12925,
+        "gitBlob": "24c1505c184e5b65cbe5468859199f896ac2ad79"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/difficulty/DifficultyRuntime.java",
+        "size": 7030,
+        "gitBlob": "e681e100eeeeb6bb3d1a89cb97e3cc04ded4481f"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/difficulty/HytaleDifficultyWorlds.java",
+        "size": 5096,
+        "gitBlob": "7f3224f19f87703f27a35ef7adc1a200b0659b29"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/difficulty/ChapterIWorldIdentityRecoveryTest.java",
+        "size": 9050,
+        "gitBlob": "521ec0c53e79887a29d34103f2703123ad955363"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/phase00/BuildIdentityTest.java",
+        "size": 1037,
+        "gitBlob": "bda6179ffc08d116f7f558e7bf136a7c9627c549"
+      }
+    ],
+    "disposition": "QUARANTINED",
+    "acceptance": "UNVERIFIED"
+  },
+  {
+    "branch": "codex/preserve-20261020-history-0425220b",
+    "head": "0425220be8acc2c8ced9203c81d668ef78b3991c",
+    "summary": "fix(rpg): repair stale native ability icons R071",
+    "sourceRoot": "C:/Users/Zemio/.codex/worktrees/hywind-r250-recovery/Hytale",
+    "unpublishedCommits": [
+      "0425220be8acc2c8ced9203c81d668ef78b3991c"
+    ],
+    "newBlobs": [
+      {
+        "path": "build.gradle",
+        "size": 6740,
+        "gitBlob": "e48b6ffdbc3a57a47af7fac2796e50012a56af34"
+      },
+      {
+        "path": "gradle.properties",
+        "size": 171,
+        "gitBlob": "6a59b9eb383f522effeb24f46110f2c169dc9142"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/input/NativeAbilityProjectionService.java",
+        "size": 17461,
+        "gitBlob": "9f3ae7407851389c2cd1b9109b776bb0822788aa"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/input/R071NativeAbilityProjectionRepairTest.java",
+        "size": 3331,
+        "gitBlob": "4486f2a6842b33b21efc15f83b0998fede927333"
+      },
+      {
+        "path": "tools/Deploy-Hywind.ps1",
+        "size": 8754,
+        "gitBlob": "5cd696a7e8bc27af3971481cb272187a3df41b1a"
+      }
+    ],
+    "disposition": "QUARANTINED",
+    "acceptance": "UNVERIFIED"
+  },
+  {
+    "branch": "codex/preserve-20261020-history-393adeb2",
+    "head": "393adeb27cd2e3725ce982203419c289d3de51eb",
+    "summary": "feat(rpg): enlarge and retime Spark presentation R065",
+    "sourceRoot": "C:/Users/Zemio/.codex/worktrees/hywind-r250-recovery/Hytale",
+    "unpublishedCommits": [
+      "393adeb27cd2e3725ce982203419c289d3de51eb"
+    ],
+    "newBlobs": [
+      {
+        "path": "gradle.properties",
+        "size": 171,
+        "gitBlob": "ee707c379769c50d360f37ecc3b55df42ee1ac9b"
+      },
+      {
+        "path": "src/main/resources/Server/Particles/Hywind/Hywind_Charged_Bolt.particlesystem",
+        "size": 158,
+        "gitBlob": "dbd2b58134f75b5663c7aced2089585fe2b9cad6"
+      },
+      {
+        "path": "src/main/resources/Server/Particles/Hywind/Hywind_Charged_Bolt_Frame.particlespawner",
+        "size": 931,
+        "gitBlob": "a42b8799023a17c569007431428540f4942e50fa"
+      },
+      {
+        "path": "src/main/resources/rpg/catalog/skills.json",
+        "size": 172827,
+        "gitBlob": "94b276d321f987d9f36a1b6f890e7add7b0a0291"
+      },
+      {
+        "path": "src/main/resources/rpg/runtime/lightning-v2.json",
+        "size": 5768,
+        "gitBlob": "b5b85bf4936b984b6e1e2e1a3d005283c3b861ba"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/SparkQaPassTest.java",
+        "size": 8447,
+        "gitBlob": "7393184eb16e2ee3c86060e208597bfe17048a33"
+      },
+      {
+        "path": "tools/Deploy-Hywind.ps1",
+        "size": 8754,
+        "gitBlob": "fb3883a466deadac5035bb6b03601c048bf095d1"
+      },
+      {
+        "path": "tools/Run-HywindSmoke.ps1",
+        "size": 7629,
+        "gitBlob": "612361b8947b0015e479878ade91a1512e508976"
+      },
+      {
+        "path": "tools/Test-HywindDeployment.ps1",
+        "size": 6095,
+        "gitBlob": "fffa571710dd505468a9d231030baf714da91a7a"
+      }
+    ],
+    "disposition": "QUARANTINED",
+    "acceptance": "UNVERIFIED"
+  },
+  {
+    "branch": "codex/preserve-20261020-history-fc8618e1",
+    "head": "fc8618e1fd4871e94e93df7e2349426ad4851ea2",
+    "summary": "fix(rpg): replace Spark particle with world quad R066",
+    "sourceRoot": "C:/Users/Zemio/.codex/worktrees/hywind-r250-recovery/Hytale",
+    "unpublishedCommits": [
+      "fc8618e1fd4871e94e93df7e2349426ad4851ea2"
+    ],
+    "newBlobs": [
+      {
+        "path": "gradle.properties",
+        "size": 171,
+        "gitBlob": "a2e60c09c5a1ce78dace135a051daf42f71be0b3"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/NativeProjectileAssetAudit.java",
+        "size": 11481,
+        "gitBlob": "a004042cfacb235b0a475aa799b9d55f575198f7"
+      },
+      {
+        "path": "src/main/resources/Common/VFX/RPG/Spark/Spark_Quad.blockymodel",
+        "size": 811,
+        "gitBlob": "d4cc3920fcf5fb0807eb46a3e7de8221c34c0e93"
+      },
+      {
+        "path": "src/main/resources/Common/VFX/RPG/Spark/Spark_Quad_FourFrame.blockyanim",
+        "size": 458,
+        "gitBlob": "c0e5e361133996feeb997fef0035ce75f43fd0e7"
+      },
+      {
+        "path": "src/main/resources/Server/Models/Projectiles/Hywind_Charged_Bolt.json",
+        "size": 419,
+        "gitBlob": "d7d75292b230b387371f64b9dd0ea103f794aca7"
+      },
+      {
+        "path": "src/main/resources/rpg/runtime/lightning-v2.json",
+        "size": 5749,
+        "gitBlob": "91918bf4b7ed1e02618a4e6cebdd33d8ce2ae5fb"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/LightningSkillUpdateTest.java",
+        "size": 10025,
+        "gitBlob": "713e2f10d4b153a4f4796e658d7a1ca0539b43c8"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/SparkQaPassTest.java",
+        "size": 10409,
+        "gitBlob": "8b5c22e4bec9bda2484b6a0b8458d629fec717e9"
+      },
+      {
+        "path": "tools/Deploy-Hywind.ps1",
+        "size": 8754,
+        "gitBlob": "1b17b8d3c8171dd4945ed69af844630584d83132"
+      },
+      {
+        "path": "tools/Run-HywindSmoke.ps1",
+        "size": 7629,
+        "gitBlob": "771124175fbc4e0eead2d9c3b7b0d03e51a199a2"
+      },
+      {
+        "path": "tools/Test-HywindDeployment.ps1",
+        "size": 6095,
+        "gitBlob": "97a4a2215d8f906fbe3546640799a64d1ecb77ce"
+      }
+    ],
+    "disposition": "QUARANTINED",
+    "acceptance": "UNVERIFIED"
+  },
+  {
+    "branch": "codex/preserve-20261020-history-bb939cd8-source",
+    "head": "1a67332b2c8b69b478253ff2f41f7b63acad1493",
+    "originalHead": "bb939cd844e657c98e433a40a0e44fe061081e0d",
+    "summary": "Implement nonblocking native persistence handoff and pre-durable shield escrow",
+    "sourceRoot": "C:/Users/Zemio/.codex/worktrees/hywind-r250-recovery/Hytale",
+    "unpublishedCommits": [
+      "bb939cd844e657c98e433a40a0e44fe061081e0d"
+    ],
+    "newBlobs": [
+      {
+        "path": "docs/stage-13/native-persistence-handoff-correction.md",
+        "size": 18236,
+        "gitBlob": "c13fa1c44a0fdb22cf9231d97976bb6d4cd1baf8"
+      },
+      {
+        "path": "docs/stage-13/native-persistence-isolated-qa.md",
+        "size": 6150,
+        "gitBlob": "6b09541662705f7f1e624218d969f8c94e2bc875"
+      },
+      {
+        "path": "docs/stage-13/stage-13-report.md",
+        "size": 54500,
+        "gitBlob": "01d5a96b6f5404b407860ee8b64917553c1beced"
+      },
+      {
+        "path": "evidence/stage-13/cohort-j/.gitattributes",
+        "size": 109,
+        "gitBlob": "14ba8ba03ceee07576a290fdee3bbbbaa30cfd8f"
+      },
+      {
+        "path": "evidence/stage-13/cohort-j/checkpoint-manifest.json",
+        "size": 6084,
+        "gitBlob": "5bb4128681aa0d7b2bd5a4c939c666173cfdd28c"
+      },
+      {
+        "path": "evidence/stage-13/cohort-j/hardening/coverage.json",
+        "size": 68067,
+        "gitBlob": "87437fd68f5678df25c41d86599ce873206650ec"
+      },
+      {
+        "path": "evidence/stage-13/cohort-j/hardening/durable-load.json",
+        "size": 28722,
+        "gitBlob": "e7d12cb9f46b1307adeaba723ec0ae9f5f07eb37"
+      },
+      {
+        "path": "evidence/stage-13/cohort-j/hardening/group-sparse-load.json",
+        "size": 5036,
+        "gitBlob": "24025814cd276ce2f1a6d048f05c329c3e5f1e23"
+      },
+      {
+        "path": "evidence/stage-13/cohort-j/hardening/handoff-crash-matrix.json",
+        "size": 853,
+        "gitBlob": "fdbf6732473273499f34c212988585278ff7a3a2"
+      },
+      {
+        "path": "evidence/stage-13/cohort-j/hardening/native-cadence-audit.json",
+        "size": 422,
+        "gitBlob": "fc5150a536ca340fa910138323d26192bab2c4fd"
+      },
+      {
+        "path": "evidence/stage-13/cohort-j/hardening/v2-crash-matrix.json",
+        "size": 3665,
+        "gitBlob": "7479328b789e622d8a80271790d4928e15e0eab8"
+      },
+      {
+        "path": "evidence/stage-13/cohort-j/hardening/v2-sparse-load.json",
+        "size": 11883,
+        "gitBlob": "0444c724f6d8d7f2b7086eafd799a9d4e4f715b0"
+      },
+      {
+        "path": "evidence/stage-13/cohort-j/isolated-qa-profile.json",
+        "size": 1399,
+        "gitBlob": "fd7726f65bff295490ee47f38e7059d0544985b3"
+      },
+      {
+        "path": "evidence/stage-13/cohort-j/live-state-verification.json",
+        "size": 879,
+        "gitBlob": "0d61123d3268e27114322ba2ce6cc4498623e266"
+      },
+      {
+        "path": "evidence/stage-13/cohort-j/matrix/skill-passive-matrix.json",
+        "size": 738774,
+        "gitBlob": "7a085fdbd544787a454e4c8ffe0f1d5a415b3b6d"
+      },
+      {
+        "path": "evidence/stage-13/cohort-j/native-basic-path-audit.json",
+        "size": 3595,
+        "gitBlob": "3144884dbd7a5790c44c6003959ee5c1c035809c"
+      },
+      {
+        "path": "evidence/stage-13/cohort-j/native-movement-guard-audit.json",
+        "size": 319,
+        "gitBlob": "7c6fa79742ccb2ae92d4cbad09b96d919176db36"
+      },
+      {
+        "path": "evidence/stage-13/cohort-j/native-projectile-equipment-audit.json",
+        "size": 3145,
+        "gitBlob": "3fd20cb7069546133def030846f824688bf187e8"
+      },
+      {
+        "path": "evidence/stage-13/cohort-j/native-tick-api-audit.json",
+        "size": 1236,
+        "gitBlob": "40e951f56bc9948a37556242f0a4a0db2e5949a4"
+      },
+      {
+        "path": "evidence/stage-13/cohort-j/release-readiness.json",
+        "size": 30569,
+        "gitBlob": "72dc978d6714865b2a846067d7b7cff579798d36"
+      },
+      {
+        "path": "evidence/stage-13/cohort-j/server-smoke-summary.json",
+        "size": 1132,
+        "gitBlob": "4be6f4345221eb1544c10b3a8c958fd518aa2587"
+      },
+      {
+        "path": "evidence/stage-13/cohort-j/server-smoke.txt",
+        "size": 116208,
+        "gitBlob": "cf5497a49d638f5ec3e1b4f2737849ee4411cc9f"
+      },
+      {
+        "path": "evidence/stage-13/cohort-j/source-sha256.json",
+        "size": 104639,
+        "gitBlob": "a27ee48c09245d24d1f4fe68cf739fcd336a2a8a"
+      },
+      {
+        "path": "evidence/stage-13/cohort-j/test-results.json",
+        "size": 141851,
+        "gitBlob": "5bf527a6741acd500b7012a0c62d14ac8128a69a"
+      },
+      {
+        "path": "evidence/stage-13/cohort-j/validation/run-chain.json",
+        "size": 3279,
+        "gitBlob": "72942813fbf288b6ecd3adbfeda7b5048bc9e177"
+      },
+      {
+        "path": "evidence/stage-13/cohort-j/verification.json",
+        "size": 1827,
+        "gitBlob": "43f4c38487c6e40c4e9c31f3c4e1cd9b740d27c5"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/combat/cooldown/RpgCooldownService.java",
+        "size": 18660,
+        "gitBlob": "14612d77f82ed1fb04a220acddb56d9c95b807e4"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/combat/hytale/HomeRestorationTickSystem.java",
+        "size": 2407,
+        "gitBlob": "34d45f2c65a68f8fd0ad7df58d756cf15fbe5e3d"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/combat/hytale/HytaleDamageLifecycleSystems.java",
+        "size": 12618,
+        "gitBlob": "e915df1cc120d31ebbb1ed8c841c9990d405126c"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/commands/RpgManaguardCommand.java",
+        "size": 1996,
+        "gitBlob": "a942f1136b67a64d9644022191fce8004984c331"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/diagnostics/NativeRpgTickMetrics.java",
+        "size": 4013,
+        "gitBlob": "50666a5cee47cff9566f681ed81bd704846d9a8a"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/diagnostics/ProgressionHandoffMetrics.java",
+        "size": 2076,
+        "gitBlob": "74865c098243ad4b22eeacb2296b7b2b4bbc5a98"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/diagnostics/RpgTraceEventType.java",
+        "size": 3766,
+        "gitBlob": "c1192acbb51ae213e318f5a66e873b0c12317e46"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/SkillExecutionPort.java",
+        "size": 3559,
+        "gitBlob": "58e4b9bf5d4b8e8b84158fa87a7df8a0ba78d503"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/SkillExecutionService.java",
+        "size": 52816,
+        "gitBlob": "b95886741e6bd034ea35c25a77b0eb1109324e0b"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/AreaNpcControlSystem.java",
+        "size": 3721,
+        "gitBlob": "5244a63727374978032d037c0b33bc2f156944fa"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/AreaStatusProjectionSystem.java",
+        "size": 3677,
+        "gitBlob": "9b2bd3aaf7c3d1a7e5dac78b5ea15be54c36c239"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleConversionSystem.java",
+        "size": 21964,
+        "gitBlob": "57044f0ad22926940d2687fddb9468a308fda6e7"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleCorpseSystem.java",
+        "size": 5996,
+        "gitBlob": "75c4e66ebac3056da8989eb7df94e01ecadd897b"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleEncounterRewards.java",
+        "size": 35247,
+        "gitBlob": "c2253b6f9388fbd321878e02c66163d570a2d411"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytalePlayerPersistenceReady.java",
+        "size": 2976,
+        "gitBlob": "2cfc9e15e0154d5c8cb8e468a8465617acc08db9"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleRetaliationSystem.java",
+        "size": 3010,
+        "gitBlob": "0ab7d7162f377de5413a6e1e5be4cd276e7603fd"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.java",
+        "size": 225498,
+        "gitBlob": "644370b51210acd704ea1a82a7d18710f83807c4"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleStatusDeathSystem.java",
+        "size": 2835,
+        "gitBlob": "b7eb6167e1ca01641932d54d75ec0a7641812d54"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleSummonSystem.java",
+        "size": 30791,
+        "gitBlob": "51a06ce57ed5f4d89eeec4fde75e74dca7e7cccc"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleSupportSystem.java",
+        "size": 38886,
+        "gitBlob": "2169630e7e847f995f1e2786d39f486f1174807b"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/NativeBasicAttackObserver.java",
+        "size": 12541,
+        "gitBlob": "7ebf1f7a80a0d5b12926896ad1de062fe8797487"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/StatusRemovalSystem.java",
+        "size": 1697,
+        "gitBlob": "e55cdfb5c8af626efbfffa16d003ef6106d8ddc4"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/SupportDamageSystems.java",
+        "size": 16636,
+        "gitBlob": "ab3426b6e13edaac63a3c9ab502a01b3c52417d4"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/SupportNativeEffects.java",
+        "size": 26079,
+        "gitBlob": "94339229e7e33737c26dc1262b0a90377bf085ad"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/support/ShieldEscrow.java",
+        "size": 5176,
+        "gitBlob": "c053cea4e52fd1aa057a2e5d04dca95dd194ffaf"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/support/SupportProgressStore.java",
+        "size": 716,
+        "gitBlob": "795da359b21207afa679c5f89f7d324f280d59fe"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/support/SupportRuntime.java",
+        "size": 38245,
+        "gitBlob": "118450b829856c81fad1ce193bd9077e5e178ac5"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/phase00/Phase00Plugin.java",
+        "size": 31546,
+        "gitBlob": "d483c25a6279337af19999aeeac081da70e0ae63"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/progress/DurableEncounterEffects.java",
+        "size": 5223,
+        "gitBlob": "cd639e94b5fe2cbd52c9ef7f5fce2e305aa4d956"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/progress/EncounterContributions.java",
+        "size": 15427,
+        "gitBlob": "a544566f311f5bf4dc17d399cc64f1388fa8a56b"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/progress/EncounterGroupCommit.java",
+        "size": 9462,
+        "gitBlob": "d6ca51a73d8d9a7c15e8e714cdae3773fc2822d9"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/progress/FileEncounterStore.java",
+        "size": 32427,
+        "gitBlob": "6265e1c0db4e3a01196645bfa5e8578e9f754cb1"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/progress/MasteryRootBudget.java",
+        "size": 1622,
+        "gitBlob": "f849ce516409d5eed41d5b0e29ad580f094147e7"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/progress/PersistentEncounterRuntime.java",
+        "size": 23012,
+        "gitBlob": "fe81a947a3ccc61d4a8135cb30f094513c289d7d"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/progress/RpgLoadoutService.java",
+        "size": 53813,
+        "gitBlob": "bda9fce2f3f518c4c1bae0988eba73dbb6b19d82"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/progress/RpgLoadoutView.java",
+        "size": 3629,
+        "gitBlob": "d738c467cf5ebc414797028524a62a6084b9fed8"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/ui/hud/RpgHudCoordinator.java",
+        "size": 7418,
+        "gitBlob": "a988f9d2538a8735a6512b4638da7f16a0ce8946"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/ui/hud/RpgHudTickSystem.java",
+        "size": 1599,
+        "gitBlob": "ddb67370d2a2aab5ebb2abe74d2d15f75363d588"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/ShieldHandoffCrashProcess.java",
+        "size": 2831,
+        "gitBlob": "6308af125bf5b12f1ba03ea0f0488241e5f38106"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/Stage09SupportRuntimeTest.java",
+        "size": 12576,
+        "gitBlob": "a83d171aca5992cb7b42ccd80b65c395dce302b4"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/Stage13EncounterNativeHandoffTest.java",
+        "size": 6787,
+        "gitBlob": "90cbc57eb0c6b9348951ad37aba5be7ddef9668f"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/Stage13EscrowArchiveRollbackTest.java",
+        "size": 6228,
+        "gitBlob": "c7b78370a92f79979f6e3d168f5de88d7ed0f7cc"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/Stage13LifecycleEdgeHandoffTest.java",
+        "size": 6488,
+        "gitBlob": "9edc29a866e774c47e06ef9099d06bcdacd8f4c9"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/Stage13NativeCooldownHandoffTest.java",
+        "size": 4725,
+        "gitBlob": "7cdd963da8d2fda327cd8697108f01cfac5dd8e1"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/Stage13NativeSupportHandoffTest.java",
+        "size": 4870,
+        "gitBlob": "27f5cda6628797b4a010dfaf5188ac299d8a9abc"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/Stage13PlayerReadIsolationTest.java",
+        "size": 5772,
+        "gitBlob": "6249d5184952971ea6d4e74f136a7fbfecd3bd21"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/Stage13ShieldEscrowTest.java",
+        "size": 3995,
+        "gitBlob": "eaf93dd0067ed6cf0fc9f2ec37399aed25c6e6ac"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/Stage13ShieldHandoffRecoveryTest.java",
+        "size": 4812,
+        "gitBlob": "3d67883539040a4ea0f7f0f4bad32397e5ae84d5"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/diagnostics/Stage13NativeTickMetricsTest.java",
+        "size": 4322,
+        "gitBlob": "8ae3681fa5b453591e940830e256ee5ccc4c61d3"
+      },
+      {
+        "path": "tools/Capture-Stage13CohortEvidence.ps1",
+        "size": 27032,
+        "gitBlob": "13c9967ac8b64a642b19c933b718fd5c39410ba4"
+      },
+      {
+        "path": "tools/Run-Stage13CohortSmoke.ps1",
+        "size": 14556,
+        "gitBlob": "9807d9994ac36f076470b652f32d36e4e88f2e64"
+      },
+      {
+        "path": "tools/Test-Stage13HandoffLiveState.ps1",
+        "size": 2394,
+        "gitBlob": "7d2a96c675ddee1b5ced271477c59de64c29acbb"
+      },
+      {
+        "path": "tools/Test-Stage13HandoffReadiness.ps1",
+        "size": 3928,
+        "gitBlob": "1023ba5d333b89b8bae716e84e7b397face42aa0"
+      },
+      {
+        "path": "tools/Test-Stage13HandoffScope.ps1",
+        "size": 6000,
+        "gitBlob": "4028612c6a92c70823b3ed0f593f8af27b2d1373"
+      },
+      {
+        "path": "tools/Test-Stage13ReleaseReadiness.ps1",
+        "size": 6366,
+        "gitBlob": "4496afdbb2eb2c109a7e6773d7c345ed9cf8634b"
+      },
+      {
+        "path": "tools/Write-Stage13CheckpointManifest.ps1",
+        "size": 6215,
+        "gitBlob": "e80444d1a2ecdbb5ed56fc7dd1d7115a96875b9e"
+      }
+    ],
+    "excludedHistoricalPaths": [
+      "evidence/corrections/R016/rollback/HytaleRPG-0.0.8.jar",
+      "evidence/corrections/R017/rollback/HytaleRPG-0.0.9.jar",
+      "evidence/corrections/R018/rollback/HytaleRPG-0.0.10.jar",
+      "evidence/corrections/R019/rollback/HytaleRPG-0.0.11.jar",
+      "evidence/corrections/R020/rollback/HytaleRPG-0.0.12.jar",
+      "evidence/corrections/R021/rollback/HytaleRPG-0.0.13.jar",
+      "evidence/corrections/R022/rollback/HytaleRPG-0.0.14.jar",
+      "evidence/corrections/R023/rollback/HytaleRPG-0.0.15.jar",
+      "evidence/corrections/R024/artifacts/HytaleRPG-0.0.17.jar",
+      "evidence/corrections/R024/rollback/HytaleRPG-0.0.16.jar",
+      "evidence/stage-04/R013/rollback/HytaleRPG-0.0.5.jar",
+      "evidence/stage-05/R014/rollback/HytaleRPG-0.0.6.jar",
+      "evidence/stage-05/R015/rollback/HytaleRPG-0.0.7.jar",
+      "evidence/stage-06/cohort-a/artifacts/HytaleRPG-0.0.18.jar",
+      "evidence/stage-06/cohort-a/rollback/HytaleRPG-0.0.17.jar",
+      "evidence/stage-06/cohort-b/artifacts/HytaleRPG-0.0.18.jar",
+      "evidence/stage-06/cohort-b/rollback/HytaleRPG-0.0.17.jar",
+      "evidence/stage-06/cohort-c/artifacts/HytaleRPG-0.0.18.jar",
+      "evidence/stage-06/cohort-c/rollback/HytaleRPG-0.0.17.jar",
+      "evidence/stage-06/cohort-d/artifacts/HytaleRPG-0.0.18.jar",
+      "evidence/stage-06/cohort-d/rollback/HytaleRPG-0.0.17.jar",
+      "evidence/stage-07/cohort-a/artifacts/HytaleRPG-0.0.19.jar",
+      "evidence/stage-07/cohort-a/rollback/HytaleRPG-0.0.18.jar",
+      "evidence/stage-07/cohort-b/artifacts/HytaleRPG-0.0.19.jar",
+      "evidence/stage-07/cohort-b/rollback/HytaleRPG-0.0.18.jar",
+      "evidence/stage-07/cohort-c/artifacts/HytaleRPG-0.0.19.jar",
+      "evidence/stage-07/cohort-c/rollback/HytaleRPG-0.0.18.jar",
+      "evidence/stage-08/cohort-a/artifacts/HytaleRPG-0.0.20.jar",
+      "evidence/stage-08/cohort-a/rollback/HytaleRPG-0.0.19.jar",
+      "evidence/stage-08/cohort-b/artifacts/HytaleRPG-0.0.20.jar",
+      "evidence/stage-08/cohort-b/rollback/HytaleRPG-0.0.19.jar",
+      "evidence/stage-09/cohort-a/artifacts/HytaleRPG-0.0.21.jar",
+      "evidence/stage-09/cohort-a/rollback/HytaleRPG-0.0.20.jar",
+      "evidence/stage-09/cohort-b/artifacts/HytaleRPG-0.0.21.jar",
+      "evidence/stage-09/cohort-b/rollback/HytaleRPG-0.0.20.jar",
+      "evidence/stage-09/cohort-c/artifacts/HytaleRPG-0.0.21.jar",
+      "evidence/stage-09/cohort-c/rollback/HytaleRPG-0.0.20.jar",
+      "evidence/stage-09/cohort-d/artifacts/HytaleRPG-0.0.21.jar",
+      "evidence/stage-09/cohort-d/rollback/HytaleRPG-0.0.20.jar",
+      "evidence/stage-09/cohort-e/artifacts/HytaleRPG-0.0.21.jar",
+      "evidence/stage-09/cohort-e/rollback/HytaleRPG-0.0.20.jar",
+      "evidence/stage-09/cohort-f/artifacts/HytaleRPG-0.0.21.jar",
+      "evidence/stage-09/cohort-f/rollback/HytaleRPG-0.0.20.jar",
+      "evidence/stage-10/cohort-a/artifacts/HytaleRPG-0.0.22.jar",
+      "evidence/stage-10/cohort-a/rollback/HytaleRPG-0.0.21.jar",
+      "evidence/stage-10/cohort-b/artifacts/HytaleRPG-0.0.22.jar",
+      "evidence/stage-10/cohort-b/rollback/HytaleRPG-0.0.22.jar",
+      "evidence/stage-10/cohort-c/artifacts/HytaleRPG-0.0.22.jar",
+      "evidence/stage-10/cohort-c/rollback/HytaleRPG-0.0.22.jar",
+      "evidence/stage-10/cohort-d/artifacts/HytaleRPG-0.0.22.jar",
+      "evidence/stage-10/cohort-d/rollback/HytaleRPG-0.0.22.jar",
+      "evidence/stage-10/cohort-e/artifacts/HytaleRPG-0.0.22.jar",
+      "evidence/stage-10/cohort-e/rollback/HytaleRPG-0.0.22.jar",
+      "evidence/stage-10/cohort-f/artifacts/HytaleRPG-0.0.22.jar",
+      "evidence/stage-10/cohort-f/rollback/HytaleRPG-0.0.22.jar",
+      "evidence/stage-10/cohort-g/artifacts/HytaleRPG-0.0.22.jar",
+      "evidence/stage-10/cohort-g/rollback/HytaleRPG-0.0.22.jar",
+      "evidence/stage-11/cohort-a/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-a/rollback/HytaleRPG-0.0.22.jar",
+      "evidence/stage-11/cohort-b/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-b/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-c/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-c/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-d/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-d/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-e/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-e/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-f/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-f/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-g/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-g/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-h/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-h/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-i/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-i/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-j/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-j/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-k/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-k/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-l/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-l/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-m/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-m/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-n/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-n/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-o/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-o/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-p/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-p/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-q/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-q/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-r/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-r/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-s/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-s/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-t/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-t/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-u/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-u/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-v/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-v/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-w/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-w/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-x/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-x/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-y/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-y/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-z/artifacts/HytaleRPG-0.0.23.jar",
+      "evidence/stage-11/cohort-z/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-12/cohort-a/artifacts/HytaleRPG-0.0.24.jar",
+      "evidence/stage-12/cohort-a/rollback/HytaleRPG-0.0.23.jar",
+      "evidence/stage-12/cohort-b/artifacts/HytaleRPG-0.0.24.jar",
+      "evidence/stage-12/cohort-b/rollback/HytaleRPG-0.0.24.jar",
+      "evidence/stage-12/cohort-c/artifacts/HytaleRPG-0.0.24.jar",
+      "evidence/stage-12/cohort-c/rollback/HytaleRPG-0.0.24.jar",
+      "evidence/stage-12/cohort-d/artifacts/HytaleRPG-0.0.24.jar",
+      "evidence/stage-12/cohort-d/rollback/HytaleRPG-0.0.24.jar",
+      "evidence/stage-12/cohort-e/artifacts/HytaleRPG-0.0.24.jar",
+      "evidence/stage-12/cohort-e/rollback/HytaleRPG-0.0.24.jar",
+      "evidence/stage-12/cohort-f/artifacts/HytaleRPG-0.0.24.jar",
+      "evidence/stage-12/cohort-f/rollback/HytaleRPG-0.0.24.jar",
+      "evidence/stage-12/cohort-g/artifacts/HytaleRPG-0.0.24.jar",
+      "evidence/stage-12/cohort-g/rollback/HytaleRPG-0.0.24.jar",
+      "evidence/stage-12/cohort-h/artifacts/HytaleRPG-0.0.24.jar",
+      "evidence/stage-12/cohort-h/rollback/HytaleRPG-0.0.24.jar",
+      "evidence/stage-13/cohort-a/artifacts/CanvasUI-0.1.0.jar",
+      "evidence/stage-13/cohort-a/artifacts/HYTALEDEVLIB-0.5.0.jar",
+      "evidence/stage-13/cohort-a/artifacts/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-a/failed-animation-audit-1/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-a/failed-animation-audit-2/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-a/rollback/HytaleRPG-0.0.24.jar",
+      "evidence/stage-13/cohort-b/artifacts/CanvasUI-0.1.0.jar",
+      "evidence/stage-13/cohort-b/artifacts/HYTALEDEVLIB-0.5.0.jar",
+      "evidence/stage-13/cohort-b/artifacts/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-b/failed-equipment-audit-1/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-b/pre-power-boundary-audit/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-b/rollback/HytaleRPG-0.0.24.jar",
+      "evidence/stage-13/cohort-c/artifacts/CanvasUI-0.1.0.jar",
+      "evidence/stage-13/cohort-c/artifacts/HYTALEDEVLIB-0.5.0.jar",
+      "evidence/stage-13/cohort-c/artifacts/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-c/failed-profile-audit-1/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-c/pre-shared-budget-audit/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-c/rollback/HytaleRPG-0.0.24.jar",
+      "evidence/stage-13/cohort-d/artifacts/CanvasUI-0.1.0.jar",
+      "evidence/stage-13/cohort-d/artifacts/HYTALEDEVLIB-0.5.0.jar",
+      "evidence/stage-13/cohort-d/artifacts/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-d/rollback/HytaleRPG-0.0.24.jar",
+      "evidence/stage-13/cohort-e/artifacts/CanvasUI-0.1.0.jar",
+      "evidence/stage-13/cohort-e/artifacts/HYTALEDEVLIB-0.5.0.jar",
+      "evidence/stage-13/cohort-e/artifacts/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-e/native-path-audit-failure-1/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-e/native-path-audit-failure-2/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-e/rollback/HytaleRPG-0.0.24.jar",
+      "evidence/stage-13/cohort-f/artifacts/CanvasUI-0.1.0.jar",
+      "evidence/stage-13/cohort-f/artifacts/HYTALEDEVLIB-0.5.0.jar",
+      "evidence/stage-13/cohort-f/artifacts/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-f/rollback/HytaleRPG-0.0.24.jar",
+      "evidence/stage-13/cohort-g/artifacts/CanvasUI-0.1.0.jar",
+      "evidence/stage-13/cohort-g/artifacts/HYTALEDEVLIB-0.5.0.jar",
+      "evidence/stage-13/cohort-g/artifacts/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-g/rollback/HytaleRPG-0.0.24.jar",
+      "evidence/stage-13/cohort-g/rollback/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-h/artifacts/CanvasUI-0.1.0.jar",
+      "evidence/stage-13/cohort-h/artifacts/HYTALEDEVLIB-0.5.0.jar",
+      "evidence/stage-13/cohort-h/artifacts/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-h/rollback/HytaleRPG-0.0.24.jar",
+      "evidence/stage-13/cohort-h/rollback/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-h/rollback/stage13-g/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-i/artifacts/CanvasUI-0.1.0.jar",
+      "evidence/stage-13/cohort-i/artifacts/HYTALEDEVLIB-0.5.0.jar",
+      "evidence/stage-13/cohort-i/artifacts/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-i/rollback/HytaleRPG-0.0.24.jar",
+      "evidence/stage-13/cohort-i/rollback/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-i/rollback/stage13-g/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-i/rollback/stage13-h/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-j/artifacts/CanvasUI-0.1.0.jar",
+      "evidence/stage-13/cohort-j/artifacts/HYTALEDEVLIB-0.5.0.jar",
+      "evidence/stage-13/cohort-j/artifacts/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-j/rollback/HytaleRPG-0.0.24.jar",
+      "evidence/stage-13/cohort-j/rollback/HytaleRPG-0.0.25.jar",
+      "evidence/stage-13/cohort-j/rollback/stage13-i/HytaleRPG-0.0.25.jar",
+      "gradle/wrapper/gradle-wrapper.jar"
+    ],
+    "disposition": "QUARANTINED",
+    "acceptance": "UNVERIFIED"
+  },
+  {
+    "branch": "codex/preserve-20261020-history-6cca0269",
+    "head": "6cca026954222ec0331ac749e95b91b7e1cb4eec",
+    "originalHead": "6cca026954222ec0331ac749e95b91b7e1cb4eec",
+    "summary": "fix(rpg): replace Spark particle with world quad R066",
+    "sourceRoot": "C:/Users/Zemio/.codex/worktrees/hywind-r250-recovery/Hytale",
+    "unpublishedCommits": [
+      "6cca026954222ec0331ac749e95b91b7e1cb4eec"
+    ],
+    "newBlobs": [
+      {
+        "path": "gradle.properties",
+        "size": 171,
+        "gitBlob": "a2e60c09c5a1ce78dace135a051daf42f71be0b3"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/NativeProjectileAssetAudit.java",
+        "size": 11481,
+        "gitBlob": "a004042cfacb235b0a475aa799b9d55f575198f7"
+      },
+      {
+        "path": "src/main/resources/Common/VFX/RPG/Spark/Spark_Quad.blockymodel",
+        "size": 811,
+        "gitBlob": "d4cc3920fcf5fb0807eb46a3e7de8221c34c0e93"
+      },
+      {
+        "path": "src/main/resources/Common/VFX/RPG/Spark/Spark_Quad_FourFrame.blockyanim",
+        "size": 458,
+        "gitBlob": "c0e5e361133996feeb997fef0035ce75f43fd0e7"
+      },
+      {
+        "path": "src/main/resources/Server/Models/Projectiles/Hywind_Charged_Bolt.json",
+        "size": 419,
+        "gitBlob": "d7d75292b230b387371f64b9dd0ea103f794aca7"
+      },
+      {
+        "path": "src/main/resources/rpg/runtime/lightning-v2.json",
+        "size": 5749,
+        "gitBlob": "91918bf4b7ed1e02618a4e6cebdd33d8ce2ae5fb"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/LightningSkillUpdateTest.java",
+        "size": 10025,
+        "gitBlob": "713e2f10d4b153a4f4796e658d7a1ca0539b43c8"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/SparkQaPassTest.java",
+        "size": 10409,
+        "gitBlob": "8b5c22e4bec9bda2484b6a0b8458d629fec717e9"
+      },
+      {
+        "path": "tools/Deploy-Hywind.ps1",
+        "size": 8754,
+        "gitBlob": "1b17b8d3c8171dd4945ed69af844630584d83132"
+      },
+      {
+        "path": "tools/Run-HywindSmoke.ps1",
+        "size": 7629,
+        "gitBlob": "771124175fbc4e0eead2d9c3b7b0d03e51a199a2"
+      },
+      {
+        "path": "tools/Test-HywindDeployment.ps1",
+        "size": 6095,
+        "gitBlob": "97a4a2215d8f906fbe3546640799a64d1ecb77ce"
+      }
+    ],
+    "excludedHistoricalPaths": [],
+    "disposition": "QUARANTINED",
+    "acceptance": "UNVERIFIED"
+  },
+  {
+    "branch": "codex/preserve-20261020-history-53d34105",
+    "head": "53d34105145bebec44a3698ab4f5b2c786f19f6c",
+    "originalHead": "53d34105145bebec44a3698ab4f5b2c786f19f6c",
+    "summary": "Package PersistentNPCs clean-install default config",
+    "sourceRoot": "C:/Users/Zemio/.codex/worktrees/hywind-r250-recovery/Hytale",
+    "unpublishedCommits": [
+      "53d34105145bebec44a3698ab4f5b2c786f19f6c"
+    ],
+    "newBlobs": [
+      {
+        "path": "persistent-npcs/src/main/resources/defaults/config.json",
+        "size": 885,
+        "gitBlob": "c1ca8587f260e5693ed2b5292884a2b547d12ba5"
+      }
+    ],
+    "excludedHistoricalPaths": [],
+    "disposition": "QUARANTINED",
+    "acceptance": "UNVERIFIED"
+  },
+  {
+    "branch": "codex/preserve-20261020-teleport-r250",
+    "head": "ea63fd8a6c70ca808c51dc3697b948133476e37c",
+    "originalHead": "ea63fd8a6c70ca808c51dc3697b948133476e37c",
+    "summary": "teleport-r250",
+    "sourceRoot": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale",
+    "unpublishedCommits": [
+      "ea63fd8a6c70ca808c51dc3697b948133476e37c"
+    ],
+    "newBlobs": [
+      {
+        "path": "docs/COMMANDS.md",
+        "size": 32446,
+        "gitBlob": "de649742bd42d4b4ce09cc07861d23aad55547a7"
+      },
+      {
+        "path": "docs/hywind/teleport-implementation.md",
+        "size": 1994,
+        "gitBlob": "7344b75a65523f66d7148203bfef303a7bb7522b"
+      },
+      {
+        "path": "gradle.properties",
+        "size": 176,
+        "gitBlob": "34808ac1a9b25f67cb2560a9e946b382b77c55e8"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/commands/RpgCommand.java",
+        "size": 43287,
+        "gitBlob": "50f0be709a9776abad6eaa450fe43d2693b68177"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/commands/RpgTeleportQaCommand.java",
+        "size": 2064,
+        "gitBlob": "8de1d50411bf133d2f1afa7eb376f3aa87c73020"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/GearResourceModifiers.java",
+        "size": 2644,
+        "gitBlob": "5737f4ed1c21df5e8a3ed803067253c957ad235e"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/SkillExecutionService.java",
+        "size": 71425,
+        "gitBlob": "2c5b0e5e7a1f051d0f34015fe2b9469079ad3c9b"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/TeleportScaling.java",
+        "size": 1078,
+        "gitBlob": "55103b7cdb6210ff0f6b5119c965da1c65961b0b"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleSkillExecutionSystem.java",
+        "size": 400056,
+        "gitBlob": "71c4aa95f0fba353c075b442243f9989341f3dea"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleSummonSystem.java",
+        "size": 107573,
+        "gitBlob": "cb3ab466c09f1a29501a287445624a99d1331bb6"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleTeleportTarget.java",
+        "size": 5068,
+        "gitBlob": "c8c8a955bc85e028d090a9e63efa93daa2ae5a5c"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/links/CompatibilityService.java",
+        "size": 28743,
+        "gitBlob": "f0338dcc0bc30773e44b432d4930a70ee86bc784"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/ui/RpgUiProjectionService.java",
+        "size": 11095,
+        "gitBlob": "84e5766bd5e6e2e941acddc59b81d7caf5e3f24f"
+      },
+      {
+        "path": "src/main/resources/Server/Particles/RPG/Teleport/RPG_Teleport_Landing.particlesystem",
+        "size": 129,
+        "gitBlob": "69c1a1683fcbd271aab9d3d482235642c1de2936"
+      },
+      {
+        "path": "src/main/resources/rpg/catalog/skills.json",
+        "size": 175104,
+        "gitBlob": "21d8ae24203484c58ccc9928855d4291c7cfac87"
+      },
+      {
+        "path": "src/main/resources/rpg/runtime/lightning-v2.json",
+        "size": 5740,
+        "gitBlob": "3941912d4db8fd3fa5cf3f1b94c11b962cc8ce60"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/LightningSkillUpdateTest.java",
+        "size": 10298,
+        "gitBlob": "cc831cee5d950ca17542b2a78e94de34c2b03bbb"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/TeleportSkillTest.java",
+        "size": 3960,
+        "gitBlob": "cfe218b1adfd68bdfc2a2f354785da3413d79601"
+      }
+    ],
+    "excludedHistoricalPaths": [],
+    "disposition": "QUARANTINED",
+    "acceptance": "UNVERIFIED"
+  },
+  {
+    "branch": "codex/preserve-20261020-elite-nameplate",
+    "head": "3327a5650cadf0173b336072f614a13c63cecc56",
+    "originalHead": "3327a5650cadf0173b336072f614a13c63cecc56",
+    "summary": "elite-nameplate",
+    "sourceRoot": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale-main-clean",
+    "unpublishedCommits": [
+      "3327a5650cadf0173b336072f614a13c63cecc56",
+      "05828a827c74bc86acb186d56cdcb37b92b0d0fd",
+      "2dda9cb0c3601c1802e656899a85fc785bcf9340",
+      "1d7e1ab4a3205d27705885da359af20d01e078d9"
+    ],
+    "newBlobs": [
+      {
+        "path": "docs/DEVELOPMENT_BASELINE.md",
+        "size": 126616,
+        "gitBlob": "fca5cce823feab6ad1320e68c82a7afc37682dc6"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/EnemyHealthBarPresentation.java",
+        "size": 38220,
+        "gitBlob": "ab91a053463daac3cdf9001f49a4f000a2aad5aa"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleDifficultyCombat.java",
+        "size": 47399,
+        "gitBlob": "507d85852ca32160bd3100c73b81b5a2ebf3d66b"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/NativeHostileNames.java",
+        "size": 11675,
+        "gitBlob": "3b6bf1a9cc31b414cb702203e8f6a64e4bbd15d7"
+      },
+      {
+        "path": "src/test/java/com/inigmasgames/hytalerpg/execution/hytale/PromotedTitleOwnershipTest.java",
+        "size": 977,
+        "gitBlob": "1b61a001e789c4ac8ba3593c5fb67e55c58dabfc"
+      },
+      {
+        "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/EnemyHealthBarPresentation.java",
+        "size": 38214,
+        "gitBlob": "d60fbf2602c0bbe69b5c1cc32b95497481987d85"
+      },
+      {
+        "path": "docs/DEVELOPMENT_BASELINE.md",
+        "size": 126548,
+        "gitBlob": "55da4e1f801cf13599b11c83c58dbcb7291f065c"
+      }
+    ],
+    "excludedHistoricalPaths": [],
+    "disposition": "QUARANTINED",
+    "acceptance": "UNVERIFIED"
+  }
+]

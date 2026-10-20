@@ -1,0 +1,112 @@
+{
+    "schemaVersion":  1,
+    "target":  "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\Hywind.jar",
+    "beforeSha256":  "CFE8B04558E4237B7C15ED9F9CADCFB08FAA673D14E98C2FACE4EBF7C0F48355",
+    "afterSha256":  "CD6075C5B75BE7C5ED1CA4DA5BC44808EAFBAF9E36551AF0483A8AA996976FBB",
+    "backup":  "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\icon-backups\\Hywind-before-CFE8B04558E4237B7C15ED9F9CADCFB08FAA673D14E98C2FACE4EBF7C0F48355.jar",
+    "sourceBackup":  "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\icon-backups\\source-before-20260922T015510Z",
+    "icons":  [
+                  {
+                      "name":  "Ball Lightning",
+                      "fileName":  "SkillBalllightning.png",
+                      "sha256":  "C8C343502DE6E4963C0C9B7A0FF67B55DA3D47B9715A2F4816B6B13CA4EF543E"
+                  },
+                  {
+                      "name":  "Blizzard",
+                      "fileName":  "SkillBlizzard.png",
+                      "sha256":  "F7EB2BB8A79928F6EFE04AED423EFDF94A20EC2A883C37EC92212EBF2AEFCC79"
+                  },
+                  {
+                      "name":  "Spark",
+                      "fileName":  "SkillChargedbolt.png",
+                      "sha256":  "3D6C1E6F1C40B2B36529395C1AF606720B3E13BF5D2043CC8516B4B2CF777E9D"
+                  },
+                  {
+                      "name":  "Fireball",
+                      "fileName":  "SkillFireball.png",
+                      "sha256":  "A560CDB3395D979D5BABAF8929D0AD13B0BCEBFDE00D6F5CE9918E1269F2A5B2"
+                  },
+                  {
+                      "name":  "Fire Bolt",
+                      "fileName":  "SkillFirebolt.png",
+                      "sha256":  "C0367CE651977A38A81642699A098CC670771017BD887320331EB7EDAE0DE7D6"
+                  },
+                  {
+                      "name":  "Healing Beam",
+                      "fileName":  "SkillHealingbeam.png",
+                      "sha256":  "DB2A8658F3B88B8A832632E22CAB7DBBA465F918812B202865A4FA91E80C0F32"
+                  },
+                  {
+                      "name":  "Lightning Arrow",
+                      "fileName":  "SkillLightningarrow.png",
+                      "sha256":  "2E0CEA206A8BD19B87162A0332950D90CA21D4A9A39D78A8E1FCF1F44B1F647B"
+                  },
+                  {
+                      "name":  "Lightning Bolt",
+                      "fileName":  "SkillLightningbolt.png",
+                      "sha256":  "10741C8F77057871EDE110061F4705B074CEA141FD6E816A98311A012B9B9D82"
+                  },
+                  {
+                      "name":  "Lightning Spire",
+                      "fileName":  "SkillLightningcoil.png",
+                      "sha256":  "6C32841FA657E8A4F903998A57E689FF0D6EB7D5CFE2AAADEC9E76D8A54A8AA2"
+                  },
+                  {
+                      "name":  "Mantle of Flame",
+                      "fileName":  "SkillMantleofflame.png",
+                      "sha256":  "9BC1B89D3AC05DFA204AF6A02756FEFF19925EA665678BD855F025EE2E5CFAFC"
+                  },
+                  {
+                      "name":  "Mantle of Thunder",
+                      "fileName":  "SkillMantleofthunder.png",
+                      "sha256":  "A57DFE78A495C474CA71C3315366FBBA5BF02EEA85566E2BCE3FB59D7964A8B0"
+                  },
+                  {
+                      "name":  "Quick Slash",
+                      "fileName":  "SkillQuickslash.png",
+                      "sha256":  "D3DBBBF03497A5CE845A48FE6F816955934271C668A6461F0D44CD1AEC077EC1"
+                  },
+                  {
+                      "name":  "Snipe",
+                      "fileName":  "SkillSnipe.png",
+                      "sha256":  "D17952E698B1DA67E7D578D0F9B85459F352F23AF3BF2456BD40493FCC05B198"
+                  },
+                  {
+                      "name":  "Static Field",
+                      "fileName":  "SkillStaticfield.png",
+                      "sha256":  "8D862F575894C9DCE181045BFBF6A7B12B38ADECF4E5ADAAA39FBBBD692D9D45"
+                  },
+                  {
+                      "name":  "Storm Strike",
+                      "fileName":  "SkillStormstrike.png",
+                      "sha256":  "0F4BF9265E212388A9873CFF333A0EADEFE1930EA423976EB650A6294B8DD2DC"
+                  },
+                  {
+                      "name":  "Summon Skeleton Archers",
+                      "fileName":  "SkillSummonskeletonarchers.png",
+                      "sha256":  "8326300229B0BFC34E8157E3AE30D98FD2867FD928C51162E0E3127B4F113F7B"
+                  },
+                  {
+                      "name":  "Teleport",
+                      "fileName":  "SkillTeleport.png",
+                      "sha256":  "A5E86528A74C262D1C82EDBB581CF4A9748D34C1B6A6860A053EE3A896D5100A"
+                  },
+                  {
+                      "name":  "Whirlwind",
+                      "fileName":  "SkillWhirlwind.png",
+                      "sha256":  "60797552980435AA0E959269A0184DD1E2926C3173C7F525C11CCAA30281561D"
+                  }
+              ],
+    "sourceChanged":  [
+                          "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\src\\main\\resources\\Common\\UI\\Custom\\Icons\\RPG\\SkillLightningcoil.png",
+                          "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\src\\main\\resources\\Common\\Icons\\Items\\RPG\\SkillLightningcoil.png",
+                          "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\src\\main\\resources\\Server\\Item\\Items\\RPG\\Abilities\\RPG_Ability_Lightning_Coil.json"
+                      ],
+    "changedEntries":  [
+                           "Common/UI/Custom/Icons/RPG/SkillLightningcoil.png",
+                           "Common/Icons/Items/RPG/SkillLightningcoil.png",
+                           "Server/Item/Items/RPG/Abilities/RPG_Ability_Lightning_Coil.json"
+                       ],
+    "utc":  "2026-09-22T01:55:11.9840742Z",
+    "savesModified":  false
+}

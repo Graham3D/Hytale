@@ -1,0 +1,143 @@
+{
+  "remoteMain": "96d748e09cc86aa6fc8015c47ae08ffa92f09c06",
+  "archives": [
+    {
+      "branch": "codex/preserve-20261020-primary",
+      "head": "e82e15002ad09232df388c401c58612685f2c539",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-legacy-primary",
+      "head": "52996061622515ba6760c05ca1124495559107c3",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-separation",
+      "head": "f72302b185f4ca3a5f1b800b5269af69dc6a9c04",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-separation-staged",
+      "head": "fe89a2ff7125e4887744e9031b0e12b8c9d4f449",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-separation-worldconfig-index",
+      "head": "22fc2e1b484ace8e433b33ccfea9c0de90c19782",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-original-rpg",
+      "head": "1fef3de23a03dc93bcd7c131ccebe06b4e975d15",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-802ac377",
+      "head": "802ac377dba42ae7f39fc63cf036cdfc6a5d75b0",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-143019a2",
+      "head": "143019a28d6a343abf49c6b3faaa2fd1324a6c20",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-0c51fec0",
+      "head": "0c51fec0d7cb08d6a5b0a57e6c3d8fd380ba6252",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-cb5306dd",
+      "head": "cb5306dd154af8c2f22c52d63a377f43be5006d6",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-9169ccf9",
+      "head": "9169ccf96837c9c4d237022961078949568c9731",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-e4900dbc",
+      "head": "e4900dbc37866674a2cd128e20539c0d3dcf7aad",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-2d92d561",
+      "head": "2d92d561b9c4a5057bd291ace53274d9411efd79",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-b9ed34ed",
+      "head": "b9ed34ed0df61eed64b8db77229c49b9b83e3d43",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-a3fc9085",
+      "head": "a3fc9085458307c6e4e3165ed0dbdc9c0d915a4a",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-0425220b",
+      "head": "0425220be8acc2c8ced9203c81d668ef78b3991c",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-393adeb2",
+      "head": "393adeb27cd2e3725ce982203419c289d3de51eb",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-fc8618e1",
+      "head": "fc8618e1fd4871e94e93df7e2349426ad4851ea2",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-bb939cd8-source",
+      "head": "1a67332b2c8b69b478253ff2f41f7b63acad1493",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-6cca0269",
+      "head": "6cca026954222ec0331ac749e95b91b7e1cb4eec",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-53d34105",
+      "head": "53d34105145bebec44a3698ab4f5b2c786f19f6c",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-teleport-r250",
+      "head": "ea63fd8a6c70ca808c51dc3697b948133476e37c",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-elite-nameplate",
+      "head": "3327a5650cadf0173b336072f614a13c63cecc56",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    }
+  ]
+}

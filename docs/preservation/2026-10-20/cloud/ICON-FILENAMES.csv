@@ -1,0 +1,158 @@
+,Kind,Name,Filename,Folder,CanonicalId
+0,Skill,Quick Slash,SkillQuickslash.png,art/Skills,quick_slash
+1,Skill,Heavy Swing,SkillHeavyswing.png,art/Skills,heavy_swing
+2,Skill,Spear Thrust,SkillSpearthrust.png,art/Skills,spear_thrust
+3,Skill,Shield Bash,SkillShieldbash.png,art/Skills,shield_bash
+4,Skill,Guard,SkillGuard.png,art/Skills,guard
+5,Skill,Quickstep,SkillQuickstep.png,art/Skills,quickstep
+6,Skill,Dagger Flurry,SkillDaggerflurry.png,art/Skills,dagger_flurry
+7,Skill,Maul Swing,SkillMaulswing.png,art/Skills,maul_swing
+8,Skill,Scythe Sweep,SkillScythesweep.png,art/Skills,scythe_sweep
+9,Skill,Pounce,SkillPounce.png,art/Skills,pounce
+10,Skill,Dive Strike,SkillDivestrike.png,art/Skills,dive_strike
+11,Skill,Spark,SkillSpark.png,art/Skills,spark
+12,Skill,Jump Strike,SkillJumpstrike.png,art/Skills,jump_strike
+13,Skill,Charge,SkillCharge.png,art/Skills,charge
+14,Skill,Finishing Strike,SkillFinishingstrike.png,art/Skills,finishing_strike
+15,Skill,Whirlwind,SkillWhirlwind.png,art/Skills,whirlwind
+16,Skill,Execution Strike,SkillExecutionstrike.png,art/Skills,execution_strike
+17,Skill,Riposte,SkillRiposte.png,art/Skills,riposte
+18,Skill,Backstab,SkillBackstab.png,art/Skills,backstab
+19,Skill,Frenzy,SkillFrenzy.png,art/Skills,frenzy
+20,Skill,Void Dash,SkillVoiddash.png,art/Skills,void_dash
+21,Skill,Axe Toss,SkillAxetoss.png,art/Skills,axe_toss
+22,Skill,Spear Toss,SkillSpeartoss.png,art/Skills,spear_toss
+23,Skill,Quick Shot,SkillQuickshot.png,art/Skills,quick_shot
+24,Skill,Crossbow Bolt,SkillCrossbowbolt.png,art/Skills,crossbow_bolt
+25,Skill,Blunderbuss Shot,SkillBlunderbussshot.png,art/Skills,blunderbuss_shot
+26,Skill,Web Shot,SkillWebshot.png,art/Skills,web_shot
+27,Skill,Fire Bolt,SkillFirebolt.png,art/Skills,fire_bolt
+28,Skill,Frost Bolt,SkillFrostbolt.png,art/Skills,frost_bolt
+29,Skill,Arcane Bolt,SkillArcanebolt.png,art/Skills,arcane_bolt
+30,Skill,Void Bolt,SkillVoidbolt.png,art/Skills,void_bolt
+31,Skill,Stone Bolt,SkillStonebolt.png,art/Skills,stone_bolt
+32,Skill,Bone Shard,SkillBoneshard.png,art/Skills,bone_shard
+33,Skill,Snipe,SkillSnipe.png,art/Skills,snipe
+34,Skill,Explosive Flask,SkillExplosiveflask.png,art/Skills,explosive_flask
+35,Skill,Bomb Toss,SkillBombtoss.png,art/Skills,bomb_toss
+36,Skill,Arcane Missiles,SkillArcanemissiles.png,art/Skills,arcane_missiles
+37,Skill,Fireball,SkillFireball.png,art/Skills,fireball
+38,Skill,Cold Blast,SkillColdblast.png,art/Skills,cold_blast
+39,Skill,Ground Slam,SkillGroundslam.png,art/Skills,ground_slam
+40,Skill,Powder Mine,SkillPowdermine.png,art/Skills,powder_mine
+41,Skill,Frost Nova,SkillFrostnova.png,art/Skills,frost_nova
+42,Skill,Cold Wave,SkillColdwave.png,art/Skills,cold_wave
+43,Skill,Root Snare,SkillRootsnare.png,art/Skills,root_snare
+44,Skill,Venom Spray,SkillVenomspray.png,art/Skills,venom_spray
+45,Skill,Blizzard,SkillBlizzard.png,art/Skills,blizzard
+46,Skill,Wall of Fire,SkillWalloffire.png,art/Skills,wall_of_fire
+47,Skill,Poison Cloud,SkillPoisoncloud.png,art/Skills,poison_cloud
+48,Skill,Vortex,SkillVortex.png,art/Skills,vortex
+49,Skill,Earthquake,SkillEarthquake.png,art/Skills,earthquake
+50,Skill,Meteor,SkillMeteor.png,art/Skills,meteor
+51,Skill,Comet,SkillComet.png,art/Skills,comet
+52,Skill,Avalanche,SkillAvalanche.png,art/Skills,avalanche
+53,Skill,Void Cataclysm,SkillVoidcataclysm.png,art/Skills,void_cataclysm
+54,Skill,Root Lash,SkillRootlash.png,art/Skills,root_lash
+55,Skill,Wind Cutter,SkillWindcutter.png,art/Skills,wind_cutter
+56,Skill,Lightning Bolt,SkillLightningbolt.png,art/Skills,lightning_bolt
+57,Skill,Ball Lightning,SkillBalllightning.png,art/Skills,ball_lightning
+58,Skill,Void Beam,SkillVoidbeam.png,art/Skills,void_beam
+59,Skill,Chain Lightning,SkillChainlightning.png,art/Skills,chain_lightning
+60,Skill,Orbiting Shadow Blades,SkillOrbitingshadowblades.png,art/Skills,orbiting_shadow_blades
+61,Skill,Life Drain,SkillLifedrain.png,art/Skills,life_drain
+62,Skill,Taunt,SkillTaunt.png,art/Skills,taunt
+63,Skill,Weakening Hex,SkillWeakeninghex.png,art/Skills,weakening_hex
+64,Skill,Hunter's Mark,SkillHuntersmark.png,art/Skills,hunter_s_mark
+65,Skill,Battle Cry,SkillBattlecry.png,art/Skills,battle_cry
+66,Skill,Pack Howl,SkillPackhowl.png,art/Skills,pack_howl
+67,Skill,Reflective Hide,SkillReflectivehide.png,art/Skills,reflective_hide
+68,Skill,Intimidate,SkillIntimidate.png,art/Skills,intimidate
+69,Skill,Minor Heal,SkillMinorheal.png,art/Skills,minor_heal
+70,Skill,Thorns Aura,SkillThornsaura.png,art/Skills,thorns_aura
+71,Skill,Flame Weapon,SkillFlameweapon.png,art/Skills,flame_weapon
+72,Skill,Spirit Shield,SkillSpiritshield.png,art/Skills,spirit_shield
+73,Skill,Managuard,SkillManaguard.png,art/Skills,managuard
+74,Skill,Emanatism,SkillEmanatism.png,art/Skills,emanatism
+75,Skill,Chilling Aura,SkillChillingaura.png,art/Skills,chilling_aura
+76,Skill,Pedanticism,SkillPedanticism.png,art/Skills,pedanticism
+77,Skill,Reaping Storm,SkillReapingstorm.png,art/Skills,reaping_storm
+78,Skill,Consume Minion,SkillConsumeminion.png,art/Skills,consume_minion
+79,Skill,Simulacrum,SkillSimulacrum.png,art/Skills,simulacrum
+80,Skill,Corpse Burst,SkillCorpseburst.png,art/Skills,corpse_burst
+81,Skill,Wolf Summon,SkillWolfsummon.png,art/Skills,wolf_summon
+82,Skill,Bone Cage,SkillBonecage.png,art/Skills,bone_cage
+83,Skill,Revive Fallen,SkillRevivefallen.png,art/Skills,revive_fallen
+84,Skill,Summon Void Crawlers,SkillSummonvoidcrawlers.png,art/Skills,summon_void_crawlers
+85,Skill,Brood Call,SkillBroodcall.png,art/Skills,brood_call
+86,Skill,Dominate,SkillDominate.png,art/Skills,dominate
+87,Passive,Potency,PassivePotency.png,art/Passives,potency
+88,Passive,Efficiency,PassiveEfficiency.png,art/Passives,efficiency
+89,Passive,Long Reach,PassiveLongreach.png,art/Passives,long_reach
+90,Passive,Rapid Invocation,PassiveRapidinvocation.png,art/Passives,rapid_invocation
+91,Passive,Second Wind,PassiveSecondwind.png,art/Passives,second_wind
+92,Passive,Overcharge,PassiveOvercharge.png,art/Passives,overcharge
+93,Passive,Concentration,PassiveConcentration.png,art/Passives,concentration
+94,Passive,Expanded Radius,PassiveExpandedradius.png,art/Passives,expanded_radius
+95,Passive,Lingering,PassiveLingering.png,art/Passives,lingering
+96,Passive,Echo,PassiveEcho.png,art/Passives,echo
+97,Passive,Piercing,PassivePiercing.png,art/Passives,piercing
+98,Passive,Fork,PassiveFork.png,art/Passives,fork
+99,Passive,Chain,PassiveChain.png,art/Passives,chain
+100,Passive,Ricochet,PassiveRicochet.png,art/Passives,ricochet
+101,Passive,Return,PassiveReturn.png,art/Passives,return
+102,Passive,Volley,PassiveVolley.png,art/Passives,volley
+103,Passive,Barrage,PassiveBarrage.png,art/Passives,barrage
+104,Passive,Homing,PassiveHoming.png,art/Passives,homing
+105,Passive,Accelerant,PassiveAccelerant.png,art/Passives,accelerant
+106,Passive,Ballistics,PassiveBallistics.png,art/Passives,ballistics
+107,Passive,Shrapnel,PassiveShrapnel.png,art/Passives,shrapnel
+108,Passive,Splinterburst,PassiveSplinterburst.png,art/Passives,splinterburst
+109,Passive,Cleaving Edge,PassiveCleavingedge.png,art/Passives,cleaving_edge
+110,Passive,Multistrike,PassiveMultistrike.png,art/Passives,multistrike
+111,Passive,Ruthless,PassiveRuthless.png,art/Passives,ruthless
+112,Passive,Shockwave,PassiveShockwave.png,art/Passives,shockwave
+113,Passive,Phantom Reach,PassivePhantomreach.png,art/Passives,phantom_reach
+114,Passive,Momentum,PassiveMomentum.png,art/Passives,momentum
+115,Passive,Executioner,PassiveExecutioner.png,art/Passives,executioner
+116,Passive,Opportunist,PassiveOpportunist.png,art/Passives,opportunist
+117,Passive,Reversal,PassiveReversal.png,art/Passives,reversal
+118,Passive,Impact Force,PassiveImpactforce.png,art/Passives,impact_force
+119,Passive,Mobile Domain,PassiveMobiledomain.png,art/Passives,mobile_domain
+120,Passive,Rapid Pulse,PassiveRapidpulse.png,art/Passives,rapid_pulse
+121,Passive,Cascade,PassiveCascade.png,art/Passives,cascade
+122,Passive,Skill Delay,PassiveSkilldelay.png,art/Passives,skill_delay
+123,Passive,Vacuum,PassiveVacuum.png,art/Passives,vacuum
+124,Passive,Repulsion,PassiveRepulsion.png,art/Passives,repulsion
+125,Passive,Orbit,PassiveOrbit.png,art/Passives,orbit
+126,Passive,Widening,PassiveWidening.png,art/Passives,widening
+127,Passive,Focused Channel,PassiveFocusedchannel.png,art/Passives,focused_channel
+128,Passive,Aftermath,PassiveAftermath.png,art/Passives,aftermath
+129,Passive,Combustion,PassiveCombustion.png,art/Passives,combustion
+130,Passive,Deep Freeze,PassiveDeepfreeze.png,art/Passives,deep_freeze
+131,Passive,Shatter,PassiveShatter.png,art/Passives,shatter
+132,Passive,Virulence,PassiveVirulence.png,art/Passives,virulence
+133,Passive,Concentrated Venom,PassiveConcentratedvenom.png,art/Passives,concentrated_venom
+134,Passive,Hemorrhage,PassiveHemorrhage.png,art/Passives,hemorrhage
+135,Passive,Terror,PassiveTerror.png,art/Passives,terror
+136,Passive,Proliferation,PassiveProliferation.png,art/Passives,proliferation
+137,Passive,Selflessness,PassiveSelflessness.png,art/Passives,selflessness
+138,Passive,Conservation,PassiveConservation.png,art/Passives,conservation
+139,Passive,Resonance,PassiveResonance.png,art/Passives,resonance
+140,Passive,Overflow,PassiveOverflow.png,art/Passives,overflow
+141,Passive,Triage,PassiveTriage.png,art/Passives,triage
+142,Passive,Shared Aegis,PassiveSharedaegis.png,art/Passives,shared_aegis
+143,Passive,Reflective Ward,PassiveReflectiveward.png,art/Passives,reflective_ward
+144,Passive,Swarm,PassiveSwarm.png,art/Passives,swarm
+145,Passive,Minion Empowerment,PassiveMinionempowerment.png,art/Passives,minion_empowerment
+146,Passive,Death Pact,PassiveDeathpact.png,art/Passives,death_pact
+147,Passive,Lifeblood,PassiveLifeblood.png,art/Passives,lifeblood
+148,Passive,Attunement,PassiveAttunement.png,art/Passives,attunement
+149,Passive,Leeching,PassiveLeeching.png,art/Passives,leeching
+150,Passive,Retaliation,PassiveRetaliation.png,art/Passives,retaliation
+151,Passive,Critical Trigger,PassiveCriticaltrigger.png,art/Passives,critical_trigger
+152,Passive,Kill Trigger,PassiveKilltrigger.png,art/Passives,kill_trigger
+153,Skill,Healing Beam,SkillHealingbeam.png,art/Skills,healing_beam
+154,Skill,Blessing of Protection,SkillBlessingofprotection.png,art/Skills,blessing_of_protection
+155,Passive,Arc,PassiveArc.png,art/Passives,arc
+

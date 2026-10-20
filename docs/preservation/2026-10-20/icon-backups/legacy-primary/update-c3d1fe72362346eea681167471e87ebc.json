@@ -1,0 +1,51 @@
+{
+    "schemaVersion":  1,
+    "target":  "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\HyARPG.jar",
+    "beforeSha256":  "114AFD95E29A4DC49DBAE688EA8D0038680FF56AE1855A1F3AC649185A033E25",
+    "afterSha256":  "B2089F0ACF94D9F62BFF1C33E44FEF92ECF5F44E94527DD37628F7824D9DA05E",
+    "backup":  "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\icon-backups\\HytaleRPG-before-114AFD95E29A4DC49DBAE688EA8D0038680FF56AE1855A1F3AC649185A033E25.jar",
+    "icons":  [
+                  {
+                      "name":  "Blizzard",
+                      "fileName":  "SkillBlizzard.png",
+                      "sha256":  "F7EB2BB8A79928F6EFE04AED423EFDF94A20EC2A883C37EC92212EBF2AEFCC79"
+                  },
+                  {
+                      "name":  "Fire Bolt",
+                      "fileName":  "SkillFirebolt.png",
+                      "sha256":  "8B4E285602E6A13A37A594F9E23B4C53E8A3AF0A0BC403D0083553910D6A7C7C"
+                  },
+                  {
+                      "name":  "Healing Beam",
+                      "fileName":  "SkillHealingbeam.png",
+                      "sha256":  "393D1022B4833E6EF2910CFBD25D6BAE49936AE5BB78AF9FF8E0E42896CD89CB"
+                  },
+                  {
+                      "name":  "Mantle of Flame",
+                      "fileName":  "SkillMantleofflame.png",
+                      "sha256":  "AB12DCD5619E98D6AC79D736A39CA060BF3FDC1501E0C60CC66BD93C0E72FD0E"
+                  },
+                  {
+                      "name":  "Quick Slash",
+                      "fileName":  "SkillQuickslash.png",
+                      "sha256":  "D3DBBBF03497A5CE845A48FE6F816955934271C668A6461F0D44CD1AEC077EC1"
+                  },
+                  {
+                      "name":  "Snipe",
+                      "fileName":  "SkillSnipe.png",
+                      "sha256":  "D17952E698B1DA67E7D578D0F9B85459F352F23AF3BF2456BD40493FCC05B198"
+                  },
+                  {
+                      "name":  "Whirlwind",
+                      "fileName":  "SkillWhirlwind.png",
+                      "sha256":  "60797552980435AA0E959269A0184DD1E2926C3173C7F525C11CCAA30281561D"
+                  }
+              ],
+    "changedEntries":  [
+                           "Common/UI/Custom/Icons/RPG/SkillMantleofflame.png",
+                           "Common/Icons/Items/RPG/SkillMantleofflame.png",
+                           "Server/Item/Items/RPG/Abilities/RPG_Ability_Mantle_Of_Flame.json"
+                       ],
+    "utc":  "2026-09-13T20:42:48.0465474Z",
+    "savesModified":  false
+}

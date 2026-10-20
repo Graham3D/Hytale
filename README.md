@@ -1,3 +1,5 @@
+> **Development archive (2026-10-20):** See [the recovery guide](docs/PRESERVATION_20261020.md) for the latest source, preserved worktrees/artwork, exact commits, and verification. This branch is a preservation checkpoint, not an accepted release.
+
 # Hywind / HyARPG development baseline
 
 0.7.2 Chapter I natural-Unique recovery QA candidate: **R262ME12S3B-072-QA5-CANDIDATE**

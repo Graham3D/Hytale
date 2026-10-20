@@ -1,0 +1,41 @@
+{
+    "schemaVersion":  1,
+    "target":  "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\data\\pre-release\\Saves\\RPG\\mods\\HytaleRPG-0.0.25.jar",
+    "beforeSha256":  "EA254981EF05FA2FB93F7E5095A935BF9114E0E46F65CD270B9EA58CD63EA4EF",
+    "afterSha256":  "CB8DCB4B56629A3CD9A4BF237D9B1A345E0620FD0935DE74219CE66DCBAE27CB",
+    "backup":  "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\icon-backups\\HytaleRPG-before-EA254981EF05FA2FB93F7E5095A935BF9114E0E46F65CD270B9EA58CD63EA4EF.jar",
+    "icons":  [
+                  {
+                      "name":  "Fire Bolt",
+                      "fileName":  "SkillFirebolt.png",
+                      "sha256":  "8B4E285602E6A13A37A594F9E23B4C53E8A3AF0A0BC403D0083553910D6A7C7C"
+                  },
+                  {
+                      "name":  "Healing Beam",
+                      "fileName":  "SkillHealingbeam.png",
+                      "sha256":  "393D1022B4833E6EF2910CFBD25D6BAE49936AE5BB78AF9FF8E0E42896CD89CB"
+                  },
+                  {
+                      "name":  "Quick Slash",
+                      "fileName":  "SkillQuickslash.png",
+                      "sha256":  "D3DBBBF03497A5CE845A48FE6F816955934271C668A6461F0D44CD1AEC077EC1"
+                  },
+                  {
+                      "name":  "Snipe",
+                      "fileName":  "SkillSnipe.png",
+                      "sha256":  "D17952E698B1DA67E7D578D0F9B85459F352F23AF3BF2456BD40493FCC05B198"
+                  },
+                  {
+                      "name":  "Whirlwind",
+                      "fileName":  "SkillWhirlwind.png",
+                      "sha256":  "60797552980435AA0E959269A0184DD1E2926C3173C7F525C11CCAA30281561D"
+                  }
+              ],
+    "changedEntries":  [
+                           "Common/UI/Custom/Icons/RPG/SkillHealingbeam.png",
+                           "Common/Icons/Items/RPG/SkillHealingbeam.png",
+                           "Server/Item/Items/RPG/Abilities/RPG_Ability_Healing_Beam.json"
+                       ],
+    "utc":  "2026-09-11T23:59:43.0406771Z",
+    "savesModified":  false
+}

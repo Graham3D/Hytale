@@ -1,0 +1,463 @@
+{
+  "date": "2026-10-20",
+  "purpose": "PRE_UNINSTALL_SOURCE_PRESERVATION",
+  "guideBranch": "codex/preserve-20261020",
+  "sourceParent": "f3c1433f1758817c6e66966dc81c6abe73780043",
+  "remoteMain": "96d748e09cc86aa6fc8015c47ae08ffa92f09c06",
+  "disposition": "QUARANTINED",
+  "buildRevisionUnchanged": "R262ME12S3B-072-QA5-CANDIDATE",
+  "releaseAcceptance": "UNVERIFIED",
+  "archives": [
+    {
+      "branch": "codex/preserve-20261020-primary",
+      "head": "e82e15002ad09232df388c401c58612685f2c539",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-legacy-primary",
+      "head": "52996061622515ba6760c05ca1124495559107c3",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-separation",
+      "head": "f72302b185f4ca3a5f1b800b5269af69dc6a9c04",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-separation-staged",
+      "head": "fe89a2ff7125e4887744e9031b0e12b8c9d4f449",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-separation-worldconfig-index",
+      "head": "22fc2e1b484ace8e433b33ccfea9c0de90c19782",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-original-rpg",
+      "head": "1fef3de23a03dc93bcd7c131ccebe06b4e975d15",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-802ac377",
+      "head": "802ac377dba42ae7f39fc63cf036cdfc6a5d75b0",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-143019a2",
+      "head": "143019a28d6a343abf49c6b3faaa2fd1324a6c20",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-0c51fec0",
+      "head": "0c51fec0d7cb08d6a5b0a57e6c3d8fd380ba6252",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-cb5306dd",
+      "head": "cb5306dd154af8c2f22c52d63a377f43be5006d6",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-9169ccf9",
+      "head": "9169ccf96837c9c4d237022961078949568c9731",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-e4900dbc",
+      "head": "e4900dbc37866674a2cd128e20539c0d3dcf7aad",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-2d92d561",
+      "head": "2d92d561b9c4a5057bd291ace53274d9411efd79",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-b9ed34ed",
+      "head": "b9ed34ed0df61eed64b8db77229c49b9b83e3d43",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-a3fc9085",
+      "head": "a3fc9085458307c6e4e3165ed0dbdc9c0d915a4a",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-0425220b",
+      "head": "0425220be8acc2c8ced9203c81d668ef78b3991c",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-393adeb2",
+      "head": "393adeb27cd2e3725ce982203419c289d3de51eb",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-fc8618e1",
+      "head": "fc8618e1fd4871e94e93df7e2349426ad4851ea2",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-bb939cd8-source",
+      "head": "1a67332b2c8b69b478253ff2f41f7b63acad1493",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-6cca0269",
+      "head": "6cca026954222ec0331ac749e95b91b7e1cb4eec",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-53d34105",
+      "head": "53d34105145bebec44a3698ab4f5b2c786f19f6c",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-teleport-r250",
+      "head": "ea63fd8a6c70ca808c51dc3697b948133476e37c",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    },
+    {
+      "branch": "codex/preserve-20261020-elite-nameplate",
+      "head": "3327a5650cadf0173b336072f614a13c63cecc56",
+      "remoteVerified": true,
+      "disposition": "QUARANTINED"
+    }
+  ],
+  "supplementalFiles": [
+    {
+      "path": "docs/preservation/2026-10-20/scratch/me12-stage2/build/write-me12-final-manifest.py",
+      "size": 7835,
+      "sha256": "ca78d012dab68c02eb6ef0bf944eee5c486adf1272543933bb988cef8988cfb0",
+      "gitBlob": "47c9188922d676251785863d89d44fef273e77c6",
+      "source": "C:\\Users\\Zemio\\.codex\\worktrees\\me12-stage2\\Hytale-main-clean\\build\\write-me12-final-manifest.py"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/scratch/me12-stage3/build/guardian/finalize-me12-stage3-continuation.py",
+      "size": 6037,
+      "sha256": "e64222e1d155bb73e928d73a92e2ed3004ae2fb5e75ea1b5b1161a5fcec35d8d",
+      "gitBlob": "35026424dcf660c471eff68800987b21e7c685f7",
+      "source": "C:\\Users\\Zemio\\.codex\\worktrees\\me12-stage3\\Hytale-main-clean\\build\\guardian\\finalize-me12-stage3-continuation.py"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/scratch/me12-stage3/build/guardian/finalize-me12-stage3.py",
+      "size": 6289,
+      "sha256": "dafce8b91ab5105d1c34569922e351929a40aa808a642ba3e0063fbd10b57c11",
+      "gitBlob": "da18b123abc90eb411f6db2213ae57a9a22a3c5b",
+      "source": "C:\\Users\\Zemio\\.codex\\worktrees\\me12-stage3\\Hytale-main-clean\\build\\guardian\\finalize-me12-stage3.py"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/scratch/cyclone-armor/build/CycloneCodecProbe.java",
+      "size": 1102,
+      "sha256": "76761eced07e040b0644898ec4b3c40603c3fefb1386114bfdceb9d700606d64",
+      "gitBlob": "f0c8b14da06be4411c6a1075ed5cd6b1c261af9b",
+      "source": "C:\\Users\\Zemio\\.codex\\worktrees\\teleport-native-target\\Hytale\\build\\CycloneCodecProbe.java"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/scratch/checkpoint-c-optional-bridge/build/tmp/r248_deploy.ps1",
+      "size": 3060,
+      "sha256": "2ede613e0347b21b79c81c49f7ddfda32fcb7c4750d9f0500a82ed70a7bf33a6",
+      "gitBlob": "20dec031432c0c0808325d94a6ce748a8ad9214c",
+      "source": "C:\\Users\\Zemio\\.codex\\worktrees\\hyarpg-separation\\build\\tmp\\r248_deploy.ps1"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/scratch/checkpoint-c-optional-bridge/build/tmp/r248_gate_init.py",
+      "size": 2896,
+      "sha256": "3208dff126a95c7681e55786e37291a6b2e2f121da161b35e96e009a7bbc5da3",
+      "gitBlob": "a821348365bcc59e68cbebd805944177f668fcb8",
+      "source": "C:\\Users\\Zemio\\.codex\\worktrees\\hyarpg-separation\\build\\tmp\\r248_gate_init.py"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/scratch/checkpoint-c-optional-bridge/build/tmp/r248_gate_stamp.py",
+      "size": 702,
+      "sha256": "853a1d2bf82cd06f4a646f05458b3420aa84b02135ccb11f556288ff4d7282ff",
+      "gitBlob": "f7e03c5d9f109b780617aae6c2aacbd2a0cadaf8",
+      "source": "C:\\Users\\Zemio\\.codex\\worktrees\\hyarpg-separation\\build\\tmp\\r248_gate_stamp.py"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/scratch/checkpoint-c-optional-bridge/build/tmp/r248_gate_update.py",
+      "size": 4416,
+      "sha256": "2c0b10d5c09bb6fe19f3f0f0f3c115076dbe95a86aa9ffadffda14e9af1b0f57",
+      "gitBlob": "b76eb501b01a4e8ea43fd157d86c99beffaa3b7d",
+      "source": "C:\\Users\\Zemio\\.codex\\worktrees\\hyarpg-separation\\build\\tmp\\r248_gate_update.py"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/scratch/checkpoint-c-optional-bridge/build/tmp/r248_package_baseline.py",
+      "size": 1172,
+      "sha256": "0f224296d0856007bdd9ab859113107edbb4eaf0af0b487b47b3c8701266a9da",
+      "gitBlob": "432e07441ce41cae1a2ddeb616aab86a5f68bd87",
+      "source": "C:\\Users\\Zemio\\.codex\\worktrees\\hyarpg-separation\\build\\tmp\\r248_package_baseline.py"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/scratch/checkpoint-c-optional-bridge/build/tmp/r248_package_compare.py",
+      "size": 646,
+      "sha256": "0ec5042f8f391b9866470eb64e87a2d81dfb5aded40083469cf64472a0c6192a",
+      "gitBlob": "1d6509a14213e681c608f758b4a9bc80edcdbbaa",
+      "source": "C:\\Users\\Zemio\\.codex\\worktrees\\hyarpg-separation\\build\\tmp\\r248_package_compare.py"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/scratch/checkpoint-c-optional-bridge/build/tmp/update-r249-gate.py",
+      "size": 2254,
+      "sha256": "3f9d43ab6e2fc0101c6a3814ce558ddaf87ff92a99bd4e8b261aeae149cb00ef",
+      "gitBlob": "1e1c8690637ff0bad43053bd4a49bcca2f6441a0",
+      "source": "C:\\Users\\Zemio\\.codex\\worktrees\\hyarpg-separation\\build\\tmp\\update-r249-gate.py"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/scratch/checkpoint-c-optional-bridge/build/tmp/update-r249b-gate.py",
+      "size": 1434,
+      "sha256": "f46f9c5e30d2dcc0aa6b44ca66078a65557b4db0a8ce0d16bbec5948ac32bdf9",
+      "gitBlob": "390ff4448d2632538ebb35c48393bde6cfcafc0a",
+      "source": "C:\\Users\\Zemio\\.codex\\worktrees\\hyarpg-separation\\build\\tmp\\update-r249b-gate.py"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/icon-backups/primary/last-update.json",
+      "size": 7653,
+      "sha256": "cd58b9a846793b258c3856e1c899f5f6327c611346e0ffc0f7167907de1edb78",
+      "gitBlob": "fdf0903cf226c14264a2ee5e725a1e1198c888f7",
+      "source": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale-main-clean\\icon-backups\\last-update.json"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/icon-backups/primary/update-aef8b8d3239a4ade8b32ab7eb9924696.json",
+      "size": 7653,
+      "sha256": "cd58b9a846793b258c3856e1c899f5f6327c611346e0ffc0f7167907de1edb78",
+      "gitBlob": "fdf0903cf226c14264a2ee5e725a1e1198c888f7",
+      "source": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale-main-clean\\icon-backups\\update-aef8b8d3239a4ade8b32ab7eb9924696.json"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/icon-backups/primary/source-before-20261011T025430Z/Server/Item/Items/RPG/Abilities/RPG_Ability_Spirit_Shield.json",
+      "size": 665,
+      "sha256": "ac50f85090c7d5e7d6793b0af873a3309b7972dd8c0f46f16cda47c0fa9827eb",
+      "gitBlob": "9106b2fe8e065f2a9373314edd1782447187a83e",
+      "source": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale-main-clean\\icon-backups\\source-before-20261011T025430Z\\Server\\Item\\Items\\RPG\\Abilities\\RPG_Ability_Spirit_Shield.json"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/icon-backups/legacy-primary/last-update.json",
+      "size": 5618,
+      "sha256": "e9d10407fd0f2780d293c2fe8936ba2178bf254fff4332b0fc4e887d3cfc6dd8",
+      "gitBlob": "45d79a4ed0e8b18047e48cf369860185bee0a2f4",
+      "source": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\icon-backups\\last-update.json"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/icon-backups/legacy-primary/update-1487c52cb1ca4099bb20848025a0b9fc.json",
+      "size": 3979,
+      "sha256": "79c497869d888138902f646b12f3f486a005c3715d9ad1e35547de516ca9fb7b",
+      "gitBlob": "871c0efb110f9e54a4e2bd142ad88c8962ecfd64",
+      "source": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\icon-backups\\update-1487c52cb1ca4099bb20848025a0b9fc.json"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/icon-backups/legacy-primary/update-44887e736c97468fa015429059f927dc.json",
+      "size": 6110,
+      "sha256": "3f08b984a8206b1f3cda5f5eb6ec968fd1b290d39a13ee3e66d89ea1ddce1eee",
+      "gitBlob": "22e2e3293e7b5d77332fe80eacdc55d206900803",
+      "source": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\icon-backups\\update-44887e736c97468fa015429059f927dc.json"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/icon-backups/legacy-primary/update-93d0796941424d15ab44d2acf9e7ee9d.json",
+      "size": 2145,
+      "sha256": "18f1331098f218675a32a84ca2b7bb0ea872e9ee0381970e932348e4a68a47db",
+      "gitBlob": "8294e689e4795b5c8ac0e9210864aaae5403c215",
+      "source": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\icon-backups\\update-93d0796941424d15ab44d2acf9e7ee9d.json"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/icon-backups/legacy-primary/update-c059ca0df3524af1acd64289a7da7502.json",
+      "size": 3883,
+      "sha256": "3ae88b745796541340ff54c97d003d7581152814f66c29ee6dd3b6d7ec0e4ed3",
+      "gitBlob": "dad4fee5651dfff189c32247f3e8ef83a4693820",
+      "source": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\icon-backups\\update-c059ca0df3524af1acd64289a7da7502.json"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/icon-backups/legacy-primary/update-c3d1fe72362346eea681167471e87ebc.json",
+      "size": 2644,
+      "sha256": "aafda44e12f68a85f2b53943e997c91d7b87e5832391cbcc88b907f70fd1843a",
+      "gitBlob": "1f9ae1b5c982859eee31009277e48341c30f821d",
+      "source": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\icon-backups\\update-c3d1fe72362346eea681167471e87ebc.json"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/icon-backups/legacy-primary/update-d28ad3e08b8d4a448ff05ec0636efb37.json",
+      "size": 3095,
+      "sha256": "d143b34d0f324a6f78dd9040920e2e4e53ae9ceffeafeb6c02c08d0616e5a6d5",
+      "gitBlob": "68f4e81b1ccddd4e26f18dc982e1e18233497722",
+      "source": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\icon-backups\\update-d28ad3e08b8d4a448ff05ec0636efb37.json"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/icon-backups/legacy-primary/update-db665317c8944ca0a0eb9196c5a5fec3.json",
+      "size": 8008,
+      "sha256": "4508708267bf30002df3453c2839e4e192caffab8278a9fbc8394e97fad158fb",
+      "gitBlob": "c2f2ae2dc7eb82a94342a4cc6d868677dcac8061",
+      "source": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\icon-backups\\update-db665317c8944ca0a0eb9196c5a5fec3.json"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/icon-backups/legacy-primary/update-f830c7b296ba47529ef3e63cb08f9589.json",
+      "size": 5618,
+      "sha256": "e9d10407fd0f2780d293c2fe8936ba2178bf254fff4332b0fc4e887d3cfc6dd8",
+      "gitBlob": "45d79a4ed0e8b18047e48cf369860185bee0a2f4",
+      "source": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\icon-backups\\update-f830c7b296ba47529ef3e63cb08f9589.json"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/icon-backups/legacy-primary/update-f88683920bca47629fe2f33dde696315.json",
+      "size": 3979,
+      "sha256": "73174c0e4ece53e37e2e5066cb3e97e1b6e01f8a7d6bcccc1f8f317518408644",
+      "gitBlob": "0794fc45fb13b346ddcbe224d64248efe731be0b",
+      "source": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\icon-backups\\update-f88683920bca47629fe2f33dde696315.json"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/icon-backups/legacy-primary/source-before-20260922T015510Z/Server/Item/Items/RPG/Abilities/RPG_Ability_Lightning_Coil.json",
+      "size": 623,
+      "sha256": "7c73bfa1545cf6c59f0c35e3114cab52e3825d7eeddb449775d80cb1f5961f1b",
+      "gitBlob": "2f527b944d22a043a3f202b12c3937f5711219c6",
+      "source": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale\\icon-backups\\source-before-20260922T015510Z\\Server\\Item\\Items\\RPG\\Abilities\\RPG_Ability_Lightning_Coil.json"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/cloud/ICON-FILENAMES.csv",
+      "size": 10218,
+      "sha256": "ecf65968343307fe25a10134fdef23ed080da5a12167b088e5875691581a3e18",
+      "gitBlob": "4b32de7b7ce23b84de104d7cb1842d273b809c41",
+      "source": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale-main-clean\\build\\preservation-20261020\\cloud\\ICON-FILENAMES.csv"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/cloud/ICON-FILENAMES.csv.metadata.json",
+      "size": 364,
+      "sha256": "9c7f3b3083108d015817b20e1513a21b47938199c5a5c24d4d6dbd23a24fbe6f",
+      "gitBlob": "eec4a9c807096b1987e9780153df2db7fcaead34",
+      "source": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale-main-clean\\build\\preservation-20261020\\cloud\\ICON-FILENAMES.csv.metadata.json"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/cloud/Skill-Animation-Audit.csv",
+      "size": 3859,
+      "sha256": "f3af1892c108a81518e7d048c3a5bcdb5f717ef1cbca95deb93cbfaa220ecc7d",
+      "gitBlob": "e569a5acf850b237421720ae1c9243962c5c9384",
+      "source": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale-main-clean\\build\\preservation-20261020\\cloud\\Skill-Animation-Audit.csv"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/cloud/Skill-Animation-Audit.csv.metadata.json",
+      "size": 371,
+      "sha256": "571ba157238c65bd3743827f928531fbaa6e45ab79b9c07c2afc3ecf60611d7b",
+      "gitBlob": "1b0dc2a0e524bcc462002b7e2061e4f230c35e12",
+      "source": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale-main-clean\\build\\preservation-20261020\\cloud\\Skill-Animation-Audit.csv.metadata.json"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/source-snapshots.json",
+      "size": 4789351,
+      "sha256": "93711e04d014ba313f82b43bc3f25b42aa730c5b835640635e22f9b2c74fd236",
+      "gitBlob": "98a55db45bf154902ffe78ac18176305a3e337ad",
+      "source": "preservation report"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/recovered-history.json",
+      "size": 64120,
+      "sha256": "203dce4b64ebef899d7113d07532d52396e4aa53c0bca1ba0c2dc946895538cf",
+      "gitBlob": "7cad51211863f5b9164dce6a1d23e68d4cb199d1",
+      "source": "preservation report"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/source-validation.json",
+      "size": 1073,
+      "sha256": "43ce081d027c91884a6cb5025ea1aded5ec586642f55bfef6ff082a70691df99",
+      "gitBlob": "58c8a97a7c34441a31172e963dad7bca24f01ebe",
+      "source": "preservation report"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/archive-publication.json",
+      "size": 4586,
+      "sha256": "46dab660cf113706186d52e01c7eb4de52684be6405d353d0f04b435e433d16f",
+      "gitBlob": "b42430388dc5501cbb1d08ca32e13d3711315280",
+      "source": "preservation report"
+    },
+    {
+      "path": "docs/preservation/2026-10-20/git-inventory.json",
+      "size": 125807,
+      "sha256": "563825579c1e394ca677823f342400e0b8afd5f3a378da04b218c25dff3524d4",
+      "gitBlob": "a032c68b92fb3811cf0eb183a64de18d1d5fa405",
+      "source": "preservation report"
+    },
+    {
+      "path": "docs/PRESERVATION_20261020.md",
+      "size": 7337,
+      "sha256": "daaba355ea6fc970c3193f8b8afec44f1f32442d8fe1d0470c6f1ea42ed3431d",
+      "gitBlob": "02141a675a9b454c6c956213a62002404d8a9a5c",
+      "source": "preservation report"
+    },
+    {
+      "path": "README.md",
+      "size": 11256,
+      "sha256": "7bae648f0a586f76c68838b8a98dbeed4fa611aceb2ec3990a620945cc6beacb",
+      "gitBlob": "1e1276af9016e0ffdfae36ba2267310fccb36dc9",
+      "source": "preservation report"
+    },
+    {
+      "path": "docs/DEVELOPMENT_BASELINE.md",
+      "size": 154663,
+      "sha256": "d643d8e5786902d984ef8c4622340335cb47d4689cc7c123264b46f2852e4f8a",
+      "gitBlob": "5e2c618b06051935aee0a0095ee0a8d3b545c7e1",
+      "source": "preservation report"
+    }
+  ],
+  "sourceValidation": {
+    "sourceVerification": "PASS",
+    "independentClone": "C:\\Users\\Zemio\\OneDrive\\Documents\\GitHub\\Hytale-main-clean\\build\\preservation-20261020\\remote-verification.git",
+    "snapshotBranches": 6,
+    "historyBranches": 17,
+    "fileVersionsVerified": 9718,
+    "deletionsVerified": 12512,
+    "uniqueBlobsSha256Verified": 8250,
+    "localSourceStillMatches": true,
+    "pngChecks": [
+      {
+        "path": "art/Skills Alpha Art/CycloneArmor.png",
+        "dimensions": [
+          1374,
+          1145
+        ]
+      },
+      {
+        "path": "art/Skills/SkillCycloneArmor.png",
+        "dimensions": [
+          128,
+          128
+        ]
+      },
+      {
+        "path": "src/main/resources/Common/Icons/Items/RPG/SkillSpiritshield.png",
+        "dimensions": [
+          128,
+          128
+        ]
+      },
+      {
+        "path": "src/main/resources/Common/UI/Custom/Icons/RPG/SkillSpiritshield.png",
+        "dimensions": [
+          128,
+          128
+        ]
+      }
+    ],
+    "historicalSourceBlobsForSupplement": 0,
+    "gameplayTestsRun": false,
+    "deploymentChanged": false,
+    "connectedQAAcceptance": "UNVERIFIED"
+  },
+  "nextAction": "Preserved source can be recovered from GitHub; reconcile source/SDK/dependencies and outstanding QA before integration."
+}

@@ -1,5 +1,25 @@
 # HyARPG/Hywind development baseline
 
+## Pre-uninstall source preservation (2026-10-20)
+
+Owner requested complete publication of recoverable local development source and
+artwork. The preservation guide branch is `codex/preserve-20261020`, based exactly
+on `codex/me12-072-modonly` at `f3c1433f1758817c6e66966dc81c6abe73780043`.
+The underlying source version remains `0.2.0-R262ME12S3B-072-QA5-CANDIDATE`; no
+new engineering revision, deployment, acceptance or main integration occurred.
+All six working/staged snapshot commits and seventeen historical archive refs,
+their exact source commits, dependencies/blockers and exclusions are recorded in
+[PRESERVATION_20261020.md](PRESERVATION_20261020.md) and its linked machine-readable
+Git/source manifests. Incomplete features remain QUARANTINED and retain their
+original QA states. An independent GitHub clone passed object integrity and
+SHA-256 verification for 9,718 file versions (8,250 blobs) and 12,512 deletions.
+Original dirty checkouts and save data remain untouched. Guardian's existing
+release checks remain blocked where documented; the comprehensive integration
+audit implementation is an explicitly UNVERIFIED enforcement gap. Next action:
+resume the appropriate preserved branch, reconcile unaccepted dependencies, run
+applicable offline gates, and obtain outstanding owner QA before integration.
+
+
 ## 0.7.2 natural-Unique startup recovery QA correction (2026-10-16)
 
 Branch `codex/me12-072-modonly` continues deployed QA4 source
