@@ -1,7 +1,7 @@
 # Hywind / HyARPG development baseline
 
 0.7.2 Chapter I natural-Unique recovery QA candidate: **R262ME12S3B-072-QA5-CANDIDATE**
-(`0.2.0-R262ME12S3B-072-QA5-CANDIDATE`) on `codex/me12-072-modonly`.
+(`0.2.0-R262ME12S3B-072-QA5-CANDIDATE`) as the owner-requested main development baseline; connected QA remains pending.
 The exact Hywind save and its two current worlds automatically acquire a bounded,
 Guardian-verified QA lease after native recovery. Production v2 remains disabled,
 and connected gameplay acceptance remains pending. Copied Nightmare/Hell destination
@@ -16,7 +16,8 @@ keeps a bounded 30-second delivery deadline if recovery begins just afterward.
 This prevents startup storage contention from disabling natural Unique birth
 admission. Hostile hit and natural Unique behavior await connected QA.
 The prior Stage 3 record below is
-retained as historical context; see [current source status](docs/DEVELOPMENT_BASELINE.md).
+retained as historical context; see [current source status](docs/DEVELOPMENT_BASELINE.md)
+and the [branch housekeeping inventory](docs/BRANCH_HOUSEKEEPING_20261020.md).
 
 Isolated ME12 Stage 3 continuation: **R262ME12S3B-CANDIDATE**
 (`0.2.0-R262ME12S3B-CANDIDATE`), Hytale `=0.7.1`, branch

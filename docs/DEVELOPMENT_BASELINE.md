@@ -1,5 +1,28 @@
 # HyARPG/Hywind development baseline
 
+## Owner-requested current-main development checkpoint (2026-10-20)
+
+Housekeeping branch `codex/main-housekeeping-20261020` explicitly continues
+`codex/me12-072-modonly` source `f3c1433f1758817c6e66966dc81c6abe73780043`.
+Pre-integration remote main is `96d748e09cc86aa6fc8015c47ae08ffa92f09c06`.
+The owner requested current development source on main; gameplay QA remains
+**QA_PENDING**, not accepted by this integration request. Version/revision remain
+`0.2.0-R262ME12S3B-072-QA5-CANDIDATE` / `R262ME12S3B-072-QA5-CANDIDATE`.
+Only original PSD/alpha artwork and branch-audit documentation are added on top
+of QA5. No new runtime revision or deployment is performed. Exact final source,
+verification, publication and integration receipts belong to the housekeeping PR.
+
+[Branch housekeeping](BRANCH_HOUSEKEEPING_20261020.md) records the per-branch
+decisions and machine-readable inventory. HRO/Elite source fixes and tests are
+already selectively ported into main; their divergent original histories and the
+obsolete R237 reconstruction remain QUARANTINED, as do all recovery archives.
+The protected dirty primary checkout remains unsynchronized. After final exact
+offline gates, the next action is serialized development-main integration and
+remote reachability verification; outstanding connected QA/release gates remain.
+Guardian's comprehensive integration inventory enforcement is still an explicitly
+UNVERIFIED implementation gap, not a claimed passing gate.
+
+
 ## 0.7.2 natural-Unique startup recovery QA correction (2026-10-16)
 
 Branch `codex/me12-072-modonly` continues deployed QA4 source

@@ -1,0 +1,958 @@
+{
+  "task": "codex/main-housekeeping-20261020",
+  "sourceParent": "f3c1433f1758817c6e66966dc81c6abe73780043",
+  "remoteMainAtAudit": "96d748e09cc86aa6fc8015c47ae08ffa92f09c06",
+  "authorization": "Owner request in this chat: We need to do housecleaning so main is the most up to date. Applied to development source integration, never connected gameplay acceptance.",
+  "state": "ENGINEERING_READY_CANDIDATE_PENDING_EXACT_COMMIT_VERIFICATION",
+  "gameplayQA": "QA_PENDING",
+  "newRevisionAssigned": false,
+  "revision": "R262ME12S3B-072-QA5-CANDIDATE",
+  "dependencyBranches": [
+    {
+      "branch": "codex/me12-072-modonly",
+      "head": "f3c1433f1758817c6e66966dc81c6abe73780043",
+      "integrationScope": "Four post-main commits; explicitly reviewed development candidate"
+    },
+    {
+      "branch": "codex/elite-natural-hookup",
+      "head": "3327a5650cadf0173b336072f614a13c63cecc56",
+      "integrationScope": "Previously selectively ported into main; do not merge obsolete branch"
+    },
+    {
+      "branch": "codex/hro-finalization",
+      "head": "f7d414e6348c84653d03a51117bdfe2fc427dded",
+      "integrationScope": "Previously selectively ported into main; do not merge obsolete branch"
+    }
+  ],
+  "branches": [
+    {
+      "branch": "RPG",
+      "head": "25b85cb2819351a0d727e33132b2f57013cda024",
+      "mainOnlyCommits": 374,
+      "branchOnlyCommits": 0,
+      "mergeBase": "25b85cb2819351a0d727e33132b2f57013cda024",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/bulk-attributes",
+      "head": "69483c6b8071822656bed092636797ae8281fe46",
+      "mainOnlyCommits": 89,
+      "branchOnlyCommits": 0,
+      "mergeBase": "69483c6b8071822656bed092636797ae8281fe46",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/chapter1-inventory-recovery",
+      "head": "afdf9bfbce9d5fb395bd68848833480a849f0e0b",
+      "mainOnlyCommits": 71,
+      "branchOnlyCommits": 0,
+      "mergeBase": "afdf9bfbce9d5fb395bd68848833480a849f0e0b",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/chapter1-skill-bar",
+      "head": "d4b2a333b9b601253c25dd41fdd44b1907681370",
+      "mainOnlyCommits": 75,
+      "branchOnlyCommits": 0,
+      "mergeBase": "d4b2a333b9b601253c25dd41fdd44b1907681370",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/chapter1-stage0-regression-inventory",
+      "head": "0ed8d6c80a84696a2d923771cfd100a661812daa",
+      "mainOnlyCommits": 70,
+      "branchOnlyCommits": 0,
+      "mergeBase": "0ed8d6c80a84696a2d923771cfd100a661812daa",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/chapter1-stage1-world-encounter-recovery",
+      "head": "63bf6a616e9031e33fb722a1e30f515abe6bb7c5",
+      "mainOnlyCommits": 69,
+      "branchOnlyCommits": 0,
+      "mergeBase": "63bf6a616e9031e33fb722a1e30f515abe6bb7c5",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/chapter1-stage2-native-combat-recovery",
+      "head": "b5bd3585fb69bcd5f615555cebfea2a2d9d7c88f",
+      "mainOnlyCommits": 67,
+      "branchOnlyCommits": 0,
+      "mergeBase": "b5bd3585fb69bcd5f615555cebfea2a2d9d7c88f",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/chapter1-stage3-elite-restoration",
+      "head": "d28d92f49e7639a6c75da71a810088918456b79b",
+      "mainOnlyCommits": 65,
+      "branchOnlyCommits": 0,
+      "mergeBase": "d28d92f49e7639a6c75da71a810088918456b79b",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/chapter1-stage4-gear-loot-recovery",
+      "head": "ce3865dd5f81bee95003cb5dde8dc2f959bdac2b",
+      "mainOnlyCommits": 62,
+      "branchOnlyCommits": 0,
+      "mergeBase": "ce3865dd5f81bee95003cb5dde8dc2f959bdac2b",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/chapter1-startup",
+      "head": "133dba62e2da20195515feade652d902ad2ce3b6",
+      "mainOnlyCommits": 85,
+      "branchOnlyCommits": 0,
+      "mergeBase": "133dba62e2da20195515feade652d902ad2ce3b6",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/checkpoint-a-separation",
+      "head": "5158b63b61c382c764ea5587e5b49a60801ee6db",
+      "mainOnlyCommits": 248,
+      "branchOnlyCommits": 0,
+      "mergeBase": "5158b63b61c382c764ea5587e5b49a60801ee6db",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/checkpoint-b-r171-port",
+      "head": "f12719d4e49b6e9b0cc28a0fc9d3c724cd6484c8",
+      "mainOnlyCommits": 247,
+      "branchOnlyCommits": 0,
+      "mergeBase": "f12719d4e49b6e9b0cc28a0fc9d3c724cd6484c8",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/checkpoint-c-optional-bridge",
+      "head": "7dbfabeb9d633330b348f6314dd0d6ff0ab4bde9",
+      "mainOnlyCommits": 172,
+      "branchOnlyCommits": 0,
+      "mergeBase": "7dbfabeb9d633330b348f6314dd0d6ff0ab4bde9",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/cyclone-armor",
+      "head": "df833376e5dfa212035e7ddd19fc363baee133cd",
+      "mainOnlyCommits": 138,
+      "branchOnlyCommits": 0,
+      "mergeBase": "df833376e5dfa212035e7ddd19fc363baee133cd",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/cyclone-barrier-rebalance",
+      "head": "ac33ff4c30848079eddc97f590921c0f98ec81c5",
+      "mainOnlyCommits": 119,
+      "branchOnlyCommits": 0,
+      "mergeBase": "ac33ff4c30848079eddc97f590921c0f98ec81c5",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/elite-natural-hookup",
+      "head": "1ff1f06989493135e62b2866393673185ab5083d",
+      "mainOnlyCommits": 46,
+      "branchOnlyCommits": 12,
+      "mergeBase": "c69e44f16302e68ebd625d65039a457ad92ead06",
+      "classification": "QUARANTINED_HISTORY_WITH_SELECTIVE_PORTS_IN_MAIN",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/hostile-mob-audit",
+      "head": "b839526e7106f780648c315692b04bb372b58d9e",
+      "mainOnlyCommits": 43,
+      "branchOnlyCommits": 0,
+      "mergeBase": "b839526e7106f780648c315692b04bb372b58d9e",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/hro-finalization",
+      "head": "f7d414e6348c84653d03a51117bdfe2fc427dded",
+      "mainOnlyCommits": 46,
+      "branchOnlyCommits": 4,
+      "mergeBase": "c69e44f16302e68ebd625d65039a457ad92ead06",
+      "classification": "QUARANTINED_HISTORY_WITH_SELECTIVE_PORTS_IN_MAIN",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/hro-stage1",
+      "head": "92ac44fb23c515acd59f2470403dd9feca292b30",
+      "mainOnlyCommits": 64,
+      "branchOnlyCommits": 0,
+      "mergeBase": "92ac44fb23c515acd59f2470403dd9feca292b30",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/hro-stage2",
+      "head": "985c9c06f3d370d2afc882299a16682aa0cd66c3",
+      "mainOnlyCommits": 55,
+      "branchOnlyCommits": 0,
+      "mergeBase": "985c9c06f3d370d2afc882299a16682aa0cd66c3",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/hro-stage3",
+      "head": "5287bb7ceecaeb7c6bcdfbfd748503886c6b1eb4",
+      "mainOnlyCommits": 53,
+      "branchOnlyCommits": 0,
+      "mergeBase": "5287bb7ceecaeb7c6bcdfbfd748503886c6b1eb4",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/hyarpg-r139-customui-hotfix",
+      "head": "c390c37caeb622009600efdaec164e4ef0101885",
+      "mainOnlyCommits": 246,
+      "branchOnlyCommits": 0,
+      "mergeBase": "c390c37caeb622009600efdaec164e4ef0101885",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/hyarpg-r140-event-binding-hotfix",
+      "head": "1d3761bbbd586e03eaaf9275c74f81af8c7d9f21",
+      "mainOnlyCommits": 245,
+      "branchOnlyCommits": 0,
+      "mergeBase": "1d3761bbbd586e03eaaf9275c74f81af8c7d9f21",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/hywind-guardian",
+      "head": "72c904215868bbd785036f5fbd9f48a07e2638ae",
+      "mainOnlyCommits": 154,
+      "branchOnlyCommits": 0,
+      "mergeBase": "72c904215868bbd785036f5fbd9f48a07e2638ae",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/hywind-r250-recovery",
+      "head": "e4927d06e9a3071bc2023aafec68b8fa68d76268",
+      "mainOnlyCommits": 168,
+      "branchOnlyCommits": 0,
+      "mergeBase": "e4927d06e9a3071bc2023aafec68b8fa68d76268",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/me12-072-modonly",
+      "head": "f3c1433f1758817c6e66966dc81c6abe73780043",
+      "mainOnlyCommits": 0,
+      "branchOnlyCommits": 4,
+      "mergeBase": "96d748e09cc86aa6fc8015c47ae08ffa92f09c06",
+      "classification": "PROPOSED_DEVELOPMENT_INTEGRATION_QA_PENDING",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/me12-stage1",
+      "head": "b0844f8a013305cffa0b6a9c8912dad571027c3c",
+      "mainOnlyCommits": 35,
+      "branchOnlyCommits": 0,
+      "mergeBase": "b0844f8a013305cffa0b6a9c8912dad571027c3c",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/me12-stage2",
+      "head": "a030722af4f9e75db012f18eadfb332f50cbf191",
+      "mainOnlyCommits": 32,
+      "branchOnlyCommits": 0,
+      "mergeBase": "a030722af4f9e75db012f18eadfb332f50cbf191",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/me12-stage3",
+      "head": "b50c49a51970622af9e4c781f35e8a67b05efb9a",
+      "mainOnlyCommits": 13,
+      "branchOnlyCommits": 0,
+      "mergeBase": "b50c49a51970622af9e4c781f35e8a67b05efb9a",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020",
+      "head": "f5ad86ca8c35250fc505132c0a00fd1d87c5fc01",
+      "mainOnlyCommits": 0,
+      "branchOnlyCommits": 5,
+      "mergeBase": "96d748e09cc86aa6fc8015c47ae08ffa92f09c06",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020-elite-nameplate",
+      "head": "3327a5650cadf0173b336072f614a13c63cecc56",
+      "mainOnlyCommits": 46,
+      "branchOnlyCommits": 16,
+      "mergeBase": "c69e44f16302e68ebd625d65039a457ad92ead06",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-0425220b",
+      "head": "0425220be8acc2c8ced9203c81d668ef78b3991c",
+      "mainOnlyCommits": 322,
+      "branchOnlyCommits": 1,
+      "mergeBase": "951e17b8e2bae6b6f77ffefc621a4a0cbec942c2",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-0c51fec0",
+      "head": "0c51fec0d7cb08d6a5b0a57e6c3d8fd380ba6252",
+      "mainOnlyCommits": 5,
+      "branchOnlyCommits": 1,
+      "mergeBase": "4cf6e82c2e15e50426dd6c90e7f954a3fc864316",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-143019a2",
+      "head": "143019a28d6a343abf49c6b3faaa2fd1324a6c20",
+      "mainOnlyCommits": 121,
+      "branchOnlyCommits": 1,
+      "mergeBase": "d72ad29b32d8b34b4552ced8d4b8315e6a40b0be",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-2d92d561",
+      "head": "2d92d561b9c4a5057bd291ace53274d9411efd79",
+      "mainOnlyCommits": 25,
+      "branchOnlyCommits": 1,
+      "mergeBase": "578da777b03b8d0e500dd1c238a3060eef350563",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-393adeb2",
+      "head": "393adeb27cd2e3725ce982203419c289d3de51eb",
+      "mainOnlyCommits": 334,
+      "branchOnlyCommits": 1,
+      "mergeBase": "b9fd9f6900702df528833e4cb743fdadf77c69ef",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-53d34105",
+      "head": "53d34105145bebec44a3698ab4f5b2c786f19f6c",
+      "mainOnlyCommits": 255,
+      "branchOnlyCommits": 1,
+      "mergeBase": "347cacb5326953dfc377bb5117c13eaa98e7ce5d",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-6cca0269",
+      "head": "6cca026954222ec0331ac749e95b91b7e1cb4eec",
+      "mainOnlyCommits": 332,
+      "branchOnlyCommits": 1,
+      "mergeBase": "083ee2e742ce8fecf163542e0580e29cfd60ebaa",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-802ac377",
+      "head": "802ac377dba42ae7f39fc63cf036cdfc6a5d75b0",
+      "mainOnlyCommits": 110,
+      "branchOnlyCommits": 1,
+      "mergeBase": "bfa9a6c25a5658dfd10b21a8dd2227ae22daf0b7",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-9169ccf9",
+      "head": "9169ccf96837c9c4d237022961078949568c9731",
+      "mainOnlyCommits": 146,
+      "branchOnlyCommits": 1,
+      "mergeBase": "864c8f16868c01612ae0fdc7fb29ada146b7c834",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-a3fc9085",
+      "head": "a3fc9085458307c6e4e3165ed0dbdc9c0d915a4a",
+      "mainOnlyCommits": 5,
+      "branchOnlyCommits": 1,
+      "mergeBase": "4cf6e82c2e15e50426dd6c90e7f954a3fc864316",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-b9ed34ed",
+      "head": "b9ed34ed0df61eed64b8db77229c49b9b83e3d43",
+      "mainOnlyCommits": 5,
+      "branchOnlyCommits": 1,
+      "mergeBase": "4cf6e82c2e15e50426dd6c90e7f954a3fc864316",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-bb939cd8-source",
+      "head": "1a67332b2c8b69b478253ff2f41f7b63acad1493",
+      "mainOnlyCommits": 554,
+      "branchOnlyCommits": 1,
+      "mergeBase": "",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-cb5306dd",
+      "head": "cb5306dd154af8c2f22c52d63a377f43be5006d6",
+      "mainOnlyCommits": 46,
+      "branchOnlyCommits": 8,
+      "mergeBase": "c69e44f16302e68ebd625d65039a457ad92ead06",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-e4900dbc",
+      "head": "e4900dbc37866674a2cd128e20539c0d3dcf7aad",
+      "mainOnlyCommits": 95,
+      "branchOnlyCommits": 1,
+      "mergeBase": "0183f2acae08c79d30a0d477c71bdd5544f95bf6",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020-history-fc8618e1",
+      "head": "fc8618e1fd4871e94e93df7e2349426ad4851ea2",
+      "mainOnlyCommits": 332,
+      "branchOnlyCommits": 1,
+      "mergeBase": "083ee2e742ce8fecf163542e0580e29cfd60ebaa",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020-legacy-primary",
+      "head": "52996061622515ba6760c05ca1124495559107c3",
+      "mainOnlyCommits": 251,
+      "branchOnlyCommits": 1,
+      "mergeBase": "209e38c01ef5db153a18f723ddc3b05866844438",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020-original-rpg",
+      "head": "1fef3de23a03dc93bcd7c131ccebe06b4e975d15",
+      "mainOnlyCommits": 471,
+      "branchOnlyCommits": 1,
+      "mergeBase": "837ed802a824d98c2394493fca18122fab6e0eb6",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020-primary",
+      "head": "e82e15002ad09232df388c401c58612685f2c539",
+      "mainOnlyCommits": 167,
+      "branchOnlyCommits": 1,
+      "mergeBase": "1dfa2cea3085196c7fd4492518c65a03d5e3b49d",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020-separation",
+      "head": "f72302b185f4ca3a5f1b800b5269af69dc6a9c04",
+      "mainOnlyCommits": 172,
+      "branchOnlyCommits": 1,
+      "mergeBase": "7dbfabeb9d633330b348f6314dd0d6ff0ab4bde9",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020-separation-staged",
+      "head": "fe89a2ff7125e4887744e9031b0e12b8c9d4f449",
+      "mainOnlyCommits": 172,
+      "branchOnlyCommits": 1,
+      "mergeBase": "7dbfabeb9d633330b348f6314dd0d6ff0ab4bde9",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020-separation-worldconfig-index",
+      "head": "22fc2e1b484ace8e433b33ccfea9c0de90c19782",
+      "mainOnlyCommits": 172,
+      "branchOnlyCommits": 1,
+      "mergeBase": "7dbfabeb9d633330b348f6314dd0d6ff0ab4bde9",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/preserve-20261020-teleport-r250",
+      "head": "ea63fd8a6c70ca808c51dc3697b948133476e37c",
+      "mainOnlyCommits": 173,
+      "branchOnlyCommits": 1,
+      "mergeBase": "6c0ab9fd6a8ddaf647ba075d831bab1128f495c1",
+      "classification": "QUARANTINED_RECOVERY_ARCHIVE",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/r237-source-reconstruction",
+      "head": "dfb2fe0886a48181c62e20c956bf253c38295e73",
+      "mainOnlyCommits": 195,
+      "branchOnlyCommits": 1,
+      "mergeBase": "0ed109dc9083eebbbfecfee155b67382018d675e",
+      "classification": "QUARANTINED_OBSOLETE_RECONSTRUCTION",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/r258-icon-preserved-deploy",
+      "head": "21292be88598dde1a3e39a60d1eb5892c1f6d98b",
+      "mainOnlyCommits": 129,
+      "branchOnlyCommits": 0,
+      "mergeBase": "21292be88598dde1a3e39a60d1eb5892c1f6d98b",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/r261-final",
+      "head": "e42b903291409bde99fde985e8e07174cbb92401",
+      "mainOnlyCommits": 100,
+      "branchOnlyCommits": 0,
+      "mergeBase": "e42b903291409bde99fde985e8e07174cbb92401",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/r261-qa-capture",
+      "head": "2b063104a106feb99b9c8f02fd606e4fa5620fac",
+      "mainOnlyCommits": 93,
+      "branchOnlyCommits": 0,
+      "mergeBase": "2b063104a106feb99b9c8f02fd606e4fa5620fac",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/r261-qa2-startup-registration",
+      "head": "6d3ef15ff0145532ef193c42e3b648307ee6e915",
+      "mainOnlyCommits": 91,
+      "branchOnlyCommits": 0,
+      "mergeBase": "6d3ef15ff0145532ef193c42e3b648307ee6e915",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/r261a-durable-cyclone",
+      "head": "e418e1ee1fa430a288b45307310ebe7cc2197912",
+      "mainOnlyCommits": 117,
+      "branchOnlyCommits": 0,
+      "mergeBase": "e418e1ee1fa430a288b45307310ebe7cc2197912",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/r261a1-cyclone-hardening",
+      "head": "90ed801a53b7be45498a5a5f07cd931ac87e6104",
+      "mainOnlyCommits": 113,
+      "branchOnlyCommits": 0,
+      "mergeBase": "90ed801a53b7be45498a5a5f07cd931ac87e6104",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/r261b-live-cyclone",
+      "head": "bfa9a6c25a5658dfd10b21a8dd2227ae22daf0b7",
+      "mainOnlyCommits": 110,
+      "branchOnlyCommits": 0,
+      "mergeBase": "bfa9a6c25a5658dfd10b21a8dd2227ae22daf0b7",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/r261c-progression-mana-hud",
+      "head": "e1c5562728b4617ac2dfab4c3a8f10445cc36b92",
+      "mainOnlyCommits": 109,
+      "branchOnlyCommits": 0,
+      "mergeBase": "e1c5562728b4617ac2dfab4c3a8f10445cc36b92",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/ready-path-gear-lock",
+      "head": "d72ad29b32d8b34b4552ced8d4b8315e6a40b0be",
+      "mainOnlyCommits": 121,
+      "branchOnlyCommits": 0,
+      "mergeBase": "d72ad29b32d8b34b4552ced8d4b8315e6a40b0be",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/skill-level-qa",
+      "head": "f6cc79b1820a5dce2f84bf96895ad1a7421b3902",
+      "mainOnlyCommits": 143,
+      "branchOnlyCommits": 0,
+      "mergeBase": "f6cc79b1820a5dce2f84bf96895ad1a7421b3902",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/teleport-landing-sound",
+      "head": "18987e622b02f5dfb593d3821af9f5e241292e28",
+      "mainOnlyCommits": 141,
+      "branchOnlyCommits": 0,
+      "mergeBase": "18987e622b02f5dfb593d3821af9f5e241292e28",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/teleport-native-target",
+      "head": "864c8f16868c01612ae0fdc7fb29ada146b7c834",
+      "mainOnlyCommits": 146,
+      "branchOnlyCommits": 0,
+      "mergeBase": "864c8f16868c01612ae0fdc7fb29ada146b7c834",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "codex/unified-diagnostics",
+      "head": "6ad419d92f3086c5211aeef313eb6dc70218cf30",
+      "mainOnlyCommits": 133,
+      "branchOnlyCommits": 0,
+      "mergeBase": "6ad419d92f3086c5211aeef313eb6dc70218cf30",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "hywind-merge",
+      "head": "424cd548ceb9d551196a3516f8e383c9af36e23c",
+      "mainOnlyCommits": 312,
+      "branchOnlyCommits": 0,
+      "mergeBase": "424cd548ceb9d551196a3516f8e383c9af36e23c",
+      "classification": "INTEGRATED_BY_REACHABILITY",
+      "acceptance": "Not reassessed; historical QA states retained"
+    },
+    {
+      "branch": "main",
+      "head": "96d748e09cc86aa6fc8015c47ae08ffa92f09c06",
+      "mainOnlyCommits": 0,
+      "branchOnlyCommits": 0,
+      "mergeBase": "96d748e09cc86aa6fc8015c47ae08ffa92f09c06",
+      "classification": "CURRENT_MAIN",
+      "acceptance": "Not reassessed; historical QA states retained"
+    }
+  ],
+  "selectivePortContentEvidence": [
+    {
+      "originalCommit": "70b66944da796cc9f7c81538275a51dd21372836",
+      "path": "src/main/java/com/inigmasgames/hytalerpg/diagnostics/hro/HroBundle.java",
+      "originalBlob": "90944a585fe5ef2b23dabd41adda19f3096f01a8",
+      "integratedMainBlob": "f2671fbbf0c48ac92720ead9a71328ab7545245f",
+      "comparison": "REVIEWED_NEWER_IMPLEMENTATION",
+      "diffNumstat": "5\t0\tsrc/main/java/com/inigmasgames/hytalerpg/diagnostics/hro/HroBundle.java",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "70b66944da796cc9f7c81538275a51dd21372836",
+      "path": "src/main/java/com/inigmasgames/hytalerpg/diagnostics/hro/HroComparison.java",
+      "originalBlob": "4fa503f475bc669b4400cf0afc6f66cbe420fb70",
+      "integratedMainBlob": "4fa503f475bc669b4400cf0afc6f66cbe420fb70",
+      "comparison": "EXACT_COMMIT_CONTENT",
+      "diffNumstat": "",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "70b66944da796cc9f7c81538275a51dd21372836",
+      "path": "src/main/java/com/inigmasgames/hytalerpg/diagnostics/hro/HroContracts.java",
+      "originalBlob": "4094b8d466353e1b42cf7e5eda6bbe89b9a06f1f",
+      "integratedMainBlob": "4094b8d466353e1b42cf7e5eda6bbe89b9a06f1f",
+      "comparison": "EXACT_COMMIT_CONTENT",
+      "diffNumstat": "",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "70b66944da796cc9f7c81538275a51dd21372836",
+      "path": "src/main/java/com/inigmasgames/hytalerpg/diagnostics/hro/HroRecorder.java",
+      "originalBlob": "440692209cce8eedf895ef44732818efdf838e13",
+      "integratedMainBlob": "4ba98bea630b718a7a40502e73b6159ad3103b7b",
+      "comparison": "REVIEWED_NEWER_IMPLEMENTATION",
+      "diffNumstat": "23\t7\tsrc/main/java/com/inigmasgames/hytalerpg/diagnostics/hro/HroRecorder.java",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "70b66944da796cc9f7c81538275a51dd21372836",
+      "path": "src/main/java/com/inigmasgames/hytalerpg/diagnostics/hro/HroRuntime.java",
+      "originalBlob": "b5a1ac9013549a5b3675397f38561a8562ab854f",
+      "integratedMainBlob": "bc690d5dccb2cc1aa3fa584be5a3c957c5fcb03b",
+      "comparison": "REVIEWED_NEWER_IMPLEMENTATION",
+      "diffNumstat": "4\t0\tsrc/main/java/com/inigmasgames/hytalerpg/diagnostics/hro/HroRuntime.java",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "70b66944da796cc9f7c81538275a51dd21372836",
+      "path": "src/main/java/com/inigmasgames/hytalerpg/diagnostics/hro/HroTool.java",
+      "originalBlob": "a546626be68e0babefb5e8782a77e05a6029c00b",
+      "integratedMainBlob": "a546626be68e0babefb5e8782a77e05a6029c00b",
+      "comparison": "EXACT_COMMIT_CONTENT",
+      "diffNumstat": "",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "70b66944da796cc9f7c81538275a51dd21372836",
+      "path": "src/main/java/com/inigmasgames/hytalerpg/progress/FileRpgPlayerStateRepository.java",
+      "originalBlob": "273e4cf4ec0937c0a37062286fc7df203be5dc9e",
+      "integratedMainBlob": "273e4cf4ec0937c0a37062286fc7df203be5dc9e",
+      "comparison": "EXACT_COMMIT_CONTENT",
+      "diffNumstat": "",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "70b66944da796cc9f7c81538275a51dd21372836",
+      "path": "src/test/java/com/inigmasgames/hytalerpg/diagnostics/hro/HroComparisonTest.java",
+      "originalBlob": "abf23fb2343370602dfe31321512a1530f056c38",
+      "integratedMainBlob": "abf23fb2343370602dfe31321512a1530f056c38",
+      "comparison": "EXACT_COMMIT_CONTENT",
+      "diffNumstat": "",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "70b66944da796cc9f7c81538275a51dd21372836",
+      "path": "src/test/java/com/inigmasgames/hytalerpg/diagnostics/hro/HroContractsTest.java",
+      "originalBlob": "9ed7f58e251ccf649f1cc6456efd7ed36efae006",
+      "integratedMainBlob": "9ed7f58e251ccf649f1cc6456efd7ed36efae006",
+      "comparison": "EXACT_COMMIT_CONTENT",
+      "diffNumstat": "",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "70b66944da796cc9f7c81538275a51dd21372836",
+      "path": "src/test/java/com/inigmasgames/hytalerpg/diagnostics/hro/HroRecorderTest.java",
+      "originalBlob": "b6662548601e8507fcf25f34dac6f6381ef34b3e",
+      "integratedMainBlob": "5be7b230cd306c47da5dfc4f00cb3cfe89af9fd7",
+      "comparison": "REVIEWED_NEWER_IMPLEMENTATION",
+      "diffNumstat": "26\t0\tsrc/test/java/com/inigmasgames/hytalerpg/diagnostics/hro/HroRecorderTest.java",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "7ebe4207f9db3faba088e757baa8408d21334c11",
+      "path": "src/main/java/com/inigmasgames/hytalerpg/diagnostics/hro/HroRecorder.java",
+      "originalBlob": "81d0768fb22b6d8f861165f873c5d0357dc6a887",
+      "integratedMainBlob": "4ba98bea630b718a7a40502e73b6159ad3103b7b",
+      "comparison": "REVIEWED_NEWER_IMPLEMENTATION",
+      "diffNumstat": "21\t6\tsrc/main/java/com/inigmasgames/hytalerpg/diagnostics/hro/HroRecorder.java",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "7ebe4207f9db3faba088e757baa8408d21334c11",
+      "path": "src/test/java/com/inigmasgames/hytalerpg/diagnostics/hro/HroRecorderTest.java",
+      "originalBlob": "996b5ea5b83664d0ce63c80f3a14ba54e2a36344",
+      "integratedMainBlob": "5be7b230cd306c47da5dfc4f00cb3cfe89af9fd7",
+      "comparison": "REVIEWED_NEWER_IMPLEMENTATION",
+      "diffNumstat": "11\t0\tsrc/test/java/com/inigmasgames/hytalerpg/diagnostics/hro/HroRecorderTest.java",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "9a2c1dcaf3caacf3c03fab7b121c8c7d52ac0050",
+      "path": "src/main/java/com/inigmasgames/hytalerpg/diagnostics/hro/HroRecorder.java",
+      "originalBlob": "94fe6f8abd90aff1fdfa8a51f3ed913a1a6587ab",
+      "integratedMainBlob": "4ba98bea630b718a7a40502e73b6159ad3103b7b",
+      "comparison": "REVIEWED_NEWER_IMPLEMENTATION",
+      "diffNumstat": "15\t3\tsrc/main/java/com/inigmasgames/hytalerpg/diagnostics/hro/HroRecorder.java",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "9a2c1dcaf3caacf3c03fab7b121c8c7d52ac0050",
+      "path": "src/test/java/com/inigmasgames/hytalerpg/diagnostics/hro/HroRecorderTest.java",
+      "originalBlob": "5be7b230cd306c47da5dfc4f00cb3cfe89af9fd7",
+      "integratedMainBlob": "5be7b230cd306c47da5dfc4f00cb3cfe89af9fd7",
+      "comparison": "EXACT_COMMIT_CONTENT",
+      "diffNumstat": "",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "8e9f1ab2632773ccd5b74ac914432181f43563ba",
+      "path": "src/main/java/com/inigmasgames/hywind/HyArpgPlugin.java",
+      "originalBlob": "519a1e35ffc18ed621361116e97b6efe179ab6ef",
+      "integratedMainBlob": "0fa240df1e62f68c24629d8c0e6f307032c1dcfb",
+      "comparison": "REVIEWED_NEWER_IMPLEMENTATION",
+      "diffNumstat": "123\t26\tsrc/main/java/com/inigmasgames/hywind/HyArpgPlugin.java",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "53e9bf0807db4e9ecb00768394b897b8faf0b38d",
+      "path": "src/main/java/com/inigmasgames/hytalerpg/ui/inventory/NativeInventoryEntryProbe.java",
+      "originalBlob": "fc07ba9feb88f142c99ad9b4ee608e0fc8420aff",
+      "integratedMainBlob": "fc07ba9feb88f142c99ad9b4ee608e0fc8420aff",
+      "comparison": "EXACT_COMMIT_CONTENT",
+      "diffNumstat": "",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "f52d25fe69e640208a5dc55c82c1e746c1062a60",
+      "path": "src/main/java/com/inigmasgames/hytalerpg/gear/GearNativeItems.java",
+      "originalBlob": "4525f25e70acc31e57f7cbfec08ee8b612c41c87",
+      "integratedMainBlob": "4525f25e70acc31e57f7cbfec08ee8b612c41c87",
+      "comparison": "EXACT_COMMIT_CONTENT",
+      "diffNumstat": "",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "f52d25fe69e640208a5dc55c82c1e746c1062a60",
+      "path": "src/main/java/com/inigmasgames/hytalerpg/gear/HytaleGearEquipment.java",
+      "originalBlob": "2b4ae215ce3fa86417b93f7172667e0b27387e47",
+      "integratedMainBlob": "2b4ae215ce3fa86417b93f7172667e0b27387e47",
+      "comparison": "EXACT_COMMIT_CONTENT",
+      "diffNumstat": "",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "f52d25fe69e640208a5dc55c82c1e746c1062a60",
+      "path": "src/main/java/com/inigmasgames/hytalerpg/gear/NativeActionPublication.java",
+      "originalBlob": "8267360ca1ec66725f46c6825fa06aa0d96e2efb",
+      "integratedMainBlob": "8267360ca1ec66725f46c6825fa06aa0d96e2efb",
+      "comparison": "EXACT_COMMIT_CONTENT",
+      "diffNumstat": "",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "f52d25fe69e640208a5dc55c82c1e746c1062a60",
+      "path": "src/test/java/com/inigmasgames/hytalerpg/gear/NativeActionPublicationTest.java",
+      "originalBlob": "73082d093c44b8842c95a99522bd02e1f04b8413",
+      "integratedMainBlob": "73082d093c44b8842c95a99522bd02e1f04b8413",
+      "comparison": "EXACT_COMMIT_CONTENT",
+      "diffNumstat": "",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "e491c692bcf0ea48d210ef5fd378ed4e1a7d5adc",
+      "path": "src/main/java/com/inigmasgames/hytalerpg/phase00/BuildIdentity.java",
+      "originalBlob": "dfce853856e84810ac80da6cd138c8ec41aa3767",
+      "integratedMainBlob": "ba41120b2f908afc6c3a4987ef34a0a03e0aa648",
+      "comparison": "REVIEWED_NEWER_IMPLEMENTATION",
+      "diffNumstat": "5\t0\tsrc/main/java/com/inigmasgames/hytalerpg/phase00/BuildIdentity.java",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "e491c692bcf0ea48d210ef5fd378ed4e1a7d5adc",
+      "path": "src/test/java/com/inigmasgames/hytalerpg/phase00/BuildIdentityTest.java",
+      "originalBlob": "fe5515ceaa468f24c05419d85cbf09e80828e9bf",
+      "integratedMainBlob": "205c983784ab033c447c811c5f2700f6373e2a95",
+      "comparison": "REVIEWED_NEWER_IMPLEMENTATION",
+      "diffNumstat": "5\t1\tsrc/test/java/com/inigmasgames/hytalerpg/phase00/BuildIdentityTest.java",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "1d7e1ab4a3205d27705885da359af20d01e078d9",
+      "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/EnemyHealthBarPresentation.java",
+      "originalBlob": "d60fbf2602c0bbe69b5c1cc32b95497481987d85",
+      "integratedMainBlob": "ab91a053463daac3cdf9001f49a4f000a2aad5aa",
+      "comparison": "REVIEWED_NEWER_IMPLEMENTATION",
+      "diffNumstat": "1\t1\tsrc/main/java/com/inigmasgames/hytalerpg/execution/hytale/EnemyHealthBarPresentation.java",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "1d7e1ab4a3205d27705885da359af20d01e078d9",
+      "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/HytaleDifficultyCombat.java",
+      "originalBlob": "507d85852ca32160bd3100c73b81b5a2ebf3d66b",
+      "integratedMainBlob": "507d85852ca32160bd3100c73b81b5a2ebf3d66b",
+      "comparison": "EXACT_COMMIT_CONTENT",
+      "diffNumstat": "",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "1d7e1ab4a3205d27705885da359af20d01e078d9",
+      "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/NativeHostileNames.java",
+      "originalBlob": "3b6bf1a9cc31b414cb702203e8f6a64e4bbd15d7",
+      "integratedMainBlob": "3b6bf1a9cc31b414cb702203e8f6a64e4bbd15d7",
+      "comparison": "EXACT_COMMIT_CONTENT",
+      "diffNumstat": "",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "1d7e1ab4a3205d27705885da359af20d01e078d9",
+      "path": "src/test/java/com/inigmasgames/hytalerpg/execution/hytale/PromotedTitleOwnershipTest.java",
+      "originalBlob": "1b61a001e789c4ac8ba3593c5fb67e55c58dabfc",
+      "integratedMainBlob": "1b61a001e789c4ac8ba3593c5fb67e55c58dabfc",
+      "comparison": "EXACT_COMMIT_CONTENT",
+      "diffNumstat": "",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    },
+    {
+      "originalCommit": "3327a5650cadf0173b336072f614a13c63cecc56",
+      "path": "src/main/java/com/inigmasgames/hytalerpg/execution/hytale/EnemyHealthBarPresentation.java",
+      "originalBlob": "ab91a053463daac3cdf9001f49a4f000a2aad5aa",
+      "integratedMainBlob": "ab91a053463daac3cdf9001f49a4f000a2aad5aa",
+      "comparison": "EXACT_COMMIT_CONTENT",
+      "diffNumstat": "",
+      "selectivePortCommit": "c37a10408501b11c49fd273eeec39725158c863d",
+      "traceability": "Port documented in DEVELOPMENT_BASELINE; source/behavior inspected, original SHA reachability is not claimed."
+    }
+  ],
+  "sourceArtwork": [
+    {
+      "path": "art/Skills.psd",
+      "sourceBranch": "codex/preserve-20261020-primary",
+      "sourceCommit": "e82e15002ad09232df388c401c58612685f2c539",
+      "sha256": "13e8c8d1fcd7ba19edd5414a7f033ed384d2966684b5616e1a516a767db3fe90",
+      "size": 6320934
+    },
+    {
+      "path": "art/Skills Alpha Art/CycloneArmor.png",
+      "sourceBranch": "codex/preserve-20261020-primary",
+      "sourceCommit": "e82e15002ad09232df388c401c58612685f2c539",
+      "sha256": "2e03a5d6cfb7c75f8fc61d79108a574965ab87b9248158b46e99d3151de8761d",
+      "size": 401298
+    }
+  ],
+  "installedCandidate": {
+    "path": "C:\\Users\\Zemio\\AppData\\Roaming\\Hytale\\UserData\\Saves\\Hywind\\mods\\HyARPG.jar",
+    "sha256": "850419adc7dd5ab51419c0a42a233961c0e0cdf86fa767ae62278a80179bb647",
+    "observedReadOnly": true,
+    "deploymentAuthorizedByThisTask": false,
+    "embeddedBuild": "rpg.revision=R262ME12S3B-072-QA5-CANDIDATE\nrpg.version=0.2.0-R262ME12S3B-072-QA5-CANDIDATE\nrpg.stage=13\nhytale.version=0.7.2\nrpg.sourceCommit=f3c1433f1758817c6e66966dc81c6abe73780043\nrpg.qaAutoSave=Hywind\nrpg.qaAutoRevision=R262ME12S3B-072-QA5-CANDIDATE\nrpg.qaAutoWorlds=3d366b79-f367-419a-87b7-a8d53cde7ec0,6e88444d-898b-4a9d-99a6-f5f19d0257a1\nrpg.qaReceiptPath=C:/Users/Zemio/OneDrive/Documents/GitHub/Hytale-main-clean/build/m/build/guardian/verification.json\n"
+  },
+  "primaryCheckout": {
+    "head": "1dfa2cea3085196c7fd4492518c65a03d5e3b49d",
+    "branch": "main",
+    "protectedChanges": 8,
+    "preservedArchive": "codex/preserve-20261020-primary",
+    "synchronization": "BLOCKED_BY_PROTECTED_LOCAL_EDITS; leave original checkout untouched"
+  },
+  "guardian": {
+    "preflight": "PASS in isolated short-path checkout after live baseline observation",
+    "comprehensiveIntegrationGate": "UNVERIFIED enforcement gap; manual inventory supplied without claiming the required future code gate exists",
+    "publicationAndExactCommitChecks": "Required after final source commit; results belong in linked PR and verification receipt"
+  },
+  "nextAction": "Verify exact committed source, publish reviewed branch, serialize owner-requested development-main integration, verify remote reachability; retain all archives and QA_PENDING statuses."
+}
