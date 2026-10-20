@@ -92,8 +92,8 @@ try {
     if ([string]::IsNullOrWhiteSpace($BackupRoot)) { $BackupRoot = Join-Path $repository 'icon-backups' }
     if ([string]::IsNullOrWhiteSpace($JarPath)) {
         $mods = Join-Path $env:APPDATA 'Hytale\data\pre-release\Saves\RPG\mods'
-        $installed = @(Get-ChildItem -LiteralPath $mods -File | Where-Object { $_.Name -eq 'HyARPG.jar' })
-        if ($installed.Count -ne 1) { throw 'Expected exactly one HyARPG.jar in the RPG world mods folder. Build/deploy HyARPG first.' }
+        $installed = @(Get-ChildItem -LiteralPath $mods -File | Where-Object { $_.Name -eq 'Hywind.jar' })
+        if ($installed.Count -ne 1) { throw 'Expected exactly one Hywind.jar in the RPG world mods folder. Deploy Hywind first.' }
         $JarPath = $installed[0].FullName
     }
     $JarPath = (Resolve-Path -LiteralPath $JarPath).Path
@@ -141,6 +141,7 @@ try {
         $index = Read-JsonEntry $zip 'rpg/presentation/icon-index.json'
         if ($index.schemaVersion -ne 1 -or @($index.entries).Count -notin @(153,156,157,158,163,164,165)) { throw 'Unsupported icon index; do not patch this build.' }
         $byFile = @{}
+        $ambiguousFiles = @{}
         $ids = @{}
         $catalogIds = @{}
         foreach ($kind in @('Skill','Passive')) {
@@ -162,6 +163,24 @@ try {
             }
             $byFile[$row.fileName] = $row
         }
+        # The installed icon index is the authority for both display names and
+        # legacy output paths. Accept a display-name PNG without changing its ID
+        # or the filename referenced by the installed index and native item.
+        foreach ($row in ($index.entries | Where-Object kind -eq 'Skill')) {
+            $displayStem = $row.name -creplace '[^A-Za-z0-9]', ''
+            if ($displayStem -cnotmatch '^[A-Z][A-Za-z0-9]*$') {
+                throw "Unsafe skill display name in icon index: $($row.id)"
+            }
+            $displayFile = 'Skill' + $displayStem + '.png'
+            if ($byFile.ContainsKey($displayFile)) {
+                $other = $byFile[$displayFile]
+                if ($other.id -cne $row.id -or $other.kind -cne $row.kind) {
+                    $ambiguousFiles[$displayFile] = "$($other.kind):$($other.id), $($row.kind):$($row.id)"
+                }
+            } else {
+                $byFile[$displayFile] = $row
+            }
+        }
         $skillCount=@($index.entries | Where-Object kind -eq 'Skill').Count
         $passiveCount=@($index.entries | Where-Object kind -eq 'Passive').Count
         if ($ids.Count -ne $catalogIds.Count -or -not (($skillCount -eq 87 -and $passiveCount -eq 66) -or
@@ -170,38 +189,61 @@ try {
             ($skillCount -eq 91 -and $passiveCount -eq 67) -or
             ($skillCount -eq 97 -and $passiveCount -eq 67) -or
             ($skillCount -eq 98 -and $passiveCount -eq 67))) { throw 'Icon index does not cover the full catalog.' }
+        $supplied = [Collections.Generic.List[object]]::new()
+        $filenameErrors = [Collections.Generic.List[string]]::new()
+        $suppliedById = @{}
         foreach ($kind in @('Skill','Passive')) {
             $folder = Join-Path $ArtRoot ($kind + 's')
             if (-not (Test-Path -LiteralPath $folder -PathType Container)) { continue }
             foreach ($file in Get-ChildItem -LiteralPath $folder -File -Filter '*.png') {
+                if ($ambiguousFiles.ContainsKey($file.Name)) {
+                    $filenameErrors.Add("Ambiguous $kind PNG '$($file.Name)': $($ambiguousFiles[$file.Name]).")
+                    continue
+                }
                 $row = $byFile[$file.Name]
                 if ($null -eq $row -or $row.kind -ne $kind) {
-                    throw "Unknown $kind PNG '$($file.Name)'. See art/ICON-FILENAMES.csv for the exact filename."
+                    $filenameErrors.Add("Unknown $kind PNG '$($file.Name)'. See the installed icon index or art/ICON-FILENAMES.csv.")
+                    continue
                 }
-                $bytes = Validate-Png $file
-                $uiEntry = 'Common/UI/Custom/Icons/RPG/' + $row.fileName
-                if ($replacements.ContainsKey($uiEntry)) { throw "Duplicate icon: $($row.fileName)" }
-                $replacements.Add($uiEntry, $bytes)
-                $sourceUpdates.Add((Join-Path $sourceRoot ($uiEntry -replace '/', '\')), $bytes)
-                if ($kind -eq 'Skill') {
-                    $nativeIcon = 'Icons/Items/RPG/' + $row.fileName
-                    $replacements.Add('Common/' + $nativeIcon, $bytes)
-                    $sourceUpdates.Add((Join-Path $sourceRoot (('Common/' + $nativeIcon) -replace '/', '\')), $bytes)
-                    $item = Read-JsonEntry $zip $row.itemAsset
-                    # Repeated updates must be exact no-ops, including Item JSON formatting.
-                    if ($item.Icon -cne $nativeIcon) {
-                        $item.Icon = $nativeIcon
-                        $replacements.Add($row.itemAsset, $utf8.GetBytes(($item | ConvertTo-Json -Depth 64)))
-                    }
-                    $sourceItemPath = Join-Path $sourceRoot ($row.itemAsset -replace '/', '\')
-                    $sourceItem = Get-Content -Raw -LiteralPath $sourceItemPath | ConvertFrom-Json
-                    if ($sourceItem.Icon -cne $nativeIcon) {
-                        $sourceItem.Icon = $nativeIcon
-                        $sourceUpdates[$sourceItemPath] = $utf8.GetBytes(($sourceItem | ConvertTo-Json -Depth 64))
-                    }
+                $key = "$kind`:$($row.id)"
+                if ($suppliedById.ContainsKey($key)) {
+                    $filenameErrors.Add("Duplicate $kind icon for '$($row.id)': '$($suppliedById[$key])' and '$($file.Name)'.")
+                    continue
                 }
-                $selected.Add([pscustomobject]@{name=$row.name;fileName=$row.fileName;sha256=(Bytes-Hash $bytes)})
+                $suppliedById[$key] = $file.Name
+                $supplied.Add([pscustomobject]@{kind=$kind;file=$file;row=$row})
             }
+        }
+        if ($filenameErrors.Count) {
+            throw ("Icon filename validation failed:`n - " + ($filenameErrors -join "`n - "))
+        }
+        foreach ($icon in $supplied) {
+            $kind = $icon.kind
+            $file = $icon.file
+            $row = $icon.row
+            $bytes = Validate-Png $file
+            $uiEntry = 'Common/UI/Custom/Icons/RPG/' + $row.fileName
+            if ($replacements.ContainsKey($uiEntry)) { throw "Duplicate icon: $($row.fileName)" }
+            $replacements.Add($uiEntry, $bytes)
+            $sourceUpdates.Add((Join-Path $sourceRoot ($uiEntry -replace '/', '\')), $bytes)
+            if ($kind -eq 'Skill') {
+                $nativeIcon = 'Icons/Items/RPG/' + $row.fileName
+                $replacements.Add('Common/' + $nativeIcon, $bytes)
+                $sourceUpdates.Add((Join-Path $sourceRoot (('Common/' + $nativeIcon) -replace '/', '\')), $bytes)
+                $item = Read-JsonEntry $zip $row.itemAsset
+                # Repeated updates must be exact no-ops, including Item JSON formatting.
+                if ($item.Icon -cne $nativeIcon) {
+                    $item.Icon = $nativeIcon
+                    $replacements.Add($row.itemAsset, $utf8.GetBytes(($item | ConvertTo-Json -Depth 64)))
+                }
+                $sourceItemPath = Join-Path $sourceRoot ($row.itemAsset -replace '/', '\')
+                $sourceItem = Get-Content -Raw -LiteralPath $sourceItemPath | ConvertFrom-Json
+                if ($sourceItem.Icon -cne $nativeIcon) {
+                    $sourceItem.Icon = $nativeIcon
+                    $sourceUpdates[$sourceItemPath] = $utf8.GetBytes(($sourceItem | ConvertTo-Json -Depth 64))
+                }
+            }
+            $selected.Add([pscustomobject]@{name=$row.name;fileName=$row.fileName;inputFileName=$file.Name;sha256=(Bytes-Hash $bytes)})
         }
     } finally { $zip.Dispose() }
     $changed = @($replacements.Keys | Where-Object {
@@ -211,7 +253,7 @@ try {
         -not (Test-Path -LiteralPath $_ -PathType Leaf) -or
         (Bytes-Hash ([IO.File]::ReadAllBytes($_))) -ne (Bytes-Hash $sourceUpdates[$_])
     })
-    foreach ($row in $selected) { Write-Output ("{0} <- {1}" -f $row.name, $row.fileName) }
+    foreach ($row in $selected) { Write-Output ("{0} <- {1} (installed as {2})" -f $row.name, $row.inputFileName, $row.fileName) }
     if ($CheckOnly) { Write-Output "CHECK PASSED: $($selected.Count) supplied icons, $($sourceChanged.Count) canonical source files and $($changed.Count) JAR entries would change. Nothing written."; exit 0 }
     if (-not $changed.Count -and -not $sourceChanged.Count) { Write-Output 'Already up to date. No source, JAR, or saves changed.'; exit 0 }
 
