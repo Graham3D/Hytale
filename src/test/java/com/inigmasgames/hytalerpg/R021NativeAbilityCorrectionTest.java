@@ -38,12 +38,12 @@ class R021NativeAbilityCorrectionTest {
         for (String skill : skills) {
             Path asset = ITEMS.resolve("RPG_Ability_" + skill + ".json");
             assertTrue(Files.isRegularFile(asset), asset.toString());
-            String json = Files.readString(asset);
-            assertTrue(json.contains("\"Slot\": \"Primary\""), skill);
-            assertTrue(json.contains("\"Cooldown\": 0"), skill);
-            assertTrue(json.contains("\"Cost\": 0"), skill);
-            assertTrue(json.contains("\"CostType\": \"None\""), skill);
-            assertTrue(json.contains("\"Cast\": \"" + com.inigmasgames.hytalerpg.input.NativeAbilityBridgeAudit.rootForItem("RPG_Ability_"+skill) + "\""), skill);
+            var ability = com.google.gson.JsonParser.parseString(Files.readString(asset)).getAsJsonObject().getAsJsonObject("Ability");
+            assertEquals("Primary", ability.get("Slot").getAsString(), skill);
+            assertEquals(0.0, ability.get("Cooldown").getAsDouble(), skill);
+            assertEquals(0.0, ability.get("Cost").getAsDouble(), skill);
+            assertEquals("None", ability.get("CostType").getAsString(), skill);
+            assertEquals(com.inigmasgames.hytalerpg.input.NativeAbilityBridgeAudit.rootForItem("RPG_Ability_"+skill), ability.get("Cast").getAsString(), skill);
         }
         String root = Files.readString(Path.of(
                 "src/main/resources/Server/Item/RootInteractions/RPG/Root_RPG_Ability_Bridge.json"));

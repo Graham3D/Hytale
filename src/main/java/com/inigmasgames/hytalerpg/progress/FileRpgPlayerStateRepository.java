@@ -26,6 +26,7 @@ public final class FileRpgPlayerStateRepository implements RpgPlayerStateReposit
 
     @Override
     public LoadResult load(UUID playerUuid) {
+        try (var readyPathSpan = com.inigmasgames.hywind.readypath.ReadyPathProbe.span("RPG_PLAYER_FILE_LOAD", playerUuid)) {
         Path path = path(playerUuid);
         if (!Files.isRegularFile(path)) return new LoadResult(RpgPlayerState.create(playerUuid), false, false,
                 RpgPlayerState.CURRENT_SCHEMA, List.of());
@@ -43,6 +44,14 @@ public final class FileRpgPlayerStateRepository implements RpgPlayerStateReposit
                 warnings.add("Legacy unwrapped state migrated to checksum envelope");
             }
             RpgStateMigrator.MigrationResult migration = migrator.migrate(rawState);
+            if(!migration.state().has("gearEconomy")||!migration.state().get("gearEconomy").isJsonObject())throw new IllegalStateException("Missing schema-11 gear economy");
+            for(String field:List.of("materials","baseRanks","receipts"))
+                if(!migration.state().getAsJsonObject("gearEconomy").has(field)||!migration.state().getAsJsonObject("gearEconomy").get(field).isJsonObject())throw new IllegalStateException("Incomplete economy "+field);
+            if(!migration.state().has("difficulty") || !migration.state().get("difficulty").isJsonObject())
+                throw new IllegalStateException("Missing schema-10 difficulty ledger");
+            var difficultyJson=migration.state().getAsJsonObject("difficulty");
+            for(String field:List.of("revision","unlocks","milestones"))
+                if(!difficultyJson.has(field)||difficultyJson.get(field).isJsonNull())throw new IllegalStateException("Incomplete difficulty ledger "+field);
             if (!migration.state().has("support") || migration.state().get("support").isJsonNull())
                 throw new IllegalStateException("Missing schema-4 durable support ledger");
             if(!migration.state().has("inactivePassives")||!migration.state().get("inactivePassives").isJsonObject())
@@ -50,6 +59,9 @@ public final class FileRpgPlayerStateRepository implements RpgPlayerStateReposit
             if(!migration.state().has("rewards")||!migration.state().get("rewards").isJsonObject())
                 throw new IllegalStateException("Missing schema-8 earned-reward checkpoint");
             var rewardJson=migration.state().getAsJsonObject("rewards");
+            if(!migration.state().has("goldBalance")||!migration.state().get("goldBalance").isJsonObject())throw new IllegalStateException("Missing schema-12 Gold balance");
+            var goldJson=migration.state().getAsJsonObject("goldBalance");
+            for(String field:List.of("gold","remainder"))if(!goldJson.has(field)||goldJson.get(field).isJsonNull())throw new IllegalStateException("Incomplete Gold balance "+field);
             if(!migration.state().has("acquisition")||!migration.state().get("acquisition").isJsonObject())throw new IllegalStateException("Missing schema-9 acquisition ledger");
             var acquisitionJson=migration.state().getAsJsonObject("acquisition");
             for(String required:List.of("meaningfulSkills","pity","spentInsight"))
@@ -88,6 +100,8 @@ public final class FileRpgPlayerStateRepository implements RpgPlayerStateReposit
             return new LoadResult(state, true, migration.migrated(), migration.sourceVersion(), warnings);
         } catch (Exception error) {
             throw new IllegalStateException("Refusing to reset unreadable RPG player state " + path + ": " + error.getMessage(), error);
+        }
+
         }
     }
 

@@ -1,0 +1,15 @@
+{
+  "RequireNewClick": true,
+  "HudInputBindingEntry": "server.hud.inputBinding.reload",
+  "Interactions": [
+    {
+      "Type": "Replace",
+      "Var": "Reload_Start",
+      "DefaultValue": {
+        "Interactions": [
+          "RPG_GearRoute_I_Common_StatAmmoReload_Entry"
+        ]
+      }
+    }
+  ]
+}

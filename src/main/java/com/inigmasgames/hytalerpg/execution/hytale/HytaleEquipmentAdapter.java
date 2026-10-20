@@ -19,11 +19,21 @@ public final class HytaleEquipmentAdapter {
         ItemStack main = InventoryComponent.getItemInHand(accessor, actor);
         InventoryComponent.Utility utility = accessor.getComponent(actor, InventoryComponent.Utility.getComponentType());
         ItemStack off = utility == null ? null : utility.getActiveItem();
-        return new SkillExecutionPort.Equipment(item(main), item(off));
+        return new SkillExecutionPort.Equipment(item(main,actor,accessor), item(off,actor,accessor));
     }
 
-    private static SkillExecutionPort.Item item(ItemStack stack) {
+    private static SkillExecutionPort.Item item(ItemStack stack,Ref<EntityStore> actor,ComponentAccessor<EntityStore> accessor) {
         if (stack == null || stack.isEmpty() || !stack.isValid()) return null;
+        if(com.inigmasgames.hytalerpg.gear.GearNativeItems.managed(stack)) {
+            if(!com.inigmasgames.hytalerpg.gear.GearNativeItems.canUse(stack,actor,accessor)) return null;
+            var gear=com.inigmasgames.hytalerpg.gear.GearNativeItems.read(stack);
+            var nativePower=POWERS.find(com.inigmasgames.hytalerpg.gear.GearNativeItems.nativeId(stack.getItemId())).orElse(null);
+            if(nativePower==null || gear.category()!=com.inigmasgames.hytalerpg.gear.GearCatalog.Category.HELD) return null;
+            var range=com.inigmasgames.hytalerpg.gear.GearAffixRuntime.physical(gear);
+            Double minimum=gear.intrinsicStats().containsKey("physicalMin")?range.minimum():null,maximum=minimum==null?null:range.maximum();
+            return new SkillExecutionPort.Item(stack.getItemId(),nativePower.kind(),new ItemPowerDescriptor(stack.getItemId(),weaponTags(nativePower.kind()),
+                    minimum==null?null:(minimum+maximum)/2,com.inigmasgames.hytalerpg.gear.GearAffixRuntime.magic(gear),minimum,maximum));
+        }
         var item = stack.getItem();
         var nativeTags=item == null || item.getData() == null ? Map.<String,String[]>of() : item.getData().getRawTags();
         return describe(stack.getItemId(), nativeTags);

@@ -296,6 +296,7 @@ public final class NpcPerceptionService implements NpcPerceptionGateway {
             List<PerceivedEntity> interactables,
             List<PerceivedEntity> stations) {
         List<EnvironmentSample> samples = new ArrayList<>();
+        var blocks = new com.hypixel.hytale.server.core.universe.world.accessor.SectionReader(world.getChunkStore());
         int ox = (int) Math.floor(origin.x);
         int oy = (int) Math.floor(origin.y);
         int oz = (int) Math.floor(origin.z);
@@ -304,12 +305,13 @@ public final class NpcPerceptionService implements NpcPerceptionGateway {
                 if (Math.hypot(x + 0.5 - origin.x, z + 0.5 - origin.z) > BLOCK_RADIUS) {
                     continue;
                 }
-                WorldChunk chunk = world.getChunkIfLoaded(ChunkUtil.indexChunkFromBlock(x, z));
+                WorldChunk chunk = world.getChunkStore().getChunkComponent(
+                        ChunkUtil.indexChunkFromBlock(x, z), WorldChunk.getComponentType());
                 if (chunk == null) {
                     continue;
                 }
                 for (int y = oy - 4; y <= oy + 10; y++) {
-                    BlockType block = chunk.getBlockType(x, y, z);
+                    BlockType block = BlockType.getAssetMap().getAsset(blocks.getBlock(x, y, z));
                     double distance = origin.distance(x + 0.5, y + 0.5, z + 0.5);
                     if (block != null && block != BlockType.EMPTY) {
                         boolean station = block.getBench() != null;
@@ -338,7 +340,7 @@ public final class NpcPerceptionService implements NpcPerceptionGateway {
                                                 && block.getParticles().length > 0,
                                 false));
                     }
-                    int fluidId = chunk.getFluidId(x, y, z);
+                    int fluidId = blocks.getFluidId(x, y, z);
                     if (fluidId != Fluid.EMPTY_ID) {
                         Fluid fluid = Fluid.getAssetMap().getAssetOrDefault(fluidId, Fluid.UNKNOWN);
                         samples.add(new EnvironmentSample(fluid.getId(), "fluid", "fluid", "",

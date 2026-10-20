@@ -1,0 +1,49 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.cloth_linen.legs.nm"
+  },
+  "Quality": "RPG_Gear_Legendary",
+  "MaxStack": 1,
+  "MaxDurability": 110,
+  "Model": "Items/Armors/Linen/Legs.blockymodel",
+  "Texture": "Items/Armors/Linen/Legs_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Armor_Cloth_Linen_Legs.png",
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": [
+      "Armor"
+    ],
+    "Family": [
+      "Cloth_Linen"
+    ]
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    }
+  },
+  "InteractionVars": {},
+  "Armor": {
+    "ArmorSlot": "Legs",
+    "BaseDamageResistance": 0,
+    "DamageResistance": {},
+    "DamageEnhancement": {},
+    "StatModifiers": {},
+    "CosmeticsToHide": [
+      "Shoes",
+      "Pants"
+    ]
+  },
+  "DurabilityLossOnHit": 0.5
+}

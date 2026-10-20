@@ -6,13 +6,18 @@ public final class ChillSourceRegistry {
     private record Key(UUID owner,String skill,UUID victim){}
     public record Source(SkillExecutionContext context,int stacks,double ends){}
     private final Map<Key,Source> sources=new HashMap<>();
-    public synchronized String observed(SkillExecutionContext context,UUID victim,StatusService.StatusView before,StatusService.StatusView after,double now){
-        if(context==null||victim==null||!Double.isFinite(now))throw new IllegalArgumentException("Invalid Chill provenance");
+    /** A non-Skill source can refresh/consume shared stacks without becoming a proliferation source. */
+    public synchronized void observedExternal(UUID victim,StatusService.StatusView before,StatusService.StatusView after,double now){
+        if(victim==null||!Double.isFinite(now))throw new IllegalArgumentException("Invalid external Chill provenance");
         sources.values().removeIf(source->source.ends<=now);
         if(before==null||after==null)sources.keySet().removeIf(key->key.victim.equals(victim));
+        if(after!=null)sources.replaceAll((key,value)->key.victim.equals(victim)?new Source(value.context,value.stacks,now+after.remainingSeconds()):value);
+    }
+    public synchronized String observed(SkillExecutionContext context,UUID victim,StatusService.StatusView before,StatusService.StatusView after,double now){
+        if(context==null||victim==null||!Double.isFinite(now))throw new IllegalArgumentException("Invalid Chill provenance");
+        observedExternal(victim,before,after,now);
         if(after==null)return "NO_TRANSFERABLE_CHILL"; // Threshold consumes ALL contributors; Frozen is never a source.
         // Native shared-stack refresh extends the existing stack contributors too.
-        sources.replaceAll((key,value)->key.victim.equals(victim)?new Source(value.context,value.stacks,now+after.remainingSeconds()):value);
         int added=after.stacks()-(before==null?0:before.stacks());
         if(added<=0||!context.compiledPlan().proliferation()||context.derivedRelease())return "NO_NEW_SOURCE_CONTRIBUTION";
         var key=new Key(context.request().actorId(),context.profile().skillId(),victim);var old=sources.get(key);

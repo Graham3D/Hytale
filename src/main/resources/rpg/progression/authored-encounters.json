@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "profileId": "rpg.encounters.r081.authored-test.v1",
+  "roles": [
+    {
+      "id": "Wolf_Black",
+      "nativeHealth": 103,
+      "attackReference": 27,
+      "assetSha256": "6D3F4E98DAC9D6C480B441338CB2BA0043A4CC3AF9EB7331EC8501802C0FDF42",
+      "campaignRegion": "",
+      "affinities": [],
+      "hellImmunities": []
+    },
+    {
+      "id": "Trork_Warrior",
+      "nativeHealth": 61,
+      "attackReference": 23,
+      "assetSha256": "CB1D4223BD75CDED0F2C25B5B8167076413DC04F9130D4A3353A1A40938B3E73",
+      "campaignRegion": "",
+      "affinities": [],
+      "hellImmunities": []
+    },
+    {
+      "id": "Skeleton_Archer",
+      "nativeHealth": 60,
+      "attackReference": 13,
+      "assetSha256": "9BCA4249C897BCB0615C3FE467343F74F9A6C9C0D7EBC0CAD488D9A29A56C6A5",
+      "campaignRegion": "",
+      "affinities": [],
+      "hellImmunities": []
+    },
+    {
+      "id": "Golem_Crystal_Earth",
+      "nativeHealth": 160,
+      "attackReference": 10,
+      "assetSha256": "8A93A3ACB4872289DCA45686F80D188FD8A00AC22D454E4C22B94A030569DA06",
+      "campaignRegion": "emerald_wilds",
+      "affinities": [
+        "NATURE"
+      ],
+      "hellImmunities": []
+    },
+    {
+      "id": "Golem_Crystal_Sand",
+      "nativeHealth": 193,
+      "attackReference": 47,
+      "assetSha256": "C1078A1D19F60C13F56D61D009E062523CC18FBC742AD9B6000DA1DC8BCC4792",
+      "campaignRegion": "howling_sands",
+      "affinities": [
+        "WIND"
+      ],
+      "hellImmunities": []
+    },
+    {
+      "id": "Golem_Crystal_Frost",
+      "nativeHealth": 224,
+      "attackReference": 10,
+      "assetSha256": "798F05745B3577BCC12B70DD286A3D8F4F2C76E718E38B4CD574FB81BE672C89",
+      "campaignRegion": "whisperfrost",
+      "affinities": [
+        "COLD"
+      ],
+      "hellImmunities": []
+    },
+    {
+      "id": "Golem_Crystal_Flame",
+      "nativeHealth": 283,
+      "attackReference": 10,
+      "assetSha256": "9C05BC2F9F70C242C5D862000F7E6822E758CF9BBAE45B929DCE6ED97273F7D0",
+      "campaignRegion": "devastated_lands",
+      "affinities": [
+        "FIRE"
+      ],
+      "hellImmunities": [
+        "FIRE"
+      ]
+    },
+    {
+      "id": "Golem_Crystal_Thunder",
+      "nativeHealth": 193,
+      "attackReference": 10,
+      "assetSha256": "BCEEC07BE7AC996056C047F66CB7E593D228E7D8219FD06AB6F181A99D9DD675",
+      "campaignRegion": "devastated_lands",
+      "affinities": [
+        "LIGHTNING"
+      ],
+      "hellImmunities": []
+    }
+  ]
+}

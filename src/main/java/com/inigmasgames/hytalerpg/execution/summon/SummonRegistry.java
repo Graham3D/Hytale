@@ -1,6 +1,7 @@
 package com.inigmasgames.hytalerpg.execution.summon;
 
 import com.inigmasgames.hytalerpg.execution.SkillExecutionContext;
+import com.inigmasgames.hytalerpg.gear.GearInstance;
 import java.util.*;
 
 /** Shared admission for pending AND live native actors. UUID ownership survives native Ref churn.
@@ -12,16 +13,30 @@ public final class SummonRegistry {
         private final UUID token=UUID.randomUUID();
         private final SkillExecutionContext context;
         private final double expires;
+        private final GearInstance boundItem;
+        private final IronSentinelStatProjection.Stats sentinelStats;
+        private final UUID boundOwner,boundWorld;
+        private final String rootCastId,skillInstanceId,correlationId;
         private UUID entity;
         private double nextAttack;
         private final double maximumHealth,coefficient,interval,snapshottedMagicPower,baseArrowCoefficient,passiveMagnitudeFactor;
         private final String roleId;
         private int attacks;
-        private Lease(SkillExecutionContext context,double now,CorpseLedger.Source source) {
+        private Lease(SkillExecutionContext context,double now,CorpseLedger.Source source,GearInstance ironSource) {
             this.context=context;var modifiers=context.compiledPlan().summonModifiers();
-            expires=now+Math.max(1,context.profile().summon().lifetime()*modifiers.lifetimeFactor());
             var spec=context.profile().summon();
-            if(source==null){
+            if(spec.ironSentinel()!=(ironSource!=null))throw new IllegalArgumentException("Iron Sentinel source mismatch");
+            boundItem=ironSource;
+            boundOwner=context.request().actorId();boundWorld=context.target().worldId();
+            rootCastId=context.rootCastId();skillInstanceId=context.skillInstanceId();correlationId=context.request().correlationId();
+            sentinelStats=ironSource==null?null:IronSentinelStatProjection.project(context.effectiveSkillLevel(),ironSource,spec.attackInterval());
+            expires=ironSource==null?now+Math.max(1,spec.lifetime()*modifiers.lifetimeFactor()):Double.POSITIVE_INFINITY;
+            if(ironSource!=null){
+                maximumHealth=sentinelStats.finalMaxHealth()*modifiers.healthAndPowerFactor();
+                coefficient=modifiers.healthAndPowerFactor();interval=sentinelStats.attackInterval();roleId=spec.roleId();
+                snapshottedMagicPower=0;baseArrowCoefficient=0;passiveMagnitudeFactor=modifiers.healthAndPowerFactor();
+            }
+            else if(source==null){
                 maximumHealth=context.snapshot().derivedStats().maxHealth()*spec.healthFactor()*modifiers.healthAndPowerFactor();
                 if(spec.nativeRanged()){
                     if(Math.abs(spec.coefficient()-SummonArrowDamage.BASE_COEFFICIENT)>1e-12)
@@ -44,10 +59,23 @@ public final class SummonRegistry {
             }
             nextAttack=now+interval;
         }
+        private Lease(IronSentinelBinding binding,double now){
+            context=null;boundItem=binding.boundItem();boundOwner=binding.ownerId();boundWorld=binding.worldId();
+            rootCastId="iron-sentinel-"+binding.instanceId();skillInstanceId=rootCastId;
+            correlationId=rootCastId;
+            sentinelStats=IronSentinelStatProjection.project(binding.restoredLevel(),boundItem,binding.restoredInterval());
+            double factor=binding.restoredPowerFactor();maximumHealth=sentinelStats.finalMaxHealth()*factor;
+            coefficient=factor;interval=sentinelStats.attackInterval();roleId="RPG_Iron_Sentinel";
+            expires=Double.POSITIVE_INFINITY;snapshottedMagicPower=0;baseArrowCoefficient=0;passiveMagnitudeFactor=factor;
+            nextAttack=now+interval;
+        }
         public UUID token(){return token;}
         public SkillExecutionContext context(){return context;}
-        public UUID owner(){return context.request().actorId();}
-        public UUID world(){return context.target().worldId();}
+        public UUID owner(){return boundOwner;}
+        public UUID world(){return boundWorld;}
+        public String rootCastId(){return rootCastId;}
+        public String skillInstanceId(){return skillInstanceId;}
+        public String correlationId(){return correlationId;}
         public UUID entity(){return entity;}
         public double expires(){return expires;}
         public double maximumHealth(){return maximumHealth;}
@@ -58,7 +86,10 @@ public final class SummonRegistry {
         public double baseArrowPhysicalDamage(){return nativeRanged()?SummonArrowDamage.basePhysicalDamage(snapshottedMagicPower):0;}
         public double interval(){return interval;}
         public String roleId(){return roleId;}
-        public boolean nativeRanged(){return context.profile().summon().nativeRanged();}
+        public boolean ironSentinel(){return boundItem!=null;}
+        public GearInstance boundItem(){return boundItem;}
+        public IronSentinelStatProjection.Stats sentinelStats(){return sentinelStats;}
+        public boolean nativeRanged(){return !ironSentinel()&&context.profile().summon().nativeRanged();}
     }
     public synchronized String admission(UUID owner,int count) {
         if(owner==null||count<1||count>OWNER_LIMIT)return "SUMMON_INVALID_COUNT";
@@ -67,7 +98,7 @@ public final class SummonRegistry {
         return "PASS";
     }
     public synchronized String admission(UUID owner, int count, boolean decoy){
-        if(decoy&&leases.values().stream().anyMatch(l->l.owner().equals(owner)&&l.context.profile().summon().decoy()))return "DECOY_ALREADY_ACTIVE";
+        if(decoy&&leases.values().stream().anyMatch(l->l.owner().equals(owner)&&!l.ironSentinel()&&l.context.profile().summon().decoy()))return "DECOY_ALREADY_ACTIVE";
         return admission(owner,count);
     }
     /** Replacement admission counts the outgoing same-skill batch as already released. The
@@ -75,9 +106,9 @@ public final class SummonRegistry {
      * strict and a recast can never transiently exceed them. */
     public synchronized String admissionReplacing(UUID owner,UUID world,String skillId,int count,boolean decoy){
         if(owner==null||world==null||skillId==null||skillId.isBlank()||count<1||count>OWNER_LIMIT)return "SUMMON_INVALID_COUNT";
-        long replaceable=leases.values().stream().filter(v->v.owner().equals(owner)&&v.world().equals(world)
+        long replaceable=leases.values().stream().filter(v->!v.ironSentinel()&&v.owner().equals(owner)&&v.world().equals(world)
                 &&v.context.profile().skillId().equals(skillId)).count();
-        if(decoy&&leases.values().stream().anyMatch(l->l.owner().equals(owner)&&l.context.profile().summon().decoy()
+        if(decoy&&leases.values().stream().anyMatch(l->!l.ironSentinel()&&l.owner().equals(owner)&&l.context.profile().summon().decoy()
                 &&!(l.world().equals(world)&&l.context.profile().skillId().equals(skillId))))return "DECOY_ALREADY_ACTIVE";
         if(leases.size()-replaceable+count>GLOBAL_LIMIT)return "SUMMON_GLOBAL_CAP";
         long owned=leases.values().stream().filter(v->v.owner().equals(owner)).count();
@@ -100,8 +131,41 @@ public final class SummonRegistry {
             throw new IllegalArgumentException("CORPSE_SOURCE_IDENTITY_MISMATCH");
         if(!admission.equals("PASS"))throw new IllegalStateException(admission);
         List<Lease> result=new ArrayList<>();
-        for(int i=0;i<count;i++){var lease=new Lease(context,now,corpse);leases.put(lease.token,lease);result.add(lease);}
+        for(int i=0;i<count;i++){var lease=new Lease(context,now,corpse,null);leases.put(lease.token,lease);result.add(lease);}
         return List.copyOf(result);
+    }
+    /** The permanent companion is a singleton regardless of summon-count passives. */
+    public synchronized Lease reserveIronSentinel(SkillExecutionContext context,double now,GearInstance source){
+        clock(now);Objects.requireNonNull(source);
+        if(!context.profile().summon().ironSentinel()||context.derivedRelease()||context.target()==null)
+            throw new IllegalArgumentException("Iron Sentinel cast identity invalid");
+        if(leases.values().stream().anyMatch(lease->lease.owner().equals(context.request().actorId())&&lease.ironSentinel()))
+            throw new IllegalStateException("IRON_SENTINEL_ALREADY_ACTIVE");
+        String gate=admission(context.request().actorId(),1);
+        if(!gate.equals("PASS"))throw new IllegalStateException(gate);
+        var lease=new Lease(context,now,null,source);leases.put(lease.token,lease);return lease;
+    }
+    /** Keep the outgoing actor live during the durable handoff. The incoming lease remains
+     * suspended by its native projection until the replacement receipt is acknowledged. */
+    public synchronized Replacement reserveReplacingIronSentinel(SkillExecutionContext context,double now,GearInstance source){
+        clock(now);Objects.requireNonNull(source);
+        if(!context.profile().summon().ironSentinel()||context.derivedRelease()||context.target()==null)
+            throw new IllegalArgumentException("Iron Sentinel replacement identity invalid");
+        var outgoing=leases.values().stream().filter(v->v.ironSentinel()&&v.owner().equals(context.request().actorId())).toList();
+        if(outgoing.size()!=1||!outgoing.getFirst().world().equals(context.target().worldId()))
+            throw new IllegalStateException("SENTINEL_REPLACEMENT_ACTOR_MISSING");
+        if(leases.size()>GLOBAL_LIMIT||leases.values().stream().filter(v->v.owner().equals(context.request().actorId())).count()>OWNER_LIMIT)
+            throw new IllegalStateException("SUMMON_REPLACEMENT_CAP");
+        var incoming=new Lease(context,now,null,source);leases.put(incoming.token,incoming);
+        return new Replacement(outgoing,List.of(incoming));
+    }
+    public synchronized Lease restoreIronSentinel(IronSentinelBinding binding,double now){
+        clock(now);Objects.requireNonNull(binding);
+        if(binding.state()!=IronSentinelBinding.State.RESTORING)throw new IllegalArgumentException("SENTINEL_RESTORE_NOT_CLAIMED");
+        if(leases.values().stream().anyMatch(l->l.ironSentinel()&&l.owner().equals(binding.ownerId())))
+            throw new IllegalStateException("IRON_SENTINEL_ALREADY_ACTIVE");
+        String gate=admission(binding.ownerId(),1);if(!gate.equals("PASS"))throw new IllegalStateException(gate);
+        var lease=new Lease(binding,now);leases.put(lease.token,lease);return lease;
     }
     public record Replacement(List<Lease> replaced,List<Lease> reserved) {
         public Replacement {replaced=List.copyOf(replaced);reserved=List.copyOf(reserved);}
@@ -125,6 +189,8 @@ public final class SummonRegistry {
         lease.entity=entity;return true;
     }
     public synchronized Optional<Lease> find(UUID token){return Optional.ofNullable(leases.get(token));}
+    public synchronized Optional<Lease> iron(UUID owner){return leases.values().stream()
+            .filter(l->l.ironSentinel()&&l.owner().equals(owner)).findFirst();}
     public synchronized Optional<Lease> owned(UUID owner,UUID world,UUID entity){return leases.values().stream()
             .filter(l->l.owner().equals(owner)&&l.world().equals(world)&&entity!=null&&entity.equals(l.entity())).findFirst();}
     public synchronized List<Lease> owned(UUID owner,UUID world){return leases.values().stream().filter(l->l.owner().equals(owner)&&l.world().equals(world)&&l.entity()!=null).toList();}
@@ -132,32 +198,32 @@ public final class SummonRegistry {
     public record End(Lease lease,EndReason reason,boolean deathPact){}
     public synchronized Optional<End> end(UUID token,EndReason reason){
         Objects.requireNonNull(reason);var lease=leases.remove(token);
-        return lease==null?Optional.empty():Optional.of(new End(lease,reason,lease.entity!=null&&lease.context.compiledPlan().summonModifiers().deathPact()
+        return lease==null?Optional.empty():Optional.of(new End(lease,reason,!lease.ironSentinel()&&lease.entity!=null&&lease.context.compiledPlan().summonModifiers().deathPact()
                 &&(reason==EndReason.NATURAL_EXPIRY||reason==EndReason.ENEMY_KILL)));
     }
     /** Benefit publication either succeeds before removal, or leaves the owned lease untouched.
      * Caller must not do native entity removal or a second resource charge inside this callback. */
     public synchronized Optional<Lease> consume(UUID owner,UUID world,UUID entity,double now,Runnable publishBenefit){
         clock(now);var lease=owned(owner,world,entity).orElse(null);
-        if(lease==null||now>=lease.expires||!lease.context.compiledPlan().finalTags().contains("TEMPORARY_COMBAT_SUMMON"))return Optional.empty();
+        if(lease==null||lease.ironSentinel()||now>=lease.expires||!lease.context.compiledPlan().finalTags().contains("TEMPORARY_COMBAT_SUMMON"))return Optional.empty();
         publishBenefit.run();leases.remove(lease.token);return Optional.of(lease);
     }
     /** Claims before damage dispatch. Reentrant calls and a stalled tick never catch up multiple attacks. */
     public synchronized int claimAttack(UUID token,double now) {
         clock(now);var lease=leases.get(token);
-        if(lease==null||lease.context.profile().summon().decoy()||lease.entity==null||now>=lease.expires||now+1e-9<lease.nextAttack)return 0;
+        if(lease==null||!lease.ironSentinel()&&lease.context.profile().summon().decoy()||lease.entity==null||now>=lease.expires||now+1e-9<lease.nextAttack)return 0;
         lease.nextAttack=now+lease.interval;return ++lease.attacks;
     }
     public synchronized Optional<Lease> remove(UUID token){return Optional.ofNullable(leases.remove(token));}
     public synchronized List<Lease> cancel(UUID owner) {
-        var removed=leases.values().stream().filter(v->v.owner().equals(owner)).toList();
+        var removed=leases.values().stream().filter(v->v.owner().equals(owner)&&!v.ironSentinel()).toList();
         removed.forEach(v->leases.remove(v.token));return removed;
     }
     /** Removes only one owner's same-world, same-skill batch. Replacement is never an
      * eligible Death Pact terminal cause and never publishes corpse/reward ownership. */
     public synchronized List<Lease> cancelSkill(UUID owner,UUID world,String skillId) {
         Objects.requireNonNull(owner);Objects.requireNonNull(world);Objects.requireNonNull(skillId);
-        var removed=leases.values().stream().filter(v->v.owner().equals(owner)&&v.world().equals(world)
+        var removed=leases.values().stream().filter(v->!v.ironSentinel()&&v.owner().equals(owner)&&v.world().equals(world)
                 &&v.context.profile().skillId().equals(skillId)).toList();
         removed.forEach(v->leases.remove(v.token));return removed;
     }

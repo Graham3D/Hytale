@@ -156,7 +156,26 @@ class QuickSlashLightProfileTest {
         g.ops.get("damage").getAsJsonObject("Next").getAsJsonArray("Interactions").get(0).getAsJsonObject().addProperty("EffectId","Unknown_Damage_Effect");
         assertThrows(IllegalArgumentException.class,g::resolve);
     }
-    @ParameterizedTest @ValueSource(strings={"INTERRUPTED","DEATH","PLAYER_DISCONNECT","WORLD_DRAIN","COMMITTED_EQUIPMENT_CHANGED"})
+    @Test void pre4DaggerHitInterruptTailIsFeedbackOnlyAndUnknownBranchesFailClosed(){
+        var g=new Graph("{\"Physical\":8}");
+        g.ops.get("damage").addProperty("Next","interrupt-hit");
+        g.ops.put("interrupt-hit",json("{\"Type\":\"Serial\",\"Interactions\":[\"common-hit\",{\"Type\":\"EffectCondition\",\"Entity\":\"Target\",\"EntityEffectIds\":[\"Hit_Interrupt_Eligible\"],\"Match\":\"All\",\"Next\":{\"Type\":\"EffectCondition\",\"Entity\":\"Target\",\"EntityEffectIds\":[\"Hit_Interrupt_Flinch\",\"Hit_Interrupt_Enraged\",\"Hit_Interrupt_Recovery_Pending\"],\"Match\":\"None\",\"Next\":{\"Type\":\"Serial\",\"Interactions\":[\"cancel\",\"stun\",{\"Type\":\"ApplyEffect\",\"Entity\":\"Target\",\"EffectId\":\"Hit_Interrupt_Flinch\"},\"reaction\"]}}}]}"));
+        g.ops.put("common-hit",json("{\"Type\":\"Serial\",\"Interactions\":[{\"Type\":\"ApplyEffect\",\"Entity\":\"Target\",\"EffectId\":\"Red_Flash\"}]}"));
+        g.ops.put("cancel",json("{\"Type\":\"Interrupt\",\"Entity\":\"Target\",\"RequiredTag\":\"Attack\"}"));
+        g.ops.put("stun",json("{\"Type\":\"ApplyEffect\",\"Entity\":\"Target\",\"EffectId\":\"Hit_Interrupt_Stunned\"}"));
+        g.ops.put("reaction",json("{\"Type\":\"EffectCondition\",\"Entity\":\"Target\",\"EntityEffectIds\":[\"Hit_Interrupt_Recent_Reaction_A\"],\"Match\":\"None\",\"Next\":{\"Type\":\"ApplyEffect\",\"Entity\":\"Target\",\"EffectId\":\"Hit_Interrupt_Recent_Reaction_A\"},\"Failed\":{\"Type\":\"ApplyEffect\",\"Entity\":\"Target\",\"EffectId\":\"Hit_Interrupt_Recent_Reaction_B\"}}"));
+        var profile=g.resolve();assertEquals(8,profile.components().getFirst().minimum());assertEquals(.4,profile.normalDuration(),1e-9);
+        g.ops.get("cancel").addProperty("RequiredTag","Cast");assertThrows(IllegalArgumentException.class,g::resolve);
+        g.ops.get("cancel").addProperty("RequiredTag","Attack");
+        g.ops.get("reaction").getAsJsonObject("Failed").addProperty("EffectId","Unknown_Damage_Effect");assertThrows(IllegalArgumentException.class,g::resolve);
+    }
+    @Test void pendingDifficultyTransferRejectsNewCastsBeforeSpendingOrTargetCapture(){
+        var h=new Harness();h.service.configureTransferGuard(id->id.equals(h.actor));
+        assertEquals(SkillExecutionResult.Status.REJECTED,h.cast().status());assertEquals(0,h.captures);assertEquals(0,h.cooldownSaves);
+        assertEquals(100,h.current(ResourceType.STAMINA));assertEquals(100,h.current(ResourceType.MANA));
+        h.service.configureTransferGuard(id->false);h.cast();assertEquals(1,h.captures);assertEquals(95,h.current(ResourceType.STAMINA));
+    }
+    @ParameterizedTest @ValueSource(strings={"INTERRUPTED","DEATH","PLAYER_DISCONNECT","WORLD_DRAIN","DIFFICULTY_TRANSFER","COMMITTED_EQUIPMENT_CHANGED"})
     void cancelledRootAndScheduleCannotProduceAStaleSecondHit(String reason){
         var h=new Harness();h.cast();var c=h.last();assertTrue(h.service.ownsActiveRoot(c));
         var s=new StrikeRepeatSchedule(2,.2,0,.4,.06);assertEquals(0,s.claimDue(60_000_000).orElseThrow());

@@ -11,13 +11,116 @@ import java.util.function.LongSupplier;
 public final class StatusService {
     private final CombatBalanceProfile profile;
     private final LongSupplier nanoTime;
+    private final com.inigmasgames.hytalerpg.combat.damage.CriticalRoller chance;
+    private java.util.function.ToDoubleFunction<UUID> fortuneEscape = ignored -> 0;
+    private java.util.function.ToDoubleFunction<UUID> resistance = ignored -> 0;
+    private java.util.function.BiPredicate<UUID, String> immunity = (target, status) -> false;
+    private java.util.function.BiPredicate<UUID, UUID> externalMutation = (source, target) -> true;
+    private java.util.function.Predicate<UUID> slowImmunity = target -> false;
+    private java.util.function.BiPredicate<UUID, String> encounterImmunity = (target, status) -> false;
+    private java.util.function.BiPredicate<UUID, UUID> encounterMutation = (source, target) -> true;
+    private java.util.function.Predicate<UUID> encounterSlowImmunity = target -> false;
     private final Map<UUID, EnumMap<RpgStatusType, State>> states = new HashMap<>();
     private final Map<UUID, Long> frozenImmunityEnds = new HashMap<>();
     private final Map<UUID, Map<String, SlowState>> slows = new HashMap<>();
     private final Map<UUID, java.util.ArrayDeque<Long>> controls = new HashMap<>();
     private record ChillBonusKey(UUID owner,String root,UUID target){}
     private final Map<ChillBonusKey,Long> chillBonusEnds=new HashMap<>();
-    public StatusService(CombatBalanceProfile profile, LongSupplier nanoTime) { this.profile = profile; this.nanoTime = nanoTime; }
+    public StatusService(CombatBalanceProfile profile, LongSupplier nanoTime) {
+        this(profile, nanoTime, new com.inigmasgames.hytalerpg.combat.damage.CriticalRoller(Math::random));
+    }
+    public StatusService(CombatBalanceProfile profile, LongSupplier nanoTime,
+                         com.inigmasgames.hytalerpg.combat.damage.CriticalRoller chance) {
+        this.profile = profile; this.nanoTime = nanoTime; this.chance = java.util.Objects.requireNonNull(chance);
+    }
+    public synchronized void configureFortuneEscape(java.util.function.ToDoubleFunction<UUID> provider) {
+        fortuneEscape = java.util.Objects.requireNonNull(provider);
+    }
+    public synchronized void configureSlowImmunity(java.util.function.Predicate<UUID> provider){slowImmunity=java.util.Objects.requireNonNull(provider);}
+    /** Pure lifecycle gate for an already accepted package; never repeats status or Fortune rolls. */
+    public synchronized boolean allowsExternalMutation(UUID source,UUID target){return externalMutation.test(source,target)&&encounterMutation.test(source,target);}
+    /** Encounter providers compose with ordinary resistance and native/gear immunity; they never replace them. */
+    public synchronized void configureEncounterAdmission(java.util.function.BiPredicate<UUID,String> immunity,
+            java.util.function.BiPredicate<UUID,UUID> mutation,java.util.function.Predicate<UUID> slowImmunity){
+        encounterImmunity=java.util.Objects.requireNonNull(immunity);
+        encounterMutation=java.util.Objects.requireNonNull(mutation);
+        encounterSlowImmunity=java.util.Objects.requireNonNull(slowImmunity);
+    }
+    public synchronized void configureAdmission(java.util.function.ToDoubleFunction<UUID> resistance,
+            java.util.function.BiPredicate<UUID, String> immunity,
+            java.util.function.BiPredicate<UUID, UUID> externalMutation) {
+        this.resistance = java.util.Objects.requireNonNull(resistance);
+        this.immunity = java.util.Objects.requireNonNull(immunity);
+        this.externalMutation = java.util.Objects.requireNonNull(externalMutation);
+    }
+    public enum Admission { ACCEPTED, PROTECTED, IMMUNE, NO_PROC, NO_STATUS_MUTATION, PROC_LOCK, STATUS_CHANCE_FAILED, FORTUNE_STATUS_AVOIDED }
+
+    /** Preflight is read-only. Call immediately before publication, on the owning world thread.
+     * Periodic projection and threshold conversion use the already-admitted package and never re-enter. */
+    public synchronized Admission admit(StatusApplication application, ControlProfile control, boolean wouldMutate) {
+        return admit(application,control,wouldMutate,chance);
+    }
+    /** ME supplies its existing purpose-separated encounter RNG; ordinary callers retain the kernel stream. */
+    public synchronized Admission admit(StatusApplication application, ControlProfile control, boolean wouldMutate,
+                                       com.inigmasgames.hytalerpg.combat.damage.CriticalRoller opportunityRandom) {
+        return admit(application,control,wouldMutate,opportunityRandom,()->true);
+    }
+    /** Attempt-time locks belong after eligibility and before the single chance/Fortune gateway. */
+    public synchronized Admission admit(StatusApplication application, ControlProfile control, boolean wouldMutate,
+            com.inigmasgames.hytalerpg.combat.damage.CriticalRoller opportunityRandom,java.util.function.BooleanSupplier claimOpportunity) {
+        java.util.Objects.requireNonNull(opportunityRandom);java.util.Objects.requireNonNull(claimOpportunity);
+        UUID target = application.target(); String status = application.status();
+        if (control.protectedEntity() || !allowsExternalMutation(application.source(), target)) return Admission.PROTECTED;
+        if (immunity.test(target, status) || encounterImmunity.test(target,status) || status.equals("FROZEN") && frozenImmuneWithoutMutation(target)) return Admission.IMMUNE;
+        if (control.blocksHardControl() && (status.equals("STAGGER") || status.equals("FEAR")
+                || status.equals("ROOT") && !control.boss() || status.equals("TAUNT"))) return Admission.IMMUNE;
+        if (application.noProc()) return Admission.NO_PROC;
+        if (!wouldMutate || status.equals("CHILL") && activeWithoutExpiryMutation(target, RpgStatusType.FROZEN))
+            return Admission.NO_STATUS_MUTATION;
+        double rawResistance = resistance.applyAsDouble(target);
+        if (!Double.isFinite(rawResistance)) throw new IllegalStateException("Invalid status resistance provider");
+        double effective = Math.clamp(rawResistance - application.sourcePenetration(), 0, .75);
+        if(application.combinedSourceChance()>0&&!claimOpportunity.getAsBoolean())return Admission.PROC_LOCK;
+        if (!opportunityRandom.chance(application.combinedSourceChance() * (1 - effective))) return Admission.STATUS_CHANCE_FAILED;
+        if (application.fortuneEligible() && opportunityRandom.chance(fortuneEscape.applyAsDouble(target)))
+            return Admission.FORTUNE_STATUS_AVOIDED;
+        return Admission.ACCEPTED;
+    }
+    private boolean activeWithoutExpiryMutation(UUID target, RpgStatusType status) {
+        var actor = states.get(target); var state = actor == null ? null : actor.get(status);
+        return state != null && state.endsAtNanos > nanoTime.getAsLong();
+    }
+    private boolean frozenImmuneWithoutMutation(UUID target) {
+        long now = nanoTime.getAsLong();
+        if (frozenImmunityEnds.getOrDefault(target, 0L) > now) return true;
+        var actor = states.get(target); var frozen = actor == null ? null : actor.get(RpgStatusType.FROZEN);
+        return frozen != null && frozen.endsAtNanos <= now
+                && frozen.endsAtNanos + Math.round(profile.frozenImmunitySeconds * 1e9) > now;
+    }
+    public synchronized Result applyElectrifiedHostile(UUID source, UUID target, ControlProfile control, int stacks, double seconds) {
+        if (stacks < 1 || stacks > 5) throw new IllegalArgumentException("Invalid Electrified payload");
+        var admitted = admit(StatusApplication.hostile(source, target, RpgStatusType.ELECTRIFIED), control, true);
+        if (admitted != Admission.ACCEPTED) return new Result(Outcome.REJECTED, RpgStatusType.ELECTRIFIED, 0, 0, admitted.name());
+        Result result = null;
+        for (int i = 0; i < stacks; i++) result = applyElectrified(target, seconds);
+        return result;
+    }
+    public synchronized Result applyHostile(UUID source, UUID target, RpgStatusType type, ControlProfile control, double seconds) {
+        return apply(StatusApplication.hostile(source, target, type), type, control, seconds);
+    }
+    public synchronized Result apply(StatusApplication application, RpgStatusType type, ControlProfile control, double seconds) {
+        if (!application.status().equals(type.name())) throw new IllegalArgumentException("Mismatched status application");
+        var admitted = admit(application, control, true);
+        return admitted == Admission.ACCEPTED ? apply(application.target(), type, control, seconds)
+                : new Result(Outcome.REJECTED, type, 0, 0, admitted.name());
+    }
+    public synchronized ChillApplication applyChillHostile(UUID source, String root, UUID target, ControlProfile control,
+                                                          int stacks, boolean deepFreeze, double seconds) {
+        var admitted = admit(StatusApplication.hostile(source, target, RpgStatusType.CHILL), control, true);
+        if (admitted != Admission.ACCEPTED) return new ChillApplication(java.util.List.of(
+                new Result(Outcome.REJECTED, RpgStatusType.CHILL, 0, 0, admitted.name())), admitted.name());
+        return applyChill(source, root, target, control, stacks, deepFreeze, seconds);
+    }
 
     public record ChillApplication(java.util.List<Result> results,String bonusGate){
         public ChillApplication {results=java.util.List.copyOf(results);}
@@ -147,6 +250,9 @@ public final class StatusService {
         if (actor.isEmpty()) states.remove(target);
         return true;
     }
+    public synchronized boolean removeExternal(UUID source,UUID target,RpgStatusType type){
+        return allowsExternalMutation(source,target)&&remove(target,type);
+    }
     /** Read-model projection of the source-owned periodic runtime, not a second DoT timer or damage writer. */
     public synchronized void projectPeriodic(UUID target, RpgStatusType type, int stacks, double seconds) {
         if (type != RpgStatusType.BURN && type != RpgStatusType.POISON && type != RpgStatusType.BLEED)
@@ -191,7 +297,8 @@ public final class StatusService {
             }
             if (sources.isEmpty()) slows.remove(target);
         }
-        return new SlowView(Math.min(.6, strength), seconds);
+        // Expiry still runs while immune; immunity affects only the resulting movement component.
+        return slowImmunity.test(target)||encounterSlowImmunity.test(target)?new SlowView(0,0):new SlowView(Math.min(.6, strength), seconds);
     }
     private record SlowState(double magnitude, long ends) { }
     public record SlowView(double magnitude, double remainingSeconds) { }

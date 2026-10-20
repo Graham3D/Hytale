@@ -44,6 +44,7 @@ class Stage12NativeBiomeAssetTest {
             var registry=EnemyRewardRegistry.load();
             for(var biome:registry.biomes())assertEquals(biome.assetSha256(),hash(Files.readAllBytes(zip.getPath("/"+biome.assetPath()))));
             for(var role:registry.roles())assertEquals(role.assetSha256(),hash(Files.readAllBytes(zip.getPath("/"+role.assetPath()))));
+            for(var alias:registry.aliases())assertEquals(alias.assetSha256(),hash(Files.readAllBytes(zip.getPath("/"+alias.assetPath()))));
         }
     }
     private static String hash(byte[] bytes)throws Exception{return HexFormat.of().withUpperCase().formatHex(MessageDigest.getInstance("SHA-256").digest(bytes));}
@@ -65,5 +66,11 @@ class Stage12NativeBiomeAssetTest {
         assertFalse(com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.nativeWorldSpawnEvidence(com.hypixel.hytale.component.AddReason.LOAD,0,0));
         assertFalse(com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.nativeWorldSpawnEvidence(com.hypixel.hytale.component.AddReason.SPAWN,Integer.MIN_VALUE,0));
         assertFalse(com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.nativeWorldSpawnEvidence(com.hypixel.hytale.component.AddReason.SPAWN,0,Integer.MIN_VALUE));
+    }
+    @Test void missingOptionalNativeHealthSnapshotSkipsOnlyThatContribution(){
+        var player=UUID.randomUUID();
+        assertFalse(com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.creditableNativeHealth(player,Double.NaN,20,100,10));
+        assertFalse(com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.creditableNativeHealth(null,30,20,100,10));
+        assertTrue(com.inigmasgames.hytalerpg.execution.hytale.HytaleEncounterRewards.creditableNativeHealth(player,30,20,100,10));
     }
 }

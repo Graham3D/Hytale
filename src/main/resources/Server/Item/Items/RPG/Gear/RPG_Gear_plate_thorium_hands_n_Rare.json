@@ -1,0 +1,46 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.plate_thorium.hands.n"
+  },
+  "Quality": "RPG_Gear_Rare",
+  "MaxStack": 1,
+  "MaxDurability": 100,
+  "Model": "Items/Armors/Thorium/Hands.blockymodel",
+  "Texture": "Items/Armors/Thorium/Hands_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Armor_Thorium_Hands.png",
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": [
+      "Armor"
+    ],
+    "Family": [
+      "Thorium"
+    ]
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    }
+  },
+  "InteractionVars": {},
+  "Armor": {
+    "ArmorSlot": "Hands",
+    "BaseDamageResistance": 0,
+    "DamageResistance": {},
+    "DamageEnhancement": {},
+    "StatModifiers": {},
+    "CosmeticsToHide": []
+  },
+  "DurabilityLossOnHit": 0.5
+}

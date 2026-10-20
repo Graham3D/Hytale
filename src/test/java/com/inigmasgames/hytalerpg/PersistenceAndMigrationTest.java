@@ -7,12 +7,14 @@ import com.inigmasgames.hytalerpg.domain.PassiveSlot;
 import com.inigmasgames.hytalerpg.domain.SkillId;
 import com.inigmasgames.hytalerpg.domain.SkillSlot;
 import com.inigmasgames.hytalerpg.progress.FileRpgPlayerStateRepository;
+import com.inigmasgames.hytalerpg.progress.GoldBalance;
 import com.inigmasgames.hytalerpg.progress.RpgPlayerState;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,6 +22,23 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PersistenceAndMigrationTest {
     @TempDir Path temp;
+
+    @Test void r199SchemaTwelveGoldSurvivesLoadCopyAndSave() throws Exception {
+        var repository = new FileRpgPlayerStateRepository(temp.resolve("players"));
+        UUID player = UUID.randomUUID();
+        var state = RpgPlayerState.create(player);
+        state.goldBalance = new GoldBalance(38, new BigDecimal("0.25"));
+        repository.save(state);
+        var loaded = repository.load(player).state();
+        assertEquals(new GoldBalance(38, new BigDecimal("0.25")), loaded.goldBalance);
+        repository.save(loaded.copy());
+        assertEquals(loaded.goldBalance, repository.load(player).state().goldBalance);
+        var raw = com.google.gson.JsonParser.parseString(Files.readString(repository.path(player)))
+                .getAsJsonObject().getAsJsonObject("state");
+        raw.remove("goldBalance");
+        Files.writeString(repository.path(player), raw.toString());
+        assertThrows(IllegalStateException.class, () -> repository.load(player));
+    }
 
     @Test void fileRoundtripPreservesSlotsJointsEdgesAndRevision() {
         FileRpgPlayerStateRepository repository = new FileRpgPlayerStateRepository(temp.resolve("players"));

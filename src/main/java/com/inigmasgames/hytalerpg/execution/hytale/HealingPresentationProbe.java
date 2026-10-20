@@ -251,8 +251,9 @@ public final class HealingPresentationProbe implements AutoCloseable {
         var world=store.getExternalData().getWorld();
         if(!(world.getWorldConfig().getWorldGenProvider() instanceof com.hypixel.hytale.server.core.universe.world.worldgen.provider.FlatWorldGenProvider))
             throw new IllegalStateException("FRESH_FLAT_PROBE_WORLD_REQUIRED");
-        var chunk=world.getChunkIfLoaded(0L);
-        if(chunk==null)throw new IllegalStateException("FIXTURE_CHUNK_NOT_LOADED_RETURN_TO_SPAWN");
+        var loaded=world.getChunkStore().getChunkReference(0L);
+        if(loaded==null)throw new IllegalStateException("FIXTURE_CHUNK_NOT_LOADED_RETURN_TO_SPAWN");
+        var chunk=new com.hypixel.hytale.server.core.universe.world.accessor.SectionReader(world.getChunkStore());
         int ground=com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType.getAssetMap().getIndex("Soil_Grass");
         for(int x=6;x<=10;x++)for(int z=0;z<=4;z++){
             if(chunk.getBlock(x,63,z)!=ground)throw new IllegalStateException("FIXTURE_FLOOR_CHANGED");

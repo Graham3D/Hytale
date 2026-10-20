@@ -6,6 +6,8 @@ import java.util.List;
 /** Versioned storage boundary. The v1 implementation remains an explicit rollback compatibility path. */
 interface EncounterLog extends AutoCloseable {
     EncounterJournal.Entry entry(EncounterJournal.Key key);
+    /** Forget a context-only cache entry before a staged ME birth restores its native baseline. */
+    void discardUnmodifiedBaseline(EncounterJournal.Key key);
     void reserve(int records) throws IOException;
     void release();
     void append(EncounterContributions.Snapshot value) throws IOException;

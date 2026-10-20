@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "revision": "enemy-visual-variants-v1.0",
+  "selectionOrder": [
+    "SUPER_UNIQUE_OVERRIDE",
+    "EXACT_ROLE_RARITY_VARIANT",
+    "CERTIFIED_RUNTIME_TINT",
+    "NATIVE_TEXTURE"
+  ],
+  "runtimeTint": {
+    "enabled": false,
+    "requiresCertifiedInstalledAdapter": true
+  },
+  "variants": []
+}

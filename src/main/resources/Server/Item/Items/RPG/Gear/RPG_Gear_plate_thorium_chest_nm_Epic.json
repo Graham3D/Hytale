@@ -1,0 +1,48 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.plate_thorium.chest.nm"
+  },
+  "Quality": "RPG_Gear_Epic",
+  "MaxStack": 1,
+  "MaxDurability": 140,
+  "Model": "Items/Armors/Thorium/Chest.blockymodel",
+  "Texture": "Items/Armors/Thorium/Chest_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Armor_Thorium_Chest.png",
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": [
+      "Armor"
+    ],
+    "Family": [
+      "Thorium"
+    ]
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    }
+  },
+  "InteractionVars": {},
+  "Armor": {
+    "ArmorSlot": "Chest",
+    "BaseDamageResistance": 0,
+    "DamageResistance": {},
+    "DamageEnhancement": {},
+    "StatModifiers": {},
+    "CosmeticsToHide": [
+      "Overtop"
+    ]
+  },
+  "DurabilityLossOnHit": 0.5
+}

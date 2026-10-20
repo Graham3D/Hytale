@@ -1,0 +1,1125 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {
+      "family": "Chest",
+      "itemId": "Armor_Leather_Light_Chest",
+      "proxy": false,
+      "width": 2,
+      "height": 3,
+      "file": "Armor_Leather_Light_Chest.png",
+      "nativePose": {
+        "Rotation": [
+          22.5,
+          45,
+          22.5
+        ],
+        "Scale": 0.43,
+        "Translation": [
+          0,
+          -8.7
+        ]
+      },
+      "nativePoseSource": "Server/Item/Items/Armor/Leather_Light/Armor_Leather_Light_Chest.json",
+      "pose": {
+        "Rotation": [
+          10,
+          -30,
+          -5
+        ],
+        "Scale": 0.45,
+        "Translation": [
+          0,
+          0
+        ]
+      },
+      "posePolicy": "CHEST_TEMPLATE",
+      "fit": {
+        "sourceBounds": [
+          62,
+          23,
+          474,
+          482
+        ],
+        "scaledSize": [
+          109,
+          122
+        ],
+        "baselineFitFraction": 0.9,
+        "scaleRatioToNative": 1.0465116279069768,
+        "positionPixels": [
+          9,
+          35
+        ],
+        "clampedToFootprint": false
+      },
+      "model": "Common/Items/Armors/Leather_Light/Chest.blockymodel",
+      "texture": "Common/Items/Armors/Leather_Light/Chest_Texture.png",
+      "stockIcon": "Common/Icons/ItemsGenerated/Armor_Leather_Light_Chest.png"
+    },
+    {
+      "family": "Hands",
+      "itemId": "Armor_Leather_Light_Hands",
+      "proxy": false,
+      "width": 2,
+      "height": 2,
+      "file": "Armor_Leather_Light_Hands.png",
+      "nativePose": {
+        "Rotation": [
+          29.815,
+          45.565,
+          25.315
+        ],
+        "Scale": 0.645,
+        "Translation": [
+          0.9,
+          -0.9
+        ]
+      },
+      "nativePoseSource": "Server/Item/Items/Armor/Leather_Light/Armor_Leather_Light_Hands.json",
+      "pose": {
+        "Rotation": [
+          29.815,
+          45.565,
+          25.315
+        ],
+        "Scale": 0.645,
+        "Translation": [
+          0,
+          0
+        ]
+      },
+      "posePolicy": "NATIVE_ARMOR_ZERO_OFFSETS",
+      "fit": {
+        "sourceBounds": [
+          21,
+          44,
+          480,
+          460
+        ],
+        "scaledSize": [
+          104,
+          95
+        ],
+        "baselineFitFraction": 0.9,
+        "scaleRatioToNative": 1.0,
+        "positionPixels": [
+          12,
+          16
+        ],
+        "clampedToFootprint": false
+      },
+      "model": "Common/Items/Armors/Leather_Light/Hands.blockymodel",
+      "texture": "Common/Items/Armors/Leather_Light/Hands_Texture.png",
+      "stockIcon": "Common/Icons/ItemsGenerated/Armor_Leather_Light_Hands.png"
+    },
+    {
+      "family": "Head",
+      "itemId": "Armor_Leather_Light_Head",
+      "proxy": false,
+      "width": 2,
+      "height": 2,
+      "file": "Armor_Leather_Light_Head.png",
+      "nativePose": {
+        "Rotation": [
+          22.5,
+          47.815,
+          22.5
+        ],
+        "Scale": 0.5,
+        "Translation": [
+          -1.5,
+          -12.3
+        ]
+      },
+      "nativePoseSource": "Server/Item/Items/Armor/Leather_Light/Armor_Leather_Light_Head.json",
+      "pose": {
+        "Rotation": [
+          22.5,
+          47.815,
+          22.5
+        ],
+        "Scale": 0.5,
+        "Translation": [
+          0,
+          0
+        ]
+      },
+      "posePolicy": "NATIVE_ARMOR_ZERO_OFFSETS",
+      "fit": {
+        "sourceBounds": [
+          60,
+          33,
+          432,
+          492
+        ],
+        "scaledSize": [
+          85,
+          104
+        ],
+        "baselineFitFraction": 0.9,
+        "scaleRatioToNative": 1.0,
+        "positionPixels": [
+          21,
+          12
+        ],
+        "clampedToFootprint": false
+      },
+      "model": "Common/Items/Armors/Leather_Light/Head.blockymodel",
+      "texture": "Common/Items/Armors/Leather_Light/Head_Texture.png",
+      "stockIcon": "Common/Icons/ItemsGenerated/Armor_Leather_Light_Head.png"
+    },
+    {
+      "family": "Legs",
+      "itemId": "Armor_Leather_Light_Legs",
+      "proxy": false,
+      "width": 2,
+      "height": 3,
+      "file": "Armor_Leather_Light_Legs.png",
+      "nativePose": {
+        "Rotation": [
+          22.5,
+          45,
+          22.5
+        ],
+        "Scale": 0.445,
+        "Translation": [
+          0.6,
+          -22.8
+        ]
+      },
+      "nativePoseSource": "Server/Item/Items/Armor/Leather_Light/Armor_Leather_Light_Legs.json",
+      "pose": {
+        "Rotation": [
+          22.5,
+          45,
+          22.5
+        ],
+        "Scale": 0.445,
+        "Translation": [
+          0,
+          0
+        ]
+      },
+      "posePolicy": "NATIVE_ARMOR_ZERO_OFFSETS",
+      "fit": {
+        "sourceBounds": [
+          133,
+          45,
+          388,
+          504
+        ],
+        "scaledSize": [
+          90,
+          162
+        ],
+        "baselineFitFraction": 0.9,
+        "scaleRatioToNative": 1.0,
+        "positionPixels": [
+          19,
+          15
+        ],
+        "clampedToFootprint": false
+      },
+      "model": "Common/Items/Armors/Leather_Light/Legs.blockymodel",
+      "texture": "Common/Items/Armors/Leather_Light/Legs_Texture.png",
+      "stockIcon": "Common/Icons/ItemsGenerated/Armor_Leather_Light_Legs.png"
+    },
+    {
+      "family": "Sword",
+      "itemId": "Weapon_Sword_Iron",
+      "proxy": false,
+      "width": 1,
+      "height": 3,
+      "file": "Weapon_Sword_Iron.png",
+      "nativePose": {
+        "Scale": 0.35,
+        "Translation": [
+          -22,
+          -22
+        ],
+        "Rotation": [
+          45,
+          90,
+          0
+        ]
+      },
+      "nativePoseSource": "Server/Item/Items/Weapon/Sword/Template_Weapon_Sword.json",
+      "pose": {
+        "Rotation": [
+          0,
+          90,
+          0
+        ],
+        "Scale": 0.35,
+        "Translation": [
+          0,
+          0
+        ]
+      },
+      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "fit": {
+        "sourceBounds": [
+          173,
+          76,
+          339,
+          512
+        ],
+        "scaledSize": [
+          47,
+          123
+        ],
+        "baselineFitFraction": 0.9,
+        "scaleRatioToNative": 1.0,
+        "positionPixels": [
+          8,
+          34
+        ],
+        "clampedToFootprint": false
+      },
+      "model": "Common/Items/Weapons/Sword/Iron.blockymodel",
+      "texture": "Common/Items/Weapons/Sword/Iron_Texture.png",
+      "stockIcon": "Common/Icons/ItemsGenerated/Weapon_Sword_Iron.png"
+    },
+    {
+      "family": "Daggers",
+      "itemId": "Weapon_Daggers_Iron",
+      "proxy": false,
+      "width": 1,
+      "height": 2,
+      "file": "Weapon_Daggers_Iron.png",
+      "nativePose": {
+        "Rotation": [
+          45,
+          90,
+          0
+        ],
+        "Scale": 0.4,
+        "Translation": [
+          -19.2,
+          -21
+        ]
+      },
+      "nativePoseSource": "Server/Item/Items/Weapon/Daggers/Template_Weapon_Daggers.json",
+      "pose": {
+        "Rotation": [
+          0,
+          90,
+          0
+        ],
+        "Scale": 0.4,
+        "Translation": [
+          0,
+          0
+        ]
+      },
+      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "fit": {
+        "sourceBounds": [
+          146,
+          14,
+          366,
+          474
+        ],
+        "scaledSize": [
+          47,
+          98
+        ],
+        "baselineFitFraction": 0.9,
+        "scaleRatioToNative": 1.0,
+        "positionPixels": [
+          8,
+          15
+        ],
+        "clampedToFootprint": false
+      },
+      "model": "Common/Items/Weapons/Dagger/Iron.blockymodel",
+      "texture": "Common/Items/Weapons/Dagger/Iron_Texture.png",
+      "stockIcon": "Common/Icons/ItemsGenerated/Weapon_Daggers_Iron.png"
+    },
+    {
+      "family": "Short Bow",
+      "itemId": "Weapon_Shortbow_Iron",
+      "proxy": false,
+      "width": 2,
+      "height": 4,
+      "file": "Weapon_Shortbow_Iron.png",
+      "nativePose": {
+        "Scale": 0.4,
+        "Translation": [
+          -25,
+          -39
+        ],
+        "Rotation": [
+          45,
+          90,
+          0
+        ]
+      },
+      "nativePoseSource": "Server/Item/Items/Weapon/Shortbow/Template_Weapon_Shortbow.json",
+      "pose": {
+        "Rotation": [
+          0,
+          90,
+          0
+        ],
+        "Scale": 0.4,
+        "Translation": [
+          0,
+          0
+        ]
+      },
+      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "fit": {
+        "sourceBounds": [
+          190,
+          35,
+          297,
+          485
+        ],
+        "scaledSize": [
+          52,
+          220
+        ],
+        "baselineFitFraction": 0.9,
+        "scaleRatioToNative": 1.0,
+        "positionPixels": [
+          38,
+          18
+        ],
+        "clampedToFootprint": false
+      },
+      "model": "Common/Items/Weapons/Bow/Iron.blockymodel",
+      "texture": "Common/Items/Weapons/Bow/Iron_Texture.png",
+      "stockIcon": "Common/Icons/ItemsGenerated/Weapon_Bow_Iron.png"
+    },
+    {
+      "family": "Long Bow proxy",
+      "itemId": "Weapon_Shortbow_Copper",
+      "proxy": true,
+      "width": 2,
+      "height": 4,
+      "file": "Weapon_Shortbow_Copper.png",
+      "nativePose": {
+        "Scale": 0.4,
+        "Translation": [
+          -25,
+          -39
+        ],
+        "Rotation": [
+          45,
+          90,
+          0
+        ]
+      },
+      "nativePoseSource": "Server/Item/Items/Weapon/Shortbow/Template_Weapon_Shortbow.json",
+      "pose": {
+        "Rotation": [
+          0,
+          90,
+          0
+        ],
+        "Scale": 0.4,
+        "Translation": [
+          0,
+          0
+        ]
+      },
+      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "fit": {
+        "sourceBounds": [
+          202,
+          27,
+          336,
+          485
+        ],
+        "scaledSize": [
+          64,
+          220
+        ],
+        "baselineFitFraction": 0.9,
+        "scaleRatioToNative": 1.0,
+        "positionPixels": [
+          32,
+          18
+        ],
+        "clampedToFootprint": false
+      },
+      "model": "Common/Items/Weapons/Bow/Copper.blockymodel",
+      "texture": "Common/Items/Weapons/Bow/Copper_Texture.png",
+      "stockIcon": "Common/Icons/ItemsGenerated/Weapon_Bow_Copper.png"
+    },
+    {
+      "family": "Crossbow",
+      "itemId": "Weapon_Crossbow_Iron",
+      "proxy": false,
+      "width": 2,
+      "height": 4,
+      "file": "Weapon_Crossbow_Iron.png",
+      "nativePose": {
+        "Scale": 0.5,
+        "Translation": [
+          -4.11,
+          -15.51
+        ],
+        "Rotation": [
+          330,
+          90,
+          45
+        ]
+      },
+      "nativePoseSource": "Server/Item/Items/Weapon/Crossbow/Template_Weapon_Crossbow.json",
+      "pose": {
+        "Rotation": [
+          0,
+          90,
+          0
+        ],
+        "Scale": 0.5,
+        "Translation": [
+          0,
+          0
+        ]
+      },
+      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "fit": {
+        "sourceBounds": [
+          126,
+          164,
+          512,
+          309
+        ],
+        "scaledSize": [
+          104,
+          39
+        ],
+        "baselineFitFraction": 0.9,
+        "scaleRatioToNative": 1.0,
+        "positionPixels": [
+          12,
+          108
+        ],
+        "clampedToFootprint": false
+      },
+      "model": "Common/Items/Weapons/Crossbow/Iron.blockymodel",
+      "texture": "Common/Items/Weapons/Crossbow/Iron_Texture.png",
+      "stockIcon": "Common/Icons/ItemsGenerated/Weapon_Crossbow_Iron.png"
+    },
+    {
+      "family": "Battleaxe",
+      "itemId": "Weapon_Battleaxe_Iron",
+      "proxy": false,
+      "width": 2,
+      "height": 4,
+      "file": "Weapon_Battleaxe_Iron.png",
+      "nativePose": {
+        "Scale": 0.3,
+        "Translation": [
+          -19.2,
+          -19.8
+        ],
+        "Rotation": [
+          45,
+          90,
+          0
+        ]
+      },
+      "nativePoseSource": "Server/Item/Items/Weapon/Battleaxe/Template_Weapon_Battleaxe.json",
+      "pose": {
+        "Rotation": [
+          0,
+          90,
+          0
+        ],
+        "Scale": 0.3,
+        "Translation": [
+          0,
+          0
+        ]
+      },
+      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "fit": {
+        "sourceBounds": [
+          212,
+          15,
+          299,
+          475
+        ],
+        "scaledSize": [
+          42,
+          220
+        ],
+        "baselineFitFraction": 0.9,
+        "scaleRatioToNative": 1.0,
+        "positionPixels": [
+          43,
+          18
+        ],
+        "clampedToFootprint": false
+      },
+      "model": "Common/Items/Weapons/Battleaxe/Iron.blockymodel",
+      "texture": "Common/Items/Weapons/Battleaxe/Iron_Texture.png",
+      "stockIcon": "Common/Icons/ItemsGenerated/Weapon_Battleaxe_Iron.png"
+    },
+    {
+      "family": "Mace",
+      "itemId": "Weapon_Mace_Iron",
+      "proxy": false,
+      "width": 1,
+      "height": 3,
+      "file": "Weapon_Mace_Iron.png",
+      "nativePose": {
+        "Scale": 0.32,
+        "Translation": [
+          -8.4,
+          -11.4
+        ],
+        "Rotation": [
+          45,
+          90,
+          0
+        ]
+      },
+      "nativePoseSource": "Server/Item/Items/Weapon/Mace/Template_Weapon_Mace.json",
+      "pose": {
+        "Rotation": [
+          0,
+          90,
+          0
+        ],
+        "Scale": 0.32,
+        "Translation": [
+          0,
+          0
+        ]
+      },
+      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "fit": {
+        "sourceBounds": [
+          202,
+          0,
+          310,
+          429
+        ],
+        "scaledSize": [
+          41,
+          162
+        ],
+        "baselineFitFraction": 0.9,
+        "scaleRatioToNative": 1.0,
+        "positionPixels": [
+          11,
+          15
+        ],
+        "clampedToFootprint": false
+      },
+      "model": "Common/Items/Weapons/Mace/Iron.blockymodel",
+      "texture": "Common/Items/Weapons/Mace/Iron_Texture.png",
+      "stockIcon": "Common/Icons/ItemsGenerated/Weapon_Mace_Iron.png"
+    },
+    {
+      "family": "Longsword",
+      "itemId": "Weapon_Longsword_Iron",
+      "proxy": false,
+      "width": 2,
+      "height": 4,
+      "file": "Weapon_Longsword_Iron.png",
+      "nativePose": {
+        "Scale": 0.36,
+        "Translation": [
+          -40,
+          -40
+        ],
+        "Rotation": [
+          45,
+          90,
+          0
+        ]
+      },
+      "nativePoseSource": "Server/Item/Items/Weapon/Longsword/Weapon_Longsword_Iron.json",
+      "pose": {
+        "Rotation": [
+          0,
+          90,
+          0
+        ],
+        "Scale": 0.36,
+        "Translation": [
+          0,
+          0
+        ]
+      },
+      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "fit": {
+        "sourceBounds": [
+          155,
+          68,
+          357,
+          512
+        ],
+        "scaledSize": [
+          100,
+          220
+        ],
+        "baselineFitFraction": 0.9,
+        "scaleRatioToNative": 1.0,
+        "positionPixels": [
+          14,
+          18
+        ],
+        "clampedToFootprint": false
+      },
+      "model": "Common/Items/Weapons/Longsword/Iron.blockymodel",
+      "texture": "Common/Items/Weapons/Longsword/Iron_Texture.png",
+      "stockIcon": "Common/Icons/ItemsGenerated/Weapon_Longsword_Iron.png"
+    },
+    {
+      "family": "Spear",
+      "itemId": "Weapon_Spear_Iron",
+      "proxy": false,
+      "width": 2,
+      "height": 4,
+      "file": "Weapon_Spear_Iron.png",
+      "nativePose": {
+        "Scale": 0.24,
+        "Translation": [
+          -58,
+          -58
+        ],
+        "Rotation": [
+          45,
+          90,
+          0
+        ]
+      },
+      "nativePoseSource": "Server/Item/Items/Weapon/Spear/Weapon_Spear_Iron.json",
+      "pose": {
+        "Rotation": [
+          0,
+          90,
+          0
+        ],
+        "Scale": 0.24,
+        "Translation": [
+          0,
+          0
+        ]
+      },
+      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "fit": {
+        "sourceBounds": [
+          237,
+          35,
+          275,
+          488
+        ],
+        "scaledSize": [
+          18,
+          220
+        ],
+        "baselineFitFraction": 0.9,
+        "scaleRatioToNative": 1.0,
+        "positionPixels": [
+          55,
+          18
+        ],
+        "clampedToFootprint": false
+      },
+      "model": "Common/Items/Weapons/Spear/Iron.blockymodel",
+      "texture": "Common/Items/Weapons/Spear/Iron_Texture.png",
+      "stockIcon": "Common/Icons/ItemsGenerated/Weapon_Spear_Iron.png"
+    },
+    {
+      "family": "Shield",
+      "itemId": "Weapon_Shield_Iron",
+      "proxy": false,
+      "width": 2,
+      "height": 3,
+      "file": "Weapon_Shield_Iron.png",
+      "nativePose": {
+        "Scale": 0.4,
+        "Translation": [
+          -25,
+          -25
+        ],
+        "Rotation": [
+          315,
+          270,
+          0
+        ]
+      },
+      "nativePoseSource": "Server/Item/Items/Weapon/Shield/Template_Weapon_Shield.json",
+      "pose": {
+        "Rotation": [
+          0,
+          90,
+          0
+        ],
+        "Scale": 0.4,
+        "Translation": [
+          0,
+          0
+        ]
+      },
+      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "fit": {
+        "sourceBounds": [
+          118,
+          21,
+          394,
+          481
+        ],
+        "scaledSize": [
+          97,
+          162
+        ],
+        "baselineFitFraction": 0.9,
+        "scaleRatioToNative": 1.0,
+        "positionPixels": [
+          15,
+          15
+        ],
+        "clampedToFootprint": false
+      },
+      "model": "Common/Items/Weapons/Shield/Iron.blockymodel",
+      "texture": "Common/Items/Weapons/Shield/Iron_Texture.png",
+      "stockIcon": "Common/Icons/ItemsGenerated/Weapon_Shield_Iron.png"
+    },
+    {
+      "family": "Staff",
+      "itemId": "Weapon_Staff_Iron",
+      "proxy": false,
+      "width": 2,
+      "height": 4,
+      "file": "Weapon_Staff_Iron.png",
+      "nativePose": {
+        "Scale": 0.3,
+        "Translation": [
+          -51,
+          -51
+        ],
+        "Rotation": [
+          45,
+          90,
+          0
+        ]
+      },
+      "nativePoseSource": "Server/Item/Items/Weapon/Staff/Weapon_Staff_Iron.json",
+      "pose": {
+        "Rotation": [
+          0,
+          90,
+          0
+        ],
+        "Scale": 0.3,
+        "Translation": [
+          0,
+          0
+        ]
+      },
+      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "fit": {
+        "sourceBounds": [
+          222,
+          5,
+          309,
+          378
+        ],
+        "scaledSize": [
+          51,
+          220
+        ],
+        "baselineFitFraction": 0.9,
+        "scaleRatioToNative": 1.0,
+        "positionPixels": [
+          38,
+          18
+        ],
+        "clampedToFootprint": false
+      },
+      "model": "Common/Items/Weapons/Staff/Iron.blockymodel",
+      "texture": "Common/Items/Weapons/Staff/Iron_Texture.png",
+      "stockIcon": "Common/Icons/ItemsGenerated/Weapon_Staff_Iron.png"
+    },
+    {
+      "family": "Wand",
+      "itemId": "Weapon_Wand_Wood",
+      "proxy": false,
+      "width": 1,
+      "height": 2,
+      "file": "Weapon_Wand_Wood.png",
+      "nativePose": {
+        "Scale": 0.6,
+        "Translation": [
+          -13,
+          -16
+        ],
+        "Rotation": [
+          45,
+          90,
+          0
+        ]
+      },
+      "nativePoseSource": "Server/Item/Items/Weapon/Wand/Weapon_Wand_Wood.json",
+      "pose": {
+        "Rotation": [
+          0,
+          90,
+          0
+        ],
+        "Scale": 0.6,
+        "Translation": [
+          0,
+          0
+        ]
+      },
+      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "fit": {
+        "sourceBounds": [
+          126,
+          58,
+          359,
+          477
+        ],
+        "scaledSize": [
+          47,
+          84
+        ],
+        "baselineFitFraction": 0.9,
+        "scaleRatioToNative": 1.0,
+        "positionPixels": [
+          8,
+          22
+        ],
+        "clampedToFootprint": false
+      },
+      "model": "Common/Items/Weapons/Wand/Wood.blockymodel",
+      "texture": "Common/Items/Weapons/Wand/Wood_Texture.png",
+      "stockIcon": "Common/Icons/ItemsGenerated/Weapon_Wand_Wood.png"
+    },
+    {
+      "family": "Book",
+      "itemId": "Weapon_Spellbook_Fire",
+      "proxy": false,
+      "width": 1,
+      "height": 2,
+      "file": "Weapon_Spellbook_Fire.png",
+      "nativePose": {
+        "Scale": 0.545,
+        "Translation": [
+          -8.4,
+          -8.4
+        ],
+        "Rotation": [
+          45,
+          90,
+          0
+        ]
+      },
+      "nativePoseSource": "Server/Item/Items/Weapon/Spellbook/Weapon_Spellbook_Fire.json",
+      "pose": {
+        "Rotation": [
+          0,
+          90,
+          0
+        ],
+        "Scale": 0.545,
+        "Translation": [
+          0,
+          0
+        ]
+      },
+      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "fit": {
+        "sourceBounds": [
+          29,
+          26,
+          421,
+          486
+        ],
+        "scaledSize": [
+          47,
+          55
+        ],
+        "baselineFitFraction": 0.9,
+        "scaleRatioToNative": 1.0,
+        "positionPixels": [
+          8,
+          36
+        ],
+        "clampedToFootprint": false
+      },
+      "model": "Common/Items/Weapons/Spellbook/Book.blockymodel",
+      "texture": "Common/Items/Weapons/Spellbook/Book_Fire_Texture.png",
+      "stockIcon": "Common/Icons/ItemsGenerated/Weapon_Spellbook_Fire.png"
+    },
+    {
+      "family": "Rifle",
+      "itemId": "Weapon_Assault_Rifle",
+      "proxy": false,
+      "width": 2,
+      "height": 4,
+      "file": "Weapon_Assault_Rifle.png",
+      "nativePose": {
+        "Scale": 0.37,
+        "Translation": [
+          -3.6,
+          -20.4
+        ],
+        "Rotation": [
+          315,
+          90,
+          0
+        ]
+      },
+      "nativePoseSource": "Server/Item/Items/Hypixel/Minigames/GunPvP/Weapon_Assault_Rifle.json",
+      "pose": {
+        "Rotation": [
+          0,
+          90,
+          0
+        ],
+        "Scale": 0.37,
+        "Translation": [
+          0,
+          0
+        ]
+      },
+      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "fit": {
+        "sourceBounds": [
+          22,
+          121,
+          481,
+          327
+        ],
+        "scaledSize": [
+          104,
+          47
+        ],
+        "baselineFitFraction": 0.9,
+        "scaleRatioToNative": 1.0,
+        "positionPixels": [
+          12,
+          104
+        ],
+        "clampedToFootprint": false
+      },
+      "model": "Common/Items/Hypixel/Minigames/GunPvP/Weapons/Assault_Rifles/Assault_Rifle.blockymodel",
+      "texture": "Common/Items/Hypixel/Minigames/GunPvP/Weapons/Assault_Rifles/Assault_Rifle_Texture.png",
+      "stockIcon": "Common/Icons/ItemsGenerated/Weapon_Assault_Rifle.png"
+    },
+    {
+      "family": "Blunderbuss",
+      "itemId": "Weapon_Gun_Blunderbuss",
+      "proxy": false,
+      "width": 2,
+      "height": 4,
+      "file": "Weapon_Gun_Blunderbuss.png",
+      "nativePose": {
+        "Scale": 0.38,
+        "Translation": [
+          -14,
+          -25
+        ],
+        "Rotation": [
+          320,
+          90,
+          0
+        ]
+      },
+      "nativePoseSource": "Server/Item/Items/Weapon/Gun/Weapon_Gun_Blunderbuss.json",
+      "pose": {
+        "Rotation": [
+          0,
+          90,
+          0
+        ],
+        "Scale": 0.38,
+        "Translation": [
+          0,
+          0
+        ]
+      },
+      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "fit": {
+        "sourceBounds": [
+          49,
+          188,
+          508,
+          312
+        ],
+        "scaledSize": [
+          104,
+          28
+        ],
+        "baselineFitFraction": 0.9,
+        "scaleRatioToNative": 1.0,
+        "positionPixels": [
+          12,
+          114
+        ],
+        "clampedToFootprint": false
+      },
+      "model": "Common/Items/Weapons/Gun/Blunderbuss.blockymodel",
+      "texture": "Common/Items/Weapons/Gun/Blunderbuss_Texture.png",
+      "stockIcon": "Common/Icons/ItemsGenerated/Weapon_Gun_Blunderbuss.png"
+    },
+    {
+      "family": "Bomb",
+      "itemId": "Weapon_Bomb_Fire",
+      "proxy": false,
+      "width": 1,
+      "height": 1,
+      "file": "Weapon_Bomb_Fire.png",
+      "nativePose": {
+        "Scale": 0.87,
+        "Translation": [
+          -7.11,
+          -7.7
+        ],
+        "Rotation": [
+          4.685,
+          6.935,
+          315
+        ]
+      },
+      "nativePoseSource": "Server/Item/Items/Weapon/Bomb/Weapon_Bomb_Fire.json",
+      "pose": {
+        "Rotation": [
+          0,
+          90,
+          0
+        ],
+        "Scale": 0.87,
+        "Translation": [
+          0,
+          0
+        ]
+      },
+      "posePolicy": "WEAPON_BASELINE_NATIVE_SCALE",
+      "fit": {
+        "sourceBounds": [
+          102,
+          0,
+          434,
+          373
+        ],
+        "scaledSize": [
+          42,
+          47
+        ],
+        "baselineFitFraction": 0.9,
+        "scaleRatioToNative": 1.0,
+        "positionPixels": [
+          11,
+          8
+        ],
+        "clampedToFootprint": false
+      },
+      "model": "Common/NPC/Intelligent/Goblin/Models/Weapons/Bomb/Fire.blockymodel",
+      "texture": "Common/NPC/Intelligent/Goblin/Models/Weapons/Bomb/Fire_Texture.png",
+      "stockIcon": "Common/Icons/ItemsGenerated/Weapon_Bomb_Fire_Goblin.png"
+    }
+  ]
+}

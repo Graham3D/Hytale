@@ -1,0 +1,11 @@
+{
+  "Type": "Condition",
+  "RequiredGameMode": "Adventure",
+  "Next": {
+    "Type": "BreakBlock",
+    "SoftOnly": true
+  },
+  "Failed": {
+    "Type": "Simple"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "Type": "ModifyInventory",
+  "RequiredGameMode": "Adventure",
+  "ItemToRemove": {
+    "Id": "Weapon_Arrow_Crude",
+    "Quantity": 1
+  },
+  "Next": {
+    "Type": "Replace",
+    "Var": "Reload_Effects",
+    "DefaultValue": {
+      "Interactions": [
+        "RPG_GearRoute_I_Common_StatAmmoReload_Effects"
+      ]
+    }
+  }
+}

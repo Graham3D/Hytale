@@ -37,7 +37,7 @@ class R045CanvasSkillTreeEditorTest {
                 com.inigmasgames.hytalerpg.domain.SkillSlot.SKILL01).orElseThrow().value());
     }
 
-    @Test void parentingPersistsAndTriangularJointRejectsAFourthNeighbor() {
+    @Test void parentingPersistsWithFourDirectionalJointPorts() {
         var bundle = Stage01BTestSupport.bundle();
         var layout = new StaticSkillTreeLayout();
         var mutations = new RpgSkillTreeMutationService(bundle.service(), layout);
@@ -53,16 +53,43 @@ class R045CanvasSkillTreeEditorTest {
         connect(editor, "passive01", "out", "joint01", "b", true);
         connect(editor, "passive02", "out", "joint01", "c", true);
 
-        // An occupied visual side permits a temporary atomic-reparent candidate, but authority rejects degree four.
-        Canvas canvas = editor.canvas();
-        canvas.connect("candidate-fourth", "passive03", "out", "joint01", "b",
-                com.inigmasgames.canvasui.api.EdgeStyle.standard("test"));
-        var rejected = editor.commit(canvas.snapshot());
-        assertFalse(rejected.accepted());
-        assertTrue(rejected.message().contains("at most three"));
-        canvas.restore(rejected.authoritativeSnapshot());
-        assertEquals(3, canvas.edges().size());
-        assertEquals(3, bundle.service().getPresentationView(player).state().linkEdges().size());
+        assertEquals(4,editor.canvas().definition().nodeType("joint").ports().size());
+        assertEquals(com.inigmasgames.canvasui.api.CanvasPoint.of(36,0),
+                editor.canvas().definition().nodeType("joint").port("a").anchorPosition());
+        assertEquals(com.inigmasgames.canvasui.api.CanvasPoint.of(36,72),
+                editor.canvas().definition().nodeType("joint").port("b").anchorPosition());
+        assertEquals(com.inigmasgames.canvasui.api.CanvasPoint.of(0,36),
+                editor.canvas().definition().nodeType("joint").port("c").anchorPosition());
+        assertEquals(com.inigmasgames.canvasui.api.CanvasPoint.of(72,36),
+                editor.canvas().definition().nodeType("joint").port("d").anchorPosition());
+        connect(editor, "passive03", "out", "joint01", "d", true);
+        assertEquals(4,editor.canvas().edges().size());
+        assertEquals(4,bundle.service().getPresentationView(player).state().linkEdges().size());
+    }
+
+    @Test void jointCanFeedAnotherJointAndPreservesPortsOnReopen(){
+        var bundle=Stage01BTestSupport.bundle();var layout=new StaticSkillTreeLayout();UUID player=UUID.randomUUID();
+        var mutations=new RpgSkillTreeMutationService(bundle.service(),layout);
+        var projection=new RpgSkillTreeProjectionService(bundle.catalog(),bundle.service(),layout,true);
+        var bindings=new SkillTreePortBindingStore(temporary.resolve("joint-chain-ports"));
+        var editor=new RpgCanvasSkillTreeEditor(player,projection,mutations,bindings);
+        assign(editor,"fire_bolt","skill01");assign(editor,"potency","passive01");
+        assign(editor,"efficiency","passive02");assign(editor,"fork","passive03");
+        assign(editor,"ballistics","passive04");
+        connect(editor,"joint01","b","skill01","in",true);
+        connect(editor,"joint02","c","joint01","d",true);
+        connect(editor,"passive01","out","joint01","a",true);
+        connect(editor,"passive02","out","joint01","c",true);
+        connect(editor,"passive03","out","joint02","a",true);
+        connect(editor,"passive04","out","joint02","b",true);
+        assertEquals(6,editor.canvas().edges().size());
+        assertEquals(4,bundle.service().getPresentationView(player).state().linkEdges().stream()
+                .filter(edge->edge.sourceNodeId().kind()==com.inigmasgames.hytalerpg.domain.LinkNodeId.NodeKind.PASSIVE)
+                .count());
+        var reopened=new RpgCanvasSkillTreeEditor(player,projection,mutations,bindings);
+        assertTrue(reopened.canvas().edges().stream().anyMatch(edge->
+                edge.sourceNodeId().equals("joint02")&&edge.sourcePortId().equals("c")
+                &&edge.targetNodeId().equals("joint01")&&edge.targetPortId().equals("d")));
     }
 
     @Test void movingANodeIsPresentationOnlyAndRetainsAuthoritativeTopology() {

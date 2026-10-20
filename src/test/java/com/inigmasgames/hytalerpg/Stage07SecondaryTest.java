@@ -123,9 +123,9 @@ class Stage07SecondaryTest {
     }
     @Test void ownerCapacityRejectionIsAtomicAndCannotBurstLaterAfterCapacityFrees() {
         var f=new Fixture("splinterburst");var p=f.spawn();
-        for(int i=0;i<21;i++)f.registry.register(new ProjectileInstance(Stage07ContinuationTest.copyPlan(p.plan(),"other-"+i,"other-"+i)));
+        for(int i=0;i<45;i++)f.registry.register(new ProjectileInstance(Stage07ContinuationTest.copyPlan(p.plan(),"other-"+i,"other-"+i)));
         var rejected=f.terminal(p,ProjectileSecondaryEffects.TerminalCause.RANGE);assertEquals("OWNER_PROJECTILE_BUDGET",rejected.reason());
-        assertEquals(22,f.registry.size());assertEquals(1,f.registry.spent(f.owner(),p.plan().rootCastId()));assertEquals(0,f.registry.triggered(f.owner(),p.plan().rootCastId()));
+        assertEquals(46,f.registry.size());assertEquals(1,f.registry.spent(f.owner(),p.plan().rootCastId()));assertEquals(0,f.registry.triggered(f.owner(),p.plan().rootCastId()));
         for(var other:f.registry.ownedBy(f.owner()))if(other!=p)f.registry.remove(other);
         assertTrue(f.terminal(p,ProjectileSecondaryEffects.TerminalCause.RANGE).children().isEmpty());
     }

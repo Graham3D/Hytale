@@ -1,0 +1,49 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.plate_cobalt.legs.n"
+  },
+  "Quality": "RPG_Gear_Common",
+  "MaxStack": 1,
+  "MaxDurability": 110,
+  "Model": "Items/Armors/Cobalt/Legs.blockymodel",
+  "Texture": "Items/Armors/Cobalt/Legs_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Armor_Cobalt_Legs.png",
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": [
+      "Armor"
+    ],
+    "Family": [
+      "Cobalt"
+    ]
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    }
+  },
+  "InteractionVars": {},
+  "Armor": {
+    "ArmorSlot": "Legs",
+    "BaseDamageResistance": 0,
+    "DamageResistance": {},
+    "DamageEnhancement": {},
+    "StatModifiers": {},
+    "CosmeticsToHide": [
+      "Pants",
+      "Shoes"
+    ]
+  },
+  "DurabilityLossOnHit": 0.5
+}

@@ -98,12 +98,20 @@ public final class HytaleDamageAdapter {
                       com.inigmasgames.hytalerpg.execution.SkillExecutionContext context,WeaponComponent witness){
         if(!Double.isFinite(amount)||amount<0||amount>Float.MAX_VALUE)throw new IllegalArgumentException("Invalid native damage amount");
         if(cause==null)throw new IllegalArgumentException("NATIVE_DAMAGE_CAUSE_MISSING");
+        // Resolve former generic Arcane by the actual authored producer, before native cause filtering.
+        // Secondary/copy callers without that witness retain the cause already supplied by their owner.
+        String mappedCause=com.inigmasgames.hytalerpg.combat.damage.DamageChannels.canonical().nativeCause(
+                cause.getId(),context==null?null:context.profile().skillId());
+        if(!mappedCause.equals(cause.getId())){
+            cause=DamageCause.getAssetMap().getAsset(mappedCause);
+            if(cause==null)throw new IllegalStateException("CANONICAL_NATIVE_DAMAGE_CAUSE_MISSING:"+mappedCause);
+        }
         EntityStatMap targetStats = accessor.getComponent(target, EntityStatMap.getComponentType());
         double before = targetStats == null || targetStats.get(DefaultEntityStatTypes.getHealth()) == null
                 ? Double.NaN : targetStats.get(DefaultEntityStatTypes.getHealth()).get();
         HytaleDamageMetadata complete = new HytaleDamageMetadata(metadata.actorId(), metadata.rootCastId(),
                 metadata.skillInstanceId(), metadata.correlationId(), amount, before,
-                metadata.effectInstanceId(),metadata.canProc(),metadata.origin());
+                metadata.effectInstanceId(),metadata.canProc(),metadata.origin(),metadata.monsterAffix());
         Damage damage = new Damage(source == null ? Damage.NULL_SOURCE : new Damage.EntitySource(source),
                 cause, (float)amount);
         damage.putMetaObject(RPG_METADATA, GSON.toJson(complete));

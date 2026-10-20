@@ -1,0 +1,51 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.plate_iron.head.nm"
+  },
+  "Quality": "RPG_Gear_Common",
+  "MaxStack": 1,
+  "MaxDurability": 130,
+  "Model": "Items/Armors/Iron/Head.blockymodel",
+  "Texture": "Items/Armors/Iron/Head_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Armor_Iron_Head.png",
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": [
+      "Armor"
+    ],
+    "Family": [
+      "Iron"
+    ]
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    }
+  },
+  "InteractionVars": {},
+  "Armor": {
+    "ArmorSlot": "Head",
+    "BaseDamageResistance": 0,
+    "DamageResistance": {},
+    "DamageEnhancement": {},
+    "StatModifiers": {},
+    "CosmeticsToHide": [
+      "EarAccessory",
+      "Ear",
+      "Haircut",
+      "HeadAccessory"
+    ]
+  },
+  "DurabilityLossOnHit": 0.5
+}

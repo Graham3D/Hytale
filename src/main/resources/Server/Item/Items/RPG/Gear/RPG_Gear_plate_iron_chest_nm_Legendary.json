@@ -1,0 +1,49 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.plate_iron.chest.nm"
+  },
+  "Quality": "RPG_Gear_Legendary",
+  "MaxStack": 1,
+  "MaxDurability": 130,
+  "Model": "Items/Armors/Iron/Chest.blockymodel",
+  "Texture": "Items/Armors/Iron/Chest_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Armor_Iron_Chest.png",
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": [
+      "Armor"
+    ],
+    "Family": [
+      "Iron"
+    ]
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    }
+  },
+  "InteractionVars": {},
+  "Armor": {
+    "ArmorSlot": "Chest",
+    "BaseDamageResistance": 0,
+    "DamageResistance": {},
+    "DamageEnhancement": {},
+    "StatModifiers": {},
+    "CosmeticsToHide": [
+      "Overtop",
+      "Cape"
+    ]
+  },
+  "DurabilityLossOnHit": 0.5
+}

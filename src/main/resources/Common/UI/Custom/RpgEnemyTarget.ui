@@ -1,0 +1,23 @@
+Group {
+  Group #RpgEnemyTarget {
+    Anchor: (Top: 96, Horizontal: 16, MaxWidth: 420);
+    LayoutMode: Top;
+    Padding: (Full: 12);
+    Background: (Color: #141923ed);
+    Visible: false;
+
+    Label #RpgEnemyName {
+      Text: "";
+      Style: (FontSize: 18, RenderBold: true, TextColor: #f2eee5, Wrap: true, WrapMaxLines: 2);
+    }
+    Label #RpgEnemyIdentity {
+      Anchor: (Top: 4);
+      Text: "";
+      Style: (FontSize: 14, TextColor: #b6c2cf, Wrap: true);
+    }
+    Group #RpgEnemyTags {
+      Anchor: (Top: 6);
+      LayoutMode: LeftWrap;
+    }
+  }
+}

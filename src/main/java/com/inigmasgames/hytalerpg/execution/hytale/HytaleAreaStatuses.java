@@ -49,11 +49,17 @@ final class HytaleAreaStatuses {
         if (payload.status().equals("CHILL")) {
             applyChill(kernel,context,id,control,payload.chillStacks(),trace,sources);
         } else if (payload.status().equals("ROOT") && control.boss()) {
+            var admission = kernel.statuses().admit(com.inigmasgames.hytalerpg.combat.status.StatusApplication.hostile(
+                    context.request().actorId(), id, RpgStatusType.ROOT), control, true);
+            if (admission != StatusService.Admission.ACCEPTED) {
+                record(new StatusService.Result(StatusService.Outcome.REJECTED, RpgStatusType.ROOT, 0, 0, admission.name()), target.stableId(), trace);
+                return;
+            }
             kernel.statuses().applySlow(id, context.rootCastId(), .35, payload.statusSeconds());
             trace.accept(RpgTraceEventType.STATUS_APPLIED, Map.of("targetId", target.stableId(), "status", "SLOW",
                     "magnitude", .35, "durationSeconds", payload.statusSeconds(), "detail", "AUTHORED_ROOT_SNARE_BOSS_SUBSTITUTE"));
         } else {
-            result = kernel.statuses().apply(id, RpgStatusType.valueOf(payload.status()), control, payload.statusSeconds());
+            result = kernel.statuses().applyHostile(context.request().actorId(), id, RpgStatusType.valueOf(payload.status()), control, payload.statusSeconds());
             record(result, target.stableId(), trace);
         }
         synchronize(kernel.statuses(), id, target.handle(), store, owner);
@@ -61,7 +67,7 @@ final class HytaleAreaStatuses {
     static StatusService.ChillApplication applyChill(RpgCombatKernel kernel,SkillExecutionContext context,UUID target,
             ControlProfile control,int stacks,BiConsumer<RpgTraceEventType,Map<String,?>> trace,com.inigmasgames.hytalerpg.execution.ChillSourceRegistry sources){
         var before=kernel.statuses().inspect(target).active().get(RpgStatusType.CHILL);
-        var result=kernel.statuses().applyChill(context.request().actorId(),context.rootCastId(),target,control,stacks,context.compiledPlan().controls().deepFreeze());
+        var result=kernel.statuses().applyChillHostile(context.request().actorId(),context.rootCastId(),target,control,stacks,context.compiledPlan().controls().deepFreeze(),Double.NaN);
         String provenance=sources.observed(context,target,before,kernel.statuses().inspect(target).active().get(RpgStatusType.CHILL),System.nanoTime()/1e9);
         if(provenance.endsWith("BUDGET"))trace.accept(RpgTraceEventType.STATUS_REJECTED,Map.of("targetId",target,"status","CHILL_PROVENANCE","reason",provenance,"nativeChillRetained",true));
         trace.accept(RpgTraceEventType.STATUS_REQUEST,Map.of("targetId",target,"status","CHILL","authoredStacks",stacks,

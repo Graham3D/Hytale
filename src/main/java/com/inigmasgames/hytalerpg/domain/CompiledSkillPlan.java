@@ -77,7 +77,7 @@ public record CompiledSkillPlan(
                                 int maxLiveSummons, int maxLiveProjectiles, int maxPersistentFields,
                                 int maxActiveAuras, int passiveSpawnCost) {
         public static SafetyBudgets baseline(int passiveSpawnCost) {
-            return new SafetyBudgets(3, 48, 16, 8, 24, 8, 4, passiveSpawnCost);
+            return new SafetyBudgets(3, 48, 16, 8, 48, 8, 4, passiveSpawnCost);
         }
     }
     /** Typed release/geometry contract derived from the compiler's validated, deduplicated passive order. */

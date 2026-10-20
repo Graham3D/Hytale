@@ -28,7 +28,7 @@ final class HytaleAreaQueries {
     record Result(List<Candidate> candidates, boolean overflow) { }
     record ProjectileContact(Vec3 point,Vec3 normal,double fraction) { }
     static boolean loaded(Store<EntityStore> store,Vec3 point) {
-        return store.getExternalData().getWorld().getChunkIfLoaded(com.hypixel.hytale.math.util.ChunkUtil.indexChunkFromBlock(point.x(),point.z()))!=null;
+        return store.getExternalData().getWorld().getChunkStore().getChunkReference(com.hypixel.hytale.math.util.ChunkUtil.indexChunkFromBlock(point.x(),point.z()))!=null;
     }
 
     static Result query(Store<EntityStore> store, Ref<EntityStore> owner, AreaGeometry geometry, int budget) {
@@ -58,7 +58,13 @@ final class HytaleAreaQueries {
         if (!target.isValid() || !owner.isValid() || target.equals(owner)) return false;
         WorldSupport support = store.getComponent(target, WorldSupport.getComponentType());
         // NPC is the first argument/attitude owner, verified in WorldSupport.getAttitude bytecode.
-        return support != null && NativeNpcAttitudes.prepared(support).getAttitude(target, owner, store) == Attitude.HOSTILE;
+        if(support==null)return false;
+        try{return NativeNpcAttitudes.prepared(support).getAttitude(target,owner,store)==Attitude.HOSTILE;}
+        catch(java.util.NoSuchElementException missingNativeAttitude){
+            // A role without a populated native attitude view cannot establish
+            // hostile targeting. This is local NPC state, not reward durability.
+            return false;
+        }
     }
     static Optional<Vec3> ground(Store<EntityStore> store, Vec3 origin, Vec3 direction, double range) {
         Vec3 displacement = direction.normalized().multiply(range);

@@ -48,33 +48,45 @@ public final class RpgCharacterPage extends InteractiveCustomUIPage<RpgCharacter
 
     @Override public void build(@Nonnull Ref<EntityStore> ref, @Nonnull UICommandBuilder commands,
                                 @Nonnull UIEventBuilder events, @Nonnull Store<EntityStore> store) {
+        try(var readyPathSpan=com.inigmasgames.hywind.readypath.ReadyPathProbe.span("RPG_CHARACTER_PAGE_BUILD",player.getUuid())) {
         commands.append("RpgCharacter.ui");
         model = project(store, ref);
         render(commands, events, model, "");
         trace.trace(player.getUuid(), "CHARACTER_OPENED", id(), Map.of("revision", model.revision()));
+
+        }
     }
 
     @Override public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store,
                                           @Nonnull Data data) {
         String correlation = id();
+        if (!"allocate".equals(data.action)) return;
         RpgAttribute attribute;
         try { attribute = RpgAttribute.parse(data.attribute); }
         catch (RuntimeException error) { return; }
         long expectedRevision;
         try { expectedRevision = Long.parseLong(data.expectedRevision); }
         catch (NumberFormatException error) { return; }
+        int requested;
+        try { requested = Integer.parseInt(data.requested); }
+        catch (NumberFormatException error) { return; }
         trace.trace(player.getUuid(), "ATTRIBUTE_ALLOCATE_REQUEST", correlation,
-                Map.of("attribute", attribute.name(), "expectedRevision", expectedRevision));
-        MutationResult result = allocation.allocate(player.getUuid(), attribute, expectedRevision, correlation);
+                Map.of("attribute", attribute.name(), "expectedRevision", expectedRevision,
+                        "requested", requested, "modifierState", "UNAVAILABLE_PRE4"));
+        var allocationResult = allocation.allocateUpTo(player.getUuid(), attribute, requested,
+                expectedRevision, correlation);
+        MutationResult result = allocationResult.mutation();
         String status;
         if (result.success()) {
             CharacterSheetViewModel beforeApply = project(store, ref);
             EntityStatMap nativeStats = requireStats(store, ref);
             new DerivedStatEntityAdapter().apply(nativeStats, beforeApply.derivedStats());
             model = project(store, ref);
-            status = "+1 " + attribute + " committed.";
+            status = "+" + allocationResult.applied() + " " + attribute + " committed.";
             trace.trace(player.getUuid(), "ATTRIBUTE_ALLOCATE_COMMITTED", correlation,
                     Map.of("attribute", attribute.name(), "revision", result.revision(),
+                            "requested", allocationResult.requested(), "applied", allocationResult.applied(),
+                            "modifierState", "UNAVAILABLE_PRE4",
                             "raw", model.derivedStats().rawAttributes().get(attribute),
                             "unspent", model.unspentAttributePoints(), "pending", model.pendingLevelUpPoints()));
         } else {
@@ -125,7 +137,8 @@ public final class RpgCharacterPage extends InteractiveCustomUIPage<RpgCharacter
             commands.set("#" + key + "Plus.Disabled", model.unspentAttributePoints() <= 0);
             events.addEventBinding(CustomUIEventBindingType.Activating, "#" + key + "Plus",
                     new EventData().append("Action", "allocate").append("Attribute", attribute.name())
-                            .append("ExpectedRevision", Long.toString(model.revision())), false);
+                            .append("ExpectedRevision", Long.toString(model.revision()))
+                            .append("Requested", "1"), false);
         }
         DerivedStats d = model.derivedStats();
         commands.set("#Pools.TextSpans", Message.raw("Max pools   Health " + one(d.maxHealth())
@@ -164,9 +177,12 @@ public final class RpgCharacterPage extends InteractiveCustomUIPage<RpgCharacter
                 .append(new KeyedCodec<>("Attribute", Codec.STRING), (d, v) -> d.attribute = v, d -> d.attribute).add()
                 .append(new KeyedCodec<>("ExpectedRevision", Codec.STRING),
                         (d, v) -> d.expectedRevision = v, d -> d.expectedRevision).add()
+                .append(new KeyedCodec<>("Requested", Codec.STRING),
+                        (d, v) -> d.requested = v, d -> d.requested).add()
                 .build();
         private String action = "";
         private String attribute = "";
         private String expectedRevision = "0";
+        private String requested = "1";
     }
 }

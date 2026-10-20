@@ -29,6 +29,7 @@ import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.server.npc.entities.NPCEntity;
 import com.hypixel.hytale.builtin.crafting.component.CraftingManager;
 import com.inigmasgames.persistentnpcs.hytale.NpcRuntimeRegistry;
+import com.inigmasgames.persistentnpcs.api.SpatialPlayerItemPolicy;
 import com.inigmasgames.persistentnpcs.home.NpcHomeAnchor;
 import com.inigmasgames.persistentnpcs.home.NpcHomeBehaviorController;
 import com.inigmasgames.persistentnpcs.event.NpcEventBus;
@@ -573,6 +574,8 @@ public final class HytaleNpcActionService implements NpcActionExecutor {
             Ref<EntityStore> npcRef,
             Ref<EntityStore> playerRef,
             Store<EntityStore> store) {
+        if (!SpatialPlayerItemPolicy.nativeMode(playerRef, store))
+            return NpcActionResult.failure("DISABLED_IN_SPATIAL_MODE", "Native NPC item exchange is disabled for spatial inventory.");
         if (!near(npcRef, playerRef, store)) {
             return NpcActionResult.failure("PLAYER_NOT_NEARBY",
                     "The player moved out of item-transfer range.");
@@ -612,6 +615,8 @@ public final class HytaleNpcActionService implements NpcActionExecutor {
             Ref<EntityStore> npcRef,
             Ref<EntityStore> playerRef,
             Store<EntityStore> store) {
+        if (!SpatialPlayerItemPolicy.nativeMode(playerRef, store))
+            return NpcActionResult.failure("DISABLED_IN_SPATIAL_MODE", "Native NPC item exchange is disabled for spatial inventory.");
         if (!near(npcRef, playerRef, store)) {
             return NpcActionResult.failure("PLAYER_NOT_NEARBY",
                     "The player moved out of item-transfer range.");
@@ -1190,17 +1195,19 @@ public final class HytaleNpcActionService implements NpcActionExecutor {
             return new Station("field_crafting", new Vector3d(origin), 0);
         }
         Station nearest = null;
+        var blocks = new com.hypixel.hytale.server.core.universe.world.accessor.SectionReader(world.getChunkStore());
         int ox = (int) Math.floor(origin.x);
         int oy = (int) Math.floor(origin.y);
         int oz = (int) Math.floor(origin.z);
         for (int x = ox - 8; x <= ox + 8; x++) {
             for (int z = oz - 8; z <= oz + 8; z++) {
-                WorldChunk chunk = world.getChunkIfLoaded(ChunkUtil.indexChunkFromBlock(x, z));
+                WorldChunk chunk = world.getChunkStore().getChunkComponent(
+                        ChunkUtil.indexChunkFromBlock(x, z), WorldChunk.getComponentType());
                 if (chunk == null) {
                     continue;
                 }
                 for (int y = oy - 3; y <= oy + 3; y++) {
-                    BlockType block = chunk.getBlockType(x, y, z);
+                    BlockType block = BlockType.getAssetMap().getAsset(blocks.getBlock(x, y, z));
                     if (block == null || block.getBench() == null
                             || !requiredIds.contains(block.getBench().getId())) {
                         continue;

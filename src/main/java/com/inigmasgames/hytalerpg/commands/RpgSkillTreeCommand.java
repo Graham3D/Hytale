@@ -6,37 +6,23 @@ import com.hypixel.hytale.protocol.GameMode;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
-import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.inigmasgames.hytalerpg.ui.skilltree.RpgSkillTreeMutationService;
-import com.inigmasgames.hytalerpg.ui.skilltree.RpgCanvasSkillTreeEditor;
-import com.inigmasgames.hytalerpg.ui.skilltree.RpgSkillTreeProjectionService;
-import com.inigmasgames.hytalerpg.ui.trace.RpgUiTraceService;
-import com.inigmasgames.canvasui.CanvasUI;
-import com.inigmasgames.hytalerpg.ui.skilltree.SkillTreePortBindingStore;
+import com.inigmasgames.hytalerpg.ui.skilltree.SkillTreeEntryAdapter;
 
 public final class RpgSkillTreeCommand extends AbstractPlayerCommand {
-    private final RpgSkillTreeProjectionService projection;
-    private final RpgSkillTreeMutationService mutations;
-    private final RpgUiTraceService trace;
-    private final SkillTreePortBindingStore portBindings;
+    private final SkillTreeEntryAdapter entry;
 
-    public RpgSkillTreeCommand(RpgSkillTreeProjectionService projection,
-                               RpgSkillTreeMutationService mutations, RpgUiTraceService trace,
-                               SkillTreePortBindingStore portBindings) {
+    public RpgSkillTreeCommand(SkillTreeEntryAdapter entry) {
         super("skilltree", "Open the server-authoritative RPG Canvas Skill Tree.");
-        this.projection = projection; this.mutations = mutations; this.trace = trace;this.portBindings=portBindings;
+        this.entry = entry;
         setPermissionGroup(GameMode.Adventure);
     }
 
     @Override protected void execute(CommandContext context, Store<EntityStore> store, Ref<EntityStore> ref,
                                      PlayerRef playerRef, World world) {
-        Player player = store.getComponent(ref, Player.getComponentType());
-        if (player == null) { context.sendMessage(Message.raw("Player UI manager is unavailable.")); return; }
-        var result = CanvasUI.openCursorEditor(new RpgCanvasSkillTreeEditor(playerRef.getUuid(), projection, mutations,portBindings),
-                player, playerRef, world, store, ref);
+        var result = entry.open(playerRef, ref, store, world);
         context.sendMessage(Message.raw(result.message()));
     }
 }

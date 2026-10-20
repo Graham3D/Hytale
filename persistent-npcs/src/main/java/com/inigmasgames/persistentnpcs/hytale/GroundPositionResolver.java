@@ -5,6 +5,9 @@ import com.hypixel.hytale.protocol.BlockMaterial;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
+import com.hypixel.hytale.server.core.universe.world.accessor.BlockReader;
+import com.hypixel.hytale.server.core.universe.world.accessor.SectionReader;
+import com.hypixel.hytale.server.core.universe.world.chunk.heightmap.HeightmapColumn;
 import java.util.Optional;
 import org.joml.Vector3d;
 
@@ -16,17 +19,22 @@ public final class GroundPositionResolver {
         if (world == null || candidate == null) return Optional.empty();
         int x = (int) Math.floor(candidate.x);
         int z = (int) Math.floor(candidate.z);
-        WorldChunk chunk = world.getChunkIfLoaded(ChunkUtil.indexChunkFromBlock(x, z));
+        WorldChunk chunk = world.getChunkStore().getChunkComponent(
+                ChunkUtil.indexChunkFromBlock(x, z), WorldChunk.getComponentType());
         if (chunk == null) return Optional.empty();
         int localX = ChunkUtil.localCoordinate(x);
         int localZ = ChunkUtil.localCoordinate(z);
-        int height = chunk.getHeight(localX, localZ);
+        HeightmapColumn heights = world.getChunkStore().getStore().getComponent(
+                chunk.getReference(), HeightmapColumn.getComponentType());
+        if (heights == null) return Optional.empty();
+        int height = heights.getHeight(localX, localZ);
+        BlockReader blocks = new SectionReader(world.getChunkStore());
         int preferred = (int) Math.floor(candidate.y) - 1;
         int top = Math.min(ChunkUtil.HEIGHT_MINUS_1,
                 Math.max(height + 3, preferred));
         int bottom = Math.max(ChunkUtil.MIN_Y, Math.min(height - 6, preferred - 96));
         for (int groundY = top; groundY >= bottom; groundY--) {
-            if (walkable(chunk, x, groundY, z)) {
+            if (walkable(blocks, x, groundY, z)) {
                 return Optional.of(new Vector3d(candidate.x, groundY + 1.0, candidate.z));
             }
         }
@@ -38,10 +46,10 @@ public final class GroundPositionResolver {
                 .orElse(false);
     }
 
-    private static boolean walkable(WorldChunk chunk, int x, int y, int z) {
-        BlockType ground = chunk.getBlockType(x, y, z);
-        BlockType feet = chunk.getBlockType(x, y + 1, z);
-        BlockType head = chunk.getBlockType(x, y + 2, z);
+    private static boolean walkable(BlockReader chunk, int x, int y, int z) {
+        BlockType ground = BlockType.getAssetMap().getAsset(chunk.getBlock(x, y, z));
+        BlockType feet = BlockType.getAssetMap().getAsset(chunk.getBlock(x, y + 1, z));
+        BlockType head = BlockType.getAssetMap().getAsset(chunk.getBlock(x, y + 2, z));
         return ground != null && ground.getMaterial() == BlockMaterial.Solid
                 && empty(feet) && empty(head);
     }

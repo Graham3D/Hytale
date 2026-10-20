@@ -1,0 +1,10 @@
+Group {
+  LayoutMode: Left;
+  Anchor: (Height: 24, Right: 4, Bottom: 4);
+  Padding: (Horizontal: 6, Vertical: 3);
+  Background: (Color: #263348ed);
+  Label #EnemyTagLabel {
+    Text: "";
+    Style: (FontSize: 14, TextColor: #f2eee5, VerticalAlignment: Center);
+  }
+}

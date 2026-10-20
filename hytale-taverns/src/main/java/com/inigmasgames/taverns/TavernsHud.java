@@ -48,6 +48,7 @@ final class TavernsHud extends CustomUIHud {
 
     @Override
     protected void build(@Nonnull UICommandBuilder commandBuilder) {
+        try(var readyPathSpan=com.inigmasgames.hywind.readypath.ReadyPathProbe.span("TAVERNS_HUD_BUILD",playerRef.getUuid())) {
         commandBuilder.append("Hud/TavernsRevision.ui");
         commandBuilder.set("#RevisionLabel.Text", "TAVERNS  " + TavernsPlugin.REVISION);
         populateCounter(commandBuilder);
@@ -55,6 +56,8 @@ final class TavernsHud extends CustomUIHud {
         populateComfortValueOverlay(commandBuilder);
         populateRelaxing(commandBuilder);
         populateServiceAnnouncement(commandBuilder, "");
+
+        }
     }
 
     void showShardBalance(String itemId, int currentTotal) {

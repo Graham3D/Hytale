@@ -17,7 +17,7 @@ public record DotModifiers(boolean combustion,boolean virulence,boolean concentr
         return switch(kind){
             case BLEED->new Application(coefficientPerSecond,1,1);
             case BURN->new Application(coefficientPerSecond*(combustion?1.5:1),1,1);
-            case POISON->new Application(coefficientPerSecond*(concentratedVenom?1.75:1),virulence?2:1,concentratedVenom?1:3);
+            case POISON->new Application(coefficientPerSecond*(concentratedVenom?1.75:1),virulence?2:1,concentratedVenom?1:com.inigmasgames.hytalerpg.combat.status.PeriodicStatusRuntime.BASE_POISON_SOURCE_CAP);
         };
     }
 }

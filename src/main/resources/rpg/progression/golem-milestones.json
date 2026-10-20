@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "profileId": "rpg.golem-milestones.v1",
+  "golems": [
+    {
+      "id": "golem.earth",
+      "label": "Earth Crystal Golem",
+      "roleId": "Golem_Crystal_Earth",
+      "assetPath": "Server/NPC/Roles/Elemental/Golem/Golem_Crystal_Earth.json",
+      "assetSha256": "8a93a3acb4872289dca45686f80d188fd8a00ac22d454e4c22b94a030569da06",
+      "nativeMarker": "Golem_Crystal_Earth"
+    },
+    {
+      "id": "golem.flame",
+      "label": "Flame Crystal Golem",
+      "roleId": "Golem_Crystal_Flame",
+      "assetPath": "Server/NPC/Roles/Elemental/Golem/Golem_Crystal_Flame.json",
+      "assetSha256": "9c05bc2f9f70c242c5d862000f7e6822e758cf9bbae45b929dce6ed97273f7d0",
+      "nativeMarker": "Golem_Crystal_Flame"
+    },
+    {
+      "id": "golem.frost",
+      "label": "Frost Crystal Golem",
+      "roleId": "Golem_Crystal_Frost",
+      "assetPath": "Server/NPC/Roles/Elemental/Golem/Golem_Crystal_Frost.json",
+      "assetSha256": "798f05745b3577bcc12b70dd286a3d8f4f2c76e718e38b4cd574fb81be672c89",
+      "nativeMarker": "Golem_Crystal_Frost"
+    },
+    {
+      "id": "golem.sand",
+      "label": "Sand Crystal Golem",
+      "roleId": "Golem_Crystal_Sand",
+      "assetPath": "Server/NPC/Roles/Elemental/Golem/Golem_Crystal_Sand.json",
+      "assetSha256": "c1078a1d19f60c13f56d61d009e062523cc18fbc742ad9b6000da1dc8bcc4792",
+      "nativeMarker": "Golem_Crystal_Sand"
+    },
+    {
+      "id": "golem.thunder",
+      "label": "Thunder Crystal Golem",
+      "roleId": "Golem_Crystal_Thunder",
+      "assetPath": "Server/NPC/Roles/Elemental/Golem/Golem_Crystal_Thunder.json",
+      "assetSha256": "bceec07be7ac996056c047f66cb7e593d228e7d8219fd06ab6f181a99d9dd675",
+      "nativeMarker": ""
+    }
+  ]
+}

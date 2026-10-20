@@ -149,6 +149,7 @@ public abstract class PersistentNpcsPlugin extends JavaPlugin {
     private ProfileRepository profiles;
     private com.inigmasgames.persistentnpcs.profile.NpcInventoryRepository npcInventories;
     private com.inigmasgames.persistentnpcs.stats.NpcStatRuntimeBridge npcStats;
+    private NpcIntelligenceTickSystem npcIntelligenceTick;
     private NpcProfileRegistry profileRegistry;
     private ConversationSessionManager sessions;
     private ConversationService conversations;
@@ -192,6 +193,7 @@ public abstract class PersistentNpcsPlugin extends JavaPlugin {
 
     @Override
     protected void setup() {
+        try (var readyPathSpan = com.inigmasgames.hywind.readypath.ReadyPathProbe.span("BOOT_NPC_INTELLIGENCE_SETUP", null)) {
         Instant setupStartedAt = Instant.now();
         NpcAuthoringPermissions.registerAll();
         RuntimeApiCompatibility runtimeCompatibility = RuntimeApiCompatibility.detect();
@@ -480,11 +482,12 @@ public abstract class PersistentNpcsPlugin extends JavaPlugin {
             getEntityStoreRegistry().registerSystem(new com.inigmasgames.persistentnpcs.stats.NpcStatHydrationSystem(npcStats));
             getEntityStoreRegistry().registerSystem(new com.inigmasgames.persistentnpcs.stats.NpcStatCheckpointSystem(npcStats));
             getEntityStoreRegistry().registerSystem(new com.inigmasgames.persistentnpcs.stats.NpcStatRemovalCaptureSystem(npcStats));
-            getEntityStoreRegistry().registerSystem(new NpcIntelligenceTickSystem(
+            npcIntelligenceTick = new NpcIntelligenceTickSystem(
                     profileRegistry, attention, taskScheduler, spatialVoice,
                     runtimes, homeBehavior, appearances, autonomousCognition,
                     backgroundLife, immersiveRoles,
-                    value -> aiServices.observeServerFrame((float) value)));
+                    value -> aiServices.observeServerFrame((float) value));
+            getEntityStoreRegistry().registerSystem(npcIntelligenceTick);
         }
         backgroundLifeRuntime = new BackgroundLifeRuntime(testProfile::get, runtimes,
                 backgroundLifeStore, backgroundLife, frameworkLog);
@@ -639,6 +642,7 @@ public abstract class PersistentNpcsPlugin extends JavaPlugin {
         getEventRegistry().registerGlobal(PlayerReadyEvent.class, event -> {
             startupCoordinator.lifecycle("PlayerReadyEvent",
                     Integer.toString(event.getReadyId()));
+            if(npcIntelligenceTick!=null)npcIntelligenceTick.refreshAppearances();
             Ref<EntityStore> ref = event.getPlayerRef();
             PlayerRef playerRef = ref.getStore().getComponent(
                     ref, PlayerRef.getComponentType());
@@ -656,16 +660,21 @@ public abstract class PersistentNpcsPlugin extends JavaPlugin {
         });
         CompletableFuture.runAsync(() -> startupCoordinator.optionalBackgroundReady(
                 "reflection, background/dormant autonomy, diagnostics, and secondary caches"));
+
+        }
     }
 
     @Override
     protected void start() {
+        try (var readyPathSpan = com.inigmasgames.hywind.readypath.ReadyPathProbe.span("BOOT_NPC_ROLE_REGISTRATION", null)) {
         if (immersiveRoles != null) {
             immersiveRoles.registerAll();
         }
         getLogger().at(Level.INFO).log(
                 "Immersive AI %s started. Test NPC=%s (%s).",
                 REVISION, testProfile.get().name(), testProfile.get().id());
+
+        }
     }
 
     @Override

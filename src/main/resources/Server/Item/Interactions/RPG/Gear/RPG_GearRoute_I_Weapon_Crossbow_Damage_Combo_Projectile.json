@@ -1,0 +1,44 @@
+{
+  "Type": "RPG_GearDamage",
+  "DamageEffects": {
+    "Knockback": {
+      "Type": "Force",
+      "VelocityConfig": {
+        "AirResistance": 0.99,
+        "AirResistanceMax": 0.98,
+        "GroundResistance": 0.94,
+        "GroundResistanceMax": 0.3,
+        "Threshold": 3.0,
+        "Style": "Linear"
+      },
+      "Direction": {
+        "X": 0.0,
+        "Y": 0.5,
+        "Z": -1
+      },
+      "Force": 12.0,
+      "VelocityType": "Set"
+    },
+    "WorldParticles": [
+      {
+        "SystemId": "Impact_Dagger_Stab_Charged"
+      }
+    ]
+  },
+  "Next": "RPG_GearRoute_I_Weapon_Crossbow_Damage_Combo_Clear_1",
+  "DamageCalculator": {
+    "Class": "Charged",
+    "BaseDamage": {
+      "Physical": 20
+    }
+  },
+  "Effects": {
+    "CameraEffect": "Impact_Strong"
+  },
+  "EntityStatsOnHit": [
+    {
+      "EntityStatId": "SignatureEnergy",
+      "Amount": 1
+    }
+  ]
+}

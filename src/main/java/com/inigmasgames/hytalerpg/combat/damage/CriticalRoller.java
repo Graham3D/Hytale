@@ -12,4 +12,9 @@ public final class CriticalRoller {
         if (!Double.isFinite(chance) || chance < 0.0 || chance > 1.0) throw new IllegalArgumentException("Crit chance must be 0..1");
         return canCrit && random.getAsDouble() < chance;
     }
+    /** Shared server chance stream, also used by status admission; deterministic endpoints consume no draw. */
+    public boolean chance(double chance) {
+        if (!Double.isFinite(chance) || chance < 0 || chance > 1) throw new IllegalArgumentException("Chance must be 0..1");
+        return chance == 1 || chance > 0 && random.getAsDouble() < chance;
+    }
 }

@@ -31,6 +31,11 @@ public final class ProgressionMath {
     public static long enemyReward(int enemyLevel,Rank rank,Rarity rarity,int playerLevel){
         Objects.requireNonNull(rank);Objects.requireNonNull(rarity);
         double scarcity=rank==Rank.BOSS&&rarity==Rarity.UNIQUE?1:rarity.multiplier;
+        return enemyReward(enemyLevel,rank,scarcity,playerLevel);
+    }
+    /** ME replaces the old rarity slot before the existing rounding and party allocation. */
+    public static long enemyReward(int enemyLevel,Rank rank,double scarcity,int playerLevel){
+        Objects.requireNonNull(rank);if(!Double.isFinite(scarcity)||scarcity<0)throw new IllegalArgumentException("INVALID_ENEMY_SCARCITY");
         return halfUp(commonReward(enemyLevel)*rank.multiplier*scarcity*levelDifference(enemyLevel,playerLevel));
     }
     /** Equal shares of one positive party pot; eligibility and its common level profile are caller-owned. */

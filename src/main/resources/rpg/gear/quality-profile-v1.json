@@ -1,0 +1,16 @@
+{
+  "revision": "hywind-three-quality-v1",
+  "normalWeights": [70, 27, 3],
+  "nightmareWeights": [50, 37, 13],
+  "hellWeights": [35, 42, 23],
+  "commonRank": [1, 1, 1],
+  "specialistRank": [1, 1.05, 1.1],
+  "eliteRank": [1, 1.1, 1.25],
+  "minibossRank": [1, 1.15, 1.4],
+  "bossRank": [1, 1.2, 1.55],
+  "mfKnee": 0.5,
+  "magicMfGain": 2.0,
+  "rareMfGain": 4.5,
+  "magicAffixWeights": [65, 35],
+  "rareAffixWeights": [40, 30, 20, 10]
+}

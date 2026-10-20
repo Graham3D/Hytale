@@ -6,35 +6,23 @@ import com.hypixel.hytale.protocol.GameMode;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
-import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.inigmasgames.hytalerpg.progress.AttributeAllocationService;
-import com.inigmasgames.hytalerpg.ui.RpgUiProjectionService;
-import com.inigmasgames.hytalerpg.ui.character.RpgCharacterPage;
-import com.inigmasgames.hytalerpg.ui.trace.RpgUiTraceService;
+import com.inigmasgames.hytalerpg.ui.inventory.InventoryEntryAdapter;
 
 public final class RpgCharacterCommand extends AbstractPlayerCommand {
-    private final RpgUiProjectionService projection;
-    private final AttributeAllocationService allocation;
-    private final RpgUiTraceService trace;
+    private final InventoryEntryAdapter entry;
 
-    public RpgCharacterCommand(RpgUiProjectionService projection, AttributeAllocationService allocation,
-                               RpgUiTraceService trace) {
-        super("character", "Open the server-authoritative RPG Character screen.");
-        this.projection = projection; this.allocation = allocation; this.trace = trace;
+    public RpgCharacterCommand(InventoryEntryAdapter entry) {
+        super("character", "Open the unified RPG Inventory/Character screen.");
+        this.entry = entry;
         setPermissionGroup(GameMode.Adventure);
     }
 
     @Override protected void execute(CommandContext context, Store<EntityStore> store, Ref<EntityStore> ref,
                                      PlayerRef playerRef, World world) {
-        Player player = store.getComponent(ref, Player.getComponentType());
-        if (player == null) {
-            context.sendMessage(Message.raw("Player UI manager is unavailable."));
-            return;
-        }
-        player.getPageManager().openCustomPage(ref, store,
-                new RpgCharacterPage(playerRef, projection, allocation, trace));
+        if (!entry.open(playerRef, ref, store))
+            context.sendMessage(Message.raw("Inventory workspace is unavailable for this player."));
     }
 }

@@ -50,6 +50,33 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
     private final Map<UUID,java.util.concurrent.CompletionStage<Void>> loading = new ConcurrentHashMap<>();
     private volatile boolean nonblockingReads;
     public void enableNonblockingReads(){nonblockingReads=true;}
+    /** Existing player-save authority atomically commits debit, random result and base rank. */
+    public com.inigmasgames.hytalerpg.gear.GearEconomyProgress.Receipt upgradeSkill(UUID player,String skill,long expectedRevision,UUID request){
+        Holder h=holder(player);synchronized(h){
+            ensureUsable(player,h);String key="upgrade/"+request;
+            var prior=h.state.gearEconomy.receipts().get(key);
+            if(prior!=null){if(!prior.operation().equals("UPGRADE")||!prior.subject().equals(skill))throw new IllegalArgumentException("Upgrade receipt conflict");return prior;}
+            if(h.state.revision!=expectedRevision)throw new IllegalArgumentException("Stale upgrade preview");
+            if(!h.state.learnedSkills.contains(skill)||catalog.skill(new SkillId(skill)).isEmpty())throw new IllegalArgumentException("Learned skill required");
+            int rank=h.state.gearEconomy.baseRanks().getOrDefault(skill,ProgressionMath.masteryLevel(h.state.skillMastery.getOrDefault(skill,0L)));
+            var recipe=com.inigmasgames.hytalerpg.gear.GearEconomy.recipe(rank+1);
+            com.inigmasgames.hytalerpg.gear.GearEconomy.debit(h.state.gearEconomy.materials(),recipe);
+            if(h.state.gearEconomy.receipts().size()>=com.inigmasgames.hytalerpg.gear.GearEconomyProgress.MAX_RECEIPTS)throw new IllegalStateException("Economy receipt capacity");
+            int roll=new java.security.SecureRandom().nextInt(10000);
+            var candidate=h.state.copy();candidate.gearEconomy=candidate.gearEconomy.upgrade(key,skill,rank,roll);candidate.revision=Math.addExact(candidate.revision,1);
+            try{repository.save(candidate);}catch(RuntimeException error){h.persistenceUncertain=true;throw error;}h.state=candidate;
+            // Future commits read the new base rank; existing casts and cooldown work are retained.
+            return candidate.gearEconomy.receipts().get(key);
+        }
+    }
+    /** Called only after the encounter item authority has durably reserved this exact salvage. */
+    public com.inigmasgames.hytalerpg.gear.GearEconomyProgress.Receipt creditGearSalvage(UUID player,com.inigmasgames.hytalerpg.gear.GearInstance item){
+        Holder h=holder(player);synchronized(h){ensureUsable(player,h);String key="salvage/"+item.identity();
+            var next=h.state.gearEconomy.salvage(key,item);if(next==h.state.gearEconomy)return next.receipts().get(key);
+            var candidate=h.state.copy();candidate.gearEconomy=next;candidate.revision=Math.addExact(candidate.revision,1);
+            try{repository.save(candidate);}catch(RuntimeException error){h.persistenceUncertain=true;throw error;}h.state=candidate;return next.receipts().get(key);
+        }
+    }
     /** No native handles or callbacks enter this queue. The holder remains the sole mutation authority. */
     public synchronized java.util.concurrent.CompletionStage<Void> preload(UUID player){
         if(states.containsKey(player))return java.util.concurrent.CompletableFuture.completedStage(null);
@@ -57,7 +84,12 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
         // Bound ready state as well as queued loads; no completion callback takes this lock.
         if(states.size()+loading.size()>=4096)throw new IllegalStateException("PLAYER_READ_VIEW_CAPACITY");
         loading.entrySet().removeIf(e->e.getValue().toCompletableFuture().isDone()&&states.containsKey(e.getKey()));
-        var receipt=playerWork.<Void>submit(()->{holder(player);return null;});loading.put(player,receipt);return receipt;
+        var readyPathTicket=com.inigmasgames.hywind.readypath.ReadyPathProbe.queued();
+        var receipt=playerWork.<Void>submit(()->{
+            try(var span=com.inigmasgames.hywind.readypath.ReadyPathProbe.execute("RPG_PRELOAD_WORKER",player,readyPathTicket)){
+                holder(player);return null;
+            }
+        });loading.put(player,receipt);return receipt;
     }
     public boolean ready(UUID player){var h=states.get(player);return playerWork.failure()==null&&h!=null&&!h.persistenceUncertain&&!h.rewardRecoveryRequired;}
     public Map<String,Object> persistenceMetrics(){return playerWork.metrics();}
@@ -371,6 +403,32 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
             for(var attribute:RpgAttribute.values())candidate.attributes.put(attribute.name(),10);
         });
     }
+    /** Operator command entry point; the command owns permission and self-only checks. */
+    public MutationResult setOperatorLevel(UUID player,int target,String correlation){
+        Holder holder=holder(player);
+        synchronized(holder){
+            ensureUsable(player,holder);
+            if(target<1||target>99)return MutationResult.failure(ValidationCode.INVALID_REQUEST,
+                    "Level must be 1..99.",correlation,holder.state.revision);
+            var xp=new com.inigmasgames.hytalerpg.ui.CharacterXpProjectionService();
+            if(xp.project(holder.state.currentXp).level()!=holder.state.level)
+                return MutationResult.failure(ValidationCode.INVALID_REQUEST,
+                        "Saved XP and level disagree; repair the player state before changing level.",correlation,holder.state.revision);
+            if(target==holder.state.level)return new MutationResult(true,ValidationCode.ACCEPTED,
+                    "Already level "+target+"; points and XP unchanged.",correlation,holder.state.revision,Map.of());
+            return mutate(holder,player,correlation,candidate->{
+                int points=Math.multiplyExact(target-candidate.level,5);
+                if(points<0&&candidate.unspentAttributePoints< -points)
+                    throw new IllegalArgumentException("Cannot lower level without removing allocated points; reset stats first.");
+                candidate.unspentAttributePoints=Math.addExact(candidate.unspentAttributePoints,points);
+                candidate.pendingLevelUpPoints=points>=0
+                        ?Math.addExact(candidate.pendingLevelUpPoints,points)
+                        :Math.max(0,candidate.pendingLevelUpPoints+points);
+                candidate.currentXp=xp.levelStartXp(target);
+                candidate.level=target;
+            });
+        }
+    }
     @Override public long masteryXp(UUID player,String skill){return readHolder(player,false).state.skillMastery.getOrDefault(skill,0L);}
 
     @Override public RpgLoadoutView getLoadout(UUID player) {
@@ -611,6 +669,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
     }
 
     private CompilationResult compileTraced(UUID player, RpgPlayerState state, String correlation) {
+        try (var readyPathSpan = com.inigmasgames.hywind.readypath.ReadyPathProbe.span("RPG_PLAYER_COMPILE_TRACE", player)) {
         trace(player, RpgTraceEventType.COMPILE_BEGIN, correlation,
                 details("RPG revision", state.revision, "schemaVersion", state.schemaVersion));
         CompilationResult result = compiler.compile(state);
@@ -632,6 +691,8 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
         details.put("plans", result.plans().values().stream().map(plan -> planDetails(plan, "FINAL", "PASS")).toList());
         trace(player, RpgTraceEventType.COMPILE_SUCCESS, correlation, details);
         return result;
+
+        }
     }
 
     private Holder holder(UUID player) {
@@ -666,6 +727,7 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
     }
 
     private Holder load(UUID player) {
+        try (var readyPathSpan = com.inigmasgames.hywind.readypath.ReadyPathProbe.span("RPG_PLAYER_LOAD_RECOVER", player)) {
         RpgPlayerStateRepository.LoadResult loaded = repository.load(player);
         RpgPlayerState state = loaded.state();
         List<String> loadWarnings = new ArrayList<>(loaded.warnings());
@@ -706,6 +768,8 @@ public final class RpgLoadoutService implements RpgLoadoutOperations, AutoClosea
             trace(player,RpgTraceEventType.PROGRESSION_REWARD_RECOVERED,reference(),details("operation","LOAD_RECOVERY",
                     "sequence",holder.state.rewards.sequence(),"receiptHash",holder.state.rewards.lastReceiptHash()));
         return holder;
+
+        }
     }
     private static boolean migrateLightningIds(RpgPlayerState state) {
         boolean changed=false;

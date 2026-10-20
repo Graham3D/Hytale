@@ -31,12 +31,16 @@ public final class Stage04SkillProfiles {
 
     private static final class Canonical { static final Stage04SkillProfiles INSTANCE=loadResources(); }
     public static Stage04SkillProfiles loadCanonical(RpgCatalog catalog) {
+        try (var readyPathSpan = com.inigmasgames.hywind.readypath.ReadyPathProbe.span("RPG_RUNTIME_PROFILE_VALIDATE", null)) {
         var loaded=Canonical.INSTANCE;
         loaded.profiles.keySet().forEach(id->catalog.skill(new SkillId(id)).orElseThrow(
                 ()->new IllegalStateException("Runtime skill is absent from catalog: "+id)));
         return loaded;
+
+        }
     }
     private static Stage04SkillProfiles loadResources() {
+        try (var readyPathSpan = com.inigmasgames.hywind.readypath.ReadyPathProbe.span("RPG_RUNTIME_PROFILE_PARSE", null)) {
         try {
             List<Stage04SkillProfile> profiles = new ArrayList<>();
             profiles.addAll(load("/rpg/runtime/stage-04-skills.json", EXPECTED_STAGE04_PILOTS));
@@ -67,13 +71,16 @@ public final class Stage04SkillProfiles {
             profiles.addAll(load("/rpg/runtime/stage-13-support-tether-cohort-v.json", 2));
             profiles.addAll(load("/rpg/runtime/mantle-of-flame-v1.json", 1));
             profiles.addAll(load("/rpg/runtime/lightning-v2.json", 7));
+            profiles.addAll(load("/rpg/runtime/iron-sentinel-v1.json", 1));
             Stage04SkillProfiles loaded = new Stage04SkillProfiles(profiles);
-            int expected = EXPECTED_STAGE04_PILOTS + EXPECTED_STAGE05_PILOTS + EXPECTED_STAGE06_PROFILES + EXPECTED_STAGE08_PROFILES + EXPECTED_STAGE09_PROFILES + EXPECTED_STAGE10_PROFILES + EXPECTED_STAGE13_PROFILES + 10;
+            int expected = EXPECTED_STAGE04_PILOTS + EXPECTED_STAGE05_PILOTS + EXPECTED_STAGE06_PROFILES + EXPECTED_STAGE08_PROFILES + EXPECTED_STAGE09_PROFILES + EXPECTED_STAGE10_PROFILES + EXPECTED_STAGE13_PROFILES + 11;
             if (loaded.profiles.size() != expected)
                 throw new IllegalStateException("Expected " + expected + " runtime pilot skills, got " + loaded.profiles.size());
             return loaded;
         } catch (RuntimeException error) { throw error; }
         catch (Exception error) { throw new IllegalStateException("Cannot load runtime skill data", error); }
+
+        }
     }
 
     public Stage04SkillProfile require(String skillId) {

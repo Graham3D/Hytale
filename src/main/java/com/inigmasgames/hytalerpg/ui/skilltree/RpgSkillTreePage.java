@@ -49,6 +49,7 @@ public final class RpgSkillTreePage extends InteractiveCustomUIPage<RpgSkillTree
 
     @Override public void build(@Nonnull Ref<EntityStore> ref, @Nonnull UICommandBuilder commands,
                                 @Nonnull UIEventBuilder events, @Nonnull Store<EntityStore> store) {
+        try(var readyPathSpan=com.inigmasgames.hywind.readypath.ReadyPathProbe.span("RPG_SKILL_TREE_PAGE_BUILD",player.getUuid())) {
         commands.append("RpgSkillTree.ui");
         currentWeaponKind = currentWeapon(ref, store);
         project();
@@ -56,6 +57,8 @@ public final class RpgSkillTreePage extends InteractiveCustomUIPage<RpgSkillTree
         render(commands, events);
         trace("SKILLTREE_OPENED", "page", Map.of("result", "PASS", "schemaRevision", model.revision(),
                 "currentWeaponKind", currentWeaponKind, "hotkey", "BLOCKED_PUBLIC_API"));
+
+        }
     }
 
     @Override public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store,

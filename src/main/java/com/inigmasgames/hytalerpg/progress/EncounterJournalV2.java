@@ -145,6 +145,12 @@ final class EncounterJournalV2 implements EncounterLog {
         if(value==null){value=legacy.load(key);if(value!=null&&value.sequence()>checkpoints.manifest().legacyFloor())throw corrupt("LEGACY_CHECKPOINT_AHEAD_OF_MIGRATION");}
         if(value!=null)cachePut(key,value);return value;
     }
+    @Override public void discardUnmodifiedBaseline(EncounterJournal.Key key){
+        var value=entry(key);
+        if(value!=null&&value.sequence()!=0||dirty.contains(key)||pinned.containsKey(key))
+            throw new IllegalStateException("ENEMY_BIRTH_CONTEXT_HAS_DURABLE_CONTRIBUTIONS");
+        cache.remove(key);
+    }
     private void cachePut(EncounterJournal.Key key,EncounterJournal.Entry value){
         if(!cache.containsKey(key)&&cache.size()>=EncounterContributions.MAX_ENCOUNTERS){
             var evict=cache.keySet().stream().filter(k->!dirty.contains(k)&&!pinned.containsKey(k)).findFirst().orElseThrow(()->corrupt("CACHE_CAPACITY"));cache.remove(evict);

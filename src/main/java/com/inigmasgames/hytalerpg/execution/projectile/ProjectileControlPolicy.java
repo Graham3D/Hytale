@@ -7,6 +7,14 @@ import java.util.UUID;
 /** Authored Root policy before native projection. Boss substitution is an explicit encounter opt-in. */
 public final class ProjectileControlPolicy {
     private ProjectileControlPolicy() {}
+    public static StatusService.Result hostileRoot(StatusService statuses, Stage04SkillProfile.Projectile payload,
+            UUID owner, UUID target, String source, String role, ControlProfile control) {
+        if (control.protectedEntity() || control.boss() && !payload.details().allowsBossSlow(role))
+            return root(statuses, payload, target, source, role, control);
+        var admission = statuses.admit(StatusApplication.hostile(owner, target, RpgStatusType.ROOT), control, true);
+        return admission == StatusService.Admission.ACCEPTED ? root(statuses, payload, target, source, role, control)
+                : new StatusService.Result(StatusService.Outcome.REJECTED, RpgStatusType.ROOT, 0, 0, admission.name());
+    }
     public static StatusService.Result root(StatusService statuses, Stage04SkillProfile.Projectile payload,
             UUID target, String source, String role, ControlProfile control) {
         if (!payload.statusId().equals("ROOT")) throw new IllegalArgumentException("ROOT payload required");

@@ -45,6 +45,7 @@ public final class LinkCompiler {
     }
 
     public CompilationResult compile(RpgPlayerState state) {
+        try (var readyPathSpan = com.inigmasgames.hywind.readypath.ReadyPathProbe.span("RPG_SKILL_PLAN_COMPILE", null)) {
         GraphValidationResult graph = graphService.validate(state);
         if (!graph.valid()) return CompilationResult.failure(graph.firstIssue().code(), graph.firstIssue().message());
 
@@ -63,6 +64,8 @@ public final class LinkCompiler {
             plans.put(slot, compileOne(slot, definition.get(), bindings));
         }
         return CompilationResult.success(plans);
+
+        }
     }
 
     private CompilationResult validateBindings(SkillDefinition skill, List<PassiveBinding> bindings) {

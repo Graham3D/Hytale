@@ -40,6 +40,131 @@ class Stage12ProgressionClosureTest {
         assertEquals(before.acquisition,after.acquisition);assertEquals(before.skillMastery,after.skillMastery);assertEquals(before.learnedSkills,after.learnedSkills);assertEquals(before.ownedPassives,after.ownedPassives);
         assertEquals(before.currentXp,after.currentXp);assertEquals(before.level,after.level);assertTrue(s.respecAttributes(player,1,"again").success());assertEquals(13,repo().load(player).state().unspentAttributePoints);
     }
+    @Test void operatorLevelAddsOnlyNewLevelPointsAndResetRefundsExistingAllocations(){
+        var before=seed();
+        try(var s=service()){
+            assertTrue(s.setOperatorLevel(player,99,"level-99").success());
+            var atCap=repo().load(player).state();
+            assertEquals(99,atCap.level);
+            assertEquals(new com.inigmasgames.hytalerpg.ui.CharacterXpProjectionService().levelStartXp(99),atCap.currentXp);
+            assertEquals(493,atCap.unspentAttributePoints);
+            assertEquals(492,atCap.pendingLevelUpPoints);
+            assertEquals(20,atCap.attributes.get("DEX"));
+            assertEquals(atCap.revision,s.setOperatorLevel(player,99,"again").revision());
+            assertEquals(493,repo().load(player).state().unspentAttributePoints);
+            assertTrue(s.respecAttributes(player,atCap.revision,"reset").success());
+            var reset=repo().load(player).state();
+            assertEquals(10,reset.attributes.get("DEX"));
+            assertEquals(503,reset.unspentAttributePoints);
+            assertEquals(492,reset.pendingLevelUpPoints);
+            assertEquals(before.rewards,reset.rewards);
+            assertEquals(before.acquisition,reset.acquisition);
+            assertTrue(s.setOperatorLevel(player,1,"level-1").success());
+            var lowered=repo().load(player).state();
+            assertEquals(1,lowered.level);assertEquals(0,lowered.currentXp);
+            assertEquals(13,lowered.unspentAttributePoints);assertEquals(2,lowered.pendingLevelUpPoints);
+        }
+        try(var reopened=service()){
+            var loaded=reopened.getPresentationView(player).state();
+            assertEquals(1,loaded.level);assertEquals(13,loaded.unspentAttributePoints);
+        }
+    }
+    @Test void operatorLevelRejectsOverspendingOnDowngradeAndInvalidTargets(){
+        var state=RpgPlayerState.create(player);state.level=20;
+        state.currentXp=new com.inigmasgames.hytalerpg.ui.CharacterXpProjectionService().levelStartXp(20);
+        state.attributes.put("STR",105);repo().save(state);
+        try(var s=service()){
+            assertFalse(s.setOperatorLevel(player,1,"lower").success());
+            assertFalse(s.setOperatorLevel(player,100,"invalid").success());
+            assertEquals(20,repo().load(player).state().level);
+            assertEquals(105,repo().load(player).state().attributes.get("STR"));
+        }
+    }
+    @Test void earnedRewardStillCommitsAfterOperatorLevelChange(){
+        try(var s=service()){
+            var previous=new EarnedReward("pre-level-kill",100,1,Map.of(),"ENEMY_DEATH","root","skill","pre-level");
+            assertEquals(EarnedRewardStore.Outcome.COMMITTED,s.awardEarned(player,previous).outcome());
+            assertTrue(s.setOperatorLevel(player,99,"cap").success());
+            var reward=new EarnedReward("post-level-kill",100,1,Map.of(),"ENEMY_DEATH","root","skill","post-level");
+            assertEquals(EarnedRewardStore.Outcome.COMMITTED,s.awardEarned(player,reward).outcome());
+            var saved=repo().load(player).state();
+            assertEquals(99,saved.level);assertEquals(490,saved.unspentAttributePoints);
+            assertEquals(new com.inigmasgames.hytalerpg.ui.CharacterXpProjectionService().levelStartXp(99)+100,saved.currentXp);
+            assertEquals(2,saved.rewards.sequence());
+        }
+    }
+    @Test void boundedAttributeAllocationIsOnePersistedMutationAndClampsToBalance(){
+        var state=RpgPlayerState.create(player);state.unspentAttributePoints=20;state.pendingLevelUpPoints=20;repo().save(state);
+        try(var s=service()){
+            var allocation=new AttributeAllocationService(s);
+            var one=allocation.allocateUpTo(player,com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.STR,1,0,"normal");
+            assertTrue(one.mutation().success());assertEquals(1,one.applied());
+            var five=allocation.allocateUpTo(player,com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.STR,5,1,"bulk");
+            assertTrue(five.mutation().success());assertEquals(5,five.applied());
+            assertEquals(16,repo().load(player).state().attributes.get("STR"));
+            assertEquals(14,repo().load(player).state().unspentAttributePoints);
+            assertFalse(allocation.allocateUpTo(player,com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.STR,5,1,"stale").mutation().success());
+            assertFalse(allocation.allocateUpTo(player,com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.STR,6,2,"invalid").mutation().success());
+        }
+    }
+    @Test void boundedAttributeAllocationHandlesPartialZeroCapAndRepeatedRequests(){
+        var state=RpgPlayerState.create(player);state.unspentAttributePoints=3;state.pendingLevelUpPoints=3;repo().save(state);
+        try(var s=service()){
+            var allocation=new AttributeAllocationService(s);
+            var partial=allocation.allocateUpTo(player,com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.DEX,5,0,"partial");
+            assertTrue(partial.mutation().success());assertEquals(3,partial.applied());
+            assertEquals(13,repo().load(player).state().attributes.get("DEX"));
+            assertEquals(0,repo().load(player).state().unspentAttributePoints);
+            assertFalse(allocation.allocateUpTo(player,com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.DEX,5,1,"zero").mutation().success());
+            assertEquals(1,repo().load(player).state().revision);
+        }
+        var cap=RpgPlayerState.create(player);cap.attributes.put("WIS",Integer.MAX_VALUE-2);
+        cap.unspentAttributePoints=20;cap.pendingLevelUpPoints=20;repo().save(cap);
+        try(var s=service()){
+            var allocation=new AttributeAllocationService(s);
+            var limited=allocation.allocateUpTo(player,com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.WIS,5,0,"cap");
+            assertTrue(limited.mutation().success());assertEquals(2,limited.applied());
+            assertEquals(Integer.MAX_VALUE,repo().load(player).state().attributes.get("WIS"));
+            assertEquals(18,repo().load(player).state().unspentAttributePoints);
+        }
+    }
+    @Test void repeatedAndMixedBulkAllocationsPersistWithoutOverspending()throws Exception{
+        var state=RpgPlayerState.create(player);state.unspentAttributePoints=20;state.pendingLevelUpPoints=20;repo().save(state);
+        try(var s=service()){
+            var allocation=new AttributeAllocationService(s);
+            long revision=0;
+            for(int i=0;i<3;i++){
+                var result=allocation.allocateUpTo(player,com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.LUCK,5,revision++,"held-ctrl-"+i);
+                assertTrue(result.mutation().success());assertEquals(5,result.applied());
+            }
+            assertTrue(allocation.allocate(player,com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.STR,revision++,"normal").success());
+            assertEquals(4,repo().load(player).state().unspentAttributePoints);
+            var last=allocation.allocateUpTo(player,com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.DEX,5,revision,"partial");
+            assertTrue(last.mutation().success());assertEquals(4,last.applied());
+            assertEquals(0,repo().load(player).state().unspentAttributePoints);
+            assertEquals(25,repo().load(player).state().attributes.get("LUCK"));
+        }
+        var persisted=repo().load(player).state();
+        assertEquals(0,persisted.unspentAttributePoints);assertEquals(14,persisted.attributes.get("DEX"));
+    }
+    @Test void simultaneousBulkRequestsCannotSpendSamePointsTwice()throws Exception{
+        var state=RpgPlayerState.create(player);state.unspentAttributePoints=5;state.pendingLevelUpPoints=5;repo().save(state);
+        try(var s=service();var pool=java.util.concurrent.Executors.newFixedThreadPool(2)){
+            var allocation=new AttributeAllocationService(s);
+            var gate=new java.util.concurrent.CountDownLatch(1);
+            var tasks=new ArrayList<java.util.concurrent.Future<AttributeAllocationService.AllocationResult>>();
+            for(int i=0;i<2;i++){
+                final int index=i;
+                tasks.add(pool.submit(()->{gate.await();return allocation.allocateUpTo(player,
+                        com.inigmasgames.hytalerpg.combat.attribute.RpgAttribute.STR,5,0,"race-"+index);}));
+            }
+            gate.countDown();int applied=0,successes=0;
+            for(var task:tasks){var result=task.get();applied+=result.applied();if(result.mutation().success())successes++;}
+            assertEquals(1,successes);assertEquals(5,applied);
+            assertEquals(0,repo().load(player).state().unspentAttributePoints);
+            assertEquals(15,repo().load(player).state().attributes.get("STR"));
+        }
+    }
     @Test void tenSecondCombatAndPendingGateApplyToAllLoadoutMutations(){
         seed();var s=service();var seconds=new AtomicReference<>(9.999);var pending=new AtomicBoolean();s.configureRespecGuard(id->RespecGate.rejection(seconds.get(),pending.get()));
         assertFalse(s.equipSkill(player,SkillSlot.SKILL01,new SkillId("quick_slash")).success());assertFalse(s.respecAttributes(player,0,"blocked").success());
@@ -96,7 +221,7 @@ class Stage12ProgressionClosureTest {
         }
     }
     void legacyWrite(RpgPlayerState state)throws Exception{
-        var raw=new Gson().toJsonTree(state).getAsJsonObject();raw.addProperty("schemaVersion",8);raw.remove("acquisition");
+        var raw=new Gson().toJsonTree(state).getAsJsonObject();raw.addProperty("schemaVersion",8);raw.remove("difficulty");raw.remove("gearEconomy");raw.remove("acquisition");
         Files.createDirectories(repo().path(player).getParent());Files.writeString(repo().path(player),raw.toString());
     }
     @ParameterizedTest @EnumSource(FileEarnedRewardStore.Boundary.class)
@@ -112,7 +237,7 @@ class Stage12ProgressionClosureTest {
         var store=new FileEarnedRewardStore(temp.resolve("rewards"),at->{if(at==boundary)throw new IllegalStateException("old-process-crash");});
         assertThrows(IllegalStateException.class,()->store.award(player,reward,authority));String beforeMigration=Files.readString(repo().path(player));
         var s=service();assertEquals(EarnedRewardStore.Outcome.DUPLICATE,s.awardEarned(player,reward).outcome());var after=repo().load(player).state();
-        assertEquals(9,after.schemaVersion);assertEquals(10,after.currentXp);assertEquals(1,after.rewards.sequence());assertEquals(AcquisitionProgress.INITIAL,after.acquisition);
+        assertEquals(RpgPlayerState.CURRENT_SCHEMA,after.schemaVersion);assertEquals(10,after.currentXp);assertEquals(1,after.rewards.sequence());assertEquals(AcquisitionProgress.INITIAL,after.acquisition);
         assertEquals(Set.of("quick_slash"),after.learnedSkills);assertEquals(Map.of("potency",2),after.ownedPassives);
         assertEquals(beforeMigration,Files.readString(repo().path(player).resolveSibling(player+".json.schema-v8.bak")));
         String key=RewardIntent.digest("old-event");var receipt=temp.resolve("rewards").resolve(player.toString()).resolve("receipts").resolve(key.substring(0,2)).resolve(key+".json");

@@ -339,16 +339,18 @@ public final class HytaleAutonomousCognitionController {
     private static List<GroundedStimulus> scanGroundedBlocks(
             UUID worldId, Vector3d origin, World world, Instant now) {
         List<GroundedStimulus> result = new ArrayList<>();
+        var blocks = new com.hypixel.hytale.server.core.universe.world.accessor.SectionReader(world.getChunkStore());
         int ox = (int) Math.floor(origin.x);
         int oy = (int) Math.floor(origin.y);
         int oz = (int) Math.floor(origin.z);
         for (int x = ox - SENSOR_RADIUS; x <= ox + SENSOR_RADIUS; x++) {
             for (int z = oz - SENSOR_RADIUS; z <= oz + SENSOR_RADIUS; z++) {
                 if (Math.hypot(x + 0.5 - origin.x, z + 0.5 - origin.z) > SENSOR_RADIUS) continue;
-                WorldChunk chunk = world.getChunkIfLoaded(ChunkUtil.indexChunkFromBlock(x, z));
+                WorldChunk chunk = world.getChunkStore().getChunkComponent(
+                        ChunkUtil.indexChunkFromBlock(x, z), WorldChunk.getComponentType());
                 if (chunk == null) continue;
                 for (int y = oy - 3; y <= oy + 5; y++) {
-                    BlockType block = chunk.getBlockType(x, y, z);
+                    BlockType block = BlockType.getAssetMap().getAsset(blocks.getBlock(x, y, z));
                     if (block == null || block == BlockType.EMPTY) continue;
                     String type = CLASSIFIER.classifyBlock(block);
                     if (type.isBlank()) continue;
@@ -439,9 +441,11 @@ public final class HytaleAutonomousCognitionController {
         int x = (int) Math.floor(fact.x());
         int y = (int) Math.floor(fact.y());
         int z = (int) Math.floor(fact.z());
-        WorldChunk chunk = world.getChunkIfLoaded(ChunkUtil.indexChunkFromBlock(x, z));
+        WorldChunk chunk = world.getChunkStore().getChunkComponent(
+                ChunkUtil.indexChunkFromBlock(x, z), WorldChunk.getComponentType());
         if (chunk == null) return false;
-        BlockType block = chunk.getBlockType(x, y, z);
+        BlockType block = BlockType.getAssetMap().getAsset(
+                new com.hypixel.hytale.server.core.universe.world.accessor.SectionReader(world.getChunkStore()).getBlock(x, y, z));
         return block != null && block != BlockType.EMPTY && fact.assetId().equals(block.getId());
     }
 

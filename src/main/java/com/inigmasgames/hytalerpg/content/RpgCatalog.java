@@ -22,7 +22,7 @@ import java.util.Set;
 
 /** Immutable canonical catalog loaded from checked-in, versioned content data. */
 public final class RpgCatalog {
-    public static final int EXPECTED_SKILLS = 96;
+    public static final int EXPECTED_SKILLS = 97;
     public static final int EXPECTED_PASSIVES = 67;
 
     private final Map<SkillId, SkillDefinition> skills;
@@ -46,6 +46,33 @@ public final class RpgCatalog {
     }
 
     public static RpgCatalog loadCanonical() {
+        return Boolean.getBoolean("hywind.readypath.legacy") ? compileCanonical() : prepared().catalog();
+    }
+
+    /** Classloader-local, immutable compiled indexes. A new JAR creates a new image. */
+    public record ContentImage(String revision, RpgCatalog catalog) {}
+    private static final class Shared {
+        static final ContentImage IMAGE = new ContentImage(canonicalRevision(), compileCanonical());
+    }
+    public static ContentImage prepared() { return Shared.IMAGE; }
+    private static String canonicalRevision() {
+        try {
+            var hash = java.security.MessageDigest.getInstance("SHA-256");
+            hash.update("Hywind-RpgCatalog-index-format-1".getBytes(StandardCharsets.UTF_8));
+            for (String resource : List.of("/rpg/catalog/skills.json", "/rpg/catalog/passives.json")) {
+                hash.update(resource.getBytes(StandardCharsets.UTF_8));
+                try (var in = RpgCatalog.class.getResourceAsStream(resource)) {
+                    if (in == null) throw new IllegalStateException("Missing canonical catalog: " + resource);
+                    hash.update(in.readAllBytes());
+                }
+            }
+            return java.util.HexFormat.of().formatHex(hash.digest());
+        } catch (java.io.IOException | java.security.NoSuchAlgorithmException error) {
+            throw new IllegalStateException("Cannot identify canonical content", error);
+        }
+    }
+    private static RpgCatalog compileCanonical() {
+        try (var readyPathSpan = com.inigmasgames.hywind.readypath.ReadyPathProbe.span("RPG_CATALOG_PARSE_VALIDATE", null)) {
         Gson gson = new Gson();
         SkillDto[] skillDtos = read(gson, "/rpg/catalog/skills.json", SkillDto[].class);
         PassiveDto[] passiveDtos = read(gson, "/rpg/catalog/passives.json", PassiveDto[].class);
@@ -56,6 +83,8 @@ public final class RpgCatalog {
         RpgCatalog catalog = new RpgCatalog(skills, passives);
         catalog.validateCanonicalCounts();
         return catalog;
+
+        }
     }
 
     private static <T> T read(Gson gson, String resource, Class<T> type) {

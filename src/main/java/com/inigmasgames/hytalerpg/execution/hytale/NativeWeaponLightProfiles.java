@@ -24,7 +24,7 @@ public final class NativeWeaponLightProfiles {
             public JsonObject interaction(String id){var value=Interaction.getAssetMap().getAsset(id);return value==null?null:
                 JsonParser.parseString(Interaction.CODEC.encode(value,new ExtraInfo()).asDocument().toJson()).getAsJsonObject();}
         };
-        var profile=new WeaponLightAttackProfileResolver(graph,item.getInteractionVars()).resolve(held.itemId(),held.weaponKind(),root,"native-0.7-pre2/"+root);
+        var profile=new WeaponLightAttackProfileResolver(graph,item.getInteractionVars()).resolve(held.itemId(),held.weaponKind(),root,"native-0.7-pre4/"+root);
         for(var component:profile.components())if(com.hypixel.hytale.server.core.modules.entity.damage.DamageCause.getAssetMap()
                 .getAsset(nativeCause(component.channel()))==null)throw new IllegalArgumentException("UNSUPPORTED_LIGHT_ATTACK_DAMAGE_CHANNEL");
         return profile;
@@ -42,8 +42,9 @@ public final class NativeWeaponLightProfiles {
             throw new IllegalStateException("LIGHT_PROFILE_CLASS_UNSUPPORTED:"+kind);
         if(!supported.containsKey("Weapon_Longsword_Flame"))throw new IllegalStateException("LIGHT_PROFILE_FLAME_QA_CASE_UNSUPPORTED");
         // Concrete installed fixtures: validate resolved inheritance, not just nonempty JSON traversal.
-        auditReference(supported.get("Weapon_Sword_Iron"),"PHYSICAL",10,.334,.117);
-        auditReference(supported.get("Weapon_Daggers_Iron"),"PHYSICAL",6,.207,.069);
+        auditReference(supported.get("Weapon_Sword_Iron"),"PHYSICAL",10,.318,.111);
+        auditReference(supported.get("Weapon_Daggers_Iron"),"PHYSICAL",6,.198,.066);
+        auditReference(supported.get("Weapon_Daggers_Fang_Doomed"),"PHYSICAL",8,.198,.066);
         auditReference(supported.get("Weapon_Longsword_Flame"),"FIRE",31,.520,.229);
         com.hypixel.hytale.logger.HytaleLogger.forEnclosingClass().atInfo().log("RPG_LIGHT_ATTACK_PROFILES result=PASS supported=%s unsupported=%s connectedProof=false",supported.size(),unsupported.size());
     }

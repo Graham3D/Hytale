@@ -1,0 +1,51 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.leather_scout.head.h"
+  },
+  "Quality": "RPG_Gear_Uncommon",
+  "MaxStack": 1,
+  "MaxDurability": 150,
+  "Model": "Items/Armors/Leather_Light/Head.blockymodel",
+  "Texture": "Items/Armors/Leather_Light/Head_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Armor_Leather_Light_Head.png",
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": [
+      "Armor"
+    ],
+    "Family": [
+      "Leather"
+    ]
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    }
+  },
+  "InteractionVars": {},
+  "Armor": {
+    "ArmorSlot": "Head",
+    "BaseDamageResistance": 0,
+    "DamageResistance": {},
+    "DamageEnhancement": {},
+    "StatModifiers": {},
+    "CosmeticsToHide": [
+      "EarAccessory",
+      "Ear",
+      "Haircut",
+      "HeadAccessory"
+    ]
+  },
+  "DurabilityLossOnHit": 0.5
+}

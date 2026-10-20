@@ -37,7 +37,7 @@ class Stage13ArchivedRollbackTest {
             // Include permanent encounter exclusion authority in the coordinated filesystem checkpoint.
             var encounters=new FileEncounterStore(running.resolve("encounters"));UUID world=UUID.randomUUID(),enemy=UUID.randomUUID();encounters.disqualify(world,enemy);encounters.close();
             copy(running,backup);Map<String,String> baseline=hashes(backup);
-            var upgraded=new FileRpgPlayerStateRepository(running.resolve("players")).load(player).state();assertEquals(9,upgraded.schemaVersion);assertEquals(10,upgraded.currentXp);
+            var upgraded=new FileRpgPlayerStateRepository(running.resolve("players")).load(player).state();assertEquals(RpgPlayerState.CURRENT_SCHEMA,upgraded.schemaVersion);assertEquals(10,upgraded.currentXp);
             // Same player schema does not justify rolling back only the player file. Mutate the live-copy
             // independently and prove the coordinated checkpoint, not an in-place rewind, is restored.
             var catalog=com.inigmasgames.hytalerpg.content.RpgCatalog.loadCanonical();

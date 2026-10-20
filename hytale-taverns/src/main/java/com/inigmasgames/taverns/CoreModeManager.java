@@ -39,6 +39,7 @@ import com.hypixel.hytale.server.core.prefab.selection.standard.BlockSelection;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.inigmasgames.taverns.api.SpatialPlayerItemPolicy;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -551,6 +552,14 @@ final class CoreModeManager {
             return;
         }
         session.commitRequested = false;
+
+        if (!SpatialPlayerItemPolicy.nativeMode(ref, store)) {
+            showResizeFeedback(session, playerRef, ref, store, proposedBounds, false,
+                    "Core shard transfer is disabled for spatial inventory.", now);
+            applySelection(state, session.acceptedBounds);
+            session.finishResize();
+            return;
+        }
 
         // Right-click is the sole transaction boundary. Recheck the live authoritative
         // inventory before consuming shards or allocating a refund.

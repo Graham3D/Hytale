@@ -1,0 +1,48 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.plate_cobalt.chest.nm"
+  },
+  "Quality": "RPG_Gear_Uncommon",
+  "MaxStack": 1,
+  "MaxDurability": 150,
+  "Model": "Items/Armors/Cobalt/Chest.blockymodel",
+  "Texture": "Items/Armors/Cobalt/Chest_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Armor_Cobalt_Chest.png",
+  "PlayerAnimationsId": "Block",
+  "Tags": {
+    "Type": [
+      "Armor"
+    ],
+    "Family": [
+      "Cobalt"
+    ]
+  },
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    },
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "EquipItem"
+        }
+      ]
+    }
+  },
+  "InteractionVars": {},
+  "Armor": {
+    "ArmorSlot": "Chest",
+    "BaseDamageResistance": 0,
+    "DamageResistance": {},
+    "DamageEnhancement": {},
+    "StatModifiers": {},
+    "CosmeticsToHide": [
+      "Overtop"
+    ]
+  },
+  "DurabilityLossOnHit": 0.5
+}

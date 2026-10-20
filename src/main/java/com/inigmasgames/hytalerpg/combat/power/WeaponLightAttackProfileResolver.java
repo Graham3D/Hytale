@@ -88,12 +88,29 @@ public final class WeaponLightAttackProfileResolver {
         switch(text(json,"Type","")){
             case "Serial" -> {for(var child:json.getAsJsonArray("Interactions"))feedbackTail(child,depth+1);}
             case "ApplyEffect" -> {
-                if(!text(json,"EffectId","").equals("Red_Flash")||!text(json,"Entity","").equals("Target"))throw unsupported("DAMAGE_TAIL_EFFECT");
+                if(!Set.of("Red_Flash","Hit_Interrupt_Flinch","Hit_Interrupt_Stunned",
+                    "Hit_Interrupt_Recovery_Pending","Hit_Interrupt_Recent_Reaction_A","Hit_Interrupt_Recent_Reaction_B")
+                    .contains(text(json,"EffectId",""))||!text(json,"Entity","").equals("Target"))throw unsupported("DAMAGE_TAIL_EFFECT");
             }
             case "ClearEntityEffect" -> {
                 if(!text(json,"Entity","").equals("Target")||!Set.of("Potion_Health_Regen_Lesser","Potion_Health_Regen_Small",
-                    "Potion_Health_Regen","Potion_Health_Regen_Greater","Potion_Health_Regen_Large","Potion_Stamina_Regen")
+                    "Potion_Health_Regen","Potion_Health_Regen_Greater","Potion_Health_Regen_Large","Potion_Stamina_Regen",
+                    "Hit_Interrupt_Recent_Reaction_A","Hit_Interrupt_Recent_Reaction_B")
                     .contains(text(json,"EntityEffectId","")))throw unsupported("DAMAGE_TAIL_CLEAR");
+            }
+            case "EffectCondition" -> {
+                if(!text(json,"Entity","").equals("Target")||!Set.of("All","None").contains(text(json,"Match","")))
+                    throw unsupported("DAMAGE_TAIL_CONDITION");
+                var ids=json.getAsJsonArray("EntityEffectIds");
+                if(ids==null||ids.isEmpty())throw unsupported("DAMAGE_TAIL_CONDITION");
+                for(var id:ids)if(!Set.of("Hit_Interrupt_Eligible","Hit_Interrupt_Flinch","Hit_Interrupt_Enraged",
+                    "Hit_Interrupt_Recovery_Pending","Hit_Interrupt_Recent_Reaction_A","Hit_Interrupt_Recent_Reaction_B")
+                    .contains(id.getAsString()))throw unsupported("DAMAGE_TAIL_CONDITION");
+                if(json.has("Failed")&&!json.get("Failed").isJsonNull())feedbackTail(json.get("Failed"),depth+1);
+            }
+            case "Interrupt" -> {
+                if(!text(json,"Entity","").equals("Target")||!text(json,"RequiredTag","").equals("Attack"))
+                    throw unsupported("DAMAGE_TAIL_INTERRUPT");
             }
             default -> throw unsupported("DAMAGE_TAIL_OPERATION");
         }

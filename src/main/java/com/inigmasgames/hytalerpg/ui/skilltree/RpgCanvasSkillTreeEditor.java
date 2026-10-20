@@ -30,7 +30,6 @@ import java.nio.file.Path;
 
 /** RPG authority adapter for the production CanvasUI graph editor. */
 public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
-    private static final String[] JOINT_PORTS = {"a", "b", "c"};
     private final UUID player;
     private final RpgSkillTreeProjectionService projection;
     private final RpgSkillTreeMutationService mutations;
@@ -193,9 +192,10 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
         NodeDefinition passive = NodeDefinition.builder("passive").size(124, 54)
                 .port(CanvasPort.output("out", "rpg-link", 2, 89, 27)).build();
         NodeDefinition joint = NodeDefinition.builder("joint").size(72, 72)
-                .port(CanvasPort.bidirectional("a", "rpg-link", 2, 18, 6))
-                .port(CanvasPort.bidirectional("b", "rpg-link", 2, 36, 6))
-                .port(CanvasPort.bidirectional("c", "rpg-link", 2, 54, 6)).build();
+                .port(CanvasPort.bidirectional("a", "rpg-link", 2, 36, 0))
+                .port(CanvasPort.bidirectional("b", "rpg-link", 2, 36, 72))
+                .port(CanvasPort.bidirectional("c", "rpg-link", 2, 0, 36))
+                .port(CanvasPort.bidirectional("d", "rpg-link", 2, 72, 36)).build();
         CanvasDefinition definition = CanvasDefinition.builder("rpg-skill-tree-" + player)
                 .pannable(false).zoomable(false).panGesture(PanGesture.MIDDLE_BUTTON)
                 .allowCycles(false).allowDuplicateEdges(false)
@@ -204,9 +204,10 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
                     if (source.nodeId().equals(target.nodeId()))
                         return ConnectionResult.reject(ConnectionCode.REJECT_SELF_CONNECTION, "A node cannot parent itself");
                     boolean legal = ("passive".equals(source.type()) && ("skill".equals(target.type()) || "joint".equals(target.type())))
-                            || ("joint".equals(source.type()) && "skill".equals(target.type()));
+                            || ("joint".equals(source.type())
+                                    && ("skill".equals(target.type()) || "joint".equals(target.type())));
                     return legal ? ConnectionResult.allow() : ConnectionResult.reject(ConnectionCode.REJECT_TYPE,
-                            "Use Passive → Skill/Joint or Joint → Skill");
+                            "Use Passive → Skill/Joint or Joint → Skill/Joint");
                 }).build();
         Canvas result = new Canvas(definition);
         for(LinkNodeId id:LinkNodeId.values())result.createNode(id.externalId(),id.kind().name().toLowerCase(),canonicalPosition(id),Map.of());
@@ -313,8 +314,8 @@ public final class RpgCanvasSkillTreeEditor implements CursorCanvasEditor {
             if (target.kind() == LinkNodeId.NodeKind.JOINT)
                 neighbors.computeIfAbsent(target, ignored -> new LinkedHashSet<>()).add(source);
         });
-        for (var entry : neighbors.entrySet()) if (entry.getValue().size() > 3)
-            return entry.getKey().externalId() + " is triangular and accepts at most three linked nodes";
+        for (var entry : neighbors.entrySet()) if (entry.getValue().size() > 4)
+            return entry.getKey().externalId() + " accepts at most four linked nodes";
         return null;
     }
 

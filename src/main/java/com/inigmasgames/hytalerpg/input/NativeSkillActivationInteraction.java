@@ -32,7 +32,7 @@ public final class NativeSkillActivationInteraction extends SimpleInstantInterac
         if (!owner.equals(context.getEntity()) || chain.getForkedChainId() != null) return;
         var player = buffer.getComponent(owner, PlayerRef.getComponentType());
         var original = context.getOriginalItemType();
-        var ability = original == null ? null : original.getAbility();
+        var ability = original != null && original.getAbility() instanceof com.hypixel.hytale.server.core.asset.type.item.config.CoreItemAbility core ? core : null;
         if (player == null || ability == null || !NativeAbilityBridgeAudit.rootForItem(original.getId()).equals(ability.getCastRootId())) return;
         inputs.acceptNativeExecution(player.getUuid(), type, chain.getChainId(), chain,
                 original.getId(), context.getHeldItemSlot());

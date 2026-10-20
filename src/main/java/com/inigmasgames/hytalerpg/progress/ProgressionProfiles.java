@@ -17,6 +17,7 @@ public record ProgressionProfiles(int schemaVersion,String profileId,List<BiomeB
     }
     public record Difficulty(String id,boolean enabled,double healthMultiplier,double damageMultiplier,String authoredEncounterRegistry,String disabledReason){
         public Difficulty{
+            com.inigmasgames.hytalerpg.difficulty.DifficultyId.valueOf(id);
             if(id==null||id.isBlank()||!Double.isFinite(healthMultiplier)||healthMultiplier<=0||!Double.isFinite(damageMultiplier)||damageMultiplier<=0||disabledReason==null||authoredEncounterRegistry==null)
                 throw new IllegalArgumentException("INVALID_DIFFICULTY_PROFILE");
             if(!enabled&&disabledReason.isBlank())throw new IllegalArgumentException("DISABLED_DIFFICULTY_REQUIRES_REASON");

@@ -1367,9 +1367,8 @@ final class TavernPatronManager {
      * the ChunkStore, which Hytale explicitly forbids during an ECS tick.
      */
     static BlockType loadedBlockType(World world, int x, int y, int z) {
-        WorldChunk chunk = world.getChunkIfLoaded(
-                ChunkUtil.indexChunkFromBlock(x, z));
-        return chunk == null ? null : chunk.getBlockType(x, y, z);
+        WorldChunk chunk = world.getChunkStore().getChunkComponent(ChunkUtil.indexChunkFromBlock(x, z), WorldChunk.getComponentType());
+        return chunk == null ? null : BlockType.getAssetMap().getAsset(new com.hypixel.hytale.server.core.universe.world.accessor.SectionReader(world.getChunkStore()).getBlock(x, y, z));
     }
 
     private static boolean isPassable(BlockType block) {

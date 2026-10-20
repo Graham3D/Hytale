@@ -31,6 +31,10 @@ import java.util.*;
 /** Pinned native finite-support adapters. No role replacement, teleport, animation-speed or HUD mutation. */
 public final class SupportNativeEffects {
     private static final ControlProfileRegistry CONTROLS=ControlProfileRegistry.loadCanonical();
+    private static volatile java.util.function.BiPredicate<Store<EntityStore>,Ref<EntityStore>> encounterProtection=(store,target)->false;
+    public static void configureEncounterProtection(java.util.function.BiPredicate<Store<EntityStore>,Ref<EntityStore>> provider){
+        encounterProtection=Objects.requireNonNull(provider);
+    }
     private SupportNativeEffects(){}
     public static void requireAssets(){
         if(EntityEffect.getAssetMap().getAsset("RPG_Rally_Movement")==null)throw new IllegalStateException("RALLY_EFFECT_MISSING");
@@ -49,7 +53,7 @@ public final class SupportNativeEffects {
         var npc=store.getComponent(target,NPCEntity.getComponentType());
         var effects=store.getComponent(target,EffectControllerComponent.getComponentType());
         var network=store.getComponent(target,NetworkId.getComponentType());
-        boolean protectedTarget=store.getComponent(target,Invulnerable.getComponentType())!=null||
+        boolean protectedTarget=encounterProtection.test(store,target)||store.getComponent(target,Invulnerable.getComponentType())!=null||
                 npc!=null&&npc.getRole()!=null&&npc.getRole().isInvulnerable()||effects!=null&&effects.isInvulnerable();
         return CONTROLS.resolve(npc==null?"":npc.getRoleName(),protectedTarget,network!=null&&bosses.isBoss(world(store),network.getId()));
     }
@@ -280,10 +284,27 @@ public final class SupportNativeEffects {
         @Override public void handle(int index,ArchetypeChunk<EntityStore> chunk,Store<EntityStore> store,CommandBuffer<EntityStore> buffer,Damage damage){
         try(var rpgTickSpan=com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.enter(store,com.inigmasgames.hytalerpg.diagnostics.NativeRpgTickMetrics.Phase.SUPPORT)){
             // RPG skill hits already use the combined additive bucket at calculation. Never apply it twice.
-            if(damage.isCancelled()||damage.getAmount()<=0||HytaleDamageAdapter.metadata(damage)!=null||!(damage.getSource() instanceof Damage.EntitySource source))return;
+            if(damage.isCancelled()||damage.getAmount()<=0||!(damage.getSource() instanceof Damage.EntitySource source))return;
             if(!source.getRef().isValid()||source.getRef().equals(chunk.getReferenceTo(index)))return;
+            // Hytale owns the four-second debuff lifetime; this existing outgoing owner reads its active state.
+            var controller=store.getComponent(source.getRef(),com.hypixel.hytale.server.core.entity.effect.EffectControllerComponent.getComponentType());
+            if(controller!=null){
+                double reduction=0;
+                for(int tier=1;tier<=3;tier++){
+                    int effect=com.hypixel.hytale.server.core.asset.type.entityeffect.config.EntityEffect.getAssetMap().getIndex("RPG_ME_Cursed_"+tier);
+                    if(effect>=0&&controller.hasEffect(effect))reduction=Math.max(reduction,switch(tier){case 1->.10;case 2->.125;default->.15;});
+                }
+                if(reduction>0)damage.setAmount((float)(damage.getAmount()*(1-reduction)));
+            }
+            if(HytaleDamageAdapter.metadata(damage)!=null
+                    ||com.inigmasgames.hytalerpg.combat.hytale.NativeDamageLeafReceipts.sourceFactorsResolved(damage))return;
             var id=store.getComponent(source.getRef(),UUIDComponent.getComponentType());if(id==null)return;
-            damage.setAmount((float)(damage.getAmount()*support.runtime().finite().nativeOutgoingFactor(world(store),id.getUuid(),System.nanoTime()/1e9)));
+            // Reuse the same native direct witness as DirectDamageBreak; attributed status ticks are not direct attacks.
+            boolean direct=damage.getIfPresentMetaObject(Damage.INTERACTION_TYPE)!=null||damage.getSource() instanceof Damage.ProjectileSource;
+            double now=System.nanoTime()/1e9;
+            double factor=direct?support.runtime().finite().nativeDirectOutgoingFactor(world(store),id.getUuid(),0,now):
+                    support.runtime().finite().nativeOutgoingFactor(world(store),id.getUuid(),now);
+            damage.setAmount((float)(damage.getAmount()*factor));
 
         }
     }

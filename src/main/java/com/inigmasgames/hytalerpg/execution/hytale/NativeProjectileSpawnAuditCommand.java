@@ -34,10 +34,15 @@ public final class NativeProjectileSpawnAuditCommand extends AbstractCommand {
         var expected=java.nio.file.Path.of(System.getProperty("rpg.projectileSpawnAuditRoot","UNSET")).toAbsolutePath().normalize();
         if(!Boolean.getBoolean("rpg.projectileSpawnAudit")||world==null||!world.getSavePath().toAbsolutePath().normalize().startsWith(expected)
                 ||Universe.get().getWorlds().values().stream().anyMatch(w->w.getPlayerCount()!=0))return CompletableFuture.failedFuture(new IllegalStateException("ISOLATED_EMPTY_WORLD_REQUIRED"));
-        world.getChunkAsync(0L).whenComplete((auditChunk,loadFailure)->{
+        world.getChunkStore().getChunkReferenceAsync(0L).whenComplete((auditChunkRef,loadFailure)->{
             if(loadFailure!=null){result.completeExceptionally(loadFailure);return;}
             world.execute(()->{
-            auditChunk.addKeepLoaded();
+            var terrain=world.getChunkStore();
+            var auditChunk=terrain.getStore().getComponent(auditChunkRef,com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk.getComponentType());
+            var pinnedSections=terrain.getLoadedSectionReferences(0,0).stream()
+                    .map(ref->terrain.getStore().getComponent(ref,com.hypixel.hytale.server.core.universe.world.chunk.section.ChunkSection.getComponentType()))
+                    .filter(Objects::nonNull).toList();
+            pinnedSections.forEach(com.hypixel.hytale.server.core.universe.world.chunk.section.ChunkSection::addKeepLoaded);
             var store=world.getEntityStore().getStore();Ref<EntityStore> actor=null;var spawned=new AtomicReference<Ref<EntityStore>>();var deferred=new AtomicBoolean();
             try{
                 UUID owner=UUID.randomUUID();var holder=EntityStore.REGISTRY.newHolder();
@@ -95,11 +100,11 @@ public final class NativeProjectileSpawnAuditCommand extends AbstractCommand {
                         command.sendMessage(Message.raw("RPG_NATIVE_SPAWN_INTEGRATION result=PASS config=Projectile_Config_RPG_Fire_Bolt nativeRefValid=true physicsVelocity=32 interactionRoots=0 pendingRollback=true productionCarrier=true connectedProof=false sameTickAdvance=true restingExpiry=true"));
                         result.complete(null);
                     }catch(Throwable failure){com.hypixel.hytale.logger.HytaleLogger.forEnclosingClass().atSevere().withCause(failure).log("RPG_NATIVE_SPAWN_INTEGRATION result=FAIL");result.completeExceptionally(failure);}
-                    finally{system.cleanupAuditProjectile(ref);if(ref.isValid())store.removeEntity(ref,RemoveReason.REMOVE);if(nativeActor.isValid())store.removeEntity(nativeActor,RemoveReason.REMOVE);auditChunk.removeKeepLoaded();}
+                    finally{system.cleanupAuditProjectile(ref);if(ref.isValid())store.removeEntity(ref,RemoveReason.REMOVE);if(nativeActor.isValid())store.removeEntity(nativeActor,RemoveReason.REMOVE);pinnedSections.forEach(com.hypixel.hytale.server.core.universe.world.chunk.section.ChunkSection::removeKeepLoaded);}
                 }));
                 deferred.set(true);
             }catch(Throwable failure){com.hypixel.hytale.logger.HytaleLogger.forEnclosingClass().atSevere().withCause(failure).log("RPG_NATIVE_SPAWN_INTEGRATION result=FAIL");result.completeExceptionally(failure);}
-            finally{if(!deferred.get()){if(spawned.get()!=null){system.cleanupAuditProjectile(spawned.get());if(spawned.get().isValid())store.removeEntity(spawned.get(),RemoveReason.REMOVE);}if(actor!=null&&actor.isValid())store.removeEntity(actor,RemoveReason.REMOVE);auditChunk.removeKeepLoaded();}}
+            finally{if(!deferred.get()){if(spawned.get()!=null){system.cleanupAuditProjectile(spawned.get());if(spawned.get().isValid())store.removeEntity(spawned.get(),RemoveReason.REMOVE);}if(actor!=null&&actor.isValid())store.removeEntity(actor,RemoveReason.REMOVE);pinnedSections.forEach(com.hypixel.hytale.server.core.universe.world.chunk.section.ChunkSection::removeKeepLoaded);}}
         });});return result;
     }
     private static SkillExecutionContext context(UUID owner){

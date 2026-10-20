@@ -54,9 +54,9 @@ class Stage07MultiplicityTest {
     @Test void fullNineShotCapacityIsRejectedBeforeAnyResourceOrCooldownCommit() {
         var h=new Harness("volley","barrage");var seed=ProjectileExecutionPlan.generationZero(Stage07ContinuationTest.context(h.owner),h.owner,
                 Vec3.ZERO,Vec3.FORWARD,"fixture",24,0);
-        for(int i=0;i<16;i++)h.registry.register(new ProjectileInstance(Stage07ContinuationTest.copyPlan(seed,"occupied-"+i,"p-"+i)));
+        for(int i=0;i<40;i++)h.registry.register(new ProjectileInstance(Stage07ContinuationTest.copyPlan(seed,"occupied-"+i,"p-"+i)));
         assertEquals("OWNER_PROJECTILE_BUDGET",h.cast().code());assertEquals(200,h.mana);assertEquals(0,h.resourceWrites);
-        assertEquals(0,h.kernel.cooldowns().remaining(h.owner,"fire_bolt"));assertTrue(h.plans.isEmpty());assertEquals(16,h.registry.size());
+        assertEquals(0,h.kernel.cooldowns().remaining(h.owner,"fire_bolt"));assertTrue(h.plans.isEmpty());assertEquals(40,h.registry.size());
     }
     @Test void invalidLaterOriginOrEquipmentCancelsRemainingBatchesWithoutRefundOrReplay() {
         var h=new Harness("volley","barrage");h.cast();double paid=h.mana;h.releaseValid=false;h.advance(.18);

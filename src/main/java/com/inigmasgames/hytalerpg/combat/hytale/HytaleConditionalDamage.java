@@ -39,7 +39,7 @@ public final class HytaleConditionalDamage {
         damage.setAmount((float)amount);
         damage.putMetaObject(VICTIM_FACTOR,victimFactor);
         damage.putMetaObject(HytaleDamageAdapter.RPG_METADATA,HytaleDamageAdapter.GSON.toJson(new HytaleDamageMetadata(metadata.actorId(),metadata.rootCastId(),metadata.skillInstanceId(),metadata.correlationId(),amount,
-                Double.isFinite(health)?health:metadata.targetHealthBefore(),metadata.effectInstanceId(),metadata.canProc(),metadata.origin())));
+                Double.isFinite(health)?health:metadata.targetHealthBefore(),metadata.effectInstanceId(),metadata.canProc(),metadata.origin(),metadata.monsterAffix())));
         return Map.of("conditionalGate","RESOLVED","targetConditionalIncreased",increased,"targetHealthAtGather",Double.isFinite(health)?health:"UNAVAILABLE",
                 "targetMaxHealthAtGather",Double.isFinite(maximum)?maximum:"UNAVAILABLE","targetControlAtGather",statuses,"conditionalPreMitigation",amount,
                 "victimCoefficientRule",request.victimCoefficient().name(),"victimCoefficientFactor",victimFactor);

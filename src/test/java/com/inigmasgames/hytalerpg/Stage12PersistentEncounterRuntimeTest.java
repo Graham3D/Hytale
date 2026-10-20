@@ -23,6 +23,14 @@ class Stage12PersistentEncounterRuntimeTest {
     private void hit(PersistentEncounterRuntime runtime,long now){assertTrue(runtime.damage(world,enemy,actor,100,90,100,true,now));}
 
     @Test void unclassifiedNewEnemyAndUnknownLoadCannotEarn(){var r=runtime();assertFalse(r.attach(world,enemy,"Unknown",Optional.empty()));assertFalse(r.contains(world,enemy));assertFalse(r.damage(world,enemy,actor,100,0,100,true,101));assertTrue(r.death(world,enemy,Vec3.ZERO,102,participants()).isEmpty());assertEquals(0,r.drain(8));assertTrue(awards.isEmpty());}
+    @Test void completedUnclassifiedNativeAttachmentIsNotObserved(){
+        var r=runtime();
+        try{
+            assertFalse(r.attachNative(world,enemy,"Unknown",Optional.empty()).toCompletableFuture().join());
+            assertFalse(r.observing(world,enemy));assertTrue(r.spawn(world,enemy).isEmpty());
+            assertFalse(r.unavailable());
+        }finally{r.close();}
+    }
     @Test void nativeInputsThroughDurableRuntimeYieldOneCalculatedAward(){var r=begin();hit(r,101);var plan=r.death(world,enemy,Vec3.ZERO,102,participants()).orElseThrow();assertEquals(131,plan.shares().getFirst().xp());assertFalse(r.contains(world,enemy));assertEquals(1,r.drain(8));assertEquals(1,awards.size());assertEquals(spawn().eventId(),awards.getFirst().eventId());assertEquals(1,awards.getFirst().insight());}
     @Test void frozenDeathReplayDoesNotDeliverAgain(){var r=begin();hit(r,101);var plan=r.death(world,enemy,Vec3.ZERO,102,participants());r.drain(8);assertEquals(plan,runtime().death(world,enemy,new Vec3(500,0,0),999,List.of()));assertEquals(0,runtime().drain(8));assertEquals(1,awards.size());}
     @Test void zeroHealthLossCannotQualify(){var r=begin();assertFalse(r.damage(world,enemy,actor,100,100,100,true,101));assertTrue(r.contributors(world,enemy).isEmpty());assertTrue(r.death(world,enemy,Vec3.ZERO,102,participants()).orElseThrow().shares().isEmpty());}

@@ -1,0 +1,6 @@
+{
+  "Type": "ClearEntityEffect",
+  "Entity": "Target",
+  "EntityEffectId": "Crossbow_Combo_2",
+  "Next": "DamageEntityParent_On_Hit"
+}

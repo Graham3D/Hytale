@@ -13,6 +13,19 @@ public final class EntityStatResourcePort implements NativeResourcePort {
     public EntityStatResourcePort(EntityStatMap stats) { this(stats,()->{}); }
     public EntityStatResourcePort(EntityStatMap stats,Runnable healthWriteObserver) {this.stats=stats;this.healthWriteObserver=java.util.Objects.requireNonNull(healthWriteObserver);}
     @Override public double current(ResourceType type) { return value(type).get(); }
+    @Override public boolean hasResource(ResourceType type){return type!=ResourceType.NONE&&stats.get(index(type))!=null&&maximum(type)>0;}
+    @Override public double drainManaAtMost(double amount,double minimum){
+        var mana=value(ResourceType.MANA);double before=mana.get();
+        float next=com.inigmasgames.hytalerpg.combat.resource.RpgResourceService.nativeDebitTarget(mana.get(),amount,minimum);
+        if(next<before)stats.setStatValue(index(ResourceType.MANA),next);
+        return Math.max(0,before-mana.get());
+    }
+    @Override public double restoreHealthAtMost(double amount){
+        var health=value(ResourceType.HEALTH);double before=health.get();if(before<=0)return 0;
+        float next=com.inigmasgames.hytalerpg.combat.resource.RpgResourceService.nativeCreditTarget(health.get(),amount,health.getMax());
+        if(next>before){healthWriteObserver.run();stats.setStatValue(index(ResourceType.HEALTH),next);}
+        return Math.max(0,health.get()-before);
+    }
     @Override public double maximum(ResourceType type) {
         return type==ResourceType.MANA?NativeManaReservationProjection.totalMaximum(value(type)):value(type).getMax();
     }

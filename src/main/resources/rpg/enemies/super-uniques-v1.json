@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "revision": "enemy-super-uniques-v1.0",
+  "templates": [
+    {
+      "id": "grimgor_the_ashen",
+      "revision": 1,
+      "name": "Grimgor the Ashen",
+      "canonicalRoleId": "Trork_Warrior",
+      "difficultyModes": [
+        "NORMAL",
+        "NIGHTMARE",
+        "HELL"
+      ],
+      "baseProfileMode": "INHERIT_ROLE",
+      "rarity": "SUPER_UNIQUE",
+      "maxHealthFactor": 3.0,
+      "directDamageFactor": 1.15,
+      "fixedAffixes": [
+        {
+          "affixId": "ME-005"
+        },
+        {
+          "affixId": "ME-024"
+        }
+      ],
+      "randomAdditionalAffixes": [
+        0,
+        1,
+        2
+      ],
+      "minions": [
+        {
+          "canonicalRoleId": "Trork_Warrior",
+          "count": 4,
+          "countsForPackbound": true
+        }
+      ],
+      "explicitImmuneChannelsByMode": {
+        "NORMAL": [],
+        "NIGHTMARE": [],
+        "HELL": [
+          "FIRE"
+        ]
+      },
+      "visualVariantId": null,
+      "lootProfileOverrideId": null,
+      "placement": {
+        "mode": "ADMIN_PLACED_ANCHOR",
+        "maximumLivePerAnchor": 1,
+        "leashMeters": 32
+      },
+      "respawn": {
+        "mode": "REUSABLE",
+        "delaySeconds": 900
+      },
+      "learningSourceMode": "CANONICAL_ROLE"
+    }
+  ]
+}

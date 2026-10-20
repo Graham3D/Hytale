@@ -1,6 +1,11 @@
 package com.inigmasgames.hytalerpg.progress;
 
 import com.inigmasgames.hytalerpg.execution.math.Vec3;
+import com.inigmasgames.hytalerpg.enemies.EnemyBirthPlan;
+import com.inigmasgames.hytalerpg.enemies.EnemyBirthRoot;
+import com.inigmasgames.hytalerpg.enemies.EnemyBirthCompensation;
+import com.inigmasgames.hytalerpg.enemies.EnemyPackRecord;
+import com.inigmasgames.hytalerpg.enemies.SuperUniqueAnchor;
 import java.util.*;
 import java.util.function.*;
 import java.util.concurrent.*;
@@ -27,6 +32,98 @@ public final class PersistentEncounterRuntime implements AutoCloseable {
         final Set<UUID> contributors=new LinkedHashSet<>();
         boolean detached,closing;
     }
+    /** Immutable birth values only; native publication must return to the owning world thread. */
+    public synchronized CompletionStage<EnemyBirthPlan> reserveEnemyBirth(EnemyBirthPlan plan){
+        Objects.requireNonNull(plan);
+        return birthIo(()->store.reserveEnemyBirth(plan));
+    }
+    public synchronized CompletionStage<EnemyBirthPlan> reserveEnemyBirthRoot(EnemyBirthRoot root){
+        Objects.requireNonNull(root);
+        return birthIo(()->store.reserveEnemyBirthRoot(root));
+    }
+    public synchronized CompletionStage<Optional<EnemyBirthRoot>> enemyBirthRoot(UUID world,UUID encounter){
+        Objects.requireNonNull(world);Objects.requireNonNull(encounter);
+        return birthIo(()->store.enemyBirthRoot(world,encounter));
+    }
+    public synchronized CompletionStage<Optional<EnemyBirthCompensation>> enemyBirthCompensation(UUID world,UUID encounter){
+        Objects.requireNonNull(world);Objects.requireNonNull(encounter);
+        return birthIo(()->store.enemyBirthCompensation(world,encounter));
+    }
+    /** Serializes behind every staged actor attachment and drops its in-memory special baseline after the writer commits ordinary restoration. */
+    public synchronized CompletionStage<EnemyBirthCompensation> compensateEnemyBirth(EnemyBirthRoot root){
+        Objects.requireNonNull(root);
+        if(stopping||unavailable)throw new IllegalStateException("ENCOUNTER_PERSISTENCE_UNAVAILABLE");
+        var keys=root.plan().actors().stream().map(actor->new Key(root.world(),actor.entityId())).toList();
+        if(keys.stream().anyMatch(key->finalizing.containsKey(key)||exclusionFrontiers.containsKey(key)))
+            throw new IllegalStateException("ENEMY_BIRTH_COMPENSATION_FINALIZING");
+        return transition(keys,()->{
+            if(!store.enemyBirthRoot(root.world(),root.encounter()).orElseThrow().equals(root))
+                throw new IllegalStateException("ENEMY_BIRTH_COMPENSATION_ROOT_MISMATCH");
+            var decision=store.compensateEnemyBirth(root.world(),root.encounter());
+            if(!decision.equals(EnemyBirthCompensation.of(root)))throw new IllegalStateException("ENEMY_BIRTH_COMPENSATION_ROOT_MISMATCH");
+            for(var key:keys){ledger.remove(key.world(),key.enemy());loaded.remove(key);attachments.remove(key);}
+            return decision;
+        }).minimalCompletionStage();
+    }
+    public synchronized CompletionStage<Optional<EnemyBirthPlan>> enemyBirth(UUID world,UUID encounter){
+        Objects.requireNonNull(world);Objects.requireNonNull(encounter);
+        return birthIo(()->store.enemyBirth(world,encounter));
+    }
+    public synchronized CompletionStage<List<EnemyBirthPlan>> enemyBirths(UUID world){
+        Objects.requireNonNull(world);
+        return birthIo(()->store.enemyBirths(world));
+    }
+    public synchronized CompletionStage<FileEncounterStore.EnemyWorldInventory> recoverEnemyWorld(UUID world){
+        Objects.requireNonNull(world);
+        return birthIo(()->store.recoverEnemyWorld(world));
+    }
+    public synchronized CompletionStage<FileEncounterStore.EnemyActionRootBlock> reserveEnemyActionRoots(
+            UUID world,UUID encounter,long generation,UUID logicalActor,int count){
+        Objects.requireNonNull(world);Objects.requireNonNull(encounter);Objects.requireNonNull(logicalActor);
+        if(generation<0||count<1||count>256)throw new IllegalArgumentException("ENEMY_ACTION_ROOT_REQUEST");
+        return birthIo(()->store.reserveEnemyActionRoots(world,encounter,generation,logicalActor,count));
+    }
+    public synchronized CompletionStage<FileEncounterStore.PlayerHitRootBlock> reservePlayerHitRoots(
+            UUID world,UUID player,int count){
+        Objects.requireNonNull(world);Objects.requireNonNull(player);
+        if(count<1||count>256)throw new IllegalArgumentException("PLAYER_HIT_ROOT_REQUEST");
+        return birthIo(()->store.reservePlayerHitRoots(world,player,count));
+    }
+    public synchronized CompletionStage<String> bindPlayerActionRoot(UUID world,UUID player,String action){
+        Objects.requireNonNull(world);Objects.requireNonNull(player);Objects.requireNonNull(action);
+        return birthIo(()->store.bindPlayerActionRoot(world,player,action));
+    }
+    public synchronized CompletionStage<Optional<EnemyPackRecord>> enemyPack(UUID world,UUID pack){
+        Objects.requireNonNull(world);Objects.requireNonNull(pack);
+        return birthIo(()->store.enemyPack(world,pack));
+    }
+    public synchronized CompletionStage<Optional<EnemyPackRecord>> enemyPackForNativeEntity(UUID world,UUID entity){
+        Objects.requireNonNull(world);Objects.requireNonNull(entity);
+        return birthIo(()->store.enemyPackForNativeEntity(world,entity));
+    }
+    public synchronized CompletionStage<List<EnemyPackRecord>> enemyPacks(UUID world){
+        Objects.requireNonNull(world);
+        return birthIo(()->store.enemyPacks(world));
+    }
+    public synchronized CompletionStage<List<SuperUniqueAnchor>> enemyAnchors(UUID world){
+        Objects.requireNonNull(world);
+        return birthIo(()->store.enemyAnchors(world));
+    }
+    public synchronized CompletionStage<EnemyPackRecord> transitionEnemyPack(UUID world,UUID pack,UnaryOperator<EnemyPackRecord> transition){
+        Objects.requireNonNull(world);Objects.requireNonNull(pack);Objects.requireNonNull(transition);
+        return birthIo(()->store.transitionEnemyPack(world,pack,transition));
+    }
+    public synchronized CompletionStage<EnemyPackRecord> reconcileEnemyPackDefeats(UUID world,UUID pack){
+        Objects.requireNonNull(world);Objects.requireNonNull(pack);
+        return birthIo(()->store.reconcileEnemyPackDefeats(world,pack));
+    }
+    private <T> CompletionStage<T> birthIo(Supplier<T> valuesOnlyWork){
+        if(stopping)throw new IllegalStateException("ENCOUNTER_SHUTDOWN_ADMISSION_CLOSED");
+        if(unavailable)throw new IllegalStateException("ENCOUNTER_PERSISTENCE_UNAVAILABLE");
+        var receipt=contextLoads.submit(()->guarded(valuesOnlyWork));
+        receipt.whenComplete((ignored,error)->{if(error!=null)unavailable=true;});
+        return receipt;
+    }
     /** Startup/load IO is independent of the short ledger monitor. No native handle is queued. */
     public synchronized CompletionStage<Boolean> attachNative(UUID world,UUID enemy,String role,Optional<EnemyRewardRegistry.Spawn> candidate){
         if(stopping)throw new IllegalStateException("ENCOUNTER_SHUTDOWN_ADMISSION_CLOSED");
@@ -45,7 +142,10 @@ public final class PersistentEncounterRuntime implements AutoCloseable {
             return receipt.minimalCompletionStage();
         }
     }
-    public synchronized boolean observing(UUID world,UUID enemy){var key=new Key(world,enemy);var a=attachments.get(key);return !unavailable&&(a!=null?!a.closing:loaded.contains(key));}
+    public synchronized boolean observing(UUID world,UUID enemy){
+        var key=new Key(world,enemy);var a=attachments.get(key);
+        return !unavailable&&(a!=null?!a.closing&&(!a.tail.isDone()||loaded.contains(key)):loaded.contains(key));
+    }
     public synchronized boolean attaching(UUID world,UUID enemy){var a=attachments.get(new Key(world,enemy));return a!=null&&!a.tail.isDone();}
     /** Takes finite provisional predecessors BEFORE publishing this transition's tail. */
     private <T> CompletableFuture<T> transition(List<Key> keys,Supplier<T> operation){

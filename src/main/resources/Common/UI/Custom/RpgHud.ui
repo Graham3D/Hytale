@@ -9,4 +9,33 @@ Group {
   }
 
   Label #LevelUpNotice { Anchor: (Horizontal: 0, Top: 70, Width: 410, Height: 34); Background: (Color: #3b2a12e8); Text: "LEVEL UP - ATTRIBUTE POINTS"; Style: (FontSize: 16, TextColor: #f2d488, Alignment: Center); Visible: false; }
+
+  Group #SentinelAffixDebug { Anchor: (Right: 24, Top: 100, Width: 390, Height: 210); Background: (Color: #141923de); Visible: false;
+    Label #SentinelAffixTitle { Anchor: (Left: 10, Top: 8, Width: 370, Height: 22); Text: "Iron Sentinel"; Style: (FontSize: 15, RenderBold: true, TextColor: #ffffff); }
+    Label #SentinelAffixRow0 { Anchor: (Left: 10, Top: 34, Width: 370, Height: 20); Text: ""; Style: (FontSize: 12, TextColor: #f2eee5); Visible: false; }
+    Label #SentinelAffixRow1 { Anchor: (Left: 10, Top: 55, Width: 370, Height: 20); Text: ""; Style: (FontSize: 12, TextColor: #f2eee5); Visible: false; }
+    Label #SentinelAffixRow2 { Anchor: (Left: 10, Top: 76, Width: 370, Height: 20); Text: ""; Style: (FontSize: 12, TextColor: #f2eee5); Visible: false; }
+    Label #SentinelAffixRow3 { Anchor: (Left: 10, Top: 97, Width: 370, Height: 20); Text: ""; Style: (FontSize: 12, TextColor: #f2eee5); Visible: false; }
+    Label #SentinelAffixRow4 { Anchor: (Left: 10, Top: 118, Width: 370, Height: 20); Text: ""; Style: (FontSize: 12, TextColor: #f2eee5); Visible: false; }
+    Label #SentinelAffixRow5 { Anchor: (Left: 10, Top: 139, Width: 370, Height: 20); Text: ""; Style: (FontSize: 12, TextColor: #f2eee5); Visible: false; }
+    Label #SentinelAffixRow6 { Anchor: (Left: 10, Top: 160, Width: 370, Height: 20); Text: ""; Style: (FontSize: 12, TextColor: #f2eee5); Visible: false; }
+    Label #SentinelAffixRow7 { Anchor: (Left: 10, Top: 181, Width: 370, Height: 20); Text: ""; Style: (FontSize: 12, TextColor: #f2eee5); Visible: false; }
+  }
+
+  // Hytale hides its native ability bar while the selected hand is empty. These are
+  // read-only mirrors of the two RPG rune slots; native input and costs stay authoritative.
+  Group #RpgEmptyHandSkill01 { Anchor: (Right: 176, Bottom: 72, Width: 58, Height: 58); Visible: false;
+    Background: (TexturePath: "Icons/RPG/Background_Ability_Ready.png");
+    Group #RpgEmptyHandIcon01 { Anchor: (Full: 6); Background: (TexturePath: "Icons/RPG/SkillSummonskeletonarchers.png"); }
+    Label #RpgEmptyHandName01 { Anchor: (Left: 4, Top: 18, Width: 50, Height: 24); Text: ""; Style: (FontSize: 10, RenderBold: true, Alignment: Center, TextColor: #ffffe6); Visible: false; }
+    Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/Frame_Ability_Ready.png"); }
+    Label #RpgEmptyHandKey01 { Anchor: (Right: 2, Bottom: 0, Width: 17, Height: 17); Text: "E"; Style: (FontSize: 12, RenderBold: true, Alignment: Center, TextColor: #ffffe6); }
+  }
+  Group #RpgEmptyHandSkill02 { Anchor: (Right: 82, Bottom: 72, Width: 58, Height: 58); Visible: false;
+    Background: (TexturePath: "Icons/RPG/Background_Ability_Ready.png");
+    Group #RpgEmptyHandIcon02 { Anchor: (Full: 6); Background: (TexturePath: "Icons/RPG/SkillSummonskeletonarchers.png"); }
+    Label #RpgEmptyHandName02 { Anchor: (Left: 4, Top: 18, Width: 50, Height: 24); Text: ""; Style: (FontSize: 10, RenderBold: true, Alignment: Center, TextColor: #ffffe6); Visible: false; }
+    Group { Anchor: (Full: 0); Background: (TexturePath: "Icons/RPG/Frame_Ability_Ready.png"); }
+    Label #RpgEmptyHandKey02 { Anchor: (Right: 2, Bottom: 0, Width: 17, Height: 17); Text: "R"; Style: (FontSize: 12, RenderBold: true, Alignment: Center, TextColor: #ffffe6); }
+  }
 }

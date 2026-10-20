@@ -7,6 +7,134 @@ import java.util.*;
 /** Bounded, source-owned finite effects. No native references, damage writer, second resource pool or Aura timer. */
 public final class FiniteSupportEffects {
     public static final int MAX_EFFECTS=4096,MAX_OWNER_EFFECTS=256,MAX_TARGET_EFFECTS=32;
+    public enum Stat { DEFENSE_BREAK, DIRECT_WEAKEN, AURA_PHYSICAL_INCREASE, AURA_RESISTANCE_ADD, AURA_MOVEMENT_INCREASE, AURA_RECOVERY_INCREASE }
+    public enum SourceKind { MONSTER_AFFIX }
+    /** Typed stat provenance; never an invisible Skill or equipment grant. */
+    public record StatSource(UUID world,UUID actor,long generation,SourceKind kind,String definitionId) {
+        public StatSource {
+            Objects.requireNonNull(world);Objects.requireNonNull(actor);Objects.requireNonNull(kind);
+            if(generation<0||definitionId==null||!Set.of("ME-014","ME-025","ME-023").contains(definitionId))
+                throw new IllegalArgumentException("INVALID_TIMED_STAT_SOURCE");
+        }
+    }
+    public record StatKey(StatSource source,UUID target,long targetGeneration,Stat stat) {
+        public StatKey {Objects.requireNonNull(source);Objects.requireNonNull(target);Objects.requireNonNull(stat);
+            if(targetGeneration<0||!(stat==Stat.DEFENSE_BREAK?"ME-025":stat==Stat.DIRECT_WEAKEN?"ME-014":"ME-023").equals(source.definitionId()))
+                throw new IllegalArgumentException("INVALID_TIMED_STAT_KEY");}
+    }
+    public record StatEffect(StatKey key,double fraction,double starts,double ends) {
+        public StatEffect {Objects.requireNonNull(key);
+            if(!Double.isFinite(fraction)||fraction<0||fraction>1||!Double.isFinite(starts)||!Double.isFinite(ends)||ends<=starts||ends-starts>120)
+                throw new IllegalArgumentException("INVALID_TIMED_STAT_EFFECT");}
+    }
+    private final Map<StatKey,StatEffect> statEffects=new LinkedHashMap<>();
+    public record IntrinsicShieldKey(UUID world,UUID target,long generation,String definitionId) {
+        public IntrinsicShieldKey {
+            Objects.requireNonNull(world);Objects.requireNonNull(target);
+            if(generation<0||!"ME-027".equals(definitionId))throw new IllegalArgumentException("INVALID_INTRINSIC_SHIELD_SOURCE");
+        }
+    }
+    public record IntrinsicShield(IntrinsicShieldKey key,double capacity,double consumed) {
+        public IntrinsicShield {
+            Objects.requireNonNull(key);
+            if(!Double.isFinite(capacity)||capacity<=0||capacity>Float.MAX_VALUE||!Double.isFinite(consumed)||consumed<0||consumed>capacity)
+                throw new IllegalArgumentException("INVALID_INTRINSIC_SHIELD");
+        }
+        public double remaining(){return Math.max(0,capacity-consumed);}
+    }
+    public record IntrinsicAbsorption(IntrinsicShield after,double amount) {}
+    private final Map<IntrinsicShieldKey,IntrinsicShield> intrinsicShields=new LinkedHashMap<>();
+    /** Intrinsic initialization/restore. External healing or refresh must never call this entry point. */
+    public synchronized IntrinsicShield restoreIntrinsicShield(IntrinsicShield saved) {
+        var key=saved.key();var prior=intrinsicShields.get(key);
+        if(prior!=null){
+            if(prior.capacity()!=saved.capacity())throw new IllegalStateException("INTRINSIC_SHIELD_BASELINE_CHANGED");
+            saved=new IntrinsicShield(key,prior.capacity(),Math.max(prior.consumed(),saved.consumed()));
+        }else{
+            if(intrinsicShields.keySet().stream().anyMatch(k->k.world.equals(key.world)&&k.target.equals(key.target)))
+                throw new IllegalStateException("INTRINSIC_SHIELD_GENERATION_STILL_BOUND");
+            if(size()>=MAX_EFFECTS||ownedCount(key.target)>=MAX_OWNER_EFFECTS||targetCount(key.target)>=MAX_TARGET_EFFECTS)
+                throw new IllegalStateException("FINITE_SUPPORT_INTRINSIC_SHIELD_BUDGET");
+        }
+        intrinsicShields.put(key,saved);return saved;
+    }
+    public synchronized Optional<IntrinsicShield> intrinsicShield(IntrinsicShieldKey key){return Optional.ofNullable(intrinsicShields.get(key));}
+    public synchronized Optional<IntrinsicShield> intrinsicShield(UUID world,UUID target){return intrinsicShields.values().stream()
+            .filter(s->s.key.world.equals(world)&&s.key.target.equals(target)).findFirst();}
+    public synchronized void unbindIntrinsicShield(IntrinsicShieldKey key){intrinsicShields.remove(key);}
+    private long ownedCount(UUID actor){return effects.keySet().stream().filter(k->k.owner.equals(actor)).count()
+            +statEffects.keySet().stream().filter(k->k.source.actor().equals(actor)).count()
+            +intrinsicShields.keySet().stream().filter(k->k.target.equals(actor)).count();}
+    private long targetCount(UUID target){return effects.keySet().stream().filter(k->k.target.equals(target)).count()
+            +statEffects.keySet().stream().filter(k->k.target.equals(target)).count()
+            +intrinsicShields.keySet().stream().filter(k->k.target.equals(target)).count();}
+    /** Caller already resolved chance/status immunity; recheck the encounter gate at publication. */
+    public synchronized boolean applyStat(StatEffect effect,double now,java.util.function.BooleanSupplier mayMutate) {
+        Objects.requireNonNull(effect);Objects.requireNonNull(mayMutate);
+        var next=statCandidate(effect,now);
+        if(!mayMutate.getAsBoolean())return false;
+        statEffects.clear();statEffects.putAll(next);return true;
+    }
+    /** Capacity preflight before consuming a status opportunity. No provider is added/refreshed. */
+    public synchronized void requireStatAdmission(StatEffect effect,double now){statCandidate(effect,now);}
+    private Map<StatKey,StatEffect> statCandidate(StatEffect effect,double now){
+        if(!Double.isFinite(now)||now<effect.starts()||now>=effect.ends())throw new IllegalArgumentException("INVALID_TIMED_STAT_TIME");
+        expire(now);
+        var key=effect.key();var next=new LinkedHashMap<>(statEffects);next.put(key,effect);
+        long ownerCount=effects.values().stream().filter(e->e.key.owner.equals(key.source.actor())).count()
+                +next.keySet().stream().filter(k->k.source.actor().equals(key.source.actor())).count();
+        long targetCount=effects.values().stream().filter(e->e.key.target.equals(key.target)).count()
+                +next.keySet().stream().filter(k->k.target.equals(key.target)).count();
+        ownerCount+=intrinsicShields.keySet().stream().filter(k->k.target.equals(key.source.actor())).count();
+        targetCount+=intrinsicShields.keySet().stream().filter(k->k.target.equals(key.target)).count();
+        if(next.size()+effects.size()+intrinsicShields.size()>MAX_EFFECTS||ownerCount>MAX_OWNER_EFFECTS||targetCount>MAX_TARGET_EFFECTS)
+            throw new IllegalStateException("FINITE_SUPPORT_STAT_BUDGET");
+        return next;
+    }
+    public synchronized double winningStat(UUID world,UUID target,long generation,Stat stat,double now) {
+        expire(now);return statEffects.values().stream().filter(e->e.key.source.world().equals(world)&&e.key.target.equals(target)
+                &&e.key.targetGeneration==generation&&e.key.stat==stat).mapToDouble(StatEffect::fraction).max().orElse(0);
+    }
+    /** Operator inspection reads the same live lease winner without expiring/removing any owner state. */
+    public synchronized double peekWinningStat(UUID world,UUID target,long generation,Stat stat,double now){
+        if(!Double.isFinite(now))throw new IllegalArgumentException("INVALID_TIMED_STAT_TIME");
+        return statEffects.values().stream().filter(e->e.key.source.world().equals(world)&&e.key.target.equals(target)
+                &&e.key.targetGeneration==generation&&e.key.stat==stat&&e.starts()<=now&&now<e.ends())
+                .mapToDouble(StatEffect::fraction).max().orElse(0);
+    }
+    /** Remaining lifetime is persisted by the encounter owner; monotonic clock values are not saved. */
+    public synchronized List<StatEffect> statEffects(UUID world,UUID target,long generation,double now) {
+        expire(now);return statEffects.values().stream().filter(e->e.key.source.world().equals(world)&&e.key.target.equals(target)
+                &&e.key.targetGeneration==generation).toList();
+    }
+    public synchronized boolean cleanseStats(UUID world,UUID target,long generation,java.util.function.BooleanSupplier mayMutate) {
+        if(!mayMutate.getAsBoolean())return false;
+        return statEffects.keySet().removeIf(k->k.source.world().equals(world)&&k.target.equals(target)&&k.targetGeneration==generation
+                &&(k.stat==Stat.DEFENSE_BREAK||k.stat==Stat.DIRECT_WEAKEN));
+    }
+    /** Atomic replacement of one source's short aura leases, using the same finite-effect budgets/expiry. */
+    public synchronized boolean replaceAuraStats(StatSource source,List<StatEffect> leases,double now,java.util.function.BooleanSupplier mayProvide){
+        if(!source.definitionId().equals("ME-023")||leases.size()>16||!Double.isFinite(now))throw new IllegalArgumentException("INVALID_AURA_PROVIDER");
+        var before=new LinkedHashMap<>(statEffects);
+        try{
+            statEffects.keySet().removeIf(key->key.source.equals(source));
+            if(!mayProvide.getAsBoolean())return false;
+            var keys=new HashSet<StatKey>();
+            for(var lease:leases){
+                if(!lease.key.source.equals(source)||!keys.add(lease.key)||lease.ends-now>.500000001)
+                    throw new IllegalArgumentException("INVALID_AURA_PROVIDER_LEASE");
+                if(!applyStat(lease,now,mayProvide)){
+                    statEffects.keySet().removeIf(key->key.source.equals(source));
+                    return false;
+                }
+            }
+            if(!mayProvide.getAsBoolean()){
+                statEffects.keySet().removeIf(key->key.source.equals(source));
+                return false;
+            }
+            return true;
+        }catch(RuntimeException error){statEffects.clear();statEffects.putAll(before);throw error;}
+    }
     public record Key(UUID world,UUID owner,String skill,UUID target){}
     public record Effect(Key key,SupportProfile.Kind kind,double magnitude,double movement,double starts,double ends,
                          String rootCastId,String skillInstanceId,String correlationId,SkillExecutionContext context,double shieldRemaining){
@@ -128,10 +256,14 @@ public final class FiniteSupportEffects {
         requireBudget(next,actor,targets);
         return next;
     }
-    private static void requireBudget(Map<Key,Effect> next,UUID actor,List<UUID> targets){
-        if(next.size()>MAX_EFFECTS||next.values().stream().filter(e->e.key.owner.equals(actor)).count()>MAX_OWNER_EFFECTS)
+    private void requireBudget(Map<Key,Effect> next,UUID actor,List<UUID> targets){
+        if(next.size()+statEffects.size()+intrinsicShields.size()>MAX_EFFECTS||next.values().stream().filter(e->e.key.owner.equals(actor)).count()
+                +statEffects.keySet().stream().filter(k->k.source.actor().equals(actor)).count()
+                +intrinsicShields.keySet().stream().filter(k->k.target.equals(actor)).count()>MAX_OWNER_EFFECTS)
             throw new IllegalStateException("FINITE_SUPPORT_OWNER_OR_GLOBAL_BUDGET");
-        for(UUID target:targets)if(next.values().stream().filter(e->e.key.target.equals(target)).count()>MAX_TARGET_EFFECTS)
+        for(UUID target:targets)if(next.values().stream().filter(e->e.key.target.equals(target)).count()
+                +statEffects.keySet().stream().filter(k->k.target.equals(target)).count()
+                +intrinsicShields.keySet().stream().filter(k->k.target.equals(target)).count()>MAX_TARGET_EFFECTS)
             throw new IllegalStateException("FINITE_SUPPORT_TARGET_BUDGET");
     }
     public synchronized List<Effect> forTarget(UUID world,UUID target,double now){
@@ -140,6 +272,16 @@ public final class FiniteSupportEffects {
     /** Identical named bonuses/debuffs refresh/choose strongest; different Increased contributions add once. */
     public synchronized ModifierBuckets damageModifiers(UUID world,UUID source,UUID target,ModifierBuckets base,double now){
         return victimModifiers(world,source,target,outgoingModifiers(world,source,base,now),now);
+    }
+    /** ME Cursed is direct-only. Call after ordinary outgoing composition, never while creating a DoT package. */
+    public synchronized ModifierBuckets directWeakening(UUID world,UUID source,long generation,ModifierBuckets base,double now){
+        double fraction=winningStat(world,source,generation,Stat.DIRECT_WEAKEN,now);
+        if(fraction==0)return base;
+        var less=new ArrayList<>(base.less());less.add(fraction);
+        return new ModifierBuckets(base.increased(),base.reduced(),base.more(),less);
+    }
+    public synchronized double nativeDirectOutgoingFactor(UUID world,UUID source,long generation,double now){
+        return nativeOutgoingFactor(world,source,now)*(1-winningStat(world,source,generation,Stat.DIRECT_WEAKEN,now));
     }
     /** Capture outgoing buff/debuff contributions with source-owned DoT snapshots, never at every later DoT tick. */
     public synchronized ModifierBuckets outgoingModifiers(UUID world,UUID source,ModifierBuckets base,double now){
@@ -187,7 +329,8 @@ public final class FiniteSupportEffects {
         return named.values().stream().mapToDouble(Double::doubleValue).sum();
     }
     public record Absorption(Effect effect,double amount,double remaining){}
-    public record ShieldHit(double remainder,double absorbed,double redirected,List<Absorption> allocations){}
+    public record ShieldHit(double remainder,double absorbed,double redirected,List<Absorption> allocations,
+                            List<IntrinsicAbsorption> intrinsicAllocations){}
     @FunctionalInterface public interface Transfer { boolean transfer(Effect shield,double amount); }
     /** Already-mitigated incoming damage: one redirect, then ordered bounded absorption; no direct Health writes. */
     public synchronized ShieldHit shieldHit(UUID world,UUID target,double incoming,boolean mayRedirect,double now,Transfer transfer){
@@ -207,16 +350,36 @@ public final class FiniteSupportEffects {
             else effects.put(shield.key,current.remaining(current.shieldRemaining-used));
             if(remaining<=1e-9)break;
         }
-        return new ShieldHit(remaining,absorbed,redirected,List.copyOf(allocations));
+        var intrinsicAllocations=new ArrayList<IntrinsicAbsorption>();
+        for(var entry:intrinsicShields.entrySet()){
+            var shield=entry.getValue();
+            if(!shield.key.world.equals(world)||!shield.key.target.equals(target))continue;
+            double used=Math.min(remaining,shield.remaining());
+            if(used<=0)continue;
+            var after=new IntrinsicShield(shield.key,shield.capacity,Math.min(shield.capacity,shield.consumed+used));
+            entry.setValue(after);remaining-=used;absorbed+=used;intrinsicAllocations.add(new IntrinsicAbsorption(after,used));
+        }
+        return new ShieldHit(remaining,absorbed,redirected,List.copyOf(allocations),List.copyOf(intrinsicAllocations));
     }
     public synchronized Optional<Effect> reflection(UUID world,UUID target,double now){
         return forTarget(world,target,now).stream().filter(e->e.kind==SupportProfile.Kind.REFLECT)
                 .max(Comparator.comparingDouble(Effect::magnitude).thenComparing(e->e.key.owner.toString()));
     }
     public synchronized void remove(Key key){effects.remove(key);}
-    public synchronized void forget(UUID actor){effects.values().removeIf(e->e.key.owner.equals(actor)||e.key.target.equals(actor));secondaryRoots.keySet().removeIf(k->k.owner.equals(actor));}
-    public synchronized void clearWorld(UUID world){effects.values().removeIf(e->e.key.world.equals(world));secondaryRoots.keySet().removeIf(k->k.world.equals(world));}
-    public synchronized void expire(double now){effects.values().removeIf(e->e.ends<=now);secondaryRoots.values().removeIf(s->s.ends<=now);}
+    /** Removes only ME-023 membership when an actor dies or leaves its native world. */
+    public synchronized void withdrawAuraActor(UUID world,UUID actor,long generation){
+        statEffects.keySet().removeIf(k->k.source.world().equals(world)
+                &&(k.target.equals(actor)&&k.targetGeneration==generation
+                ||k.source.actor().equals(actor)&&k.source.generation()==generation)
+                &&k.source.definitionId().equals("ME-023"));
+    }
+    public synchronized void forget(UUID actor){effects.values().removeIf(e->e.key.owner.equals(actor)||e.key.target.equals(actor));secondaryRoots.keySet().removeIf(k->k.owner.equals(actor));
+        // Accepted negative packages outlive the delivery monster. Aura membership does not.
+        statEffects.keySet().removeIf(k->k.target.equals(actor)||k.source.actor().equals(actor)
+                &&k.stat!=Stat.DEFENSE_BREAK&&k.stat!=Stat.DIRECT_WEAKEN);
+        intrinsicShields.keySet().removeIf(k->k.target.equals(actor));}
+    public synchronized void clearWorld(UUID world){effects.values().removeIf(e->e.key.world.equals(world));secondaryRoots.keySet().removeIf(k->k.world.equals(world));statEffects.keySet().removeIf(k->k.source.world().equals(world));intrinsicShields.keySet().removeIf(k->k.world.equals(world));}
+    public synchronized void expire(double now){effects.values().removeIf(e->e.ends<=now);secondaryRoots.values().removeIf(s->s.ends<=now);statEffects.values().removeIf(e->e.ends<=now);}
     public synchronized int secondaryRootCount(){return secondaryRoots.size();}
-    public synchronized int size(){return effects.size();}
+    public synchronized int size(){return effects.size()+statEffects.size()+intrinsicShields.size();}
 }

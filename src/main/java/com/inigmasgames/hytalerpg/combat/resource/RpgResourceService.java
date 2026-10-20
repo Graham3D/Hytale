@@ -34,6 +34,32 @@ public final class RpgResourceService {
         if(narrowed>target)narrowed=Math.nextDown(narrowed);
         return Math.max(current,narrowed); // A recovery never removes current resource after a cap change.
     }
+    public static float nativeDebitTarget(float current,double amount,double minimum){
+        if(!Float.isFinite(current)||current<0||!Double.isFinite(amount)||amount<0||!Double.isFinite(minimum)||minimum<0)
+            throw new IllegalArgumentException("Invalid bounded native debit");
+        double target=Math.max(minimum,(double)current-amount);float narrowed=(float)target;
+        if(narrowed<target)narrowed=Math.nextUp(narrowed);
+        return Math.min(current,narrowed);
+    }
+    /** Same reservation/activation owner as ordinary costs; only externally spendable Mana is exposed. */
+    public synchronized double drainSpendableMana(UUID actor,double requested,NativeResourcePort resources,java.util.function.BooleanSupplier mayMutate){
+        if(actor==null||!Double.isFinite(requested)||requested<0)throw new IllegalArgumentException("Invalid external Mana debit");
+        if(!mayMutate.getAsBoolean()||!resources.hasResource(ResourceType.MANA))return 0;
+        double current=resources.current(ResourceType.MANA);
+        double held=pending.values().stream().filter(p->p.actor.equals(actor)&&p.cost.type()==ResourceType.MANA&&!p.committed).mapToDouble(p->p.cost.amount()).sum();
+        double amount=Math.min(requested,Math.max(0,Math.min(current,reservations.spendableMaximum(actor,resources.maximum(ResourceType.MANA)))-held));
+        if(amount<=0||!mayMutate.getAsBoolean())return 0;
+        double actual=resources.drainManaAtMost(amount,held);
+        if(!Double.isFinite(actual)||actual<0||actual>amount+1e-9)throw new IllegalStateException("NATIVE_MANA_DEBIT_EXCEEDED_ALLOWANCE");
+        return actual;
+    }
+    public double creditLivingHealth(double requested,NativeResourcePort resources,java.util.function.BooleanSupplier mayMutate){
+        if(!Double.isFinite(requested)||requested<0)throw new IllegalArgumentException("Invalid external Health credit");
+        if(!mayMutate.getAsBoolean()||!resources.hasResource(ResourceType.HEALTH)||resources.current(ResourceType.HEALTH)<=0)return 0;
+        double actual=resources.restoreHealthAtMost(requested);
+        if(!Double.isFinite(actual)||actual<0||actual>requested+1e-9)throw new IllegalStateException("NATIVE_HEALTH_CREDIT_EXCEEDED_ALLOWANCE");
+        return actual;
+    }
     public double spendableMaximum(UUID actor,ResourceType type,NativeResourcePort resources){
         if(type!=ResourceType.MANA&&type!=ResourceType.STAMINA)throw new IllegalArgumentException("No leechable resource");
         return type==ResourceType.MANA?reservations.spendableMaximum(actor,resources.maximum(type)):resources.maximum(type);

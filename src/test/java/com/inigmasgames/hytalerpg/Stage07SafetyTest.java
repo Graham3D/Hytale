@@ -75,9 +75,9 @@ class Stage07SafetyTest {
     }
     @Test void promisedEchoSlotsCountAgainstOwnerCapacityBeforeAnySecondLaunch() {
         var registry=new ProjectileLifecycleRegistry();UUID owner=UUID.randomUUID();var seed=plan(owner,"root","p","echo");
-        for(int i=0;i<12;i++)registry.register(new ProjectileInstance(Stage07ContinuationTest.copyPlan(seed,"root-"+i,"p-"+i)));
-        assertEquals(12,registry.size());assertEquals("OWNER_PROJECTILE_BUDGET",registry.admission(owner,1));
-        registry.removeOwnedBy(owner);assertEquals("PASS",registry.admission(owner,24));assertEquals(0,registry.rootCount());
+        for(int i=0;i<24;i++)registry.register(new ProjectileInstance(Stage07ContinuationTest.copyPlan(seed,"root-"+i,"p-"+i)));
+        assertEquals(24,registry.size());assertEquals("OWNER_PROJECTILE_BUDGET",registry.admission(owner,1));
+        registry.removeOwnedBy(owner);assertEquals("PASS",registry.admission(owner,48));assertEquals(0,registry.rootCount());
     }
     @Test void global512CapIncludesOtherOwnersAndNeverEvictsTheirProjectiles() {
         var registry=new ProjectileLifecycleRegistry();int next=0;

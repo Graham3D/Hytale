@@ -17,6 +17,9 @@ import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.StandardCopyOption;
 import java.util.function.Consumer;
 import java.util.Optional;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import com.inigmasgames.persistentnpcs.appearance.NpcSkinCodecAdapter;
 
 /** Resolves Skin Swap-compatible exports without linking to or modifying Skin Swap. */
@@ -26,6 +29,7 @@ public final class AppearanceRepository {
     private final Path saveRoot;
     private final Path profilesDirectory;
     private final Consumer<String> diagnostics;
+    private final Map<String, LoadedAppearance> appliedAppearances = new ConcurrentHashMap<>();
 
     public AppearanceRepository(Path pluginDataDirectory, Consumer<String> diagnostics) {
         this.profilesDirectory = pluginDataDirectory.resolve("profiles")
@@ -97,6 +101,19 @@ public final class AppearanceRepository {
         }
     }
 
+    /** A restored NPC can retain its UUID after native skin/model components are reset. */
+    public boolean matchesApplied(String name,String preset,Ref<EntityStore> ref,Store<EntityStore> store){
+        LoadedAppearance expected=appliedAppearances.get(name);
+        if(expected==null)expected=appliedAppearances.get(preset);
+        if(expected==null)return false;
+        PlayerSkinComponent skin=store.getComponent(ref,PlayerSkinComponent.getComponentType());
+        ModelComponent model=store.getComponent(ref,ModelComponent.getComponentType());
+        return skin!=null&&expected.skin().equals(skin.getPlayerSkin())
+                &&model!=null&&model.getModel()!=null
+                &&Objects.equals(expected.model().getModel().getModelAssetId(),model.getModel().getModelAssetId())
+                &&Objects.equals(expected.model().getModel().getTexture(),model.getModel().getTexture());
+    }
+
     private LoadedAppearance loadAppearance(String preset) {
         if (preset == null || preset.isBlank() || saveRoot == null) return null;
         Path skinFile = expectedSkinFile(preset);
@@ -112,6 +129,7 @@ public final class AppearanceRepository {
             CosmeticsModule.get().validateSkin(skin);
             ModelComponent component = new ModelComponent(
                     CosmeticsModule.get().createModel(skin, 1.0f));
+            appliedAppearances.put(preset,new LoadedAppearance(skin,component));
             diagnostics.accept("Appearance resolved preset=" + preset + " skin=" + skinFile
                     + " generatedModelPresent=" + Files.isRegularFile(modelFile));
             return new LoadedAppearance(skin, component);

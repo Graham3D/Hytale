@@ -5,6 +5,15 @@ import java.util.*;
 /** Shared finite root admission; bounded scalar/key state only, no native entity references. */
 public final class RootEffectBudget {
     private final UUID actor;private final String root;
+    private String durableOriginalHitRoot;
+    /** Receipt metadata only; Skill execution and effect admission do not depend on this value. */
+    public synchronized void bindDurableOriginalHitRoot(String value){
+        if(value==null||value.isBlank()||value.length()>512)throw new IllegalArgumentException("ORIGINAL_HIT_ROOT");
+        if(durableOriginalHitRoot!=null&&!durableOriginalHitRoot.equals(value))
+            throw new IllegalStateException("ORIGINAL_HIT_ROOT_REBOUND");
+        durableOriginalHitRoot=value;
+    }
+    public synchronized String durableOriginalHitRoot(){return durableOriginalHitRoot;}
     private com.inigmasgames.hytalerpg.combat.damage.WeaponExecutionLedger weaponExecutions;
     private com.inigmasgames.hytalerpg.combat.power.WeaponLightAttackProfile lightAttack;
     public synchronized void captureLightAttack(com.inigmasgames.hytalerpg.combat.power.WeaponLightAttackProfile profile){

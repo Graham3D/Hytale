@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "slotPixels": 64,
+  "entries": [
+    {"family": "Chest", "itemId": "Armor_Leather_Light_Chest"},
+    {"family": "Hands", "itemId": "Armor_Leather_Light_Hands"},
+    {"family": "Head", "itemId": "Armor_Leather_Light_Head"},
+    {"family": "Legs", "itemId": "Armor_Leather_Light_Legs"},
+    {"family": "Sword", "itemId": "Weapon_Sword_Iron"},
+    {"family": "Daggers", "itemId": "Weapon_Daggers_Iron"},
+    {"family": "Short Bow", "itemId": "Weapon_Shortbow_Iron"},
+    {"family": "Long Bow proxy", "itemId": "Weapon_Shortbow_Copper", "proxy": true},
+    {"family": "Crossbow", "itemId": "Weapon_Crossbow_Iron"},
+    {"family": "Battleaxe", "itemId": "Weapon_Battleaxe_Iron"},
+    {"family": "Mace", "itemId": "Weapon_Mace_Iron"},
+    {"family": "Longsword", "itemId": "Weapon_Longsword_Iron"},
+    {"family": "Spear", "itemId": "Weapon_Spear_Iron"},
+    {"family": "Shield", "itemId": "Weapon_Shield_Iron"},
+    {"family": "Staff", "itemId": "Weapon_Staff_Iron"},
+    {"family": "Wand", "itemId": "Weapon_Wand_Wood"},
+    {"family": "Book", "itemId": "Weapon_Spellbook_Fire"},
+    {"family": "Rifle", "itemId": "Weapon_Assault_Rifle"},
+    {"family": "Blunderbuss", "itemId": "Weapon_Gun_Blunderbuss"},
+    {"family": "Bomb", "itemId": "Weapon_Bomb_Fire"}
+  ]
+}

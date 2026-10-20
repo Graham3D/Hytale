@@ -42,7 +42,7 @@ import com.hypixel.hytale.server.core.modules.entity.item.ItemPhysicsComponent;
 import com.hypixel.hytale.server.core.modules.interaction.system.InteractionSystems;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
-import com.inigmasgames.persistentnpcs.PersistentNpcsPlugin;
+import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import java.nio.file.Path;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -59,7 +59,8 @@ import javax.annotation.Nonnull;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 
-public abstract class TavernsPlugin extends PersistentNpcsPlugin {
+/** Tavern gameplay lifecycle; ImmersiveNPCs owns its own separate plugin. */
+public abstract class TavernsPlugin extends JavaPlugin {
     public static final String CORE_ITEM_ID = CoreDefinitions.TAVERN.itemId();
     public static final String TAVERN_SERVICE_ITEM_ID = "Furniture_Tavern_Service";
     public static final String REVISION = "R056";
@@ -85,7 +86,7 @@ public abstract class TavernsPlugin extends PersistentNpcsPlugin {
 
     @Override
     protected void setup() {
-        super.setup();
+        try (var readyPathSpan = com.inigmasgames.hywind.readypath.ReadyPathProbe.span("BOOT_TAVERNS_SETUP", null)) {
         Path dataDirectory = tavernsDataDirectory();
         repository = new TavernRepository(
                 dataDirectory,
@@ -183,11 +184,13 @@ public abstract class TavernsPlugin extends PersistentNpcsPlugin {
                         playerRef, new TavernsHud(playerRef));
             }
         });
+
+        }
     }
 
     @Override
     protected void start() {
-        super.start();
+        try (var readyPathSpan = com.inigmasgames.hywind.readypath.ReadyPathProbe.span("BOOT_TAVERNS_START", null)) {
         coreMode.start();
         // LoadedAssetsEvent may be emitted before the final vanilla Item map is
         // populated. Resolve once more at plugin start, after asset loading.
@@ -195,30 +198,29 @@ public abstract class TavernsPlugin extends PersistentNpcsPlugin {
         getLogger().at(Level.INFO).log(
                 "Taverns revision %s started with persistence schema %s and generic Core support.",
                 REVISION, TavernRepository.CURRENT_SCHEMA_VERSION);
+
+        }
     }
 
     @Override
     protected void shutdown() {
-        try {
-            if (coreMode != null) {
-                coreMode.shutdown();
-            }
-            if (comfortTooltipInstaller != null) {
-                comfortTooltipInstaller.restore();
-            }
-            if (tableServingManager != null) {
-                tableServingManager.restoreEmptyHandSecondary();
-                TableServingUseInteraction.uninstall(tableServingManager);
-            }
-            if (patronManager != null) {
-                patronManager.shutdown();
-            }
-        } finally {
-            super.shutdown();
+        if (coreMode != null) {
+            coreMode.shutdown();
+        }
+        if (comfortTooltipInstaller != null) {
+            comfortTooltipInstaller.restore();
+        }
+        if (tableServingManager != null) {
+            tableServingManager.restoreEmptyHandSecondary();
+            TableServingUseInteraction.uninstall(tableServingManager);
+        }
+        if (patronManager != null) {
+            patronManager.shutdown();
         }
     }
 
     private void resolveComfortItems() {
+        try (var readyPathSpan = com.inigmasgames.hywind.readypath.ReadyPathProbe.span("NATIVE_TAVERNS_ASSET_RESOLUTION", null)) {
         try {
             tableServingManager.installEmptyHandSecondary();
             comfortRegistry.resolveLoadedItems(
@@ -230,6 +232,8 @@ public abstract class TavernsPlugin extends PersistentNpcsPlugin {
         } catch (RuntimeException exception) {
             getLogger().at(Level.SEVERE).withCause(exception)
                     .log("Could not resolve Comfort data after Item assets loaded");
+        }
+
         }
     }
 
@@ -251,7 +255,7 @@ public abstract class TavernsPlugin extends PersistentNpcsPlugin {
     }
 
     private static boolean isCoreBlock(World world, Vector3i position, String itemId) {
-        BlockType blockType = BlockType.getAssetMap().getAsset(world.getBlock(position.x(), position.y(), position.z()));
+        BlockType blockType = BlockType.getAssetMap().getAsset(new com.hypixel.hytale.server.core.universe.world.accessor.SectionReader(world.getChunkStore()).getBlock(position.x(), position.y(), position.z()));
         return blockType != null && itemId.equals(blockType.getId());
     }
 

@@ -26,6 +26,10 @@ import java.util.*;
 
 /** Reversible native relationship overlay; no Role, allegiance-memory, inventory, Health or reward creation writes. */
 public final class HytaleConversionSystem extends EntityTickingSystem<EntityStore>{
+    private volatile java.util.function.BiPredicate<UUID,UUID> encounterConversionProtected=(world,entity)->false;
+    public void configureEncounterConversionProtection(java.util.function.BiPredicate<UUID,UUID> provider){
+        encounterConversionProtected=Objects.requireNonNull(provider);
+    }
     private final ConversionRegistry registry=new ConversionRegistry();
     private final Map<AttitudeView,Boolean> installed=Collections.synchronizedMap(new WeakHashMap<>());
     private final CombatTrace trace;
@@ -41,6 +45,8 @@ public final class HytaleConversionSystem extends EntityTickingSystem<EntityStor
     public synchronized void abandonDurable(SkillExecutionContext context){exclusionReceipts.remove(context.skillInstanceId());}
     public HytaleConversionSystem(CombatTrace trace,HytaleBossBarTracker bosses,com.inigmasgames.hytalerpg.vfx.LinkTreeVfxService vfx){this.trace=trace;this.bosses=bosses;this.vfx=vfx;}
     public void cancel(UUID owner){for(var lease:registry.owned(owner))registry.end(lease.token());}
+    /** Voluntary release restores each converted native NPC on its next world tick. */
+    public int dismissOwned(UUID owner){var leases=registry.owned(owner);for(var lease:leases)registry.end(lease.token());return leases.size();}
     private static UUID world(ComponentAccessor<EntityStore> store){return store.getExternalData().getWorld().getWorldConfig().getUuid();}
     private static UUID id(ComponentAccessor<EntityStore> store,Ref<EntityStore> ref){var c=ref==null||!ref.isValid()?null:store.getComponent(ref,UUIDComponent.getComponentType());return c==null?null:c.getUuid();}
     private static Vec3 point(Store<EntityStore> store,Ref<EntityStore> ref){var p=store.getComponent(ref,TransformComponent.getComponentType()).getPosition();return new Vec3(p.x(),p.y(),p.z());}
@@ -60,6 +66,7 @@ public final class HytaleConversionSystem extends EntityTickingSystem<EntityStor
         // Explicit authored Dominatable common-role opt-in. Unknown roles do NOT inherit COMMON.
         boolean classified=npc!=null&&"Wolf_Black".equals(npc.getRoleName());
         boolean protectedActor=npc==null||npc.getRole()==null||npc.isReserved()||npc.getRole().isInvulnerable()
+                ||encounterConversionProtected.test(world(store),id(store,target))
                 ||store.getComponent(target,Invulnerable.getComponentType())!=null||store.getComponent(target,SummonProjection.getComponentType())!=null
                 ||store.getComponent(target,ConversionProjection.getComponentType())!=null
                 ||store.getComponent(target,EntityStore.REGISTRY.getNonSerializedComponentType())!=null

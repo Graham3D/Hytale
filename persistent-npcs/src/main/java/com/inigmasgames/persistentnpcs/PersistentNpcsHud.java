@@ -23,6 +23,7 @@ final class PersistentNpcsHud extends CustomUIHud {
 
     @Override
     protected void build(@Nonnull UICommandBuilder commandBuilder) {
+        try(var readyPathSpan=com.inigmasgames.hywind.readypath.ReadyPathProbe.span("NPC_HUD_BUILD",getPlayerRef().getUuid())) {
         commandBuilder.append("Hud/ImmersiveNPCsRevision.ui");
         commandBuilder.set("#RevisionLabel.Text",
                 "IMMERSIVE NPCS  " + PersistentNpcsPlugin.REVISION);
@@ -31,6 +32,8 @@ final class PersistentNpcsHud extends CustomUIHud {
         subscription = readiness.subscribe(this::publish);
         OrbisReadinessSnapshot current = readiness.snapshot();
         if (current.revision() != initial.revision()) render(commandBuilder, current);
+
+        }
     }
 
     private void publish(OrbisReadinessSnapshot snapshot) {

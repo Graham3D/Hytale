@@ -9,6 +9,7 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.cli
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.data.Collector;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.data.CollectorTag;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.DamageEntityInteraction;
+import com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.LaunchProjectileInteraction;
 import java.util.*;
 
 /** Uses the installed engine's Replace/Charging walk, including the actual equipped item's variables.
@@ -18,17 +19,23 @@ public final class NativeBasicAttackPaths implements Collector {
     private record Path(boolean charged,boolean afterDamage,Interaction operation) {}
     private final ArrayDeque<Path> stack=new ArrayDeque<>();
     private final IdentityHashMap<Interaction,Kind> damage=new IdentityHashMap<>();
+    private final IdentityHashMap<DamageEntityInteraction,Integer> damageOccurrences=new IdentityHashMap<>();
+    private final IdentityHashMap<LaunchProjectileInteraction,Integer> projectileOccurrences=new IdentityHashMap<>();
     private Path pending=new Path(false,false,null);
     private int visited;
     public static NativeBasicAttackPaths resolve(InteractionContext context,RootInteraction root){
+        return resolve(context,root,InteractionType.Primary);
+    }
+    public static NativeBasicAttackPaths resolve(InteractionContext context,RootInteraction root,InteractionType type){
         var result=new NativeBasicAttackPaths();
-        InteractionManager.walkChain(result,InteractionType.Primary,context,Objects.requireNonNull(root));
+        InteractionManager.walkChain(result,Objects.requireNonNull(type),context,Objects.requireNonNull(root));
         return result;
     }
     @Override public void start() { if(visited!=0)throw new IllegalStateException("NESTED_NATIVE_WALK_UNSUPPORTED"); }
     @Override public void into(InteractionContext context,Interaction interaction){
         if(stack.size()>=64)throw new IllegalStateException("NATIVE_BASIC_PATH_DEPTH_LIMIT");
-        stack.push(new Path(pending.charged(),pending.afterDamage()||interaction instanceof DamageEntityInteraction,interaction));
+        stack.push(new Path(pending.charged(),pending.afterDamage()
+                ||interaction instanceof DamageEntityInteraction||interaction instanceof LaunchProjectileInteraction,interaction));
     }
     @Override public boolean collect(CollectorTag tag,InteractionContext context,Interaction interaction){
         if(++visited>4096)throw new IllegalStateException("NATIVE_BASIC_PATH_OPERATION_LIMIT");
@@ -45,7 +52,9 @@ public final class NativeBasicAttackPaths implements Collector {
             charged=charge.getSeconds()>0;
         }
         pending=new Path(charged,parent!=null&&parent.afterDamage(),interaction);
-        if(interaction instanceof DamageEntityInteraction&&!pending.afterDamage()){
+        if(interaction instanceof DamageEntityInteraction leaf)damageOccurrences.merge(leaf,1,Integer::sum);
+        if(interaction instanceof LaunchProjectileInteraction leaf)projectileOccurrences.merge(leaf,1,Integer::sum);
+        if((interaction instanceof DamageEntityInteraction||interaction instanceof LaunchProjectileInteraction)&&!pending.afterDamage()){
             Kind kind=charged?Kind.CHARGED:Kind.NORMAL;
             damage.merge(interaction,kind,(a,b)->a==b?a:Kind.AMBIGUOUS);
         }
@@ -55,6 +64,14 @@ public final class NativeBasicAttackPaths implements Collector {
     @Override public void finished(){if(!stack.isEmpty())throw new IllegalStateException("UNBALANCED_NATIVE_WALK");}
     public Optional<Kind> classify(Object operation){
         Kind kind=damage.get(operation);return kind==null||kind==Kind.AMBIGUOUS?Optional.empty():Optional.of(kind);
+    }
+    /** Includes post-damage and repeated routes, which cannot be certified from classify() alone. */
+    public Map<DamageEntityInteraction,Integer> damageOccurrences(){
+        return Collections.unmodifiableMap(new IdentityHashMap<>(damageOccurrences));
+    }
+    /** Native launch operations are independent strike producers. Counting them cannot certify a later hit. */
+    public Map<LaunchProjectileInteraction,Integer> projectileOccurrences(){
+        return Collections.unmodifiableMap(new IdentityHashMap<>(projectileOccurrences));
     }
     public Map<String,String> audit(){
         var result=new TreeMap<String,String>();damage.forEach((interaction,kind)->result.put(interaction.getId(),kind.name()));return Map.copyOf(result);

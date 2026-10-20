@@ -44,6 +44,8 @@ public final class CombatBalanceProfile {
     public double protectedFrozenSlow;
     public double burnDurationSeconds;
     public double poisonDurationSeconds;
+    public double poisonBaselineCoefficientPerSecond;
+    public FortuneBreak fortuneBreak;
 
     public static CombatBalanceProfile loadCanonical() {
         try (var stream = CombatBalanceProfile.class.getResourceAsStream("/rpg/balance/combat-kernel-v1.json")) {
@@ -68,6 +70,23 @@ public final class CombatBalanceProfile {
             throw new IllegalStateException("Attribute slopes must be finite and non-negative");
         if (!Double.isFinite(potencyIncreased) || potencyIncreased < 0.0)
             throw new IllegalStateException("Potency increased magnitude must be finite and non-negative");
+        if (fortuneBreak == null) throw new IllegalStateException("Missing Fortune Break balance");
+        fortuneBreak.validate();
+        if(!Double.isFinite(poisonBaselineCoefficientPerSecond)||poisonBaselineCoefficientPerSecond<=0||poisonBaselineCoefficientPerSecond>1)
+            throw new IllegalStateException("Invalid shared Poison coefficient");
+    }
+
+    public static final class FortuneBreak {
+        public int startingAllocationAttribute;
+        public double qualificationProgressLuck, scalarAnchor, scalarSpan, exponent, statusEscapeChance;
+        public void validate() {
+            if (startingAllocationAttribute < 0 || !Double.isFinite(qualificationProgressLuck)
+                    || !Double.isFinite(scalarAnchor) || !Double.isFinite(scalarSpan) || scalarSpan <= 0
+                    || !Double.isFinite(exponent) || exponent <= 0 || qualificationProgressLuck < scalarAnchor
+                    || scalarAnchor < startingAllocationAttribute || !Double.isFinite(statusEscapeChance)
+                    || statusEscapeChance < 0 || statusEscapeChance > 1)
+                throw new IllegalStateException("Invalid Fortune Break balance");
+        }
     }
 
     public static final class AttributeCurve {

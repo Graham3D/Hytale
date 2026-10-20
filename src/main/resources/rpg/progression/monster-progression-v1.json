@@ -1,0 +1,15 @@
+{
+  "revision": "monster-progression-v1-test-baseline",
+  "damagePerLevel": 0.04,
+  "referenceLevelOverrides": {},
+  "anchors": [
+    {"level": 1, "health": 1.0, "physicalProtection": 0.05, "elementalFloor": 0.0},
+    {"level": 10, "health": 1.8, "physicalProtection": 0.10, "elementalFloor": 0.03},
+    {"level": 20, "health": 2.7, "physicalProtection": 0.15, "elementalFloor": 0.06},
+    {"level": 30, "health": 3.8, "physicalProtection": 0.20, "elementalFloor": 0.09},
+    {"level": 40, "health": 5.0, "physicalProtection": 0.25, "elementalFloor": 0.12},
+    {"level": 59, "health": 8.5, "physicalProtection": 0.30, "elementalFloor": 0.16},
+    {"level": 79, "health": 14.0, "physicalProtection": 0.35, "elementalFloor": 0.20},
+    {"level": 99, "health": 22.0, "physicalProtection": 0.40, "elementalFloor": 0.25}
+  ]
+}

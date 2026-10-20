@@ -60,6 +60,7 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.SoundUtil;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.inigmasgames.taverns.api.SpatialPlayerItemPolicy;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import java.util.List;
 import java.util.Map;
@@ -162,7 +163,7 @@ final class TableServingManager {
             return Optional.empty();
         }
         BlockType blockType = BlockType.getAssetMap().getAsset(
-                world.getBlock(position.x(), position.y(), position.z()));
+                new com.hypixel.hytale.server.core.universe.world.accessor.SectionReader(world.getChunkStore()).getBlock(position.x(), position.y(), position.z()));
         if (blockType == null || blockType == BlockType.EMPTY || !isRegisteredTable(blockType)) {
             return Optional.empty();
         }
@@ -184,7 +185,7 @@ final class TableServingManager {
             Vector3i candidate = new Vector3i(
                     position.x(), position.y() + offsetY, position.z());
             BlockType blockType = BlockType.getAssetMap().getAsset(
-                    world.getBlock(candidate.x(), candidate.y(), candidate.z()));
+                    new com.hypixel.hytale.server.core.universe.world.accessor.SectionReader(world.getChunkStore()).getBlock(candidate.x(), candidate.y(), candidate.z()));
             if (blockType != null && blockType != BlockType.EMPTY
                     && isRegisteredTable(blockType)) {
                 return Optional.of(candidate);
@@ -351,7 +352,7 @@ final class TableServingManager {
             World world,
             CommandBuffer<EntityStore> commandBuffer) {
         BlockType blockType = BlockType.getAssetMap().getAsset(
-                world.getBlock(tablePosition.x(), tablePosition.y(), tablePosition.z()));
+                new com.hypixel.hytale.server.core.universe.world.accessor.SectionReader(world.getChunkStore()).getBlock(tablePosition.x(), tablePosition.y(), tablePosition.z()));
         if (blockType == null || blockType == BlockType.EMPTY || !isRegisteredTable(blockType)) {
             return false;
         }
@@ -612,6 +613,7 @@ final class TableServingManager {
             Ref<EntityStore> foodRef,
             TableServingComponent serving,
             InteractionContext context) {
+        if (!SpatialPlayerItemPolicy.nativeMode(playerRef, context.getCommandBuffer())) return false;
         ItemStack foodStack = serving.itemStack();
         String rootId = foodStack.getItem().getInteractions().get(InteractionType.Secondary);
         CommandBuffer<EntityStore> commandBuffer = context.getCommandBuffer();
@@ -673,6 +675,7 @@ final class TableServingManager {
             boolean consumed = !sameStack(chainResult, foodStack);
 
             if (consumed) {
+                if (!SpatialPlayerItemPolicy.nativeMode(playerRef, commandBuffer)) return;
                 if (chainResult != null && !chainResult.isEmpty()) {
                     CombinedItemContainer inventory = InventoryComponent.getCombined(
                             commandBuffer, playerRef,
@@ -699,6 +702,7 @@ final class TableServingManager {
             Ref<EntityStore> foodRef,
             TableServingComponent serving,
             CommandBuffer<EntityStore> commandBuffer) {
+        if (!SpatialPlayerItemPolicy.nativeMode(playerRef, commandBuffer)) return false;
         ItemStack foodStack = serving.itemStack();
         CombinedItemContainer inventory = InventoryComponent.getCombined(
                 commandBuffer, playerRef, InventoryComponent.STORAGE_HOTBAR_BACKPACK);
@@ -726,6 +730,7 @@ final class TableServingManager {
             Ref<EntityStore> plateRef,
             TableServingComponent serving,
             CommandBuffer<EntityStore> commandBuffer) {
+        if (!SpatialPlayerItemPolicy.nativeMode(playerRef, commandBuffer)) return false;
         TableKey key = key(worldId(commandBuffer.getStore()), serving);
         ServingState state = servings.get(key);
         if (state != null && state.food != null && state.food.isValid()) {
@@ -939,9 +944,8 @@ final class TableServingManager {
 
     /** Non-loading lookup safe to use while an EntityStore system is processing. */
     private static BlockType loadedBlockType(World world, int x, int y, int z) {
-        WorldChunk chunk = world.getChunkIfLoaded(
-                ChunkUtil.indexChunkFromBlock(x, z));
-        return chunk == null ? null : chunk.getBlockType(x, y, z);
+        WorldChunk chunk = world.getChunkStore().getChunkComponent(ChunkUtil.indexChunkFromBlock(x, z), WorldChunk.getComponentType());
+        return chunk == null ? null : BlockType.getAssetMap().getAsset(new com.hypixel.hytale.server.core.universe.world.accessor.SectionReader(world.getChunkStore()).getBlock(x, y, z));
     }
 
     private static void stripLegacyItemComponents(
@@ -1062,7 +1066,7 @@ final class TableServingManager {
             return false;
         }
         World world = commandBuffer.getExternalData().getWorld();
-        BlockType chair = BlockType.getAssetMap().getAsset(world.getBlock(
+        BlockType chair = BlockType.getAssetMap().getAsset(new com.hypixel.hytale.server.core.universe.world.accessor.SectionReader(world.getChunkStore()).getBlock(
                 chairPosition.x(), chairPosition.y(), chairPosition.z()));
         if (chair == null || !isRegisteredCategory(chair, ComfortCategory.SEATING)) {
             return false;
@@ -1105,12 +1109,11 @@ final class TableServingManager {
     static ServingPose servingPose(World world, TableTarget target) {
         TableKey key = target.key();
         long chunkIndex = ChunkUtil.indexChunkFromBlock(key.x(), key.z());
-        WorldChunk chunk = world.getChunkIfLoaded(chunkIndex);
+        WorldChunk chunk = world.getChunkStore().getChunkComponent(chunkIndex, WorldChunk.getComponentType());
         RotationTuple blockRotation = chunk == null
                 ? RotationTuple.NONE
-                : chunk.getBlockChunk().getSectionAtBlockY(key.y()).getRotation(
-                        ChunkUtil.localCoordinate(key.x()), key.y(),
-                        ChunkUtil.localCoordinate(key.z()));
+                : RotationTuple.get(new com.hypixel.hytale.server.core.universe.world.accessor.SectionReader(
+                        world.getChunkStore()).getRotationIndex(key.x(), key.y(), key.z()));
         Rotation3f displayRotation = new Rotation3f();
         blockRotation.applyRotationTo(displayRotation);
 
@@ -1158,17 +1161,12 @@ final class TableServingManager {
     }
 
     private static Vector3i tableAnchor(World world, Vector3i position) {
-        WorldChunk chunk = world.getChunkIfLoaded(
-                ChunkUtil.indexChunkFromBlock(position.x(), position.z()));
+        WorldChunk chunk = world.getChunkStore().getChunkComponent(ChunkUtil.indexChunkFromBlock(position.x(), position.z()), WorldChunk.getComponentType());
         if (chunk == null) {
             return new Vector3i(position);
         }
-        int filler = chunk.getBlockChunk()
-                .getSectionAtBlockY(position.y())
-                .getFiller(
-                        ChunkUtil.localCoordinate(position.x()),
-                        position.y(),
-                        ChunkUtil.localCoordinate(position.z()));
+        int filler = new com.hypixel.hytale.server.core.universe.world.accessor.SectionReader(
+                world.getChunkStore()).getFiller(position.x(), position.y(), position.z());
         if (filler == FillerBlockUtil.NO_FILLER) {
             return new Vector3i(position);
         }

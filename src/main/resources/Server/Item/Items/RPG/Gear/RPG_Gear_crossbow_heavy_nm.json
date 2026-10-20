@@ -1,0 +1,1058 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.crossbow_heavy.nm"
+  },
+  "Quality": "RPG_Gear_Common",
+  "MaxStack": 1,
+  "MaxDurability": 160,
+  "Model": "Items/Weapons/Crossbow/Iron.blockymodel",
+  "Texture": "Items/Weapons/Crossbow/Iron_Rusty_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Weapon_Crossbow_Iron_Rusty.png",
+  "PlayerAnimationsId": "Crossbow",
+  "Tags": {
+    "Type": [
+      "Weapon"
+    ],
+    "Family": [
+      "Crossbow"
+    ]
+  },
+  "Interactions": {
+    "SwapFrom": "RPG_GearRoute_R_Root_Weapon_Crossbow_Swap_From",
+    "Primary": "RPG_GearRoute_R_Root_Weapon_Crossbow_Primary_Signature",
+    "Secondary": "RPG_GearRoute_R_Root_Weapon_Crossbow_Secondary_Guard",
+    "Ability1": "RPG_GearRoute_R_Root_Weapon_Crossbow_Signature_BigArrow",
+    "Ability4": "RPG_GearRoute_R_Root_Common_StatAmmoReload_Entry"
+  },
+  "InteractionVars": {
+    "Arrow_Inventory_Condition": {
+      "Interactions": [
+        {
+          "Type": "ModifyInventory",
+          "RequiredGameMode": "Adventure",
+          "ItemToRemove": {
+            "Id": "Weapon_Arrow_Crude",
+            "Quantity": 1
+          }
+        }
+      ]
+    },
+    "Standard_Projectile_Launch": {
+      "Interactions": [
+        {
+          "Type": "RPG_GearProjectile",
+          "RunTime": 0.2,
+          "Effects": {
+            "ItemAnimationId": "Shoot",
+            "ClearAnimationOnFinish": true
+          },
+          "Config": "RPG_GearRoute_C_Projectile_Config_Arrow_Crossbow",
+          "Next": {
+            "Type": "ChangeStat",
+            "Behaviour": "Set",
+            "StatModifiers": {
+              "StaminaRegenDelay": 0
+            }
+          },
+          "$Comment": "Launching the standard projectile"
+        }
+      ]
+    },
+    "Standard_Projectile_Damage": {
+      "Interactions": [
+        {
+          "Type": "RPG_GearDamage",
+          "DamageEffects": {
+            "Knockback": {
+              "Type": "Force",
+              "VelocityConfig": {
+                "AirResistance": 0.99,
+                "AirResistanceMax": 0.98,
+                "GroundResistance": 0.94,
+                "GroundResistanceMax": 0.3,
+                "Threshold": 3.0,
+                "Style": "Linear"
+              },
+              "Direction": {
+                "X": 0.0,
+                "Y": 0.5,
+                "Z": -1
+              },
+              "Force": 4,
+              "VelocityType": "Add"
+            },
+            "WorldParticles": [
+              {
+                "SystemId": "Impact_Dagger_Stab",
+                "Scale": 1
+              }
+            ]
+          },
+          "Next": "DamageEntityParent_On_Hit",
+          "DamageCalculator": {
+            "Class": "Light",
+            "BaseDamage": {
+              "Projectile": 10.5
+            }
+          }
+        }
+      ]
+    },
+    "Standard_Projectile_Impact": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "Effects": {
+            "LocalSoundEventId": "SFX_Arrow_FullCharge_Hit",
+            "WorldSoundEventId": "SFX_Arrow_FullCharge_Hit"
+          },
+          "$Comment": "When the standard projectile hits an entity"
+        }
+      ]
+    },
+    "Standard_Projectile_Miss": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 5,
+          "Effects": {
+            "LocalSoundEventId": "SFX_Arrow_FullCharge_Miss",
+            "WorldSoundEventId": "SFX_Arrow_FullCharge_Miss"
+          },
+          "$Comment": "When the standard projectile hits the ground"
+        }
+      ]
+    },
+    "No_Ammo_Effects": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 0.25,
+          "Effects": {
+            "ItemAnimationId": "Interact",
+            "WorldSoundEventId": "SFX_Bow_No_Ammo",
+            "LocalSoundEventId": "SFX_Bow_No_Ammo"
+          }
+        }
+      ]
+    },
+    "Combo_Projectile_Damage": {
+      "Interactions": [
+        {
+          "Type": "RPG_GearDamage",
+          "DamageEffects": {
+            "Knockback": {
+              "Type": "Force",
+              "VelocityConfig": {
+                "AirResistance": 0.99,
+                "AirResistanceMax": 0.98,
+                "GroundResistance": 0.94,
+                "GroundResistanceMax": 0.3,
+                "Threshold": 3.0,
+                "Style": "Linear"
+              },
+              "Direction": {
+                "X": 0.0,
+                "Y": 0.5,
+                "Z": -1
+              },
+              "Force": 12.0,
+              "VelocityType": "Set"
+            },
+            "WorldParticles": [
+              {
+                "SystemId": "Impact_Dagger_Stab_Charged"
+              }
+            ]
+          },
+          "Next": "RPG_GearRoute_I_Weapon_Crossbow_Damage_Combo_Clear_1",
+          "DamageCalculator": {
+            "Class": "Charged",
+            "BaseDamage": {
+              "Projectile": 13.125
+            }
+          },
+          "Effects": {
+            "CameraEffect": "Impact_Strong"
+          },
+          "EntityStatsOnHit": [
+            {
+              "EntityStatId": "SignatureEnergy",
+              "Amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    "Overcharge_Start": {
+      "Interactions": [
+        {
+          "Type": "Charging",
+          "AllowIndefiniteHold": false,
+          "DisplayProgress": false,
+          "HorizontalSpeedMultiplier": 1,
+          "Effects": {
+            "ItemAnimationId": "ReloadReady",
+            "WorldSoundEventId": "SFX_Hand_Crossbow_T2_Reload_Start",
+            "LocalSoundEventId": "SFX_Hand_Crossbow_T2_Reload_Start_Local",
+            "ClearAnimationOnFinish": true
+          },
+          "Next": {
+            "0": {
+              "Type": "StatsCondition",
+              "Costs": {
+                "Ammo": 1
+              },
+              "Failed": {
+                "Type": "Replace",
+                "Var": "Reload_Start",
+                "DefaultValue": "RPG_GearRoute_R_Root_Common_StatAmmoReload_Entry"
+              },
+              "Next": {
+                "Type": "ChangeStat",
+                "StatModifiers": {
+                  "Ammo": -1
+                },
+                "Next": {
+                  "Type": "Replace",
+                  "Var": "Standard_Projectile_Launch",
+                  "DefaultValue": {
+                    "Interactions": [
+                      "RPG_GearRoute_I_Weapon_Crossbow_Shot_Standard_Projectile"
+                    ]
+                  }
+                }
+              }
+            },
+            "0.8": {
+              "Type": "ModifyInventory",
+              "RequiredGameMode": "Adventure",
+              "ItemToRemove": {
+                "Id": "Weapon_Arrow_Crude",
+                "Quantity": 1
+              },
+              "Failed": {
+                "Type": "StatsCondition",
+                "Costs": {
+                  "Ammo": 1
+                },
+                "Next": {
+                  "Type": "ChangeStat",
+                  "StatModifiers": {
+                    "Ammo": -1
+                  },
+                  "Next": {
+                    "Type": "Replace",
+                    "Var": "Standard_Projectile_Launch",
+                    "DefaultValue": {
+                      "Interactions": [
+                        "RPG_GearRoute_I_Weapon_Crossbow_Shot_Standard_Projectile"
+                      ]
+                    }
+                  }
+                }
+              },
+              "Next": {
+                "Type": "Charging",
+                "AllowIndefiniteHold": false,
+                "DisplayProgress": false,
+                "Effects": {
+                  "ItemAnimationId": "ReloadCharged",
+                  "WorldSoundEventId": "SFX_Hand_Crossbow_T2_Load",
+                  "LocalSoundEventId": "SFX_Hand_Crossbow_T2_Load_Local",
+                  "ClearAnimationOnFinish": true
+                },
+                "HorizontalSpeedMultiplier": 0.85,
+                "Next": {
+                  "0": {
+                    "Type": "Repeat",
+                    "RunTime": 0.3,
+                    "Repeat": 1,
+                    "ForkInteractions": {
+                      "Interactions": [
+                        {
+                          "Type": "ChangeStat",
+                          "StatModifiers": {
+                            "Ammo": -1
+                          }
+                        },
+                        {
+                          "Type": "Replace",
+                          "Var": "Overcharge_Projectile_Launch",
+                          "DefaultValue": {
+                            "Interactions": [
+                              "RPG_GearRoute_I_Weapon_Crossbow_Shot_Standard_Projectile"
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "0.5": {
+                    "Type": "Charging",
+                    "AllowIndefiniteHold": false,
+                    "DisplayProgress": false,
+                    "Effects": {
+                      "ItemAnimationId": "ReloadCharged2",
+                      "WorldSoundEventId": "SFX_Hand_Crossbow_T2_Load",
+                      "LocalSoundEventId": "SFX_Hand_Crossbow_T2_Load_Local",
+                      "ClearAnimationOnFinish": true
+                    },
+                    "HorizontalSpeedMultiplier": 0.85,
+                    "Next": {
+                      "0": {
+                        "Type": "Repeat",
+                        "RunTime": 0.3,
+                        "Repeat": 1,
+                        "ForkInteractions": {
+                          "Interactions": [
+                            {
+                              "Type": "ChangeStat",
+                              "StatModifiers": {
+                                "Ammo": -1
+                              }
+                            },
+                            {
+                              "Type": "Replace",
+                              "Var": "Overcharge_Projectile_Launch",
+                              "DefaultValue": {
+                                "Interactions": [
+                                  "RPG_GearRoute_I_Weapon_Crossbow_Shot_Standard_Projectile"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "0.75": {
+                        "Type": "ModifyInventory",
+                        "RequiredGameMode": "Adventure",
+                        "ItemToRemove": {
+                          "Id": "Weapon_Arrow_Crude",
+                          "Quantity": 1
+                        },
+                        "Failed": {
+                          "Type": "Repeat",
+                          "RunTime": 0.3,
+                          "Repeat": 1,
+                          "ForkInteractions": {
+                            "Interactions": [
+                              {
+                                "Type": "ChangeStat",
+                                "StatModifiers": {
+                                  "Ammo": -1
+                                }
+                              },
+                              {
+                                "Type": "Replace",
+                                "Var": "Overcharge_Projectile_Launch",
+                                "DefaultValue": {
+                                  "Interactions": [
+                                    "RPG_GearRoute_I_Weapon_Crossbow_Shot_Standard_Projectile"
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        "Next": {
+                          "Type": "Charging",
+                          "AllowIndefiniteHold": false,
+                          "DisplayProgress": false,
+                          "Effects": {
+                            "ItemAnimationId": "ReloadCharged3",
+                            "WorldSoundEventId": "SFX_Hand_Crossbow_T2_Load",
+                            "LocalSoundEventId": "SFX_Hand_Crossbow_T2_Load_Local",
+                            "ClearAnimationOnFinish": true
+                          },
+                          "HorizontalSpeedMultiplier": 0.85,
+                          "Next": {
+                            "0": {
+                              "Type": "Repeat",
+                              "RunTime": 0.3,
+                              "Repeat": 2,
+                              "ForkInteractions": {
+                                "Interactions": [
+                                  {
+                                    "Type": "ChangeStat",
+                                    "StatModifiers": {
+                                      "Ammo": -1
+                                    }
+                                  },
+                                  {
+                                    "Type": "Replace",
+                                    "Var": "Overcharge_Projectile_Launch",
+                                    "DefaultValue": {
+                                      "Interactions": [
+                                        "RPG_GearRoute_I_Weapon_Crossbow_Shot_Standard_Projectile"
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            "1": {
+                              "Type": "ModifyInventory",
+                              "RequiredGameMode": "Adventure",
+                              "ItemToRemove": {
+                                "Id": "Weapon_Arrow_Crude",
+                                "Quantity": 1
+                              },
+                              "Failed": {
+                                "Type": "Repeat",
+                                "RunTime": 0.3,
+                                "Repeat": 2,
+                                "ForkInteractions": {
+                                  "Interactions": [
+                                    {
+                                      "Type": "ChangeStat",
+                                      "StatModifiers": {
+                                        "Ammo": -1
+                                      }
+                                    },
+                                    {
+                                      "Type": "Replace",
+                                      "Var": "Overcharge_Projectile_Launch",
+                                      "DefaultValue": {
+                                        "Interactions": [
+                                          "RPG_GearRoute_I_Weapon_Crossbow_Shot_Standard_Projectile"
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              "Next": {
+                                "Type": "Charging",
+                                "AllowIndefiniteHold": false,
+                                "DisplayProgress": false,
+                                "Effects": {
+                                  "ItemAnimationId": "ReloadCharged4",
+                                  "WorldSoundEventId": "SFX_Hand_Crossbow_T2_Load",
+                                  "LocalSoundEventId": "SFX_Hand_Crossbow_T2_Load_Local",
+                                  "ClearAnimationOnFinish": true
+                                },
+                                "HorizontalSpeedMultiplier": 0.85,
+                                "Next": {
+                                  "0": {
+                                    "Type": "Repeat",
+                                    "RunTime": 0.3,
+                                    "Repeat": 3,
+                                    "ForkInteractions": {
+                                      "Interactions": [
+                                        {
+                                          "Type": "ChangeStat",
+                                          "StatModifiers": {
+                                            "Ammo": -1
+                                          }
+                                        },
+                                        {
+                                          "Type": "Replace",
+                                          "Var": "Overcharge_Projectile_Launch",
+                                          "DefaultValue": {
+                                            "Interactions": [
+                                              "RPG_GearRoute_I_Weapon_Crossbow_Shot_Standard_Projectile"
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "1.25": {
+                                    "Type": "ModifyInventory",
+                                    "RequiredGameMode": "Adventure",
+                                    "ItemToRemove": {
+                                      "Id": "Weapon_Arrow_Crude",
+                                      "Quantity": 1
+                                    },
+                                    "Failed": {
+                                      "Type": "Repeat",
+                                      "RunTime": 0.3,
+                                      "Repeat": 3,
+                                      "ForkInteractions": {
+                                        "Interactions": [
+                                          {
+                                            "Type": "ChangeStat",
+                                            "StatModifiers": {
+                                              "Ammo": -1
+                                            }
+                                          },
+                                          {
+                                            "Type": "Replace",
+                                            "Var": "Overcharge_Projectile_Launch",
+                                            "DefaultValue": {
+                                              "Interactions": [
+                                                "RPG_GearRoute_I_Weapon_Crossbow_Shot_Standard_Projectile"
+                                              ]
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    "Next": {
+                                      "Type": "Charging",
+                                      "AllowIndefiniteHold": false,
+                                      "DisplayProgress": false,
+                                      "Effects": {
+                                        "ItemAnimationId": "ReloadCharged5",
+                                        "WorldSoundEventId": "SFX_Hand_Crossbow_T2_Load",
+                                        "LocalSoundEventId": "SFX_Hand_Crossbow_T2_Load_Local",
+                                        "ClearAnimationOnFinish": true
+                                      },
+                                      "HorizontalSpeedMultiplier": 0.85,
+                                      "Next": {
+                                        "0": {
+                                          "Type": "Repeat",
+                                          "RunTime": 0.3,
+                                          "Repeat": 4,
+                                          "ForkInteractions": {
+                                            "Interactions": [
+                                              {
+                                                "Type": "ChangeStat",
+                                                "StatModifiers": {
+                                                  "Ammo": -1
+                                                }
+                                              },
+                                              {
+                                                "Type": "Replace",
+                                                "Var": "Overcharge_Projectile_Launch",
+                                                "DefaultValue": {
+                                                  "Interactions": [
+                                                    "RPG_GearRoute_I_Weapon_Crossbow_Shot_Standard_Projectile"
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        "1.5": {
+                                          "Type": "ModifyInventory",
+                                          "RequiredGameMode": "Adventure",
+                                          "ItemToRemove": {
+                                            "Id": "Weapon_Arrow_Crude",
+                                            "Quantity": 1
+                                          },
+                                          "Failed": {
+                                            "Type": "Repeat",
+                                            "RunTime": 0.3,
+                                            "Repeat": 4,
+                                            "ForkInteractions": {
+                                              "Interactions": [
+                                                {
+                                                  "Type": "ChangeStat",
+                                                  "StatModifiers": {
+                                                    "Ammo": -1
+                                                  }
+                                                },
+                                                {
+                                                  "Type": "Replace",
+                                                  "Var": "Overcharge_Projectile_Launch",
+                                                  "DefaultValue": {
+                                                    "Interactions": [
+                                                      "RPG_GearRoute_I_Weapon_Crossbow_Shot_Standard_Projectile"
+                                                    ]
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          },
+                                          "Next": {
+                                            "Type": "Repeat",
+                                            "RunTime": 0.3,
+                                            "Repeat": 5,
+                                            "ForkInteractions": {
+                                              "Interactions": [
+                                                {
+                                                  "Type": "ChangeStat",
+                                                  "StatModifiers": {
+                                                    "Ammo": -1
+                                                  }
+                                                },
+                                                {
+                                                  "Type": "Replace",
+                                                  "Var": "Overcharge_Projectile_Launch",
+                                                  "DefaultValue": {
+                                                    "Interactions": [
+                                                      "RPG_GearRoute_I_Weapon_Crossbow_Shot_Standard_Projectile"
+                                                    ]
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "$Comment": "This is played at the start of the Overcharge ability, before loading arrows"
+        }
+      ]
+    },
+    "Overcharge_Projectile_Launch": {
+      "Interactions": [
+        {
+          "Type": "RPG_GearProjectile",
+          "RunTime": 0.2,
+          "Effects": {
+            "ItemAnimationId": "ShootCharged",
+            "ClearAnimationOnFinish": true
+          },
+          "Config": "RPG_GearRoute_C_Projectile_Config_Arrow_Crossbow",
+          "Next": {
+            "Type": "ChangeStat",
+            "Behaviour": "Set",
+            "StatModifiers": {
+              "StaminaRegenDelay": 0
+            }
+          },
+          "$Comment": "Launching the overcharge projectile"
+        }
+      ]
+    },
+    "Reload_Start": {
+      "RequireNewClick": true,
+      "HudInputBindingEntry": "server.hud.inputBinding.reload",
+      "Interactions": [
+        {
+          "Type": "DurabilityCondition",
+          "Threshold": 0,
+          "Operator": "GreaterThan",
+          "Next": {
+            "Type": "Simple",
+            "RunTime": 0.8,
+            "Effects": {
+              "ItemAnimationId": "ReloadReady",
+              "WorldSoundEventId": "SFX_Door_Crude_Open",
+              "LocalSoundEventId": "SFX_Door_Crude_Open",
+              "ClearAnimationOnFinish": true
+            },
+            "Next": {
+              "Type": "Repeat",
+              "Repeat": -1,
+              "Rules": {
+                "InterruptedBy": [
+                  "Primary",
+                  "Secondary"
+                ]
+              },
+              "ForkInteractions": {
+                "Interactions": [
+                  {
+                    "Type": "StatsCondition",
+                    "LessThan": true,
+                    "Costs": {
+                      "Ammo": 100
+                    },
+                    "ValueType": "Percent",
+                    "Next": {
+                      "Type": "Replace",
+                      "Var": "Reload_ItemConsume",
+                      "DefaultValue": {
+                        "Interactions": [
+                          "RPG_GearRoute_I_Common_StatAmmoReload_ItemConsume"
+                        ]
+                      }
+                    }
+                  }
+                ]
+              },
+              "Failed": {
+                "Type": "Replace",
+                "Var": "No_Ammo_Effects",
+                "DefaultValue": {
+                  "Interactions": [
+                    "RPG_GearRoute_I_Common_Bow_No_Ammo"
+                  ]
+                }
+              }
+            }
+          },
+          "Rules": {
+            "Blocking": [
+              "SwapFrom",
+              "Primary",
+              "Secondary"
+            ]
+          },
+          "Effects": {
+            "WorldSoundEventId": "SFX_Hand_Crossbow_T2_Reload_Start",
+            "LocalSoundEventId": "SFX_Hand_Crossbow_T2_Reload_Start_Local"
+          }
+        }
+      ]
+    },
+    "Reload_ItemConsume": {
+      "Interactions": [
+        {
+          "Type": "ModifyInventory",
+          "RequiredGameMode": "Adventure",
+          "ItemToRemove": {
+            "Id": "Weapon_Arrow_Crude",
+            "Quantity": 1
+          },
+          "Next": {
+            "Type": "Replace",
+            "Var": "Reload_Effects",
+            "DefaultValue": {
+              "Interactions": [
+                "RPG_GearRoute_I_Common_StatAmmoReload_Effects"
+              ]
+            }
+          },
+          "$Comment": "The item to consume for every iteration of reloading"
+        }
+      ]
+    },
+    "Reload_Effects": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 0.3,
+          "HorizontalSpeedMultiplier": 0.75,
+          "Effects": {
+            "ItemAnimationId": "Reload",
+            "WorldSoundEventId": "SFX_Hand_Crossbow_T2_Load",
+            "LocalSoundEventId": "SFX_Hand_Crossbow_T2_Load_Local",
+            "ClearAnimationOnFinish": true
+          },
+          "Next": {
+            "Type": "Replace",
+            "Var": "Reload_StatModifier",
+            "DefaultValue": {
+              "Interactions": [
+                "RPG_GearRoute_I_Common_StatAmmoReload_StatModifier"
+              ]
+            }
+          },
+          "$Comment": "The effects to trigger for every iteration of reloading"
+        }
+      ]
+    },
+    "Reload_StatModifier": {
+      "Interactions": [
+        {
+          "Type": "ApplyEffect",
+          "HorizontalSpeedMultiplier": 0.75,
+          "EffectId": {
+            "StatModifiers": {
+              "Ammo": 1
+            }
+          },
+          "$Comment": "The stat modification to perform for every iteration of reloading"
+        }
+      ]
+    },
+    "Signature_Activate_Effects": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "Effects": {
+            "WorldSoundEventId": "SFX_Bow_T2_Signature_Nock",
+            "LocalSoundEventId": "SFX_Bow_T2_Signature_Nock_Local"
+          }
+        }
+      ]
+    },
+    "Signature_BigArrow_Launch": {
+      "Interactions": [
+        {
+          "Type": "RPG_GearProjectile",
+          "RunTime": 0.2,
+          "Effects": {
+            "ItemAnimationId": "ShootCharged",
+            "ClearAnimationOnFinish": true
+          },
+          "Config": "RPG_GearRoute_C_Projectile_Config_Arrow_Crossbow_Signature",
+          "Next": {
+            "Type": "ChangeStat",
+            "Behaviour": "Set",
+            "StatModifiers": {
+              "SignatureCharges": -100
+            },
+            "ValueType": "Percent"
+          },
+          "$Comment": "Signature BigArrow - Fast, flat trajectory with big impact"
+        }
+      ]
+    },
+    "Signature_BigArrow_Damage": {
+      "Interactions": [
+        {
+          "Type": "RPG_GearDamage",
+          "DamageEffects": {
+            "Knockback": {
+              "Type": "Force",
+              "VelocityConfig": {
+                "AirResistance": 0.99,
+                "AirResistanceMax": 0.98,
+                "GroundResistance": 0.94,
+                "GroundResistanceMax": 0.3,
+                "Threshold": 3.0,
+                "Style": "Linear"
+              },
+              "Direction": {
+                "X": 0.0,
+                "Y": 0.5,
+                "Z": -1
+              },
+              "Force": 18.0,
+              "VelocityType": "Set"
+            },
+            "WorldParticles": [
+              {
+                "SystemId": "Impact_Daggers_Signature",
+                "Scale": 1.5
+              }
+            ]
+          },
+          "Next": "DamageEntityParent_On_Hit",
+          "DamageCalculator": {
+            "Class": "Signature",
+            "BaseDamage": {
+              "Projectile": 82
+            }
+          }
+        }
+      ]
+    },
+    "Signature_BigArrow_Miss": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "RunTime": 5,
+          "Effects": {
+            "LocalSoundEventId": "SFX_Arrow_FullCharge_Miss",
+            "WorldSoundEventId": "SFX_Arrow_FullCharge_Miss"
+          }
+        }
+      ]
+    },
+    "Guard_Start_StaminaCost": {
+      "Interactions": [
+        {
+          "$Comment": "The amount of stamina consumed upon starting guarding",
+          "Type": "ChangeStat",
+          "StatModifiers": {
+            "Stamina": -0.5
+          }
+        }
+      ]
+    },
+    "Guard_Wield": {
+      "Interactions": [
+        {
+          "Type": "Wielding",
+          "OnItemChangeBehavior": "Finish",
+          "Effects": {
+            "ItemAnimationId": "Guard",
+            "ClearAnimationOnFinish": true,
+            "WorldSoundEventId": "SFX_Hand_Crossbow_T1_Raise",
+            "LocalSoundEventId": "SFX_Hand_Crossbow_T1_Raise_Local"
+          },
+          "Forks": {
+            "Primary": {
+              "Interactions": [
+                {
+                  "Type": "Replace",
+                  "Var": "Guard_Bash",
+                  "DefaultOk": true,
+                  "DefaultValue": {
+                    "Interactions": [
+                      "RPG_GearRoute_I_Weapon_Crossbow_Secondary_Guard_Bash"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "AngledWielding": {
+            "Angle": 0,
+            "AngleDistance": 90,
+            "DamageModifiers": {
+              "Physical": 0,
+              "Projectile": 0,
+              "Poison": 0
+            },
+            "KnockbackModifiers": {
+              "Physical": 0.25,
+              "Projectile": 0.25
+            }
+          },
+          "StaminaCost": {
+            "Value": 15.56,
+            "CostType": "Damage"
+          },
+          "CancelOnOtherClick": false,
+          "Failed": {
+            "Type": "Replace",
+            "Var": "Guard_Break",
+            "DefaultOk": true,
+            "DefaultValue": {
+              "Interactions": [
+                {
+                  "Type": "Simple",
+                  "Effects": {
+                    "Particles": [
+                      {
+                        "SystemId": "Shield_Shatter"
+                      }
+                    ],
+                    "WorldSoundEventId": "SFX_Shield_T1_Break",
+                    "LocalSoundEventId": "SFX_Shield_T1_Break"
+                  }
+                }
+              ]
+            }
+          },
+          "BlockedEffects": {
+            "WorldSoundEventId": "SFX_Hand_Crossbow_T1_Block_Impact",
+            "WorldParticles": [
+              {
+                "SystemId": "Shield_Block"
+              }
+            ]
+          },
+          "Next": {
+            "$Comment": "Standard regen delay upon ending guarding on all weapons",
+            "Type": "ChangeStat",
+            "Behaviour": "Min",
+            "StatModifiers": {
+              "StaminaRegenDelay": -0.5
+            },
+            "OnItemChangeBehavior": "Ignore"
+          }
+        }
+      ]
+    },
+    "Guard_Bash": {
+      "Interactions": [
+        {
+          "Type": "ApplyEffect",
+          "EffectId": "Stamina_Broken_Immune"
+        },
+        {
+          "Type": "Serial",
+          "Interactions": [
+            {
+              "Type": "ApplyEffect",
+              "EffectId": "Stamina_Broken_Immune"
+            },
+            {
+              "Type": "ChangeStat",
+              "StatModifiers": {
+                "Stamina": -2
+              },
+              "Effects": {
+                "ItemAnimationId": "GuardBash",
+                "WorldSoundEventId": "SFX_Hand_Crossbow_T1_Shove",
+                "LocalSoundEventId": "SFX_Hand_Crossbow_T1_Shove_Local"
+              },
+              "RunTime": 0.167,
+              "Next": {
+                "Type": "ChangeStat",
+                "Behaviour": "Min",
+                "StatModifiers": {
+                  "StaminaRegenDelay": -1
+                },
+                "Next": {
+                  "Type": "Replace",
+                  "Var": "Guard_Bash_Selector",
+                  "DefaultOk": true,
+                  "DefaultValue": {
+                    "Interactions": [
+                      "RPG_GearRoute_I_Weapon_Crossbow_Secondary_Guard_Bash_Selector"
+                    ]
+                  }
+                }
+              }
+            }
+          ],
+          "$Comment": "Effects and stamina consumed upon a guard bash"
+        }
+      ]
+    },
+    "Guard_Bash_Damage": {
+      "Interactions": [
+        {
+          "Type": "RPG_GearDamage",
+          "DamageEffects": {
+            "Knockback": {
+              "Type": "Force",
+              "VelocityConfig": {
+                "AirResistance": 0.97,
+                "AirResistanceMax": 0.96,
+                "GroundResistance": 0.94,
+                "GroundResistanceMax": 0.3,
+                "Threshold": 3.0,
+                "Style": "Exp"
+              },
+              "Direction": {
+                "X": 0.0,
+                "Y": 1.0,
+                "Z": -2.0
+              },
+              "Force": 12,
+              "VelocityType": "Set"
+            },
+            "WorldSoundEventId": "SFX_T1_Impact_Blunt",
+            "LocalSoundEventId": "SFX_T1_Impact_Blunt",
+            "WorldParticles": [
+              {
+                "SystemId": "Impact_Crossbow_Bash"
+              }
+            ]
+          },
+          "Next": "DamageEntityParent_On_Hit",
+          "DamageCalculator": {
+            "BaseDamage": {
+              "Physical": 0
+            }
+          }
+        }
+      ]
+    }
+  },
+  "Weapon": {
+    "EntityStatsToClear": [
+      "SignatureEnergy",
+      "SignatureCharges",
+      "Ammo"
+    ],
+    "StatModifiers": {
+      "Ammo": [
+        {
+          "Amount": 6,
+          "CalculationType": "Additive"
+        }
+      ],
+      "SignatureEnergy": [
+        {
+          "Amount": 5,
+          "CalculationType": "Additive"
+        }
+      ],
+      "SignatureCharges": [
+        {
+          "Amount": 1,
+          "CalculationType": "Additive"
+        }
+      ]
+    }
+  },
+  "Utility": {
+    "Compatible": true
+  },
+  "DurabilityLossOnHit": 0.28
+}

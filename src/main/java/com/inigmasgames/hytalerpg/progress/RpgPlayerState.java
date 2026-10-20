@@ -19,7 +19,7 @@ import java.util.UUID;
 
 /** Versioned server-owned RPG player state. Live Hytale resources are intentionally not duplicated here. */
 public final class RpgPlayerState {
-    public static final int CURRENT_SCHEMA = 9;
+    public static final int CURRENT_SCHEMA = 12;
 
     public int schemaVersion = CURRENT_SCHEMA;
     public String playerUuid;
@@ -38,7 +38,10 @@ public final class RpgPlayerState {
     public List<PersistedLinkEdge> graphEdges = new ArrayList<>();
     public Map<String, Long> skillMastery = new LinkedHashMap<>();
     public RewardLedger rewards=RewardLedger.INITIAL;
+    public GoldBalance goldBalance=GoldBalance.INITIAL;
     public AcquisitionProgress acquisition=AcquisitionProgress.INITIAL;
+    public com.inigmasgames.hytalerpg.gear.GearEconomyProgress gearEconomy=com.inigmasgames.hytalerpg.gear.GearEconomyProgress.INITIAL;
+    public com.inigmasgames.hytalerpg.difficulty.DifficultyProgress difficulty = com.inigmasgames.hytalerpg.difficulty.DifficultyProgress.INITIAL;
     public long revision;
     public SupportProgress support = SupportProgress.INITIAL;
     public Map<String,com.inigmasgames.hytalerpg.combat.cooldown.SavedCooldown> cooldowns=new LinkedHashMap<>();
@@ -98,7 +101,11 @@ public final class RpgPlayerState {
         }
         if (support == null) throw new IllegalStateException("Missing durable support ledger; refusing a free-shield reset");
         if (rewards == null) throw new IllegalStateException("Missing earned-reward checkpoint; refusing an award reset");
+        if (goldBalance == null) throw new IllegalStateException("Missing schema-12 Gold balance; refusing a currency reset");
+        goldBalance=new GoldBalance(goldBalance.gold(),goldBalance.remainder());
         if(acquisition==null)throw new IllegalStateException("Missing schema-9 acquisition ledger; refusing pity or spending reset");
+        if(gearEconomy==null)throw new IllegalStateException("Missing schema-11 gear economy; refusing debit/rank reset");
+        if(difficulty==null)throw new IllegalStateException("Missing schema-10 difficulty ledger; refusing unlock/checklist reset");
         acquisition.availableInsight(rewards.insight());
         com.inigmasgames.hytalerpg.combat.cooldown.SavedCooldown.validate(cooldowns);
     }
@@ -121,7 +128,10 @@ public final class RpgPlayerState {
         copy.graphEdges = graphEdges.stream().map(PersistedLinkEdge::copy).collect(java.util.stream.Collectors.toCollection(ArrayList::new));
         copy.skillMastery = new LinkedHashMap<>(skillMastery);
         copy.rewards = rewards;
+        copy.goldBalance = goldBalance;
         copy.acquisition = acquisition;
+        copy.gearEconomy = gearEconomy;
+        copy.difficulty = difficulty;
         copy.revision = revision;
         copy.support = support;
         copy.cooldowns=new LinkedHashMap<>(cooldowns);

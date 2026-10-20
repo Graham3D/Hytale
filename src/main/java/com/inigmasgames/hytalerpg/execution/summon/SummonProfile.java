@@ -17,7 +17,8 @@ public record SummonProfile(String roleId, String element, double range, int cou
     }
     public SummonProfile {
         countPolicy=countPolicy==null?CountPolicy.FIXED:countPolicy;
-        boolean roleAllowed=countPolicy==CountPolicy.EFFECTIVE_LEVEL_EVERY_TWO?"RPG_Summon_Skeleton_Archer".equals(roleId):roleId!=null&&roleId.startsWith("RPG_Summon_");
+        boolean roleAllowed=countPolicy==CountPolicy.EFFECTIVE_LEVEL_EVERY_TWO?"RPG_Summon_Skeleton_Archer".equals(roleId):
+                roleId!=null&&(roleId.startsWith("RPG_Summon_")||roleId.equals("RPG_Iron_Sentinel"));
         if (!roleAllowed || element == null || element.isBlank()
                 || count < 1 || count > SummonRegistry.OWNER_LIMIT || !positive(range,healthFactor,lifetime,attackInterval,leash)
                 || !Double.isFinite(coefficient) || (decoy ? coefficient!=0||count!=1||corpseRequired : coefficient<=0)
@@ -29,6 +30,7 @@ public record SummonProfile(String roleId, String element, double range, int cou
     public int baseCount(int effectiveSkillLevel){return countPolicy==CountPolicy.EFFECTIVE_LEVEL_EVERY_TWO?
             com.inigmasgames.hytalerpg.execution.EffectiveSkillLevel.summonSkeletonArchers(effectiveSkillLevel):count;}
     public boolean nativeRanged(){return "RPG_Summon_Skeleton_Archer".equals(roleId);}
+    public boolean ironSentinel(){return "RPG_Iron_Sentinel".equals(roleId);}
     private static boolean positive(double... values) {
         for (double value : values) if (!Double.isFinite(value) || value <= 0) return false;
         return true;

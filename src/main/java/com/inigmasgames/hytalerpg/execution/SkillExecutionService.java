@@ -74,6 +74,7 @@ public final class SkillExecutionService {
     public SkillExecutionResult request(SkillExecutionRequest request, SkillExecutionPort port) {
         String root = "input-" + request.chainId() + '-' + request.correlationId().substring(0, Math.min(8, request.correlationId().length()));
         String pendingInstance = "activation-" + UUID.randomUUID();
+        if(transferInProgress.test(request.actorId()))return reject(request,root,pendingInstance,"DIFFICULTY_TRANSFER_IN_PROGRESS");
         if(persistenceCommits.containsKey(request.actorId()))return SkillExecutionResult.pending("PREVIOUS_DURABLE_COMMIT_PENDING");
         emit(request, RpgTraceEventType.SKILL_ACTIVATION_REQUEST, root, pendingInstance,
                 Map.of("action", request.action(), "skillSlot", request.slot().externalId(),"origin",request.origin()));
@@ -139,9 +140,12 @@ public final class SkillExecutionService {
     public OptionalDouble activeWindupSeconds(UUID actor) {
         synchronized (windups) {
             Prepared value = windups.get(actor);
-            return value == null ? OptionalDouble.empty() : OptionalDouble.of(value.profile.windupSeconds());
+            return value == null ? OptionalDouble.empty() : OptionalDouble.of(value.windupSeconds);
         }
     }
+    private java.util.function.Predicate<UUID> transferInProgress=ignored->false;
+    public void configureTransferGuard(java.util.function.Predicate<UUID> guard){transferInProgress=java.util.Objects.requireNonNull(guard);}
+    public boolean persistenceCommitPending(UUID actor){return persistenceCommits.containsKey(actor);}
     public boolean pendingCast(UUID actor){return persistenceCommits.containsKey(actor)||lifecycle.active(actor).isPresent()||releases.pending(actor)||activeWindupSeconds(actor).isPresent();}
     /** Delayed authored contacts must still belong to the live root, not just an old scheduler entry. */
     public boolean ownsActiveRoot(SkillExecutionContext context){
@@ -222,7 +226,7 @@ public final class SkillExecutionService {
         return false;
     }
     public int effectiveSkillLevel(UUID actor,String skillId){
-        return EffectiveSkillLevel.resolve(loadouts.masteryXp(actor,skillId),0);
+        return EffectiveSkillLevel.resolveBase(loadouts.baseSkillRank(actor,skillId),0);
     }
 
     public void recordExecutionFailure(SkillExecutionContext context,String stage,RuntimeException failure){
@@ -243,6 +247,7 @@ public final class SkillExecutionService {
         return validate(request, port, root, null);
     }
     private Prepared validate(SkillExecutionRequest request, SkillExecutionPort port, String root, String retainedInstance) {
+        if(transferInProgress.test(request.actorId()))throw new Rejection("DIFFICULTY_TRANSFER_IN_PROGRESS",retainedInstance);
         if (!port.actorAliveAndUsable()) throw new Rejection("ACTOR_NOT_USABLE", retainedInstance);
         if(releases.hasPendingPrimary(request.actorId(),request.slot())) throw new Rejection("PENDING_PRIMARY_FOR_SLOT",retainedInstance);
         var view = loadouts.getPresentationView(request.actorId());
@@ -279,17 +284,20 @@ public final class SkillExecutionService {
                 throw new Rejection("EQUIPMENT_POWER_UNAVAILABLE", instance);
             }
         }
-        int effectiveSkillLevel=EffectiveSkillLevel.resolve(loadouts.masteryXp(request.actorId(),profile.skillId()),
+        int effectiveSkillLevel=EffectiveSkillLevel.resolveBase(loadouts.baseSkillRank(request.actorId(),profile.skillId()),
                 port.itemGrantedSkillLevels(profile.skillId(),equipment));
         SkillExecutionPort.Validation family = port.familyPrerequisites(profile, plan,effectiveSkillLevel);
         if (!family.accepted()) {
             emitProjectileRejection(request, root, instance, profile, family.code());
             throw new Rejection(family.code(), instance);
         }
-        ResourceCost declared = new ResourceCost(ResourceType.valueOf(profile.resourceType()), profile.resourceCost());
+        ResourceCost declared = declaredCost(profile,effectiveSkillLevel,port);
         int stacks=attunementFor(request,plan);
         ruthlessFor(request,plan); // Capacity and origin check before any payment or windup.
         ResourceCost cost = kernel.resources().evaluateActivation(declared, plan,stacks);
+        if(profile.skillId().equals("teleport")&&cost.type()==ResourceType.MANA
+                &&cost.amount()>kernel.resources().spendableMaximum(request.actorId(),ResourceType.MANA,port.resources())+1e-9)
+            throw new Rejection("INSUFFICIENT_SPENDABLE_MANA",instance);
         if(profile.support()!=null&&profile.support().upkeepPerSecond()>0){
             var first=kernel.resources().evaluateUpkeep(new ResourceCost(ResourceType.MANA,profile.support().upkeepPerSecond()*.25*plan.supportModifiers().commitmentFactor()),plan.kernelModifiers());
             if(!kernel.resources().canAfford(request.actorId(),new ResourceCost(ResourceType.MANA,cost.amount()+first.amount()),port.resources()))
@@ -305,7 +313,7 @@ public final class SkillExecutionService {
         }
         String concurrency=concurrentInstances.admission(request.actorId(),profile.skillId(),plan.concurrentInstances());
         if(!concurrency.equals("PASS"))throw new Rejection(concurrency,instance);
-        return new Prepared(request, root, instance, profile, plan, cost, equipment,stacks,false,effectiveSkillLevel);
+        return new Prepared(request, root, instance, profile, plan, cost, equipment,stacks,false,effectiveSkillLevel,port.gearEffects().windup(profile.windupSeconds()));
     }
 
     private int attunementFor(SkillExecutionRequest request,CompiledSkillPlan plan){
@@ -326,11 +334,11 @@ public final class SkillExecutionService {
         try{
             int stacks=attunementFor(prepared.request,prepared.plan);
             boolean powered=ruthlessFor(prepared.request,prepared.plan);
-            var cost=kernel.resources().evaluateActivation(new ResourceCost(ResourceType.valueOf(prepared.profile.resourceType()),prepared.profile.resourceCost()),prepared.plan,stacks);
+            int effectiveSkillLevel=EffectiveSkillLevel.resolveBase(loadouts.baseSkillRank(prepared.request.actorId(),prepared.profile.skillId()),
+                    port.itemGrantedSkillLevels(prepared.profile.skillId(),prepared.equipment));
+            var cost=kernel.resources().evaluateActivation(declaredCost(prepared.profile,effectiveSkillLevel,port),prepared.plan,stacks);
             var profile=CompiledProfileResolver.ruthless(compiledProfiles.resolve(profiles.require(prepared.profile.skillId()),prepared.plan),powered);
-            int effectiveSkillLevel=EffectiveSkillLevel.resolve(loadouts.masteryXp(prepared.request.actorId(),profile.skillId()),
-                    port.itemGrantedSkillLevels(profile.skillId(),prepared.equipment));
-            prepared=new Prepared(prepared.request,prepared.rootCastId,prepared.instanceId,profile,prepared.plan,cost,prepared.equipment,stacks,powered,effectiveSkillLevel);
+            prepared=new Prepared(prepared.request,prepared.rootCastId,prepared.instanceId,profile,prepared.plan,cost,prepared.equipment,stacks,powered,effectiveSkillLevel,prepared.windupSeconds);
         }catch(RuntimeException failed){lifecycle.terminate(prepared.request.actorId(),prepared.instanceId);return reject(prepared.request,prepared.rootCastId,prepared.instanceId,"COMMIT_RESOURCE_MODIFIER_REJECTED");}
         var releaseModifiers=prepared.plan.executionModifiers();
         String admission=releases.reserve(prepared.instanceId,prepared.request.actorId(),prepared.request.slot(),releaseModifiers);
@@ -357,9 +365,9 @@ public final class SkillExecutionService {
         SkillExecutionContext context;
         String preparationStage="ATTRIBUTE_SNAPSHOT";
         try {
-            DerivedStats attributes = derive(prepared.request.actorId());
+            DerivedStats attributes = derive(prepared.request.actorId(),port);
             preparationStage="POWER_RESOLUTION";
-            BasePowerResolver.Resolution power = resolvePower(prepared.profile, prepared.equipment);
+            BasePowerResolver.Resolution power = resolvePower(prepared.profile, prepared.equipment,prepared.rootCastId);
             preparationStage="COOLDOWN_PREPARATION";
             var cooldownTerms=BlizzardCooldownPolicy.terms(prepared.profile,prepared.plan,attributes);
             var cooldown = kernel.cooldowns().calculate(prepared.request.actorId(),cooldownTerms.baseSeconds(),cooldownTerms.durationFactor()*spirePotencyCooldownFactor(prepared.profile,prepared.plan),
@@ -383,7 +391,7 @@ public final class SkillExecutionService {
                 modifiers=new ModifierBuckets(modifiers.increased(),modifiers.reduced(),more,modifiers.less());
             }
             preparationStage="MASTERY_PREPARATION";
-            double mastery=com.inigmasgames.hytalerpg.progress.ProgressionMath.masteryMagnitude(loadouts.masteryXp(prepared.request.actorId(),prepared.profile.skillId()));
+            double mastery=1+.02*(prepared.effectiveSkillLevel-1);
             if(mastery!=1){
                 var more=new java.util.ArrayList<>(modifiers.more());more.add(mastery);
                 modifiers=new ModifierBuckets(modifiers.increased(),modifiers.reduced(),more,modifiers.less());
@@ -495,6 +503,9 @@ public final class SkillExecutionService {
             if(plan==null||!plan.planHash().equals(prepared.plan.planHash()))throw new IllegalStateException("PENDING_COMMIT_LOADOUT_CHANGED");
             var ownerValidation=port.validateDurableCompletion(context);
             if(!ownerValidation.accepted())throw new IllegalStateException(ownerValidation.code());
+            if(prepared.profile.skillId().equals("teleport")&&prepared.cost.type()==ResourceType.MANA
+                    &&prepared.cost.amount()>kernel.resources().spendableMaximum(prepared.request.actorId(),ResourceType.MANA,port.resources())+1e-9)
+                throw new IllegalStateException("INSUFFICIENT_SPENDABLE_MANA");
             kernel.resources().commitCost(token,port.resources());resourceCommitted=true;
             if(prepared.plan.resources().attunement()&&prepared.request.origin()==SkillExecutionRequest.Origin.MANUAL)
                 attunementCommit=attunement.committed(new AttunementLedger.Key(prepared.request.actorId(),prepared.request.slot()),prepared.rootCastId,now());
@@ -661,16 +672,27 @@ public final class SkillExecutionService {
                 Map.of("reason",reason,"refund",false));
     }
 
-    private DerivedStats derive(UUID actor) {
+    private DerivedStats derive(UUID actor,SkillExecutionPort port) {
         var state = loadouts.getPresentationView(actor).state();
         EnumMap<RpgAttribute, Integer> raw = new EnumMap<>(RpgAttribute.class);
         for (RpgAttribute attribute : RpgAttribute.values()) raw.put(attribute,
                 state.attributes.getOrDefault(attribute.name(), 10));
-        return kernel.derivedStats().derive(raw);
+        return port.gearEffects().derive(kernel.derivedStats(),raw);
+    }
+
+    private static ResourceCost declaredCost(Stage04SkillProfile profile,int effectiveSkillLevel,SkillExecutionPort port) {
+        if(!profile.skillId().equals("teleport"))
+            return new ResourceCost(ResourceType.valueOf(profile.resourceType()),profile.resourceCost());
+        double maximum=port.resources().maximum(ResourceType.MANA);
+        if(!Double.isFinite(maximum)||maximum<=0)throw new IllegalStateException("TELEPORT_MAX_MANA_UNAVAILABLE");
+        return new ResourceCost(ResourceType.MANA,maximum*TeleportScaling.manaFraction(effectiveSkillLevel));
     }
 
     private BasePowerResolver.Resolution resolvePower(Stage04SkillProfile profile, SkillExecutionPort.Equipment equipment) {
-        return switch (profile.basePowerSource()) {
+        return resolvePower(profile,equipment,null);
+    }
+    private BasePowerResolver.Resolution resolvePower(Stage04SkillProfile profile, SkillExecutionPort.Equipment equipment,String root) {
+        var resolution = switch (profile.basePowerSource()) {
             case "NONE" -> kernel.basePower().resolve(new BasePowerResolver.Request(BasePowerSource.NONE, null, null));
             case "INNATE" -> kernel.basePower().resolve(new BasePowerResolver.Request(BasePowerSource.INNATE, null,
                     profile.innateBasePower()));
@@ -682,6 +704,12 @@ public final class SkillExecutionService {
                     equipment.mainHand().power(), null));
             default -> throw new IllegalArgumentException("Unsupported power source " + profile.basePowerSource());
         };
+        if(root!=null && resolution.source()==BasePowerSource.WEAPON) {
+            var descriptor=(profile.basePowerSource().equals("OFFHAND_WEAPON")?equipment.offHand():equipment.mainHand()).power();
+            if(descriptor.physicalMinimum()!=null) return new BasePowerResolver.Resolution(resolution.source(),resolution.weaponClass(),resolution.itemId(),
+                    com.inigmasgames.hytalerpg.gear.GearPower.sample(descriptor.physicalMinimum(),descriptor.physicalMaximum(),root));
+        }
+        return resolution;
     }
 
     private static void validateEquipment(Stage04SkillProfile profile, SkillExecutionPort.Equipment equipment,
@@ -725,7 +753,7 @@ public final class SkillExecutionService {
     }
     private record Prepared(SkillExecutionRequest request, String rootCastId, String instanceId,
                             Stage04SkillProfile profile, CompiledSkillPlan plan, ResourceCost cost,
-                            SkillExecutionPort.Equipment equipment,int attunementStacks,boolean ruthlessEmpowered,int effectiveSkillLevel) { }
+                            SkillExecutionPort.Equipment equipment,int attunementStacks,boolean ruthlessEmpowered,int effectiveSkillLevel,double windupSeconds) { }
     private static final class Rejection extends RuntimeException {
         private final String code; private final String skillInstanceId;
         private Rejection(String code, String skillInstanceId) { super(code); this.code = code; this.skillInstanceId = skillInstanceId; }

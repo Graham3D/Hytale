@@ -2,6 +2,10 @@
   "schemaVersion": 1,
   "entries": [
     {
+      "kind":"Skill", "id":"iron_sentinel", "name":"Iron Sentinel",
+      "fileName":"SkillIronsentinel.png", "itemAsset":"Server/Item/Items/RPG/Abilities/RPG_Ability_Iron_Sentinel.json"
+    },
+    {
       "kind":"Skill", "id":"mantle_of_flame", "name":"Mantle of Flame",
       "fileName":"SkillMantleofflame.png", "itemAsset":"Server/Item/Items/RPG/Abilities/RPG_Ability_Mantle_Of_Flame.json"
     },

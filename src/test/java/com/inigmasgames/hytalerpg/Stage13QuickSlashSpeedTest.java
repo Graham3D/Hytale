@@ -8,9 +8,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class Stage13QuickSlashSpeedTest {
     @Test void amendedTwoHundredPercentSpeedMeansTwiceBase(){
-        assertEquals(25.0/60/2,NativeStrikeFeedback.quickSlashInterval("SWORD"),1e-12);
+        assertEquals(25.0/60/2.1,NativeStrikeFeedback.quickSlashInterval("SWORD"),1e-12);
         assertEquals(25.0/60/(.8*2),NativeStrikeFeedback.quickSlashInterval("LONGSWORD"),1e-12);
-        assertEquals(20.0/60/(1.2*2),NativeStrikeFeedback.quickSlashInterval("DAGGER"),1e-12);
+        assertEquals(20.0/60/(1.26*2),NativeStrikeFeedback.quickSlashInterval("DAGGER"),1e-12);
     }
     @Test void failureDiagnosticsBoundCodeLocationsAndOmitPrivateMessagesAndFiles(){
         var error=new IllegalStateException("secret=DO_NOT_LOG");

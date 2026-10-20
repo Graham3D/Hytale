@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "revision": "master-1.7.0-channels-2026-10-02",
+  "nativeCauses": {
+    "Physical": "PHYSICAL", "Projectile": "PHYSICAL",
+    "Wind": "WIND", "Water": "WATER", "Ice": "WATER", "Cold": "WATER", "Frost": "WATER",
+    "Fire": "FIRE", "Earth": "EARTH", "Poison": "EARTH", "Nature": "EARTH", "RPG_Nature": "EARTH",
+    "Lightning": "LIGHTNING", "RPG_Void": "VOID", "Void": "VOID", "RPG_Necrotic": "VOID", "Necrotic": "VOID", "Shadow": "VOID"
+  },
+  "perProducerCauses": {
+    "RPG_Arcane": { "arcane_bolt": "LIGHTNING", "arcane_missiles": "LIGHTNING" }
+  }
+}

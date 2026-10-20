@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "skills": [{
+    "skillId": "iron_sentinel", "family": "SUMMON",
+    "allowedMainHandKinds": [], "requiredOffHandKinds": [], "secondaryFamilies": [],
+    "resourceType": "MANA", "resourceCost": 0, "cooldownSeconds": 0, "windupSeconds": 0,
+    "basePowerSource": "INNATE", "innateBasePower": 0, "scaling": "NONE",
+    "summon": {"roleId": "RPG_Iron_Sentinel", "element": "PHYSICAL", "range": 6,
+      "count": 1, "healthFactor": 1, "coefficient": 1, "lifetime": 60,
+      "attackInterval": 2, "leash": 24, "countPolicy": "FIXED", "developmentFixture": false}
+  }]
+}

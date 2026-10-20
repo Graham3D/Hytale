@@ -52,7 +52,15 @@ public final class NpcIntelligenceTickSystem extends EntityTickingSystem<EntityS
     private final BackgroundLifeSimulator backgroundLife;
     private final ImmersiveNpcRoleService nativeRoles;
     private final java.util.function.DoubleConsumer serverFrameObserver;
-    private final Set<UUID> appearanceApplied = ConcurrentHashMap.newKeySet();
+    private final java.util.Map<UUID,Long> appliedAppearanceEpoch = new ConcurrentHashMap<>();
+    private final java.util.concurrent.atomic.AtomicLong appearanceEpoch = new java.util.concurrent.atomic.AtomicLong();
+    private final java.util.Map<UUID,Long> nextAppearanceCheck = new ConcurrentHashMap<>();
+
+    /** A returning client needs a fresh native appearance projection for loaded NPCs. */
+    public void refreshAppearances(){
+        appearanceEpoch.incrementAndGet();
+        nextAppearanceCheck.clear();
+    }
 
     public NpcIntelligenceTickSystem(
             Supplier<NpcProfile> profile,
@@ -180,11 +188,22 @@ public final class NpcIntelligenceTickSystem extends EntityTickingSystem<EntityS
         }
         NpcProfile currentProfile = resolveProfile(
                 ref, uuid.getUuid(), npc.getNPCTypeId(), commandBuffer);
-        if (appearances != null && !appearanceApplied.contains(uuid.getUuid())
-                && (appearances.queueApply(currentProfile.name(), ref, npc, commandBuffer)
-                        || appearances.queueApply(currentProfile.appearancePreset(), ref,
-                                npc, commandBuffer))) {
-                appearanceApplied.add(uuid.getUuid());
+        if (appearances != null) {
+            UUID entityId=uuid.getUuid();
+            long now=System.nanoTime();
+            long epoch=appearanceEpoch.get();
+            boolean applied=appliedAppearanceEpoch.getOrDefault(entityId,-1L)==epoch;
+            if(!applied
+                    || now>=nextAppearanceCheck.getOrDefault(entityId,0L)){
+                if(!applied
+                        || !appearances.matchesApplied(currentProfile.name(),
+                                currentProfile.appearancePreset(),ref,store)){
+                    if(appearances.queueApply(currentProfile.name(),ref,npc,commandBuffer)
+                            || appearances.queueApply(currentProfile.appearancePreset(),ref,npc,commandBuffer))
+                        appliedAppearanceEpoch.put(entityId,epoch);
+                }
+                nextAppearanceCheck.put(entityId,now+5_000_000_000L);
+            }
         }
         UUID worldId = worldId(store);
         if (runtimes != null && !runtimes.registerIfAbsent(

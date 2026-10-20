@@ -41,12 +41,12 @@ public final class NativeRuneControl {
     public static void auditAssets() {
         var item = com.hypixel.hytale.server.core.asset.type.item.config.Item.getAssetMap().getAsset(RUNE);
         var root = RootInteraction.getAssetMap().getAsset(ROOT);
-        var ability = item == null ? null : item.getAbility();
+        var ability = item != null && item.getAbility() instanceof com.hypixel.hytale.server.core.asset.type.item.config.CoreItemAbility core ? core : null;
         var operations = new ArrayList<String>();
         if (root != null) for (int i = 0; i < root.getOperationMax(); i++)
             operations.add(root.getOperation(i).getClass().getSimpleName());
         boolean pass = ability != null && ROOT.equals(ability.getCastRootId())
-                && ability.getSlot() == AbilitySlot.Primary && ability.getCost() == 25
+                && ability.getSlot() == AbilitySlot.Core && ability.getCost() == 25
                 && ability.getCooldownS() == 12 && ability.getCostType() == AbilityCostType.Mana
                 && !operations.isEmpty();
         com.hypixel.hytale.logger.HytaleLogger.forEnclosingClass().atInfo().log(
@@ -84,9 +84,9 @@ public final class NativeRuneControl {
         }
         ItemStack rune = new ItemStack(RUNE);
         if (!rune.isValid()) return "Control refused: shipped Rune_Fireball asset missing.";
-        var ability = rune.getItem().getAbility();
+        var ability = rune.getItem().getAbility() instanceof com.hypixel.hytale.server.core.asset.type.item.config.CoreItemAbility core ? core : null;
         RootInteraction root = RootInteraction.getAssetMap().getAsset(ROOT);
-        if (ability == null || ability.getSlot() != AbilitySlot.Primary || !ROOT.equals(ability.getCastRootId())
+        if (ability == null || ability.getSlot() != AbilitySlot.Core || !ROOT.equals(ability.getCastRootId())
                 || ability.getCost() != 25 || ability.getCooldownS() != 12 || ability.getCostType() != AbilityCostType.Mana
                 || root == null || root.getOperationMax() == 0)
             return "Control refused: installed shipped Rune does not match audited 0.7.0-pre.1 baseline.";

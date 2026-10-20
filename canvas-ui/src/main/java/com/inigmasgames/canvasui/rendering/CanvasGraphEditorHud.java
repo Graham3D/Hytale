@@ -21,7 +21,7 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
     public static final String KEY = "inigmas:canvasui:graph-editor";
     public static final int LIBRARY_ROWS = 16;
     public static final int WORKSPACE_LEFT = 114;
-    public static final int WORKSPACE_TOP = 140;
+    public static final int WORKSPACE_TOP = 128;
     public static final int LIBRARY_ROW_TOP = 94;
     public static final int LIBRARY_ROW_STEP = 43;
     public static final int LIBRARY_TRACK_TOP = 94;
@@ -208,9 +208,10 @@ public final class CanvasGraphEditorHud extends CustomUIHud {
             commands.set(selector + " #Port0.Visible", false);
             commands.set(selector + " #Port1.Visible", false);
             commands.set(selector + " #Port2.Visible", false);
+            commands.set(selector + " #Port3.Visible", false);
             int portIndex = 0;
             for (SkillTreeViewModel.Port port : node.ports()) {
-                if (portIndex >= 3) break;
+                if (portIndex >= 4) break;
                 commands.set(selector + " #Port" + portIndex + ".Visible", true);
                 commands.setObject(selector + " #Port" + portIndex + ".Anchor",
                         anchor((int)Math.round(port.point().x() - point.x()) - 5,

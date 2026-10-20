@@ -33,6 +33,8 @@ public final class SourcedBeliefStore implements AutoCloseable {
     private final Thread writer;
     private long nextSequence = 1;
     private long snapshotSequence;
+    private long validatedSnapshotOffset;
+    private final Object snapshotWriter = new Object();
     private int writesSinceSnapshot;
     private volatile RuntimeException writerFailure;
     private volatile RestorationStats restorationStats = RestorationStats.empty();
@@ -51,7 +53,7 @@ public final class SourcedBeliefStore implements AutoCloseable {
     public synchronized void load() {
         long restoreStarted = System.nanoTime();
         legacy.clear(); history.clear(); eventsById.clear(); assertions.clear();
-        nextSequence = 1; snapshotSequence = 0;
+        nextSequence = 1; snapshotSequence = 0; validatedSnapshotOffset = 0;
         if (Files.isRegularFile(legacyPath)) {
             SourcedBelief[] values = JsonFiles.read(legacyPath, SourcedBelief[].class);
             if (values != null) Arrays.stream(values).map(SourcedBelief::normalized)
@@ -92,6 +94,8 @@ public final class SourcedBeliefStore implements AutoCloseable {
     }
 
     private BeliefAssertion assertInternal(BeliefProposal raw, boolean enforce) {
+        if (closed.get()) throw new IllegalStateException("Belief store is closed");
+        if (writerFailure != null) throw writerFailure;
         if (raw == null || raw.ownerNpcId() == null || raw.provenance() == null) {
             throw new IllegalArgumentException("complete belief proposal required");
         }
@@ -494,6 +498,8 @@ public final class SourcedBeliefStore implements AutoCloseable {
             double statusScore) { }
 
     private void commit(BeliefEvent raw, boolean enforce, BeliefAssertion prior) {
+        if (closed.get()) throw new IllegalStateException("Belief store is closed");
+        if (writerFailure != null) throw writerFailure;
         BeliefEvent event = signed(raw);
         if (enforce) gate(event.assertion(), event, prior, true);
         if (!writes.offer(event)) throw new IllegalStateException("belief writer queue full");
@@ -615,18 +621,41 @@ public final class SourcedBeliefStore implements AutoCloseable {
         }
     }
 
-    private synchronized void writeSnapshot() {
+    private void writeSnapshot() {
+        // One writer owns file offsets. Capture accepted state under the existing authority
+        // monitor, then serialize immutable values without blocking readers on disk/JSON.
+        synchronized (snapshotWriter) {
+            if (Boolean.getBoolean("hywind.readypath.legacy")) {
+                synchronized (this) { writeCapturedSnapshot(captureSnapshot()); }
+            } else {
+                CapturedSnapshot captured;
+                synchronized (this) { captured = captureSnapshot(); }
+                writeCapturedSnapshot(captured);
+            }
+        }
+    }
+    private record CapturedSnapshot(Snapshot snapshot, List<SourcedBelief> legacy) {}
+    /** Caller holds this; the writer cannot append while serializing this captured boundary. */
+    private CapturedSnapshot captureSnapshot() {
         long eventOffset = 0;
         try { if (Files.isRegularFile(eventPath)) eventOffset = Files.size(eventPath); }
-        catch (IOException ignored) { }
+        catch (IOException failure) { throw new java.io.UncheckedIOException(failure); }
         Snapshot raw = new Snapshot(2, nextSequence - 1, eventOffset,
                 List.copyOf(assertions.values()), List.copyOf(history), "");
+        return new CapturedSnapshot(raw, List.copyOf(legacy));
+    }
+    private void writeCapturedSnapshot(CapturedSnapshot captured) {
+        Snapshot raw = captured.snapshot();
         Snapshot snapshot = new Snapshot(2, raw.lastSequence(), raw.eventByteOffset(),
                 raw.assertions(), raw.events(),
                 snapshotChecksum(raw));
         JsonFiles.writeAtomic(snapshotPath, snapshot);
-        JsonFiles.writeAtomic(legacyPath, legacy);
-        snapshotSequence = snapshot.lastSequence(); writesSinceSnapshot = 0;
+        JsonFiles.writeAtomic(legacyPath, captured.legacy());
+        synchronized (this) {
+            snapshotSequence = snapshot.lastSequence();
+            validatedSnapshotOffset = snapshot.eventByteOffset();
+            writesSinceSnapshot = 0;
+        }
     }
     private void loadSnapshot() {
         if (!Files.isRegularFile(snapshotPath)) return;
@@ -644,6 +673,7 @@ public final class SourcedBeliefStore implements AutoCloseable {
                 });
             }
             snapshotSequence = value.lastSequence(); nextSequence = snapshotSequence + 1;
+            validatedSnapshotOffset = value.schemaVersion() >= 2 ? Math.max(0, value.eventByteOffset()) : 0;
         } catch (RuntimeException ignored) { }
     }
     private void loadEvents() {
@@ -676,11 +706,9 @@ public final class SourcedBeliefStore implements AutoCloseable {
         } catch (IOException | RuntimeException ignored) { }
     }
     private long snapshotEventOffset() {
-        if (!Files.isRegularFile(snapshotPath)) return 0;
-        try {
-            Snapshot value = JsonFiles.read(snapshotPath, Snapshot.class);
-            return value.schemaVersion() >= 2 ? Math.max(0, value.eventByteOffset()) : 0;
-        } catch (RuntimeException ignored) { return 0; }
+        // Reuse only the header already checksum-validated by loadSnapshot().
+        // Re-reading the entire snapshot here repeated parsing on every boot.
+        return validatedSnapshotOffset;
     }
     private static String snapshotChecksum(Snapshot value) {
         String payload = value.schemaVersion() + "|" + value.lastSequence() + "|"
@@ -707,11 +735,17 @@ public final class SourcedBeliefStore implements AutoCloseable {
     public synchronized boolean readOnly(UUID npcId) { return readOnlyScopes.contains(npcId); }
 
     @Override public void close() {
-        if (!closed.compareAndSet(false, true)) return;
-        writer.interrupt();
-        try { writer.join(2_000); } catch (InterruptedException ignored) {
-            Thread.currentThread().interrupt();
+        // Seal admission under the same monitor as mutation. Do not interrupt a file
+        // write: the bounded poll wakes on its own and accepted events must drain.
+        synchronized (this) {
+            if (!closed.compareAndSet(false, true)) return;
         }
+        try { writer.join(30_000); } catch (InterruptedException interrupted) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("Belief writer shutdown interrupted", interrupted);
+        }
+        if (writer.isAlive()) throw new IllegalStateException("Belief writer shutdown timed out; journal retained");
+        if (writerFailure != null) throw writerFailure;
         writeSnapshot();
     }
 

@@ -34,6 +34,13 @@ public final class CanvasCursorProbeHud extends CustomUIHud {
     @Override protected void build(@Nonnull UICommandBuilder commands) {
         commands.append("CanvasCursorProbeHud.ui");
         writeIdentity(commands, context);
+        if ("CURSOR_CAMERA_INVENTORY_DRAG_PROOF".equals(context)) {
+            for (int y = 0; y < 4; y++) for (int x = 0; x < 18; x++) {
+                commands.append("#CursorInventoryGrid", "CanvasInventoryDragCell.ui");
+                commands.setObject("#CursorInventoryGrid[" + (y * 18 + x) + "].Anchor",
+                        anchor(x * 46, y * 46, 45, 45));
+            }
+        }
     }
 
     public void refresh(Status status) {
@@ -73,6 +80,29 @@ public final class CanvasCursorProbeHud extends CustomUIHud {
         UICommandBuilder commands = new UICommandBuilder();
         commands.set("#CursorDragProof.Visible", visible);
         if (visible) commands.set("#CursorProbeCalibration.Visible", false);
+        update(false, commands);
+    }
+
+    public void setInventoryProofVisible(String itemId) {
+        UICommandBuilder commands = new UICommandBuilder();
+        commands.set("#CursorInventoryDragProof.Visible", true);
+        commands.set("#CursorProbeCalibration.Visible", false);
+        commands.set("#CursorInventoryBow #Icon.ItemId", itemId);
+        update(false, commands);
+    }
+
+    public void updateInventoryGraph(Canvas canvas) {
+        CanvasNode bow = canvas.node("inventory-bow");
+        if (bow == null) return;
+        UICommandBuilder commands = new UICommandBuilder();
+        commands.setObject("#CursorInventoryBow.Anchor", anchor(
+                (int)Math.round(bow.position().x()), (int)Math.round(bow.position().y()), 92, 184));
+        update(false, commands);
+    }
+
+    public void inventoryStatus(String value) {
+        UICommandBuilder commands = new UICommandBuilder();
+        commands.set("#CursorInventoryStatus.TextSpans", Message.raw(value));
         update(false, commands);
     }
 

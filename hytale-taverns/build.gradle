@@ -16,7 +16,7 @@ java {
 repositories { mavenCentral() }
 
 dependencies {
-    api project(':persistent-npcs')
+    api project(':hywind-runtime-common')
     compileOnly files(serverJar)
     testImplementation files(serverJar)
     testImplementation platform('org.junit:junit-bom:5.12.2')

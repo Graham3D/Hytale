@@ -1,0 +1,141 @@
+{
+  "TranslationProperties": {
+    "Name": "server.gear.base.gm.tool.pickaxe.crude.h"
+  },
+  "Quality": "RPG_Gear_Common",
+  "MaxStack": 1,
+  "MaxDurability": 150,
+  "Model": "Items/Tools/Pickaxe/Crude.blockymodel",
+  "Texture": "Items/Tools/Pickaxe/Crude_Texture.png",
+  "Icon": "Icons/ItemsGenerated/Tool_Pickaxe_Crude.png",
+  "PlayerAnimationsId": "Pickaxe",
+  "Tags": {
+    "Type": [
+      "Tool"
+    ]
+  },
+  "Interactions": {
+    "Primary": "Pickaxe_Attack"
+  },
+  "InteractionVars": {
+    "Block_Hit_Camera_Effects": {
+      "Interactions": [
+        {
+          "Type": "Simple",
+          "Effects": {
+            "CameraEffect": "Pickaxe_Mine_Impact"
+          }
+        }
+      ]
+    },
+    "Pickaxe_Mine_Effect": {
+      "Interactions": [
+        {
+          "Parent": "Pickaxe_Mine_Effect",
+          "Effects": {
+            "WorldSoundEventId": "SFX_Tool_T1_Swing",
+            "LocalSoundEventId": "SFX_Pickaxe_T1_Swing_Down_Local"
+          }
+        }
+      ]
+    },
+    "Pickaxe_Mine_Damage": {
+      "Interactions": [
+        {
+          "Parent": "Pickaxe_Mine_Damage",
+          "DamageCalculator": {
+            "Type": "Absolute",
+            "BaseDamage": {
+              "Physical": 1
+            }
+          },
+          "DamageEffects": {
+            "WorldSoundEventId": "SFX_Light_Melee_T1_Impact"
+          }
+        }
+      ]
+    }
+  },
+  "Tool": {
+    "Specs": [
+      {
+        "Power": 1,
+        "GatherType": "SoftBlocks"
+      },
+      {
+        "Power": 0.35,
+        "GatherType": "Soils"
+      },
+      {
+        "Power": 0.05,
+        "GatherType": "Woods"
+      },
+      {
+        "Power": 0.25,
+        "GatherType": "Rocks",
+        "Quality": 1
+      },
+      {
+        "Power": 0.5,
+        "GatherType": "Benches"
+      },
+      {
+        "Power": 0.001,
+        "GatherType": "Metals",
+        "IsIncorrect": true,
+        "HitSoundLayer": "SFX_Pickaxe_Impact_Poor"
+      },
+      {
+        "Power": 0.084,
+        "GatherType": "VolcanicRocks"
+      },
+      {
+        "Power": 0.125,
+        "GatherType": "OreCopper"
+      },
+      {
+        "Power": 0.084,
+        "GatherType": "OreIron"
+      },
+      {
+        "Power": 0.084,
+        "GatherType": "OreSilver"
+      },
+      {
+        "Power": 0.084,
+        "GatherType": "OreGold"
+      },
+      {
+        "Power": 0.063,
+        "GatherType": "OreThorium"
+      },
+      {
+        "Power": 0.063,
+        "GatherType": "OreCobalt"
+      },
+      {
+        "Power": 0.05,
+        "GatherType": "OreAdamantite"
+      },
+      {
+        "Power": 0.042,
+        "GatherType": "OreMithril"
+      }
+    ],
+    "DurabilityLossBlockTypes": [
+      {
+        "BlockSets": [
+          "Stone",
+          "Rock",
+          "Ores",
+          "Soil",
+          "Wood"
+        ],
+        "DurabilityLossOnHit": 0.25
+      }
+    ]
+  },
+  "Utility": {
+    "Compatible": true
+  }
+}

@@ -4,7 +4,8 @@ import java.util.*;
 
 /** Root-lifetime budgets include promised Echo launches; carrier replacement is not a new gameplay effect. */
 public final class ProjectileLifecycleRegistry {
-    public static final int OWNER_CAP=24,GLOBAL_CAP=512;
+    // A five-bolt skill with Volley and Barrage reserves up to 45 carriers for one cast.
+    public static final int OWNER_CAP=48,GLOBAL_CAP=512;
     private final Map<String,ProjectileInstance> active=new LinkedHashMap<>();
     private final Map<RootKey,Root> roots=new LinkedHashMap<>();
     private record RootKey(UUID owner,String id) { }
